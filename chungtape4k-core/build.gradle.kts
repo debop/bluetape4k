@@ -3,7 +3,7 @@ configurations {
 }
 
 dependencies {
-    api(project(":common-logging"))
+    api(project(":chungtape4k-utils-logging"))
     api(Libs.commons_lang3)
     compileOnly(Libs.commons_codec)
     compileOnly(Libs.commons_text)

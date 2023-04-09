@@ -8,15 +8,16 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
-rootProject.name = "kotlinx-commons"
+rootProject.name = "chungtape4k"
 
-includeModules("common")
+include(rootProject.name + "-core")
+
 includeModules("data")
 includeModules("io")
 includeModules("quarkus")
 includeModules("spring")
 includeModules("test")
-includeModules("util")
+includeModules("utils")
 includeModules("vertx")
 
 
@@ -28,7 +29,7 @@ fun includeModules(baseDir: String) {
             moduleDir.listFiles()
                 ?.filter { it.isDirectory }
                 ?.forEach { dir ->
-                    val projectName = baseDir + "-" + dir.name
+                    val projectName = rootProject.name + "-" + baseDir + "-" + dir.name
                     // println("include modules: $projectName")
 
                     include(projectName)
