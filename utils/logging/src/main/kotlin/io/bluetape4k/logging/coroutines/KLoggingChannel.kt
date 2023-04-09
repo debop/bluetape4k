@@ -1,18 +1,14 @@
 package io.bluetape4k.logging.coroutines
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
-import io.bluetape4k.logging.error
-import io.bluetape4k.logging.info
 import io.bluetape4k.logging.logMessageSafe
-import io.bluetape4k.logging.trace
-import io.bluetape4k.logging.warn
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -56,15 +52,20 @@ open class KLoggingChannel : KLogging() {
             return
 
         job = scope.launch {
-            sharedFlow.onEach { event ->
-                when (event.level) {
-                    Level.TRACE -> log.trace(event.error) { event.msg }
-                    Level.DEBUG -> log.debug(event.error) { event.msg }
-                    Level.INFO -> log.info(event.error) { event.msg }
-                    Level.WARN -> log.warn(event.error) { event.msg }
-                    Level.ERROR -> log.error(event.error) { event.msg }
+            log.info("Start logging channel.")
+
+            sharedFlow
+                .onEach { event ->
+                    when (event.level) {
+                        Level.TRACE -> log.trace(event.msg, event.error)
+                        Level.DEBUG -> log.debug(event.msg, event.error)
+                        Level.INFO -> log.info(event.msg, event.error)
+                        Level.WARN -> log.warn(event.msg, event.error)
+                        Level.ERROR -> log.error(event.msg, event.error)
+                        else -> log.debug(event.msg, event.error)
+                    }
                 }
-            }
+                .collect()
         }
     }
 
