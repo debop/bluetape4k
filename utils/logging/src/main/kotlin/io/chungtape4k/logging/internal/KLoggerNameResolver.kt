@@ -1,4 +1,4 @@
-package io.kommons.logging.internal
+package io.chungtape4k.logging.internal
 
 import java.lang.reflect.Modifier
 

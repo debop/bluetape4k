@@ -1,6 +1,6 @@
-package io.kommons.core
+package io.chungtape4k.core
 
-import io.kommons.logging.KLogging
+import io.chungtape4k.logging.KLogging
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test

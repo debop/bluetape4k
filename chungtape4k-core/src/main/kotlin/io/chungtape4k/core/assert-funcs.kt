@@ -1,4 +1,4 @@
-package io.kommons.core
+package io.chungtape4k.core
 
 import kotlin.contracts.contract
 

@@ -1,6 +1,6 @@
-package io.kommons.logging.internal
+package io.chungtape4k.logging.internal
 
-import io.kommons.logging.KLogging
+import io.chungtape4k.logging.KLogging
 import org.slf4j.Logger
 
 internal object KLoggerFactory {

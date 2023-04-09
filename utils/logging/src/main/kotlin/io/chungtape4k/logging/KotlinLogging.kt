@@ -1,6 +1,6 @@
-package io.kommons.logging
+package io.chungtape4k.logging
 
-import io.kommons.logging.internal.KLoggerFactory
+import io.chungtape4k.logging.internal.KLoggerFactory
 import org.slf4j.Logger
 
 object KotlinLogging {
