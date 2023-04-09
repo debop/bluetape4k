@@ -53,108 +53,112 @@ fun <T : CharSequence> T?.assertNullOrBlank(parameterName: String): T? {
 }
 
 
-fun <T : CharSequence> T?.assertContains(other: CharSequence, name: String): T {
-    this.assertNotNull(name)
-    assert(this.contains(other)) { "$name[$this] must contain $other" }
+fun <T : CharSequence> T?.assertContains(other: CharSequence, parameterName: String): T {
+    this.assertNotNull(parameterName)
+    assert(this.contains(other)) { "$parameterName[$this] must contain $other" }
     return this
 }
 
-fun <T : CharSequence> T?.assertStartsWith(prefix: CharSequence, name: String, ignoreCase: Boolean = false): T {
-    this.assertNotNull(name)
-    assert(this.startsWith(prefix, ignoreCase)) { "$name[$this] must be starts with $prefix" }
+fun <T : CharSequence> T?.assertStartsWith(
+    prefix: CharSequence,
+    parameterName: String,
+    ignoreCase: Boolean = false
+): T {
+    this.assertNotNull(parameterName)
+    assert(this.startsWith(prefix, ignoreCase)) { "$parameterName[$this] must be starts with $prefix" }
     return this
 }
 
-fun <T : CharSequence> T?.assertEndsWith(prefix: CharSequence, name: String, ignoreCase: Boolean = false): T {
-    this.assertNotNull(name)
-    assert(this.endsWith(prefix, ignoreCase)) { "$name[$this] must be ends with $prefix" }
+fun <T : CharSequence> T?.assertEndsWith(prefix: CharSequence, parameterName: String, ignoreCase: Boolean = false): T {
+    this.assertNotNull(parameterName)
+    assert(this.endsWith(prefix, ignoreCase)) { "$parameterName[$this] must be ends with $prefix" }
     return this
 }
 
-fun <T> T.assertEquals(expected: T, name: String): T = apply {
-    assert(this == expected) { "$name[$this] must be equal to $expected" }
+fun <T> T.assertEquals(expected: T, parameterName: String): T = apply {
+    assert(this == expected) { "$parameterName[$this] must be equal to $expected" }
 }
 
-@Deprecated("use assertGt", replaceWith = ReplaceWith("assertGt(expected, name)"))
-fun <T : Comparable<T>> T.assertGreaterThan(expected: T, name: String): T = apply {
-    assert(this > expected) { "$name[$this] must be greater than $expected." }
+@Deprecated("use assertGt", replaceWith = ReplaceWith("assertGt(expected, parameterName)"))
+fun <T : Comparable<T>> T.assertGreaterThan(expected: T, parameterName: String): T = apply {
+    assert(this > expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.assertGt(expected: T, name: String): T = apply {
-    assert(this > expected) { "$name[$this] must be greater than $expected." }
+fun <T : Comparable<T>> T.assertGt(expected: T, parameterName: String): T = apply {
+    assert(this > expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-@Deprecated("use assertGe", replaceWith = ReplaceWith("assertGe(expected, name)"))
-fun <T : Comparable<T>> T.assertGreaterThanOrEqualTo(expected: T, name: String): T = apply {
-    assert(this >= expected) { "$name[$this] must be greater than $expected." }
+@Deprecated("use assertGe", replaceWith = ReplaceWith("assertGe(expected, parameterName)"))
+fun <T : Comparable<T>> T.assertGreaterThanOrEqualTo(expected: T, parameterName: String): T = apply {
+    assert(this >= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.assertGe(expected: T, name: String): T = apply {
-    assert(this >= expected) { "$name[$this] must be greater than $expected." }
+fun <T : Comparable<T>> T.assertGe(expected: T, parameterName: String): T = apply {
+    assert(this >= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-@Deprecated("use assertLt", replaceWith = ReplaceWith("assertLt(expected, name)"))
-fun <T : Comparable<T>> T.assertLessThan(expected: T, name: String): T = apply {
-    assert(this < expected) { "$name[$this] must be greater than $expected." }
+@Deprecated("use assertLt", replaceWith = ReplaceWith("assertLt(expected, parameterName)"))
+fun <T : Comparable<T>> T.assertLessThan(expected: T, parameterName: String): T = apply {
+    assert(this < expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.assertLt(expected: T, name: String): T = apply {
-    assert(this < expected) { "$name[$this] must be greater than $expected." }
+fun <T : Comparable<T>> T.assertLt(expected: T, parameterName: String): T = apply {
+    assert(this < expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-@Deprecated("use assertLe", replaceWith = ReplaceWith("assertLe(expected, name)"))
-fun <T : Comparable<T>> T.assertLessThanOrEqualTo(expected: T, name: String): T = apply {
-    assert(this <= expected) { "$name[$this] must be greater than $expected." }
+@Deprecated("use assertLe", replaceWith = ReplaceWith("assertLe(expected, parameterName)"))
+fun <T : Comparable<T>> T.assertLessThanOrEqualTo(expected: T, parameterName: String): T = apply {
+    assert(this <= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.assertLe(expected: T, name: String): T = apply {
-    assert(this <= expected) { "$name[$this] must be greater than $expected." }
+fun <T : Comparable<T>> T.assertLe(expected: T, parameterName: String): T = apply {
+    assert(this <= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.assertInRange(start: T, endInclusive: T, name: String) = apply {
-    assert(this in start..endInclusive) { "$name[$this] must be in range ($start .. $endInclusive)" }
+fun <T : Comparable<T>> T.assertInRange(start: T, endInclusive: T, parameterName: String) = apply {
+    assert(this in start..endInclusive) { "$parameterName[$this] must be in range ($start .. $endInclusive)" }
 }
 
 fun <T : Comparable<T>> T.assertInOpenRange(start: T, endExclusive: T, name: String): T = apply {
     assert(this >= start && this < endExclusive) { "$start <= $name[$this] < $endExclusive" }
 }
 
-fun <T> T.assertZeroOrPositiveNumber(name: String): T where T : Number, T : Comparable<T> = apply {
-    toDouble().assertGe(0.0, name)
+fun <T> T.assertZeroOrPositiveNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+    toDouble().assertGe(0.0, parameterName)
 }
 
-fun <T> T.assertPositiveNumber(name: String): T where T : Number, T : Comparable<T> = apply {
-    toDouble().assertGt(0.0, name)
+fun <T> T.assertPositiveNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+    toDouble().assertGt(0.0, parameterName)
 }
 
-fun <T> T.assertZeroOrNegativeNumber(name: String): T where T : Number, T : Comparable<T> = apply {
-    toDouble().assertLe(0.0, name)
+fun <T> T.assertZeroOrNegativeNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+    toDouble().assertLe(0.0, parameterName)
 }
 
-fun <T> T.assertNegativeNumber(name: String): T where T : Number, T : Comparable<T> = apply {
-    toDouble().assertLt(0.0, name)
+fun <T> T.assertNegativeNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+    toDouble().assertLt(0.0, parameterName)
 }
 
-fun <T> Collection<T>?.assertNotEmpty(name: String) = apply {
-    assert(!this.isNullOrEmpty()) { "$name[$this] must not be null or empty." }
+fun <T> Collection<T>?.assertNotEmpty(parameterName: String) = apply {
+    assert(!this.isNullOrEmpty()) { "$parameterName[$this] must not be null or empty." }
 }
 
 
-fun <K, V> Map<K, V>?.assertNotEmpty(name: String) = apply {
-    assert(!this.isNullOrEmpty()) { "$name must not be null or empty." }
+fun <K, V> Map<K, V>?.assertNotEmpty(parameterName: String) = apply {
+    assert(!this.isNullOrEmpty()) { "$parameterName must not be null or empty." }
 }
 
-fun <K, V> Map<K, V>?.assertHasKey(key: K, name: String) = apply {
-    assertNotEmpty(name)
-    assert(this!!.containsKey(key)) { "$name require contains key $key" }
+fun <K, V> Map<K, V>?.assertHasKey(key: K, parameterName: String) = apply {
+    assertNotEmpty(parameterName)
+    assert(this!!.containsKey(key)) { "$parameterName require contains key $key" }
 }
 
-fun <K, V> Map<K, V>?.assertHasValue(value: V, name: String) = apply {
-    assertNotEmpty(name)
-    assert(this!!.containsValue(value)) { "$name require contains value $value" }
+fun <K, V> Map<K, V>?.assertHasValue(value: V, parameterName: String) = apply {
+    assertNotEmpty(parameterName)
+    assert(this!!.containsValue(value)) { "$parameterName require contains value $value" }
 }
 
-fun <K, V> Map<K, V>?.assertContains(key: K, value: V, name: String) = apply {
-    assertNotEmpty(name)
-    assert(this!![key] == value) { "$name require contains ($key, $value)" }
+fun <K, V> Map<K, V>?.assertContains(key: K, value: V, parameterName: String) = apply {
+    assertNotEmpty(parameterName)
+    assert(this!![key] == value) { "$parameterName require contains ($key, $value)" }
 }

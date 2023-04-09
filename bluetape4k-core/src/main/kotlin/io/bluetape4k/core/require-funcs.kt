@@ -53,108 +53,112 @@ fun <T : CharSequence> T?.requireNullOrBlank(parameterName: String): T? {
 }
 
 
-fun <T : CharSequence> T?.requireContains(other: CharSequence, name: String): T {
-    this.requireNotNull(name)
-    require(this.contains(other)) { "$name[$this] must contain $other" }
+fun <T : CharSequence> T?.requireContains(other: CharSequence, parameterName: String): T {
+    this.requireNotNull(parameterName)
+    require(this.contains(other)) { "$parameterName[$this] must contain $other" }
     return this
 }
 
-fun <T : CharSequence> T?.requireStartsWith(prefix: CharSequence, name: String, ignoreCase: Boolean = false): T {
-    this.requireNotNull(name)
-    require(this.startsWith(prefix, ignoreCase)) { "$name[$this] must be starts with $prefix" }
+fun <T : CharSequence> T?.requireStartsWith(
+    prefix: CharSequence,
+    parameterName: String,
+    ignoreCase: Boolean = false
+): T {
+    this.requireNotNull(parameterName)
+    require(this.startsWith(prefix, ignoreCase)) { "$parameterName[$this] must be starts with $prefix" }
     return this
 }
 
-fun <T : CharSequence> T?.requireEndsWith(prefix: CharSequence, name: String, ignoreCase: Boolean = false): T {
-    this.requireNotNull(name)
-    require(this.endsWith(prefix, ignoreCase)) { "$name[$this] must be ends with $prefix" }
+fun <T : CharSequence> T?.requireEndsWith(prefix: CharSequence, parameterName: String, ignoreCase: Boolean = false): T {
+    this.requireNotNull(parameterName)
+    require(this.endsWith(prefix, ignoreCase)) { "$parameterName[$this] must be ends with $prefix" }
     return this
 }
 
-fun <T> T.requireEquals(expected: T, name: String): T = apply {
-    require(this == expected) { "$name[$this] must be equal to $expected" }
+fun <T> T.requireEquals(expected: T, parameterName: String): T = apply {
+    require(this == expected) { "$parameterName[$this] must be equal to $expected" }
 }
 
-@Deprecated("use requireGt", replaceWith = ReplaceWith("requireGt(expected, name)"))
-fun <T : Comparable<T>> T.requireGreaterThan(expected: T, name: String): T = apply {
-    require(this > expected) { "$name[$this] must be greater than $expected." }
+@Deprecated("use requireGt", replaceWith = ReplaceWith("requireGt(expected, parameterName)"))
+fun <T : Comparable<T>> T.requireGreaterThan(expected: T, parameterName: String): T = apply {
+    require(this > expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.requireGt(expected: T, name: String): T = apply {
-    require(this > expected) { "$name[$this] must be greater than $expected." }
+fun <T : Comparable<T>> T.requireGt(expected: T, parameterName: String): T = apply {
+    require(this > expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-@Deprecated("use requireGe", replaceWith = ReplaceWith("requireGe(expected, name)"))
-fun <T : Comparable<T>> T.requireGreaterThanOrEqualTo(expected: T, name: String): T = apply {
-    require(this >= expected) { "$name[$this] must be greater than $expected." }
+@Deprecated("use requireGe", replaceWith = ReplaceWith("requireGe(expected, parameterName)"))
+fun <T : Comparable<T>> T.requireGreaterThanOrEqualTo(expected: T, parameterName: String): T = apply {
+    require(this >= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.requireGe(expected: T, name: String): T = apply {
-    require(this >= expected) { "$name[$this] must be greater than $expected." }
+fun <T : Comparable<T>> T.requireGe(expected: T, parameterName: String): T = apply {
+    require(this >= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-@Deprecated("use requireLt", replaceWith = ReplaceWith("requireLt(expected, name)"))
-fun <T : Comparable<T>> T.requireLessThan(expected: T, name: String): T = apply {
-    require(this < expected) { "$name[$this] must be greater than $expected." }
+@Deprecated("use requireLt", replaceWith = ReplaceWith("requireLt(expected, parameterName)"))
+fun <T : Comparable<T>> T.requireLessThan(expected: T, parameterName: String): T = apply {
+    require(this < expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.requireLt(expected: T, name: String): T = apply {
-    require(this < expected) { "$name[$this] must be greater than $expected." }
+fun <T : Comparable<T>> T.requireLt(expected: T, parameterName: String): T = apply {
+    require(this < expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-@Deprecated("use requireLe", replaceWith = ReplaceWith("requireLe(expected, name)"))
-fun <T : Comparable<T>> T.requireLessThanOrEqualTo(expected: T, name: String): T = apply {
-    require(this <= expected) { "$name[$this] must be greater than $expected." }
+@Deprecated("use requireLe", replaceWith = ReplaceWith("requireLe(expected, parameterName)"))
+fun <T : Comparable<T>> T.requireLessThanOrEqualTo(expected: T, parameterName: String): T = apply {
+    require(this <= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.requireLe(expected: T, name: String): T = apply {
-    require(this <= expected) { "$name[$this] must be greater than $expected." }
+fun <T : Comparable<T>> T.requireLe(expected: T, parameterName: String): T = apply {
+    require(this <= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.requireInRange(start: T, endInclusive: T, name: String) = apply {
-    require(this in start..endInclusive) { "$name[$this] must be in range ($start .. $endInclusive)" }
+fun <T : Comparable<T>> T.requireInRange(start: T, endInclusive: T, parameterName: String) = apply {
+    require(this in start..endInclusive) { "$parameterName[$this] must be in range ($start .. $endInclusive)" }
 }
 
-fun <T : Comparable<T>> T.requireInOpenRange(start: T, endExclusive: T, name: String): T = apply {
-    require(this >= start && this < endExclusive) { "$start <= $name[$this] < $endExclusive" }
+fun <T : Comparable<T>> T.requireInOpenRange(start: T, endExclusive: T, parameterName: String): T = apply {
+    require(this >= start && this < endExclusive) { "$start <= $parameterName[$this] < $endExclusive" }
 }
 
-fun <T> T.requireZeroOrPositiveNumber(name: String): T where T : Number, T : Comparable<T> = apply {
-    toDouble().requireGe(0.0, name)
+fun <T> T.requireZeroOrPositiveNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+    toDouble().requireGe(0.0, parameterName)
 }
 
-fun <T> T.requirePositiveNumber(name: String): T where T : Number, T : Comparable<T> = apply {
-    toDouble().requireGt(0.0, name)
+fun <T> T.requirePositiveNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+    toDouble().requireGt(0.0, parameterName)
 }
 
-fun <T> T.requireZeroOrNegativeNumber(name: String): T where T : Number, T : Comparable<T> = apply {
-    toDouble().requireLe(0.0, name)
+fun <T> T.requireZeroOrNegativeNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+    toDouble().requireLe(0.0, parameterName)
 }
 
-fun <T> T.requireNegativeNumber(name: String): T where T : Number, T : Comparable<T> = apply {
-    toDouble().requireLt(0.0, name)
+fun <T> T.requireNegativeNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+    toDouble().requireLt(0.0, parameterName)
 }
 
-fun <T> Collection<T>?.requireNotEmpty(name: String) = apply {
-    require(!this.isNullOrEmpty()) { "$name[$this] must not be null or empty." }
+fun <T> Collection<T>?.requireNotEmpty(parameterName: String) = apply {
+    require(!this.isNullOrEmpty()) { "$parameterName[$this] must not be null or empty." }
 }
 
 
-fun <K, V> Map<K, V>?.requireNotEmpty(name: String) = apply {
-    require(!this.isNullOrEmpty()) { "$name must not be null or empty." }
+fun <K, V> Map<K, V>?.requireNotEmpty(parameterName: String) = apply {
+    require(!this.isNullOrEmpty()) { "$parameterName must not be null or empty." }
 }
 
-fun <K, V> Map<K, V>?.requireHasKey(key: K, name: String) = apply {
-    requireNotEmpty(name)
-    require(this!!.containsKey(key)) { "$name require contains key $key" }
+fun <K, V> Map<K, V>?.requireHasKey(key: K, parameterName: String) = apply {
+    requireNotEmpty(parameterName)
+    require(this!!.containsKey(key)) { "$parameterName require contains key $key" }
 }
 
-fun <K, V> Map<K, V>?.requireHasValue(value: V, name: String) = apply {
-    requireNotEmpty(name)
-    require(this!!.containsValue(value)) { "$name require contains value $value" }
+fun <K, V> Map<K, V>?.requireHasValue(value: V, parameterName: String) = apply {
+    requireNotEmpty(parameterName)
+    require(this!!.containsValue(value)) { "$parameterName require contains value $value" }
 }
 
-fun <K, V> Map<K, V>?.requireContains(key: K, value: V, name: String) = apply {
-    requireNotEmpty(name)
-    require(this!![key] == value) { "$name require contains ($key, $value)" }
+fun <K, V> Map<K, V>?.requireContains(key: K, value: V, parameterName: String) = apply {
+    requireNotEmpty(parameterName)
+    require(this!![key] == value) { "$parameterName require contains ($key, $value)" }
 }

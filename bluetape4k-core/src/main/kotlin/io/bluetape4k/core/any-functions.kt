@@ -53,7 +53,6 @@ fun safeAreEquals(a: Any?, b: Any?): Boolean {
  * 두 Object 가 같은 것인가 검사한다. Array인 경우도 검사할 수 있습니다.
  */
 fun arrayEquals(a: Any, b: Any): Boolean {
-
     if (a is Array<*> && b is Array<*>) {
         return a.contentEquals(b)
     }

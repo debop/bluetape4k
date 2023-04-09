@@ -56,7 +56,7 @@ allprojects {
 }
 
 subprojects {
-    if (name == "kommons-bom") {
+    if (name == "bluetape4k-bom") {
         return@subprojects
     }
 

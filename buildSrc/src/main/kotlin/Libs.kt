@@ -60,7 +60,7 @@ object Versions {
     const val quarkus = Plugins.Versions.quarkus
     const val resteasy = "6.1.0.Final"
     const val mutiny = "1.7.0"
-    const val vertx = "4.3.3"
+    const val vertx = "4.3.8"
     const val agroal = "1.16"
 
 
@@ -88,7 +88,7 @@ object Versions {
     const val okhttp3 = "4.10.0"
     const val asynchttpclient = "2.12.3"
 
-    const val jackson = "2.14.1"
+    const val jackson = "2.14.2"
     const val jjwt = "0.11.5"
 
     const val mapstruct = "1.4.1.Final"
