@@ -8,7 +8,7 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
-rootProject.name = "chungtape4k"
+rootProject.name = "bluetape4k"
 
 include(rootProject.name + "-core")
 
