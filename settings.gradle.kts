@@ -10,9 +10,14 @@
 
 rootProject.name = "kotlinx-commons"
 
-includeModules("commons")
+includeModules("common")
 includeModules("data")
 includeModules("io")
+includeModules("quarkus")
+includeModules("spring")
+includeModules("test")
+includeModules("util")
+includeModules("vertx")
 
 
 

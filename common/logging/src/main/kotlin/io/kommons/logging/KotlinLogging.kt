@@ -1,6 +1,6 @@
-package io.github.kommons.logging
+package io.kommons.logging
 
-import io.github.kommons.logging.internal.KLoggerFactory
+import io.kommons.logging.internal.KLoggerFactory
 import org.slf4j.Logger
 
 object KotlinLogging {
@@ -16,5 +16,14 @@ object KotlinLogging {
      */
     fun logger(name: String): Logger = KLoggerFactory.logger(name)
 
+    /**
+     * [action]이 속한 package name이 Logger name이 됩니다.
+     *
+     * ```
+     * val log = KotlinLogging.logger {}
+     * ```
+     *
+     * @param action [action]이 속한 package name이 Logger name이 됩니다.
+     */
     fun logger(action: () -> Unit): Logger = KLoggerFactory.logger(action)
 }

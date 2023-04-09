@@ -92,53 +92,63 @@ subprojects {
         }
 
         compileKotlin {
-            // sourceCompatibility = javaVersion
             kotlinOptions {
                 jvmTarget = javaVersion
+                languageVersion = "1.7"
+                apiVersion = "1.7"
                 freeCompilerArgs = listOf(
                     "-Xjsr305=strict",
-                    "-Xjvm-default=enable",
+                    "-Xjvm-default=all",
                     "-Xinline-classes",
-                    "-progressive"
+                    "-Xallow-result-return-type",
+                    "-Xstring-concat=indy",         // since Kotlin 1.4.20 for JVM 9+
+                    "-progressive",                 // since Kotlin 1.6
+                    "-Xenable-builder-inference",   // since Kotlin 1.6
+                    "-Xbackend-threads=0",          // since 1.6.20 (0 means one thread per CPU core)
+                    // "-Xuse-k2"                      // since Kotlin 1.7  // kapt not support
                 )
 
                 val experimentalAnnotations = listOf(
-                    "kotlin.Experimental",
-                    "kotlin.ExperimentalStdlibApi",
+                    "kotlin.RequiresOptIn",
                     "kotlin.contracts.ExperimentalContracts",
                     "kotlin.experimental.ExperimentalTypeInference",
-                    "kotlin.ExperimentalMultiplatform",
                     "kotlinx.coroutines.ExperimentalCoroutinesApi",
-                    "kotlinx.coroutines.ObsoleteCoroutinesApi",
                     "kotlinx.coroutines.InternalCoroutinesApi",
-                    "kotlinx.coroutines.FlowPreview"
+                    "kotlinx.coroutines.FlowPreview",
                 )
-                freeCompilerArgs = freeCompilerArgs.plus(experimentalAnnotations.map { "-Xuse-experimental=$it" })
+                freeCompilerArgs = freeCompilerArgs.plus(experimentalAnnotations.map { "-opt-in=$it" })
             }
         }
 
         compileTestKotlin {
             kotlinOptions {
                 jvmTarget = javaVersion
+                languageVersion = "1.7"
+                apiVersion = "1.7"
                 freeCompilerArgs = listOf(
                     "-Xjsr305=strict",
-                    "-Xjvm-default=enable",
+                    "-Xjvm-default=all",
                     "-Xinline-classes",
-                    "-progressive"
+                    "-Xallow-result-return-type",
+                    "-Xstring-concat=indy",         // since Kotlin 1.4.20 for JVM 9+
+                    "-progressive",                 // since Kotlin 1.6
+                    "-Xenable-builder-inference",   // since Kotlin 1.6
+                    "-Xbackend-threads=0",          // since 1.6.20 (0 means one thread per CPU core)
+                    // "-Xuse-k2"                      // since Kotlin 1.7 // kapt not support
                 )
 
                 val experimentalAnnotations = listOf(
+                    "kotlin.RequiresOptIn",
                     "kotlin.Experimental",
                     "kotlin.ExperimentalStdlibApi",
+                    "kotlin.time.ExperimentalTime",
                     "kotlin.contracts.ExperimentalContracts",
                     "kotlin.experimental.ExperimentalTypeInference",
-                    "kotlin.ExperimentalMultiplatform",
                     "kotlinx.coroutines.ExperimentalCoroutinesApi",
-                    "kotlinx.coroutines.ObsoleteCoroutinesApi",
                     "kotlinx.coroutines.InternalCoroutinesApi",
-                    "kotlinx.coroutines.FlowPreview"
+                    "kotlinx.coroutines.FlowPreview",
                 )
-                freeCompilerArgs = freeCompilerArgs.plus(experimentalAnnotations.map { "-Xuse-experimental=$it" })
+                freeCompilerArgs = freeCompilerArgs.plus(experimentalAnnotations.map { "-opt-in=$it" })
             }
         }
 
@@ -146,6 +156,10 @@ subprojects {
             useJUnitPlatform()
 
             testLogging {
+                showExceptions = true
+                showCauses = true
+                showStackTraces = true
+
                 events("failed")
             }
         }

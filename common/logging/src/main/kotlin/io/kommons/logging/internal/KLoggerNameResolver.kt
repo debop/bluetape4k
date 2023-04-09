@@ -1,4 +1,4 @@
-package io.github.kommons.logging.internal
+package io.kommons.logging.internal
 
 import java.lang.reflect.Modifier
 

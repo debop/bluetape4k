@@ -1,6 +1,6 @@
-package io.github.kommons.logging.internal
+package io.kommons.logging.internal
 
-import io.github.kommons.logging.KLogging
+import io.kommons.logging.KLogging
 import org.slf4j.Logger
 
 internal object KLoggerFactory {

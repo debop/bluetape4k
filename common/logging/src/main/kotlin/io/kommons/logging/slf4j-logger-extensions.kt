@@ -1,4 +1,4 @@
-package io.github.kommons.logging
+package io.kommons.logging
 
 import org.slf4j.Logger
 
