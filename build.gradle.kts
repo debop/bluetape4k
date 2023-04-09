@@ -11,13 +11,16 @@ plugins {
     kotlin("plugin.allopen") version Versions.kotlin apply false
     kotlin("plugin.noarg") version Versions.kotlin apply false
     kotlin("plugin.jpa") version Versions.kotlin apply false
+    kotlin("plugin.serialization") version Versions.kotlin apply false
+    // kotlin("plugin.atomicfu") version Versions.kotlin apply false
     kotlin("kapt") version Versions.kotlin apply false
 
-    id(BuildPlugins.dependency_management) version BuildPlugins.Versions.dependency_management
-    id(BuildPlugins.spring_boot) version BuildPlugins.Versions.spring_boot apply false
+    id(Plugins.dependency_management) version Plugins.Versions.dependency_management
+    id(Plugins.spring_boot) version Plugins.Versions.spring_boot apply false
 
-    id(BuildPlugins.testLogger) version BuildPlugins.Versions.testLogger
-    id(BuildPlugins.dokka) version BuildPlugins.Versions.dokka
+    id(Plugins.dokka) version Plugins.Versions.dokka
+    id(Plugins.testLogger) version Plugins.Versions.testLogger
+    id(Plugins.shadow) version Plugins.Versions.shadow apply false
 }
 
 val projectGroup: String by project
@@ -31,7 +34,6 @@ allprojects {
 
     repositories {
         mavenCentral()
-        jcenter()
         google()
 
         // for Kotlinx Benchmark
@@ -76,10 +78,16 @@ subprojects {
         plugin("jacoco")
         plugin("maven-publish")
 
-        plugin(BuildPlugins.dependency_management)
+        plugin(Plugins.dependency_management)
 
-        plugin(BuildPlugins.testLogger)
-        plugin(BuildPlugins.dokka)
+        plugin(Plugins.dokka)
+        plugin(Plugins.testLogger)
+    }
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
     }
 
     val javaVersion = JavaVersion.VERSION_17.toString()
@@ -94,8 +102,8 @@ subprojects {
         compileKotlin {
             kotlinOptions {
                 jvmTarget = javaVersion
-                languageVersion = "1.7"
-                apiVersion = "1.7"
+                languageVersion = "1.8"
+                apiVersion = "1.8"
                 freeCompilerArgs = listOf(
                     "-Xjsr305=strict",
                     "-Xjvm-default=all",
@@ -123,8 +131,8 @@ subprojects {
         compileTestKotlin {
             kotlinOptions {
                 jvmTarget = javaVersion
-                languageVersion = "1.7"
-                apiVersion = "1.7"
+                languageVersion = "1.8"
+                apiVersion = "1.8"
                 freeCompilerArgs = listOf(
                     "-Xjsr305=strict",
                     "-Xjvm-default=all",
@@ -143,7 +151,7 @@ subprojects {
                     "kotlin.ExperimentalStdlibApi",
                     "kotlin.time.ExperimentalTime",
                     "kotlin.contracts.ExperimentalContracts",
-                    "kotlin.experimental.ExperimentalTypeInference",
+                    // "kotlin.experimental.ExperimentalTypeInference",
                     "kotlinx.coroutines.ExperimentalCoroutinesApi",
                     "kotlinx.coroutines.InternalCoroutinesApi",
                     "kotlinx.coroutines.FlowPreview",
@@ -167,25 +175,41 @@ subprojects {
         testlogger {
             theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
             showFullStackTraces = true
-            showSummary = true
         }
 
-        // Configure existing Dokka task to output HTML to typical Javadoc directory
-        dokka {
-            outputFormat = "html"
-            outputDirectory = "$buildDir/javadoc"
-
-            // externalDocumentationLink { url = URL("https://docs.oracle.com/javase/8/docs/api/") }
-            // commons-io 가 제대로 Link 되는데도, dokka에서 예외를 발생시킨다. 우선은 link 안되게 막음
-            // externalDocumentationLink { url = URL("https://commons.apache.org/proper/commons-io/javadocs/api-2.6/") }
+        jacoco {
+            toolVersion = Plugins.Versions.jacoco
         }
 
-//        jacocoTestReport {
-//            reports {
-//                html.isEnabled = true
-//                xml.isEnabled = true
-//            }
-//        }
+        jacocoTestReport {
+            reports {
+                html.required.set(true)
+                xml.required.set(true)
+            }
+        }
+
+        jacocoTestCoverageVerification {
+            dependsOn(jacocoTestReport)
+
+            violationRules {
+                rule {
+                    // 룰 검증 수행 여부
+                    enabled = true
+
+                    // 룰을 검증할 단위를 클래스 단위로 한다
+                    element = "CLASS"         // BUNDLE|PACKAGE|CLASS|SOURCEFILE|METHOD
+
+                    // 브랜치 커버리지를 최소한 10% 를 만족시켜야 한다
+                    limit {
+                        counter =
+                            "INSTRUCTION"       // INSTRUCTION, LINE, BRANCH, COMPLEXITY, METHOD and CLASS. Defaults to INSTRUCTION.
+                        value =
+                            "COVEREDRATIO"   // TOTALCOUNT, MISSEDCOUNT, COVEREDCOUNT, MISSEDRATIO and COVEREDRATIO. Defaults to COVEREDRATIO
+                        minimum = 0.10.toBigDecimal()
+                    }
+                }
+            }
+        }
 
         jacocoTestCoverageVerification {
             dependsOn(jacocoTestReport)
@@ -220,6 +244,20 @@ subprojects {
                 "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
         }
 
+        // https://kotlin.github.io/dokka/1.6.0/user_guide/gradle/usage/
+        withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+            outputDirectory.set(buildDir.resolve("javadoc"))
+            dokkaSourceSets {
+                configureEach {
+                    includes.from("README.md")
+                }
+            }
+        }
+
+        dokkaHtml.configure {
+            outputDirectory.set(buildDir.resolve("dokka"))
+        }
+
         clean {
             doLast {
                 delete("./.project")
@@ -231,29 +269,32 @@ subprojects {
 
     dependencyManagement {
         imports {
-            mavenBom(Libs.spring_boot_dependencies)
+            mavenBom(Libs.feign_bom)
+            mavenBom(Libs.micrometer_bom)
+            mavenBom(Libs.opentelemetry_bom)
+            mavenBom(Libs.opentelemetry_alpha_bom)
+            mavenBom(Libs.opentelemetry_instrumentation_bom_alpha)
             mavenBom(Libs.spring_cloud_dependencies)
+            mavenBom(Libs.spring_boot_dependencies)
+            mavenBom(Libs.vertx_dependencies)
             mavenBom(Libs.log4j_bom)
+            mavenBom(Libs.junit_bom)
             mavenBom(Libs.testcontainers_bom)
-            mavenBom(Libs.netty_bom)
-            mavenBom(Libs.jackson_bom)
             mavenBom(Libs.aws_bom)
+            mavenBom(Libs.aws2_bom)
             mavenBom(Libs.okhttp3_bom)
             mavenBom(Libs.grpc_bom)
             mavenBom(Libs.protobuf_bom)
             mavenBom(Libs.metrics_bom)
-            mavenBom(Libs.micrometer_bom)
-            mavenBom(Libs.resilience4j_bom)
+            mavenBom(Libs.fabric8_kubernetes_client_bom)
+            mavenBom(Libs.netty_bom)
+            mavenBom(Libs.jackson_bom)
 
-            mavenBom(Libs.kotlin_bom)
             mavenBom(Libs.kotlinx_coroutines_bom)
+            mavenBom(Libs.kotlin_bom)
         }
         dependencies {
             dependency(Libs.jetbrains_annotations)
-
-            dependency(Libs.kotlinx_io)
-            dependency(Libs.kotlinx_io_jvm)
-            dependency(Libs.kotlinx_coroutines_io_jvm)
 
             // Apache Commons
             dependency(Libs.commons_beanutils)
@@ -270,7 +311,11 @@ subprojects {
             dependency(Libs.commons_io)
 
             dependency(Libs.slf4j_api)
+            dependency(Libs.jcl_over_slf4j)
+            dependency(Libs.jul_to_slf4j)
+            dependency(Libs.log4j_over_slf4j)
             dependency(Libs.logback)
+            dependency(Libs.logback_core)
 
             // Jakarta API
             dependency(Libs.jakarta_activation_api)
@@ -300,7 +345,8 @@ subprojects {
 
             dependency(Libs.fst)
             dependency(Libs.kryo)
-            dependency(Libs.kryo_serializers)
+            dependency(Libs.marshalling)
+            dependency(Libs.marshalling_river)
 
             // Retrofit
             dependency(Libs.retrofit2)
@@ -313,23 +359,44 @@ subprojects {
             dependency(Libs.retrofit2_converter_scalars)
             dependency(Libs.retrofit2_mock)
 
+            // Resilience4j
+            dependency(Libs.resilience4j_all)
+            dependency(Libs.resilience4j_annotations)
+            dependency(Libs.resilience4j_bulkhead)
+            dependency(Libs.resilience4j_cache)
+            dependency(Libs.resilience4j_circuitbreaker)
+            dependency(Libs.resilience4j_circularbuffer)
+            dependency(Libs.resilience4j_consumer)
+            dependency(Libs.resilience4j_core)
+            dependency(Libs.resilience4j_feign)
+            dependency(Libs.resilience4j_framework_common)
+            dependency(Libs.resilience4j_kotlin)
+            dependency(Libs.resilience4j_metrics)
+            dependency(Libs.resilience4j_micrometer)
+            dependency(Libs.resilience4j_prometheus)
+            dependency(Libs.resilience4j_ratelimiter)
+            dependency(Libs.resilience4j_ratpack)
+            dependency(Libs.resilience4j_reactor)
+            dependency(Libs.resilience4j_retrofit)
+            dependency(Libs.resilience4j_retry)
+            dependency(Libs.resilience4j_rxjava2)
+            dependency(Libs.resilience4j_rxjava3)
+            dependency(Libs.resilience4j_spring)
+            dependency(Libs.resilience4j_spring_boot2)
+            dependency(Libs.resilience4j_spring_cloud2)
+            dependency(Libs.resilience4j_timelimiter)
+            dependency(Libs.resilience4j_vertx)
+
             // Http
             dependency(Libs.async_http_client)
             dependency(Libs.async_http_client_extras_retrofit2)
             dependency(Libs.async_http_client_extras_rxjava2)
 
-            dependency(Libs.typesafe_config)
             dependency(Libs.grpc_kotlin_stub)
 
-            dependency(Libs.rxjava2)
-            dependency(Libs.rxkotlin2)
-
-            dependency(Libs.mongo_java_driver)
             dependency(Libs.mongo_bson)
-            dependency(Libs.mongo_driver)
-            dependency(Libs.mongo_driver_async)
-            dependency(Libs.mongo_driver_core)
-            dependency(Libs.mongo_driver_reactivestreams)
+            dependency(Libs.mongodb_driver_core)
+            dependency(Libs.mongodb_driver_reactivestreams)
 
             // Hibernate
             dependency(Libs.hibernate_core)
@@ -349,7 +416,6 @@ subprojects {
             dependency(Libs.hikaricp)
             dependency(Libs.mysql_connector_java)
             dependency(Libs.mariadb_java_client)
-            dependency(Libs.h2)
 
             dependency(Libs.cache2k_api)
             dependency(Libs.cache2k_core)
@@ -357,13 +423,7 @@ subprojects {
             dependency(Libs.cache2k_spring)
 
             dependency(Libs.caffeine)
-            dependency(Libs.caffeine_guava)
             dependency(Libs.caffeine_jcache)
-
-            // Koin
-            dependency(Libs.koin_core)
-            dependency(Libs.koin_core_ext)
-            dependency(Libs.koin_test)
 
             // Metrics
             dependency(Libs.latencyUtils)
@@ -371,23 +431,8 @@ subprojects {
 
             dependency(Libs.objenesis)
             dependency(Libs.ow2_asm)
-            dependency(Libs.ow2_asm_commons)
-            dependency(Libs.ow2_asm_tree)
-            dependency(Libs.ow2_asm_util)
 
             dependency(Libs.reflectasm)
-
-            dependency(Libs.junit_jupiter)
-            dependency(Libs.junit_jupiter_api)
-            dependency(Libs.junit_jupiter_engine)
-            dependency(Libs.junit_jupiter_params)
-            dependency(Libs.junit_jupiter_migrationsupport)
-
-            dependency(Libs.junit_platform_commons)
-            dependency(Libs.junit_platform_launcher)
-            dependency(Libs.junit_platform_runner)
-            dependency(Libs.junit_platform_engine)
-            dependency(Libs.junit_platform_suite_api)
 
             dependency(Libs.kluent)
             dependency(Libs.assertj_core)
@@ -397,14 +442,18 @@ subprojects {
             dependency(Libs.mockito_junit_jupiter)
             dependency(Libs.mockito_kotlin)
 
+            dependency(Libs.datafaker)
             dependency(Libs.random_beans)
-            dependency(Libs.javafaker)
+
+            dependency(Libs.jsonpath)
+            dependency(Libs.jsonassert)
 
             dependency(Libs.bouncycastle_bcpkix)
             dependency(Libs.bouncycastle_bcprov)
 
             dependency(Libs.prometheus_simpleclient)
             dependency(Libs.prometheus_simpleclient_common)
+            dependency(Libs.prometheus_simpleclient_httpserver)
             dependency(Libs.prometheus_simpleclient_pushgateway)
             dependency(Libs.prometheus_simpleclient_spring_boot)
 
@@ -422,22 +471,23 @@ subprojects {
         val implementation by configurations
         val testImplementation by configurations
 
+        val compileOnly by configurations
+        val testCompileOnly by configurations
         val testRuntimeOnly by configurations
 
-        implementation(Libs.jetbrains_annotations)
+        api(Libs.jetbrains_annotations)
 
-        implementation(Libs.kotlin_stdlib)
-        implementation(Libs.kotlin_stdlib_common)
-        implementation(Libs.kotlin_stdlib_jdk7)
-        implementation(Libs.kotlin_stdlib_jdk8)
+        api(Libs.kotlin_stdlib)
+        // implementation(Libs.kotlin_stdlib_common)
+        // implementation(Libs.kotlin_stdlib_jdk7)
+        api(Libs.kotlin_stdlib_jdk8)
         implementation(Libs.kotlin_reflect)
         testImplementation(Libs.kotlin_test)
         testImplementation(Libs.kotlin_test_junit5)
 
-        implementation(Libs.atomicfu)
-
+        // 개발 시에는 logback 이 검증하기에 더 좋고, Production에서 비동기 로깅은 log4j2 가 성능이 좋다고 합니다.
         api(Libs.slf4j_api)
-        testApi(Libs.logback)
+        testImplementation(Libs.logback)
 
         testImplementation(Libs.junit_jupiter)
         testImplementation(Libs.junit_jupiter_migrationsupport)
@@ -445,13 +495,13 @@ subprojects {
 
         testImplementation(Libs.kluent)
         testImplementation(Libs.mockk)
-        testImplementation(Libs.testcontainers)
-        // testcontainers 가 M1 에서 docker가 안될 때
-        // https://github.com/testcontainers/testcontainers-java/issues/3834
-        testImplementation(Libs.jna)
+        testImplementation(Libs.awaitility_kotlin)
+        // testImplementation(Libs.testcontainers)
+        // Apple Silicon에서 testcontainers 를 사용하기 위해 참조해야 합니다.
+        // testImplementation(Libs.jna)
 
         // Property baesd test
-        testImplementation(Libs.javafaker)
+        testImplementation(Libs.datafaker)
         testImplementation(Libs.random_beans)
     }
 
@@ -498,8 +548,8 @@ subprojects {
                     artifact(javadocJar)
 
                     pom {
-                        name.set("Kommons")
-                        description.set("Kotlin JVM Common Libs")
+                        name.set("bluetape4k")
+                        description.set("BlueTape for Kotlin")
                         url.set("https://github.com/debop")
                         licenses {
                             license {
@@ -515,8 +565,8 @@ subprojects {
                             }
                         }
                         scm {
-                            url.set("https://www.github.com/debop/kommons")
-                            connection.set("scm:git:https://www.github.com/debop/kommons")
+                            url.set("https://www.github.com/debop/bluetape4k")
+                            connection.set("scm:git:https://www.github.com/debop/bluetape4k")
                             developerConnection.set("scm:git:https://www.github.com/debop")
                         }
                     }
