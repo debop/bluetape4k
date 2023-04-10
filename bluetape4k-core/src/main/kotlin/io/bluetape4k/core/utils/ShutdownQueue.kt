@@ -1,6 +1,6 @@
 package io.bluetape4k.core.utils
 
-import io.bluetape4k.core.closeTimeout
+import io.bluetape4k.core.support.closeTimeout
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info

@@ -1,4 +1,4 @@
-package io.bluetape4k.core.utils
+package io.bluetape4k.core.support
 
 private val CHO_SUNG: IntArray =
     intArrayOf(

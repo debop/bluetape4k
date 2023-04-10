@@ -1,4 +1,4 @@
-package io.bluetape4k.core
+package io.bluetape4k.core.support
 
 import kotlin.reflect.KClass
 

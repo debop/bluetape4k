@@ -13,7 +13,7 @@ import org.awaitility.kotlin.until
 import org.junit.jupiter.api.Test
 import java.util.concurrent.ExecutionException
 
-class TimeoutSupportTest {
+class TimeFunctionsTest {
 
     companion object : KLogging()
 

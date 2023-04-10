@@ -1,6 +1,5 @@
-package io.bluetape4k.core
+package io.bluetape4k.core.support
 
-import io.bluetape4k.core.support.whenAllNotNull
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging

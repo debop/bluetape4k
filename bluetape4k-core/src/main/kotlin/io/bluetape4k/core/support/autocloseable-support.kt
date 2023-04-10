@@ -1,5 +1,6 @@
-package io.bluetape4k.core
+package io.bluetape4k.core.support
 
+import io.bluetape4k.core.asyncWithTimeout
 import java.time.Duration
 
 @JvmField

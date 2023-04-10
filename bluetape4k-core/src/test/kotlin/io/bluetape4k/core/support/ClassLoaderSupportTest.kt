@@ -1,5 +1,6 @@
-package io.bluetape4k.core
+package io.bluetape4k.core.support
 
+import io.bluetape4k.core.ValueObject
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
