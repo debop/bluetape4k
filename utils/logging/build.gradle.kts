@@ -11,5 +11,6 @@ dependencies {
     testImplementation(Libs.logback)
 
     compileOnly(Libs.kotlinx_coroutines_core)
+    compileOnly(Libs.kotlinx_coroutines_slf4j)
     testImplementation(Libs.kotlinx_coroutines_test)
 }

@@ -6,7 +6,7 @@
         <immediateFlush>true</immediateFlush>
         <encoder>
             <!-- @formatter:off -->
-            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level)[traceId=%X{traceId}][%.24thread] %logger{36}:%line: %msg%n%throwable</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level)[traceId=%X{traceId}][spanId=%X{spanId}][%.24thread] %logger{36}:%line: %msg%n%throwable</pattern>
             <!-- @formatter:on -->
             <charset>UTF-8</charset>
         </encoder>
