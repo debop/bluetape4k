@@ -19,6 +19,6 @@ class ClassLoaderSupportTest {
     @Test
     fun `get class loader from class type`() {
         getClassLoader(KLogging::class) shouldBeEqualTo getContextClassLoader()
-        getClassLoader(ByteArrays::class) shouldBeEqualTo getClassLoader<ByteArrays>()
+        getClassLoader(ValueObject::class) shouldBeEqualTo getClassLoader<ValueObject>()
     }
 }
