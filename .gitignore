@@ -51,7 +51,6 @@ atlassian-ide-plugin.xml
 .sonar
 
 lucene/
-/kommons-testcontainers/ignite/
-/kommons-data-ignite/ignite/
-/kommons-spring-data-jpa/build/
-/kommons-money/.resourceCache/
+/test/**/ignite/
+/data/**/ignite/
+.resourceCache
