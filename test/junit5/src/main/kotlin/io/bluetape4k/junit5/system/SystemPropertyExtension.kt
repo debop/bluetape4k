@@ -49,8 +49,8 @@ class SystemPropertyExtension : BeforeAllCallback, BeforeEachCallback, AfterEach
         readRestoreContextInMethod(context)?.restore()
     }
 
-    private fun buildRestoreContext(systemProperties: List<SystemProperty>): RestoreContext {
-        val builder = RestoreContext.Builder()
+    private fun buildRestoreContext(systemProperties: List<SystemProperty>): SystemPropertyRestoreContext {
+        val builder = SystemPropertyRestoreContext.Builder()
 
         // 테스트 시 설정할 시스템 속성 정보
         systemProperties.forEach { property ->
@@ -80,22 +80,22 @@ class SystemPropertyExtension : BeforeAllCallback, BeforeEachCallback, AfterEach
         return result
     }
 
-    private fun readRestoreContextInClass(context: ExtensionContext): RestoreContext? {
+    private fun readRestoreContextInClass(context: ExtensionContext): SystemPropertyRestoreContext? {
         val key = makeKey(context.requiredTestClass.name)
-        return context.store(this.javaClass).get(key, RestoreContext::class.java)
+        return context.store(this.javaClass).get(key, SystemPropertyRestoreContext::class.java)
     }
 
-    private fun writeRestoreContextInClass(context: ExtensionContext, restoreContext: RestoreContext) {
+    private fun writeRestoreContextInClass(context: ExtensionContext, restoreContext: SystemPropertyRestoreContext) {
         val key = makeKey(context.requiredTestClass.name)
         context.store(this.javaClass).getOrComputeIfAbsent(key) { restoreContext }
     }
 
-    private fun readRestoreContextInMethod(context: ExtensionContext): RestoreContext? {
+    private fun readRestoreContextInMethod(context: ExtensionContext): SystemPropertyRestoreContext? {
         val key = makeKey(context.requiredTestMethod.name)
-        return context.store(this.javaClass).get(key, RestoreContext::class.java)
+        return context.store(this.javaClass).get(key, SystemPropertyRestoreContext::class.java)
     }
 
-    private fun writeRestoreContextInMethod(context: ExtensionContext, restoreContext: RestoreContext) {
+    private fun writeRestoreContextInMethod(context: ExtensionContext, restoreContext: SystemPropertyRestoreContext) {
         val key = makeKey(context.requiredTestMethod.name)
         context.store(this.javaClass).getOrComputeIfAbsent(key) { restoreContext }
     }

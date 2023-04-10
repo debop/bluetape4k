@@ -3,7 +3,7 @@ package io.bluetape4k.junit5.system
 /**
  * 테스트 시에 재정의된 시스템 속성을 테스트 후에는 원래 속성 값으로 복원하고, 추가된 신규 속성은 제거합니다.
  */
-internal class RestoreContext(
+internal class SystemPropertyRestoreContext(
     propertyNames: MutableSet<String>,
     restoreProperties: MutableMap<String, String>,
 ) {
@@ -39,7 +39,7 @@ internal class RestoreContext(
             restoreProperties[name] = value
         }
 
-        fun build(): RestoreContext =
-            RestoreContext(propertyNames, restoreProperties)
+        fun build(): SystemPropertyRestoreContext =
+            SystemPropertyRestoreContext(propertyNames, restoreProperties)
     }
 }

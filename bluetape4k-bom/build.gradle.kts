@@ -24,15 +24,15 @@ publishing {
         }
     }
     repositories {
-        maven {
-            val suffix = if (project.version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"
-            url = uri("https://$nexusHost/repository/maven-$suffix")
-            // <3>
-            credentials {
-                username = nexusDeployUser
-                password = nexusDeployPassword
-            }
-        }
+//        maven {
+//            val suffix = if (project.version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"
+//            url = uri("https://$nexusHost/repository/maven-$suffix")
+//            // <3>
+//            credentials {
+//                username = nexusDeployUser
+//                password = nexusDeployPassword
+//            }
+//        }
         mavenLocal()
     }
 }

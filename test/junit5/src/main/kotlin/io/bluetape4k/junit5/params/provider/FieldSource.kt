@@ -1,0 +1,29 @@
+package io.bluetape4k.junit5.params.provider
+
+import org.junit.jupiter.params.provider.ArgumentsSource
+
+/**
+ * 테스트 메소드에 인자를 제공할 때, 필드 변수로부터 얻을 수 있도록 합니다.
+ *
+ * ```
+ * val arguments: List<Arguments> = listOf(
+ *         Arguments.of(null, true),
+ *         Arguments.of("", true),
+ *         Arguments.of("  ", true),
+ *         Arguments.of("not blank", false)
+ *     )
+ *
+ * @ParameterizedTest
+ * @FieldSource("arguments")
+ * fun `isBlank should return true for null or blank string variable`(input:String, expected:Boolean) {
+ *     Strings.isBlank(input) shouldBeEqualTo expected
+ * }
+ * ```
+ * @see org.junit.jupiter.params.provider.MethodSource
+ */
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FUNCTION)
+@ArgumentsSource(FieldArgumentsProvider::class)
+annotation class FieldSource(
+    val value: String,
+)

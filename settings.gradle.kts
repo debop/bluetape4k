@@ -10,6 +10,7 @@
 
 rootProject.name = "bluetape4k"
 
+include(rootProject.name + "-bom")
 include(rootProject.name + "-core")
 
 includeModules("data")
