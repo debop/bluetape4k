@@ -1,4 +1,4 @@
-package io.bluetape4k.core
+package io.bluetape4k.core.utils
 
 /**
  * 값이 true 라면 [block]을 실행합니다. false라면 null을 반환합니다.

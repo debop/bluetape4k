@@ -1,5 +1,6 @@
 package io.bluetape4k.core
 
+import io.bluetape4k.core.utils.toByteArray
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue

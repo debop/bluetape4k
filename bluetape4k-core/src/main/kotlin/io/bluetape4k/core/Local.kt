@@ -1,4 +1,4 @@
-package io.bluetape4k.core.utils
+package io.bluetape4k.core
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
