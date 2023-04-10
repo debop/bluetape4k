@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <withJansi>true</withJansi>
         <immediateFlush>true</immediateFlush>
@@ -14,7 +13,7 @@
 
     <logger name="io.bluetape4k" level="TRACE"/>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="Console"/>
     </root>
 
