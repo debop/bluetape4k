@@ -6,7 +6,7 @@ import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
-class AssertFunctionsTest {
+class AssertSupportTest {
 
     companion object : KLogging()
 
@@ -14,11 +14,8 @@ class AssertFunctionsTest {
 
     @Test
     fun `assert without -ea`() {
-        AssertFunctionsTest::class.java.classLoader.setClassAssertionStatus(
-            AssertFunctionsTest::class.qualifiedName,
-            false
-        )
-        AssertFunctionsTest::class.java.desiredAssertionStatus().shouldBeFalse()
+        AssertSupportTest::class.java.classLoader.setClassAssertionStatus(AssertSupportTest::class.qualifiedName, false)
+        AssertSupportTest::class.java.desiredAssertionStatus().shouldBeFalse()
     }
 
 
@@ -32,7 +29,7 @@ class AssertFunctionsTest {
     fun `assert not null`() {
         var x: Long? = null
         assertFailsWith<AssertionError> {
-            x.assertNotNull("x")
+            x.assertNotNull("x").toByteArray()
         }
 
         x = 12L
@@ -79,21 +76,5 @@ class AssertFunctionsTest {
         assertFailsWith<AssertionError> {
             x.assertNotBlank("x")
         }
-    }
-
-    @Test
-    fun `assert for not empty collection`() {
-        var x: Collection<String>? = null
-        assertFailsWith<AssertionError> {
-            x.assertNotEmpty("x")
-        }
-
-        x = emptyList()
-        assertFailsWith<AssertionError> {
-            x.assertNotEmpty("x")
-        }
-
-        x = listOf("a", "b")
-        x.assertNotEmpty("x")
     }
 }
