@@ -1,5 +1,6 @@
 package io.bluetape4k.core.utils
 
+import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
@@ -9,6 +10,8 @@ import java.math.BigInteger
 import kotlin.test.assertFailsWith
 
 class NumberExtensionsTest {
+
+    companion object : KLogging()
 
     @Test
     fun `coerceIn operator`() {

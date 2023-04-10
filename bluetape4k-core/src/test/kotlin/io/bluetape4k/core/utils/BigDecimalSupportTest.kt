@@ -11,9 +11,12 @@ class BigDecimalSupportTest {
     companion object : KLogging()
 
     @Test
-    fun `compare BigDecimal`() {
-        Assertions.assertTrue { BigDecimal.ZERO < BigDecimal.ONE }
-        Assertions.assertFalse { BigDecimal.ZERO > BigDecimal.ONE }
+    fun `compare BigDecimal and Number`() {
+        Assertions.assertTrue { BigDecimal.ONE > 0L }
+        Assertions.assertTrue { BigDecimal.ONE > 0.5 }
+
+        Assertions.assertFalse { BigDecimal.ZERO > 0L }
+        Assertions.assertFalse { BigDecimal.ZERO > 0.5 }
     }
 
     @Test

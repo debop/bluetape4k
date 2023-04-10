@@ -9,7 +9,7 @@ import java.math.BigDecimal
 fun Number.toBigDecimal(): BigDecimal = when (this) {
     is BigDecimal -> this
     is Long -> BigDecimal(this)
-    else -> BigDecimal(this.toString())
+    else -> BigDecimal(this.asDouble().toString())
 }
 
 operator fun BigDecimal.plus(other: Number): BigDecimal = this.add(other.toBigDecimal())

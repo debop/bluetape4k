@@ -9,7 +9,7 @@ fun Number.toBigInt(): BigInteger = when (this) {
     is BigInteger -> this
     is Int -> BigInteger.valueOf(this.toLong())
     is Long -> BigInteger.valueOf(this)
-    else -> BigInteger(this.toString())
+    else -> BigInteger(this.asLong().toString())
 }
 
 operator fun BigInteger.plus(other: Number): BigInteger = this.add(other.toBigInt())

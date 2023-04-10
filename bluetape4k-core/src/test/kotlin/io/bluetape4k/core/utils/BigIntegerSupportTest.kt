@@ -11,9 +11,15 @@ class BigIntegerSupportTest {
     companion object : KLogging()
 
     @Test
-    fun `compare BigInteger`() {
-        Assertions.assertTrue { BigInteger.ZERO < BigInteger.ONE }
-        Assertions.assertFalse { BigInteger.ZERO > BigInteger.ONE }
+    fun `compare BigInteger with Number`() {
+        Assertions.assertTrue { BigInteger.ZERO < 1L }
+        Assertions.assertFalse { BigInteger.ZERO > 1L }
+
+        Assertions.assertTrue { BigInteger.ONE > 0L }
+        Assertions.assertTrue { BigInteger.TEN > 5 }
+
+        Assertions.assertFalse { BigInteger.ZERO > 1L }
+        Assertions.assertFalse { BigInteger.ZERO > 1.0 }
     }
 
     @Test

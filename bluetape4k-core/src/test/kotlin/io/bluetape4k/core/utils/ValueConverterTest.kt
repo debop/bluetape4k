@@ -1,5 +1,6 @@
 package io.bluetape4k.core.utils
 
+import io.bluetape4k.junit5.params.provider.argumentOf
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
@@ -17,7 +18,9 @@ import java.math.BigInteger
 @RandomizedTest
 class ValueConverterTest {
 
-    companion object : KLogging()
+    companion object : KLogging() {
+        private const val REPEAT_SIZE = 10
+    }
 
     @Test
     fun `convert any as char`() {
@@ -38,7 +41,7 @@ class ValueConverterTest {
         5000.asChar() shouldBeEqualTo 5000.toChar()
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `convert random value asChar`(@RandomValue(type = Int::class, size = 100) expects: List<Int>) {
         expects.forEach { expected ->
             val target = expected.toString()
@@ -69,7 +72,7 @@ class ValueConverterTest {
         5000.asByte() shouldBeEqualTo 5000.toByte()
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `convert random value asByte`(@RandomValue(type = Int::class, size = 100) expects: List<Int>) {
         expects.forEach { expected ->
             val target = expected.toString()
@@ -103,7 +106,7 @@ class ValueConverterTest {
         Short.MIN_VALUE.toString().asShort() shouldBeEqualTo Short.MIN_VALUE
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `convert random value asShort`(@RandomValue(type = Int::class, size = 100) expects: List<Int>) {
         expects.forEach { expected ->
             val target = expected.toString()
@@ -155,7 +158,7 @@ class ValueConverterTest {
         5000.asIntOrNull() shouldBeEqualTo 5000
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `convert random value asInt`(@RandomValue(type = Long::class, size = 100) expects: List<Long>) {
         expects.forEach { expected ->
             val target = expected.toString()
@@ -186,13 +189,13 @@ class ValueConverterTest {
         5000.asLong() shouldBeEqualTo 5000L
     }
 
-    fun getLongValues(): List<Arguments> = listOf(
-        Arguments.of("0", 0L),
-        Arguments.of("2", 2L),
-        Arguments.of(Long.MIN_VALUE.toString(), Long.MIN_VALUE),
-        Arguments.of(Long.MAX_VALUE.toString(), Long.MAX_VALUE),
-        Arguments.of("227366841360584705", 227366841360584705L),
-        Arguments.of("9223372036854775806", 9223372036854775806L)
+    private fun getLongValues(): List<Arguments> = listOf(
+        argumentOf("0", 0L),
+        argumentOf("2", 2L),
+        argumentOf(Long.MIN_VALUE.toString(), Long.MIN_VALUE),
+        argumentOf(Long.MAX_VALUE.toString(), Long.MAX_VALUE),
+        argumentOf("227366841360584705", 227366841360584705L),
+        argumentOf("9223372036854775806", 9223372036854775806L)
     )
 
     @ParameterizedTest
@@ -201,7 +204,7 @@ class ValueConverterTest {
         src.asLong() shouldBeEqualTo expected
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `convert random value asLong`(@RandomValue(type = BigDecimal::class, size = 100) expects: List<BigDecimal>) {
         expects.forEach { expected ->
             val target = expected.toString()
@@ -232,7 +235,7 @@ class ValueConverterTest {
         5000.asFloat() shouldBeEqualTo 5000.0F
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `convert random value asFloat`(@RandomValue(type = Double::class, size = 100) expects: List<Double>) {
         expects.forEach { expected ->
             val target = expected.toString()
@@ -263,7 +266,7 @@ class ValueConverterTest {
         5000.asDouble() shouldBeEqualTo 5000.0
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `convert random value asDouble`(@RandomValue(type = BigDecimal::class, size = 100) expects: List<BigDecimal>) {
         expects.forEach { expected ->
             val target = expected.toString()
@@ -294,7 +297,7 @@ class ValueConverterTest {
         5000.asBigInt() shouldBeEqualTo 5000.toBigInteger()
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `convert random value asBigInt`(@RandomValue(type = BigInteger::class, size = 100) expects: List<BigInteger>) {
         expects.forEach { expected ->
             val target = expected.toString()
@@ -325,7 +328,7 @@ class ValueConverterTest {
         5000.asBigDecimal() shouldBeEqualTo 5000.toBigDecimal()
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `convert random value asBigDecimal`(@RandomValue(type = BigDecimal::class, size = 100) expects: List<BigDecimal>) {
         expects.forEach { expected ->
             val target = expected.toString()
@@ -335,10 +338,10 @@ class ValueConverterTest {
 
     @Test
     fun `floor float number`() {
-        val one = 1.00123456f
+        val one = 1.0012345f
         val one1 = 1.011111f
-        val one5 = 1.0502345f
-        val one49 = 1.0499999999f
+        val one5 = 1.050234f
+        val one49 = 1.049999f
         val empty: Float? = null
 
         one.asFloatFloor(2) shouldBeEqualTo 1.00F
@@ -386,10 +389,10 @@ class ValueConverterTest {
 
     @Test
     fun `round float number`() {
-        val one = 1.00123456f
+        val one = 1.0012345f
         val one1 = 1.011111f
-        val one5 = 1.0502345f
-        val one49 = 1.0499999999f
+        val one5 = 1.050234f
+        val one49 = 1.049999f
         val empty: Float? = uninitialized()
 
         one.asFloatRound(2) shouldBeEqualTo 1.00F
@@ -402,7 +405,7 @@ class ValueConverterTest {
         one5.asFloatRound(1) shouldBeEqualTo 1.1F
 
         one49.asFloatRound(2) shouldBeEqualTo 1.05F
-        one49.asFloatRound(1) shouldBeEqualTo 1.1F
+        one49.asFloatRound(1) shouldBeEqualTo 1.0F
 
         empty.asFloatRound(2) shouldBeEqualTo 0.00F
         empty.asFloatRound(1) shouldBeEqualTo 0.0F
