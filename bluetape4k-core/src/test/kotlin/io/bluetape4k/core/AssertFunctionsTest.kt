@@ -1,13 +1,13 @@
 package io.bluetape4k.core
 
-import io.bluetape4k.core.utils.toByteArray
+import io.bluetape4k.core.support.toByteArray
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
-class AssertSupportTest {
+class AssertFunctionsTest {
 
     companion object : KLogging()
 
@@ -15,8 +15,8 @@ class AssertSupportTest {
 
     @Test
     fun `assert without -ea`() {
-        AssertSupportTest::class.java.classLoader.setClassAssertionStatus(AssertSupportTest::class.qualifiedName, false)
-        AssertSupportTest::class.java.desiredAssertionStatus().shouldBeFalse()
+        AssertFunctionsTest::class.java.classLoader.setClassAssertionStatus(AssertFunctionsTest::class.qualifiedName, false)
+        AssertFunctionsTest::class.java.desiredAssertionStatus().shouldBeFalse()
     }
 
 

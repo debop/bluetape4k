@@ -6,17 +6,17 @@ import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
-class RequireSupportTest {
+class RequireFunctionsTest {
 
     companion object : KLogging()
 
     @Test
     fun `assert without -ea`() {
-        RequireSupportTest::class.java.classLoader.setClassAssertionStatus(
-            RequireSupportTest::class.qualifiedName,
+        RequireFunctionsTest::class.java.classLoader.setClassAssertionStatus(
+            RequireFunctionsTest::class.qualifiedName,
             false
         )
-        RequireSupportTest::class.java.desiredAssertionStatus().shouldBeFalse()
+        RequireFunctionsTest::class.java.desiredAssertionStatus().shouldBeFalse()
     }
 
     class TestClass

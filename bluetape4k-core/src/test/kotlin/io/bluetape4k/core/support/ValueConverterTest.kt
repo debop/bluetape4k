@@ -1,4 +1,4 @@
-package io.bluetape4k.core.utils
+package io.bluetape4k.core.support
 
 import io.bluetape4k.junit5.params.provider.argumentOf
 import io.bluetape4k.junit5.random.RandomValue

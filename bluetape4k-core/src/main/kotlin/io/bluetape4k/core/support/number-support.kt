@@ -1,4 +1,4 @@
-package io.bluetape4k.core.utils
+package io.bluetape4k.core.support
 
 import io.bluetape4k.exceptions.NotSupportedException
 import java.math.BigDecimal
