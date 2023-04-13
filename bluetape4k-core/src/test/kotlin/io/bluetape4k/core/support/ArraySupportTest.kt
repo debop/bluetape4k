@@ -16,7 +16,7 @@ class ArraySupportTest {
     fun `길이가 0 인 array`() {
         emptyByteArray.count() shouldBeEqualTo 0
         emptyByteArray.isNullOrEmpty().shouldBeTrue()
-        emptyByteArray.isNonEmpty().shouldBeFalse()
+        emptyByteArray.isNotEmpty().shouldBeFalse()
     }
 
     @Test

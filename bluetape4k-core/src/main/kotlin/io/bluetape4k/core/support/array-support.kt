@@ -1,7 +1,5 @@
 package io.bluetape4k.core.support
 
-import kotlin.contracts.contract
-
 
 /** Size가 0인 BooleanArray */
 val emptyBooleanArray: BooleanArray = BooleanArray(0)
@@ -27,13 +25,7 @@ val emptyFloatArray: FloatArray = FloatArray(0)
 /** Size가 0인 DoubleArray */
 val emptyDoubleArray: DoubleArray = DoubleArray(0)
 
-fun BooleanArray?.isNullOrEmpty(): Boolean {
-    contract {
-        returns(true) implies (this@isNullOrEmpty == null)
-    }
-    return this == null || this.isEmpty()
-}
-
+fun BooleanArray?.isNullOrEmpty(): Boolean = this == null || this.isEmpty()
 fun CharArray?.isNullOrEmpty(): Boolean = this == null || this.isEmpty()
 fun ByteArray?.isNullOrEmpty(): Boolean = this == null || this.isEmpty()
 fun ShortArray?.isNullOrEmpty(): Boolean = this == null || this.isEmpty()
@@ -41,29 +33,7 @@ fun IntArray?.isNullOrEmpty(): Boolean = this == null || this.isEmpty()
 fun LongArray?.isNullOrEmpty(): Boolean = this == null || this.isEmpty()
 fun FloatArray?.isNullOrEmpty(): Boolean = this == null || this.isEmpty()
 fun DoubleArray?.isNullOrEmpty(): Boolean = this == null || this.isEmpty()
-
-
-fun BooleanArray?.isNonEmpty(): Boolean {
-    contract {
-        returnsNotNull() implies (this@isNonEmpty != null)
-    }
-    return this?.isNotEmpty() ?: false
-}
-
-fun CharArray?.isNonEmpty(): Boolean {
-    contract {
-        returnsNotNull() implies (this@isNonEmpty != null)
-    }
-    return this?.isNotEmpty() ?: false
-}
-
-fun ByteArray?.isNonEmpty(): Boolean = this?.isNotEmpty() ?: false
-fun ShortArray?.isNonEmpty(): Boolean = this?.isNotEmpty() ?: false
-fun IntArray?.isNonEmpty(): Boolean = this?.isNotEmpty() ?: false
-fun LongArray?.isNonEmpty(): Boolean = this?.isNotEmpty() ?: false
-fun FloatArray?.isNonEmpty(): Boolean = this?.isNotEmpty() ?: false
-fun DoubleArray?.isNonEmpty(): Boolean = this?.isNotEmpty() ?: false
-fun <T> Array<T>?.isNonEmpty(): Boolean = this?.isNotEmpty() ?: false
+fun <T> Array<T>?.isNullOrEmpty(): Boolean = this?.isEmpty() ?: true
 
 /**
  * Array의 요소에 지정한 `supplier`를 통해 값을 설정합니다.

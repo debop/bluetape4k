@@ -37,22 +37,22 @@ class LockSupportTest {
 
         val result1 = async {
             rwLock.withWriteLock {
-                delay(10)
+                delay(20)
                 counter = 42
             }
             rwLock.withReadLock {
-                delay(5)
+                delay(2)
                 counter
             }
         }
 
         val result2 = async {
             rwLock.withWriteLock {
-                delay(5)
+                delay(2)
                 counter = 21
             }
             rwLock.withReadLock {
-                delay(10)
+                delay(20)
                 counter
             }
         }

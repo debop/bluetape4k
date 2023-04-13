@@ -8,18 +8,21 @@ dependencies {
 
     compileOnly(Libs.kotlinx_atomicfu)
 
-    // Coroutines
-    compileOnly(Libs.kotlinx_coroutines_core)
-    testImplementation(Libs.kotlinx_coroutines_test)
-
     // Apache Commons
     api(Libs.commons_lang3)
     compileOnly(Libs.commons_codec)
     compileOnly(Libs.commons_text)
 
+    // Coroutines
+    compileOnly(Libs.kotlinx_coroutines_core)
+    testImplementation(Libs.kotlinx_coroutines_test)
+
     // Cache
     compileOnly(Libs.caffeine)
     compileOnly(Libs.caffeine_jcache)
 
+    // Eclipse Collections
     compileOnly(Libs.eclipse_collections)
+    compileOnly(Libs.eclipse_collections_forkjoin)
+    testImplementation(Libs.eclipse_collections_testutils)
 }
