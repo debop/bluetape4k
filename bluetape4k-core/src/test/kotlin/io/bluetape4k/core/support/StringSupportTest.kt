@@ -76,7 +76,7 @@ class StringSupportTest {
     @RepeatedTest(REPEAT_SIZE)
     fun `convert to utf8`(@RandomValue origin: String) {
 
-        val bytes = origin.toUtf8ByteArray()
+        val bytes = origin.toUtf8Bytes()
         bytes.shouldNotBeEmpty()
 
         val actual = bytes.toUtf8String()

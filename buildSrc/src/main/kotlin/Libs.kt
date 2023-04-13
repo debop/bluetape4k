@@ -361,6 +361,7 @@ object Libs {
     val kryo get() = "com.esotericsoftware:kryo:5.4.0"
     val marshalling get() = "org.jboss.marshalling:jboss-marshalling:2.1.1.Final"
     val marshalling_river get() = "org.jboss.marshalling:jboss-marshalling-river:2.1.1.Final"
+    val marshalling_serial get() = "org.jboss.marshalling:jboss-marshalling-serial:2.1.1.Final"
 
     // Spring Boot
     val spring_boot_dependencies get() = "org.springframework.boot:spring-boot-dependencies:${Versions.spring_boot}"

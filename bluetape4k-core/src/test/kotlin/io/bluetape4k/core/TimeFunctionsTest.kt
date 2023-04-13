@@ -74,8 +74,8 @@ class TimeFunctionsTest {
                 log.trace { "Working... $i" }
                 i++
             }
-            isWorking.value = false
-            "Hello"
+//            isWorking.value = false
+//            "Hello"
         }
         result.shouldBeNull()
         log.trace { "작업 종료: ${isWorking.value}" }

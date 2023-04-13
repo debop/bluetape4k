@@ -2,7 +2,6 @@ package io.bluetape4k.core.support
 
 import io.bluetape4k.core.assertPositiveNumber
 import io.bluetape4k.core.assertZeroOrPositiveNumber
-import io.bluetape4k.core.utils.Systemx
 import org.apache.commons.lang3.RandomStringUtils
 import org.apache.commons.lang3.StringUtils
 import java.nio.ByteBuffer
@@ -20,11 +19,10 @@ const val TAB = "\t"
 private const val ElipsisLength = 80
 
 @JvmField
-val LINE_SEPARATOR: String = Systemx.LineSeparator
+val LINE_SEPARATOR: String = System.getProperty("line.separator")
 
 @JvmField
 val WHITESPACE_BLOCK: Pattern = Pattern.compile("\\s+")
-
 @JvmField
 val UTF_8: Charset = Charsets.UTF_8
 
@@ -41,17 +39,30 @@ fun String?.asNullIfEmpty(): String? = if (isNullOrEmpty()) null else this
  * @receiver String
  * @return ByteArray
  */
-fun String?.toUtf8ByteArray(): ByteArray = this?.run { toByteArray(Charsets.UTF_8) } ?: emptyByteArray
+@Deprecated("use toUtf8Bytes() instead", ReplaceWith("toUtf8Bytes()"))
+fun String?.toUtf8ByteArray(): ByteArray = this?.run { toByteArray(UTF_8) } ?: emptyByteArray
+
+/**
+ * 문자열을 UTF-8 인코딩의 [ByteArray]로 변환합니다.
+ * @receiver String
+ * @return ByteArray
+ */
+fun String.toUtf8Bytes(): ByteArray = toByteArray(UTF_8)
 
 /**
  * [ByteArray]를 UTF-8 인코딩의 문자열로 반환한다
  */
-fun ByteArray.toUtf8String(): String = toString(Charsets.UTF_8)
+fun ByteArray.toUtf8String(): String = toString(UTF_8)
+
+/**
+ * 문자열을 UTF-8 인코딩의 [ByteBuffer]로 변환합니다.
+ */
+fun String.toUtf8ByteBuffer(): ByteBuffer = UTF_8.encode(this)
 
 /**
  * [ByteBuffer]를 UTF-8 인코딩의 문자열로 반환한다
  */
-fun ByteBuffer.toUtf8String(): String = Charsets.UTF_8.decode(this).toString()
+fun ByteBuffer.toUtf8String(): String = UTF_8.decode(this).toString()
 
 /**
  * 문자열이 null이거나 empty라면 [fallback]을 수행합니다.
@@ -77,7 +88,7 @@ inline fun String?.ifNullOrBlank(fallback: () -> String): String = when {
     else -> this
 }
 
-fun String?.hasLength(): Boolean = !isNullOrEmpty()
+fun String?.hasLength(): Boolean = (this != null && length > 0)
 
 /**
  * 문자열 앞 뒤의 Whitespace를 제거합니다.
@@ -155,15 +166,13 @@ fun randomString(size: Int = 10): String {
 }
 
 fun String?.needEllipsis(maxLength: Int = ElipsisLength): Boolean {
-    return !isNullOrBlank() && length > maxLength
+    return this != null && isNotBlank() && length > maxLength
 }
 
 fun String?.ellipsisEnd(maxLength: Int = ElipsisLength): String {
     return this?.let { self ->
         when {
-            self.needEllipsis(maxLength) ->
-                self.substring(0, maxLength - TRIMMING.length) + TRIMMING
-
+            self.needEllipsis(maxLength) -> self.substring(0, maxLength - TRIMMING.length) + TRIMMING
             else -> self
         }
     } ?: EMPTY_STRING
@@ -188,9 +197,7 @@ fun String?.ellipsisMid(maxLength: Int = ElipsisLength): String =
 fun String?.ellipsisStart(maxLength: Int = ElipsisLength): String {
     return this?.let { self ->
         when {
-            self.needEllipsis(maxLength) ->
-                TRIMMING + self.substring(self.length - maxLength + TRIMMING.length)
-
+            self.needEllipsis(maxLength) -> TRIMMING + self.substring(self.length - maxLength + TRIMMING.length)
             else -> self
         }
     } ?: EMPTY_STRING
@@ -357,7 +364,6 @@ fun String.sliding(size: Int): Sequence<String> = sequence {
  * ```
  */
 fun String.redact(mask: String = "*"): String = mask.repeat(length)
-
 
 /**
  * [delimiter](기본=`-`)로 구분된 문자열을 camel case 문자열로 변환합니다.
