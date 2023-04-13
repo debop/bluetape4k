@@ -7,7 +7,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
-import org.junit.jupiter.api.Test
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
 class LockSupportTest {
@@ -16,12 +15,12 @@ class LockSupportTest {
         private const val REPEAT_SIZE = 10
     }
 
-    @Test
+    @RepeatedTest(REPEAT_SIZE)
     fun `with CountDownLatch`() {
 
         val x = 1.withLatch {
             log.trace { "with CountDownLatch ..." }
-            Thread.sleep(100)
+            Thread.sleep(10)
             countDown()
             log.trace { "countDown latch ..." }
             42
@@ -38,7 +37,7 @@ class LockSupportTest {
 
         val result1 = async {
             rwLock.withWriteLock {
-                delay(100)
+                delay(10)
                 counter = 42
             }
             rwLock.withReadLock {
@@ -53,12 +52,12 @@ class LockSupportTest {
                 counter = 21
             }
             rwLock.withReadLock {
-                delay(100)
+                delay(10)
                 counter
             }
         }
 
-        log.trace("result1= ${result1.await()}, result2=${result2.await()}")
+        log.trace { "result1=${result1.await()}, result2=${result2.await()}" }
         result1.await() shouldBeEqualTo 42
         result2.await() shouldBeEqualTo 42
     }
