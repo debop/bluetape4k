@@ -27,7 +27,7 @@ class BenchmarkExtension(
         context.publishReportEntry(REPORT_FORMAT.format(unit.name, testMethod.name), duration.toString())
     }
 
-    class Stopwatch {
+    internal class Stopwatch {
         private val start: Long = System.nanoTime()
 
         fun elapsedTime(unit: TimeUnit): Long =
