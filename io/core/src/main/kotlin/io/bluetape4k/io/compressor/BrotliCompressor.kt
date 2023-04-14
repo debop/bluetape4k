@@ -4,9 +4,9 @@ import com.aayushatharva.brotli4j.Brotli4jLoader
 import com.aayushatharva.brotli4j.decoder.BrotliInputStream
 import com.aayushatharva.brotli4j.encoder.BrotliOutputStream
 import com.aayushatharva.brotli4j.encoder.Encoder
-import io.bluetape4k.core.support.classIsPresent
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.support.classIsPresent
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 

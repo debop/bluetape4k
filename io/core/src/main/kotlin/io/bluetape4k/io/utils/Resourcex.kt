@@ -1,13 +1,13 @@
 package io.bluetape4k.io.utils
 
 import io.bluetape4k.core.assertNotBlank
-import io.bluetape4k.core.support.EMPTY_STRING
-import io.bluetape4k.core.support.emptyByteArray
 import io.bluetape4k.io.toByteArray
 import io.bluetape4k.io.toString
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.warn
+import io.bluetape4k.support.EMPTY_STRING
+import io.bluetape4k.support.emptyByteArray
 import java.io.InputStream
 import java.nio.charset.Charset
 

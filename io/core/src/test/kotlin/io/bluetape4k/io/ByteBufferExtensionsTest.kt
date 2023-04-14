@@ -1,18 +1,18 @@
 package io.bluetape4k.io
 
-import io.bluetape4k.core.support.emptyByteArray
-import io.bluetape4k.core.support.toUtf8ByteArray
-import io.bluetape4k.core.support.toUtf8String
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import io.bluetape4k.support.emptyByteArray
+import io.bluetape4k.support.toUtf8ByteArray
+import io.bluetape4k.support.toUtf8String
+import java.nio.ByteBuffer
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
-import java.nio.ByteBuffer
 
 @RandomizedTest
 class ByteBufferExtensionsTest {

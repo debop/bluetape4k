@@ -1,8 +1,8 @@
 package io.bluetape4k.tokenizer.korean.normalizer
 
-import io.bluetape4k.core.support.sliding
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.support.sliding
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanTokenizer
 import io.bluetape4k.tokenizer.korean.utils.Hangul
 import io.bluetape4k.tokenizer.korean.utils.Hangul.HangulChar

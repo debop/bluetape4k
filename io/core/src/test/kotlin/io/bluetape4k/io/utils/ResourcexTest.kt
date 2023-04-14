@@ -1,6 +1,6 @@
 package io.bluetape4k.io.utils
 
-import io.bluetape4k.core.support.toUtf8String
+import io.bluetape4k.support.toUtf8String
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeEmpty

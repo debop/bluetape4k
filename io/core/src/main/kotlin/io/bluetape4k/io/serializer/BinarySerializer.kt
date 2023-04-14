@@ -1,10 +1,10 @@
 package io.bluetape4k.io.serializer
 
-import io.bluetape4k.core.support.emptyByteArray
-import io.bluetape4k.core.support.isNullOrEmpty
 import io.bluetape4k.io.getBytes
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
+import io.bluetape4k.support.emptyByteArray
+import io.bluetape4k.support.isNullOrEmpty
 import java.nio.ByteBuffer
 
 /**

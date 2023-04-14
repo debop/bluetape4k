@@ -1,9 +1,9 @@
 package io.bluetape4k.utils.idgenerators.hashids
 
 import io.bluetape4k.core.assertNotBlank
-import io.bluetape4k.core.support.toLongArray
-import io.bluetape4k.core.support.toUUID
-import java.util.*
+import io.bluetape4k.support.toLongArray
+import io.bluetape4k.support.toUUID
+import java.util.UUID
 
 fun Hashids.encodeUUID(uuid: UUID): String = encode(*uuid.toLongArray())
 

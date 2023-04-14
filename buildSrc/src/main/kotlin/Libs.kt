@@ -132,8 +132,8 @@ object Versions {
     const val opentelemetryInstrumentationAlpha = "1.22.1-alpha"
 
     const val cache2k = "2.6.1.Final"
-    const val caffeine = "3.1.2"        // Java 9+ 이상에서는 3.x 사용
-    const val ehcache = "3.10.0"
+    const val caffeine = "3.1.6"        // Java 9+ 이상에서는 3.x 사용
+    const val ehcache = "3.10.8"
 
     const val ignite = "2.14.0"
     const val hazelcast = "4.2.5"
@@ -156,7 +156,7 @@ object Versions {
     const val mockito = "3.12.4"
     const val awaitility = "4.2.0"
     const val jmh = "1.35"
-    const val testcontainers = "1.17.6"
+    const val testcontainers = "1.18.0"
     const val jna = "5.12.1"
     const val archunit = "0.21.0"
 

@@ -15,6 +15,7 @@ include(rootProject.name + "-core")
 
 includeModules("data")
 includeModules("io")
+includeModules("kotlinx")
 includeModules("quarkus")
 includeModules("spring")
 includeModules("test")

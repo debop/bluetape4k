@@ -1,6 +1,5 @@
 package io.bluetape4k.tokenizer.korean
 
-import io.bluetape4k.core.utils.Systemx
 import io.bluetape4k.logging.debug
 import io.bluetape4k.tokenizer.korean.KoreanProcessor.addNounsToDictionary
 import io.bluetape4k.tokenizer.korean.KoreanProcessor.extractPhrases
@@ -24,6 +23,7 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Space
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.model.BlockwordRequest
 import io.bluetape4k.tokenizer.model.Severity
+import io.bluetape4k.utils.Systemx
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeLessThan

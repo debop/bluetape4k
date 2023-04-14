@@ -1,13 +1,13 @@
 package io.bluetape4k.io.compressor
 
-import io.bluetape4k.core.support.emptyByteArray
-import io.bluetape4k.core.support.replicate
-import io.bluetape4k.core.support.toUtf8Bytes
-import io.bluetape4k.core.support.toUtf8String
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.support.emptyByteArray
+import io.bluetape4k.support.replicate
+import io.bluetape4k.support.toUtf8Bytes
+import io.bluetape4k.support.toUtf8String
 import net.datafaker.Faker
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo

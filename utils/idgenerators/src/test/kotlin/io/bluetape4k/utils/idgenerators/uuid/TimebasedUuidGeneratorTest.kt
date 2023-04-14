@@ -1,9 +1,9 @@
 package io.bluetape4k.utils.idgenerators.uuid
 
-import io.bluetape4k.core.support.toLongArray
-import io.bluetape4k.core.support.toUUID
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.support.toLongArray
+import io.bluetape4k.support.toUUID
 import io.bluetape4k.utils.idgenerators.hashids.Hashids
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame

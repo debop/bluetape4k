@@ -1,9 +1,9 @@
 package io.bluetape4k.tokenizer.korean.block
 
-import io.bluetape4k.core.support.EMPTY_STRING
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.trace
+import io.bluetape4k.support.EMPTY_STRING
 import io.bluetape4k.tokenizer.exceptions.InvalidRequestException
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanToken
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanTokenizer

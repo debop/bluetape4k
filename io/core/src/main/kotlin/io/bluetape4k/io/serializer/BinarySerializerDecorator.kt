@@ -1,7 +1,7 @@
 package io.bluetape4k.io.serializer
 
-import io.bluetape4k.core.support.emptyByteArray
 import io.bluetape4k.io.compressor.Compressor
+import io.bluetape4k.support.emptyByteArray
 
 
 /**

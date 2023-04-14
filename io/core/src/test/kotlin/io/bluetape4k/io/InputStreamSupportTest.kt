@@ -1,19 +1,19 @@
 package io.bluetape4k.io
 
-import io.bluetape4k.core.support.toUtf8Bytes
-import io.bluetape4k.core.support.toUtf8String
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
-import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.RepeatedTest
+import io.bluetape4k.support.toUtf8Bytes
+import io.bluetape4k.support.toUtf8String
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.StringReader
 import java.io.StringWriter
 import java.nio.ByteBuffer
 import java.nio.channels.Channels
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.RepeatedTest
 
 @RandomizedTest
 class InputStreamExtensionsTest {

@@ -1,6 +1,6 @@
 package io.bluetape4k.io.netty
 
-import io.bluetape4k.core.support.classIsPresent
+import io.bluetape4k.support.classIsPresent
 
 /**
  * Netty Transport 시 Unix 시스템에서 사용할 수 있는 netty-transport-native-epoll 라이브러리를 참조하는가?

@@ -1,9 +1,9 @@
 package io.bluetape4k.io.compressor
 
-import io.bluetape4k.core.support.emptyByteArray
-import io.bluetape4k.core.support.toByteArray
-import io.bluetape4k.core.support.toInt
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.emptyByteArray
+import io.bluetape4k.support.toByteArray
+import io.bluetape4k.support.toInt
 import net.jpountz.lz4.LZ4Factory
 
 /**

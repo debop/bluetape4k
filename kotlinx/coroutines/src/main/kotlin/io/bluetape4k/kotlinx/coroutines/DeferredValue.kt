@@ -1,0 +1,45 @@
+package io.bluetape4k.kotlinx.coroutines
+
+import io.bluetape4k.core.ToStringBuilder
+import io.bluetape4k.core.ValueObject
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
+
+
+fun <T> deferredValueOf(factory: suspend () -> T): DeferredValue<T> = DeferredValue(factory)
+
+/**
+ * 값 계산을 지연해서 수행하는 클래스입니다.
+ *
+ * @param T
+ * @property factory 값 계산을 수행하는 함수
+ */
+data class DeferredValue<T>(private inline val factory: suspend () -> T): DefaultCoroutineScope(), ValueObject {
+
+    private val deferredValue: Deferred<T> = async { factory() }
+
+    val value: T by lazy { runBlocking { deferredValue.await() } }
+
+    suspend fun await(): T = deferredValue.await()
+
+    val isCompleted: Boolean get() = deferredValue.isCompleted
+    val isActive: Boolean get() = deferredValue.isActive
+    val isCancelled: Boolean get() = deferredValue.isCancelled
+
+    override fun equals(other: Any?): Boolean =
+        other is DeferredValue<*> && deferredValue == other.deferredValue
+
+    override fun hashCode(): Int = value.hashCode()
+
+    override fun toString(): String =
+        ToStringBuilder(this)
+            .add("value", value)
+            .toString()
+
+    inline fun <S> map(crossinline mapper: suspend (T) -> S): DeferredValue<S> =
+        DeferredValue { mapper(await()) }
+
+    inline fun <S> flatMap(crossinline flatter: (T) -> DeferredValue<S>): DeferredValue<S> =
+        DeferredValue { flatter(await()).await() }
+}

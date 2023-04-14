@@ -2,15 +2,15 @@ package io.bluetape4k.io.compressor
 
 import io.bluetape4k.codec.decodeBase64ByteArray
 import io.bluetape4k.codec.encodeBase64String
-import io.bluetape4k.core.support.emptyByteArray
-import io.bluetape4k.core.support.isNullOrEmpty
-import io.bluetape4k.core.support.toUtf8ByteArray
-import io.bluetape4k.core.support.toUtf8String
 import io.bluetape4k.io.getBytes
 import io.bluetape4k.io.toByteArray
 import io.bluetape4k.io.toInputStream
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.warn
+import io.bluetape4k.support.emptyByteArray
+import io.bluetape4k.support.isNullOrEmpty
+import io.bluetape4k.support.toUtf8ByteArray
+import io.bluetape4k.support.toUtf8String
 import java.io.InputStream
 import java.nio.ByteBuffer
 

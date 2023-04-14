@@ -2,8 +2,8 @@ package io.bluetape4k.io
 
 import io.bluetape4k.core.assertPositiveNumber
 import io.bluetape4k.core.assertZeroOrPositiveNumber
-import io.bluetape4k.core.support.toUtf8String
 import io.bluetape4k.logging.KotlinLogging
+import io.bluetape4k.support.toUtf8String
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream

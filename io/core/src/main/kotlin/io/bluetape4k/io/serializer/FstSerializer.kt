@@ -1,9 +1,9 @@
 package io.bluetape4k.io.serializer
 
-import io.bluetape4k.core.support.emptyByteArray
 import io.bluetape4k.logging.KLogging
-import org.nustaq.serialization.FSTConfiguration
+import io.bluetape4k.support.emptyByteArray
 import java.io.ByteArrayOutputStream
+import org.nustaq.serialization.FSTConfiguration
 
 /**
  * Fst Serializer
