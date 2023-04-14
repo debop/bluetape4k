@@ -18,10 +18,9 @@ includeModules("io")
 includeModules("quarkus")
 includeModules("spring")
 includeModules("test")
+includeModules("tokenizer")
 includeModules("utils")
 includeModules("vertx")
-
-
 
 fun includeModules(baseDir: String) {
     files("$rootDir/$baseDir").files
