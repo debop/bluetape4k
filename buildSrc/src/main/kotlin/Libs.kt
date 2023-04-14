@@ -60,7 +60,7 @@ object Versions {
     const val quarkus = Plugins.Versions.quarkus
     const val resteasy = "6.1.0.Final"
     const val mutiny = "1.7.0"
-    const val vertx = "4.3.8"  // 4.4.1
+    const val vertx = "4.4.1"
     const val agroal = "1.16"
 
 
@@ -70,7 +70,7 @@ object Versions {
     const val problem = "0.27.0"
 
     const val bucket4j = "7.6.0"
-    const val resilience4j = "1.7.1"
+    const val resilience4j = "2.0.2"
     const val netty = "4.1.87.Final"
 
     const val aws = "1.12.296"
@@ -438,7 +438,7 @@ object Libs {
         "io.github.resilience4j:resilience4j-$module:$version"
 
     // resilience4j-bom 은 1.7.1 로 update 되지 않았다 (배포 실수인 듯)
-    val resilience4j_bom get() = resilience4j("bom", "1.7.0")
+    val resilience4j_bom get() = resilience4j("bom")
     val resilience4j_all get() = resilience4j("all")
     val resilience4j_annotations get() = resilience4j("annotations")
     val resilience4j_bulkhead get() = resilience4j("bulkhead")
