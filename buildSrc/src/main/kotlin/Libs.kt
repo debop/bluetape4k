@@ -13,7 +13,7 @@ object Plugins {
         const val testLogger = "3.2.0"
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.2"
-        const val spring_boot = "2.7.7"
+        const val spring_boot = "3.0.5"
         const val jacoco = "0.8.8"
         const val quarkus = "2.12.2.Final"
     }
@@ -60,7 +60,7 @@ object Versions {
     const val quarkus = Plugins.Versions.quarkus
     const val resteasy = "6.1.0.Final"
     const val mutiny = "1.7.0"
-    const val vertx = "4.3.8"
+    const val vertx = "4.3.8"  // 4.4.1
     const val agroal = "1.16"
 
 
@@ -119,7 +119,8 @@ object Versions {
     const val prometheus = "0.12.0"
 
     //NOTE: spring boot 2.7.x 를 사용할 시 micrometer는 1.9+ 를 사용해야 합니다.
-    const val micrometer = "1.10.3"
+    const val micrometer = "1.10.6"
+    const val micrometerTracing = "1.0.4"
 
     // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom
     const val opentelemetry = "1.22.0"
@@ -737,6 +738,15 @@ object Libs {
     val micrometer_registry_new_relic get() = micrometer("registry-new-relic")
     val micrometer_registry_prometheus get() = micrometer("registry-prometheus")
     val micrometer_registry_jmx get() = micrometer("registry-jmx")
+
+    // Micrometer Tracing
+    fun micrometerTracing(module: String) = "io.micrometer:micrometer-tracing-$module:${Versions.micrometerTracing}"
+    val micrometer_tracing_bom get() = micrometerTracing("bom")
+    val micrometer_tracing_bridge_brave get() = micrometerTracing("bridge-brave")
+    val micrometer_tracing_bridge_otel get() = micrometerTracing("bridge-otel")
+    val micrometer_tracing_integeration_test get() = micrometerTracing("integration-test")
+    val micrometer_tracing_test get() = micrometerTracing("test")
+
 
     // OpenTelemetry
     fun opentelemetry(module: String): String = "io.opentelemetry:opentelemetry-$module"

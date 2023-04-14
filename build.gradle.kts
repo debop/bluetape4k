@@ -61,7 +61,7 @@ subprojects {
     }
 
     configurations.all {
-        if (name.toLowerCase().contains("kapt") || name.toLowerCase().contains("proto")) {
+        if (name.lowercase().contains("kapt") || name.lowercase().contains("proto")) {
             attributes.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage::class.java, Usage.JAVA_RUNTIME))
         }
     }
@@ -271,6 +271,7 @@ subprojects {
         imports {
             mavenBom(Libs.feign_bom)
             mavenBom(Libs.micrometer_bom)
+            mavenBom(Libs.micrometer_tracing_bom)
             mavenBom(Libs.opentelemetry_bom)
             mavenBom(Libs.opentelemetry_alpha_bom)
             mavenBom(Libs.opentelemetry_instrumentation_bom_alpha)
