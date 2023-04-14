@@ -2,9 +2,9 @@ package io.bluetape4k.collections
 
 import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
 import io.bluetape4k.collections.eclipse.primitives.toIntArrayList
-import io.bluetape4k.core.support.emptyIntArray
-import io.bluetape4k.core.support.emptyLongArray
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.emptyIntArray
+import io.bluetape4k.support.emptyLongArray
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeLessOrEqualTo
 import org.amshove.kluent.shouldContainSame

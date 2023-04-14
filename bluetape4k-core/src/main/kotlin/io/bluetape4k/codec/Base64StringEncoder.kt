@@ -1,9 +1,9 @@
 package io.bluetape4k.codec
 
-import io.bluetape4k.core.support.EMPTY_STRING
-import io.bluetape4k.core.support.emptyByteArray
-import io.bluetape4k.core.support.toUtf8Bytes
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.EMPTY_STRING
+import io.bluetape4k.support.emptyByteArray
+import io.bluetape4k.support.toUtf8Bytes
 import org.apache.commons.codec.binary.Base64
 
 /**

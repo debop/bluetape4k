@@ -1,7 +1,7 @@
 package io.bluetape4k.codec
 
-import io.bluetape4k.core.support.toBigInt
-import io.bluetape4k.core.support.toUuid
+import io.bluetape4k.support.toBigInt
+import io.bluetape4k.support.toUuid
 import java.util.*
 
 /**

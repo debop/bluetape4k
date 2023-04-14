@@ -1,7 +1,7 @@
 package io.bluetape4k.codec
 
-import io.bluetape4k.core.support.EMPTY_STRING
-import io.bluetape4k.core.support.emptyByteArray
+import io.bluetape4k.support.EMPTY_STRING
+import io.bluetape4k.support.emptyByteArray
 
 
 private val base64Encoder = Base64StringEncoder()

@@ -3,11 +3,11 @@ package io.bluetape4k.codec
 import io.bluetape4k.codec.Base62.DEFAULT_BIT_LIMIT
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.core.requireZeroOrPositiveNumber
-import io.bluetape4k.core.support.toBigInt
-import io.bluetape4k.core.support.toUuid
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.toBigInt
+import io.bluetape4k.support.toUuid
 import java.math.BigInteger
-import java.util.*
+import java.util.UUID
 
 
 /**

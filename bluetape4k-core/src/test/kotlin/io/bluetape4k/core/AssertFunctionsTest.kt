@@ -1,7 +1,7 @@
 package io.bluetape4k.core
 
-import io.bluetape4k.core.support.toByteArray
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.toByteArray
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
