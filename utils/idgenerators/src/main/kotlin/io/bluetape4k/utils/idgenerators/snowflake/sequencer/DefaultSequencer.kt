@@ -47,30 +47,30 @@ internal class DefaultSequencer(machineId: Int = getMachineId(MAX_MACHINE_ID)) :
         }
     }
 
-    override fun nextSequences(size: Int): Sequence<SnowflakeId> {
+    override fun nextSequences(size: Int): List<SnowflakeId> {
         synchronized(syncObj) {
-            return sequence {
-                var currentTimestamp = System.currentTimeMillis()
+            val results = mutableListOf<SnowflakeId>()
+            var currentTimestamp = System.currentTimeMillis()
 
-                repeat(size) {
-                    if (currentTimestamp == lastTimestamp) {
-                        sequencer.increment()
-                        // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
-                        if (sequencer.toLong() >= MAX_SEQUENCE) {
-                            while (currentTimestamp == lastTimestamp) {
-                                currentTimestamp = System.currentTimeMillis()
-                            }
-                            sequencer.reset()
-                            lastTimestamp = currentTimestamp
+            repeat(size) {
+                if (currentTimestamp == lastTimestamp) {
+                    sequencer.increment()
+                    // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
+                    if (sequencer.toLong() >= MAX_SEQUENCE) {
+                        while (currentTimestamp == lastTimestamp) {
+                            currentTimestamp = System.currentTimeMillis()
                         }
-                    } else {
                         sequencer.reset()
                         lastTimestamp = currentTimestamp
                     }
-
-                    yield(SnowflakeId(lastTimestamp, machineId, sequencer.toInt()))
+                } else {
+                    sequencer.reset()
+                    lastTimestamp = currentTimestamp
                 }
+
+                results.add(SnowflakeId(lastTimestamp, machineId, sequencer.toInt()))
             }
+            return results
         }
     }
 }

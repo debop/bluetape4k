@@ -181,8 +181,8 @@ abstract class AbstractSnowflakeTest {
 
     @RepeatedTest(10)
     fun `parse snowflake ids as String`() {
-        val ids = snowflake.nextIdsAsString(TEST_COUNT).toList()
-        val snowflakeIds = ids.map { snowflake.parse(it).value }.toList()
+        val ids = snowflake.nextIdsAsString(TEST_COUNT)
+        val snowflakeIds = ids.map { snowflake.parse(it).value }
 
         snowflakeIds.forEachIndexed { index, snowflakeId ->
             snowflakeId shouldBeEqualTo ids[index].parseAsLong()
@@ -192,7 +192,7 @@ abstract class AbstractSnowflakeTest {
 
     @RepeatedTest(10)
     fun `parse snowflake id as String as parallel`() {
-        val ids = snowflake.nextIdsAsString(TEST_COUNT).toList()
+        val ids = snowflake.nextIdsAsString(TEST_COUNT)
         val snowflakeIds = ids.asParallelStream().map { snowflake.parse(it).value }.sorted().toList()
 
         snowflakeIds.forEachIndexed { index, snowflakeId ->

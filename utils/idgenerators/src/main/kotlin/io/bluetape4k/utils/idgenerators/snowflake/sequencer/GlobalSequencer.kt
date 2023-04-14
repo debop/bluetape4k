@@ -67,36 +67,36 @@ class GlobalSequencer : Sequencer {
         }
     }
 
-    override fun nextSequences(size: Int): Sequence<SnowflakeId> {
+    override fun nextSequences(size: Int): List<SnowflakeId> {
         synchronized(syncObj) {
-            return sequence {
-                var currentTimestamp = System.currentTimeMillis()
+            val results = mutableListOf<SnowflakeId>()
+            var currentTimestamp = System.currentTimeMillis()
 
-                repeat(size) {
-                    if (currentTimestamp == lastTimestamp) {
-                        sequencer.increment()
-                        if (sequencer.toLong() >= MAX_SEQUENCE) {
-                            machineIdSequencer.increment()
+            repeat(size) {
+                if (currentTimestamp == lastTimestamp) {
+                    sequencer.increment()
+                    if (sequencer.toLong() >= MAX_SEQUENCE) {
+                        machineIdSequencer.increment()
 
-                            // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
-                            if (machineId >= MAX_MACHINE_ID) {
-                                while (currentTimestamp == lastTimestamp) {
-                                    currentTimestamp = System.currentTimeMillis()
-                                }
-                                machineIdSequencer.reset()
-                                lastTimestamp = currentTimestamp
+                        // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
+                        if (machineId >= MAX_MACHINE_ID) {
+                            while (currentTimestamp == lastTimestamp) {
+                                currentTimestamp = System.currentTimeMillis()
                             }
-                            sequencer.reset()
+                            machineIdSequencer.reset()
+                            lastTimestamp = currentTimestamp
                         }
-                    } else {
-                        // Reset sequence and machine id
                         sequencer.reset()
-                        machineId = 0
-                        lastTimestamp = currentTimestamp
                     }
-                    yield(SnowflakeId(lastTimestamp, machineId, sequencer.toInt()))
+                } else {
+                    // Reset sequence and machine id
+                    sequencer.reset()
+                    machineId = 0
+                    lastTimestamp = currentTimestamp
                 }
+                results.add(SnowflakeId(lastTimestamp, machineId, sequencer.toInt()))
             }
+            return results
         }
     }
 }

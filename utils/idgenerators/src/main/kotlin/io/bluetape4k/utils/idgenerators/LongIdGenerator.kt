@@ -11,9 +11,9 @@ interface LongIdGenerator {
 
     fun nextIdAsString(): String = nextId().toString(ALPHA_NUMERIC_BASE)
 
-    fun nextIds(size: Int): Sequence<Long>
+    fun nextIds(size: Int): List<Long>
 
-    fun nextIdsAsString(size: Int): Sequence<String> {
+    fun nextIdsAsString(size: Int): List<String> {
         size.assertPositiveNumber("size")
         return nextIds(size).map { it.toString(ALPHA_NUMERIC_BASE) }
     }

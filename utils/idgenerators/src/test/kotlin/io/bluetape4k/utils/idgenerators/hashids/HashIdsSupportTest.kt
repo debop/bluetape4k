@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.idgenerators.hashids
 
+import io.bluetape4k.collections.stream.asParallelStream
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.idgenerators.snowflake.DefaultSnowflake
@@ -76,6 +77,7 @@ class HashIdsSupportTest {
         fun `encode snowflake id as parallel`() {
             snowflake
                 .nextIds(REPEAT_SIZE)
+                .asParallelStream()
                 .forEach {
                     verifySnowflakeId(it)
                 }
