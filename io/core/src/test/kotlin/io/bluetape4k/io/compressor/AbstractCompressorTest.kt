@@ -18,14 +18,14 @@ import org.xerial.snappy.Snappy
 @RandomizedTest
 abstract class AbstractCompressorTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         const val TEST_COUNT = 10
 
         private val faker = Faker()
 
         init {
             Snappy.cleanUp()
-            val compressed = Snappy.compress("debop")
+            val compressed = Snappy.compress("bluetape4k")
             Snappy.uncompress(compressed)
         }
 
@@ -67,7 +67,6 @@ abstract class AbstractCompressorTest {
         val actual = compressor.decompress(compressed).toUtf8String()
 
         log.debug { "Ratio=${compressed.size * 100.0 / expected.length}" }
-
         actual shouldBeEqualTo expected
     }
 
@@ -79,7 +78,6 @@ abstract class AbstractCompressorTest {
         val actual = compressor.decompress(compressed)
 
         log.debug { "Ratio=${compressed.size * 100.0 / expected.size}" }
-
         actual shouldBeEqualTo expected
     }
 }

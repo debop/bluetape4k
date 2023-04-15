@@ -5,7 +5,7 @@ import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.support.emptyByteArray
-import io.bluetape4k.support.toUtf8ByteArray
+import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
 import java.nio.ByteBuffer
 import org.amshove.kluent.shouldBeEqualTo
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test
 @RandomizedTest
 class ByteBufferExtensionsTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 3
         private const val BUFFER_SIZE = 1024
     }
@@ -62,7 +62,7 @@ class ByteBufferExtensionsTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `getString operator`(@RandomValue expected: String) {
-        val buffer = ByteBuffer.wrap(expected.toUtf8ByteArray())
+        val buffer = ByteBuffer.wrap(expected.toUtf8Bytes())
 
         val actual = buffer.getString()
         actual shouldBeEqualTo expected
@@ -82,7 +82,7 @@ class ByteBufferExtensionsTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `convert to hexString`(@RandomValue expected: String) {
-        val buffer = ByteBuffer.wrap(expected.toUtf8ByteArray())
+        val buffer = ByteBuffer.wrap(expected.toUtf8Bytes())
         val hexStr = buffer.encodeHexString()
         log.trace { "Hex string=$hexStr" }
 
