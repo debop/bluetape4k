@@ -46,8 +46,21 @@ class EncryptorTest {
         repeat(REPEAT_SIZE) {
             val message = getRandomString()
 
-            val encrypted = encryptor.encryptAsString(message)
-            val decrypted = encryptor.decryptAsString(encrypted)
+            val encrypted = encryptor.encrypt(message)
+            val decrypted = encryptor.decrypt(encrypted)
+
+            decrypted shouldBeEqualTo message
+        }
+    }
+
+    @ParameterizedTest
+    @FieldSource("encryptors")
+    fun `encrypt and decrypt char array`(encryptor: Encryptor) {
+        repeat(REPEAT_SIZE) {
+            val message = getRandomString().toCharArray()
+
+            val encrypted = encryptor.encrypt(message)
+            val decrypted = encryptor.decrypt(encrypted)
 
             decrypted shouldBeEqualTo message
         }

@@ -38,9 +38,9 @@ interface Encryptor {
      * 지정된 문자열을 암호화하여 반환합니다.
      * @param message 암호화할 일반 문자열
      */
-    fun encryptAsString(message: String?): String {
+    fun encrypt(message: String?): String {
         return message?.run {
-            encrypt(this.encodeBase64ByteArray()).encodeBase64String()
+            encrypt(encodeBase64ByteArray()).encodeBase64String()
         } ?: EMPTY_STRING
     }
 
@@ -56,9 +56,26 @@ interface Encryptor {
      * @param encrypted 암호화된 문자열
      * @return 복호화된 일반 문자열
      */
-    fun decryptAsString(encrypted: String?): String {
+    fun decrypt(encrypted: String?): String {
         return encrypted?.run {
-            decrypt(this.decodeBase64ByteArray()).decodeBase64String()
+            decrypt(decodeBase64ByteArray()).decodeBase64String()
         } ?: EMPTY_STRING
     }
+
+    /**
+     * 지정된 CharArray 를 암호화 합니다.
+     *
+     * @param message 암호화할 CharArray
+     * @return 암호화된 CharArray
+     */
+    fun encrypt(message: CharArray): CharArray =
+        encrypt(message.concatToString()).toCharArray()
+
+    /**
+     * 암호화된 CharArray을 복호화하여 원문 CharArray로 반환합니다.
+     * @param encrypted 암호화된 CharArray
+     * @return 복호화된 원문 CharArray
+     */
+    fun decrypt(encrypted: CharArray): CharArray =
+        decrypt(encrypted.concatToString()).toCharArray()
 }
