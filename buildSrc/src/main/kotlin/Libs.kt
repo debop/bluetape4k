@@ -655,8 +655,9 @@ object Libs {
     val jsonassert get() = "org.skyscreamer:jsonassert:1.5.0"
 
     // GSON
-    val gson get() = "com.google.code.gson:gson:2.8.9"
-    val gson_jodatime_serialisers get() = "com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:1.8.0"
+    val gson get() = "com.google.code.gson:gson:2.10.1"
+    val gson_javatime_serializers
+        get() = "com.fatboyindustrial.gson-javatime-serialisers:gson-javatime-serialisers:1.1.2"
 
     // JWT
     fun jjwt(module: String) = "io.jsonwebtoken:jjwt-$module:${Versions.jjwt}"

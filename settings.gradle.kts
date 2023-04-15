@@ -23,6 +23,9 @@ includeModules("tokenizer")
 includeModules("utils")
 includeModules("vertx")
 
+// for example
+includeModules("examples")
+
 fun includeModules(baseDir: String) {
     files("$rootDir/$baseDir").files
         .filter { it.isDirectory }
