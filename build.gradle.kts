@@ -479,8 +479,6 @@ subprojects {
         api(Libs.jetbrains_annotations)
 
         api(Libs.kotlin_stdlib)
-        // implementation(Libs.kotlin_stdlib_common)
-        // implementation(Libs.kotlin_stdlib_jdk7)
         api(Libs.kotlin_stdlib_jdk8)
         implementation(Libs.kotlin_reflect)
         testImplementation(Libs.kotlin_test)
