@@ -5,13 +5,13 @@ import com.univocity.parsers.tsv.TsvParser
 import com.univocity.parsers.tsv.TsvParserSettings
 import io.bluetape4k.io.csv.DefaultTsvParserSettings
 import io.bluetape4k.logging.KLogging
+import java.io.InputStream
+import java.nio.charset.Charset
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.io.InputStream
-import java.nio.charset.Charset
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -19,7 +19,9 @@ import kotlin.coroutines.CoroutineContext
  *
  * @property settings
  */
-class CoTsvRecordReader(val settings: TsvParserSettings = DefaultTsvParserSettings): CoRecordReader {
+class CoTsvRecordReader(
+    private val settings: TsvParserSettings = DefaultTsvParserSettings,
+): CoRecordReader {
 
     companion object: KLogging()
 

@@ -19,7 +19,10 @@ class TsvRecordWriter private constructor(
             return TsvRecordWriter(tsvWriter)
         }
 
-        operator fun invoke(writer: Writer, settings: TsvWriterSettings = DefaultTsvWriterSettings): TsvRecordWriter {
+        operator fun invoke(
+            writer: Writer,
+            settings: TsvWriterSettings = DefaultTsvWriterSettings,
+        ): TsvRecordWriter {
             return TsvRecordWriter(TsvWriter(writer, settings))
         }
     }

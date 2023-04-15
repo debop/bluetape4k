@@ -4,12 +4,12 @@ import com.univocity.parsers.csv.CsvWriter
 import com.univocity.parsers.csv.CsvWriterSettings
 import io.bluetape4k.io.csv.DefaultCsvWriterSettings
 import io.bluetape4k.logging.KLogging
+import java.io.Writer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
-import java.io.Writer
 import kotlin.coroutines.CoroutineContext
 
 class CoCsvRecordWriter private constructor(
@@ -17,8 +17,13 @@ class CoCsvRecordWriter private constructor(
 ): CoRecordWriter {
 
     companion object: KLogging() {
-        operator fun invoke(writer: CsvWriter): CoCsvRecordWriter = CoCsvRecordWriter(writer)
-        operator fun invoke(writer: Writer, settings: CsvWriterSettings = DefaultCsvWriterSettings): CoCsvRecordWriter =
+        operator fun invoke(writer: CsvWriter): CoCsvRecordWriter =
+            CoCsvRecordWriter(writer)
+
+        operator fun invoke(
+            writer: Writer,
+            settings: CsvWriterSettings = DefaultCsvWriterSettings,
+        ): CoCsvRecordWriter =
             CoCsvRecordWriter(CsvWriter(writer, settings))
     }
 

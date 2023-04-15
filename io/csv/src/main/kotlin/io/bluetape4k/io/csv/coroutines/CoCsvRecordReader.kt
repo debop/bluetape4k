@@ -5,13 +5,13 @@ import com.univocity.parsers.csv.CsvParser
 import com.univocity.parsers.csv.CsvParserSettings
 import io.bluetape4k.io.csv.DefaultCsvParserSettings
 import io.bluetape4k.logging.KLogging
+import java.io.InputStream
+import java.nio.charset.Charset
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.io.InputStream
-import java.nio.charset.Charset
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -20,7 +20,9 @@ import kotlin.coroutines.CoroutineContext
  * @property settings
  * @constructor Create empty Co csv record reader
  */
-class CoCsvRecordReader(private val settings: CsvParserSettings = DefaultCsvParserSettings): CoRecordReader {
+class CoCsvRecordReader(
+    private val settings: CsvParserSettings = DefaultCsvParserSettings,
+): CoRecordReader {
 
     companion object: KLogging()
 

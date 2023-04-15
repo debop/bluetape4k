@@ -18,7 +18,10 @@ class CsvRecordWriter private constructor(
             return CsvRecordWriter(csvWriter)
         }
 
-        operator fun invoke(writer: Writer, settings: CsvWriterSettings = DefaultCsvWriterSettings): CsvRecordWriter {
+        operator fun invoke(
+            writer: Writer,
+            settings: CsvWriterSettings = DefaultCsvWriterSettings,
+        ): CsvRecordWriter {
             return CsvRecordWriter(CsvWriter(writer, settings))
         }
     }
