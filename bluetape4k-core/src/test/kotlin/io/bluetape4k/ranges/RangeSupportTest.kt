@@ -6,12 +6,11 @@ import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class ClosedRangeSupporTest {
-
+class RangeSupportTest {
     companion object: KLogging()
 
     private fun longRanges(vararg ranges: IntRange): List<LongRange> =
-        ranges.map { it.start.toLong()..it.endInclusive.toLong() }
+        ranges.map { it.first.toLong()..it.last.toLong() }
 
 
     @Test
