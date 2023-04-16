@@ -63,7 +63,6 @@ object Versions {
     const val vertx = "4.4.1"
     const val agroal = "1.16"
 
-
     const val swagger = "1.6.2"
     const val springdoc_openapi = "1.6.14"
     const val springfox_swagger = "3.0.0"
@@ -71,17 +70,18 @@ object Versions {
 
     const val bucket4j = "7.6.0"
     const val resilience4j = "2.0.2"
-    const val netty = "4.1.87.Final"
+    const val netty = "4.1.91.Final"
 
-    const val aws = "1.12.296"
+    // https://mvnrepository.com/artifact/com.amazonaws
+    const val aws = "1.12.449"
 
     // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
-    const val aws2 = "2.17.267"
+    const val aws2 = "2.20.46"
 
-    const val grpc = "1.50.0"
+    const val grpc = "1.54.0"
     const val grpc_kotlin = "1.3.0"
-    const val protobuf = "3.21.7"
-    const val avro = "1.11.0"   // 1.9.+ 은 jackson-dataformat-avro 에서 아직 지원하지 않습니다.
+    const val protobuf = "3.22.3"
+    const val avro = "1.11.1"
 
     const val feign = "12.1"
     const val retrofit2 = "2.9.0"
