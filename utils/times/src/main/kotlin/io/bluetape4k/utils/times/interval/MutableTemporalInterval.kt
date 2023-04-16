@@ -13,36 +13,36 @@ class MutableTemporalInterval<T>(
     override val zoneId: ZoneId = UtcZoneId,
 ): AbstractTemporalInterval<T>() where T: Temporal, T: Comparable<T> {
 
-    constructor(other: ReadableTemporalInterval<T>): this(other.start, other.end, other.zoneId)
+    constructor(other: ReadableTemporalInterval<T>): this(other.startInclusive, other.endExclusive, other.zoneId)
 
-    override var start: T = start
+    override var startInclusive: T = start
         set(value) {
-            if (value > end) {
-                field = end
-                end = value
+            if (value > endExclusive) {
+                field = endExclusive
+                endExclusive = value
             } else {
                 field = value
             }
         }
 
-    override var end: T = end
+    override var endExclusive: T = end
         set(value) {
-            if (value < start) {
-                field = start
-                this.start = value
+            if (value < startInclusive) {
+                field = startInclusive
+                this.startInclusive = value
             } else {
                 field = value
             }
         }
 
     override fun withStart(newStart: T): MutableTemporalInterval<T> = when {
-        newStart < end -> mutableTemporalIntervalOf(newStart, this.end, zoneId)
-        else -> mutableTemporalIntervalOf(end, newStart, zoneId)
+        newStart < endExclusive -> mutableTemporalIntervalOf(newStart, this.endExclusive, zoneId)
+        else -> mutableTemporalIntervalOf(endExclusive, newStart, zoneId)
     }
 
     override fun withEnd(newEnd: T): ReadableTemporalInterval<T> = when {
-        newEnd > start -> mutableTemporalIntervalOf(this.start, newEnd, zoneId)
-        else -> mutableTemporalIntervalOf(newEnd, this.start, zoneId)
+        newEnd > startInclusive -> mutableTemporalIntervalOf(this.startInclusive, newEnd, zoneId)
+        else -> mutableTemporalIntervalOf(newEnd, this.startInclusive, zoneId)
     }
 
 }

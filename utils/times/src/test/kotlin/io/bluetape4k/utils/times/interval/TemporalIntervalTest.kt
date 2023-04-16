@@ -35,8 +35,8 @@ class TemporalIntervalTest {
         val end = maxOf(time1.absoluteValue, time2.absoluteValue)
 
         with(temporalIntervalOf(start.toInstant(), end.toInstant())) {
-            this.start.toEpochMilli() shouldBeEqualTo start
-            this.end.toEpochMilli() shouldBeEqualTo end
+            this.startInclusive.toEpochMilli() shouldBeEqualTo start
+            this.endExclusive.toEpochMilli() shouldBeEqualTo end
             zoneId shouldBeEqualTo UtcZoneId
             toDurationMillis() shouldBeEqualTo (end - start)
         }
@@ -48,8 +48,8 @@ class TemporalIntervalTest {
         val end = maxOf(time1.absoluteValue, time2.absoluteValue)
 
         with(temporalIntervalOf(end.toInstant(), start.toInstant())) {
-            this.start.toEpochMilli() shouldBeEqualTo start
-            this.end.toEpochMilli() shouldBeEqualTo end
+            this.startInclusive.toEpochMilli() shouldBeEqualTo start
+            this.endExclusive.toEpochMilli() shouldBeEqualTo end
             zoneId shouldBeEqualTo UtcZoneId
             toDurationMillis() shouldBeEqualTo (end - start)
         }
@@ -65,8 +65,8 @@ class TemporalIntervalTest {
 
         val interval = temporalIntervalOf(start, period)
 
-        interval.start shouldBeEqualTo start
-        interval.end shouldBeEqualTo (start + period)
+        interval.startInclusive shouldBeEqualTo start
+        interval.endExclusive shouldBeEqualTo (start + period)
         interval.zoneId shouldBeEqualTo UtcZoneId
         interval.toDuration() shouldBeEqualTo Duration.ofDays(days.toLong())
     }
@@ -81,8 +81,8 @@ class TemporalIntervalTest {
 
         val interval = temporalIntervalOf(start, duration)
 
-        interval.start shouldBeEqualTo start
-        interval.end shouldBeEqualTo (start + duration)
+        interval.startInclusive shouldBeEqualTo start
+        interval.endExclusive shouldBeEqualTo (start + duration)
         interval.zoneId shouldBeEqualTo UtcZoneId
         interval.toDuration() shouldBeEqualTo duration
     }
@@ -97,8 +97,8 @@ class TemporalIntervalTest {
 
         val interval = temporalIntervalOf(period, end)
 
-        interval.start shouldBeEqualTo end - period
-        interval.end shouldBeEqualTo end
+        interval.startInclusive shouldBeEqualTo end - period
+        interval.endExclusive shouldBeEqualTo end
         interval.zoneId shouldBeEqualTo UtcZoneId
         interval.toDuration() shouldBeEqualTo Duration.ofDays(days.toLong())
     }
@@ -113,8 +113,8 @@ class TemporalIntervalTest {
 
         val interval = temporalIntervalOf(duration, end)
 
-        interval.start shouldBeEqualTo end - duration
-        interval.end shouldBeEqualTo end
+        interval.startInclusive shouldBeEqualTo end - duration
+        interval.endExclusive shouldBeEqualTo end
         interval.zoneId shouldBeEqualTo UtcZoneId
         interval.toDuration() shouldBeEqualTo duration
     }
@@ -206,7 +206,7 @@ class TemporalIntervalTest {
 
         log.trace { "text=$text, parsed=$parsed" }
 
-        parsed.start.toOffsetDateTime() shouldBeEqualTo start
-        parsed.end.toOffsetDateTime() shouldBeEqualTo end
+        parsed.startInclusive.toOffsetDateTime() shouldBeEqualTo start
+        parsed.endExclusive.toOffsetDateTime() shouldBeEqualTo end
     }
 }

@@ -24,78 +24,87 @@ abstract class AbstractTemporalInterval<T>: ReadableTemporalInterval<T> where T:
      * @param other
      */
     override fun abuts(other: ReadableTemporalInterval<T>): Boolean =
-        areEquals(start, other.end) || areEquals(end, other.start)
+        areEquals(startInclusive, other.endExclusive) || areEquals(endExclusive, other.startInclusive)
 
     override fun gap(interval: ReadableTemporalInterval<T>): ReadableTemporalInterval<T>? {
         return when {
             overlaps(interval) -> null
-            else -> temporalIntervalOf(maxOf(start, interval.start), minOf(end, interval.end), zoneId)
+            else -> temporalIntervalOf(
+                maxOf(startInclusive, interval.startInclusive),
+                minOf(endExclusive, interval.endExclusive),
+                zoneId
+            )
         }
     }
 
     override fun overlap(interval: ReadableTemporalInterval<T>): ReadableTemporalInterval<T>? {
         return when {
-            overlaps(interval) -> temporalIntervalOf(maxOf(start, interval.start), minOf(end, interval.end), zoneId)
+            overlaps(interval) -> temporalIntervalOf(
+                maxOf(startInclusive, interval.startInclusive),
+                minOf(endExclusive, interval.endExclusive),
+                zoneId
+            )
+
             else -> null
         }
     }
 
     override fun overlaps(other: ReadableTemporalInterval<T>): Boolean =
-        overlaps(other.start) || overlaps(other.end)
+        overlaps(other.startInclusive) || overlaps(other.endExclusive)
 
     /**
      * the specific moment in <code>[start, end]</code>
      * @param moment
      */
-    override fun overlaps(moment: T): Boolean = moment >= start && moment < end
+    override fun overlaps(moment: T): Boolean = moment >= startInclusive && moment < endExclusive
 
     /**
      * given interval is inner inverval of this interval
      * @param other
      */
     override operator fun contains(other: ReadableTemporalInterval<T>): Boolean =
-        contains(other.start) && contains(other.end)
+        contains(other.startInclusive) && contains(other.endExclusive)
 
     override fun contains(epochMillis: Long): Boolean =
-        epochMillis >= start.toEpochMillis() && epochMillis < end.toEpochMillis()
+        epochMillis >= startInclusive.toEpochMillis() && epochMillis < endExclusive.toEpochMillis()
 
     /**
      * 현 Interval 이 `other` interval 보다 이전인가?
      * @param other
      */
-    override fun isBefore(other: ReadableTemporalInterval<T>): Boolean = end < other.end
+    override fun isBefore(other: ReadableTemporalInterval<T>): Boolean = endExclusive < other.endExclusive
 
     /**
      * This interval is before to given instant
      * @param instant
      */
-    override fun isBefore(moment: T): Boolean = end < moment
+    override fun isBefore(moment: T): Boolean = endExclusive < moment
 
-    override fun isAfter(other: ReadableTemporalInterval<T>): Boolean = start >= other.start
+    override fun isAfter(other: ReadableTemporalInterval<T>): Boolean = startInclusive >= other.startInclusive
 
-    override fun isAfter(moment: T): Boolean = moment < start
+    override fun isAfter(moment: T): Boolean = moment < startInclusive
 
     override fun withStart(newStart: T): ReadableTemporalInterval<T> = when {
-        newStart > this.end -> temporalIntervalOf(this.end, newStart, zoneId)
-        else -> temporalIntervalOf(newStart, this.end, zoneId)
+        newStart > this.endExclusive -> temporalIntervalOf(this.endExclusive, newStart, zoneId)
+        else -> temporalIntervalOf(newStart, this.endExclusive, zoneId)
     }
 
     override fun withEnd(newEnd: T): ReadableTemporalInterval<T> = when {
-        newEnd < this.start -> temporalIntervalOf(newEnd, this.start, zoneId)
-        else -> temporalIntervalOf(this.start, newEnd, zoneId)
+        newEnd < this.startInclusive -> temporalIntervalOf(newEnd, this.startInclusive, zoneId)
+        else -> temporalIntervalOf(this.startInclusive, newEnd, zoneId)
     }
 
 
     override fun compareTo(other: ClosedRange<T>): Int =
-        start.compareTo(other.start)
+        startInclusive.compareTo(other.start)
 
     override fun equals(other: Any?): Boolean =
         other is ReadableTemporalInterval<*> &&
-            areEquals(start, other.start) &&
-            areEquals(end, other.end) &&
+            areEquals(startInclusive, other.startInclusive) &&
+            areEquals(endExclusive, other.endExclusive) &&
             areEquals(zoneId, other.zoneId)
 
-    override fun hashCode(): Int = hashOf(start, end, zoneId)
+    override fun hashCode(): Int = hashOf(startInclusive, endExclusive, zoneId)
 
-    override fun toString(): String = "$start $SEPARATOR $end"
+    override fun toString(): String = "$startInclusive $SEPARATOR $endExclusive"
 }

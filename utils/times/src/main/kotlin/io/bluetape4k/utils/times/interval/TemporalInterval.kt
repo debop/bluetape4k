@@ -15,8 +15,8 @@ import java.time.temporal.TemporalAmount
  */
 @Suppress("UNCHECKED_CAST")
 class TemporalInterval<T> private constructor(
-    override val start: T,
-    override val end: T,
+    override val startInclusive: T,
+    override val endExclusive: T,
     override val zoneId: ZoneId,
 ): AbstractTemporalInterval<T>() where T: Temporal, T: Comparable<T> {
 
@@ -84,7 +84,7 @@ class TemporalInterval<T> private constructor(
      * @return TemporalInterval
      */
     fun withAmountAfterStart(duration: TemporalAmount): TemporalInterval<T> {
-        return temporalIntervalOf(start, duration, zoneId)
+        return temporalIntervalOf(startInclusive, duration, zoneId)
     }
 
     /**
@@ -93,6 +93,6 @@ class TemporalInterval<T> private constructor(
      * @return TemporalInterval
      */
     fun withAmountBeforeEnd(duration: TemporalAmount): TemporalInterval<T> {
-        return temporalIntervalOf(duration, end, zoneId)
+        return temporalIntervalOf(duration, endExclusive, zoneId)
     }
 }

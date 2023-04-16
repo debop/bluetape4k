@@ -1,6 +1,6 @@
 package io.bluetape4k.utils.times.interval
 
-import io.bluetape4k.ranges.OpenedRange
+import io.bluetape4k.ranges.ClosedOpenRange
 import java.io.Serializable
 import java.time.Instant
 import java.time.ZoneId
@@ -11,7 +11,7 @@ import java.time.temporal.Temporal
  * JodaTime 의 `ReadableTemporalInterval` 과 같은 기능을 수행합니다.
  */
 interface ReadableTemporalInterval<T>:
-    OpenedRange<T>,
+    ClosedOpenRange<T>,
     Comparable<ClosedRange<T>>,
     Serializable
     where T: Temporal, T: Comparable<T> {

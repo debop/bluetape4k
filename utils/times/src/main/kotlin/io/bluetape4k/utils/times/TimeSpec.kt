@@ -4,7 +4,6 @@ import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.Year
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -151,7 +150,7 @@ val MinNegativeDuration: Duration = (-1).nanos()
 val MinPeriodTime: ZonedDateTime = zonedDateTimeOf(LocalDate.MIN, LocalTime.MIDNIGHT)
 
 @JvmField
-val MaxPeriodTime: ZonedDateTime = zonedDateTimeOf(Year.MAX_VALUE, 12, 31)
+val MaxPeriodTime: ZonedDateTime = zonedDateTimeOf(LocalDate.MAX, LocalTime.MIDNIGHT)
 
 @JvmField
 val DefaultStartOffset: Duration = EmptyDuration

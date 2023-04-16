@@ -112,7 +112,7 @@ fun <T> mutableTemporalIntervalOf(
  * [ReadableTemporalInterval]의 시작시각과 완료시각으로 [Duration]을 빌드합니다.
  */
 fun <T> ReadableTemporalInterval<T>.toDuration(): Duration where T: Temporal, T: Comparable<T> =
-    Duration.between(start, end)
+    Duration.between(startInclusive, endExclusive)
 
 /**
  * [ReadableTemporalInterval]의 시작시각과 완료시각으로 Milliseconds 로 반환합니다.
@@ -121,18 +121,18 @@ fun <T> ReadableTemporalInterval<T>.toDurationMillis(): Long where T: Temporal, 
     toDuration().toMillis()
 
 fun <T> ReadableTemporalInterval<T>.toInterval(): ReadableTemporalInterval<T> where T: Temporal, T: Comparable<T> {
-    return temporalIntervalOf(start, end, zoneId)
+    return temporalIntervalOf(startInclusive, endExclusive, zoneId)
 }
 
 fun <T> ReadableTemporalInterval<T>.toMutableInterval(): MutableTemporalInterval<T> where T: Temporal, T: Comparable<T> {
-    return mutableTemporalIntervalOf(start, end, zoneId)
+    return mutableTemporalIntervalOf(startInclusive, endExclusive, zoneId)
 }
 
 /**
  * [ReadableTemporalInterval]의 시작시각과 완료시각으로 [Period]을 빌드합니다.
  */
 fun <T> ReadableTemporalInterval<T>.toPeriod(): Period where T: Temporal, T: Comparable<T> =
-    Period.between(LocalDate.ofEpochDay(start.toEpochDay()), LocalDate.ofEpochDay(end.toEpochDay()))
+    Period.between(LocalDate.ofEpochDay(startInclusive.toEpochDay()), LocalDate.ofEpochDay(endExclusive.toEpochDay()))
 
 /**
  * [ReadableTemporalInterval]의 시작시각과 완료시각으로 [unit] 단위의 [Period]을 빌드합니다.
@@ -156,9 +156,9 @@ fun <T> ReadableTemporalInterval<T>.toPeriod(unit: ChronoUnit): Period where T: 
 @Suppress("UNCHECKED_CAST")
 fun <T> ReadableTemporalInterval<T>.sequence(step: TemporalAmount): Sequence<T> where T: Temporal, T: Comparable<T> {
     return sequence {
-        var current = start
+        var current = startInclusive
         // NOTE: TemporalInterval 은 OpenedRange ( [start, end) ) 입니다.
-        while (current < end) {
+        while (current < endExclusive) {
             yield(current)
             current = (current + step) as T
         }
@@ -173,9 +173,9 @@ fun <T> ReadableTemporalInterval<T>.sequence(
     step.assertPositiveNumber("step")
 
     return sequence {
-        var current = start.startOf(unit)
+        var current = startInclusive.startOf(unit)
         val increment = step.temporalAmount(unit)
-        while (current < end) {
+        while (current < endExclusive) {
             yield(current)
             current = (current + increment) as T
         }
