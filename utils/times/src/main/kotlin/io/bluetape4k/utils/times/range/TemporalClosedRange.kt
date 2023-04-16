@@ -13,7 +13,7 @@ import java.time.temporal.Temporal
 class TemporalClosedRange<T>(
     start: T,
     endInclusive: T,
-): TemporalProgression<T>(start, endInclusive, Duration.ofMillis(1)),
+): TemporalClosedProgression<T>(start, endInclusive, Duration.ofMillis(1)),
     ClosedRange<T>, Serializable
     where T: Temporal, T: Comparable<T> {
 

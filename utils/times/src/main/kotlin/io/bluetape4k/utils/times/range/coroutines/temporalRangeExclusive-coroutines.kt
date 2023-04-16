@@ -2,8 +2,8 @@ package io.bluetape4k.utils.times.range.coroutines
 
 import io.bluetape4k.core.assertPositiveNumber
 import io.bluetape4k.utils.times.range.SupportChronoUnits
+import io.bluetape4k.utils.times.range.TemporalOpenedProgression
 import io.bluetape4k.utils.times.range.TemporalOpenedRange
-import io.bluetape4k.utils.times.range.TemporalProgressionExclusive
 import io.bluetape4k.utils.times.startOf
 import io.bluetape4k.utils.times.temporalAmount
 import java.time.temporal.ChronoUnit
@@ -11,7 +11,7 @@ import java.time.temporal.Temporal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-fun <T> TemporalProgressionExclusive<T>.asFlow(): Flow<T> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalOpenedProgression<T>.asFlow(): Flow<T> where T: Temporal, T: Comparable<T> =
     flow {
         sequence().forEach { emit(it) }
     }
