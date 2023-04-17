@@ -33,7 +33,10 @@ fun includeModules(baseDir: String) {
             moduleDir.listFiles()
                 ?.filter { it.isDirectory }
                 ?.forEach { dir ->
-                    val projectName = rootProject.name + "-" + baseDir + "-" + dir.name
+                    val projectName = when {
+                        baseDir.contains("examples") -> baseDir + "-" + dir.name
+                        else -> rootProject.name + "-" + baseDir + "-" + dir.name
+                    }
                     // println("include modules: $projectName")
 
                     include(projectName)
