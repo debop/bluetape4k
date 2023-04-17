@@ -19,7 +19,10 @@ dependencies {
 
     // testImplementation(Libs.springBoot("starter"))
     testImplementation(Libs.springBootStarter("cache"))
-    testImplementation(Libs.springBootStarter("test"))
+    testImplementation(Libs.springBootStarter("test")) {
+        exclude("org.junit.vintage", "junit-vintage-engine")
+        exclude("junit", "junit")
+    }
 
     compileOnly(Libs.kotlinx_coroutines_core)
     compileOnly(Libs.kotlinx_coroutines_jdk8)
