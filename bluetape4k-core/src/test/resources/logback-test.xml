@@ -5,8 +5,9 @@
         <withJansi>true</withJansi>
         <immediateFlush>true</immediateFlush>
         <encoder>
-            <pattern>%d{ISO8601} %highlight(%-5level) [%blue(%t)] %yellow(%logger):%method:%line: %msg%n%throwable
-            </pattern>
+            <!-- @formatter:off -->
+            <pattern>%d{ISO8601} %highlight(%-5level) [%blue(%.24t)] %yellow(%logger{36}):%line: %msg%n%throwable</pattern>
+            <!-- @formatter:on -->
             <charset>UTF-8</charset>
         </encoder>
     </appender>

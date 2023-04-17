@@ -5,7 +5,8 @@
         <withJansi>true</withJansi>
         <immediateFlush>true</immediateFlush>
         <encoder>
-            <pattern>%d{ISO8601} %highlight(%-5level) [%blue(%t)] %yellow(%logger):%method:%line: %msg%n%throwable
+            <pattern>%d{ISO8601} %highlight(%-5level)[traceId=%X{traceId}][spanId=%X{spanId}][%blue(%t)]
+                %yellow(%logger):%method:%line: %msg%n%throwable
             </pattern>
             <charset>UTF-8</charset>
         </encoder>

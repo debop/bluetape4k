@@ -6,13 +6,17 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 
-
+/**
+ * [DeferredValue] 인스턴스를 생성합니다.
+ *
+ * @param factory 값을 생성하는 suspend 함수
+ * @return [DeferredValue] 인스턴스
+ */
 fun <T> deferredValueOf(factory: suspend () -> T): DeferredValue<T> = DeferredValue(factory)
 
 /**
  * 값 계산을 지연해서 수행하는 클래스입니다.
  *
- * @param T
  * @property factory 값 계산을 수행하는 함수
  */
 data class DeferredValue<T>(private inline val factory: suspend () -> T): DefaultCoroutineScope(), ValueObject {
