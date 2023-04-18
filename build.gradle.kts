@@ -360,34 +360,6 @@ subprojects {
             dependency(Libs.retrofit2_converter_scalars)
             dependency(Libs.retrofit2_mock)
 
-            // Resilience4j
-            dependency(Libs.resilience4j_all)
-            dependency(Libs.resilience4j_annotations)
-            dependency(Libs.resilience4j_bulkhead)
-            dependency(Libs.resilience4j_cache)
-            dependency(Libs.resilience4j_circuitbreaker)
-            dependency(Libs.resilience4j_circularbuffer)
-            dependency(Libs.resilience4j_consumer)
-            dependency(Libs.resilience4j_core)
-            dependency(Libs.resilience4j_feign)
-            dependency(Libs.resilience4j_framework_common)
-            dependency(Libs.resilience4j_kotlin)
-            dependency(Libs.resilience4j_metrics)
-            dependency(Libs.resilience4j_micrometer)
-            dependency(Libs.resilience4j_prometheus)
-            dependency(Libs.resilience4j_ratelimiter)
-            dependency(Libs.resilience4j_ratpack)
-            dependency(Libs.resilience4j_reactor)
-            dependency(Libs.resilience4j_retrofit)
-            dependency(Libs.resilience4j_retry)
-            dependency(Libs.resilience4j_rxjava2)
-            dependency(Libs.resilience4j_rxjava3)
-            dependency(Libs.resilience4j_spring)
-            dependency(Libs.resilience4j_spring_boot2)
-            dependency(Libs.resilience4j_spring_cloud2)
-            dependency(Libs.resilience4j_timelimiter)
-            dependency(Libs.resilience4j_vertx)
-
             // Http
             dependency(Libs.async_http_client)
             dependency(Libs.async_http_client_extras_retrofit2)
@@ -418,17 +390,8 @@ subprojects {
             dependency(Libs.mysql_connector_java)
             dependency(Libs.mariadb_java_client)
 
-            dependency(Libs.cache2k_api)
-            dependency(Libs.cache2k_core)
-            dependency(Libs.cache2k_jcache)
-            dependency(Libs.cache2k_spring)
-
             dependency(Libs.caffeine)
             dependency(Libs.caffeine_jcache)
-
-            // Metrics
-            dependency(Libs.latencyUtils)
-            dependency(Libs.hdrHistogram)
 
             dependency(Libs.objenesis)
             dependency(Libs.ow2_asm)
@@ -463,6 +426,8 @@ subprojects {
             dependency(Libs.ow2_asm_commons)
             dependency(Libs.ow2_asm_util)
             dependency(Libs.ow2_asm_tree)
+
+            dependency(Libs.snakeyaml)
         }
     }
 
