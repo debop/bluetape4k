@@ -7,17 +7,38 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.utility.DockerImageName
 
-class PostgreSQLServer(
-    tag: String = TAG,
+class PostgreSQLServer private constructor(
+    imageName: DockerImageName,
     useDefaultPort: Boolean = false,
     username: String = "test",
     password: String = "test",
     reuse: Boolean = true,
-): PostgreSQLContainer<PostgreSQLServer>(DockerImageName.parse("$IMAGE:$tag")), JdbcServer {
+): PostgreSQLContainer<PostgreSQLServer>(imageName), JdbcServer {
 
     companion object: KLogging() {
-        const val TAG: String = "13"
+        const val TAG: String = "14"
         const val DEFAULT_PORT: Int = 5432
+
+        operator fun invoke(
+            tag: String = TAG,
+            useDefaultPort: Boolean = true,
+            username: String = "test",
+            password: String = "test",
+            reuse: Boolean = true,
+        ): PostgreSQLServer {
+            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
+            return PostgreSQLServer(imageName, useDefaultPort, username, password, reuse)
+        }
+
+        operator fun invoke(
+            imageName: DockerImageName,
+            useDefaultPort: Boolean = true,
+            username: String = "test",
+            password: String = "test",
+            reuse: Boolean = true,
+        ): PostgreSQLServer {
+            return PostgreSQLServer(imageName, useDefaultPort, username, password, reuse)
+        }
     }
 
     override val url: String get() = jdbcUrl
