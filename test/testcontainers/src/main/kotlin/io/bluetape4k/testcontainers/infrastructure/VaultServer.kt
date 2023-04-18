@@ -10,9 +10,14 @@ import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.utility.DockerImageName
 import org.testcontainers.vault.VaultContainer
 
+/**
+ * VaultServer
+ *
+ * 참고: [Vault docker image](https://hub.docker.com/_/vault)
+ */
 class VaultServer private constructor(
     imageName: DockerImageName,
-    val useDefaultPort: Boolean = false,
+    useDefaultPort: Boolean = false,
     reuse: Boolean = true,
 ): VaultContainer<VaultServer>(imageName), GenericServer {
 

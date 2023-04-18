@@ -849,10 +849,10 @@ object Libs {
     val influxdb_spring_data get() = "com.github.miwurster:spring-data-influxdb:1.8"
 
     // RabbitMQ
-    val amqp_client get() = "com.rabbitmq:amqp-client:5.14.2"
+    val amqp_client get() = "com.rabbitmq:amqp-client:5.17.0"
 
     // Kafka
-    val kafka_clients get() = "org.apache.kafka:kafka-clients:3.2.3"
+    val kafka_clients get() = "org.apache.kafka:kafka-clients:3.4.0"
 
     // Spring Kafka
     val spring_kafka get() = "org.springframework.kafka:spring-kafka:2.9.4"
@@ -862,7 +862,7 @@ object Libs {
 
     // Nats
     // https://github.com/nats-io/nats.java
-    val jnats get() = "io.nats:jnats:2.8.0"
+    val jnats get() = "io.nats:jnats:2.16.10"
 
     // Zipkin
     val zipkin_brave get() = "io.zipkin.brave:brave:5.13.3"

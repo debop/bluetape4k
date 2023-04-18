@@ -42,7 +42,10 @@ dependencies {
 
     // Kafka
     compileOnly(Libs.testcontainers_kafka)
-    testImplementation(Libs.kafka_clients)
+    compileOnly(Libs.kafka_clients)
+
+    // NATS
+    testImplementation(Libs.jnats)
 
     // RabbitMQ
     compileOnly(Libs.testcontainers_rabbitmq)
