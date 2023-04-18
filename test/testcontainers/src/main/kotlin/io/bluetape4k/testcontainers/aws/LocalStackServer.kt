@@ -4,6 +4,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
+import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.localstack.LocalStackContainer
 import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.utility.DockerImageName
@@ -38,11 +39,11 @@ class LocalStackServer private constructor(
     companion object: KLogging() {
         val IMAGE_NAME: DockerImageName = DockerImageName.parse("localstack/localstack")
         val NAME = "localstack"
-        val DEFAULT_TAG = "2.0"
-        val DEFAULT_PORT = 4566
+        val TAG = "2.0"
+        val PORT = 4566
 
         operator fun invoke(
-            tag: String = DEFAULT_TAG,
+            tag: String = TAG,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): LocalStackServer {
@@ -53,12 +54,12 @@ class LocalStackServer private constructor(
     override val url: String get() = "http://$host:$port"
 
     init {
+        withExposedPorts(PORT)
         withReuse(reuse)
         withLogConsumer(Slf4jLogConsumer(log))
-        withExposedPorts(DEFAULT_PORT)
 
         if (useDefaultPort) {
-            exposeCustomPorts(DEFAULT_PORT)
+            exposeCustomPorts(PORT)
         }
     }
 
@@ -75,4 +76,16 @@ class LocalStackServer private constructor(
         return StaticCredentialsProvider.create(AwsBasicCredentials.create(this.accessKey, this.secretKey))
     }
 
+
+    /**
+     * [LocalStackServer]용 Launcher
+     */
+    object Launcher {
+        val locakStack: LocalStackContainer by lazy {
+            LocalStackServer().apply {
+                start()
+                ShutdownQueue.register(this)
+            }
+        }
+    }
 }

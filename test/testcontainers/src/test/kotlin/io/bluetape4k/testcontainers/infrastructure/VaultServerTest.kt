@@ -1,5 +1,6 @@
 package io.bluetape4k.testcontainers.infrastructure
 
+import com.bettercloud.vault.Vault
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
@@ -48,7 +49,7 @@ class VaultServerTest {
             output shouldContain "db_password123"
 
             // Use [VaultClient]
-            val client = server.createVaultClient(VAULT_TOKEN)
+            val client: Vault = server.createVaultClient(VAULT_TOKEN)
             val kv = client.logical().read("secret/testing1").data
             log.debug { "kv=$kv" }
             kv["top_secret"] shouldBeEqualTo "top_password123"
