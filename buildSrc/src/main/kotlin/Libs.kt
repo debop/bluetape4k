@@ -136,8 +136,8 @@ object Versions {
     const val ehcache = "3.10.8"
 
     const val ignite = "2.14.0"
-    const val hazelcast = "4.2.5"
-    const val hazelcast_client = "3.12.12"
+    const val hazelcast = "5.2.3"
+    const val hazelcast_client = "3.12.13"
     const val cassandra = "4.14.1"
     const val scylla_java = "4.13.0.0"
     const val elasticsearch = "7.17.8"
@@ -987,7 +987,6 @@ object Libs {
     val ignite_spring_cache_ext get() = ignite("spring-cache-ext", "1.0.0")
 
     val hazelcast get() = "com.hazelcast:hazelcast:${Versions.hazelcast}"
-    val hazelcast_all get() = "com.hazelcast:hazelcast-all:${Versions.hazelcast}"
     val hazelcast_spring get() = "com.hazelcast:hazelcast-spring:${Versions.hazelcast}"
     val hazelcast_client get() = "com.hazelcast:hazelcast-client:${Versions.hazelcast_client}"
 

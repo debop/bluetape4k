@@ -33,7 +33,7 @@ dependencies {
     compileOnly(Libs.snappy_java)
 
     // Hazelcast
-    compileOnly(Libs.hazelcast_all)
+    compileOnly(Libs.hazelcast)
     compileOnly(Libs.hazelcast_client)
 
     // MongoDB
