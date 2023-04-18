@@ -26,11 +26,13 @@ import org.testcontainers.utility.DockerImageName
 /**
  * Docker 를 이용하여 Cassandra 4.0+ Server를 실행합니다.
  *
- * testcontainers 에서 제공하는 cassandra 는 내부에 cassandra driver 3.x 를 사용해서,
+ * testcontainers (1.18.0) 에서 제공하는 cassandra 는 내부에 cassandra driver 3.x 를 사용해서,
  * 최신 버전인 4.x 를 사용하지 못하고, 충돌이 생깁니다.
  * 이 문제를 해결하고자, [GenericContainer]를 이용하여 직접 구현했습니다.
  *
  * 참고: [Cassandra docker image](https://hub.docker.com/_/cassandra)
+ *
+ * @see [org.testcontainers.containers.CassandraContainer]
  */
 class Cassandra4Server private constructor(
     imageName: DockerImageName,
