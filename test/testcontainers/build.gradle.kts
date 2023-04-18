@@ -53,7 +53,7 @@ dependencies {
 
     // HashiCorp Vault
     compileOnly(Libs.testcontainers_vault)
-    testImplementation(Libs.vault_java_driver)
+    compileOnly(Libs.vault_java_driver)
 
     // OkHttp
     testImplementation(Libs.okhttp3)
