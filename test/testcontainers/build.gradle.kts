@@ -46,8 +46,7 @@ dependencies {
 
     // ElasticSearch
     compileOnly(Libs.testcontainers_elasticsearch)
-    testImplementation(Libs.elasticsearch_rest_client)
-    testImplementation(Libs.elasticsearch_rest_high_level_client)
+    compileOnly(Libs.elasticsearch_rest_client)
 
     // Kafka
     compileOnly(Libs.testcontainers_kafka)

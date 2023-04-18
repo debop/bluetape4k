@@ -140,7 +140,7 @@ object Versions {
     const val hazelcast_client = "3.12.13"
     const val cassandra = "4.15.0"
     const val scylla_java = "4.13.0.0"
-    const val elasticsearch = "7.17.8"
+    const val elasticsearch = "8.7.0"
 
     const val eclipse_collections = "11.1.0"
     const val jctools = "3.3.0"
