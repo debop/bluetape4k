@@ -1,4 +1,4 @@
-package io.bluetape4k.testcontainers.nosql
+package io.bluetape4k.testcontainers.storage
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.GenericServer

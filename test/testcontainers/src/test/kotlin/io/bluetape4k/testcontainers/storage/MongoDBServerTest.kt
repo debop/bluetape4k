@@ -1,4 +1,4 @@
-package io.bluetape4k.testcontainers.nosql
+package io.bluetape4k.testcontainers.storage
 
 import com.mongodb.ReadConcern
 import com.mongodb.ReadPreference

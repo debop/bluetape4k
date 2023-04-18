@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.cache.jcache.coroutines
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.testcontainers.nosql.RedisServer
+import io.bluetape4k.testcontainers.storage.RedisServer
 import java.util.UUID
 import javax.cache.configuration.MutableConfiguration
 

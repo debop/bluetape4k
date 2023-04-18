@@ -138,7 +138,7 @@ object Versions {
     const val ignite = "2.14.0"
     const val hazelcast = "5.2.3"
     const val hazelcast_client = "3.12.13"
-    const val cassandra = "4.14.1"
+    const val cassandra = "4.15.0"
     const val scylla_java = "4.13.0.0"
     const val elasticsearch = "7.17.8"
 

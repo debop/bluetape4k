@@ -4,7 +4,7 @@ import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.faker.Fakers.randomString
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.testcontainers.nosql.RedisServer
+import io.bluetape4k.testcontainers.storage.RedisServer
 import io.bluetape4k.utils.cache.jcache.JCache
 import io.bluetape4k.utils.cache.jcache.JCaching
 import io.bluetape4k.utils.cache.jcache.jcacheConfiguration

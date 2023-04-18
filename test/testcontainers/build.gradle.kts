@@ -4,7 +4,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    testImplementation(project(":bluetape4k-io-core"))
+    compileOnly(project(":bluetape4k-io-core"))
     testImplementation(project(":bluetape4k-test-junit5"))
 
 
@@ -39,6 +39,15 @@ dependencies {
     // MongoDB
     compileOnly(Libs.testcontainers_mongodb)
     compileOnly(Libs.mongodb_driver_sync)
+
+    // Cassandra
+    compileOnly(Libs.testcontainers_cassandra)
+    compileOnly(Libs.cassandra_java_driver_core)
+
+    // ElasticSearch
+    compileOnly(Libs.testcontainers_elasticsearch)
+    testImplementation(Libs.elasticsearch_rest_client)
+    testImplementation(Libs.elasticsearch_rest_high_level_client)
 
     // Kafka
     compileOnly(Libs.testcontainers_kafka)
@@ -78,11 +87,6 @@ dependencies {
     testImplementation(Libs.metrics_jmx)
     testImplementation(Libs.netty_transport_native_epoll + ":linux-x86_64")
     testImplementation(Libs.netty_transport_native_kqueue + ":osx-x86_64")
-
-    // ElasticSearch
-    compileOnly(Libs.testcontainers_elasticsearch)
-    testImplementation(Libs.elasticsearch_rest_client)
-    testImplementation(Libs.elasticsearch_rest_high_level_client)
 
     // K3s
     compileOnly(Libs.testcontainers_k3s)

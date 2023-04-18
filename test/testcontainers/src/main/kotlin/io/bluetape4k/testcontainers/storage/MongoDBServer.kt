@@ -1,4 +1,4 @@
-package io.bluetape4k.testcontainers.nosql
+package io.bluetape4k.testcontainers.storage
 
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients

@@ -1,4 +1,4 @@
-package io.bluetape4k.testcontainers.nosql
+package io.bluetape4k.testcontainers.storage
 
 import org.redisson.Redisson
 import org.redisson.api.RedissonClient
