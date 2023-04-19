@@ -4,6 +4,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
+import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.containers.wait.strategy.Wait
@@ -69,5 +70,14 @@ class NatsServer private constructor(
     override fun start() {
         super.start()
         writeToSystemProperties(NAME)
+    }
+
+    object Launcher {
+        val nats: NatsServer by lazy {
+            NatsServer().apply {
+                start()
+                ShutdownQueue.register(this)
+            }
+        }
     }
 }

@@ -60,7 +60,7 @@ class MongoDBServer private constructor(
     }
 
     object Launcher {
-        val mongoDBServer: MongoDBServer by lazy {
+        val mongoDB: MongoDBServer by lazy {
             MongoDBServer().apply {
                 start()
                 // JVM 종료 시, 자동으로 Close 되도록 합니다
@@ -68,7 +68,7 @@ class MongoDBServer private constructor(
             }
         }
 
-        fun getClient(connectionString: String = mongoDBServer.url): MongoClient {
+        fun getClient(connectionString: String = mongoDB.url): MongoClient {
             return MongoClients.create(connectionString)
         }
     }

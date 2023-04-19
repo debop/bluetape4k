@@ -6,6 +6,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
+import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.utility.DockerImageName
 import org.testcontainers.vault.VaultContainer
@@ -73,5 +74,14 @@ class VaultServer private constructor(
             .token(token)
             .build()
         return Vault(config)
+    }
+
+    object Launcher {
+        val vault: VaultServer by lazy {
+            VaultServer().apply {
+                start()
+                ShutdownQueue.register(this)
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ package io.bluetape4k.testcontainers.jdbc
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
+import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.MySQLContainer
 import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.containers.wait.strategy.Wait
@@ -68,5 +69,14 @@ class MySQL8Server private constructor(
     override fun start() {
         super.start()
         writeToSystemProperties(NAME, buildJdbcProperties())
+    }
+
+    object Launcher {
+        val mysql: MySQL8Server by lazy {
+            MySQL8Server().apply {
+                start()
+                ShutdownQueue.register(this)
+            }
+        }
     }
 }
