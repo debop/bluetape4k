@@ -15,7 +15,7 @@ object Plugins {
         const val kotlinx_benchmark = "0.4.2"
         const val spring_boot = "3.0.5"
         const val jacoco = "0.8.8"
-        const val quarkus = "2.12.2.Final"
+        const val quarkus = "2.16.6.Final"
     }
 
     const val detekt = "io.gitlab.arturbosch.detekt"
@@ -58,8 +58,8 @@ object Versions {
     const val spring_statemachine = "3.2.0"
 
     const val quarkus = Plugins.Versions.quarkus
-    const val resteasy = "6.1.0.Final"
-    const val mutiny = "1.7.0"
+    const val resteasy = "6.2.3.Final"
+    const val mutiny = "2.1.0"
     const val vertx = "4.4.1"
     const val agroal = "1.16"
 

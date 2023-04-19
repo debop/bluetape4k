@@ -3,6 +3,11 @@ package io.bluetape4k.kotlinx.mutiny
 import io.bluetape4k.collections.stream.asSequence
 import io.bluetape4k.collections.stream.asStream
 import io.smallrye.mutiny.Multi
+import io.smallrye.mutiny.Uni
+import io.smallrye.mutiny.groups.MultiRepetition
+import io.smallrye.mutiny.groups.UniRepeat
+import java.util.concurrent.CompletionStage
+import java.util.function.Supplier
 import java.util.stream.DoubleStream
 import java.util.stream.IntStream
 import java.util.stream.LongStream
@@ -47,3 +52,11 @@ fun DoubleStream.asMulti(): Multi<Double> = asSequence().asMulti()
 fun CharProgression.asMulti(): Multi<Char> = asSequence().asMulti()
 fun IntProgression.asMulti(): Multi<Int> = asSequence().asMulti()
 fun LongProgression.asMulti(): Multi<Long> = asSequence().asMulti()
+
+fun <T> MultiRepetition.deferUni(supplier: () -> Uni<T>): UniRepeat<T> {
+    return this.uni(Supplier { supplier() })
+}
+
+fun <T> MultiRepetition.deferCompletionStage(supplier: () -> CompletionStage<T>): UniRepeat<T> {
+    return this.completionStage { supplier() }
+}
