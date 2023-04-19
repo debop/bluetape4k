@@ -44,11 +44,12 @@ dependencies {
     compileOnly(Libs.commons_codec)
 
     // Binary Serializers
-    compileOnly(Libs.fst)
     compileOnly(Libs.kryo)
     compileOnly(Libs.marshalling)
     compileOnly(Libs.marshalling_river)
     compileOnly(Libs.marshalling_serial)
+    // FST 는 JDK17 이상에서는 사용할 수 없다
+    // compileOnly(Libs.fst)
 
     // Apple M1
     compileOnly(Libs.jna_platform)

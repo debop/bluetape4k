@@ -1,35 +1,18 @@
 package io.bluetape4k.data.redis.lettuce
 
-import io.bluetape4k.data.redis.AbstractRedisTest
-import io.bluetape4k.data.redis.lettuce.codec.LettuceBinaryCodecs
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
-import io.lettuce.core.RedisClient
-import io.lettuce.core.api.async.RedisAsyncCommands
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.RepeatedTest
 
-class RedisFutureSupportTest: AbstractRedisTest() {
+class RedisFutureSupportTest: AbstractLettuceTest() {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 5
         private const val ITEM_SIZE = 1000
     }
 
-    private val client: RedisClient by lazy {
-        LettuceClients.clientOf(redis.host, redis.port)
-    }
-    private val asyncCommands: RedisAsyncCommands<String, Any> by lazy {
-        LettuceClients.asyncCommands(client, LettuceBinaryCodecs.Default)
-    }
-
-    @AfterAll
-    fun cleanup() {
-        asyncCommands.shutdown(false)
-        client.shutdown()
-    }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `bulk put asynchroneously`() = runSuspendWithIO {

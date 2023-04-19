@@ -8,7 +8,7 @@ import io.bluetape4k.io.compressor.Compressors
  */
 object Serializers {
     /** Default Serializer */
-    val Default: BinarySerializer by lazy { LZ4Fst }
+    val Default: BinarySerializer by lazy { LZ4Kryo }
 
     val Jdk: JdkSerializer by lazy { JdkSerializer() }
 
@@ -24,12 +24,12 @@ object Serializers {
     val SnappyJdk: SnappyJdkSerializer by lazy { SnappyJdkSerializer() }
     val ZstdJdk: BinarySerializer by lazy { CompressableBinarySerializer(Serializers.Jdk, Compressors.Zstd) }
 
-    val BZip2Fst: BZip2FstSerializer by lazy { BZip2FstSerializer() }
-    val DeflateFst: DeflateFstSerializer by lazy { DeflateFstSerializer() }
-    val GZipFst: GZipFstSerializer by lazy { GZipFstSerializer() }
-    val LZ4Fst: LZ4FstSerializer by lazy { LZ4FstSerializer() }
-    val SnappyFst: SnappyFstSerializer by lazy { SnappyFstSerializer() }
-    val ZstdFst: BinarySerializer by lazy { CompressableBinarySerializer(Serializers.Fst, Compressors.Zstd) }
+//    val BZip2Fst: BZip2FstSerializer by lazy { BZip2FstSerializer() }
+//    val DeflateFst: DeflateFstSerializer by lazy { DeflateFstSerializer() }
+//    val GZipFst: GZipFstSerializer by lazy { GZipFstSerializer() }
+//    val LZ4Fst: LZ4FstSerializer by lazy { LZ4FstSerializer() }
+//    val SnappyFst: SnappyFstSerializer by lazy { SnappyFstSerializer() }
+//    val ZstdFst: BinarySerializer by lazy { CompressableBinarySerializer(Serializers.Fst, Compressors.Zstd) }
 
     val BZip2Kryo: BZip2KryoSerializer by lazy { BZip2KryoSerializer() }
     val DeflateKryo: DeflateKryoSerializer by lazy { DeflateKryoSerializer() }

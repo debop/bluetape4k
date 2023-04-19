@@ -8,7 +8,7 @@ object RedisConst {
     const val DEFAULT_URL = "redis://$DEFAULT_HOST:$DEFAULT_PORT"
 
     const val DEFAULT_SENTINEL_PORT = 26379
-    const val DEFAULT_TIMEOUT_MILLIS: Long = 10_000L
+    const val DEFAULT_TIMEOUT_MILLIS: Long = 30_000L
     const val DEFAULT_DATABASE = 0
 
     const val DEFAULT_CHARSET = "UTF-8"

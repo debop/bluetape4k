@@ -2,38 +2,23 @@ package io.bluetape4k.data.redis.lettuce.codec
 
 import com.google.protobuf.Timestamp
 import com.google.protobuf.timestamp
-import io.bluetape4k.data.redis.AbstractRedisTest
+import io.bluetape4k.data.redis.lettuce.AbstractLettuceTest
 import io.bluetape4k.data.redis.lettuce.LettuceClients
 import io.bluetape4k.data.redis.messages.SimpleMessage
 import io.bluetape4k.data.redis.messages.simpleMessage
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
-import io.lettuce.core.RedisClient
 import io.lettuce.core.codec.RedisCodec
 import java.time.Instant
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import kotlin.random.Random
 
-class LettuceBinaryCodecTest: AbstractRedisTest() {
+class LettuceBinaryCodecTest: AbstractLettuceTest() {
 
     companion object: KLogging()
-
-    private lateinit var client: RedisClient
-
-    @BeforeAll
-    fun beforeAll() {
-        client = LettuceClients.clientOf(redis.host, redis.port)
-    }
-
-    @AfterAll
-    fun afterAll() {
-        runCatching { client.shutdown() }
-    }
 
     private fun getRedisCodecs(): List<LettuceBinaryCodec<Any>> = listOf(
         LettuceBinaryCodecs.jdk(),
@@ -66,7 +51,6 @@ class LettuceBinaryCodecTest: AbstractRedisTest() {
         LettuceBinaryCodecs.zstdMarshalling(),
         LettuceBinaryCodecs.zstdProtobuf(),
     )
-
 
     @ParameterizedTest
     @MethodSource("getRedisCodecs")
