@@ -78,7 +78,7 @@ object Versions {
     // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
     const val aws2 = "2.20.46"
 
-    const val grpc = "1.54.0"
+    const val grpc = "1.54.1"
     const val grpc_kotlin = "1.3.0"
     const val protobuf = "3.22.3"
     const val avro = "1.11.1"

@@ -11,7 +11,9 @@ object Serializers {
     val Default: BinarySerializer by lazy { LZ4Fst }
 
     val Jdk: JdkSerializer by lazy { JdkSerializer() }
-    val Fst: FstSerializer by lazy { FstSerializer() }
+
+    // Fst 는 JVM 17 에서는 초기화에 실패해서 사용할 수 없습니다
+//    val Fst: FstSerializer by lazy { FstSerializer() }
     val Kryo: KryoSerializer by lazy { KryoSerializer() }
     val Marshalling: MarshallingSerializer by lazy { MarshallingSerializer() }
 

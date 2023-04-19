@@ -8,7 +8,7 @@ import org.nustaq.serialization.FSTConfiguration
 /**
  * Fst Serializer
  */
-@Deprecated("JVM 17 에서는 초기화에 실패해서 사용할 수 없습니다")
+@Deprecated("JVM 17 에서는 초기화에 실패해서 사용할 수 없습니다", level = DeprecationLevel.ERROR)
 class FstSerializer private constructor(
     private val conf: FSTConfiguration,
     private val useCache: Boolean,

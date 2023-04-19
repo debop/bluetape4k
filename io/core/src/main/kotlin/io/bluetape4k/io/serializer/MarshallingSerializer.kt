@@ -1,14 +1,14 @@
 package io.bluetape4k.io.serializer
 
 import io.bluetape4k.logging.KLogging
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.util.Locale
 import org.jboss.marshalling.InputStreamByteInput
 import org.jboss.marshalling.MarshallerFactory
 import org.jboss.marshalling.Marshalling
 import org.jboss.marshalling.MarshallingConfiguration
 import org.jboss.marshalling.OutputStreamByteOutput
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.util.*
 
 /**
  * JBoss Marshaller 를 이용한 [BinarySerializer]
@@ -35,7 +35,7 @@ class MarshallingSerializer private constructor(
         }
 
         operator fun invoke(
-            protocol: Protocol = Protocol.SERIAL,
+            protocol: Protocol = Protocol.RIVER,
             configuration: MarshallingConfiguration = DefaultMarshallingConfiguration,
         ): MarshallingSerializer {
             val factory = Marshalling.getProvidedMarshallerFactory(protocol.name.lowercase(Locale.ENGLISH))

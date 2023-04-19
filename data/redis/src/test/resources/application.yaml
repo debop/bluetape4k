@@ -1,0 +1,4 @@
+io.bluetake4k:
+  data:
+    redisson:
+      config: redisson.yaml
