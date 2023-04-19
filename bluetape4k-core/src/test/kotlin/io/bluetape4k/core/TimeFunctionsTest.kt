@@ -2,6 +2,7 @@ package io.bluetape4k.core
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import java.util.concurrent.ExecutionException
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.internal.assertFailsWith
 import org.amshove.kluent.shouldBeEqualTo
@@ -11,7 +12,6 @@ import org.amshove.kluent.shouldBeTrue
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.junit.jupiter.api.Test
-import java.util.concurrent.ExecutionException
 
 class TimeFunctionsTest {
 
@@ -32,7 +32,7 @@ class TimeFunctionsTest {
             //            isWorking.value = false
             //            "Hello"
         }
-        Thread.sleep(600)
+        Thread.sleep(1000)
         future.isDone.shouldBeTrue()
         future.isCompletedExceptionally.shouldBeTrue()
 

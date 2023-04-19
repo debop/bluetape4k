@@ -102,17 +102,16 @@ object Versions {
     // 참고: https://github.com/redisson/redisson/issues/4809
     const val redisson = "3.19.1"
 
-    const val hibernate = "5.6.14.Final"
+    const val hibernate = "6.2.1.Final"
     const val hibernate_reactive = "1.1.9.Final"
-    const val hibernate_kotlin_jdsl = "2.0.3.RELEASE"
-    const val hibernate_validator = "7.0.4.Final"
+    const val hibernate_validator = "8.0.0.Final"
     const val querydsl = "5.0.0"
 
     // https://mvnrepository.com/artifact/io.quarkus.platform/quarkus-blaze-persistence-bom
     const val blaze_persistence = "1.6.8"
 
-    const val slf4j = "1.7.36"
-    const val logback = "1.2.11"
+    const val slf4j = "2.0.7"
+    const val logback = "1.4.6"
     const val log4j = "2.17.2"
 
     const val metrics = "4.1.25"
@@ -288,19 +287,19 @@ object Libs {
     val javax_json get() = "org.glassfish:javax.json:1.1.4"
 
     // jakarta
-    val jakarta_activation_api get() = "jakarta.activation:jakarta.activation-api:1.2.2"
-    val jakarta_annotation_api get() = "jakarta.annotation:jakarta.annotation-api:1.3.5"
-    val jakarta_el_api get() = "jakarta.el:jakarta.el-api:3.0.3"
-    val jakarta_el get() = "org.glassfish:jakarta.el:3.0.4"
+    val jakarta_activation_api get() = "jakarta.activation:jakarta.activation-api:2.1.1"
+    val jakarta_annotation_api get() = "jakarta.annotation:jakarta.annotation-api:2.1.1"
+    val jakarta_el_api get() = "jakarta.el:jakarta.el-api:5.0.1"
+    val jakarta_el get() = "org.glassfish:jakarta.el:5.0.0-M1"
     val jakarta_inject_api get() = "jakarta.inject:jakarta.inject-api:1.0.5"
-    val jakarta_interceptor_api get() = "jakarta.interceptor:jakarta.interceptor-api:1.2.5"
-    val jakarta_jms_api get() = "jakarta.jms:jakarta.jms-api:2.0.3"
+    val jakarta_interceptor_api get() = "jakarta.interceptor:jakarta.interceptor-api:2.1.0"
+    val jakarta_jms_api get() = "jakarta.jms:jakarta.jms-api:3.1.0"
     val jakarta_json_api get() = "jakarta.json:jakarta.json-api:1.1.6"
-    val jakarta_json get() = "org.glassfish:jakarta.json:1.1.6"
-    val jakarta_persistence_api get() = "jakarta.persistence:jakarta.persistence-api:2.2.3"
-    val jakarta_servlet_api get() = "jakarta.servlet:jakarta.servlet-api:4.0.4"
-    val jakarta_transaction_api get() = "jakarta.transaction:jakarta.transaction-api:1.3.3"
-    val jakarta_validation_api get() = "jakarta.validation:jakarta.validation-api:2.0.2"
+    val jakarta_json get() = "org.glassfish:jakarta.json:2.0.1"
+    val jakarta_persistence_api get() = "jakarta.persistence:jakarta.persistence-api:3.1.0"
+    val jakarta_servlet_api get() = "jakarta.servlet:jakarta.servlet-api:6.0.0"
+    val jakarta_transaction_api get() = "jakarta.transaction:jakarta.transaction-api:2.0.1"
+    val jakarta_validation_api get() = "jakarta.validation:jakarta.validation-api:3.0.2"
     val jakarta_ws_rs_api get() = "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"
 
     // Java Money
@@ -871,17 +870,18 @@ object Libs {
     val vault_java_driver get() = "com.bettercloud:vault-java-driver:5.1.0"
 
     // Hibernate
-    fun hibernate(module: String) = "org.hibernate:hibernate-$module:${Versions.hibernate}"
+    fun hibernate(module: String) = "org.hibernate.orm:hibernate-$module:${Versions.hibernate}"
     val hibernate_core get() = hibernate("core")
     val hibernate_jcache get() = hibernate("jcache")
     val hibernate_testing get() = hibernate("testing")
     val hibernate_envers get() = hibernate("envers")
     val hibernate_jpamodelgen get() = hibernate("jpamodelgen")
+    val hibernate_hikaricp get() = hibernate("hikaricp")
+    val hibernate_spatial get() = hibernate("spatial")
 
     val hibernate_reactive_core get() = "org.hibernate.reactive:hibernate-reactive-core:${Versions.hibernate_reactive}"
-    val hibernate_kotlin_jdsl get() = "com.linecorp.kotlin-jdsl:hibernate-kotlin-jdsl:${Versions.hibernate_kotlin_jdsl}"
 
-    val javassist get() = "org.javassist:javassist:3.28.0-GA"
+    val javassist get() = "org.javassist:javassist:3.29.2-GA"
 
     // Validators
     val hibernate_validator get() = "org.hibernate:hibernate-validator:${Versions.hibernate_validator}"

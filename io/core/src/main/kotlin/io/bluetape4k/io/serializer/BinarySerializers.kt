@@ -4,9 +4,9 @@ import io.bluetape4k.io.compressor.Compressors
 
 
 /**
- * Serializers
+ * BinarySerializers
  */
-object Serializers {
+object BinarySerializers {
     /** Default Serializer */
     val Default: BinarySerializer by lazy { LZ4Kryo }
 
@@ -22,21 +22,22 @@ object Serializers {
     val GZipJdk: GZipJdkSerializer by lazy { GZipJdkSerializer() }
     val LZ4Jdk: LZ4JdkSerializer by lazy { LZ4JdkSerializer() }
     val SnappyJdk: SnappyJdkSerializer by lazy { SnappyJdkSerializer() }
-    val ZstdJdk: BinarySerializer by lazy { CompressableBinarySerializer(Serializers.Jdk, Compressors.Zstd) }
+    val ZstdJdk: BinarySerializer by lazy { CompressableBinarySerializer(BinarySerializers.Jdk, Compressors.Zstd) }
 
+    // Fst 는 JVM 17 에서는 초기화에 실패해서 사용할 수 없습니다
 //    val BZip2Fst: BZip2FstSerializer by lazy { BZip2FstSerializer() }
 //    val DeflateFst: DeflateFstSerializer by lazy { DeflateFstSerializer() }
 //    val GZipFst: GZipFstSerializer by lazy { GZipFstSerializer() }
 //    val LZ4Fst: LZ4FstSerializer by lazy { LZ4FstSerializer() }
 //    val SnappyFst: SnappyFstSerializer by lazy { SnappyFstSerializer() }
-//    val ZstdFst: BinarySerializer by lazy { CompressableBinarySerializer(Serializers.Fst, Compressors.Zstd) }
+//    val ZstdFst: BinarySerializer by lazy { CompressableBinarySerializer(BinarySerializers.Fst, Compressors.Zstd) }
 
     val BZip2Kryo: BZip2KryoSerializer by lazy { BZip2KryoSerializer() }
     val DeflateKryo: DeflateKryoSerializer by lazy { DeflateKryoSerializer() }
     val GZipKryo: GZipKryoSerializer by lazy { GZipKryoSerializer() }
     val LZ4Kryo: LZ4KryoSerializer by lazy { LZ4KryoSerializer() }
     val SnappyKryo: SnappyKryoSerializer by lazy { SnappyKryoSerializer() }
-    val ZstdKryo: BinarySerializer by lazy { CompressableBinarySerializer(Serializers.Kryo, Compressors.Zstd) }
+    val ZstdKryo: BinarySerializer by lazy { CompressableBinarySerializer(BinarySerializers.Kryo, Compressors.Zstd) }
 
     val BZip2Marshalling: BZip2MarshallingSerializer by lazy { BZip2MarshallingSerializer() }
     val DeflateMarshalling: DeflateMarshallingSerializer by lazy { DeflateMarshallingSerializer() }
@@ -45,7 +46,7 @@ object Serializers {
     val SnappyMarshalling: SnappyMarshallingSerializer by lazy { SnappyMarshallingSerializer() }
     val ZstdMarshalling: BinarySerializer by lazy {
         CompressableBinarySerializer(
-            Serializers.Marshalling,
+            BinarySerializers.Marshalling,
             Compressors.Zstd
         )
     }

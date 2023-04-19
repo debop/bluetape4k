@@ -6,36 +6,36 @@ class MarshallingSerializerTest {
 
     @Nested
     inner class MarshallingSerializerTest : AbstractBinarySerializerTest() {
-        override val serializer: BinarySerializer = Serializers.Marshalling
+        override val serializer: BinarySerializer = BinarySerializers.Marshalling
     }
 
     @Nested
     inner class BZip2MarshallingSerializerTest : AbstractBinarySerializerTest() {
-        override val serializer: BinarySerializer = Serializers.BZip2Marshalling
+        override val serializer: BinarySerializer = BinarySerializers.BZip2Marshalling
     }
 
     @Nested
     inner class DeflateMarshallingSerializerTest : AbstractBinarySerializerTest() {
-        override val serializer: BinarySerializer = Serializers.DeflateMarshalling
+        override val serializer: BinarySerializer = BinarySerializers.DeflateMarshalling
     }
 
     @Nested
     inner class GZipMarshallingSerializerTest : AbstractBinarySerializerTest() {
-        override val serializer: BinarySerializer = Serializers.GZipMarshalling
+        override val serializer: BinarySerializer = BinarySerializers.GZipMarshalling
     }
 
     @Nested
     inner class LZ4MarshallingSerializerTest : AbstractBinarySerializerTest() {
-        override val serializer: BinarySerializer = Serializers.LZ4Marshalling
+        override val serializer: BinarySerializer = BinarySerializers.LZ4Marshalling
     }
 
     @Nested
     inner class SnappyMarshallingSerializerTest : AbstractBinarySerializerTest() {
-        override val serializer: BinarySerializer = Serializers.SnappyMarshalling
+        override val serializer: BinarySerializer = BinarySerializers.SnappyMarshalling
     }
 
     @Nested
     inner class ZstdMarshallingSerializerTest : AbstractBinarySerializerTest() {
-        override val serializer: BinarySerializer = Serializers.ZstdMarshalling
+        override val serializer: BinarySerializer = BinarySerializers.ZstdMarshalling
     }
 }

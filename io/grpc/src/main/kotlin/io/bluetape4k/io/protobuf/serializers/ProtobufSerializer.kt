@@ -4,7 +4,7 @@ import io.bluetape4k.io.protobuf.ProtoAny
 import io.bluetape4k.io.protobuf.ProtoMessage
 import io.bluetape4k.io.serializer.AbstractBinarySerializer
 import io.bluetape4k.io.serializer.BinarySerializer
-import io.bluetape4k.io.serializer.Serializers
+import io.bluetape4k.io.serializer.BinarySerializers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.isNullOrEmpty
 import java.util.concurrent.ConcurrentHashMap
@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @property fallbackSerializer 예외시 수행할 fallback serializer
  */
 class ProtobufSerializer(
-    private val fallbackSerializer: BinarySerializer = Serializers.Jdk,
+    private val fallbackSerializer: BinarySerializer = BinarySerializers.Jdk,
 ): AbstractBinarySerializer() {
 
     companion object: KLogging() {
