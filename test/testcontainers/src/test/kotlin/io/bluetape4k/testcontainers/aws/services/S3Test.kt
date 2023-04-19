@@ -43,9 +43,9 @@ class S3Test {
             .build()
     }
 
-    val bucketName = "foo"
-    val keyName = "bar"
-    val content = "baz"
+    private val bucketName = "foo"
+    private val keyName = "bar"
+    private val content = "baz"
 
     @BeforeAll
     fun setup() {
