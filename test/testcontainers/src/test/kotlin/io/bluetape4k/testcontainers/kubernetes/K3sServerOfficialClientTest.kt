@@ -1,8 +1,7 @@
-package io.bluetape4k.testcontainers.infrastructure
+package io.bluetape4k.testcontainers.kubernetes
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.testcontainers.kubernetes.K3sServer
 import io.kubernetes.client.openapi.apis.CoreV1Api
 import io.kubernetes.client.util.Config
 import java.io.StringReader

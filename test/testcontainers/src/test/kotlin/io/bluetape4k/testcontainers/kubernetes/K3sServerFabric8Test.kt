@@ -1,8 +1,7 @@
-package io.bluetape4k.testcontainers.infrastructure
+package io.bluetape4k.testcontainers.kubernetes
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.testcontainers.kubernetes.K3sServer
 import io.fabric8.kubernetes.api.model.ContainerBuilder
 import io.fabric8.kubernetes.api.model.ContainerPortBuilder
 import io.fabric8.kubernetes.api.model.Pod
