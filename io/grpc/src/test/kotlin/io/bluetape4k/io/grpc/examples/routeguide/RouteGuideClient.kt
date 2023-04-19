@@ -83,7 +83,7 @@ class RouteGuideClient private constructor(channel: ManagedChannel): AbstractGrp
             }
     }
 
-    fun recordRoute(points: Flow<Point>) = runBlocking {
+    fun recordRoute(points: Flow<Point>) = runBlocking(Dispatchers.IO) {
         log.info { "Record route..." }
 
         val summary = stub.recordRoute(points)
