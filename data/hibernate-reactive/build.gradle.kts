@@ -1,4 +1,5 @@
 plugins {
+    idea
     kotlin("plugin.spring")
     kotlin("plugin.allopen")
     kotlin("plugin.noarg")
@@ -15,6 +16,23 @@ allOpen {
     annotation("javax.persistence.MappedSuperclass")
 }
 
+kapt {
+    showProcessorStats = true
+    // kapt 가 제대로 동작하지 않는 경우, 아래 옵션을 추가해보세요.
+    correctErrorTypes = true
+}
+
+idea {
+    module {
+        val kaptMain = file("build/generated/source/kapt/main")
+        sourceDirs.plus(kaptMain)
+        generatedSourceDirs.plus(kaptMain)
+
+        val kaptTest = file("build/generated/source/kapt/test")
+        testSources.plus(kaptTest)
+    }
+}
+
 // NOTE: implementation 로 지정된 Dependency를 testImplementation 으로도 지정하도록 합니다.
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
@@ -25,6 +43,10 @@ dependencies {
     api(project(":bluetape4k-kotlinx-mutiny"))
     api(project(":bluetape4k-vertx-core"))
 
+    // NOTE: Java 9+ 환경에서 kapt가 제대로 동작하려면 javax.annotation-api 를 참조해야 합니다.
+    api(Libs.jakarta_annotation_api)
+
+    api(Libs.jakarta_persistence_api)
     api(Libs.hibernate_reactive_core)
 
     // hibernate-reactive 는 querydsl 을 사용하지 못한다. 대신 jpamodelgen 을 사용합니다.
@@ -41,7 +63,8 @@ dependencies {
     testImplementation(Libs.vertx_mysql_client) // MySQL
     // Testcontainers MySQL 에서 검증을 위해 사용하기 위해 불가피하게 필요합니다
     // reactive 방식에서는 항상 verx-mysql-client 를 사용합니다
-    testRuntimeOnly(Libs.mysql_connector_java)
+    testImplementation(Libs.hikaricp)
+    testImplementation(Libs.mysql_connector_j)
 
     testImplementation(project(":bluetape4k-test-junit5"))
     testImplementation(project(":bluetape4k-test-testcontainers"))

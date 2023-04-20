@@ -18,6 +18,7 @@ allOpen {
 
 kapt {
     showProcessorStats = true
+    // kapt 가 제대로 동작하지 않는 경우, 아래 옵션을 추가해보세요.
     correctErrorTypes = true
 }
 
@@ -32,7 +33,6 @@ idea {
     }
 }
 
-
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }
@@ -40,6 +40,9 @@ configurations {
 dependencies {
     api(project(":bluetape4k-core"))
     testImplementation(project(":bluetape4k-test-junit5"))
+
+    // NOTE: Java 9+ 환경에서 kapt가 제대로 동작하려면 javax.annotation-api 를 참조해야 합니다.
+    api(Libs.jakarta_annotation_api)
 
     api(Libs.jakarta_persistence_api)
     api(Libs.hibernate_core)
@@ -49,8 +52,6 @@ dependencies {
 
     // Querydsl
     compileOnly(Libs.querydsl_jpa + ":jakarta")
-    // NOTE: Java 9+ 환경에서 kapt가 제대로 동작하려면 javax.annotation-api 를 참조해야 합니다.
-    api(Libs.jakarta_annotation_api)
     // Hibernate 6+ 에서는 jakarta 를 사용해야 합니다.
     // https://github.com/querydsl/querydsl/issues/3493
     kapt(Libs.querydsl_apt + ":jakarta")
@@ -87,8 +88,8 @@ dependencies {
     }
 
     testImplementation(Libs.hikaricp)
-    testImplementation(Libs.h2)
-    testImplementation(Libs.mysql_connector_java)
+    testImplementation(Libs.h2_v2)
+    testImplementation(Libs.mysql_connector_j)
 
     testImplementation(project(":bluetape4k-test-testcontainers"))
     testImplementation(Libs.testcontainers_mysql)

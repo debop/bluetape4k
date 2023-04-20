@@ -9,7 +9,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.warn
 import io.bluetape4k.support.emptyByteArray
 import io.bluetape4k.support.isNullOrEmpty
-import io.bluetape4k.support.toUtf8ByteArray
+import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
 import java.io.InputStream
 import java.nio.ByteBuffer
@@ -36,7 +36,7 @@ interface Compressor {
     fun decompress(compressed: ByteArray?): ByteArray
 
     fun compress(plain: String): String =
-        compress(plain.toUtf8ByteArray()).encodeBase64String()
+        compress(plain.toUtf8Bytes()).encodeBase64String()
 
     fun decompress(compressed: String): String =
         decompress(compressed.decodeBase64ByteArray()).toUtf8String()

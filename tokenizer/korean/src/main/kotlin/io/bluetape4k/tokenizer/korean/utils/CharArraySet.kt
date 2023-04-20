@@ -12,6 +12,7 @@ open class CharArraySet(val map: CharArrayMap<Any>): java.util.AbstractSet<Any>(
         private val EMPTY_SET = CharArraySet(CharArrayMap.emptyMap())
         private val PLACEHOLDER = Any()
 
+        @Suppress("USELESS_IS_CHECK")
         fun unmodifiableSet(set: CharArraySet): CharArraySet {
             return when (set) {
                 EMPTY_SET -> EMPTY_SET

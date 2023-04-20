@@ -83,7 +83,7 @@ object Versions {
     const val protobuf = "3.22.3"
     const val avro = "1.11.1"
 
-    const val feign = "12.1"
+    const val feign = "12.3"
     const val retrofit2 = "2.9.0"
     const val okhttp3 = "4.10.0"
     const val asynchttpclient = "2.12.3"
@@ -94,16 +94,16 @@ object Versions {
     const val mapstruct = "1.4.1.Final"
     const val reflectasm = "1.11.9"
 
-    const val mongo_driver = "4.8.2"
-    const val lettuce = "6.2.2.RELEASE"
+    const val mongo_driver = "4.9.1"
+    const val lettuce = "6.2.3.RELEASE"
 
     // NOTE: Redisson 3.19.1 사용 시, NearCache 에서 kotlin.collections.LinkedHashMap 에 대해 역직렬화에 실패하는 버그가 있습니다.
     // NOTE: java.util.HashMap 을 사용하면, 성공합니다.
     // 참고: https://github.com/redisson/redisson/issues/4809
-    const val redisson = "3.19.1"
+    const val redisson = "3.20.1"
 
     const val hibernate = "6.2.1.Final"
-    const val hibernate_reactive = "1.1.9.Final"
+    const val hibernate_reactive = "2.0.0.Beta2"
     const val hibernate_validator = "8.0.0.Final"
     const val querydsl = "5.0.0"
 
@@ -122,13 +122,13 @@ object Versions {
     const val micrometerTracing = "1.0.4"
 
     // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom
-    const val opentelemetry = "1.22.0"
+    const val opentelemetry = "1.25.0"
 
     // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom-alpha
     const val opentelemetryAlpha = "$opentelemetry-alpha"
 
     // https://mvnrepository.com/artifact/io.opentelemetry.instrumentation/opentelemetry-instrumentation-bom-alpha
-    const val opentelemetryInstrumentationAlpha = "1.22.1-alpha"
+    const val opentelemetryInstrumentationAlpha = "$opentelemetry-alpha"
 
     const val cache2k = "2.6.1.Final"
     const val caffeine = "3.1.6"        // Java 9+ 이상에서는 3.x 사용
@@ -150,18 +150,17 @@ object Versions {
     const val junit_platform = "1.9.2"
     const val assertj_core = "3.23.1"
     const val kluent = "1.72"
-    const val mockk = "1.13.3"
-    const val springmockk = "4.0.0"
+    const val mockk = "1.13.5"
+    const val springmockk = "4.0.2"
     const val mockito = "3.12.4"
     const val awaitility = "4.2.0"
     const val jmh = "1.35"
     const val testcontainers = "1.18.0"
-    const val jna = "5.12.1"
+    const val jna = "5.13.0"
     const val archunit = "0.21.0"
 
-    const val javafaker = "1.0.2"
-    const val datafaker = "1.7.0"
-    const val snakeyaml = "1.33"
+    const val datafaker = "1.8.1"
+    const val snakeyaml = "2.0"
     const val random_beans = "3.9.0"
 
     const val logback_slack_appender = "1.6.1"
@@ -924,12 +923,11 @@ object Libs {
     val byte_buddy = "net.bytebuddy:byte-buddy:1.12.10"
 
     val hikaricp get() = "com.zaxxer:HikariCP:5.0.1"
-    val dbcp2 get() = "org.apache.commons:commons-dbcp2:2.7.0"
     val tomcat_jdbc get() = "org.apache.tomcat:tomcat-jdbc:9.0.36"
 
-    val mysql_connector_java get() = "mysql:mysql-connector-java:8.0.29"
-    val mariadb_java_client get() = "org.mariadb.jdbc:mariadb-java-client:2.7.2"
-    val postgresql_driver get() = "org.postgresql:postgresql:42.2.10"
+    val mysql_connector_j get() = "com.mysql:mysql-connector-j:8.0.32"
+    val mariadb_java_client get() = "org.mariadb.jdbc:mariadb-java-client:3.1.3"
+    val postgresql_driver get() = "org.postgresql:postgresql:42.6.0"
     val oracle_ojdbc8 get() = "com.oracle.ojdbc:ojdbc8:19.3.0.0"
 
     // NOTE: Apache Ignite 에서는 꼭 1.4.197 를 써야 합니다.
@@ -1034,7 +1032,6 @@ object Libs {
     val awaitility_kotlin get() = "org.awaitility:awaitility-kotlin:${Versions.awaitility}"
 
     val datafaker get() = "net.datafaker:datafaker:${Versions.datafaker}"
-    val javafaker get() = "com.github.javafaker:javafaker:${Versions.javafaker}"
     val snakeyaml get() = "org.yaml:snakeyaml:${Versions.snakeyaml}"
     val random_beans get() = "io.github.benas:random-beans:${Versions.random_beans}"
 

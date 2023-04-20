@@ -388,7 +388,7 @@ subprojects {
             dependency(Libs.javax_el)
 
             dependency(Libs.hikaricp)
-            dependency(Libs.mysql_connector_java)
+            dependency(Libs.mysql_connector_j)
             dependency(Libs.mariadb_java_client)
 
             dependency(Libs.caffeine)

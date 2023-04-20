@@ -23,6 +23,6 @@ dependencies {
 
     runtimeOnly(Libs.h2)
     testImplementation(Libs.testcontainers_mysql)
-    testImplementation(Libs.mysql_connector_java)
+    testImplementation(Libs.mysql_connector_j)
     testImplementation(Libs.mariadb_java_client)
 }

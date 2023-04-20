@@ -12,10 +12,10 @@
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.data.hibernate" level="TRACE"/>
+    <logger name="io.bluetape4k.data.hibernate.reactive" level="TRACE"/>
 
     <!-- Hibernate Reactive -->
-    <logger name="org.hibernate" level="DEBUG"/>
+    <logger name="org.hibernate.reactive" level="DEBUG"/>
 
     <!-- HQL 실행 통계를 로그에 출력합니다.-->
     <!-- eg. HHH000117: HQL: select generatedAlias0 from Article as generatedAlias0 order by generatedAlias0.addedAt desc, time: 1ms, rows: 2-->

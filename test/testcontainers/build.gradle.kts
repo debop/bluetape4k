@@ -21,7 +21,7 @@ dependencies {
 
     compileOnly(Libs.hikaricp)
 
-    testImplementation(Libs.mysql_connector_java)
+    testImplementation(Libs.mysql_connector_j)
     testImplementation(Libs.mariadb_java_client)
     testImplementation(Libs.postgresql_driver)
 
