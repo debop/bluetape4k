@@ -1,7 +1,7 @@
 package io.bluetape4k.data.hibernate.reactive.stage
 
-import jakarta.persistence.EntityGraph
 import java.util.concurrent.CompletionStage
+import javax.persistence.EntityGraph
 import org.hibernate.LockMode
 import org.hibernate.reactive.common.ResultSetMapping
 import org.hibernate.reactive.stage.Stage

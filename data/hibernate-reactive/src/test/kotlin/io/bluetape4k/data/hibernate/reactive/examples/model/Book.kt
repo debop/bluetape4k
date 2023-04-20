@@ -3,17 +3,17 @@ package io.bluetape4k.data.hibernate.reactive.examples.model
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.support.hashOf
-import jakarta.persistence.Access
-import jakarta.persistence.AccessType
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
-import jakarta.validation.constraints.Past
 import java.time.LocalDate
+import javax.persistence.Access
+import javax.persistence.AccessType
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.ManyToOne
+import javax.persistence.Table
+import javax.validation.constraints.Past
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.FetchProfile
 

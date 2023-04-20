@@ -9,8 +9,8 @@ import io.bluetape4k.data.hibernate.reactive.mutiny.withSessionAndAwait
 import io.bluetape4k.data.hibernate.reactive.mutiny.withTransactionAndAwait
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.smallrye.mutiny.coroutines.awaitSuspending
-import jakarta.persistence.criteria.CriteriaQuery
 import java.time.LocalDate
+import javax.persistence.criteria.CriteriaQuery
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
 import org.amshove.kluent.shouldNotBeNull
@@ -75,11 +75,11 @@ class MutinySessionFactoryExamples: AbstractMutinyTest() {
         criteria.select(root)
 
         val books = sf.withSessionAndAwait { session ->
-            val graph: RootGraph<Book> = session.createEntityGraph(Book::class.java) as RootGraph<Book>
+            val graph = session.createEntityGraph(Book::class.java)
             graph.addAttributeNodes(Book::author.name)
 
             val query: Mutiny.Query<Book> = session.createQuery(criteria)
-            query.applyLoadGraph(graph)
+            query.setPlan(graph)
 
             query.resultList.awaitSuspending()
         }
@@ -99,11 +99,11 @@ class MutinySessionFactoryExamples: AbstractMutinyTest() {
         criteria.select(book).where(cb.equal(author.get(Author_.name), "Debop"))
 
         val books = sf.withSessionAndAwait { session ->
-            val graph = session.createEntityGraph(Book::class.java) as RootGraph<Book>
+            val graph = session.createEntityGraph(Book::class.java)
             graph.addAttributeNodes(Book_.author)
 
             val query = session.createQuery(criteria)
-            query.applyLoadGraph(graph)
+            query.setPlan(graph)
             query.resultList.awaitSuspending()
         }
         books.forEach {
@@ -146,7 +146,7 @@ class MutinySessionFactoryExamples: AbstractMutinyTest() {
                 addAttributeNodes(Author_.books)
             } as RootGraph<Author>
 
-            session.createQuery(criteria).applyLoadGraph(graph).resultList.awaitSuspending()
+            session.createQuery(criteria).setPlan(graph).resultList.awaitSuspending()
         }
 
         authors.forEach { a ->

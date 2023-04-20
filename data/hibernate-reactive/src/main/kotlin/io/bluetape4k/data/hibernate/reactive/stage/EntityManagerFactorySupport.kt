@@ -1,6 +1,6 @@
 package io.bluetape4k.data.hibernate.reactive.stage
 
-import jakarta.persistence.EntityManagerFactory
+import javax.persistence.EntityManagerFactory
 import org.hibernate.reactive.stage.Stage
 
 

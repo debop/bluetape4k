@@ -102,9 +102,9 @@ object Versions {
     // 참고: https://github.com/redisson/redisson/issues/4809
     const val redisson = "3.20.1"
 
-    const val hibernate = "6.2.1.Final"
-    const val hibernate_reactive = "2.0.0.Beta2"
-    const val hibernate_validator = "8.0.0.Final"
+    const val hibernate = "5.6.15.Final"
+    const val hibernate_reactive = "1.1.9.Final"
+    const val hibernate_validator = "7.0.5.Final"
     const val querydsl = "5.0.0"
 
     // https://mvnrepository.com/artifact/io.quarkus.platform/quarkus-blaze-persistence-bom
@@ -274,6 +274,7 @@ object Libs {
     val javax_annotation_api get() = "javax.annotation:javax.annotation-api:1.3.2"
     val javax_cache_api get() = "javax.cache:cache-api:1.1.1"
     val javax_inject get() = "javax.inject:javax.inject:1"
+    val javax_persistence_api get() = "javax.persistence:javax.persistence-api:2.2"
     val javax_servlet_api get() = "javax.servlet:javax.servlet-api:4.0.1"
     val javax_transaction_api get() = "javax.transaction:jta:1.1"
     val javax_validation_api get() = "javax.validation:validation-api:2.0.1.Final"
@@ -869,7 +870,7 @@ object Libs {
     val vault_java_driver get() = "com.bettercloud:vault-java-driver:5.1.0"
 
     // Hibernate
-    fun hibernate(module: String) = "org.hibernate.orm:hibernate-$module:${Versions.hibernate}"
+    fun hibernate(module: String) = "org.hibernate:hibernate-$module:${Versions.hibernate}"
     val hibernate_core get() = hibernate("core")
     val hibernate_jcache get() = hibernate("jcache")
     val hibernate_testing get() = hibernate("testing")

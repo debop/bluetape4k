@@ -44,9 +44,9 @@ dependencies {
     api(project(":bluetape4k-vertx-core"))
 
     // NOTE: Java 9+ 환경에서 kapt가 제대로 동작하려면 javax.annotation-api 를 참조해야 합니다.
-    api(Libs.jakarta_annotation_api)
+    api(Libs.javax_annotation_api)
 
-    api(Libs.jakarta_persistence_api)
+    api(Libs.javax_persistence_api)
     api(Libs.hibernate_reactive_core)
 
     // hibernate-reactive 는 querydsl 을 사용하지 못한다. 대신 jpamodelgen 을 사용합니다.
@@ -54,7 +54,7 @@ dependencies {
     kaptTest(Libs.hibernate_jpamodelgen)
 
     implementation(Libs.hibernate_validator)
-    runtimeOnly(Libs.jakarta_el)
+    runtimeOnly(Libs.javax_validation_api)
 
     api(Libs.mutiny_kotlin)
     api(Libs.kotlinx_coroutines_jdk8)

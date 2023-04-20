@@ -1,7 +1,7 @@
 package io.bluetape4k.data.hibernate.reactive.mutiny
 
 import io.smallrye.mutiny.Uni
-import jakarta.persistence.EntityGraph
+import javax.persistence.EntityGraph
 import org.hibernate.LockMode
 import org.hibernate.reactive.common.AffectedEntities
 import org.hibernate.reactive.common.Identifier

@@ -3,17 +3,17 @@ package io.bluetape4k.data.hibernate.reactive.examples.model
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.core.requireNotBlank
-import jakarta.persistence.Access
-import jakarta.persistence.AccessType
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
+import javax.persistence.Access
+import javax.persistence.AccessType
+import javax.persistence.CascadeType
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.OneToMany
+import javax.persistence.Table
 
 @Entity
 @Table(name = "authors")
