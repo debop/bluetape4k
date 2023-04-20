@@ -13,7 +13,7 @@ object Plugins {
         const val testLogger = "3.2.0"
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.2"
-        const val spring_boot = "3.0.5"
+        const val spring_boot = "2.7.10"
         const val jacoco = "0.8.8"
         const val quarkus = "2.16.6.Final"
     }
@@ -102,16 +102,23 @@ object Versions {
     // 참고: https://github.com/redisson/redisson/issues/4809
     const val redisson = "3.20.1"
 
+    // NOTE: Hibernate 는 jakarta 버전인 경우 orm, validator 등이 group 에 포함됩니다.
+    // NOTE: 이 경우 기존 javax 를 사용하는 버전과 충돌이 생길 수 있으니 조심하세요 
+    // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
+
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
     const val hibernate = "5.6.15.Final"
     const val hibernate_reactive = "1.1.9.Final"
-    const val hibernate_validator = "7.0.5.Final"
+
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
+    const val hibernate_validator = "8.0.0.Final"
     const val querydsl = "5.0.0"
 
     // https://mvnrepository.com/artifact/io.quarkus.platform/quarkus-blaze-persistence-bom
     const val blaze_persistence = "1.6.8"
 
-    const val slf4j = "2.0.7"
-    const val logback = "1.4.6"
+    const val slf4j = "1.7.36"
+    const val logback = "1.2.12"
     const val log4j = "2.17.2"
 
     const val metrics = "4.1.25"

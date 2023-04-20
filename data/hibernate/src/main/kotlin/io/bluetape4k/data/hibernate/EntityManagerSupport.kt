@@ -1,10 +1,10 @@
 package io.bluetape4k.data.hibernate
 
 import io.bluetape4k.data.hibernate.model.JpaEntity
-import jakarta.persistence.EntityManager
-import jakarta.persistence.TypedQuery
 import java.io.Serializable
 import java.sql.Connection
+import javax.persistence.EntityManager
+import javax.persistence.TypedQuery
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.internal.SessionImpl

@@ -1,7 +1,7 @@
 package io.bluetape4k.data.hibernate.stateless
 
 import io.bluetape4k.data.hibernate.sessionFactory
-import jakarta.persistence.EntityManager
+import javax.persistence.EntityManager
 import org.hibernate.SessionFactory
 import org.hibernate.StatelessSession
 

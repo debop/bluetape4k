@@ -46,7 +46,7 @@ class HibernateEntityListener:
         log.trace { "Fail to delete entity. event=$event" }
     }
 
-    override fun requiresPostCommitHandling(persister: EntityPersister?): Boolean {
+    override fun requiresPostCommitHanding(persister: EntityPersister?): Boolean {
         return true
     }
 }

@@ -2,8 +2,8 @@ package io.bluetape4k.data.hibernate.model
 
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.logging.KLogging
-import jakarta.persistence.Transient
 import java.io.Serializable
+import javax.persistence.Transient
 import org.hibernate.Hibernate
 
 /**

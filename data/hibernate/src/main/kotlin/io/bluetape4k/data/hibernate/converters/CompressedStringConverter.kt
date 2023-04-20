@@ -2,8 +2,8 @@ package io.bluetape4k.data.hibernate.converters
 
 import io.bluetape4k.io.compressor.Compressor
 import io.bluetape4k.io.compressor.Compressors
-import jakarta.persistence.AttributeConverter
-import jakarta.persistence.Converter
+import javax.persistence.AttributeConverter
+import javax.persistence.Converter
 
 /**
  * 문자열을 압축해서 문자열로 저장하는 JPA Converter 입니다.

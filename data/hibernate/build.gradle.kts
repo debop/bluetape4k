@@ -42,23 +42,23 @@ dependencies {
     testImplementation(project(":bluetape4k-test-junit5"))
 
     // NOTE: Java 9+ 환경에서 kapt가 제대로 동작하려면 javax.annotation-api 를 참조해야 합니다.
-    api(Libs.jakarta_annotation_api)
+    api(Libs.javax_annotation_api)
 
-    api(Libs.jakarta_persistence_api)
+    api(Libs.javax_persistence_api)
     api(Libs.hibernate_core)
     kapt(Libs.hibernate_jpamodelgen)
     kaptTest(Libs.hibernate_jpamodelgen)
     testImplementation(Libs.hibernate_testing)
 
     // Querydsl
-    compileOnly(Libs.querydsl_jpa + ":jakarta")
+    compileOnly(Libs.querydsl_jpa)
     // Hibernate 6+ 에서는 jakarta 를 사용해야 합니다.
     // https://github.com/querydsl/querydsl/issues/3493
-    kapt(Libs.querydsl_apt + ":jakarta")
-    kaptTest(Libs.querydsl_apt + ":jakarta")
+    kapt(Libs.querydsl_apt + ":jpa")
+    kaptTest(Libs.querydsl_apt + ":jpa")
 
     // Validator
-    api(Libs.jakarta_validation_api)
+    api(Libs.javax_validation_api)
     compileOnly(Libs.hibernate_validator)
 
     // Converter

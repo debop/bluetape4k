@@ -1,8 +1,8 @@
 package io.bluetape4k.data.hibernate.converters
 
-import jakarta.persistence.AttributeConverter
 import java.sql.Timestamp
 import java.time.Duration
+import javax.persistence.AttributeConverter
 
 /**
  * Java Time [Duration]을 [Timestamp]로 변환해서 저장하는 Converter

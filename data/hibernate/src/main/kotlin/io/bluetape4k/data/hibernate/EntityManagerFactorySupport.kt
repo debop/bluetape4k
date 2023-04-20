@@ -1,7 +1,7 @@
 package io.bluetape4k.data.hibernate
 
-import jakarta.persistence.EntityManager
-import jakarta.persistence.EntityManagerFactory
+import javax.persistence.EntityManager
+import javax.persistence.EntityManagerFactory
 
 /**
  * 새로운 [EntityManager] 를 생성하여, DB 작업을 수행하고, [EntityManager]는 소멸시킵니다.
