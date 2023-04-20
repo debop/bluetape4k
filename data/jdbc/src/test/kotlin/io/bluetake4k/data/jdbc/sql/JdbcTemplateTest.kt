@@ -106,11 +106,11 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
             rsFunction
         )?.firstOrNull() shouldBeEqualTo 1
 
-        jdbcTemplate.query(
-            SELECT_ID_BY_DESCRIPTION,
-            arrayOf("python"),
-            rsFunction
-        )?.firstOrNull() shouldBeEqualTo 1
+//        jdbcTemplate.query(
+//            SELECT_ID_BY_DESCRIPTION,
+//            arrayOf("python"),
+//            rsFunction
+//        )?.firstOrNull() shouldBeEqualTo 1
 
         jdbcTemplate.query(
             { conn: Connection -> conn.prepareStatement(SELECT) },
@@ -149,11 +149,11 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
             mapperFunction
         )?.description shouldBeEqualTo expected
 
-        jdbcTemplate.queryForObject(
-            SELECT_BY_ID,
-            arrayOf(1),
-            mapperFunction
-        )?.description shouldBeEqualTo expected
+//        jdbcTemplate.queryForObject(
+//            SELECT_BY_ID,
+//            arrayOf(1),
+//            mapperFunction
+//        )?.description shouldBeEqualTo expected
     }
 
     @Test

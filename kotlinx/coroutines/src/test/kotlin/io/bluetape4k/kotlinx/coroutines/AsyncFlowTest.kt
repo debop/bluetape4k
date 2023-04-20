@@ -2,6 +2,7 @@ package io.bluetape4k.kotlinx.coroutines
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.newFixedThreadPoolContext
@@ -16,6 +17,7 @@ class AsyncFlowTest {
         private const val REPEAT_SIZE = 5
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private val dispatcher = newFixedThreadPoolContext(4, "async")
 
     @RepeatedTest(REPEAT_SIZE)
