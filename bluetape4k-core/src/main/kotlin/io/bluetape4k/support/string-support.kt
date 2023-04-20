@@ -1,3 +1,5 @@
+@file:Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+
 package io.bluetape4k.support
 
 import io.bluetape4k.core.assertPositiveNumber

@@ -8,7 +8,7 @@ object Plugins {
         const val dependency_management = "1.1.0"
         const val jooq = "3.0.3"
         const val protobuf = "0.8.19"
-        const val avro = "1.3.0"
+        const val avro = "1.7.0"
         const val jarTest = "1.0.1"
         const val testLogger = "3.2.0"
         const val shadow = "7.1.2"
@@ -81,6 +81,8 @@ object Versions {
     const val grpc = "1.54.1"
     const val grpc_kotlin = "1.3.0"
     const val protobuf = "3.22.3"
+
+    // https://mvnrepository.com/artifact/org.apache.avro/avro
     const val avro = "1.11.1"
 
     const val feign = "12.3"
@@ -533,6 +535,9 @@ object Libs {
     val avro_ipc_netty get() = "org.apache.avro:avro-ipc-netty:${Versions.avro}"
     val avro_compiler get() = "org.apache.avro:avro-compiler:${Versions.avro}"
     val avro_protobuf get() = "org.apache.avro:avro-protobuf:${Versions.avro}"
+
+    // https://mvnrepository.com/artifact/com.github.avro-kotlin.avro4k/avro4k-core
+    val avro_kotlin get() = "com.github.avro-kotlin.avro4k:avro4k-core:1.7.0"
 
     fun awsSdk(name: String, version: String = Versions.aws) = "com.amazonaws:aws-java-sdk-$name:$version"
     val aws_bom get() = awsSdk("bom")
