@@ -6,7 +6,7 @@ dependencies {
     api(project(":bluetape4k-utils-logging"))
     testImplementation(project(":bluetape4k-test-junit5"))
 
-    compileOnly(Libs.kotlinx_atomicfu)
+    api(Libs.kotlinx_atomicfu)
 
     // Apache Commons
     api(Libs.commons_lang3)
@@ -14,15 +14,16 @@ dependencies {
     compileOnly(Libs.commons_text)
 
     // Coroutines
-    compileOnly(Libs.kotlinx_coroutines_core)
+    api(Libs.kotlinx_coroutines_core)
+    api(Libs.kotlinx_coroutines_jdk8)
     testImplementation(Libs.kotlinx_coroutines_test)
+
+    // Eclipse Collections
+    api(Libs.eclipse_collections)
+    compileOnly(Libs.eclipse_collections_forkjoin)
+    testImplementation(Libs.eclipse_collections_testutils)
 
     // Cache
     compileOnly(Libs.caffeine)
     compileOnly(Libs.caffeine_jcache)
-
-    // Eclipse Collections
-    compileOnly(Libs.eclipse_collections)
-    compileOnly(Libs.eclipse_collections_forkjoin)
-    testImplementation(Libs.eclipse_collections_testutils)
 }

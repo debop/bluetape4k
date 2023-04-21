@@ -4,6 +4,8 @@ import io.bluetape4k.collections.eclipse.emptyFastList
 import io.bluetape4k.collections.eclipse.primitives.toIntArrayList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.ForkJoinPool
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeNull
@@ -15,12 +17,10 @@ import org.eclipse.collections.impl.list.mutable.FastList
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.ForkJoinPool
 
 class EclipseCollectionExamples {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     val executor: ExecutorService = ForkJoinPool.commonPool()
 
@@ -98,15 +98,22 @@ class EclipseCollectionExamples {
         emap["odd"].size shouldBeEqualTo size / 2
     }
 
-    val people = FastList.newList<Person>().apply {
-        add(Person("Mary", "Smith").addPet(PetType.CAT, "Tabby", 2))
-        add(Person("Bob", "Smith").addPet(PetType.CAT, "Dolly", 3).addPet(PetType.DOG, "Spot", 2))
-        add(Person("Ted", "Smith").addPet(PetType.DOG, "Spike", 4))
-        add(Person("Jack", "Snake").addPet(PetType.SNAKE, "Serpy", 1))
-        add(Person("Barry", "Bird").addPet(PetType.BIRD, "Tweety", 2))
-        add(Person("Terry", "Turtle").addPet(PetType.TURTLE, "Speedy", 1))
-        add(Person("Harry", "Hamster").addPet(PetType.HAMSTER, "Fuzzy", 1).addPet(PetType.HAMSTER, "Muzzy", 1))
-    }
+    private val people = FastList.newList<Person>()
+        .apply {
+            add(Person("Mary", "Smith").addPet(PetType.CAT, "Tabby", 2))
+            add(
+                Person("Bob", "Smith").addPet(PetType.CAT, "Dolly", 3)
+                    .addPet(PetType.DOG, "Spot", 2)
+            )
+            add(Person("Ted", "Smith").addPet(PetType.DOG, "Spike", 4))
+            add(Person("Jack", "Snake").addPet(PetType.SNAKE, "Serpy", 1))
+            add(Person("Barry", "Bird").addPet(PetType.BIRD, "Tweety", 2))
+            add(Person("Terry", "Turtle").addPet(PetType.TURTLE, "Speedy", 1))
+            add(
+                Person("Harry", "Hamster").addPet(PetType.HAMSTER, "Fuzzy", 1)
+                    .addPet(PetType.HAMSTER, "Muzzy", 1)
+            )
+        }
 
     @Test
     fun `grouping people by lastname`() {
@@ -179,7 +186,6 @@ class EclipseCollectionExamples {
     data class Person(val firstname: String, val lastname: String, val pets: FastList<Pet> = emptyFastList()) {
 
         val getPetType: (Pet) -> PetType = Pet::type
-
         val name: String = "$firstname $lastname"
 
         fun named(name: String): Boolean = this.name == name
