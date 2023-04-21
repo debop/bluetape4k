@@ -241,7 +241,7 @@ class ExceptionHandlingExamples {
     fun `Coroutine exception handler 를 사용하여 작업하기`() = runTest {
         var hasException = false
 
-        val handler = CoroutineExceptionHandler { ctx, exception ->
+        val handler = CoroutineExceptionHandler { _, exception ->
             hasException = true
             log.error(exception) { "예외가 발생했습니다." }
         }

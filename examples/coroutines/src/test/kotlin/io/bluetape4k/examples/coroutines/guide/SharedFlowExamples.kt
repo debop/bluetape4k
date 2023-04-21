@@ -6,6 +6,7 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import java.time.Duration
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
+@OptIn(DelicateCoroutinesApi::class)
 class SharedFlowExamples {
 
     companion object: KLogging() {
@@ -75,13 +77,13 @@ class SharedFlowExamples {
         jobs += List(5) { producerId ->
             launch(producerDispatcher) {
                 while (isActive) {
-                    log.trace { "Producer[$producerId] emit event ... $Created" }
-                    eventBus.postEvent(Created)
+                    log.trace { "Producer[$producerId] emit event ... ${Event.Created}" }
+                    eventBus.postEvent(Event.Created)
                     totalProduced.incrementAndGet()
                     yield()
 
-                    log.trace { "Producer[$producerId] emit event ... $Deleted" }
-                    eventBus.postEvent(Deleted)
+                    log.trace { "Producer[$producerId] emit event ... ${Event.Deleted}" }
+                    eventBus.postEvent(Event.Deleted)
                     totalProduced.incrementAndGet()
                     yield()
                 }

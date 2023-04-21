@@ -69,7 +69,7 @@ class ChannelAsFlowExamples {
             launch(producerDispatcher) {
                 while (isActive) {
                     totalProduced.incrementAndGet()
-                    eventBus.postEvent(Created)
+                    eventBus.postEvent(Event.Created)
 
                 }
             }
@@ -78,7 +78,7 @@ class ChannelAsFlowExamples {
             launch(producerDispatcher) {
                 while (isActive) {
                     totalProduced.incrementAndGet()
-                    eventBus.postEvent(Deleted)
+                    eventBus.postEvent(Event.Deleted)
 
                 }
             }

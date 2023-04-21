@@ -113,7 +113,7 @@ subprojects {
                     "-progressive",                 // since Kotlin 1.6
                     "-Xenable-builder-inference",   // since Kotlin 1.6
                     "-Xbackend-threads=0",          // since 1.6.20 (0 means one thread per CPU core)
-                    // "-Xuse-k2"                      // since Kotlin 1.7  // kapt not support
+                    // "-Xuse-k2"                   // since Kotlin 1.7  // kapt not support
                 )
 
                 val experimentalAnnotations = listOf(
