@@ -14,6 +14,7 @@ suspend fun <T> Future<T>.awaitSuspending(): T = when (this) {
         when {
             isDone -> {
                 try {
+                    @Suppress("BlockingMethodInNonBlockingContext")
                     get() as T
                 } catch (e: ExecutionException) {
                     throw e.cause ?: e

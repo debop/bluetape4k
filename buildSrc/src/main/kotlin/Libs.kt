@@ -86,6 +86,7 @@ object Versions {
     const val avro = "1.11.1"
 
     const val feign = "12.3"
+    const val httpclient5 = "5.2.1"
     const val retrofit2 = "2.9.0"
     const val okhttp3 = "4.10.0"
     const val asynchttpclient = "2.12.3"
@@ -596,6 +597,10 @@ object Libs {
     val feign_okhttp get() = feign("okhttp")
     val feign_ribbon get() = feign("ribbon")
     val feign_slf4j get() = feign("slf4j")
+
+    // Apache HttpComponents
+    val httpclient5 get() = "org.apache.httpcomponents.client5:httpclient5:${Versions.httpclient5}"
+    val httpcore5 get() = "org.apache.httpcomponents.core5:httpcore5:${Versions.httpclient5}"
 
 
     // Retrofit2

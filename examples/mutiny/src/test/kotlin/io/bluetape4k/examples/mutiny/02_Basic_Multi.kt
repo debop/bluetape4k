@@ -30,7 +30,6 @@ class MultiBasicExamples {
 
     @Test
     fun `01 Multi Basic`() {
-
         // Just item
         multiOf(1, 2, 3)
             .subscribe().with(
@@ -96,7 +95,7 @@ class MultiBasicExamples {
         val captures = mutableListOf<String>()
 
         Multi.createFrom()
-            .emitter<String> { emitter ->
+            .emitter { emitter ->
                 val scheduledFuture = service.scheduleAtFixedRate(
                     {
                         emitter.emit("tick")
