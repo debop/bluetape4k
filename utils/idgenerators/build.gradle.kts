@@ -9,5 +9,7 @@ dependencies {
     // https://github.com/cowtowncoder/java-uuid-generator
     compileOnly(Libs.java_uuid_generator)
 
+    compileOnly(Libs.commons_codec)
+
     testImplementation(Libs.eclipse_collections)
 }

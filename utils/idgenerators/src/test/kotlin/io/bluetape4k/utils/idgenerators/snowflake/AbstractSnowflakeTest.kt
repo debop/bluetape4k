@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 
 abstract class AbstractSnowflakeTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 10
         private const val TEST_COUNT = MAX_SEQUENCE * 4
         private val TEST_LIST = List(TEST_COUNT) { it }
@@ -29,7 +29,7 @@ abstract class AbstractSnowflakeTest {
         machineId shouldBeInRange (0 until MAX_MACHINE_ID)
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `generate snowflake id`() {
         snowflake.nextId()
 
@@ -45,19 +45,19 @@ abstract class AbstractSnowflakeTest {
         }
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `generate snowflake ids`() {
         val ids = snowflake.nextIds(TEST_COUNT).toList()
         verifyIds(ids)
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `generate snowflake as parallel`() {
         val ids = TEST_LIST.parallelStream().map { snowflake.nextId() }.sorted().toList()
         verifyIds(ids)
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `generate snowflake id as string`() {
         val id1 = snowflake.nextIdAsString()
         val id2 = snowflake.nextIdAsString()
@@ -76,13 +76,13 @@ abstract class AbstractSnowflakeTest {
         (id3 > id2).shouldBeTrue()
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `generate snowflake ids as string`() {
         val ids = snowflake.nextIdsAsString(TEST_COUNT).toList()
         verifyIdsAsString(ids)
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `generate snowflake id as String as parallel`() {
         val ids = TEST_LIST.parallelStream().map { snowflake.nextIdAsString() }.sorted().toList()
         verifyIdsAsString(ids)
@@ -107,7 +107,7 @@ abstract class AbstractSnowflakeTest {
         }
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `parse snowflake id`() {
         snowflake.nextId()  // for warmup
 
@@ -129,7 +129,7 @@ abstract class AbstractSnowflakeTest {
         snowflakeId3.value shouldBeEqualTo id3
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `parse snowflake ids as sequence`() {
         val ids = snowflake.nextIds(TEST_COUNT).toList()
         val snowflakeIds = ids.map { snowflake.parse(it) }.toList()
@@ -138,7 +138,7 @@ abstract class AbstractSnowflakeTest {
         snowflakeIds.all { ids.contains(it.value) }.shouldBeTrue()
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `parse snowflake ids as parallel`() {
         val ids = snowflake.nextIds(TEST_COUNT).toList()
         val snowflakeIds = ids.asParallelStream().map { snowflake.parse(it) }.toList()
@@ -147,7 +147,7 @@ abstract class AbstractSnowflakeTest {
         snowflakeIds.all { ids.contains(it.value) }.shouldBeTrue()
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `parse snowflake id as string`() {
         val id1 = snowflake.nextIdAsString()
         val id2 = snowflake.nextIdAsString()
@@ -179,7 +179,7 @@ abstract class AbstractSnowflakeTest {
         snowflakeId4.timestamp shouldBeGreaterThan snowflakeId2.timestamp
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `parse snowflake ids as String`() {
         val ids = snowflake.nextIdsAsString(TEST_COUNT)
         val snowflakeIds = ids.map { snowflake.parse(it).value }
@@ -190,7 +190,7 @@ abstract class AbstractSnowflakeTest {
         snowflakeIds.toSet().size shouldBeEqualTo ids.size
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `parse snowflake id as String as parallel`() {
         val ids = snowflake.nextIdsAsString(TEST_COUNT)
         val snowflakeIds = ids.asParallelStream().map { snowflake.parse(it).value }.sorted().toList()
@@ -205,6 +205,7 @@ abstract class AbstractSnowflakeTest {
         val sorted = ids.sorted()
         sorted.forEachIndexed { index, id ->
             id shouldBeEqualTo ids[index]
+            log.trace { "id[$index]=$id" }
         }
         ids.toSet().size shouldBeEqualTo ids.size
     }
@@ -213,6 +214,7 @@ abstract class AbstractSnowflakeTest {
         val sorted = ids.sorted()
         sorted.forEachIndexed { index, id ->
             id shouldBeEqualTo ids[index]
+            log.trace { "id[$index]=$id" }
         }
         ids.toSet().size shouldBeEqualTo ids.size
     }
