@@ -25,6 +25,6 @@ dependencies {
 
     api(Libs.commons_lang3)
 
-    compileOnly(Libs.kotlinx_coroutines_jdk8)
+    compileOnly(Libs.kotlinx_coroutines_core)
     compileOnly(Libs.kotlinx_coroutines_test)
 }
