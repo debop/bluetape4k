@@ -113,6 +113,7 @@ class ByteBufByteTest {
         }
     }
 
+    @Suppress("OPT_IN_USAGE")
     private fun doUByteGSTest(setter: ByteBuf.(Int, Int) -> ByteBuf, getter: ByteBuf.(Int) -> UByte) {
         val testData = Random.nextUBytes(DATA_SIZE)
         val buf = ByteBufAllocator.DEFAULT.buffer(testData.size * UByte.SIZE_BYTES)
@@ -128,6 +129,7 @@ class ByteBufByteTest {
         }
     }
 
+    @Suppress("OPT_IN_USAGE")
     private fun doUByteRWTest(writer: ByteBuf.(Int) -> ByteBuf, reader: ByteBuf.() -> UByte) {
         val testData = Random.nextUBytes(DATA_SIZE)
         val buf = ByteBufAllocator.DEFAULT.buffer(testData.size * UByte.SIZE_BYTES)

@@ -1,14 +1,14 @@
 package io.bluetape4k.utils.money
 
 import io.bluetape4k.logging.KLogging
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeNear
-import org.junit.jupiter.api.Test
 import java.math.BigDecimal
-import java.util.*
+import java.util.Locale
 import javax.money.CurrencyUnit
 import javax.money.Monetary
 import javax.money.format.MonetaryFormats
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeNear
+import org.junit.jupiter.api.Test
 
 class FastMoneySupportTest {
 
@@ -86,7 +86,7 @@ class FastMoneySupportTest {
     fun `외화 환전하기`() {
         val usd = 1000L.toFastMoneyMinor(USD, 2)
         val eur = usd.convertTo(EUR)
-        val krw = usd.convertTo(KRW)
+        // val krw = usd.convertTo(KRW)
 
         eur.convertTo(USD).doubleValue.shouldBeNear(usd.doubleValue, 1e-2)
 

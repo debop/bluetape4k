@@ -2,7 +2,7 @@ package io.bluetape4k.codec
 
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
-import io.bluetape4k.support.toUtf8ByteArray
+import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
@@ -30,7 +30,7 @@ abstract class AbstractStringEncoderTest {
     @RepeatedTest(10)
     fun `encode decode string`(@RandomValue expected: String) {
 
-        val encoded = encoder.encode(expected.toUtf8ByteArray())
+        val encoded = encoder.encode(expected.toUtf8Bytes())
         val decoded = encoder.decode(encoded)
 
         decoded.toUtf8String() shouldBeEqualTo expected

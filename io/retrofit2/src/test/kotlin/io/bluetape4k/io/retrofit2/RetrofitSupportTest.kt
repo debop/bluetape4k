@@ -68,7 +68,7 @@ class RetrofitSupportTest: AbstractRetrofitTest() {
 
         @RepeatedTest(REPEAT_SIZE)
         fun `Retrofit용 API를 활용한 동기방식 Bulk 호출`() {
-            val responses = List(CALL_SIZE) {
+            List(CALL_SIZE) {
                 jsonApi.getPost(Random.nextInt(1, 100)).execute()
             }
         }

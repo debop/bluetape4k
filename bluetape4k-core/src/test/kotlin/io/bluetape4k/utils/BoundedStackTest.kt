@@ -12,7 +12,7 @@ class BoundedStackTest {
     @Test
     fun `invalid bound`() {
         assertFailsWith<IllegalArgumentException> {
-            val stack = BoundedStack<Int>(0)
+            BoundedStack<Int>(0)
         }
     }
 

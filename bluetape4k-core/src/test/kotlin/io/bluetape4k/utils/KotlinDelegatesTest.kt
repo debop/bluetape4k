@@ -71,6 +71,7 @@ class KotlinDelegatesTest {
 
     class Baz(var param1: String = "a", var param2: Optional<Int> = Optional.empty())
 
+    @Suppress("UNUSED_PARAMETER")
     class TwoConstructorsWithDefaultOne {
         // kotlin 의 primary constructor가 아닙니다.
         constructor()
@@ -78,6 +79,7 @@ class KotlinDelegatesTest {
         constructor(param1: String)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     class TwoConstructorsWithoutDefaultOne {
         // kotlin 의 primary constructor가 아닙니다.
         constructor(param1: String)
@@ -85,11 +87,13 @@ class KotlinDelegatesTest {
         constructor(param1: String, param2: String)
     }
 
+    @Suppress("ConvertSecondaryConstructorToPrimary")
     class OneConstructorWithDefaultOne {
         // kotlin 의 primary constructor가 아닙니다.
         constructor()
     }
 
+    @Suppress("UNUSED_PARAMETER", "ConvertSecondaryConstructorToPrimary")
     class OneConstructorWithoutDefaultOne {
         // kotlin 의 primary constructor가 아닙니다.
         constructor(param1: String)

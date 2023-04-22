@@ -14,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.assertFailsWith
 
+@Suppress("DEPRECATION")
 class BatchSequenceTest {
 
     companion object : KLogging()
