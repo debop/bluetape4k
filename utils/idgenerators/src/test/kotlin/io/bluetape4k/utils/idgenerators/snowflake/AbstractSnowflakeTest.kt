@@ -33,14 +33,12 @@ abstract class AbstractSnowflakeTest {
     fun `generate snowflake id`() {
         snowflake.nextId()
 
-        val id1 = snowflake.nextId()
-        val id2 = snowflake.nextId()
-        val id3 = snowflake.nextId()
+        val ids = List(3) { snowflake.nextId() }
 
-        id2 shouldBeGreaterThan id1
-        id3 shouldBeGreaterThan id2
+        ids[1] shouldBeGreaterThan ids[0]
+        ids[2] shouldBeGreaterThan ids[1]
 
-        listOf(id1, id2, id3).forEach {
+        ids.forEach {
             log.trace { "id=$it, ${snowflake.parse(it)}" }
         }
     }
@@ -205,7 +203,7 @@ abstract class AbstractSnowflakeTest {
         val sorted = ids.sorted()
         sorted.forEachIndexed { index, id ->
             id shouldBeEqualTo ids[index]
-            log.trace { "id[$index]=$id" }
+            // log.trace { "id[$index]=$id" }
         }
         ids.toSet().size shouldBeEqualTo ids.size
     }
@@ -214,7 +212,7 @@ abstract class AbstractSnowflakeTest {
         val sorted = ids.sorted()
         sorted.forEachIndexed { index, id ->
             id shouldBeEqualTo ids[index]
-            log.trace { "id[$index]=$id" }
+            // log.trace { "id[$index]=$id" }
         }
         ids.toSet().size shouldBeEqualTo ids.size
     }

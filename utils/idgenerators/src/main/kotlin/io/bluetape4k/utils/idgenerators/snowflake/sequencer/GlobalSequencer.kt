@@ -4,6 +4,8 @@ import io.bluetape4k.utils.idgenerators.snowflake.MAX_MACHINE_ID
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_SEQUENCE
 import io.bluetape4k.utils.idgenerators.snowflake.SnowflakeId
 import java.util.concurrent.atomic.LongAdder
+import java.util.concurrent.locks.ReentrantLock
+import kotlinx.atomicfu.locks.withLock
 
 /**
  * MachineId 구분 없이 Sequence를 생성합니다.
@@ -14,12 +16,18 @@ import java.util.concurrent.atomic.LongAdder
  *
  * MAX_MACHINE_ID * MAX_SEQUENCE 값보더 더 많은 sequence를 생성하려면 최대 1 msec가 소요됩니다.
  */
-class GlobalSequencer : Sequencer {
+class GlobalSequencer: Sequencer {
 
+    @Volatile
+    private var currentTimestamp: Long = -1L
+
+    @Volatile
     private var lastTimestamp: Long = -1L
+
     private val machineIdSequencer = LongAdder()
     private val sequencer = LongAdder()
-    private val syncObj = Any()
+
+    private val lock = ReentrantLock()
 
     override var machineId: Int
         get() = machineIdSequencer.toInt()
@@ -39,64 +47,44 @@ class GlobalSequencer : Sequencer {
      * MAX_MACHINE_ID * MAX_SEQUENCE 값보더 더 많은 sequence를 생성하려면 최대 1 msec가 소요됩니다.
      */
     override fun nextSequence(): SnowflakeId {
-        synchronized(syncObj) {
-            var currentTimestamp = System.currentTimeMillis()
-
-            if (currentTimestamp == lastTimestamp) {
-                sequencer.increment()
-                if (sequencer.toLong() >= MAX_SEQUENCE) {
-                    machineIdSequencer.increment()
-
-                    // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
-                    if (machineId >= MAX_MACHINE_ID) {
-                        while (currentTimestamp == lastTimestamp) {
-                            currentTimestamp = System.currentTimeMillis()
-                        }
-                        machineIdSequencer.reset()
-                        lastTimestamp = currentTimestamp
-                    }
-                    sequencer.reset()
-                }
-            } else {
-                // Reset sequence and machine id
-                sequencer.reset()
-                machineId = 0
-                lastTimestamp = currentTimestamp
-            }
+        lock.withLock {
+            updateState()
             return SnowflakeId(lastTimestamp, machineId, sequencer.toInt())
         }
     }
 
     override fun nextSequences(size: Int): List<SnowflakeId> {
-        synchronized(syncObj) {
-            val results = mutableListOf<SnowflakeId>()
-            var currentTimestamp = System.currentTimeMillis()
+        lock.withLock {
+            return List(size) {
+                updateState()
+                SnowflakeId(lastTimestamp, machineId, sequencer.toInt())
+            }
+        }
+    }
 
-            repeat(size) {
-                if (currentTimestamp == lastTimestamp) {
-                    sequencer.increment()
-                    if (sequencer.toLong() >= MAX_SEQUENCE) {
-                        machineIdSequencer.increment()
+    private fun updateState() {
+        currentTimestamp = System.currentTimeMillis()
 
-                        // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
-                        if (machineId >= MAX_MACHINE_ID) {
-                            while (currentTimestamp == lastTimestamp) {
-                                currentTimestamp = System.currentTimeMillis()
-                            }
-                            machineIdSequencer.reset()
-                            lastTimestamp = currentTimestamp
-                        }
-                        sequencer.reset()
+        if (currentTimestamp == lastTimestamp) {
+            sequencer.increment()
+            if (sequencer.toLong() >= MAX_SEQUENCE) {
+                machineIdSequencer.increment()
+
+                // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
+                if (machineId >= MAX_MACHINE_ID) {
+                    while (currentTimestamp == lastTimestamp) {
+                        currentTimestamp = System.currentTimeMillis()
                     }
-                } else {
-                    // Reset sequence and machine id
-                    sequencer.reset()
-                    machineId = 0
+                    machineIdSequencer.reset()
                     lastTimestamp = currentTimestamp
                 }
-                results.add(SnowflakeId(lastTimestamp, machineId, sequencer.toInt()))
+                sequencer.reset()
             }
-            return results
+        } else {
+            // Reset sequence and machine id
+            sequencer.reset()
+            machineId = 0
+            lastTimestamp = currentTimestamp
         }
     }
 }

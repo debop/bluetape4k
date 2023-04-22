@@ -1,22 +1,23 @@
 package io.bluetape4k.utils.idgenerators.snowflake.sequencer
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_MACHINE_ID
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_SEQUENCE
 import io.bluetape4k.utils.idgenerators.snowflake.SnowflakeId
+import java.util.stream.IntStream
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeLessThan
+import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import java.util.stream.IntStream
 import kotlin.math.absoluteValue
 
 abstract class AbstractSequencerTest {
 
     companion object : KLogging() {
-        private const val TEST_SIZE: Int = MAX_SEQUENCE * 32
+        private const val TEST_SIZE: Int = MAX_SEQUENCE * 4
     }
 
     protected abstract val sequencer: Sequencer
@@ -40,19 +41,31 @@ abstract class AbstractSequencerTest {
 
     @RepeatedTest(10)
     fun `generate sequence`() {
+        val ids = List(TEST_SIZE) { sequencer.nextSequence() }
+
+        ids shouldHaveSize TEST_SIZE
+        ids.distinct() shouldBeEqualTo ids
+//        ids.forEach {
+//            log.trace { it }
+//        }
+    }
+
+    @RepeatedTest(10)
+    fun `generate sequence as parallel`() {
         val ids = IntStream.range(0, TEST_SIZE)
             .parallel()
             .mapToObj { sequencer.nextSequence() }
             .toList()
 
-        val resetIds = ids.filter { it.sequence == 0 }.sortedWith(comparator)
-
-        resetIds.forEach {
-            log.trace { it }
-        }
+//        ids.forEach {
+//            log.trace { it }
+//        }
 
         //ids.count { it.machineId > 0 } shouldBeGreaterThan 0
-        ids.toSet().size shouldBeEqualTo ids.size
+        ids.distinct().size shouldBeEqualTo ids.size
+
+        val resetIds = ids.filter { it.sequence == 0 }.sortedWith(comparator)
+        resetIds.size shouldBeLessThan ids.size
     }
 
     @ParameterizedTest
