@@ -77,10 +77,13 @@ class MultithreadingTester {
      * @see [numRoundsPerThread]
      */
     fun run() {
-        check(runnableAsserts.isNotEmpty()) { "No RunnableAsserts added. Please add at least one RunnableAssert." }
-        check(numThreads >= runnableAsserts.size) { "numThreads($numThreads) < runnableAsserts.size(${runnableAsserts.size})" }
+        check(runnableAsserts.isNotEmpty()) {
+            "No RunnableAsserts added. Please add at least one RunnableAssert."
+        }
+        check(numThreads >= runnableAsserts.size) {
+            "numThreads($numThreads) < runnableAsserts.size(${runnableAsserts.size})"
+        }
 
-        numThreads = numThreads.coerceAtLeast(runnableAsserts.size)
         val me = MultiException()
         startMonitorThread(me)
         try {
