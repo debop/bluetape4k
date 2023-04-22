@@ -1,15 +1,19 @@
 package io.bluetape4k.utils.idgenerators.snowflake.sequencer
 
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_MACHINE_ID
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_SEQUENCE
 import io.bluetape4k.utils.idgenerators.snowflake.SnowflakeId
+import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.IntStream
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeLessThan
+import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.RepeatedTest
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import kotlin.math.absoluteValue
@@ -73,5 +77,16 @@ abstract class AbstractSequencerTest {
     fun `create Snowflake instance with invalid machineId`(machineId: Int) {
         val sequencer = DefaultSequencer(machineId)
         sequencer.machineId shouldBeEqualTo (machineId.absoluteValue % MAX_MACHINE_ID)
+    }
+
+    @Test
+    fun `generate sequence in multithreading`() {
+        val idMap = ConcurrentHashMap<Long, Int>()
+        MultithreadingTester().numThreads(100).roundsPerThread(MAX_SEQUENCE * 2)
+            .add {
+                val id = sequencer.nextSequence()
+                idMap.putIfAbsent(id.value, 1).shouldBeNull()
+            }
+            .run()
     }
 }

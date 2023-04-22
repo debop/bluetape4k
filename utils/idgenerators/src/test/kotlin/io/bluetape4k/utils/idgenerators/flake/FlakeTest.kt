@@ -1,14 +1,17 @@
 package io.bluetape4k.utils.idgenerators.flake
 
 import io.bluetape4k.codec.encodeHexString
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import java.time.Clock
 import java.time.Duration
+import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldHaveSize
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
@@ -76,6 +79,18 @@ class FlakeTest {
         val seq2 = flake.nextId().copyOfRange(14, 15)
 
         seq2 shouldBeEqualTo seq1
+    }
+
+    @Test
+    fun `generate id in multi threading`() {
+        val flake = Flake()
+        val idMap = ConcurrentHashMap<String, Int>()
+        MultithreadingTester().numThreads(100).roundsPerThread(1000)
+            .add {
+                val id = Flake.asBase62String(flake.nextId())
+                idMap.putIfAbsent(id, 1).shouldBeNull()
+            }
+            .run()
     }
 
     @Test

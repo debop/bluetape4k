@@ -1,14 +1,17 @@
 package io.bluetape4k.utils.idgenerators.snowflake
 
 import io.bluetape4k.collections.stream.asParallelStream
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.idgenerators.getMachineId
 import io.bluetape4k.utils.idgenerators.parseAsLong
+import java.util.concurrent.ConcurrentHashMap
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldBeInRange
+import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
@@ -84,6 +87,17 @@ abstract class AbstractSnowflakeTest {
     fun `generate snowflake id as String as parallel`() {
         val ids = TEST_LIST.parallelStream().map { snowflake.nextIdAsString() }.sorted().toList()
         verifyIdsAsString(ids)
+    }
+
+    @Test
+    fun `generate snowflake id in multithread`() {
+        val idMap = ConcurrentHashMap<Long, Int>()
+        MultithreadingTester().numThreads(100).roundsPerThread(TEST_COUNT)
+            .add {
+                val id = snowflake.nextId()
+                idMap.putIfAbsent(id, 1).shouldBeNull()
+            }
+            .run()
     }
 
     @Test

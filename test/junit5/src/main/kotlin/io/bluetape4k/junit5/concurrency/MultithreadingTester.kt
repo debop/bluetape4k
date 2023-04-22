@@ -44,7 +44,7 @@ class MultithreadingTester {
     }
 
     fun roundsPerThread(roundsPerThreads: Int) = apply {
-        check(roundsPerThreads in 1..4000) { "Invalid roundsPerThreads: $roundsPerThreads -- must be range in 1..4000" }
+        check(roundsPerThreads in 1..Int.MAX_VALUE) { "Invalid roundsPerThreads: $roundsPerThreads -- must be range in 1..${Int.MAX_VALUE}" }
         this.roundsPerThreads = roundsPerThreads
     }
 
