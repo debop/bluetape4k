@@ -41,17 +41,6 @@ allprojects {
             name = "Kotlinx"
             url = uri("https://dl.bintray.com/kotlin/kotlinx/")
         }
-
-        // for Oracle ojdbc10
-//        maven {
-//            name = "ICM"
-//            url = uri("https://maven.icm.edu.pl/artifactory/repo/")
-//        }
-
-        maven {
-            name = "jitpack"
-            url = uri("https://jitpack.io")
-        }
     }
 }
 

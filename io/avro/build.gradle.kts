@@ -17,6 +17,11 @@ avro {
 tasks["compileKotlin"].dependsOn(tasks["generateAvroJava"])
 tasks["compileTestKotlin"].dependsOn(tasks["generateTestAvroJava"])
 
+
+configurations {
+    testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
+}
+
 dependencies {
     api(project(":bluetape4k-io-core"))
 
