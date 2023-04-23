@@ -46,35 +46,27 @@ class MarshallingSerializer private constructor(
 
 
     override fun doSerialize(graph: Any): ByteArray {
-        val marshaller = factory.createMarshaller(configuration)
-        try {
+        return factory.createMarshaller(configuration).use { marshaller ->
             ByteArrayOutputStream(DEFAULT_BUFFER_SIZE).use { bos ->
                 OutputStreamByteOutput(bos).use { osbo ->
                     marshaller.start(osbo)
                     marshaller.writeObject(graph)
                     marshaller.flush()
                 }
-                return bos.toByteArray()
+                bos.toByteArray()
             }
-        } finally {
-            marshaller.finish()
-            marshaller.close()
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : Any> doDeserialize(bytes: ByteArray): T? {
-        val unmarshaller = factory.createUnmarshaller(configuration)
-        try {
+        return factory.createUnmarshaller(configuration).use { unmarshaller ->
             ByteArrayInputStream(bytes).buffered(DEFAULT_BUFFER_SIZE).use { bis ->
                 InputStreamByteInput(bis).use { inputStream ->
                     unmarshaller.start(inputStream)
-                    return unmarshaller.readObject() as? T
+                    unmarshaller.readObject() as? T
                 }
             }
-        } finally {
-            unmarshaller.finish()
-            unmarshaller.close()
         }
     }
 }

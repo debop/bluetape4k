@@ -12,7 +12,7 @@
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.io.retrofit2" level="TRACE"/>
+    <logger name="io.bluetape4k.io" level="TRACE"/>
 
     <root level="INFO">
         <appender-ref ref="Console"/>
