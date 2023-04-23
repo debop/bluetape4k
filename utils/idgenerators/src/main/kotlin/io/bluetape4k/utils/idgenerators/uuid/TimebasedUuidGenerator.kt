@@ -1,9 +1,7 @@
 package io.bluetape4k.utils.idgenerators.uuid
 
-import com.fasterxml.uuid.EthernetAddress
 import com.fasterxml.uuid.Generators
-import com.fasterxml.uuid.UUIDTimer
-import com.fasterxml.uuid.impl.TimeBasedGenerator
+import com.fasterxml.uuid.NoArgGenerator
 import io.bluetape4k.codec.Url62
 import io.bluetape4k.core.assertPositiveNumber
 import java.util.*
@@ -13,12 +11,8 @@ import java.util.*
  */
 class TimebasedUuidGenerator {
 
-    private val uuidTimer: UUIDTimer by lazy {
-        UUIDTimer(Random(System.currentTimeMillis()), null)
-    }
-
-    private val generator: TimeBasedGenerator by lazy {
-        Generators.timeBasedGenerator(EthernetAddress.fromInterface(), uuidTimer)
+    private val generator: NoArgGenerator by lazy {
+        Generators.timeBasedReorderedGenerator()
     }
 
     /**

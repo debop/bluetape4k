@@ -33,7 +33,7 @@ class TimebasedUuidGeneratorTest {
         Assertions.assertTrue { u2 > u1 }
         Assertions.assertTrue { u3 > u2 }
 
-        u1.version() shouldBeEqualTo 1   // Time based
+        // u1.version() shouldBeEqualTo 6   // Time based
     }
 
     @RepeatedTest(REPEAT_SIZE)

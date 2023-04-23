@@ -957,7 +957,7 @@ object Libs {
     val flyway_core get() = "org.flywaydb:flyway-core:8.5.9"
 
     // UUID Generator
-    val java_uuid_generator get() = "com.fasterxml.uuid:java-uuid-generator:4.0.1"
+    val java_uuid_generator get() = "com.fasterxml.uuid:java-uuid-generator:4.1.0"
     val uuid_creator get() = "com.github.f4b6a3:uuid-creator:1.3.9"
 
     // Cache2K
