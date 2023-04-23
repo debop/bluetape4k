@@ -30,17 +30,25 @@ class K3sServer private constructor(
         const val NAME = "k3s"
         const val TAG = "v1.23.6-k3s1"
 
+        // K3s Ports : https://rancher.com/docs/rancher/v2.5/en/installation/requirements/ports/#commonly-used-ports
         const val KUBE_SECURE_PORT = 6443
         const val RANCHER_WEBHOOK_PORT = 8443
 
         operator fun invoke(
-            image: String = IMAGE,
+            imageName: DockerImageName,
+            useDefaultPort: Boolean = false,
+            reuse: Boolean = true,
+        ): K3sServer {
+            return K3sServer(imageName, useDefaultPort, reuse)
+        }
+
+        operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): K3sServer {
-            val imageName = DockerImageName.parse(image).withTag(tag)
-            return K3sServer(imageName, useDefaultPort, reuse)
+            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
+            return invoke(imageName, useDefaultPort, reuse)
         }
     }
 
@@ -50,7 +58,6 @@ class K3sServer private constructor(
     val rancherWebhookPort: Int get() = getMappedPort(RANCHER_WEBHOOK_PORT)
 
     init {
-        withExposedPorts(KUBE_SECURE_PORT, RANCHER_WEBHOOK_PORT)
         withReuse(reuse)
         withLogConsumer(Slf4jLogConsumer(log))
 

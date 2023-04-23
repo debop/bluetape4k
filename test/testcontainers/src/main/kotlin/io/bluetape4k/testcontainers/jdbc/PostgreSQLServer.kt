@@ -6,6 +6,7 @@ import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.output.Slf4jLogConsumer
+import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
 class PostgreSQLServer private constructor(
@@ -17,7 +18,10 @@ class PostgreSQLServer private constructor(
 ): PostgreSQLContainer<PostgreSQLServer>(imageName), JdbcServer {
 
     companion object: KLogging() {
-        const val TAG: String = "11"
+        const val IMAGE = "postgres"
+        const val TAG: String = "14"
+        const val NAME = "postgresql"
+        const val PORT = 5432
 
         operator fun invoke(
             tag: String = TAG,
@@ -42,18 +46,18 @@ class PostgreSQLServer private constructor(
     }
 
     override val url: String get() = jdbcUrl
-    override val port: Int get() = getMappedPort(POSTGRESQL_PORT)
 
     init {
-        withExposedPorts(POSTGRESQL_PORT)
         withUsername(username)
         withPassword(password)
 
         withReuse(reuse)
         withLogConsumer(Slf4jLogConsumer(log))
 
+        setWaitStrategy(Wait.forListeningPort())
+
         if (useDefaultPort) {
-            exposeCustomPorts(POSTGRESQL_PORT)
+            exposeCustomPorts(PORT)
         }
     }
 

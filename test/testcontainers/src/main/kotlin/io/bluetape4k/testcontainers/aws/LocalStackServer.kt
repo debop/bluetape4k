@@ -7,6 +7,7 @@ import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.localstack.LocalStackContainer
 import org.testcontainers.containers.output.Slf4jLogConsumer
+import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
@@ -39,7 +40,7 @@ class LocalStackServer private constructor(
     companion object: KLogging() {
         val IMAGE = "localstack/localstack"
         val NAME = "localstack"
-        val TAG = "2.0"
+        val TAG = "2.0.2"
         val PORT = 4566
 
         operator fun invoke(
@@ -66,6 +67,8 @@ class LocalStackServer private constructor(
         withExposedPorts(PORT)
         withReuse(reuse)
         withLogConsumer(Slf4jLogConsumer(log))
+
+        setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {
             exposeCustomPorts(PORT)

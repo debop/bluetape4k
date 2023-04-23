@@ -23,7 +23,7 @@ class PostgreSQLServerTest: AbstractJdbcServerTest() {
     fun `launch PostgreSQL server with default port`() {
         PostgreSQLServer(useDefaultPort = true).use { postgres ->
             postgres.start()
-            postgres.port shouldBeEqualTo 5432
+            postgres.port shouldBeEqualTo PostgreSQLServer.PORT
             assertConnection(postgres)
         }
     }
