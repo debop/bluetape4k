@@ -51,6 +51,7 @@ class PrometheusServer private constructor(
         }
     }
 
+    override val url: String get() = "http://$host:$port"
     override val port get() = getMappedPort(PORT)
 
     val serverPort: Int get() = getMappedPort(PORT)
@@ -79,9 +80,9 @@ class PrometheusServer private constructor(
         super.start()
 
         val extraProps = mapOf<String, Any?>(
-            "serverPort" to serverPort,
-            "pushgatewayPort" to pushgatewayPort,
-            "graphiteExporterPort" to graphiteExporterPort
+            "server.port" to serverPort,
+            "pushgateway.port" to pushgatewayPort,
+            "graphiteExporter.port" to graphiteExporterPort
         )
         writeToSystemProperties(NAME, extraProps)
     }

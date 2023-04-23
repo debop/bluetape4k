@@ -38,7 +38,9 @@ class KMSTest {
 
     companion object: KLogging()
 
-    private val kmsServer: LocalStackServer = LocalStackServer().withServices(LocalStackContainer.Service.KMS)
+    private val kmsServer: LocalStackServer by lazy {
+        LocalStackServer.Launcher.locakStack.withServices(LocalStackContainer.Service.KMS)
+    }
     private val endpoint: URI get() = kmsServer.getEndpointOverride(LocalStackContainer.Service.KMS)
 
     private val kmsClient: KmsClient by lazy {

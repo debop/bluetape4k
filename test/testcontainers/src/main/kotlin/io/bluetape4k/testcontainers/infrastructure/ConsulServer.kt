@@ -44,6 +44,7 @@ class ConsulServer private constructor(
         }
     }
 
+    override val url: String get() = "http://$host:$port"
     override val port: Int get() = getMappedPort(HTTP_PORT)
 
     val dnsPort: Int get() = getMappedPort(DNS_PORT)
@@ -69,7 +70,7 @@ class ConsulServer private constructor(
         val extraProps = mapOf(
             "dns.port" to dnsPort,
             "http.port" to httpPort,
-            "rpcPort" to rpcPort
+            "rpc.port" to rpcPort
         )
         writeToSystemProperties(NAME, extraProps)
     }

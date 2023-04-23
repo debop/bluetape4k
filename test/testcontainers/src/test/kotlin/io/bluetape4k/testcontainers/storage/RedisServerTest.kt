@@ -27,7 +27,7 @@ class RedisServerTest {
         RedisServer(useDefaultPort = true).use { redis ->
             redis.start()
             redis.isRunning.shouldBeTrue()
-            redis.port shouldBeEqualTo RedisServer.REDIS_PORT
+            redis.port shouldBeEqualTo RedisServer.PORT
 
             verifyRedisServer(redis)
         }

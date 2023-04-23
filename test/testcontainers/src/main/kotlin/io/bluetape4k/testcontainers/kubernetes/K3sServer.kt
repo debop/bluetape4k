@@ -44,6 +44,7 @@ class K3sServer private constructor(
         }
     }
 
+    override val url: String get() = "http://$host:$port"
     override val port: Int get() = getMappedPort(KUBE_SECURE_PORT)
     val kubeSecurePort: Int get() = getMappedPort(KUBE_SECURE_PORT)
     val rancherWebhookPort: Int get() = getMappedPort(RANCHER_WEBHOOK_PORT)

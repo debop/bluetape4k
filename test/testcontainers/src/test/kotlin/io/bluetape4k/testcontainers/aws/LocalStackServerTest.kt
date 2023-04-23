@@ -22,49 +22,44 @@ class LocalStackServerTest {
 
     @Test
     fun `run S3 Service`() {
-        LocalStackServer().withServices(LocalStackContainer.Service.S3).use { server ->
-            server.start()
-            server.isRunning.shouldBeTrue()
+        val server = LocalStackServer.Launcher.locakStack.withServices(LocalStackContainer.Service.S3)
 
-            // AWS SDK V2 사용
-            val credentialProvider = server.getCredentialProvider()
+        // AWS SDK V2 사용
+        val credentialProvider = server.getCredentialProvider()
 
-            val s3 = S3Client.builder()
-                .endpointOverride(server.getEndpointOverride(LocalStackContainer.Service.S3))
-                .region(Region.AP_NORTHEAST_2)
-                .credentialsProvider(credentialProvider)
-                .build()
+        val s3 = S3Client.builder()
+            .endpointOverride(server.getEndpointOverride(LocalStackContainer.Service.S3))
+            .region(Region.AP_NORTHEAST_2)
+            .credentialsProvider(credentialProvider)
+            .build()
 
-            s3.createBucket(CreateBucketRequest.builder().bucket("foo").build())
-            Thread.sleep(100)
+        s3.createBucket(CreateBucketRequest.builder().bucket("foo").build())
+        Thread.sleep(100)
 
-            val putRequest = PutObjectRequest.builder()
-                .bucket("foo")
-                .key("bar")
-                .build()
-            s3.putObject(putRequest, RequestBody.fromString("baz"))
-            Thread.sleep(100)
+        val putRequest = PutObjectRequest.builder()
+            .bucket("foo")
+            .key("bar")
+            .build()
+        s3.putObject(putRequest, RequestBody.fromString("baz"))
+        Thread.sleep(100)
 
-            val getRequest = GetObjectRequest.builder()
-                .bucket("foo")
-                .key("bar")
-                .build()
-            val content = s3.getObjectAsBytes(getRequest).asUtf8String()
-            content shouldBeEqualTo "baz"
-        }
+        val getRequest = GetObjectRequest.builder()
+            .bucket("foo")
+            .key("bar")
+            .build()
+        val content = s3.getObjectAsBytes(getRequest).asUtf8String()
+        content shouldBeEqualTo "baz"
     }
+
 
     @Test
     fun `run multiple services with custom network`() {
         val network = Network.newNetwork()
 
-        LocalStackServer()
+        val server = LocalStackServer.Launcher.locakStack
             .withNetwork(network)
             .withNetworkAliases("notthis", "localstack")
             .withServices(LocalStackContainer.Service.S3, LocalStackContainer.Service.CLOUDWATCHLOGS)
-            .use { server ->
-                server.start()
-                server.isRunning.shouldBeTrue()
-            }
+        server.isRunning.shouldBeTrue()
     }
 }

@@ -32,8 +32,8 @@ class RabbitMQServer private constructor(
 
         const val AMQP_PORT = 5672
         const val AMQPS_PORT = 5671
-        const val RABBITMQ_HTTPS_PORT = 15671
         const val RABBITMQ_HTTP_PORT = 15672
+        const val RABBITMQ_HTTPS_PORT = 15671
 
         operator fun invoke(
             tag: String = TAG,
@@ -53,6 +53,13 @@ class RabbitMQServer private constructor(
         }
     }
 
+    override val url: String get() = "amqp://$host:$port"
+    override val port: Int get() = getMappedPort(AMQP_PORT)
+    val amqpPort: Int get() = getMappedPort(AMQP_PORT)
+    val amqpsPort: Int get() = getMappedPort(AMQPS_PORT)
+    val rabbitmqHttpPort: Int get() = getMappedPort(RABBITMQ_HTTP_PORT)
+    val rabbitmqHttpsPort: Int get() = getMappedPort(RABBITMQ_HTTPS_PORT)
+
     init {
         withExposedPorts(AMQP_PORT, AMQPS_PORT, RABBITMQ_HTTP_PORT, RABBITMQ_HTTPS_PORT)
         withReuse(reuse)
@@ -70,10 +77,10 @@ class RabbitMQServer private constructor(
         super.start()
 
         val props = mapOf(
-            "amqp.port" to getMappedPort(AMQP_PORT),
-            "amqps.port" to getMappedPort(AMQPS_PORT),
-            "rabbitmq.http.port" to getMappedPort(RABBITMQ_HTTP_PORT),
-            "rabbitmq.https.port" to getMappedPort(RABBITMQ_HTTPS_PORT)
+            "amqp.port" to amqpPort,
+            "amqps.port" to amqpsPort,
+            "rabbitmq.http.port" to rabbitmqHttpPort,
+            "rabbitmq.https.port" to rabbitmqHttpsPort
         )
         writeToSystemProperties(NAME, props)
     }

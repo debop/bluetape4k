@@ -31,13 +31,13 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
  *
  */
 class LocalStackServer private constructor(
-    tag: String,
+    imageName: DockerImageName,
     useDefaultPort: Boolean,
     reuse: Boolean,
-): LocalStackContainer(IMAGE_NAME.withTag(tag)), GenericServer {
+): LocalStackContainer(imageName), GenericServer {
 
     companion object: KLogging() {
-        val IMAGE_NAME: DockerImageName = DockerImageName.parse("localstack/localstack")
+        val IMAGE = "localstack/localstack"
         val NAME = "localstack"
         val TAG = "2.0"
         val PORT = 4566
@@ -47,7 +47,16 @@ class LocalStackServer private constructor(
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): LocalStackServer {
-            return LocalStackServer(tag, useDefaultPort, reuse)
+            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
+            return LocalStackServer(imageName, useDefaultPort, reuse)
+        }
+
+        operator fun invoke(
+            imageName: DockerImageName,
+            useDefaultPort: Boolean = false,
+            reuse: Boolean = true,
+        ): LocalStackServer {
+            return LocalStackServer(imageName, useDefaultPort, reuse)
         }
     }
 
@@ -81,7 +90,7 @@ class LocalStackServer private constructor(
      * [LocalStackServer]용 Launcher
      */
     object Launcher {
-        val locakStack: LocalStackContainer by lazy {
+        val locakStack: LocalStackServer by lazy {
             LocalStackServer().apply {
                 start()
                 ShutdownQueue.register(this)

@@ -39,19 +39,19 @@ class RedisServer private constructor(
 ): GenericContainer<RedisServer>(imageName), GenericServer {
 
     companion object: KLogging() {
-        const val IMAGE_NAME = "redis"
-        const val DEFAULT_TAG = "6.2"
+        const val IMAGE = "redis"
+        const val TAG = "6.2"
 
-        const val REDIS_NAME = "redis"
-        const val REDIS_PORT = 6379
+        const val NAME = "redis"
+        const val PORT = 6379
 
         operator fun invoke(
-            tag: String = DEFAULT_TAG,
+            tag: String = TAG,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): RedisServer {
             require(tag.isNotBlank()) { "tag must not be blank." }
-            return RedisServer(DockerImageName.parse("$IMAGE_NAME:$tag"), useDefaultPort, reuse)
+            return RedisServer(DockerImageName.parse("$IMAGE:$tag"), useDefaultPort, reuse)
         }
 
         operator fun invoke(
@@ -63,24 +63,23 @@ class RedisServer private constructor(
         }
     }
 
-    override val url: String
-        get() = "$REDIS_NAME://$host:$port"
+    override val url: String get() = "$NAME://$host:$port"
 
     init {
-        withExposedPorts(REDIS_PORT)
+        withExposedPorts(PORT)
 
         withReuse(reuse)
         withLogConsumer(Slf4jLogConsumer(log))
         setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {
-            exposeCustomPorts(REDIS_PORT)
+            exposeCustomPorts(PORT)
         }
     }
 
     override fun start() {
         super.start()
-        writeToSystemProperties(REDIS_NAME)
+        writeToSystemProperties(NAME)
     }
 
     object Launcher {

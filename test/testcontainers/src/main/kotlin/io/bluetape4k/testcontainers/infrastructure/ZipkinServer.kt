@@ -1,4 +1,4 @@
-package io.bluetape4k.testcontainers.massage
+package io.bluetape4k.testcontainers.infrastructure
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.GenericServer
@@ -10,59 +10,48 @@ import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
-/**
- * Docker를 이용하여 [nats](http://nats.io)를 구동해주는 container 입니다.
- *
- * 참고: [Nats official images](https://hub.docker.com/_/nats?tab=description&page=1&ordering=last_updated)
- *
- * ```
- * // start nats server by docker
- * val nats = NatsServer().apply { start() }
- * ```
- */
-class NatsServer private constructor(
+class ZipkinServer private constructor(
     imageName: DockerImageName,
     useDefaultPort: Boolean,
     reuse: Boolean,
-): GenericContainer<NatsServer>(imageName), GenericServer {
+): GenericContainer<ZipkinServer>(imageName), GenericServer {
 
     companion object: KLogging() {
-        const val IMAGE = "nats"
-        const val TAG = "2.9"
-        const val NAME = "nats"
-
-        val NATS_PORTS: Array<Int> = arrayOf(4222, 6222, 8222)
+        const val IMAGE = "openzipkin/zipkin"
+        const val NAME = "zipkin"
+        const val TAG = "2"
+        const val PORT = 9411
 
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
-        ): NatsServer {
-            return NatsServer(imageName, useDefaultPort, reuse)
+        ): ZipkinServer {
+            return ZipkinServer(imageName, useDefaultPort, reuse)
         }
 
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
-        ): NatsServer {
+        ): ZipkinServer {
             val imageName = DockerImageName.parse(IMAGE).withTag(tag)
-            return NatsServer(imageName, useDefaultPort, reuse)
+            return ZipkinServer(imageName, useDefaultPort, reuse)
         }
     }
 
-    override val url: String get() = "$NAME://$host:$port"
+    override val url: String get() = "http://$host:$port"
+    override val port: Int get() = getMappedPort(PORT)
 
     init {
-        withExposedPorts(*NATS_PORTS)
+        withExposedPorts(PORT)
         withReuse(reuse)
         withLogConsumer(Slf4jLogConsumer(log))
 
         setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {
-            // 위에 withExposedPorts 를 등록했으면, 따로 지정하지 않으면 그 값들을 사용합니다.
-            exposeCustomPorts()
+            exposeCustomPorts(PORT)
         }
     }
 
@@ -72,8 +61,8 @@ class NatsServer private constructor(
     }
 
     object Launcher {
-        val nats: NatsServer by lazy {
-            NatsServer().apply {
+        val zipkin: ZipkinServer by lazy {
+            ZipkinServer().apply {
                 start()
                 ShutdownQueue.register(this)
             }

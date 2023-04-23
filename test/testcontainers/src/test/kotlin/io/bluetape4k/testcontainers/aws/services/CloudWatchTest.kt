@@ -23,8 +23,13 @@ class CloudWatchTest {
 
     companion object: KLogging()
 
-    private val cloudWatch = LocalStackServer()
-        .withServices(LocalStackContainer.Service.CLOUDWATCH, LocalStackContainer.Service.CLOUDWATCHLOGS)
+    private val cloudWatch: LocalStackServer by lazy {
+        LocalStackServer.Launcher.locakStack
+            .withServices(
+                LocalStackContainer.Service.CLOUDWATCH,
+                LocalStackContainer.Service.CLOUDWATCHLOGS
+            )
+    }
 
     private val cloudWatchEndpoint: URI
         get() = cloudWatch.getEndpointOverride(LocalStackContainer.Service.CLOUDWATCH)

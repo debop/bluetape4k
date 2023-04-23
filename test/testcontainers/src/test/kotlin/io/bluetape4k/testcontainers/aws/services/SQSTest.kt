@@ -26,7 +26,9 @@ class SQSTest {
         private val QUEUE_NAME = "test-queue-${System.currentTimeMillis()}"
     }
 
-    private val sqsServer: LocalStackServer = LocalStackServer().withServices(LocalStackContainer.Service.SQS)
+    private val sqsServer: LocalStackServer by lazy {
+        LocalStackServer.Launcher.locakStack.withServices(LocalStackContainer.Service.SQS)
+    }
     private val endpoint: URI get() = sqsServer.getEndpointOverride(LocalStackContainer.Service.SQS)
 
     private val sqsClient: SqsClient by lazy {

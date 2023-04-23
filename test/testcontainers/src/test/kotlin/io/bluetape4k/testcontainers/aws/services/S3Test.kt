@@ -32,7 +32,9 @@ class S3Test {
 
     companion object: KLogging()
 
-    private val s3Server: LocalStackServer = LocalStackServer().withServices(LocalStackContainer.Service.S3)
+    private val s3Server: LocalStackServer by lazy {
+        LocalStackServer.Launcher.locakStack.withServices(LocalStackContainer.Service.S3)
+    }
     private val endpoint: URI get() = s3Server.getEndpointOverride(LocalStackContainer.Service.S3)
 
     private val s3 by lazy {

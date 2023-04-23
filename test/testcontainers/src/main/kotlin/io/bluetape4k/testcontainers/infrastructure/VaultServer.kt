@@ -45,11 +45,8 @@ class VaultServer private constructor(
         }
     }
 
-    override val url: String
-        get() = "http://$host:$port"
-
-    override val port: Int
-        get() = getMappedPort(PORT)
+    override val url: String get() = "http://$host:$port"
+    override val port: Int get() = getMappedPort(PORT)
 
     init {
         withReuse(reuse)

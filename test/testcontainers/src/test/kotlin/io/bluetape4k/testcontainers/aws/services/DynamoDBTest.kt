@@ -38,7 +38,9 @@ class DynamoDBTest {
         private const val TABLE_NAME = "test-table"
     }
 
-    private val dynamodb: LocalStackServer = LocalStackServer().withServices(LocalStackContainer.Service.DYNAMODB)
+    private val dynamodb: LocalStackServer by lazy {
+        LocalStackServer.Launcher.locakStack.withServices(LocalStackContainer.Service.DYNAMODB)
+    }
     private val endpoint: URI get() = dynamodb.getEndpointOverride(LocalStackContainer.Service.DYNAMODB)
 
     private val client by lazy {
