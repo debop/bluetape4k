@@ -6,12 +6,18 @@ import io.bluetape4k.io.retrofit2.AbstractRetrofitTest
 import io.bluetape4k.io.retrofit2.retrofitOf
 import io.bluetape4k.io.retrofit2.service
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import io.bluetape4k.support.toUtf8Bytes
+import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
@@ -36,16 +42,35 @@ abstract class AbstractClientTest: AbstractRetrofitTest() {
         api = retrofitOf(server.baseUrl, callFactory).service()
     }
 
+    @AfterEach
+    fun cleanup() {
+        server.shutdown()
+    }
+
     @Test
     fun `verify api instance`() {
         api.shouldNotBeNull()
+    }
+
+    @Disabled("테스트 중")
+    @Test
+    fun `run patch method`() {
+        // server.enqueueBody("""{ "name": "foo" }""", "Content-Type: text/plain")
+        server.enqueue(MockResponse().setBody("foo").addHeader("Content-Type", "text/plain"))
+
+        val body = api.patch("").execute().body()
+        log.debug { "body=$body" }
+        body shouldBeEqualTo "foo"
+
+        val request = server.takeRequest()
+        request.headers["Accept"] shouldBeEqualTo "text/plain"
     }
 
     interface TestInterface {
 
         @POST("/?foo=bar&foo=baz&qux=")
         @Headers("Foo: Bar", "Foo: Baz", "Qux: ", "Content-Type: text/plain")
-        fun post(body: String): Call<String>
+        fun post(@Body body: String): Call<String>
 
         @POST("/path/{to}/resource")
         @Headers("Accept: text/plain")
@@ -53,7 +78,7 @@ abstract class AbstractClientTest: AbstractRetrofitTest() {
 
         @POST("/?foo=bar&foo=baz&qux=")
         @Headers("Foo: Bar", "Foo: Baz", "Qux: ", "Content-Type: text/plain")
-        fun postForString(body: String?): String?
+        fun postForString(@Body body: String?): Call<String>
 
         @GET
         @Headers("Accept: text/plain", "Accept-Encoding: gzip, deflate, lz4, snappy, zstd")
@@ -62,18 +87,17 @@ abstract class AbstractClientTest: AbstractRetrofitTest() {
         @GET("/?foo={multiFoo}")
         fun get(@Query("multiFoo") multiFoo: List<String?>?): Call<String>
 
-        @Headers("Authorization: {authorization}")
         @GET
-        fun getWithHeaders(@Header("authorization") authorization: String?): Call<String>
+        fun getWithHeaders(@Header("Authorization") authorization: String?): Call<String>
 
         @GET(value = "/?foo={multiFoo}")
         fun getCSV(@Query("multiFoo") multiFoo: List<String?>?): Call<String>
 
-        @PATCH
-        @Headers("Accept: text/plain")
-        fun patch(body: String?): String?
+        @PATCH("/")
+        @Headers("Accept: text/plain", "Content-Type: text/plain")
+        fun patch(@Body body: String?): Call<String>
 
-        @POST
+        @POST("/")
         fun noPostBody(): Call<String>
 
         @PUT
@@ -84,7 +108,7 @@ abstract class AbstractClientTest: AbstractRetrofitTest() {
 
         @POST("/?foo=bar&foo=baz&qux=")
         @Headers("Foo: Bar", "Foo: Baz", "Qux: ")
-        fun postWithContentType(body: String?, @Header("Content-Type") contentType: String): Call<String>
+        fun postWithContentType(@Body body: String?, @Header("Content-Type") contentType: String): Call<String>
     }
 
     private fun gzip(data: String): ByteArray {

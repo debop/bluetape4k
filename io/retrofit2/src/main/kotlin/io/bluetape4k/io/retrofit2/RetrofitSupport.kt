@@ -49,6 +49,7 @@ fun retrofitOf(
         callFactory(callFactory)
         addConverterFactory(converterFactory)
 
+        addCallAdapterFactory(ResultCallAdapterFactory())
         callAdapterFactories.forEach { addCallAdapterFactory(it) }
 
         if (isPresentRetrofitAdapterRxJava2()) {

@@ -70,7 +70,6 @@ class VertxCallFactory private constructor(
                         }
                     })
                 }
-                future.get()
                 promise.get()
             } catch (e: Exception) {
                 throw IOException(e)
@@ -97,12 +96,7 @@ class VertxCallFactory private constructor(
                     request.send { ar2 ->
                         if (ar2.succeeded()) {
                             val response = ar2.result()
-                            response.toOkhttp3Response(okRequest)
-                                .onSuccess {
-                                    log.debug { "Get response. code=${it.code}, reason=${it.message}" }
-                                    responseCallback.onResponse(this@VertxCall, it)
-                                }
-                                .onFailure { responseCallback.onFailure(this@VertxCall, IOException(it)) }
+                            response.toOkhttp3Response(this@VertxCall, okRequest, responseCallback)
                         } else {
                             responseCallback.onFailure(this@VertxCall, IOException(ar2.cause()))
                         }

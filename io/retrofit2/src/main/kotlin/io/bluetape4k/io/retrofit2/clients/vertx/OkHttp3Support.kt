@@ -40,9 +40,12 @@ internal fun HttpClientRequest.parse(okRequest: okhttp3.Request) {
     }
 }
 
-internal fun HttpClientResponse.toOkhttp3Response(okRequest: okhttp3.Request): Result<okhttp3.Response> {
+internal fun HttpClientResponse.toOkhttp3Response(
+    call: okhttp3.Call,
+    okRequest: okhttp3.Request,
+    callback: okhttp3.Callback,
+) {
     val self: HttpClientResponse = this
-    var result: Result<okhttp3.Response>? = null
     body { ar ->
         when {
             ar.succeeded() -> {
@@ -64,12 +67,10 @@ internal fun HttpClientResponse.toOkhttp3Response(okRequest: okhttp3.Request): R
                     val buffer = ar.result()
                     body(buffer.bytes.toResponseBody(contentType))
                 }
-                result = Result.success(response)
+                callback.onResponse(call, response)
             }
 
-            else -> result = Result.failure(IOException(ar.cause()))
+            else -> callback.onFailure(call, IOException(ar.cause()))
         }
-    }.end().result()
-
-    return result!!
+    }
 }
