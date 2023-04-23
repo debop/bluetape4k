@@ -579,6 +579,11 @@ object Libs {
     val async_http_client_extras_retrofit2 get() = "org.asynchttpclient:async-http-client-extras-retrofit2:${Versions.asynchttpclient}"
     val async_http_client_extras_rxjava2 get() = "org.asynchttpclient:async-http-client-extras-rxjava2:${Versions.asynchttpclient}"
 
+    // Apache HttpComponents
+    val httpclient5 get() = "org.apache.httpcomponents.client5:httpclient5:${Versions.httpclient5}"
+    val httpcore5 get() = "org.apache.httpcomponents.core5:httpcore5:${Versions.httpclient5}"
+
+
     // OpenFeign
     fun feign(module: String) = "io.github.openfeign:feign-$module:${Versions.feign}"
     val feign_bom get() = feign("bom")
@@ -597,11 +602,6 @@ object Libs {
     val feign_okhttp get() = feign("okhttp")
     val feign_ribbon get() = feign("ribbon")
     val feign_slf4j get() = feign("slf4j")
-
-    // Apache HttpComponents
-    val httpclient5 get() = "org.apache.httpcomponents.client5:httpclient5:${Versions.httpclient5}"
-    val httpcore5 get() = "org.apache.httpcomponents.core5:httpcore5:${Versions.httpclient5}"
-
 
     // Retrofit2
     fun retrofit2(module: String) = "com.squareup.retrofit2:$module:${Versions.retrofit2}"

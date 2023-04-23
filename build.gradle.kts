@@ -332,7 +332,6 @@ subprojects {
 
             dependency(Libs.findbugs)
             dependency(Libs.guava)
-            dependency(Libs.joda_time)
 
             dependency(Libs.kryo)
             dependency(Libs.marshalling)
@@ -353,6 +352,9 @@ subprojects {
             dependency(Libs.async_http_client)
             dependency(Libs.async_http_client_extras_retrofit2)
             dependency(Libs.async_http_client_extras_rxjava2)
+
+            dependency(Libs.httpclient5)
+            dependency(Libs.httpcore5)
 
             dependency(Libs.grpc_kotlin_stub)
 
