@@ -1,6 +1,7 @@
 package io.bluetape4k.utils.cache.nearcache
 
 import com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider
+import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.utils.cache.jcache.jcacheManager
 import java.io.Serializable
 import java.util.Objects
@@ -25,7 +26,7 @@ import javax.cache.expiry.Duration
  */
 open class NearCacheConfig<K: Any, V: Any>(
     val cacheManagerFactory: Factory<CacheManager> = CaffeineCacheManagerFactory,
-    val frontCacheName: String = "near-front-cache-" + UUID.randomUUID().toString(),
+    val frontCacheName: String = "near-front-cache-" + UUID.randomUUID().encodeBase62(),
     val frontCacheConfiguration: MutableConfiguration<K, V> = getDefaultFrontCacheConfiguration(),
     val isSynchronous: Boolean = false,
     val checkExpiryPeriod: Long = DEFAULT_EXPIRY_CHECK_PERIOD,

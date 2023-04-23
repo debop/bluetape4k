@@ -1,7 +1,8 @@
 package io.bluetape4k.utils.cache.jcache.coroutines
 
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
-import java.util.UUID
+import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
@@ -14,7 +15,6 @@ import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-
 abstract class AbstractCoCacheTest {
 
     companion object: KLogging() {
@@ -24,8 +24,8 @@ abstract class AbstractCoCacheTest {
 
     protected abstract val coCache: CoCache<String, Any>
 
-    open fun getKey() = UUID.randomUUID().toString()
-    open fun getValue() = UUID.randomUUID().toString()
+    open fun getKey() = TimebasedUuid.nextBase62String()
+    open fun getValue() = Fakers.randomString(128, 2048, true)
 
     @BeforeEach
     fun setup() {

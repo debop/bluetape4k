@@ -1,10 +1,11 @@
 package io.bluetape4k.utils.cache.nearcache
 
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.output.CaptureOutput
 import io.bluetape4k.junit5.output.OutputCapturer
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.utils.cache.jcache.JCache
-import java.util.UUID
+import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeNull
@@ -28,8 +29,8 @@ abstract class AbstractNearCacheTest {
     companion object: KLogging() {
         const val TEST_SIZE = 5
 
-        private fun randomKey(): String = UUID.randomUUID().toString()
-        private fun randomValue(): UUID = UUID.randomUUID()
+        private fun randomKey(): String = TimebasedUuid.nextBase62String()
+        private fun randomValue(): String = Fakers.randomString(256, 2048, true)
     }
 
     abstract val backCache: JCache<String, Any>
@@ -183,7 +184,7 @@ abstract class AbstractNearCacheTest {
     @RepeatedTest(TEST_SIZE)
     fun `putAll - 복수의 캐시를 저장하면 다른 cache에 모두 반영된다`() {
         val map = List(10) {
-            randomKey() to UUID.randomUUID()
+            randomKey() to randomValue()
         }.toMap()
 
         nearCache1.putAll(map)
@@ -198,8 +199,8 @@ abstract class AbstractNearCacheTest {
     @RepeatedTest(TEST_SIZE)
     fun `putIfAbsent - 값이 없는 경우에 추가합니다`() {
         val key = "key-1"
-        val oldValue = randomKey()
-        val newValue = randomKey()
+        val oldValue = randomValue()
+        val newValue = randomValue()
 
         nearCache1.put(key, oldValue)
         nearCache1[key] shouldBeEqualTo oldValue
@@ -216,7 +217,7 @@ abstract class AbstractNearCacheTest {
     fun `putIfAbsent - 값이 없는 경우`() {
         // 등록되지 않는 key2 에 대해서 새로 등록한다 -> backCache에 등록되어 다른 nearCache에 전달되어야 합니다.
         val key = "not-exist-key"
-        val value = randomKey()
+        val value = randomValue()
 
         nearCache2.putIfAbsent(key, value).shouldBeTrue()
         nearCache2[key] shouldBeEqualTo value
@@ -251,8 +252,8 @@ abstract class AbstractNearCacheTest {
     @RepeatedTest(TEST_SIZE)
     fun `remove with value - cache entry를 삭제하면 모든 near cache에서 삭제됩니다`() {
         val key = randomKey()
-        val oldValue = randomKey()
-        val newValue = randomKey()
+        val oldValue = randomValue()
+        val newValue = randomValue()
 
         nearCache1.put(key, newValue)
         await until { nearCache2[key] == newValue }
@@ -343,8 +344,8 @@ abstract class AbstractNearCacheTest {
     @RepeatedTest(TEST_SIZE)
     fun `replace old value - 모든 캐시에 적용되어야 합니다`() {
         val key = randomKey()
-        val oldValue = randomKey()
-        val newValue = randomKey()
+        val oldValue = randomValue()
+        val newValue = randomValue()
 
         nearCache2.put(key, oldValue)
         await until { nearCache1[key] == oldValue }
@@ -363,8 +364,8 @@ abstract class AbstractNearCacheTest {
     @RepeatedTest(TEST_SIZE)
     fun `repalce - value를 변경하면 모든 캐시에 적용되어야 한다`() {
         val key = randomKey()
-        val oldValue = randomKey()
-        val newValue = randomKey()
+        val oldValue = randomValue()
+        val newValue = randomValue()
 
         nearCache1.put(key, oldValue)
         await until { nearCache2.containsKey(key) }
@@ -385,8 +386,8 @@ abstract class AbstractNearCacheTest {
     fun `get and replace - 새로운 값으로 대체하고, 기존 값을 반환`() {
         val key = randomKey()
         val oldValue = randomKey()
-        val oldValue2 = randomKey()
-        val newValue = randomKey()
+        val oldValue2 = randomValue()
+        val newValue = randomValue()
 
         // 기존에 key가 없으므로 replace 하지 못한다
         nearCache1.getAndReplace(key, oldValue).shouldBeNull()

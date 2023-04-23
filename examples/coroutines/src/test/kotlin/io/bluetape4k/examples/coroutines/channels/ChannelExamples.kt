@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.coroutines.channels
 
+import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.warn
@@ -293,7 +294,7 @@ class ChannelExamples {
 
             channels.forEach { channel ->
                 launch {
-                    sendString(channel, UUID.randomUUID().toString(), 200L)
+                    sendString(channel, UUID.randomUUID().encodeBase62(), 200L)
                 }
             }
 

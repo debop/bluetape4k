@@ -4,6 +4,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
+    api(project(":bluetape4k-utils-idgenerators"))
     compileOnly(project(":bluetape4k-kotlinx-coroutines"))
     testImplementation(project(":bluetape4k-test-junit5"))
     testImplementation(project(":bluetape4k-test-testcontainers"))

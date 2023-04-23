@@ -1,5 +1,7 @@
 package io.bluetape4k.utils.cache.jcache
 
+import io.bluetape4k.codec.encodeBase62
+import io.bluetape4k.junit5.faker.Fakers
 import java.util.UUID
 import javax.cache.Cache
 import javax.cache.integration.CacheLoader
@@ -61,9 +63,8 @@ class JCacheReadWriteThroughExample {
 
     @Test
     fun `get cache entry with read through write through`() {
-
-        val key = UUID.randomUUID().toString()
-        val value = UUID.randomUUID()
+        val key = UUID.randomUUID().encodeBase62()
+        val value = Fakers.randomString(128, 2048, true)
 
         nearCache.put(key, value)
         remoteCache.get(key) shouldBeEqualTo value
@@ -75,8 +76,8 @@ class JCacheReadWriteThroughExample {
     @Test
     fun `read write through with bulk cache entries`() {
         val entries = List(100) {
-            val key = UUID.randomUUID().toString()
-            val value = UUID.randomUUID()
+            val key = UUID.randomUUID().encodeBase62()
+            val value = Fakers.randomString(128, 2048, true)
             key to value
         }.toMap()
 
@@ -88,8 +89,8 @@ class JCacheReadWriteThroughExample {
 
     @Test
     fun `clear not applied write through`() {
-        val key = UUID.randomUUID().toString()
-        val value = UUID.randomUUID()
+        val key = UUID.randomUUID().encodeBase62()
+        val value = Fakers.randomString(128, 2048, true)
 
         nearCache.put(key, value)
         remoteCache.containsKey(key).shouldBeTrue()
@@ -101,8 +102,8 @@ class JCacheReadWriteThroughExample {
 
     @Test
     fun `removeAll with write through`() {
-        val key = UUID.randomUUID().toString()
-        val value = UUID.randomUUID()
+        val key = UUID.randomUUID().encodeBase62()
+        val value = Fakers.randomString(128, 2048, true)
 
         nearCache.put(key, value)
         remoteCache.containsKey(key).shouldBeTrue()
@@ -113,8 +114,8 @@ class JCacheReadWriteThroughExample {
 
     @Test
     fun `remote 에만 존재하는 key를 near 에서 containsKey는 false`() {
-        val key = UUID.randomUUID().toString()
-        val value = UUID.randomUUID()
+        val key = UUID.randomUUID().encodeBase62()
+        val value = Fakers.randomString(128, 2048, true)
 
         nearCache.containsKey(key).shouldBeFalse()
         remoteCache.put(key, value)

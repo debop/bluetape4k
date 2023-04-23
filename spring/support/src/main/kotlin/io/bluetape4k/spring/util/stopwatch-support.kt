@@ -1,5 +1,6 @@
 package io.bluetape4k.spring.util
 
+import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.logging.KotlinLogging
 import java.util.UUID
 import org.springframework.util.StopWatch
@@ -21,7 +22,7 @@ private val log = KotlinLogging.logger { }
  * @return StopWatch 인스턴스
  */
 @JvmOverloads
-inline fun withStopWatch(id: String = UUID.randomUUID().toString(), body: () -> Unit): StopWatch {
+inline fun withStopWatch(id: String = UUID.randomUUID().encodeBase62(), body: () -> Unit): StopWatch {
     return StopWatch(id).apply {
         start()
         try {
@@ -32,7 +33,7 @@ inline fun withStopWatch(id: String = UUID.randomUUID().toString(), body: () -> 
     }
 }
 
-inline fun <T> StopWatch.task(name: String = UUID.randomUUID().toString(), body: () -> T): T {
+inline fun <T> StopWatch.task(name: String = UUID.randomUUID().encodeBase62(), body: () -> T): T {
     check(!isRunning) { "StopWatch already started, please stop at first." }
     return try {
         start(name)

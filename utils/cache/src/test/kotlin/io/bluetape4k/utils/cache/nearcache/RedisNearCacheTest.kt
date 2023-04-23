@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.cache.nearcache
 
+import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.faker.Fakers.randomString
 import io.bluetape4k.logging.KLogging
@@ -47,7 +48,7 @@ class RedisNearCacheTest: AbstractNearCacheTest() {
         }
 
         JCaching.Redisson.getOrCreate<String, Any>(
-            "back-cache-" + UUID.randomUUID().toString(),
+            "back-cache-" + UUID.randomUUID().encodeBase62(),
             redisson,
             jcacheConfiguration
         )
@@ -97,7 +98,7 @@ class RedisNearCacheTest: AbstractNearCacheTest() {
     fun `remote cache entry가 expire 되면 near cache도 expire 되어야 한다`() {
         val keys = List(1_000) { it }
             .chunked(100) {
-                val entries = it.associate { UUID.randomUUID().toString() to CacheItem() }
+                val entries = it.associate { UUID.randomUUID().encodeBase62() to CacheItem() }
                 nearCache1.putAll(entries)
                 entries.keys
             }

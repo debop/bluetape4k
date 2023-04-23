@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.cache.nearcache
 
+import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.concurrent.futureWithTimeout
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
@@ -73,7 +74,7 @@ class NearCache<K: Any, V: Any> private constructor(
         val thread = thread(
             start = true,
             isDaemon = true,
-            name = "nearcache-${frontCache.name}-expire-thread-" + UUID.randomUUID().toString(),
+            name = "nearcache-${frontCache.name}-expire-thread-" + UUID.randomUUID().encodeBase62(),
             priority = Thread.MIN_PRIORITY
         ) {
             try {

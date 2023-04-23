@@ -70,11 +70,11 @@ fun String.decodeBase62(bitLimit: Int = DEFAULT_BIT_LIMIT): BigInteger = Base62.
  * Base62 알고리즘을 이용하여 UUID 값을 문자열로 인코딩합니다.
  * @return Base62로 인코딩된 문자열
  */
-@Deprecated("use Url62.encode instead", ReplaceWith("Url62.encode(this)"))
+// @Deprecated("use Url62.encode instead", ReplaceWith("Url62.encode(this)"))
 fun UUID.encodeBase62(): String = Base62.encode(this.toBigInt())
 
 /**
  * Base62 알고리즘으로 인코딩된 문자열을 디코딩하여 UUID 값을 반환합니다.
  */
-@Deprecated("use Url62.decode instead", ReplaceWith("Url62.decode(this)"))
+// @Deprecated("use Url62.decode instead", ReplaceWith("Url62.decode(this)"))
 fun String.decodeBase62AsUuid(bitLimit: Int = DEFAULT_BIT_LIMIT): UUID = Base62.decode(this, bitLimit).toUuid()

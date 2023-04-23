@@ -1,5 +1,6 @@
 package io.bluetape4k.testcontainers.massage
 
+import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
@@ -105,7 +106,7 @@ class KafkaServer private constructor(
         fun createStringProducer(kafkaServer: KafkaServer = kafka): KafkaProducer<String, String> {
             val map = mapOf(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to kafkaServer.bootstrapServers,
-                ProducerConfig.CLIENT_ID_CONFIG to UUID.randomUUID().toString(),
+                ProducerConfig.CLIENT_ID_CONFIG to UUID.randomUUID().encodeBase62(),
                 ProducerConfig.COMPRESSION_TYPE_CONFIG to "lz4",
                 ProducerConfig.LINGER_MS_CONFIG to "0",
                 ProducerConfig.BATCH_SIZE_CONFIG to "1"
@@ -116,8 +117,8 @@ class KafkaServer private constructor(
         fun createStringConsumer(kafkaServer: KafkaServer = kafka): KafkaConsumer<String, String> {
             val map = mapOf(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to kafkaServer.bootstrapServers,
-                ConsumerConfig.GROUP_ID_CONFIG to UUID.randomUUID().toString(),
-                ConsumerConfig.CLIENT_ID_CONFIG to UUID.randomUUID().toString(),
+                ConsumerConfig.GROUP_ID_CONFIG to UUID.randomUUID().encodeBase62(),
+                ConsumerConfig.CLIENT_ID_CONFIG to UUID.randomUUID().encodeBase62(),
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
                 ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to "true",
                 ConsumerConfig.RETRY_BACKOFF_MS_CONFIG to 100

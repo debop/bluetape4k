@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.mutiny
 
+import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.kotlinx.mutiny.asUni
 import io.bluetape4k.kotlinx.mutiny.multiOf
 import io.bluetape4k.kotlinx.mutiny.multiRangeOf
@@ -386,7 +387,7 @@ class CompositionTransformationExamples {
 
     private fun generate(): Person =
         Person(
-            identifier = UUID.randomUUID().toString(),
+            identifier = UUID.randomUUID().encodeBase62(),
             age = Random.nextInt(18, 50),
             city = cities.random()
         )

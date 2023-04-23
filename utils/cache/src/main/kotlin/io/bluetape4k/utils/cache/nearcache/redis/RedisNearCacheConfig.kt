@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.cache.nearcache.redis
 
+import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.utils.cache.nearcache.NearCacheConfig
 import java.util.Objects
 import java.util.UUID
@@ -13,7 +14,7 @@ import org.redisson.jcache.configuration.RedissonConfiguration
 
 class RedisNearCacheConfig<K: Any, V: Any>(
     cacheManagerFactory: Factory<CacheManager> = CaffeineCacheManagerFactory,
-    frontCacheName: String = "near-front-cache-" + UUID.randomUUID().toString(),
+    frontCacheName: String = "near-front-cache-" + UUID.randomUUID().encodeBase62(),
     frontCacheConfiguration: MutableConfiguration<K, V> = MutableConfiguration<K, V>().apply {
         setExpiryPolicyFactory {
             AccessedExpiryPolicy(Duration.THIRTY_MINUTES)
@@ -56,7 +57,7 @@ class RedisNearCacheConfigBuilderDsl<K: Any, V: Any>(
 
     ) {
     var cacheManagerFactory: Factory<CacheManager> = NearCacheConfig.CaffeineCacheManagerFactory
-    var frontCacheName: String = "near-front-cache-" + UUID.randomUUID().toString()
+    var frontCacheName: String = "near-front-cache-" + UUID.randomUUID().encodeBase62()
     var frontCacheConfiguration: MutableConfiguration<K, V> = MutableConfiguration<K, V>().apply {
         setExpiryPolicyFactory {
             AccessedExpiryPolicy(

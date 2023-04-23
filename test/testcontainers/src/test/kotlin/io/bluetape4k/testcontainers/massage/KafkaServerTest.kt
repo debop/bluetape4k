@@ -89,7 +89,11 @@ class KafkaServerTest {
         val producer = KafkaServer.Launcher.createStringProducer()
 
         val producingJob = launch {
-            val record = ProducerRecord(TOPIC_NAME_CORUTINE, "coroutine-key", "message in coroutines")
+            val record = ProducerRecord(
+                TOPIC_NAME_CORUTINE,
+                "coroutine-key",
+                "message in coroutines"
+            )
             val metadata = producer.sendAndAwait(record)
 
             metadata.topic() shouldBeEqualTo TOPIC_NAME_CORUTINE
@@ -142,5 +146,4 @@ class KafkaServerTest {
             consumer.close(Duration.ofSeconds(3))
         }
     }
-
 }

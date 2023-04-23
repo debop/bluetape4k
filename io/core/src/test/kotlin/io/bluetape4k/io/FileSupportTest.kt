@@ -1,30 +1,31 @@
 package io.bluetape4k.io
 
+import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.junit5.folder.TempFolder
 import io.bluetape4k.junit5.folder.TempFolderExtension
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
+import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.extension.ExtendWith
-import java.util.*
 
 @RandomizedTest
 @ExtendWith(TempFolderExtension::class)
 class FileSupportTest {
 
     companion object : KLogging() {
-        private const val TEST_COUNT = 3
+        private const val REPEAT_SIZE = 3
     }
 
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `write bytearray to file and read async`(tempDir: TempFolder, @RandomValue bytes: ByteArray) {
-        val filename = UUID.randomUUID().toString() + ".dat"
+        val filename = UUID.randomUUID().encodeBase62() + ".dat"
         val path = tempDir.createFile(filename).toPath()
 
         path.writeAsync(bytes)
@@ -40,11 +41,11 @@ class FileSupportTest {
             .join()
     }
 
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `write bytearray to file and read async in coroutines`(
         tempDir: TempFolder, @RandomValue bytes: ByteArray,
     ) = runSuspendTest(Dispatchers.IO) {
-        val filename = UUID.randomUUID().toString() + ".dat"
+        val filename = UUID.randomUUID().encodeBase62() + ".dat"
         val path = tempDir.createFile(filename).toPath()
 
         val written = path.writeAsync(bytes).await()
@@ -54,9 +55,9 @@ class FileSupportTest {
         loaded shouldBeEqualTo bytes
     }
 
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `write string list to file`(tempDir: TempFolder, @RandomValue(type = String::class) contents: List<String>) {
-        val filename = UUID.randomUUID().toString() + ".txt"
+        val filename = UUID.randomUUID().encodeBase62() + ".txt"
         val path = tempDir.createFile(filename).toPath()
 
         path.writeLinesAsync(contents)
@@ -69,7 +70,7 @@ class FileSupportTest {
             .join()
     }
 
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `write string list to file in coroutines`(
         tempDir: TempFolder,
         @RandomValue(type = String::class) contents: List<String>,

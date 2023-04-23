@@ -7,7 +7,7 @@ dependencies {
     testImplementation(project(":bluetape4k-test-junit5"))
 
     // https://github.com/cowtowncoder/java-uuid-generator
-    compileOnly(Libs.java_uuid_generator)
+    api(Libs.java_uuid_generator)
 
     compileOnly(Libs.commons_codec)
 
