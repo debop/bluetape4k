@@ -334,7 +334,6 @@ subprojects {
             dependency(Libs.guava)
             dependency(Libs.joda_time)
 
-            dependency(Libs.fst)
             dependency(Libs.kryo)
             dependency(Libs.marshalling)
             dependency(Libs.marshalling_river)

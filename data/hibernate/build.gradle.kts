@@ -65,7 +65,6 @@ dependencies {
     compileOnly(project(":bluetape4k-io-core"))
     compileOnly(project(":bluetape4k-io-json"))
 
-    testImplementation(Libs.fst)
     testImplementation(Libs.kryo)
     testImplementation(Libs.marshalling)
     testImplementation(Libs.marshalling_river)

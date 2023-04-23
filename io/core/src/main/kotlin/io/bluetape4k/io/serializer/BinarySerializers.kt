@@ -8,12 +8,10 @@ import io.bluetape4k.io.compressor.Compressors
  */
 object BinarySerializers {
     /** Default Serializer */
-    val Default: BinarySerializer by lazy { LZ4Kryo }
+    val Default: BinarySerializer by lazy { Jdk }
 
     val Jdk: JdkSerializer by lazy { JdkSerializer() }
 
-    // Fst 는 JVM 17 에서는 초기화에 실패해서 사용할 수 없습니다
-//    val Fst: FstSerializer by lazy { FstSerializer() }
     val Kryo: KryoSerializer by lazy { KryoSerializer() }
     val Marshalling: MarshallingSerializer by lazy { MarshallingSerializer() }
 
@@ -23,14 +21,6 @@ object BinarySerializers {
     val LZ4Jdk: LZ4JdkSerializer by lazy { LZ4JdkSerializer() }
     val SnappyJdk: SnappyJdkSerializer by lazy { SnappyJdkSerializer() }
     val ZstdJdk: BinarySerializer by lazy { CompressableBinarySerializer(BinarySerializers.Jdk, Compressors.Zstd) }
-
-    // Fst 는 JVM 17 에서는 초기화에 실패해서 사용할 수 없습니다
-//    val BZip2Fst: BZip2FstSerializer by lazy { BZip2FstSerializer() }
-//    val DeflateFst: DeflateFstSerializer by lazy { DeflateFstSerializer() }
-//    val GZipFst: GZipFstSerializer by lazy { GZipFstSerializer() }
-//    val LZ4Fst: LZ4FstSerializer by lazy { LZ4FstSerializer() }
-//    val SnappyFst: SnappyFstSerializer by lazy { SnappyFstSerializer() }
-//    val ZstdFst: BinarySerializer by lazy { CompressableBinarySerializer(BinarySerializers.Fst, Compressors.Zstd) }
 
     val BZip2Kryo: BZip2KryoSerializer by lazy { BZip2KryoSerializer() }
     val DeflateKryo: DeflateKryoSerializer by lazy { DeflateKryoSerializer() }
@@ -50,5 +40,4 @@ object BinarySerializers {
             Compressors.Zstd
         )
     }
-
 }

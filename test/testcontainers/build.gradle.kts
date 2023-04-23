@@ -29,8 +29,12 @@ dependencies {
     compileOnly(Libs.redisson)
     compileOnly(Libs.lettuce_core)
 
-    compileOnly(Libs.fst)
+    compileOnly(Libs.kryo)
+    compileOnly(Libs.marshalling)
+    compileOnly(Libs.marshalling_river)
+
     compileOnly(Libs.snappy_java)
+    compileOnly(Libs.lz4_java)
 
     // Hazelcast
     compileOnly(Libs.hazelcast)

@@ -51,10 +51,10 @@ object Versions {
     const val kotlinx_benchmark = Plugins.Versions.kotlinx_benchmark
 
     const val spring_boot = Plugins.Versions.spring_boot
-    const val spring_cloud = "2021.0.5"
+    const val spring_cloud = "2022.0.2"
 
-    const val reactor_bom = "2022.0.1"
-    const val blockhound = "1.0.6.RELEASE"
+    const val reactor_bom = "2022.0.6"
+    const val blockhound = "1.0.8.RELEASE"
     const val spring_statemachine = "3.2.0"
 
     const val quarkus = Plugins.Versions.quarkus
@@ -64,19 +64,19 @@ object Versions {
     const val agroal = "1.16"
 
     const val swagger = "1.6.2"
-    const val springdoc_openapi = "1.6.14"
+    const val springdoc_openapi = "1.7.0"
     const val springfox_swagger = "3.0.0"
-    const val problem = "0.27.0"
+    const val problem = "0.27.1"
 
     const val bucket4j = "7.6.0"
     const val resilience4j = "2.0.2"
     const val netty = "4.1.91.Final"
 
     // https://mvnrepository.com/artifact/com.amazonaws
-    const val aws = "1.12.449"
+    const val aws = "1.12.454"
 
     // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
-    const val aws2 = "2.20.46"
+    const val aws2 = "2.20.51"
 
     const val grpc = "1.54.1"
     const val grpc_kotlin = "1.3.0"
@@ -140,13 +140,15 @@ object Versions {
     // https://mvnrepository.com/artifact/io.opentelemetry.instrumentation/opentelemetry-instrumentation-bom-alpha
     const val opentelemetryInstrumentationAlpha = "$opentelemetry-alpha"
 
-    const val cache2k = "2.6.1.Final"
     const val caffeine = "3.1.6"        // Java 9+ 이상에서는 3.x 사용
     const val ehcache = "3.10.8"
+    const val cache2k = "2.6.1.Final"
 
     const val ignite = "2.14.0"
     const val hazelcast = "5.2.3"
     const val hazelcast_client = "3.12.13"
+
+    // https://mvnrepository.com/artifact/com.datastax.oss/java-driver-core
     const val cassandra = "4.15.0"
     const val scylla_java = "4.13.0.0"
     const val elasticsearch = "8.7.0"
@@ -164,17 +166,19 @@ object Versions {
     const val springmockk = "4.0.2"
     const val mockito = "3.12.4"
     const val awaitility = "4.2.0"
-    const val jmh = "1.35"
+    const val jmh = "1.36"
     const val testcontainers = "1.18.0"
     const val jna = "5.13.0"
     const val archunit = "0.21.0"
 
-    const val datafaker = "1.8.1"
+    const val datafaker = "1.9.0"
     const val snakeyaml = "2.0"
     const val random_beans = "3.9.0"
 
+    // https://mvnrepository.com/artifact/com.github.maricn/logback-slack-appender
     const val logback_slack_appender = "1.6.1"
-    const val sentry_logback = "6.1.4"
+    // https://mvnrepository.com/artifact/io.sentry/sentry-logback
+    const val sentry_logback = "6.17.0"
 }
 
 object Libs {
@@ -364,11 +368,7 @@ object Libs {
     // https://github.com/JCTools/JCTools
     val jctools_core = "org.jctools:jctools-core:${Versions.jctools}"
 
-    // https://github.com/RuedigerMoeller/fast-serialization
-    // NOTE: FST 가 JDK 17를 지원하지 못합니다.
-    // https://github.com/RuedigerMoeller/fast-serialization/issues/327
-    val fst get() = "de.ruedigermoeller:fst:2.57"
-    val kryo get() = "com.esotericsoftware:kryo:5.4.0"
+    val kryo get() = "com.esotericsoftware:kryo:5.5.0"
     val marshalling get() = "org.jboss.marshalling:jboss-marshalling:2.1.1.Final"
     val marshalling_river get() = "org.jboss.marshalling:jboss-marshalling-river:2.1.1.Final"
     val marshalling_serial get() = "org.jboss.marshalling:jboss-marshalling-serial:2.1.1.Final"
@@ -1118,6 +1118,7 @@ object Libs {
     val problem_spring_web get() = "org.zalando:problem-spring-web:${Versions.problem}"
     val problem_spring_webflux get() = "org.zalando:problem-spring-webflux:${Versions.problem}"
 
+    // https://mvnrepository.com/artifact/com.github.maricn/logback-slack-appender
     val logback_slack_appender get() = "com.github.maricn:logback-slack-appender:${Versions.logback_slack_appender}"
     val sentry_logback get() = "io.sentry:sentry-logback:${Versions.sentry_logback}"
 

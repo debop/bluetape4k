@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.coroutines.guide
 
+import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -9,15 +10,14 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeGreaterThan
 import org.awaitility.kotlin.atMost
@@ -42,7 +42,7 @@ class SharedFlowExamples {
          *  extraBufferCapacity는 producer의 속도가 빠르고, consumer가 느릴 때 버퍼를 가져갈 수 있도록 합니다.
          * Buffer가 넘칠 경우 BufferOverflow 값에 따라 처리합니다 (대기, 무시 등)
          */
-        private val _events: MutableSharedFlow<Event> = MutableSharedFlow<Event>(0, 16, BufferOverflow.SUSPEND)
+        private val _events = MutableSharedFlow<Event>(0, 16, BufferOverflow.SUSPEND)
         val events: SharedFlow<Event> = _events.asSharedFlow()
 
         suspend fun postEvent(event: Event) {
@@ -66,7 +66,7 @@ class SharedFlowExamples {
     }
 
     @Test
-    fun `복수개의 Producer로 event 발송과 복수개의 Consumer로 수신 예제`() = runTest {
+    fun `복수개의 Producer로 event 발송과 복수개의 Consumer로 수신 예제`() = runSuspendTest {
         val totalProduced = atomic(0L)
         val totalConsumed = atomic(0L)
 
@@ -89,6 +89,7 @@ class SharedFlowExamples {
                 }
             }
         }
+        yield()
 
         // 3개의 Consumer가 event를 수신합니다.
         jobs += List(3) { consumerId ->
@@ -101,10 +102,11 @@ class SharedFlowExamples {
             }
         }
 
+        yield()
         await atMost Duration.ofSeconds(5) until { totalConsumed.value > 0L }
 
-        jobs.forEach { it.cancel() }
-        jobs.joinAll()
+        jobs.forEach { it.cancelAndJoin() }
+        // jobs.joinAll()
 
         log.debug { "produced=${totalProduced.value}, consumed=${totalConsumed.value}" }
         totalProduced.value shouldBeGreaterThan 0L
