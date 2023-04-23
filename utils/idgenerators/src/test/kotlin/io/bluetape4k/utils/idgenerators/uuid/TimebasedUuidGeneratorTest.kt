@@ -1,18 +1,22 @@
 package io.bluetape4k.utils.idgenerators.uuid
 
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.toLongArray
 import io.bluetape4k.support.toUUID
 import io.bluetape4k.utils.idgenerators.hashids.Hashids
+import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.RepeatedTest
 
 class TimebasedUuidGeneratorTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 10
         private val TEST_COUNT = 1024 * Runtime.getRuntime().availableProcessors()
         private val TEST_LIST = List(TEST_COUNT) { it }
@@ -56,6 +60,17 @@ class TimebasedUuidGeneratorTest {
 
         // 중복 발행은 없어야 한다
         uuids.toSet().size shouldBeEqualTo uuids.size
+    }
+
+    @RepeatedTest(REPEAT_SIZE)
+    fun `generate timebased uuids in multithread`() {
+        val idMap = ConcurrentHashMap<UUID, Int>()
+        MultithreadingTester().numThreads(100).roundsPerThread(TEST_COUNT)
+            .add {
+                val id = uuidGenerator.nextUUID()
+                idMap.putIfAbsent(id, 1).shouldBeNull()
+            }
+            .run()
     }
 
     @RepeatedTest(REPEAT_SIZE)
