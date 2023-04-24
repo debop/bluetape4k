@@ -6,13 +6,38 @@ import feign.Target
 import feign.codec.Decoder
 import feign.codec.Encoder
 
-@JvmField
-internal val defaultRequestOptions = Request.Options()
-
+/**
+ * [Feign.Builder]를 생성하는 함수
+ *
+ * ```
+ * val feignBuilder = feignBuilder {
+ *      client(VertxHttpClient())
+ * }
+ * val api = feignBuilder.target<HttpbinApi>("https://httpbin.org")
+ * ```
+ *
+ * @param intializer [Feign.Builder]를 초기화하는 함수
+ * @return [feign.Feign.Builder] 인스턴스
+ */
 inline fun feignBuilder(intializer: Feign.Builder.() -> Unit): Feign.Builder {
     return Feign.Builder().apply(intializer)
 }
 
+/**
+ * [Feign.Builder] 를 생성합니다.
+ *
+ * ```
+ * val feignBuilder = feignBuilderOf(client=VertxHttpClient())
+ * val api = feignBuilder.target<HttpbinApi>("https://httpbin.org")
+ * ```
+ *
+ * @param client  [feign.Client] 인스턴스
+ * @param encoder [Encoder] 인스턴스
+ * @param decoder [Decoder] 인스턴스
+ * @param options 요청 옵션 정보
+ * @param logLevel 로그 레벨 (기본값: [feign.Logger.Level.BASIC])
+ * @return [feign.Feign.Builder] 인스턴스
+ */
 fun feingBuilderOf(
     client: feign.Client,
     encoder: Encoder = Encoder.Default(),

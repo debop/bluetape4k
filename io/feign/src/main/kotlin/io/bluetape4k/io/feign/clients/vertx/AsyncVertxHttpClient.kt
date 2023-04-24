@@ -5,17 +5,13 @@ import feign.Request
 import feign.Response
 import io.bluetape4k.io.http.vertx.vertxHttpClientOf
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
-import io.bluetape4k.vertx.toCompletableFuture
 import io.vertx.core.http.HttpClient
-import java.io.Closeable
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.TimeUnit
 
 class AsyncVertxHttpClient private constructor(
     private val vertxClient: HttpClient,
-): AsyncClient<Any>, Closeable {
+): AsyncClient<Any> {
 
     companion object: KLogging() {
 
@@ -30,13 +26,6 @@ class AsyncVertxHttpClient private constructor(
         feignOptions: Request.Options,
         requestContext: Optional<Any>,
     ): CompletableFuture<Response> {
-        return vertxClient.sendRequest(feignRequest, feignOptions)
-    }
-
-    override fun close() {
-        log.debug { "Close AsyncVertxHttpClient." }
-        runCatching {
-            vertxClient.close().toCompletableFuture().get(5, TimeUnit.SECONDS)
-        }
+        return vertxClient.sendAsync(feignRequest, feignOptions)
     }
 }

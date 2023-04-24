@@ -283,7 +283,7 @@ object Libs {
     val kotlinx_benchmark_runtime get() = kotlinxBenchmark("runtime")
     val kotlinx_benchmark_runtime_jvm get() = kotlinxBenchmark("runtime-jvm")
 
-    // javax api (Deperecated) (Use jakarta library)
+    // javax api
     val javax_activation_api get() = "javax.activation:javax.activation-api:1.2.0"
     val javax_annotation_api get() = "javax.annotation:javax.annotation-api:1.3.2"
     val javax_cache_api get() = "javax.cache:cache-api:1.1.1"
@@ -292,13 +292,19 @@ object Libs {
     val javax_servlet_api get() = "javax.servlet:javax.servlet-api:4.0.1"
     val javax_transaction_api get() = "javax.transaction:jta:1.1"
     val javax_validation_api get() = "javax.validation:validation-api:2.0.1.Final"
+    val javax_ws_rs_api get() = "javax.ws.rs:javax.ws.rs-api:2.1.1"
 
     // javax expression
-    val javax_el get() = "org.glassfish:javax.el:3.0.1-b12"
     val javax_el_api get() = "javax.el:javax.el-api:3.0.0"
+    val javax_el get() = "org.glassfish:javax.el:3.0.1-b12"
 
     // json 구현체
+    val javax_json_api get() = "javax.json:javax.json-api:1.1.4"
     val javax_json get() = "org.glassfish:javax.json:1.1.4"
+
+    // Java Money
+    val javax_money_api get() = "javax.money:money-api:1.1"
+    val javamoney_moneta get() = "org.javamoney:moneta:1.4.2"
 
     // jakarta
     val jakarta_activation_api get() = "jakarta.activation:jakarta.activation-api:2.1.1"
@@ -316,9 +322,6 @@ object Libs {
     val jakarta_validation_api get() = "jakarta.validation:jakarta.validation-api:3.0.2"
     val jakarta_ws_rs_api get() = "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"
 
-    // Java Money
-    val javax_money_api get() = "javax.money:money-api:1.1"
-    val javamoney_moneta get() = "org.javamoney:moneta:1.4.2"
 
     // Apache Commons
     val commons_beanutils get() = "commons-beanutils:commons-beanutils:1.9.4"

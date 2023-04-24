@@ -26,6 +26,9 @@ dependencies {
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 
+    // https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api
+    api(Libs.javax_ws_rs_api)
+
     // Feign
     api(Libs.feign_hc5)
     api(Libs.feign_kotlin)

@@ -75,7 +75,14 @@ internal fun HttpClientResponse.convertToFeignResponse(
     }
 }
 
-internal fun HttpClient.sendRequest(
+/**
+ * Vertx [HttpClient]를 이용하여 Feign 의 [Request] 를 Async/Non-Blocking 방식으로 요청하고 응답을 받습니다.
+ *
+ * @param feignRequest [feign.Request] 인스턴스
+ * @param feignOptions [feign.Request.Options] 인스턴스
+ * @return [feign.Response]를 담은 [CompletableFuture] 인스턴스
+ */
+internal fun HttpClient.sendAsync(
     feignRequest: feign.Request,
     feignOptions: feign.Request.Options,
 ): CompletableFuture<feign.Response> {

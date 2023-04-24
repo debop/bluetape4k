@@ -24,7 +24,8 @@ class VertxHttpClient private constructor(
         feignRequest: feign.Request,
         feignOptions: feign.Request.Options,
     ): feign.Response {
-        val future = vertxClient.sendRequest(feignRequest, feignOptions)
-        return future.get(feignOptions.readTimeout(), feignOptions.readTimeoutUnit())
+        return vertxClient
+            .sendAsync(feignRequest, feignOptions)
+            .get(feignOptions.readTimeout(), feignOptions.readTimeoutUnit())
     }
 }
