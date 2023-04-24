@@ -1,5 +1,6 @@
 package io.bluetape4k.io.retrofit2.client
 
+import io.bluetape4k.io.retrofit2.defaultJsonConverterFactory
 import io.bluetape4k.io.retrofit2.retrofitOf
 import io.bluetape4k.io.retrofit2.service
 import io.bluetape4k.io.retrofit2.services.JsonPlaceHolder
@@ -23,7 +24,7 @@ abstract class AbstractJsonPlaceHolderSyncTest: AbstractJsonPlaceHolderTest() {
     companion object: KLogging()
 
     private val api: JsonPlaceHolder.JsonPlaceHolderApi by lazy {
-        retrofitOf(JsonPlaceHolder.BASE_URL, callFactory).service()
+        retrofitOf(JsonPlaceHolder.BASE_URL, callFactory, defaultJsonConverterFactory).service()
     }
 
     @Test

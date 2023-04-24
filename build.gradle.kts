@@ -308,6 +308,19 @@ subprojects {
             dependency(Libs.logback)
             dependency(Libs.logback_core)
 
+            // Javax API
+            dependency(Libs.javax_activation_api)
+            dependency(Libs.javax_annotation_api)
+            dependency(Libs.javax_el_api)
+            dependency(Libs.javax_cache_api)
+            dependency(Libs.javax_inject)
+            dependency(Libs.javax_json_api)
+            dependency(Libs.javax_persistence_api)
+            dependency(Libs.javax_servlet_api)
+            dependency(Libs.javax_transaction_api)
+            dependency(Libs.javax_validation_api)
+            dependency(Libs.javax_ws_rs_api)
+
             // Jakarta API
             dependency(Libs.jakarta_activation_api)
             dependency(Libs.jakarta_annotation_api)
@@ -320,6 +333,7 @@ subprojects {
             dependency(Libs.jakarta_servlet_api)
             dependency(Libs.jakarta_transaction_api)
             dependency(Libs.jakarta_validation_api)
+            dependency(Libs.jakarta_ws_rs_api)
 
             // Compressor
             dependency(Libs.snappy_java)
@@ -336,6 +350,18 @@ subprojects {
             dependency(Libs.kryo)
             dependency(Libs.marshalling)
             dependency(Libs.marshalling_river)
+
+            // Jackson (이상하게 mavenBom 에 적용이 안되어서 강제로 추가하였다)
+            dependency(Libs.jackson_annotations)
+            dependency(Libs.jackson_core)
+            dependency(Libs.jackson_databind)
+            dependency(Libs.jackson_datatype_jdk8)
+            dependency(Libs.jackson_datatype_jsr310)
+            dependency(Libs.jackson_datatype_jsr353)
+            dependency(Libs.jackson_module_kotlin)
+            dependency(Libs.jackson_module_paranamer)
+            dependency(Libs.jackson_module_parameter_names)
+            dependency(Libs.jackson_module_afterburner)
 
             // Retrofit
             dependency(Libs.retrofit2)

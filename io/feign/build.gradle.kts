@@ -37,11 +37,6 @@ dependencies {
     api(Libs.feign_jackson)
     compileOnly(Libs.feign_jaxrs)
     compileOnly(Libs.feign_jaxrs2)
-    compileOnly(Libs.feign_httpclient)
-    compileOnly(Libs.feign_java11)
-    compileOnly(Libs.feign_okhttp)
-    compileOnly(Libs.feign_ribbon)
-    compileOnly(Libs.feign_gson)
 
     // OkHttp3
     compileOnly(Libs.okhttp3)
@@ -62,7 +57,7 @@ dependencies {
     compileOnly(Libs.vertx_lang_kotlin)
     compileOnly(Libs.vertx_lang_kotlin_coroutines)
 
-    // Jackson
+    // Jackson (2.14 와 2.13 이 혼용되어서 jackson-core, jackson-databind 를 모두 지정해주어야 한다)
     api(project(":bluetape4k-io-json"))
     api(Libs.jackson_core)
     api(Libs.jackson_databind)

@@ -4,10 +4,17 @@ import io.bluetape4k.io.http.okhttp3.okhttp3Client
 import io.bluetape4k.io.retrofit2.client.AbstractClientTest
 import io.bluetape4k.logging.KLogging
 import okhttp3.Call
+import org.junit.jupiter.api.Assumptions
+import org.junit.jupiter.api.Test
 
-class OkHttpClientTest: AbstractClientTest() {
+class OkHttpClientTest : AbstractClientTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     override val callFactory: Call.Factory = okhttp3Client { }
+
+    @Test
+    override fun `can support Deflate`() {
+        Assumptions.assumeTrue(false, "OkHttp3 는 기본적으로 deflate를 지원하지 않는다.")
+    }
 }

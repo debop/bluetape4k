@@ -20,6 +20,7 @@ dependencies {
     // Retrofit2
     api(Libs.retrofit2)
     api(Libs.retrofit2_converter_jackson)
+    api(Libs.retrofit2_converter_scalars)
     api(Libs.retrofit2_adapter_java8)
     compileOnly(Libs.retrofit2_adapter_reactor)
     compileOnly(Libs.retrofit2_adapter_rxjava2)
