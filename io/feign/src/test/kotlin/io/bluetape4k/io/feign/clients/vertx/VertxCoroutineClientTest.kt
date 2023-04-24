@@ -11,7 +11,7 @@ class VertxCoroutineClientTest: AbstractCoroutineClientTest() {
 
     companion object: KLogging()
 
-    override fun newCoroutineBuilder(): CoroutineFeign.CoroutineBuilder<Any> {
+    override fun newCoroutineBuilder(): CoroutineFeign.CoroutineBuilder<*> {
         return coroutineFeignBuilder {
             client(AsyncVertxHttpClient())
             logger(Slf4jLogger(VertxCoroutineClientTest::class.java))

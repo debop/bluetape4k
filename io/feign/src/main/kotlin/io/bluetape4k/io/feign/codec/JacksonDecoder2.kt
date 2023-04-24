@@ -1,6 +1,6 @@
 package io.bluetape4k.io.feign.codec
 
-import com.fasterxml.jackson.databind.RuntimeJsonMappingException
+import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import feign.Response
@@ -13,6 +13,7 @@ import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
+import io.bluetape4k.logging.trace
 import io.bluetape4k.support.closeSafe
 import java.io.BufferedReader
 import java.io.IOException
@@ -24,9 +25,9 @@ import java.lang.reflect.Type
  */
 class JacksonDecoder2 private constructor(
     private val mapper: JsonMapper,
-): Decoder {
+) : Decoder {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         private val fallbackDecoder by lazy { Decoder.Default() }
 
         val INSTANCE: JacksonDecoder2 by lazy { invoke() }
@@ -63,9 +64,9 @@ class JacksonDecoder2 private constructor(
                 return null
             }
             reader.reset()
-            log.debug { "Read json format response body. type=$type" }
+            log.trace { "Read json format response body. type=$type" }
             return mapper.readValue(reader, mapper.constructType(type))
-        } catch (e: RuntimeJsonMappingException) {
+        } catch (e: JsonParseException) {
             log.error(e) { "Failed to read json format response body. type=$type" }
 
             if (e.cause is IOException) {
@@ -74,7 +75,8 @@ class JacksonDecoder2 private constructor(
             throw DecodeException(
                 response.status(),
                 "$type is not a type supported by JacksonDecoder2 decoder.",
-                response.request()
+                response.request(),
+                e
             )
         } finally {
             reader.closeSafe()
@@ -82,7 +84,10 @@ class JacksonDecoder2 private constructor(
     }
 
     private fun fallback(response: Response, type: Type): Any? {
-        log.debug { "Read non-json format response body by fallback decoder. type=$type" }
+        log.debug {
+            "Read non-json format response body by fallback decoder. " +
+                "type=$type, content-type=${response.headers()["content-type"]}"
+        }
         return fallbackDecoder.decode(response, type)
     }
 }

@@ -17,6 +17,7 @@ dependencies {
 
     api(Libs.jackson_module_kotlin)
     api(Libs.jackson_module_parameter_names)
+    api(Libs.jackson_module_afterburner)
 
     compileOnly(Libs.jackson_dataformat_properties)
     compileOnly(Libs.jackson_dataformat_yaml)

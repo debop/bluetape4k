@@ -28,7 +28,7 @@ inline fun response(initializer: feign.Response.Builder.() -> Unit): feign.Respo
  * [Response]가 JSON 형식인지 검사합니다.
  */
 fun Response.isJsonBody(): Boolean {
-    val contentType = headers()["Content-Type"]
+    val contentType = headers()["Content-Type"] ?: headers()["content-type"]
     return contentType?.any { it.contains("application/json", true) } ?: false
 }
 
@@ -37,7 +37,7 @@ fun Response.isJsonBody(): Boolean {
  */
 fun Response.isTextBody(): Boolean {
     MediaType.TEXT_HTML
-    val contentType = headers()["Content-Type"]
+    val contentType = headers()["Content-Type"] ?: headers()["content-type"]
     return contentType?.any { it.contains("text/plain", true) } ?: false
 }
 

@@ -18,7 +18,7 @@ object JsonPlaceHolder: KLogging() {
      * 참고: [JsonPlaceHolder](https://jsonplaceholder.typicode.com/)
      * 참고: [RequestLine with Feign Client](https://www.baeldung.com/feign-requestline)
      */
-// REST API 호출 시, Content-Type 을 명시적으로 지정해야 한다.
+    // REST API 호출 시, Content-Type 을 명시적으로 지정해야 한다.
     @Headers("Content-Type: application/json; charset=UTF-8")
     interface JsonPlaceholderClient {
 
@@ -26,7 +26,7 @@ object JsonPlaceHolder: KLogging() {
         fun posts(): List<Post>
 
         @RequestLine("GET /posts/{id}")
-        fun getPost(@Param("id") postId: Int): Post
+        fun getPost(@Param("id") postId: Int): Post?
 
         @RequestLine("GET /posts?userId={userId}")
         fun getUserPosts(@Param("userId") userId: Int): List<Post>
@@ -78,7 +78,7 @@ object JsonPlaceHolder: KLogging() {
         suspend fun posts(): List<Post>
 
         @RequestLine("GET /posts/{id}")
-        suspend fun getPost(@Param("id") postId: Int): Post
+        suspend fun getPost(@Param("id") postId: Int): Post?
 
         @RequestLine("GET /posts?userId={userId}")
         suspend fun getUserPosts(@Param("userId") userId: Int): List<Post>

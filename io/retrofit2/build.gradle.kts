@@ -49,6 +49,7 @@ dependencies {
 
     // Jackson
     api(project(":bluetape4k-io-json"))
+    api(Libs.jackson_core)
     api(Libs.jackson_databind)
     api(Libs.jackson_module_kotlin)
 

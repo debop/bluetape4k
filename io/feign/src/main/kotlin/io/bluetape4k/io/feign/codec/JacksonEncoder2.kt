@@ -3,7 +3,6 @@ package io.bluetape4k.io.feign.codec
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import feign.RequestTemplate
-import feign.Util
 import feign.codec.EncodeException
 import feign.codec.Encoder
 import io.bluetape4k.io.json.jackson.Jackson
@@ -15,9 +14,9 @@ import java.lang.reflect.Type
  */
 class JacksonEncoder2 private constructor(
     private val mapper: JsonMapper,
-): Encoder {
+) : Encoder {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
 
         val INSTANCE: JacksonEncoder2 by lazy { invoke() }
 
@@ -30,7 +29,7 @@ class JacksonEncoder2 private constructor(
     override fun encode(obj: Any?, bodyType: Type, template: RequestTemplate) {
         try {
             val javaType = mapper.typeFactory.constructType(bodyType)
-            template.body(mapper.writerFor(javaType).writeValueAsBytes(obj), Util.UTF_8)
+            template.body(mapper.writerFor(javaType).writeValueAsBytes(obj), Charsets.UTF_8)
         } catch (e: JsonProcessingException) {
             throw EncodeException(e.message, e)
         }

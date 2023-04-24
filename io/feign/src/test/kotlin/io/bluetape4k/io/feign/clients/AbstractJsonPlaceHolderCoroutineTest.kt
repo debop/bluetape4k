@@ -1,12 +1,11 @@
-package io.bluetape4k.io.retrofit2.client
+package io.bluetape4k.io.feign.clients
 
-import io.bluetape4k.io.retrofit2.retrofitOf
-import io.bluetape4k.io.retrofit2.service
-import io.bluetape4k.io.retrofit2.services.JsonPlaceHolder
-import io.bluetape4k.io.retrofit2.services.Post
+import feign.kotlin.CoroutineFeign
+import io.bluetape4k.io.feign.coroutines.client
+import io.bluetape4k.io.feign.services.JsonPlaceHolder
+import io.bluetape4k.io.feign.services.Post
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.random.RandomValue
-import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.Dispatchers
@@ -18,29 +17,33 @@ import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
-@RandomizedTest
-abstract class AbstractJsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderTest() {
+abstract class AbstractJsonPlaceHolderCoroutineTest : AbstractJsonPlaceHolderTest() {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         private const val ITEM_SIZE = 5
     }
 
-    private val api: JsonPlaceHolder.JsonPlaceHolderCoroutineApi by lazy {
-        retrofitOf(JsonPlaceHolder.BASE_URL, callFactory).service()
+    protected abstract fun newBuilder(): CoroutineFeign.CoroutineBuilder<*>
+    private lateinit var client: JsonPlaceHolder.JsonPlaceholderCoroutineClient
+
+    @BeforeAll
+    fun beforeAll() {
+        client = newBuilder().client(JsonPlaceHolder.BASE_URL)
     }
 
     @Test
     fun `create retrofit2 api instance`() {
-        api.shouldNotBeNull()
+        client.shouldNotBeNull()
     }
 
     @Test
     fun `get posts`() = runSuspendWithIO {
-        val posts = api.posts()
+        val posts = client.posts()
 
         posts.shouldNotBeEmpty()
         posts.forEach { it.verify() }
@@ -51,7 +54,7 @@ abstract class AbstractJsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderTest
         val postIds = List(ITEM_SIZE) { Random.nextInt(1, 100) }.distinct()
 
         val deferred = postIds.map { postId ->
-            async(Dispatchers.IO) { api.getPost(postId) }
+            async(Dispatchers.IO) { client.getPost(postId)!! }
         }
 
         val posts = deferred.awaitAll()
@@ -66,7 +69,7 @@ abstract class AbstractJsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderTest
 
         val deferred = userIds.map { userId ->
             async {
-                userId to api.getUserPosts(userId)
+                userId to client.getUserPosts(userId)
             }
         }
         val userPosts = deferred.awaitAll().toMap()
@@ -85,7 +88,7 @@ abstract class AbstractJsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderTest
 
         val deferred = postIds.map { postId ->
             async {
-                postId to api.getPostComments(postId)
+                postId to client.getPostComments(postId)
             }
         }
 
@@ -101,7 +104,7 @@ abstract class AbstractJsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderTest
 
     @Test
     fun `get all users`() = runSuspendWithIO {
-        val users = api.getUsers()
+        val users = client.getUsers()
         users.shouldNotBeEmpty()
     }
 
@@ -111,7 +114,7 @@ abstract class AbstractJsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderTest
 
         val deferred = userIds.map { userId ->
             async {
-                userId to api.getAlbumsByUserId(userId)
+                userId to client.getAlbumsByUserId(userId)
             }
         }
 
@@ -129,7 +132,7 @@ abstract class AbstractJsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderTest
     fun `create new post`(@RandomValue(type = Post::class, size = ITEM_SIZE) posts: List<Post>) = runSuspendWithIO {
         val deferred = posts.map { post ->
             async {
-                api.newPost(post.copy(userId = post.userId.absoluteValue))
+                client.createPost(post.copy(userId = post.userId.absoluteValue))
             }
         }
 
@@ -143,8 +146,8 @@ abstract class AbstractJsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderTest
 
         val deferred = postIds.map { postId ->
             async {
-                val post = api.getPost(postId)
-                api.updatePost(postId, post.copy(title = "Updated " + post.title))
+                val post = client.getPost(postId)!!
+                client.updatePost(post.copy(title = "Updated " + post.title), postId)
             }
         }
 
@@ -156,11 +159,11 @@ abstract class AbstractJsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderTest
     @Test
     fun `delete post`(@RandomValue post: Post) = runSuspendWithIO {
         val newPost = post.copy(userId = post.userId.absoluteValue)
-        val saved = api.newPost(newPost)
+        val saved = client.createPost(newPost)
         val savedPostId = saved.id
         log.debug { "saved=$saved" }
 
-        val deleted = api.deletePost(savedPostId)
+        val deleted = client.deletePost(savedPostId)
         log.debug { "deleted=$deleted" }
         deleted.id shouldBeEqualTo 0
         deleted.userId shouldBeEqualTo 0

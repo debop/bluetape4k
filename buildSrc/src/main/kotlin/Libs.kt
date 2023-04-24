@@ -51,7 +51,7 @@ object Versions {
     const val kotlinx_benchmark = Plugins.Versions.kotlinx_benchmark
 
     const val spring_boot = Plugins.Versions.spring_boot
-    const val spring_cloud = "2022.0.2"
+    const val spring_cloud = "2021.0.6"
     const val reactor_bom = "2022.0.6"
     const val spring_statemachine = "3.2.0"
 

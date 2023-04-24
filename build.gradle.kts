@@ -277,9 +277,9 @@ subprojects {
             mavenBom(Libs.protobuf_bom)
             mavenBom(Libs.metrics_bom)
             mavenBom(Libs.fabric8_kubernetes_client_bom)
-            mavenBom(Libs.jackson_bom)
             mavenBom(Libs.resilience4j_bom)
             mavenBom(Libs.netty_bom)
+            mavenBom(Libs.jackson_bom)
 
             mavenBom(Libs.kotlinx_coroutines_bom)
             mavenBom(Libs.kotlin_bom)

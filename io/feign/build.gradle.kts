@@ -14,7 +14,6 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-io-http"))
-    api(project(":bluetape4k-io-json"))
     api(project(":bluetape4k-io-netty"))
     api(project(":bluetape4k-utils-resilience4j"))
     testImplementation(project(":bluetape4k-test-junit5"))
@@ -31,6 +30,7 @@ dependencies {
     api(Libs.javax_ws_rs_api)
 
     // Feign
+    api(Libs.feign_core)
     api(Libs.feign_hc5)
     api(Libs.feign_kotlin)
     api(Libs.feign_slf4j)
@@ -64,6 +64,7 @@ dependencies {
 
     // Jackson
     api(project(":bluetape4k-io-json"))
+    api(Libs.jackson_core)
     api(Libs.jackson_databind)
     api(Libs.jackson_module_kotlin)
 

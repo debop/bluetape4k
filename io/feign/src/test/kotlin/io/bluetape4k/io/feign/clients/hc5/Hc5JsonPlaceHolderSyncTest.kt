@@ -1,0 +1,26 @@
+package io.bluetape4k.io.feign.clients.hc5
+
+import feign.Feign
+import feign.Logger
+import feign.hc5.ApacheHttp5Client
+import feign.slf4j.Slf4jLogger
+import io.bluetape4k.io.feign.clients.AbstractJsonPlaceHolderSyncTest
+import io.bluetape4k.io.feign.codec.JacksonDecoder2
+import io.bluetape4k.io.feign.codec.JacksonEncoder2
+import io.bluetape4k.io.feign.feignBuilder
+import io.bluetape4k.logging.KLogging
+
+class Hc5JsonPlaceHolderSyncTest : AbstractJsonPlaceHolderSyncTest() {
+
+    companion object : KLogging()
+
+    override fun newBuilder(): Feign.Builder {
+        return feignBuilder {
+            client(ApacheHttp5Client())
+            encoder(JacksonEncoder2())
+            decoder(JacksonDecoder2())
+            logger(Slf4jLogger(Hc5JsonPlaceHolderSyncTest::class.java))
+            logLevel(Logger.Level.FULL)
+        }
+    }
+}
