@@ -585,7 +585,7 @@ object Libs {
     // Apache HttpComponents
     val httpclient5 get() = "org.apache.httpcomponents.client5:httpclient5:${Versions.httpclient5}"
     val httpcore5 get() = "org.apache.httpcomponents.core5:httpcore5:${Versions.httpclient5}"
-
+    val httpcore5_h2 get() = "org.apache.httpcomponents.core5:httpcore5-h2:${Versions.httpclient5}"
 
     // OpenFeign
     fun feign(module: String) = "io.github.openfeign:feign-$module:${Versions.feign}"

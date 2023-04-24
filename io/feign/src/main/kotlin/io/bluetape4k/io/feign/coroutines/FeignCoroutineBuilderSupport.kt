@@ -31,7 +31,7 @@ fun <C: Any> coroutineFeignBuilderOf(
     }
 }
 
-inline fun <reified T: Any> CoroutineFeign.CoroutineBuilder<out Any>.target(baseUrl: String? = null): T = when {
+inline fun <reified T: Any> CoroutineFeign.CoroutineBuilder<*>.client(baseUrl: String? = null): T = when {
     baseUrl.isNullOrBlank() -> target(Target.EmptyTarget.create(T::class.java))
     else -> target(T::class.java, baseUrl)
 }

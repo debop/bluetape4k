@@ -35,7 +35,6 @@ dependencies {
     api(Libs.feign_kotlin)
     api(Libs.feign_slf4j)
     api(Libs.feign_jackson)
-    api(Libs.feign_hc5)
     compileOnly(Libs.feign_jaxrs)
     compileOnly(Libs.feign_jaxrs2)
     compileOnly(Libs.feign_httpclient)
@@ -52,7 +51,10 @@ dependencies {
     testImplementation(Libs.okhttp3_mockwebserver)
 
     // Apache HttpCompoents HttpClient 5
+    // feign_hc5 를 사용하려면, httpcore5, httpcore5-h2 도 버전을 맞춰줘야 한다 
     api(Libs.httpclient5)
+    api(Libs.httpcore5)
+    api(Libs.httpcore5_h2)
 
     // Vertx
     compileOnly(project(":bluetape4k-vertx-core"))

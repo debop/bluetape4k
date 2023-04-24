@@ -20,7 +20,10 @@ import feign.codec.Encoder
  * @return [feign.Feign.Builder] 인스턴스
  */
 inline fun feignBuilder(intializer: Feign.Builder.() -> Unit): Feign.Builder {
-    return Feign.Builder().apply(intializer)
+    return Feign.Builder()
+        .encoder(Encoder.Default())
+        .decoder(Decoder.Default())
+        .apply(intializer)
 }
 
 /**
@@ -79,7 +82,7 @@ fun feingBuilderOf(
  * @param baseUrl base url for service
  * @return Service API instance
  */
-inline fun <reified T: Any> Feign.Builder.target(baseUrl: String? = null): T = when {
+inline fun <reified T: Any> Feign.Builder.client(baseUrl: String? = null): T = when {
     baseUrl.isNullOrBlank() -> target(Target.EmptyTarget.create(T::class.java))
     else -> target(T::class.java, baseUrl)
 }

@@ -13,10 +13,10 @@ import feign.jaxrs2.JAXRS2Contract
 import feign.slf4j.Slf4jLogger
 import io.bluetape4k.io.compressor.Compressors
 import io.bluetape4k.io.feign.AbstractFeignTest
+import io.bluetape4k.io.feign.client
 import io.bluetape4k.io.feign.codec.JacksonDecoder2
 import io.bluetape4k.io.feign.codec.JacksonEncoder2
 import io.bluetape4k.io.feign.feignBuilder
-import io.bluetape4k.io.feign.target
 import io.bluetape4k.io.http.okhttp3.mock.baseUrl
 import io.bluetape4k.io.http.okhttp3.mock.enqueueBody
 import io.bluetape4k.io.json.jackson.Jackson
@@ -53,19 +53,19 @@ abstract class AbstractClientTest: AbstractFeignTest() {
         protected val mapper: JsonMapper by lazy { Jackson.defaultJsonMapper }
     }
 
-    protected lateinit var server: MockWebServer
-    protected lateinit var api: TestInterface
-
     protected abstract fun newBuilder(): feign.Feign.Builder
 
+    private lateinit var server: MockWebServer
+    private lateinit var api: TestInterface
+
     @BeforeEach
-    fun setup() {
-        server = MockWebServer().apply { start() }
-        api = newBuilder().target(server.baseUrl)
+    fun beforeEach() {
+        server = MockWebServer()
+        api = newBuilder().client(server.baseUrl)
     }
 
     @AfterEach
-    fun cleanup() {
+    fun afterEach() {
         server.closeSafe()
     }
 
@@ -380,7 +380,7 @@ abstract class AbstractClientTest: AbstractFeignTest() {
             logger(Slf4jLogger(JaxRsTestInterface::class.java))
             logLevel(Logger.Level.FULL)
         }
-            .target<JaxRsTestInterface>(server.baseUrl)
+            .client<JaxRsTestInterface>(server.baseUrl)
 
         val user = User("debop", 54)
         val userJson = mapper.writeValueAsString(user)

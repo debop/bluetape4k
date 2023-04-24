@@ -12,8 +12,8 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import retrofit2.Call
@@ -36,14 +36,14 @@ abstract class AbstractClientTest: AbstractRetrofitTest() {
 
     protected abstract val callFactory: okhttp3.Call.Factory
 
-    @BeforeEach
-    fun setup() {
+    @BeforeAll
+    fun beforeAll() {
         server = MockWebServer()
         api = retrofitOf(server.baseUrl, callFactory).service()
     }
 
-    @AfterEach
-    fun cleanup() {
+    @AfterAll
+    fun afterAll() {
         server.shutdown()
     }
 
