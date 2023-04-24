@@ -36,7 +36,11 @@ internal fun HttpClientRequest.parse(okRequest: okhttp3.Request) {
             val buffer = Buffer()
             body.writeTo(buffer)
             write(io.vertx.core.buffer.Buffer.buffer(buffer.readByteArray()))
+        } else {
+            putHeader("Content-Length", "0")
         }
+    } ?: run {
+        putHeader("Content-Length", "0")
     }
 }
 

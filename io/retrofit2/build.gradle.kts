@@ -25,9 +25,6 @@ dependencies {
     compileOnly(Libs.retrofit2_adapter_rxjava3)
     testImplementation(Libs.retrofit2_mock)
 
-    // Jakarta
-    api(Libs.jakarta_ws_rs_api)
-
     // OkHttp3
     api(Libs.okhttp3)
     api(Libs.okhttp3_logging_interceptor)

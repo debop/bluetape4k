@@ -26,21 +26,23 @@ dependencies {
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 
-    // Jakarta
-    api(Libs.jakarta_ws_rs_api)
-
     // Feign
     api(Libs.feign_hc5)
     api(Libs.feign_kotlin)
+    api(Libs.feign_slf4j)
     api(Libs.feign_jackson)
+    api(Libs.feign_hc5)
+    compileOnly(Libs.feign_jaxrs)
+    compileOnly(Libs.feign_jaxrs2)
     compileOnly(Libs.feign_httpclient)
+    compileOnly(Libs.feign_java11)
     compileOnly(Libs.feign_okhttp)
     compileOnly(Libs.feign_ribbon)
     compileOnly(Libs.feign_gson)
 
     // OkHttp3
-    api(Libs.okhttp3)
-    api(Libs.okhttp3_logging_interceptor)
+    compileOnly(Libs.okhttp3)
+    compileOnly(Libs.okhttp3_logging_interceptor)
 
     // OkHttp3 MockWebServer
     testImplementation(Libs.okhttp3_mockwebserver)
