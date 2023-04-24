@@ -30,15 +30,18 @@ class MarshallingSerializer private constructor(
 
         @JvmField
         val DefaultMarshallingConfiguration = MarshallingConfiguration().apply {
-            instanceCount = 32
-            classCount = 16
+            instanceCount = 256
+            classCount = 64
+            bufferSize = 1024
         }
 
+        @JvmStatic
         operator fun invoke(
             protocol: Protocol = Protocol.RIVER,
             configuration: MarshallingConfiguration = DefaultMarshallingConfiguration,
         ): MarshallingSerializer {
-            val factory = Marshalling.getProvidedMarshallerFactory(protocol.name.lowercase(Locale.ENGLISH))
+            val factory = Marshalling
+                .getProvidedMarshallerFactory(protocol.name.lowercase(Locale.ENGLISH))
                 ?: throw IllegalArgumentException("Invalid protocol. $protocol")
             return MarshallingSerializer(factory, configuration)
         }

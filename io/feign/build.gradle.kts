@@ -15,6 +15,7 @@ configurations {
 dependencies {
     api(project(":bluetape4k-io-http"))
     api(project(":bluetape4k-io-json"))
+    api(project(":bluetape4k-io-netty"))
     api(project(":bluetape4k-utils-resilience4j"))
     testImplementation(project(":bluetape4k-test-junit5"))
 

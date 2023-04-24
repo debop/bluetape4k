@@ -1,19 +1,19 @@
 package io.bluetape4k.io.csv.coroutines
 
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import java.io.StringWriter
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Test
-import java.io.StringWriter
 
 class CoTsvRecordWriterTest {
 
     companion object: KLogging()
 
     @Test
-    fun `write rows`() = runBlocking<Unit> {
+    fun `write rows`() = runSuspendWithIO {
         StringWriter().use { sw ->
             CoTsvRecordWriter(sw).use { writer ->
                 val rows = listOf(
@@ -32,7 +32,7 @@ class CoTsvRecordWriterTest {
     }
 
     @Test
-    fun `write rows as Flow with headers`() = runBlocking<Unit> {
+    fun `write rows as Flow with headers`() = runSuspendWithIO {
         StringWriter().use { sw ->
             CoTsvRecordWriter(sw).use { writer ->
                 writer.writeHeaders("col1", "col2", "col3", "col4")

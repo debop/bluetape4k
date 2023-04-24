@@ -9,13 +9,6 @@ class LZ4JdkSerializer: CompressableBinarySerializer(BinarySerializers.Jdk, Comp
 class SnappyJdkSerializer: CompressableBinarySerializer(BinarySerializers.Jdk, Compressors.Snappy)
 class ZstdJdkSerializer: CompressableBinarySerializer(BinarySerializers.Jdk, Compressors.Zstd)
 
-//class BZip2FstSerializer : CompressableBinarySerializer(BinarySerializers.Fst, Compressors.BZip2)
-//class DeflateFstSerializer : CompressableBinarySerializer(BinarySerializers.Fst, Compressors.Deflate)
-//class GZipFstSerializer : CompressableBinarySerializer(BinarySerializers.Fst, Compressors.GZip)
-//class LZ4FstSerializer : CompressableBinarySerializer(BinarySerializers.Fst, Compressors.LZ4)
-//class SnappyFstSerializer : CompressableBinarySerializer(BinarySerializers.Fst, Compressors.Snappy)
-//class ZstdFstSerializer : CompressableBinarySerializer(BinarySerializers.Fst, Compressors.Zstd)
-
 class BZip2KryoSerializer: CompressableBinarySerializer(BinarySerializers.Kryo, Compressors.BZip2)
 class DeflateKryoSerializer: CompressableBinarySerializer(BinarySerializers.Kryo, Compressors.Deflate)
 class GZipKryoSerializer: CompressableBinarySerializer(BinarySerializers.Kryo, Compressors.GZip)

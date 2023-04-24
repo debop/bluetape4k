@@ -3,10 +3,10 @@ package io.bluetape4k.io.csv.coroutines
 import com.univocity.parsers.common.record.Record
 import io.bluetape4k.io.csv.model.ProductType
 import io.bluetape4k.io.utils.Resourcex
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldNotBeBlank
 import org.amshove.kluent.shouldNotBeEmpty
@@ -23,7 +23,7 @@ abstract class AbstractCoRecordReaderTest {
     protected abstract val productTypePath: String
     protected abstract val extraWordsPath: String
 
-    val mapper: (Record) -> ProductType = { record: Record ->
+    private val mapper: (Record) -> ProductType = { record: Record ->
         val tagFamily = record.getValue(0, "").trim()
         val representative = record.getValue(1, "").trim()
         val synonym = record.getValue<String?>(2, null)?.trim()
@@ -44,9 +44,8 @@ abstract class AbstractCoRecordReaderTest {
     }
 
     @Test
-    fun `read record from csv file with number types`() = runBlocking {
+    fun `read record from csv file with number types`() = runSuspendWithIO {
         Resourcex.getInputStream(productTypePath)!!.buffered().use { input ->
-
             reader
                 .read(input, UTF_8, true)
                 .collect { record ->
@@ -62,9 +61,8 @@ abstract class AbstractCoRecordReaderTest {
     }
 
     @Test
-    fun `read product type from csv file with mapper`() = runBlocking {
+    fun `read product type from csv file with mapper`() = runSuspendWithIO {
         Resourcex.getInputStream(productTypePath)!!.buffered().use { input ->
-
             reader
                 .read(input, UTF_8, true, mapper)
                 .collect { productType ->
@@ -78,7 +76,7 @@ abstract class AbstractCoRecordReaderTest {
     }
 
     @Test
-    fun `read extra words from csv file `() = runBlocking {
+    fun `read extra words from csv file `() = runSuspendWithIO {
         Resourcex.getInputStream(extraWordsPath)!!.buffered().use { input ->
 
             reader

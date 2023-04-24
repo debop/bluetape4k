@@ -35,9 +35,6 @@ object BinarySerializers {
     val LZ4Marshalling: LZ4MarshallingSerializer by lazy { LZ4MarshallingSerializer() }
     val SnappyMarshalling: SnappyMarshallingSerializer by lazy { SnappyMarshallingSerializer() }
     val ZstdMarshalling: BinarySerializer by lazy {
-        CompressableBinarySerializer(
-            BinarySerializers.Marshalling,
-            Compressors.Zstd
-        )
+        CompressableBinarySerializer(BinarySerializers.Marshalling, Compressors.Zstd)
     }
 }

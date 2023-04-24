@@ -2,6 +2,7 @@ package io.bluetape4k.utils.resilience4j.cache
 
 import io.bluetape4k.concurrent.futureOf
 import io.bluetape4k.concurrent.onSuccess
+import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
@@ -36,7 +37,7 @@ abstract class AbstractJCacheCoroutinesTest {
     }
 
     @Test
-    fun `decorate suspend function1 for Cache`() = runBlocking<Unit> {
+    fun `decorate suspend function1 for Cache`() = runSuspendTest {
         var hits = 0
         var missed = 0
         cache.eventPublisher

@@ -1,12 +1,12 @@
 package io.bluetape4k.utils.resilience4j.circuitbreaker
 
+import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
 import io.bluetape4k.utils.resilience4j.CoHelloWorldService
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
 import io.github.resilience4j.kotlin.circuitbreaker.executeSuspendFunction
-import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
@@ -33,7 +33,7 @@ class CircuitBreakerExamples {
     }
 
     @Test
-    fun `execute successful function`() = runBlocking<Unit> {
+    fun `execute successful function`() = runSuspendTest {
         val circuitBreaker = CircuitBreaker.ofDefaults("test")
         val metrics = circuitBreaker.metrics
         metrics.numberOfBufferedCalls shouldBeEqualTo 0

@@ -15,14 +15,17 @@ open class ByteBufferInputStream private constructor(
 ) : InputStream() {
 
     companion object : KLogging() {
+        @JvmStatic
         operator fun invoke(bufferSize: Int = DEFAULT_BUFFER_SIZE): ByteBufferInputStream {
             return ByteBufferInputStream(ByteBuffer.allocate(bufferSize))
         }
 
+        @JvmStatic
         operator fun invoke(bytes: ByteArray): ByteBufferInputStream {
             return ByteBufferInputStream(bytes.toByteBuffer())
         }
 
+        @JvmStatic
         operator fun invoke(buffer: ByteBuffer): ByteBufferInputStream {
             return ByteBufferInputStream(buffer)
         }

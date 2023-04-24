@@ -22,7 +22,7 @@ import java.time.temporal.Temporal
 import java.time.temporal.TemporalAmount
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Disabled
@@ -76,7 +76,7 @@ abstract class TemporalClosedRangeTest<T> where T: Temporal, T: Comparable<T> {
 
     @Suppress("UNCHECKED_CAST")
     @Test
-    fun `windowed with flow`() = runBlocking<Unit> {
+    fun `windowed with flow`() = runTest {
         val range = start.startOfHour()..(start.startOfHour() + 5.hours()) as T
         val windowed = range.windowedFlowHours(3, 1)
             .onEach { log.trace { "windowed $it" } }
@@ -87,7 +87,7 @@ abstract class TemporalClosedRangeTest<T> where T: Temporal, T: Comparable<T> {
 
     @Suppress("UNCHECKED_CAST")
     @Test
-    fun `chunk ranges with flow`() = runBlocking<Unit> {
+    fun `chunk ranges with flow`() = runTest {
         val range = start.startOfHour()..(start.startOfHour() + 5.hours()) as T
         val chunked = range.chunkedFlowHours(3)
             .onEach { log.trace { "chunked $it" } }

@@ -4,7 +4,6 @@ import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.junit.jupiter.api.Test
@@ -57,7 +56,7 @@ class StopWatchSupportTest {
     }
 
     @Test
-    fun `run tasks with coroutines`() = runBlocking<Unit> {
+    fun `run tasks with coroutines`() = runSuspendTest {
         val sw = StopWatch("run tasks with coroutines")
 
         val result1 = sw.task("task1") {

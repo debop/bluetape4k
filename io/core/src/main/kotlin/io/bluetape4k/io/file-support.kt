@@ -209,7 +209,7 @@ fun File.writeLines(lines: Collection<String>, append: Boolean = false, cs: Char
 }
 
 fun Path.writeAsync(bytes: ByteArray, append: Boolean = false): CompletableFuture<Long> {
-    val future = CompletableFuture<Long>()
+    val promise = CompletableFuture<Long>()
 
     val options = arrayOf(StandardOpenOption.CREATE, StandardOpenOption.WRITE)
     val channel = AsynchronousFileChannel.open(this, *options)
@@ -220,19 +220,19 @@ fun Path.writeAsync(bytes: ByteArray, append: Boolean = false): CompletableFutur
     // TODO: 이렇게 Callback 방식 이외에 Future 방식 (channel.write(content, pos)) 를 사용하면 Coroutines로 사용할 수 있다.
     val handler = object : CompletionHandler<Int, ByteBuffer?> {
         override fun completed(result: Int, attachment: ByteBuffer?) {
-            future.complete(result.toLong())
+            promise.complete(result.toLong())
             log.trace { "Write bytearray to file. path=[${this@writeAsync}], written=$result" }
             channel.closeSafe()
         }
 
         override fun failed(exc: Throwable?, attachment: ByteBuffer?) {
-            future.completeExceptionally(exc)
+            promise.completeExceptionally(exc)
             channel.closeSafe()
         }
     }
     channel.write(content, pos, content, handler)
 
-    return future
+    return promise
 }
 
 @JvmOverloads

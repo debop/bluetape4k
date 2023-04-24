@@ -13,7 +13,7 @@ private const val BF = 0xBF.toByte()
 private const val FE = 0xFE.toByte()
 private const val FF = 0xFF.toByte()
 
-fun ByteArray.getBOM(defaultCharset: Charset = UTF_8): Pair<Int, Charset> {
+fun ByteArray.getBOM(cs: Charset = UTF_8): Pair<Int, Charset> {
     val bom = this.copyOf(4)
 
     when (bom) {
@@ -27,21 +27,21 @@ fun ByteArray.getBOM(defaultCharset: Charset = UTF_8): Pair<Int, Charset> {
         byteArrayOf(FE, FF) -> return Pair(2, Charsets.UTF_16BE)
         byteArrayOf(FF, FE) -> return Pair(2, Charsets.UTF_16LE)
     }
-    return Pair(0, defaultCharset)
+    return Pair(0, cs)
 }
 
-fun ByteArray.removeBom(defaultCharset: Charset = UTF_8): Pair<ByteArray, Charset> {
-    val (skipSize, charset) = getBOM(defaultCharset)
+fun ByteArray.removeBom(cs: Charset = UTF_8): Pair<ByteArray, Charset> {
+    val (skipSize, charset) = getBOM(cs)
     val array = if (skipSize > 0) this.copyOfRange(skipSize, size) else this
 
     return array to charset
 }
 
-fun InputStream.withoutBom(defaultCharset: Charset = UTF_8): Pair<InputStream, Charset> {
+fun InputStream.withoutBom(cs: Charset = UTF_8): Pair<InputStream, Charset> {
     val bom = ByteArray(BOM_SIZE)
     val pushbackStream = PushbackInputStream(this, BOM_SIZE)
     val readSize = pushbackStream.read(bom, 0, bom.size)
-    val (skipSize, charset) = bom.getBOM(defaultCharset)
+    val (skipSize, charset) = bom.getBOM(cs)
 
     pushbackStream.unread(bom, skipSize, readSize - skipSize)
     return pushbackStream to charset

@@ -11,8 +11,8 @@ import com.esotericsoftware.kryo.util.Pool
 import io.bluetape4k.io.serializer.Kryox.release
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
-import org.objenesis.strategy.StdInstantiatorStrategy
 import java.util.concurrent.CompletableFuture
+import org.objenesis.strategy.StdInstantiatorStrategy
 
 /**
  * Kryo 를 이용한 작업을 함수로 표현

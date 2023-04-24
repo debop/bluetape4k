@@ -10,17 +10,20 @@ import java.nio.ByteBuffer
  */
 open class ByteBufferOutputStream private constructor(
     private val buffer: ByteBuffer,
-) : OutputStream() {
+): OutputStream() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
+        @JvmStatic
         operator fun invoke(capacity: Int = DEFAULT_BUFFER_SIZE): ByteBufferOutputStream {
             return ByteBufferOutputStream(ByteBuffer.allocate(capacity))
         }
 
+        @JvmStatic
         operator fun invoke(bytes: ByteArray): ByteBufferOutputStream {
             return ByteBufferOutputStream(bytes.toByteBuffer())
         }
 
+        @JvmStatic
         operator fun invoke(buffer: ByteBuffer): ByteBufferOutputStream {
             return ByteBufferOutputStream(buffer)
         }

@@ -13,7 +13,7 @@ object Plugins {
         const val testLogger = "3.2.0"
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.7"
-        const val spring_boot = "2.7.10"
+        const val spring_boot = "2.7.11"
         const val jacoco = "0.8.8"
         const val quarkus = "2.16.6.Final"
     }
@@ -52,10 +52,10 @@ object Versions {
 
     const val spring_boot = Plugins.Versions.spring_boot
     const val spring_cloud = "2022.0.2"
-
     const val reactor_bom = "2022.0.6"
-    const val blockhound = "1.0.8.RELEASE"
     const val spring_statemachine = "3.2.0"
+
+    const val blockhound = "1.0.8.RELEASE"
 
     const val quarkus = Plugins.Versions.quarkus
     const val resteasy = "6.2.3.Final"
@@ -156,7 +156,7 @@ object Versions {
     const val eclipse_collections = "11.1.0"
     const val jctools = "3.3.0"
 
-    const val ow2_asm = "9.3"
+    const val ow2_asm = "9.5"
 
     const val junit_jupiter = "5.9.2"
     const val junit_platform = "1.9.2"
@@ -205,7 +205,7 @@ object Libs {
         }
     }
 
-    val jetbrains_annotations get() = "org.jetbrains:annotations:24.0.0"
+    val jetbrains_annotations get() = "org.jetbrains:annotations:24.0.1"
 
     // kotlin
     fun kotlin(module: String, version: String = Versions.kotlin) = "org.jetbrains.kotlin:kotlin-$module:$version"
