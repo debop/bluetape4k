@@ -46,9 +46,12 @@ class UnidirectionTest(
         loaded shouldBeEqualTo cloud
         loaded.producedSnowflakes shouldContainSame cloud.producedSnowflakes
 
+        // 삭제할 snowflake
         val sfToRemove = loaded.producedSnowflakes.first()
         val sf3 = newSnowflake()
         loaded.producedSnowflakes.remove(sfToRemove)
+        // 남은 snowflake
+        val sfToRemain = loaded.producedSnowflakes.first()
         loaded.producedSnowflakes.add(sf3)
 
         cloudRepo.save(loaded)
@@ -58,6 +61,6 @@ class UnidirectionTest(
 
         val loaded2 = cloudRepo.findByIdOrNull(cloud.id)!!
         loaded2 shouldBeEqualTo cloud
-        loaded.producedSnowflakes.map { it.name } shouldBeEqualTo listOf(sf2.name, sf3.name)
+        loaded.producedSnowflakes.map { it.name } shouldContainSame listOf(sfToRemain.name, sf3.name)
     }
 }
