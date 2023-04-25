@@ -40,7 +40,7 @@ class ConverterTest : AbstractHibernateTest() {
         tem.persistAndFlush(entity)
         tem.clear()
 
-        val query = em.createQuery("select cv from ConvertableEntity cv where cv.password = :password")
+        val query = em.createQuery("select cv from convertable_entity cv where cv.password = :password")
         query.setParameter("password", entity.password)
 
         val loaded = query.singleResult as ConvertableEntity
