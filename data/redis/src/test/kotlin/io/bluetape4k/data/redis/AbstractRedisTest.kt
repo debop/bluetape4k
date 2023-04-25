@@ -7,8 +7,12 @@ import io.bluetape4k.testcontainers.storage.RedisServer
 abstract class AbstractRedisTest {
 
     companion object: KLogging() {
-        val redis: RedisServer by lazy { RedisServer.Launcher.redis }
-    }
 
-    protected fun randomName(): String = Fakers.randomString(32, 128, true)
+        @JvmStatic
+        val redis: RedisServer by lazy { RedisServer.Launcher.redis }
+
+        @JvmStatic
+        protected fun randomName(): String =
+            Fakers.randomString(32, 128, true)
+    }
 }

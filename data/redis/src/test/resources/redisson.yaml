@@ -20,8 +20,8 @@ singleServerConfig:
   dnsMonitoringInterval: 5000
 threads: 0
 
-# Java 7 이상에서는 org.redisson.codec.SnappyCodec 을 쓰고, fst 도 2.x 이상을 써야 합니다.
 # Java 8 을 사용하시면, 기본 값인 org.redisson.codec.SnappyCodec 을 사용하시면 됩니다.
+# Redisson 3.x 부터는 Kryo5 가 기본 Codec 입니다. (Lz4Codec 이나 SnappyCodec 모두 내부적으로 Kryo5 를 사용합니다)
 # codec: !<org.redisson.codec.SnappyCodec> {}
 
 useLinuxNativeEpoll: false
