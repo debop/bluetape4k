@@ -72,6 +72,10 @@ dependencies {
     testImplementation(Libs.snappy_java)
     testImplementation(Libs.lz4_java)
 
+    testImplementation(Libs.jasypt)
+    testImplementation(Libs.bouncycastle_bcprov)
+    testImplementation(Libs.bouncycastle_bcpkix)
+
     compileOnly(project(":bluetape4k-utils-idgenerators"))
 
     // TODO: querydsl-kotlin-codegen 은 tree entity 도 못 만들고, spring-data-jpa 의 repository에서 문제가 생긴다.
