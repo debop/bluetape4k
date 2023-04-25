@@ -52,7 +52,7 @@ class TreeNodeTest(
         // child1 삭제 시 자손은 모두 삭제된다.
         repository.existsById(child11.id!!).shouldBeFalse()
 
-        // child2 는 자손이 없었다
+        // child2는 자손이 없었다
         repository.existsById(child12.id!!).shouldBeFalse()
     }
 }

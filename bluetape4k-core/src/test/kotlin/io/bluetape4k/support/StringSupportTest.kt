@@ -214,12 +214,12 @@ class StringSupportTest {
 
     @Test
     fun `add prefix if absent`() {
-        val prefix = "kommons."
-        val expected = "kommons.version"
+        val prefix = "bluetape4k."
+        val expected = "bluetape4k.version"
 
         "version".prefixIfAbsent(prefix, true) shouldBeEqualTo expected
-        "kommons.version".prefixIfAbsent(prefix, true) shouldBeEqualTo expected
-        "kommons.version".prefixIfAbsent(prefix, false) shouldBeEqualTo expected
+        "bluetape4k.version".prefixIfAbsent(prefix, true) shouldBeEqualTo expected
+        "bluetape4k.version".prefixIfAbsent(prefix, false) shouldBeEqualTo expected
     }
 
     @Test

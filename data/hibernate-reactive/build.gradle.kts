@@ -70,7 +70,7 @@ dependencies {
     testImplementation(project(":bluetape4k-test-testcontainers"))
     testImplementation(Libs.testcontainers_mysql)
 
-    // kommons-hibernate의 entity 들을 재사용하려고 testArchives 를 참조한다
+    // bluetape4k-data-hibernate의 entity 들을 재사용하려고 testArchives 를 참조한다
     // persistence.xml 에서도 jar-file에 entity path를 추가해야 한다
     // see : https://github.com/hauner/gradle-plugins/tree/master/jartest
     // testImplementation(project(path = ":bluetape4k-data-hibernate", configuration = "testArchives"))

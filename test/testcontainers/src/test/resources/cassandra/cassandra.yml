@@ -846,7 +846,7 @@ range_request_timeout_in_ms: 10000
 write_request_timeout_in_ms: 2000
 # How long the coordinator should wait for counter writes to complete
 counter_write_request_timeout_in_ms: 5000
-# How long a coordinator should continue to com.hpcnt.kommons.resilience4j.retry a CAS operation
+# How long a coordinator should continue to retry a CAS operation
 # that contends with other proposals for the same row
 cas_contention_timeout_in_ms: 1000
 # How long the coordinator should wait for truncates to complete

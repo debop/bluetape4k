@@ -26,7 +26,7 @@ fun ToStringCreator.append(): ToStringCreatorAppendTokens = ToStringCreatorAppen
  * @param body 문자열로 표현할 코드
  * @return ToStringCreator
  *
- * @see [io.kommons.ToStringBuilder]
+ * @see [io.bluetape4k.core.ToStringBuilder]
  */
 inline fun toStringCreatorOf(obj: Any, body: ToStringCreator.() -> Unit): ToStringCreator {
     return ToStringCreator(obj).apply(body)
@@ -50,7 +50,7 @@ inline fun toStringCreatorOf(obj: Any, body: ToStringCreator.() -> Unit): ToStri
  * @param body 문자열로 표현할 코드
  * @return ToStringCreator
  *
- * @see [io.kommons.ToStringBuilder]
+ * @see [io.bluetape4k.core.ToStringBuilder]
  */
 inline fun toStringCreatorOf(
     obj: Any,
@@ -78,7 +78,7 @@ inline fun toStringCreatorOf(
  * @param body 문자열로 표현할 코드
  * @return ToStringCreator
  *
- * @see [io.kommons.ToStringBuilder]
+ * @see [io.bluetake4k.core.ToStringBuilder]
  */
 inline fun toStringCreatorOf(
     obj: Any,
