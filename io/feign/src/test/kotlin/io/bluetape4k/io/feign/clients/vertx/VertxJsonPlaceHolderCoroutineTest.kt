@@ -15,7 +15,7 @@ class VertxJsonPlaceHolderCoroutineTest : AbstractJsonPlaceHolderCoroutineTest()
             client(AsyncVertxHttpClient())
             encoder(JacksonEncoder2())
             decoder(JacksonDecoder2())
-            logger(Slf4jLogger(VertxJsonPlaceHolderCoroutineTest::class.java))
+            logger(Slf4jLogger(javaClass))
             logLevel(Logger.Level.FULL)
         }
     }

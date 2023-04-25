@@ -8,15 +8,18 @@ import io.bluetape4k.io.feign.clients.AbstractJsonPlaceHolderCoroutineTest
 import io.bluetape4k.io.feign.codec.JacksonDecoder2
 import io.bluetape4k.io.feign.codec.JacksonEncoder2
 import io.bluetape4k.io.feign.coroutines.coroutineFeignBuilder
+import io.bluetape4k.logging.KLogging
 
-class Hc5JsonPlaceHolderCoroutineTest : AbstractJsonPlaceHolderCoroutineTest() {
+class ApacheHc5JsonPlaceHolderCoroutineTest : AbstractJsonPlaceHolderCoroutineTest() {
+
+    companion object : KLogging()
 
     override fun newBuilder(): CoroutineFeign.CoroutineBuilder<*> {
         return coroutineFeignBuilder {
             client(AsyncApacheHttp5Client())
             encoder(JacksonEncoder2())
             decoder(JacksonDecoder2())
-            logger(Slf4jLogger(Hc5JsonPlaceHolderCoroutineTest::class.java))
+            logger(Slf4jLogger(javaClass))
             logLevel(Logger.Level.FULL)
         }
     }

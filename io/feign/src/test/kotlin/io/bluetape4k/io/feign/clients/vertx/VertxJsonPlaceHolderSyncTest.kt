@@ -15,7 +15,7 @@ class VertxJsonPlaceHolderSyncTest : AbstractJsonPlaceHolderSyncTest() {
             client(VertxHttpClient())
             encoder(JacksonEncoder2())
             decoder(JacksonDecoder2())
-            logger(Slf4jLogger(VertxJsonPlaceHolderSyncTest::class.java))
+            logger(Slf4jLogger(javaClass))
             logLevel(Logger.Level.FULL)
         }
     }

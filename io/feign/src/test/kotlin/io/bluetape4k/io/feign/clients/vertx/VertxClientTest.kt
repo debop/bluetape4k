@@ -8,19 +8,22 @@ import io.bluetape4k.io.feign.feignBuilder
 import io.bluetape4k.logging.KLogging
 import org.junit.jupiter.api.Assumptions
 
-class VertxClientTest: AbstractClientTest() {
+class VertxClientTest : AbstractClientTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     override fun newBuilder(): Feign.Builder {
         return feignBuilder {
             client(VertxHttpClient())
-            logger(Slf4jLogger(VertxClientTest::class.java))
+            logger(Slf4jLogger(javaClass))
             logLevel(Logger.Level.FULL)
         }
     }
 
     override fun `very long response null length`() {
-        Assumptions.assumeTrue(false, "Vertx client seems to hang with response size equalto Long.MAX")
+        Assumptions.assumeTrue(
+            false,
+            "Vertx client seems to hang with response size equalto Long.MAX"
+        )
     }
 }
