@@ -21,12 +21,10 @@ class ProtobufCodecTest : AbstractRedissonTest() {
         private const val REPEAT_SIZE = 10
     }
 
-    private val protobufCodec = RedissonCodecs.Protobuf
-    private val lz4ProtobufCodec = RedissonCodecs.LZ4Protobuf
-
     private fun getTestCodecs() = listOf(
-        Arguments.of(protobufCodec),
-        Arguments.of(lz4ProtobufCodec)
+        Arguments.of(RedissonCodecs.Protobuf),
+        Arguments.of(RedissonCodecs.LZ4Protobuf),
+        Arguments.of(RedissonCodecs.SnappyProtobuf)
     )
 
     data class CustomData(
