@@ -19,11 +19,13 @@ import org.xerial.snappy.Snappy
 abstract class AbstractCompressorTest {
 
     companion object: KLogging() {
-        const val TEST_COUNT = 10
+        const val REPEAT_SIZE = 10
 
         private val faker = Faker()
 
         init {
+
+            // Snappy 는 이렇게 한 번 초기화 해주어야 제대로 성능을 알 수 있다.
             Snappy.cleanUp()
             val compressed = Snappy.compress("bluetape4k")
             Snappy.uncompress(compressed)
@@ -49,7 +51,7 @@ abstract class AbstractCompressorTest {
         compressor.decompress(emptyByteArray).shouldBeEmpty()
     }
 
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `compress as string`() {
         val expected = getRandomString()
 
@@ -59,7 +61,7 @@ abstract class AbstractCompressorTest {
         actual shouldBeEqualTo expected
     }
 
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `compress plain string`() {
         val expected = getRandomString()
 
@@ -70,7 +72,7 @@ abstract class AbstractCompressorTest {
         actual shouldBeEqualTo expected
     }
 
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `compress byte array`() {
         val expected = getRandomString().toUtf8Bytes()
 

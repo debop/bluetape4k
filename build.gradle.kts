@@ -33,14 +33,15 @@ allprojects {
     version = baseVersion + snapshotVersion
 
     repositories {
+        mavenLocal()
         mavenCentral()
         google()
 
-        // for Kotlinx Benchmark
-        maven {
-            name = "Kotlinx"
-            url = uri("https://dl.bintray.com/kotlin/kotlinx/")
-        }
+//        // for Kotlinx Benchmark
+//        maven {
+//            name = "Kotlinx"
+//            url = uri("https://dl.bintray.com/kotlin/kotlinx/")
+//        }
     }
 }
 

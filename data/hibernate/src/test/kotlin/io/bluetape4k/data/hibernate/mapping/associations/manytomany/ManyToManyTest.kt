@@ -137,6 +137,10 @@ class BankAccount(val number: String): IntJpaEntity() {
         return other is BankAccount && number == other.number
     }
 
+    override fun equals(other: Any?): Boolean {
+        return super.equals(other)
+    }
+
     override fun hashCode(): Int {
         return id?.hashCode() ?: number.hashCode()
     }
@@ -178,6 +182,10 @@ class AccountOwner(val ssn: String): IntJpaEntity() {
 
     override fun equalProperties(other: Any): Boolean {
         return other is AccountOwner && ssn == other.ssn
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return super.equals(other)
     }
 
     override fun hashCode(): Int {
