@@ -7,11 +7,12 @@ import io.bluetape4k.kotlinx.coroutines.support.currentCoroutineId
 import io.bluetape4k.leader.CoLeaderElection
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.logging.error
+import io.bluetape4k.logging.warn
 import io.bluetape4k.support.uninitialized
 import kotlinx.coroutines.coroutineScope
 import org.redisson.api.RLock
 import org.redisson.api.RedissonClient
+import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
 /**
@@ -20,10 +21,16 @@ import java.util.concurrent.TimeUnit
  */
 class CoRedissonLeaderElection(
     private val redissonClient: RedissonClient,
-    private val options: LeaderElectionOptions
-): CoLeaderElection {
+    private val options: LeaderElectionOptions,
+) : CoLeaderElection {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
+
+        private fun getCoroutineSequenceName(): String {
+            val today = LocalDate.now()
+            val todaySequence = "${today.year}:${today.monthValue}:${today.dayOfMonth}"
+            return "bluetape4k:leader:coroutineId:$todaySequence"
+        }
 
         operator fun invoke(
             redissonClient: RedissonClient,
@@ -51,11 +58,14 @@ class CoRedissonLeaderElection(
 
         try {
             log.debug { "Leader 승격을 요청합니다 ..." }
-            val lockCoroutineId = currentCoroutineId
+            // Thread Id 기반으로 Lock 을 걸게 되므로, Coroutines 환경에서는 사용할 수 없다.
+            // 고유의 Id 값을 제공해야 하므로 [RAtomicLong] 을 사용한다.
+            val corotuineSequence = redissonClient.getAtomicLong(getCoroutineSequenceName())
+            val lockCoroutineId = runCatching { corotuineSequence.andIncrement }.getOrElse { currentCoroutineId }
             val acquired = lock.tryLockAsync(waitTimeMills, leaseTimeMills, TimeUnit.MILLISECONDS, lockCoroutineId)
                 .awaitSuspending()
             if (acquired) {
-                log.debug { "Leader로 승격하여 작업을 수행합니다. lock=$lockName, coroutineId=$lockCoroutineId" }
+                log.debug { "Leader로 승격되어 작업을 수행합니다. lock=$lockName, coroutineId=$lockCoroutineId" }
                 try {
                     result = action()
                 } finally {
@@ -68,7 +78,7 @@ class CoRedissonLeaderElection(
                 }
             }
         } catch (e: InterruptedException) {
-            log.error(e) { "Fail to run as leader" }
+            log.warn(e) { "Interrupt to run action as leader. lockName=$lockName" }
         }
         result
     }
