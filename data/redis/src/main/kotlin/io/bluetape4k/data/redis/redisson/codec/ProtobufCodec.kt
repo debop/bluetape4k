@@ -24,9 +24,9 @@ typealias AnyMessage = com.google.protobuf.Any
  * @property fallbackCodec 내부 코덱
  * @constructor Create empty Protobuf codec
  */
-class ProtobufCodec private constructor(private val fallbackCodec: Codec): BaseCodec() {
+class ProtobufCodec private constructor(private val fallbackCodec: Codec) : BaseCodec() {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
 
         @JvmStatic
         val INSTANCE: ProtobufCodec by lazy { ProtobufCodec() }
@@ -62,7 +62,7 @@ class ProtobufCodec private constructor(private val fallbackCodec: Codec): BaseC
             val out = ByteBufAllocator.DEFAULT.buffer(bytes.size)
             out.writeBytes(bytes)
         } else {
-            log.warn { "Value is not Protobuf Message instance. graph class=${graph.javaClass}" }
+            log.warn { "Value is not Protobuf Message instance. use fallbackCodec[$fallbackCodec] graph class=${graph.javaClass}" }
             fallbackCodec.valueEncoder.encode(graph)
         }
     }
@@ -78,7 +78,7 @@ class ProtobufCodec private constructor(private val fallbackCodec: Codec): BaseC
             }
             any.unpack(clazz)
         } catch (e: Throwable) {
-            log.warn { "Fail to decode as Protobuf message. it is not Protobuf Message." }
+            log.warn(e) { "Fail to decode as Protobuf message. it is not Protobuf Message, use fallbackCodec[$fallbackCodec]" }
             fallbackCodec.valueDecoder.decode(Unpooled.wrappedBuffer(buf.resetReaderIndex()), state)
         }
     }

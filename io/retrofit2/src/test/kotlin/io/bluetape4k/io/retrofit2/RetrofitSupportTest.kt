@@ -1,6 +1,7 @@
 package io.bluetape4k.io.retrofit2
 
 import io.bluetape4k.concurrent.allAsList
+import io.bluetape4k.io.retrofit2.clients.vertx.vertxCallFactoryOf
 import io.bluetape4k.io.retrofit2.services.JsonPlaceHolder
 import io.bluetape4k.io.retrofit2.services.JsonPlaceHolder.JsonPlaceHolderApi
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
@@ -15,16 +16,16 @@ import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
-class RetrofitSupportTest: AbstractRetrofitTest() {
+class RetrofitSupportTest : AbstractRetrofitTest() {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         private const val REPEAT_SIZE = 3
         private const val CALL_SIZE = 10
 
     }
 
     private val jsonApi: JsonPlaceHolderApi by lazy {
-        retrofitOf(JsonPlaceHolder.BASE_URL).service()
+        retrofitOf(JsonPlaceHolder.BASE_URL, vertxCallFactoryOf()).service()
     }
 
     @Test

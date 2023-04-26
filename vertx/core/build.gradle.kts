@@ -20,4 +20,7 @@ dependencies {
     compileOnly(Libs.kotlinx_coroutines_reactive)
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
+
+    // Netty 를 Mac M1 에서 사용하기 위한 설정
+    testImplementation(Libs.netty_resolver_dns_native_macos + ":osx-aarch_64")
 }

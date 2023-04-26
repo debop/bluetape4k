@@ -1,8 +1,8 @@
 package io.bluetape4k.junit5.utils
 
+import org.junit.runner.notification.RunListener.ThreadSafe
 import java.io.PrintWriter
 import java.io.StringWriter
-import org.junit.runner.notification.RunListener.ThreadSafe
 
 /**
  * Allows multiple exceptions to be thrown as a single exception -- adapted from Jetty.
@@ -72,7 +72,7 @@ class MultiException: RuntimeException("Multiple exceptions") {
                 buildString {
                     val n = nested.size
                     append(n).append(if (n == 1) " nested exception:" else " nested exceptions:")
-                    nested.forEachIndexed { index, t ->
+                    nested.forEach { t ->
                         appendLine(EXCEPTION_SEPARATOR)
                         StringWriter().use { sw ->
                             PrintWriter(sw).use { pw ->

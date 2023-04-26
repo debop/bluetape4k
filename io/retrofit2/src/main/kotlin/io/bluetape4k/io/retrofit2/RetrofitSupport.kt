@@ -41,6 +41,9 @@ fun retrofitBuilderOf(
             baseUrl(baseUrl)
         }
         addConverterFactory(converterFactory)
+        if (converterFactory != defaultJsonConverterFactory) {
+            addConverterFactory(defaultJsonConverterFactory)
+        }
     }
 }
 

@@ -77,13 +77,6 @@ dependencies {
     compileOnly(Libs.resilience4j_circuitbreaker)
     compileOnly(Libs.resilience4j_reactor)
 
-    // Netty
-    compileOnly(Libs.netty_all)
-
-    // NOTE: linux-x86_64 를 따로 추가해줘야 제대로 classifier가 지정된다. 이유는 모르겠지만, 이렇게 해야 제대로 된 jar를 참조한다
-    compileOnly(Libs.netty_transport_native_epoll + ":linux-x86_64")
-    compileOnly(Libs.netty_transport_native_kqueue + ":osx-x86_64")
-
     //
     // Spring Cloud OpenFeign 사용
     //
@@ -93,5 +86,4 @@ dependencies {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-
 }
