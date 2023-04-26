@@ -124,9 +124,9 @@ fun ByteBuf.appendPrettyHexDumpTo(dump: StringBuilder) {
 }
 
 fun ByteBuf.isText(
-    charset: Charset,
     index: Int = readerIndex(),
     length: Int = readableBytes(),
+    charset: Charset = Charsets.UTF_8,
 ): Boolean =
     ByteBufUtil.isText(this, index, length, charset)
 
