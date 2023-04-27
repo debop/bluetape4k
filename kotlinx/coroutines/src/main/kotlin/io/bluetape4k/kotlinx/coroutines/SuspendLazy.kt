@@ -1,13 +1,7 @@
 package io.bluetape4k.kotlinx.coroutines
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * lazy operation의 실행 블럭에 suspend 함수를 사용하도록 하는 interface
@@ -106,7 +100,7 @@ fun <T> suspendBlockingLazyIO(initializer: () -> T): SuspendLazy<T> =
  * @return
  */
 fun <T> CoroutineScope.suspendLazy(
-    context: CoroutineContext = EmptyCoroutineContext,
+    context: CoroutineContext = Dispatchers.Default,
     initializer: suspend CoroutineScope.() -> T,
 ): SuspendLazy<T> =
     SuspendLazySuspendingImpl(this, context, initializer)

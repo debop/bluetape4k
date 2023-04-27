@@ -78,9 +78,10 @@ class LockExamples: AbstractRedissonCoroutineTest() {
 
         val job = scope.launch(exceptionHandler) {
             log.debug { "다른 Coroutine scope에서 기존 lock에 tryLock 시도 -> 소유권이 다르므로 실패한다" }
-            lock.tryLockAsync(1, 60, TimeUnit.SECONDS, lockId).awaitSuspending().shouldBeFalse()
+            val lockId2 = redisson.getLockId(lockName)
+            lock.tryLockAsync(1, 60, TimeUnit.SECONDS, lockId2).awaitSuspending().shouldBeFalse()
         }
-        delay(10)
+        delay(5)
         job.join()
 
         val prevTtl = lock.remainTimeToLiveAsync().awaitSuspending()

@@ -1,6 +1,7 @@
 package io.bluetape4k.examples.coroutines
 
 import io.bluetape4k.core.requirePositiveNumber
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,7 +22,7 @@ fun Int.isOdd(): Boolean = this % 2 == 1
  * @receiver
  */
 suspend fun massiveRun(
-    coroutineContext: CoroutineContext = EmptyCoroutineContext,
+    coroutineContext: CoroutineContext = Dispatchers.Default,
     times: Int = 1000,
     action: suspend () -> Unit,
 ) {

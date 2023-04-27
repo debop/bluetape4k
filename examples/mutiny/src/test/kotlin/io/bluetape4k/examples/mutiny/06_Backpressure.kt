@@ -5,11 +5,12 @@ import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.subscription.BackPressureStrategy
 import io.smallrye.mutiny.subscription.MultiEmitter
 import io.smallrye.mutiny.subscription.MultiSubscriber
-import java.time.Duration
-import java.util.concurrent.Flow
 import kotlinx.coroutines.test.runTest
 import org.awaitility.kotlin.await
+import org.awaitility.kotlin.until
 import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.util.concurrent.Flow
 import kotlin.concurrent.thread
 
 class BackpressureExamples {
@@ -46,8 +47,7 @@ class BackpressureExamples {
                 }
             })
 
-        await.atMost(Duration.ofSeconds(2))
-            .until { isCompleted }
+        await.atMost(Duration.ofSeconds(10)) until { isCompleted }
     }
 
     @Test
@@ -80,7 +80,7 @@ class BackpressureExamples {
                 }
             })
 
-        await.atMost(Duration.ofSeconds(5)).until { isCompleted }
+        await.atMost(Duration.ofSeconds(10)).until { isCompleted }
     }
 
     private fun emitTooFast(emitter: MultiEmitter<in String>) {

@@ -25,6 +25,7 @@ class MDCContextExamples {
             log.debug { "Inside operation" }
             MDC.get("traceId") shouldBeEqualTo "200"
         }
+
         log.debug { "After operation" }
         MDC.get("traceId") shouldBeEqualTo "100"
     }

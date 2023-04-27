@@ -2,7 +2,6 @@ package io.bluetape4k.kotlinx.coroutines.support
 
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.debug
-import java.time.Duration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -10,8 +9,8 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import java.time.Duration
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 
 private val log = KotlinLogging.logger { }
@@ -82,7 +81,7 @@ suspend fun <E> ReceiveChannel<E>.distinctUntilChanged(
  * @return
  */
 suspend fun <E> ReceiveChannel<E>.reduce(
-    context: CoroutineContext = EmptyCoroutineContext,
+    context: CoroutineContext = Dispatchers.Default,
     accumulator: (acc: E, item: E) -> E,
 ): ReceiveChannel<E> = coroutineScope {
     produce(context, Channel.BUFFERED) {
@@ -104,7 +103,7 @@ suspend fun <E> ReceiveChannel<E>.reduce(
  */
 suspend fun <E> ReceiveChannel<E>.reduce(
     initValue: E,
-    context: CoroutineContext = EmptyCoroutineContext,
+    context: CoroutineContext = Dispatchers.Default,
     accumulator: (acc: E, item: E) -> E,
 ): ReceiveChannel<E> = coroutineScope {
     produce(context, Channel.BUFFERED) {
@@ -126,7 +125,7 @@ suspend fun <E> ReceiveChannel<E>.reduce(
  */
 suspend fun <E> ReceiveChannel<E>.concatWith(
     other: ReceiveChannel<E>,
-    context: CoroutineContext = EmptyCoroutineContext,
+    context: CoroutineContext = Dispatchers.Default,
 ): ReceiveChannel<E> = coroutineScope {
     produce(context, Channel.BUFFERED) {
         consumeEach { send(it) }
@@ -146,7 +145,7 @@ suspend fun <E> ReceiveChannel<E>.concatWith(
 suspend fun <E> concat(
     first: ReceiveChannel<E>,
     second: ReceiveChannel<E>,
-    context: CoroutineContext = EmptyCoroutineContext,
+    context: CoroutineContext = Dispatchers.Default,
 ): ReceiveChannel<E> = first.concatWith(second, context)
 
 /**
@@ -159,7 +158,7 @@ suspend fun <E> concat(
  */
 suspend fun <E> ReceiveChannel<E>.debounce(
     waitDuration: Duration,
-    context: CoroutineContext = EmptyCoroutineContext,
+    context: CoroutineContext = Dispatchers.Default,
 ): ReceiveChannel<E> = coroutineScope {
     val self = this@debounce
     require(!waitDuration.isNegative) { "waitDuration must be zero or positive value." }

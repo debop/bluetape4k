@@ -1,20 +1,14 @@
 package io.bluetape4k.kotlinx.coroutines.support
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.stream.consumeAsFlow
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.DoubleStream
 import java.util.stream.IntStream
 import java.util.stream.LongStream
 import java.util.stream.Stream
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.stream.consumeAsFlow
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * Java Stream 을 [Flow] 처럼 사용합니다.
@@ -27,7 +21,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 fun <T> Stream<T>.asFlow(): Flow<T> = consumeAsFlow()
 
 suspend fun <T> Stream<T>.coForEach(
-    coroutineContext: CoroutineContext = EmptyCoroutineContext,
+    coroutineContext: CoroutineContext = Dispatchers.Default,
     consumer: suspend (T) -> Unit,
 ) {
     consumeAsFlow()
@@ -38,7 +32,7 @@ suspend fun <T> Stream<T>.coForEach(
 }
 
 fun <T, R> Stream<T>.coMap(
-    coroutineContext: CoroutineContext = EmptyCoroutineContext,
+    coroutineContext: CoroutineContext = Dispatchers.Default,
     mapper: suspend (T) -> R,
 ): Flow<R> = channelFlow {
     consumeAsFlow()
@@ -55,7 +49,7 @@ fun IntStream.asFlow(): Flow<Int> = consumeAsFlow()
 
 
 suspend fun IntStream.coForEach(
-    coroutineContext: CoroutineContext = EmptyCoroutineContext,
+    coroutineContext: CoroutineContext = Dispatchers.Default,
     consumer: suspend (Int) -> Unit,
 ) {
     consumeAsFlow()
@@ -66,7 +60,7 @@ suspend fun IntStream.coForEach(
 }
 
 fun <R> IntStream.coMap(
-    coroutineContext: CoroutineContext = EmptyCoroutineContext,
+    coroutineContext: CoroutineContext = Dispatchers.Default,
     mapper: suspend (Int) -> R,
 ): Flow<R> = channelFlow {
     consumeAsFlow()
@@ -96,7 +90,7 @@ fun LongStream.consumeAsFlow(): Flow<Long> = LongStreamFlow(this)
 fun LongStream.asFlow(): Flow<Long> = consumeAsFlow()
 
 suspend fun LongStream.coForEach(
-    coroutineContext: CoroutineContext = EmptyCoroutineContext,
+    coroutineContext: CoroutineContext = Dispatchers.Default,
     consumer: suspend (Long) -> Unit,
 ) {
     consumeAsFlow()
@@ -107,7 +101,7 @@ suspend fun LongStream.coForEach(
 }
 
 fun <R> LongStream.coMap(
-    coroutineContext: CoroutineContext = EmptyCoroutineContext,
+    coroutineContext: CoroutineContext = Dispatchers.Default,
     mapper: suspend (Long) -> R,
 ): Flow<R> = channelFlow {
     consumeAsFlow()
@@ -137,7 +131,7 @@ fun DoubleStream.consumeAsFlow(): Flow<Double> = DoubleStreamFlow(this)
 fun DoubleStream.asFlow(): Flow<Double> = consumeAsFlow()
 
 suspend fun DoubleStream.coForEach(
-    coroutineContext: CoroutineContext = EmptyCoroutineContext,
+    coroutineContext: CoroutineContext = Dispatchers.Default,
     consumer: suspend (Double) -> Unit,
 ) {
     consumeAsFlow()
@@ -148,7 +142,7 @@ suspend fun DoubleStream.coForEach(
 }
 
 fun <R> DoubleStream.coMap(
-    coroutineContext: CoroutineContext = EmptyCoroutineContext,
+    coroutineContext: CoroutineContext = Dispatchers.Default,
     mapper: suspend (Double) -> R,
 ): Flow<R> = channelFlow {
     consumeAsFlow()

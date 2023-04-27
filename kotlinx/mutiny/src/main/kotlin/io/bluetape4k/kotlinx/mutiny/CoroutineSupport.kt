@@ -3,10 +3,10 @@ package io.bluetape4k.kotlinx.mutiny
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.asUni
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * Produce a [Uni] from given [block] in a non-suspending context.
@@ -17,7 +17,7 @@ import kotlin.coroutines.EmptyCoroutineContext
  * The behaviour can be changed by passing an own [context] that's used for `async` execution of the given [suspendSupplier].
  */
 fun <T> CoroutineScope.asUni(
-    context: CoroutineContext = EmptyCoroutineContext,
+    context: CoroutineContext = Dispatchers.Default,
     block: suspend CoroutineScope.() -> T,
 ): Uni<T> {
     return async(context) {
