@@ -3,6 +3,17 @@ import com.google.protobuf.gradle.id
 import com.google.protobuf.gradle.plugins
 import com.google.protobuf.gradle.protobuf
 import com.google.protobuf.gradle.protoc
+import org.gradle.kotlin.dsl.api
+import org.gradle.kotlin.dsl.compileOnly
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.idea
+import org.gradle.kotlin.dsl.implementation
+import org.gradle.kotlin.dsl.invoke
+import org.gradle.kotlin.dsl.`java-library`
+import org.gradle.kotlin.dsl.project
+import org.gradle.kotlin.dsl.runtimeOnly
+import org.gradle.kotlin.dsl.testImplementation
+import org.gradle.kotlin.dsl.version
 
 plugins {
     `java-library`
@@ -55,6 +66,7 @@ dependencies {
     api(project(":bluetape4k-kotlinx-coroutines"))
     api(project(":bluetape4k-io-core"))
     api(project(":bluetape4k-io-json"))
+    api(project(":bluetape4k-io-netty"))
     compileOnly(project(":bluetape4k-utils-money"))
     testImplementation(project(":bluetape4k-test-junit5"))
 
