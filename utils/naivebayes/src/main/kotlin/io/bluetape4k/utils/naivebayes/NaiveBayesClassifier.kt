@@ -16,7 +16,7 @@ import kotlin.math.ln
  * @property k2
  */
 class NaiveBayesClassifier<F: Any, C: Any>(
-    val observationLimit: Int = Int.MAX_VALUE,
+    private val observationLimit: Int = Int.MAX_VALUE,
     val k1: Double = DEFAULT_K1,
     val k2: Double = DEFAULT_K2,
 ) {
