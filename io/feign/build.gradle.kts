@@ -20,8 +20,8 @@ dependencies {
 
     // Coroutines
     api(project(":bluetape4k-kotlinx-coroutines"))
-    compileOnly(Libs.kotlinx_coroutines_core)
-    compileOnly(Libs.kotlinx_coroutines_jdk8)
+    api(Libs.kotlinx_coroutines_core)
+    api(Libs.kotlinx_coroutines_jdk8)
     compileOnly(Libs.kotlinx_coroutines_reactive)
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
