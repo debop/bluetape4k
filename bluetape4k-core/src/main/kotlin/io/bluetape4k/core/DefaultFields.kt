@@ -5,6 +5,8 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.*
 
+const val LibraryName: String = "bluetape4k"
+
 /**
  * System Default Locale
  */
