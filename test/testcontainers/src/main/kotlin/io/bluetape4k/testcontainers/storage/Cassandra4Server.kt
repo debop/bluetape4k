@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.core.CqlSessionBuilder
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder
 import com.github.dockerjava.api.command.InspectContainerResponse
+import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.exceptions.BluetapeException
 import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.KLogging
@@ -176,26 +177,21 @@ class Cassandra4Server private constructor(
 
         fun getOrCreateSession(
             keyspace: String = EMPTY_STRING,
-            setup: CqlSessionBuilder.() -> Unit = {},
+            initializer: CqlSessionBuilder.() -> Unit = {},
         ): CqlSession {
-            if (keyspace.isNotBlank()) {
-                recreateKeyspace(keyspace)
-            }
+            keyspace.requireNotBlank("keyspace")
+
+            recreateKeyspace(keyspace)
 
             return newCqlSessionBuilder()
-                .apply(setup)
-                .also { builder ->
-                    if (keyspace.isNotBlank()) {
-                        builder.withKeyspace(keyspace)
-                    }
-                }
+                .apply { withKeyspace(keyspace) }
+                .apply(initializer)
                 .build()
-                .also {
+                .apply {
                     // 혹시 제대로 닫지 않아도, JVM 종료 시 닫아준다.
-                    ShutdownQueue.register(it)
+                    ShutdownQueue.register(this)
                 }
         }
-
 
         fun recreateKeyspace(keyspace: String) {
             if (keyspace.isNotBlank()) {

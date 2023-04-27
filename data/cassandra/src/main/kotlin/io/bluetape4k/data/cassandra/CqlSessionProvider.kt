@@ -55,10 +55,18 @@ object CqlSessionProvider: KLogging() {
         return sessionCache.getOrPut(keyspace) {
             log.info { "Creating new CqlSession for $keyspace" }
 
-            val session = builderSupplier().apply(initializer).build()
-            CassandraAdmin.createKeyspace(session, keyspace)
-            ShutdownQueue.register(session)
-            session
+            // keyspace가 없을 수 있으므로, adminSession으로 신규 keyspace를 생성하도록 합니다.
+            builderSupplier().build().use { adminSession ->
+                CassandraAdmin.createKeyspace(adminSession, keyspace)
+            }
+
+            builderSupplier()
+                .withKeyspace(keyspace)
+                .apply(initializer)
+                .build()
+                .apply {
+                    ShutdownQueue.register(this)
+                }
         }
     }
 }

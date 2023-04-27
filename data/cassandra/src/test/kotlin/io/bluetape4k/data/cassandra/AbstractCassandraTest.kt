@@ -20,7 +20,8 @@ abstract class AbstractCassandraTest {
 
     protected val session by lazy { newCqlSession() }
 
-    protected fun newCqlSession(): CqlSession = Cassandra4Server.Launcher.getOrCreateSession(DEFAULT_KEYSPACE)
+    protected fun newCqlSession(keyspace: String = DEFAULT_KEYSPACE): CqlSession =
+        Cassandra4Server.Launcher.getOrCreateSession(keyspace)
 
     protected fun newCqlSessionBuilder(): CqlSessionBuilder = Cassandra4Server.Launcher.newCqlSessionBuilder()
 }
