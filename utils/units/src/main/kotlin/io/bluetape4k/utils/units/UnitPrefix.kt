@@ -1,9 +1,8 @@
 package io.bluetape4k.utils.units
 
-/**
- *  단위의 계수를 나타냅니다.
- */
-object Prefixes {
+
+object UnitPrefix {
+
     // Multiples
     const val DECA = 10.0
     const val HECTO = 1.0e2
@@ -26,4 +25,5 @@ object Prefixes {
     const val ATTO = 1.0e-18
     const val ZEPTO = 1.0e-21
     const val YOCTO = 1.0e-24
+
 }
