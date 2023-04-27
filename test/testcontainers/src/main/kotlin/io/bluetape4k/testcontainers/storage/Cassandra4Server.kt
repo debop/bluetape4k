@@ -1,8 +1,8 @@
 package io.bluetape4k.testcontainers.storage
 
-import com.datastax.driver.core.schemabuilder.SchemaBuilder
 import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.core.CqlSessionBuilder
+import com.datastax.oss.driver.api.querybuilder.SchemaBuilder
 import com.github.dockerjava.api.command.InspectContainerResponse
 import io.bluetape4k.exceptions.BluetapeException
 import io.bluetape4k.io.utils.Resourcex
@@ -16,12 +16,12 @@ import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
-import java.io.IOException
-import java.net.InetSocketAddress
-import javax.script.ScriptException
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.utility.DockerImageName
+import java.io.IOException
+import java.net.InetSocketAddress
+import javax.script.ScriptException
 
 /**
  * Docker 를 이용하여 Cassandra 4.0+ Server를 실행합니다.
@@ -216,16 +216,15 @@ class Cassandra4Server private constructor(
         ): Boolean {
             val createKeyspaceStmt = SchemaBuilder.createKeyspace(keyspace)
                 .ifNotExists()
-                .with()
-                .replication(mapOf("class" to "SimpleStrategy", "replication_factor" to replicationFactor))
-                .queryString
+                .withSimpleStrategy(replicationFactor)
+                .build()
 
             log.info { "Create keyspace. statement=$createKeyspaceStmt" }
             return session.execute(createKeyspaceStmt).wasApplied()
         }
 
         fun dropKeyspace(session: CqlSession, keyspace: String): Boolean {
-            val dropKeyspaceStmt = SchemaBuilder.dropKeyspace(keyspace).ifExists().queryString
+            val dropKeyspaceStmt = SchemaBuilder.dropKeyspace(keyspace).ifExists().build()
             log.info { "Drop keyspace if exists. statement=$dropKeyspaceStmt" }
             return session.execute(dropKeyspaceStmt).wasApplied()
         }

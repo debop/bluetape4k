@@ -47,6 +47,7 @@ dependencies {
     // Cassandra
     compileOnly(Libs.testcontainers_cassandra)
     compileOnly(Libs.cassandra_java_driver_core)
+    compileOnly(Libs.cassandra_java_driver_query_builder)
 
     // ElasticSearch
     compileOnly(Libs.testcontainers_elasticsearch)
