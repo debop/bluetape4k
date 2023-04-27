@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import org.junit.jupiter.api.extension.TestInstancePostProcessor
 import java.util.stream.Stream
+import kotlin.streams.toList
 
 class RandomExtension : TestInstancePostProcessor, ParameterResolver {
 

@@ -32,4 +32,4 @@ import org.junit.jupiter.api.extension.ExtendWith
 @MustBeDocumented
 @Repeatable
 @ExtendWith(RandomExtension::class)
-annotation class RandomizedTest()
+annotation class RandomizedTest

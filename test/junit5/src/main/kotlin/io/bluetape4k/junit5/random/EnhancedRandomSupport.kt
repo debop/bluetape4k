@@ -2,6 +2,7 @@ package io.bluetape4k.junit5.random
 
 import io.github.benas.randombeans.EnhancedRandomBuilder
 import io.github.benas.randombeans.api.EnhancedRandom
+import kotlin.streams.toList
 
 /**
  * [EnhancedRandom]을 생성해주는 함수

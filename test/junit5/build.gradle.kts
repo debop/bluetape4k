@@ -16,14 +16,13 @@ dependencies {
     api(Libs.kluent)
     compileOnly(Libs.mockk)
 
-    api(Libs.random_beans)
-    api(Libs.datafaker)
-
-    compileOnly(Libs.logback)
-
     api(Libs.awaitility_kotlin)
 
+    api(Libs.datafaker)
+    api(Libs.random_beans)
+
     api(Libs.commons_lang3)
+    compileOnly(Libs.logback)
 
     compileOnly(Libs.kotlinx_coroutines_core)
     compileOnly(Libs.kotlinx_coroutines_test)
