@@ -55,7 +55,7 @@ class HashIdsSupportTest {
 
         @Test
         fun `정렬된 UUID에 대한 hashid는 정렬되지 않습니다`() {
-            val uuids = List(10) { uuidGenerator.nextUUID() }
+            val uuids = List(100) { uuidGenerator.nextUUID() }
             val encodeds = uuids.map { hashids.encodeUUID(it) }.onEach { log.debug { it } }
             encodeds.sorted() shouldNotBeEqualTo encodeds
         }

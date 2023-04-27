@@ -6,15 +6,11 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.idgenerators.getMachineId
 import io.bluetape4k.utils.idgenerators.parseAsLong
-import java.util.concurrent.ConcurrentHashMap
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeGreaterOrEqualTo
-import org.amshove.kluent.shouldBeGreaterThan
-import org.amshove.kluent.shouldBeInRange
-import org.amshove.kluent.shouldBeNull
-import org.amshove.kluent.shouldBeTrue
+import org.amshove.kluent.*
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
+import java.util.concurrent.ConcurrentHashMap
+import kotlin.streams.toList
 
 abstract class AbstractSnowflakeTest {
 

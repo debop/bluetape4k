@@ -5,8 +5,6 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_MACHINE_ID
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_SEQUENCE
 import io.bluetape4k.utils.idgenerators.snowflake.SnowflakeId
-import java.util.concurrent.ConcurrentHashMap
-import java.util.stream.IntStream
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeLessThan
 import org.amshove.kluent.shouldBeNull
@@ -16,7 +14,10 @@ import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import java.util.concurrent.ConcurrentHashMap
+import java.util.stream.IntStream
 import kotlin.math.absoluteValue
+import kotlin.streams.toList
 
 abstract class AbstractSequencerTest {
 

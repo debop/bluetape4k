@@ -361,8 +361,6 @@ object Libs {
 
     val findbugs get() = "com.google.code.findbugs:jsr305:3.0.2"
     val guava get() = "com.google.guava:guava:31.1-jre"
-    val joda_time get() = "joda-time:joda-time:2.10.14"
-    val joda_convert get() = "org.joda:joda-convert:2.2.2"
 
     val eclipse_collections get() = "org.eclipse.collections:eclipse-collections:${Versions.eclipse_collections}"
     val eclipse_collections_forkjoin get() = "org.eclipse.collections:eclipse-collections-forkjoin:${Versions.eclipse_collections}"
