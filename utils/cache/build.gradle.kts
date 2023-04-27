@@ -13,9 +13,7 @@ dependencies {
 
     api(Libs.caffeine)
     api(Libs.caffeine_jcache)
-
     compileOnly(Libs.ehcache)
-
     compileOnly(Libs.redisson)
 
     // testImplementation(Libs.springBoot("starter"))

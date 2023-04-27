@@ -1,16 +1,11 @@
 package io.bluetape4k.utils.cache.caffeine
 
-import com.github.benmanes.caffeine.cache.AsyncCache
-import com.github.benmanes.caffeine.cache.AsyncLoadingCache
-import com.github.benmanes.caffeine.cache.Cache
-import com.github.benmanes.caffeine.cache.Caffeine
-import com.github.benmanes.caffeine.cache.CaffeineSpec
-import com.github.benmanes.caffeine.cache.LoadingCache
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
+import com.github.benmanes.caffeine.cache.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.future.future
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 
 /**
  * [CaffeineSpec] 을 빌드합니다.
