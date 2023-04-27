@@ -108,8 +108,8 @@ class DataFakerExamples {
         val names = faker.getValues("name.fullName", 10).toList()
     }
 
-    private fun Faker.getValues(provider: String, size: Int = 1): Sequence<Any> {
-        val names = provider.split(".", limit = 2)
+    private fun Faker.getValues(providerFullName: String, size: Int = 1): Sequence<Any> {
+        val names = providerFullName.split(".", limit = 2)
         val providerName = names[0]
         val labelName = names[1]
         log.trace { "providerName=$providerName, labelName=$labelName" }
