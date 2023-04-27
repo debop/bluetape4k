@@ -20,14 +20,14 @@ import java.util.concurrent.TimeUnit
  */
 class RedissonLeaderElection private constructor(
     private val redissonClient: RedissonClient,
-    private val options: LeaderElectionOptions
+    private val options: RedissonLeaderElectionOptions
 ): LeaderElection {
 
     companion object: KLogging() {
         @JvmStatic
         operator fun invoke(
             redissonClient: RedissonClient,
-            options: LeaderElectionOptions = LeaderElectionOptions.Default
+            options: RedissonLeaderElectionOptions = RedissonLeaderElectionOptions.Default
         ): RedissonLeaderElection {
             return RedissonLeaderElection(redissonClient, options)
         }

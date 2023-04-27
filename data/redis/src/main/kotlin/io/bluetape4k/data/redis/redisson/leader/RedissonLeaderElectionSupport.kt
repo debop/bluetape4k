@@ -7,7 +7,7 @@ import java.util.concurrent.ForkJoinPool
 
 fun <T> RedissonClient.runIfLeader(
     jobName: String,
-    options: LeaderElectionOptions = LeaderElectionOptions.Default,
+    options: RedissonLeaderElectionOptions = RedissonLeaderElectionOptions.Default,
     action: () -> T
 ): T {
     val leaderElection = RedissonLeaderElection(this, options)
@@ -17,7 +17,7 @@ fun <T> RedissonClient.runIfLeader(
 fun <T> RedissonClient.runAsyncIfLeader(
     jobName: String,
     executor: Executor = ForkJoinPool.commonPool(),
-    options: LeaderElectionOptions = LeaderElectionOptions.Default,
+    options: RedissonLeaderElectionOptions = RedissonLeaderElectionOptions.Default,
     action: () -> CompletableFuture<T>
 ): CompletableFuture<T> {
     val leaderElection = RedissonLeaderElection(this, options)

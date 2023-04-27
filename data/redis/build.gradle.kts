@@ -95,8 +95,9 @@ dependencies {
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 
-    // NOTE: linux-x86_64 를 따로 추가해줘야 제대로 classifier가 지정된다. 이유는 모르겠지만, 이렇게 해야 제대로 된 jar를 참조한다
-    compileOnly(Libs.netty_transport_native_epoll + ":linux-x86_64")
-    compileOnly(Libs.netty_transport_native_kqueue + ":osx-x86_64")
-
+    // Redisson Map Read/Write Through 예제를 위해 
+    testImplementation(project(":bluetape4k-data-jdbc"))
+    testRuntimeOnly(Libs.h2)
+    testImplementation(Libs.hikaricp)
+    testImplementation(Libs.springBootStarter("jdbc"))
 }
