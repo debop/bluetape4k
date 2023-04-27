@@ -14,9 +14,10 @@ avro {
 }
 
 // Build script 에 아래와 같이 compile 전에 avro 를 generate 하도록 해주면 Kotlin 에서도 사용이 가능합니다.
-tasks["compileKotlin"].dependsOn(tasks["generateAvroJava"])
-tasks["compileTestKotlin"].dependsOn(tasks["generateTestAvroJava"])
-
+tasks.compileKotlin { dependsOn(tasks.generateAvroJava) }
+tasks.compileTestKotlin { dependsOn(tasks.generateTestAvroJava) }
+//tasks["compileKotlin"].dependsOn(tasks["generateAvroJava"])
+//tasks["compileTestKotlin"].dependsOn(tasks["generateTestAvroJava"])
 
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
@@ -24,13 +25,13 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-io-core"))
-
     testImplementation(project(":bluetape4k-io-http"))
     testImplementation(project(":bluetape4k-test-junit5"))
 
     api(Libs.avro)
     api(Libs.avro_kotlin)
     api(Libs.snappy_java)
+    compileOnly(Libs.zstd_jni)
 
     implementation(Libs.jackson_databind)
     implementation(Libs.jackson_module_kotlin)

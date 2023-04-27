@@ -1,48 +1,52 @@
 package io.bluetape4k.io.avro
 
-import io.bluetape4k.io.avro.message.examples.Employee
-import io.bluetape4k.io.avro.message.examples.EmployeeList
-import io.bluetape4k.io.avro.message.examples.ProductProperty
-import io.bluetape4k.io.avro.message.examples.ProductRoot
-import io.bluetape4k.io.avro.message.examples.Suit
-import java.time.Instant
+import io.bluetape4k.io.avro.message.examples.*
+import net.datafaker.Faker
 
 object TestMessageProvider {
 
-    const val COUNT = 1000
+    private const val COUNT = 1000
 
-    fun createEmployee(id: Int): Employee =
-        Employee.newBuilder()
-            .setId(id)
-            .setName("name-$id")
-            .setAddress("Seould Rd. $id")
-            .setSalary(1000L)
-            .setAge(51)
-            .setHireAt(Instant.now().toEpochMilli())
+    private val faker = Faker()
+
+    fun createEmployee(): Employee {
+        return Employee.newBuilder()
+            .setId(AbstractAvroTest.faker.random().nextInt())
+            .setName(AbstractAvroTest.faker.name().fullName())
+            .setAddress(AbstractAvroTest.faker.address().fullAddress())
+            .setAge(AbstractAvroTest.faker.random().nextInt(100))
+            .setSalary(AbstractAvroTest.faker.random().nextLong())
+            .setEventType(EventType.CREATED)
+            .setHireAt(AbstractAvroTest.faker.date().birthday().time)
+            .setLastUpdatedAt(AbstractAvroTest.faker.date().birthday().time)
             .build()
+    }
 
     fun createEmployeeList(count: Int = COUNT): EmployeeList =
         EmployeeList.newBuilder()
-            .setEmps(List(count) { createEmployee(it) })
+            .setEmps(List(count) { createEmployee() })
             .build()
 
 
-    private val values = mapOf("name" to "Sunghyouk Bae", "nick" to "Debop")
+    private val values = mapOf(
+        "name" to faker.name().fullName(),
+        "nick" to faker.name().username(),
+    )
 
     fun createProductProperty(id: Long = 1L, valid: Boolean = true): ProductProperty =
         ProductProperty.newBuilder()
             .setId(id)
             .setKey(id.toString())
-            .setCreatedAt(Instant.now().toEpochMilli())
-            .setUpdatedAt(Instant.now().toEpochMilli())
+            .setCreatedAt(faker.date().birthday().time)
+            .setUpdatedAt(faker.date().birthday().time)
             .setValid(valid)
             .setValues(values)
             .build()
 
     fun createProductRoot(): ProductRoot =
         ProductRoot.newBuilder()
-            .setId(12)
-            .setCategoryId(30L)
+            .setId(faker.random().nextLong())
+            .setCategoryId(faker.random().nextLong())
             .setProductProperties(listOf(createProductProperty(1L), createProductProperty(2L)))
             .setSuit(Suit.HEARTS)
             .build()
