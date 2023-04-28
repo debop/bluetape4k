@@ -3,11 +3,11 @@ package io.bluetape4k.spring.cassandra
 import io.bluetape4k.spring.cassandra.domain.model.AllPossibleTypes
 import io.bluetape4k.testcontainers.storage.Cassandra4Server
 import org.springframework.boot.autoconfigure.domain.EntityScan
-import org.springframework.data.cassandra.config.AbstractCassandraConfiguration
+import org.springframework.data.cassandra.config.AbstractReactiveCassandraConfiguration
 import org.springframework.data.cassandra.config.SchemaAction
 
 @EntityScan(basePackageClasses = [AllPossibleTypes::class])
-abstract class AbstractCassandraTestConfiguration: AbstractCassandraConfiguration() {
+abstract class AbstractReactiveCassandraTestConfiguration: AbstractReactiveCassandraConfiguration() {
 
     // NOTE: 테스트 시에는 testcontainers 를 실행하기 위해 ScyllaServer.Launcher 작업을 미리 수행해야 합니다.
     //

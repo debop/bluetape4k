@@ -5,10 +5,10 @@ import com.datastax.oss.driver.api.core.uuid.Uuids
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder
 import io.bluetape4k.data.cassandra.querybuilder.eq
 import io.bluetape4k.data.cassandra.querybuilder.literal
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest
+import io.bluetape4k.spring.cassandra.cql.deleteOptions
 import io.bluetape4k.spring.cassandra.cql.updateOptions
 import io.bluetape4k.spring.cassandra.domain.DomainTestConfiguration
 import io.bluetape4k.spring.cassandra.domain.model.User
@@ -16,8 +16,8 @@ import io.bluetape4k.spring.cassandra.domain.model.UserToken
 import io.bluetape4k.spring.cassandra.query.eq
 import io.bluetape4k.spring.coroutines.await
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
@@ -28,7 +28,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.cassandra.core.AsyncCassandraTemplate
-import org.springframework.data.cassandra.core.DeleteOptions
 import org.springframework.data.cassandra.core.EntityWriteResult
 import org.springframework.data.cassandra.core.InsertOptions
 import org.springframework.data.cassandra.core.count
@@ -50,26 +49,26 @@ import org.springframework.data.domain.Sort
 @SpringBootTest(classes = [DomainTestConfiguration::class])
 class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template") {
 
-    companion object: KLogging() {
-        private fun newUser(): User =
-            User(Uuids.timeBased().toString(), faker.name().firstName(), faker.name().lastName())
-    }
+    companion object: KLogging()
 
     private val operations: AsyncCassandraTemplate by lazy {
         AsyncCassandraTemplate(session)
     }
 
+    private fun newUser(): User =
+        User(Uuids.timeBased().toString(), faker.name().firstName(), faker.name().lastName())
+
     @BeforeEach
     fun beforeEach() {
         runBlocking {
-//            operations.isUsePreparedStatements = false
+            operations.isUsePreparedStatements = false
             operations.truncate<User>().await()
             operations.truncate<UserToken>().await()
         }
     }
 
     @Test
-    fun `조회 시 정렬 적용`() = runSuspendTest {
+    fun `조회 시 정렬 적용`() = runSuspendWithIO {
         val token1 = UserToken(
             userId = Uuids.timeBased(),
             token = Uuids.timeBased(),
@@ -98,7 +97,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `단건 조회`() = runSuspendTest {
+    fun `단건 조회`() = runSuspendWithIO {
         val token1 = UserToken(
             userId = Uuids.timeBased(),
             token = Uuids.timeBased(),
@@ -119,7 +118,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
 
 
     @Test
-    fun `insert entity`() = runSuspendTest {
+    fun `insert entity`() = runSuspendWithIO {
         val user = newUser()
         getUserById(user.id).shouldBeNull()
 
@@ -128,7 +127,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `존재하지 않을 시에만 신규로 저장`() = runSuspendTest {
+    fun `존재하지 않을 시에만 신규로 저장`() = runSuspendWithIO {
         val lwtOption = InsertOptions.builder().withIfNotExists().build()
         val user = newUser()
 
@@ -143,7 +142,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `레코드 count 조회`() = runSuspendTest {
+    fun `레코드 count 조회`() = runSuspendWithIO {
         val user = newUser()
         val saved = operations.insert(user).await()!!
         saved shouldBeEqualTo user
@@ -152,7 +151,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `조건절을 이용한 count 조회`() = runSuspendTest {
+    fun `조건절을 이용한 count 조회`() = runSuspendWithIO {
         val user1 = newUser()
         val user2 = newUser()
         operations.insert(user1).await()
@@ -163,7 +162,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `exists 조회`() = runSuspendTest {
+    fun `exists 조회`() = runSuspendWithIO {
         val user1 = newUser()
         val user2 = newUser()
         operations.insert(user1).await()
@@ -177,7 +176,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `엔티티 갱신하기`() = runSuspendTest {
+    fun `엔티티 갱신하기`() = runSuspendWithIO {
         val user = newUser()
         operations.insert(user).await()
 
@@ -187,7 +186,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `존재하지 않으면 Update 하지 않기`() = runSuspendTest {
+    fun `존재하지 않으면 Update 하지 않기`() = runSuspendWithIO {
         // 존재하지 않는 엔티티를 Update 하는 경우에는 아무 작업도 하지 않도록 합니다.
         val user = newUser()
 
@@ -199,7 +198,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `존재하는 엔티티를 Update 하기`() = runSuspendTest {
+    fun `존재하는 엔티티를 Update 하기`() = runSuspendWithIO {
         val user = newUser()
         operations.insert(user).await()
 
@@ -211,7 +210,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `조건절로 엔티티 삭제하기`() = runSuspendTest {
+    fun `조건절로 엔티티 삭제하기`() = runSuspendWithIO {
         val user = newUser()
         operations.insert(user).await()
 
@@ -222,8 +221,8 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `특정 컬럼만 삭제하기`() = runSuspendTest {
-        val user = User(faker.internet().emailAddress(), faker.name().firstName(), faker.name().lastName())
+    fun `특정 컬럼만 삭제하기`() = runSuspendWithIO {
+        val user = newUser()
         operations.insert(user).await()!!
 
         val query = query(where("id").eq(user.id))
@@ -237,8 +236,8 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `엔티티 삭제하기`() = runSuspendTest {
-        val user = User(faker.internet().emailAddress(), faker.name().firstName(), faker.name().lastName())
+    fun `엔티티 삭제하기`() = runSuspendWithIO {
+        val user = newUser()
         operations.insert(user).await()!!
 
         operations.delete(user).await()
@@ -247,8 +246,8 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `Id로 엔티티 삭제하기`() = runSuspendTest {
-        val user = User(faker.internet().emailAddress(), faker.name().firstName(), faker.name().lastName())
+    fun `Id로 엔티티 삭제하기`() = runSuspendWithIO {
+        val user = newUser()
         operations.insert(user).await()!!
 
         operations.deleteById<User>(user.id).await().shouldBeTrue()
@@ -256,29 +255,31 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     }
 
     @Test
-    fun `존재하는 엔티티만 삭제하기`() = runSuspendTest {
-        val user = User(faker.internet().emailAddress(), faker.name().firstName(), faker.name().lastName())
+    fun `존재하는 엔티티만 삭제하기`() = runSuspendWithIO {
+        val user = newUser()
         operations.insert(user).await()!!
 
-        val lwtOptions = DeleteOptions.builder().withIfExists().build()
+        val lwtOptions = deleteOptions { withIfExists() }
         operations.delete(user, lwtOptions).await().wasApplied().shouldBeTrue()
-        getUserById(user.id).shouldBeNull()
 
+        Thread.sleep(10)
+        getUserById(user.id).shouldBeNull()
         // 이미 삭제되었으므로, 재삭제 요청은 처리되지 않습니다.
         operations.delete(user, lwtOptions).await().wasApplied().shouldBeFalse()
     }
 
     @Test
-    fun `조건절에 queryOptions 적용하여 삭제하기`() = runSuspendTest {
-        val user = User(faker.internet().emailAddress(), faker.name().firstName(), faker.name().lastName())
+    fun `조건절에 queryOptions 적용하여 삭제하기`() = runSuspendWithIO {
+        val user = newUser()
         operations.insert(user).await()!!
 
-        val lwtOptions = DeleteOptions.builder().withIfExists().build()
+        val lwtOptions = deleteOptions { withIfExists() } // 존재하는 엔티티만 삭제합니다.
         val query = query(where("id").eq(user.id)).queryOptions(lwtOptions)
 
         operations.delete<User>(query).await().shouldBeTrue()
-        getUserById(user.id).shouldBeNull()
 
+        Thread.sleep(10)
+        getUserById(user.id).shouldBeNull()
         // 이미 삭제되었으므로, 재삭제 요청은 처리되지 않습니다.
         operations.delete<User>(query).await().shouldBeFalse()
     }
@@ -287,16 +288,15 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     fun `PageRequest를 이용하여 Slice로 조회`() = runSuspendWithIO {
         val entitySize = 100
         val sliceSize = 10
-        val expectedIds = mutableSetOf<String>()
 
-        val jobs = List(entitySize) { index ->
-            launch(Dispatchers.IO) {
+        val insertTasks = List(entitySize) { index ->
+            async(Dispatchers.IO) {
                 val user = newUser()
-                expectedIds.add(user.id)
                 operations.insert(user).await()
+                user.id
             }
         }
-        jobs.joinAll()
+        val expectedIds = insertTasks.awaitAll().toSet()
 
         val query = Query.empty()
         var slice = operations.slice<User>(query.pageRequest(CassandraPageRequest.first(sliceSize))).await()
@@ -317,7 +317,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
             }
         } while (slice.content.isNotEmpty())
 
-        loadIds.size shouldBeEqualTo expectedIds.size
+        loadIds.size shouldBeEqualTo entitySize
         loadIds shouldContainSame expectedIds
         iterations shouldBeEqualTo entitySize / sliceSize
     }

@@ -10,7 +10,7 @@ import io.bluetape4k.spring.cassandra.cql.insertOptions
 import io.bluetape4k.spring.cassandra.cql.updateOptions
 import io.bluetape4k.spring.cassandra.deleteByIdSuspending
 import io.bluetape4k.spring.cassandra.deleteSuspending
-import io.bluetape4k.spring.cassandra.domain.DomainTestConfiguration
+import io.bluetape4k.spring.cassandra.domain.ReactiveDomainTestConfiguration
 import io.bluetape4k.spring.cassandra.domain.model.User
 import io.bluetape4k.spring.cassandra.existsSuspending
 import io.bluetape4k.spring.cassandra.insertSuspending
@@ -18,8 +18,9 @@ import io.bluetape4k.spring.cassandra.query.eq
 import io.bluetape4k.spring.cassandra.sliceSuspending
 import io.bluetape4k.spring.cassandra.truncateSuspending
 import io.bluetape4k.spring.cassandra.updateSuspending
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.runBlocking
@@ -43,7 +44,7 @@ import org.springframework.data.cassandra.core.query.where
 import org.springframework.data.cassandra.core.selectOneById
 import org.springframework.data.cassandra.repository.config.EnableReactiveCassandraRepositories
 
-@SpringBootTest(classes = [DomainTestConfiguration::class])
+@SpringBootTest(classes = [ReactiveDomainTestConfiguration::class])
 @EnableReactiveCassandraRepositories
 class ReactiveCassandraTemplateTest(
     @Autowired private val operations: ReactiveCassandraOperations,
@@ -232,16 +233,15 @@ class ReactiveCassandraTemplateTest(
     fun `PageRequest를 이용하여 Slice로 조회`() = runSuspendWithIO {
         val entitySize = 100
         val sliceSize = 10
-        val expectedIds = mutableSetOf<String>()
 
-        val jobs = List(entitySize) { index ->
-            launch {
+        val insertTasks = List(entitySize) {
+            async(Dispatchers.IO) {
                 val user = newUser()
-                expectedIds.add(user.id)
                 operations.insert(user).awaitSingle()
+                user.id
             }
         }
-        jobs.joinAll()
+        val expectedIds = insertTasks.awaitAll().toSet()
 
         val query = Query.empty()
         var slice = operations.sliceSuspending<User>(query.pageRequest(CassandraPageRequest.first(sliceSize)))

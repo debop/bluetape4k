@@ -26,7 +26,9 @@ class AsyncOptimisticLockingTest: AbstractCassandraCoroutineTest("async-optimist
 
     companion object: KLogging()
 
-    private val operations: AsyncCassandraOperations by lazy { AsyncCassandraTemplate(session) }
+    private val operations: AsyncCassandraOperations by lazy {
+        AsyncCassandraTemplate(session)
+    }
 
     @BeforeEach
     fun beforeEach() {

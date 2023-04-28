@@ -5,7 +5,7 @@ import io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest
 import io.bluetape4k.spring.cassandra.cql.insertOptions
 import io.bluetape4k.spring.cassandra.cql.queryForResultSetSuspending
 import io.bluetape4k.spring.cassandra.cql.writeOptions
-import io.bluetape4k.spring.cassandra.domain.DomainTestConfiguration
+import io.bluetape4k.spring.cassandra.domain.ReactiveDomainTestConfiguration
 import io.bluetape4k.spring.cassandra.domain.model.FlatGroup
 import io.bluetape4k.spring.cassandra.domain.model.Group
 import io.bluetape4k.spring.cassandra.domain.model.GroupKey
@@ -38,7 +38,7 @@ import org.springframework.data.cassandra.repository.config.EnableReactiveCassan
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertFailsWith
 
-@SpringBootTest(classes = [DomainTestConfiguration::class])
+@SpringBootTest(classes = [ReactiveDomainTestConfiguration::class])
 @EnableReactiveCassandraRepositories
 class ReactiveCassandraBatchTemplateTest(
     @Autowired private val operations: ReactiveCassandraOperations,
