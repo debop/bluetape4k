@@ -5,7 +5,6 @@ import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.MySQLContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
@@ -19,8 +18,10 @@ class MySQL8Server private constructor(
 ): MySQLContainer<MySQL8Server>(imageName), JdbcServer {
 
     companion object: KLogging() {
+        const val IMAGE = "mysql"
         const val TAG = "8.0"
-        const val DEFAULT_PORT: Int = 3306
+        const val NAME = "mysql"
+        const val PORT: Int = 3306
         const val DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver"
 
         operator fun invoke(
@@ -31,7 +32,7 @@ class MySQL8Server private constructor(
             password: String = "test",
             reuse: Boolean = true,
         ): MySQL8Server {
-            val imageName = DockerImageName.parse(NAME).withTag(tag)
+            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
             return MySQL8Server(imageName, useDefaultPort, configuration, username, password, reuse)
         }
 
@@ -54,11 +55,11 @@ class MySQL8Server private constructor(
         if (configuration.isNotBlank()) {
             withConfigurationOverride(configuration)
         }
+        addExposedPorts(PORT)
         withUsername(username)
         withPassword(password)
 
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
         setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {

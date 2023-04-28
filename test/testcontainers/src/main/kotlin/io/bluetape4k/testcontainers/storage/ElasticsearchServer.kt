@@ -5,7 +5,6 @@ import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
-import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.elasticsearch.ElasticsearchContainer
 import org.testcontainers.utility.DockerImageName
 
@@ -49,9 +48,8 @@ class ElasticsearchServer private constructor(
     override val url: String get() = httpHostAddress
 
     init {
-        withExposedPorts(PORT, TCP_PORT)
+        addExposedPorts(PORT, TCP_PORT)
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
 
         if (useDefaultPort) {
             exposeCustomPorts(PORT, TCP_PORT)

@@ -5,7 +5,6 @@ import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
-import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.k3s.K3sContainer
 import org.testcontainers.utility.DockerImageName
 
@@ -58,8 +57,9 @@ class K3sServer private constructor(
     val rancherWebhookPort: Int get() = getMappedPort(RANCHER_WEBHOOK_PORT)
 
     init {
+        addExposedPorts(KUBE_SECURE_PORT, RANCHER_WEBHOOK_PORT)
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
+        // withLogConsumer(Slf4jLogConsumer(log))
 
         if (useDefaultPort) {
             exposeCustomPorts(KUBE_SECURE_PORT, RANCHER_WEBHOOK_PORT)

@@ -6,8 +6,6 @@ import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.GenericContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
-import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
 /**
@@ -31,7 +29,7 @@ class NatsServer private constructor(
         const val TAG = "2.9"
         const val NAME = "nats"
 
-        val NATS_PORTS: Array<Int> = arrayOf(4222, 6222, 8222)
+        val NATS_PORTS = intArrayOf(4222, 6222, 8222)
 
         operator fun invoke(
             imageName: DockerImageName,
@@ -54,15 +52,12 @@ class NatsServer private constructor(
     override val url: String get() = "$NAME://$host:$port"
 
     init {
-        withExposedPorts(*NATS_PORTS)
+        addExposedPorts(*NATS_PORTS)
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
-
-        setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {
             // 위에 withExposedPorts 를 등록했으면, 따로 지정하지 않으면 그 값들을 사용합니다.
-            exposeCustomPorts()
+            exposeCustomPorts(*NATS_PORTS)
         }
     }
 

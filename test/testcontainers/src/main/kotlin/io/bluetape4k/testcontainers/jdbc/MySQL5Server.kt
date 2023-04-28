@@ -5,7 +5,6 @@ import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.MySQLContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
@@ -37,7 +36,7 @@ class MySQL5Server private constructor(
         const val IMAGE = "biarms/mysql"
         const val TAG = "5.7"
         const val NAME = "mysql"
-        const val DEFAULT_PORT: Int = 3306
+        const val PORT: Int = 3306
         const val DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver"
 
         operator fun invoke(
@@ -71,15 +70,17 @@ class MySQL5Server private constructor(
         if (configuration.isNotBlank()) {
             withConfigurationOverride(configuration)
         }
+        addExposedPorts(PORT)
+
         withUsername(username)
         withPassword(password)
 
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
+        // withLogConsumer(Slf4jLogConsumer(log))
         setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {
-            exposeCustomPorts(DEFAULT_PORT)
+            exposeCustomPorts(PORT)
         }
     }
 

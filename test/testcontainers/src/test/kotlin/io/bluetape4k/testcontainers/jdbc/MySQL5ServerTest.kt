@@ -23,7 +23,7 @@ class MySQL5ServerTest: AbstractJdbcServerTest() {
     fun `launch mysql 5 server with default port`() {
         MySQL5Server(useDefaultPort = true).use { mysql ->
             mysql.start()
-            mysql.port shouldBeEqualTo MySQL5Server.DEFAULT_PORT
+            mysql.port shouldBeEqualTo MySQL5Server.PORT
             assertConnection(mysql)
         }
     }

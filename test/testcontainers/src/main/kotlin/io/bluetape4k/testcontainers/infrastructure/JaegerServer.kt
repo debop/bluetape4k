@@ -6,7 +6,6 @@ import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.GenericContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
@@ -54,9 +53,8 @@ class JaegerServer private constructor(
     val thriftPort: Int get() = getMappedPort(THRIFT_PORT)
 
     init {
+        addExposedPorts(*EXPOSED_PORT)
         withReuse(reuse)
-        withExposedPorts(*EXPOSED_PORT.toTypedArray())
-        withLogConsumer(Slf4jLogConsumer(log))
 
         val wait = Wait.forLogMessage(".*Query server started.*\\s", 1)
         setWaitStrategy(wait)

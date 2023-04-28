@@ -6,7 +6,6 @@ import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.GenericContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
@@ -44,9 +43,8 @@ class ZipkinServer private constructor(
     override val port: Int get() = getMappedPort(PORT)
 
     init {
-        withExposedPorts(PORT)
+        addExposedPorts(PORT)
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
 
         setWaitStrategy(Wait.forListeningPort())
 

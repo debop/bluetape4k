@@ -6,7 +6,6 @@ import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.RabbitMQContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.utility.DockerImageName
 
 /**
@@ -61,15 +60,14 @@ class RabbitMQServer private constructor(
     val rabbitmqHttpsPort: Int get() = getMappedPort(RABBITMQ_HTTPS_PORT)
 
     init {
-        withExposedPorts(AMQP_PORT, AMQPS_PORT, RABBITMQ_HTTP_PORT, RABBITMQ_HTTPS_PORT)
+        addExposedPorts(AMQP_PORT, AMQPS_PORT, RABBITMQ_HTTP_PORT, RABBITMQ_HTTPS_PORT)
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
 
         // wait strategy 는 RabbitMQContainer 생성자에서 설정합니다.
 
         if (useDefaultPort) {
             // 위에 withExposedPorts 를 등록했으면, 따로 지정하지 않으면 그 값들을 사용합니다.
-            exposeCustomPorts()
+            exposeCustomPorts(AMQP_PORT, AMQPS_PORT, RABBITMQ_HTTP_PORT, RABBITMQ_HTTPS_PORT)
         }
     }
 

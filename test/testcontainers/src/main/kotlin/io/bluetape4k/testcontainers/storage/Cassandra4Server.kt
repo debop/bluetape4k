@@ -18,12 +18,11 @@ import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
-import org.testcontainers.containers.GenericContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
-import org.testcontainers.utility.DockerImageName
 import java.io.IOException
 import java.net.InetSocketAddress
 import javax.script.ScriptException
+import org.testcontainers.containers.GenericContainer
+import org.testcontainers.utility.DockerImageName
 
 /**
  * Docker 를 이용하여 Cassandra 4.0+ Server를 실행합니다.
@@ -78,8 +77,7 @@ class Cassandra4Server private constructor(
     private var initScriptPath: String = EMPTY_STRING
 
     init {
-        withExposedPorts(CQL_PORT)
-        withLogConsumer(Slf4jLogConsumer(log))
+        addExposedPorts(CQL_PORT)
         withReuse(reuse)
 
         withEnv("CASSANDRA_SNITCH", "GossipingPropertyFileSnitch")

@@ -8,8 +8,6 @@ import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.MongoDBContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
-import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
 class MongoDBServer private constructor(
@@ -19,16 +17,17 @@ class MongoDBServer private constructor(
 ): MongoDBContainer(imageName), GenericServer {
 
     companion object: KLogging() {
-        const val IMAGE_NAME = "mongo"
-        const val DEFAULT_TAG = "4.4"
-        const val MONGODB_PORT = 27017
+        const val IMAGE = "mongo"
+        const val TAG = "4.4"
+        const val NAME = "mongo"
+        const val PORT = 27017
 
         operator fun invoke(
-            tag: String = DEFAULT_TAG,
+            tag: String = TAG,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): MongoDBServer {
-            val imageName = DockerImageName.parse("$IMAGE_NAME:$tag")
+            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
             return MongoDBServer(imageName, useDefaultPort, reuse)
         }
 
@@ -44,19 +43,17 @@ class MongoDBServer private constructor(
     override val url: String get() = this.replicaSetUrl
 
     init {
-        withExposedPorts(MONGODB_PORT)
+        addExposedPorts(PORT)
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
-        setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {
-            exposeCustomPorts(MONGODB_PORT)
+            exposeCustomPorts(PORT)
         }
     }
 
     override fun start() {
         super.start()
-        writeToSystemProperties(IMAGE_NAME)
+        writeToSystemProperties(IMAGE)
     }
 
     object Launcher {

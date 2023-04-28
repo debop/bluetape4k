@@ -5,7 +5,6 @@ import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
@@ -48,12 +47,12 @@ class PostgreSQLServer private constructor(
     override val url: String get() = jdbcUrl
 
     init {
+        addExposedPorts(PORT)
+
         withUsername(username)
         withPassword(password)
 
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
-
         setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {

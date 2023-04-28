@@ -15,8 +15,6 @@ import org.redisson.Redisson
 import org.redisson.api.RedissonClient
 import org.redisson.config.Config
 import org.testcontainers.containers.GenericContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
-import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
 
@@ -41,7 +39,6 @@ class RedisServer private constructor(
     companion object: KLogging() {
         const val IMAGE = "redis"
         const val TAG = "6.2"
-
         const val NAME = "redis"
         const val PORT = 6379
 
@@ -51,7 +48,8 @@ class RedisServer private constructor(
             reuse: Boolean = true,
         ): RedisServer {
             require(tag.isNotBlank()) { "tag must not be blank." }
-            return RedisServer(DockerImageName.parse("$IMAGE:$tag"), useDefaultPort, reuse)
+            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
+            return RedisServer(imageName, useDefaultPort, reuse)
         }
 
         operator fun invoke(
@@ -66,11 +64,8 @@ class RedisServer private constructor(
     override val url: String get() = "$NAME://$host:$port"
 
     init {
-        withExposedPorts(PORT)
-
+        addExposedPorts(PORT)
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
-        setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {
             exposeCustomPorts(PORT)

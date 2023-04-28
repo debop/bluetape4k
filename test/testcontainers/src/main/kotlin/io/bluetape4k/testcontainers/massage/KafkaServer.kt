@@ -14,8 +14,6 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.testcontainers.containers.KafkaContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
-import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
 /**
@@ -63,11 +61,9 @@ class KafkaServer private constructor(
     }
 
     init {
-        withExposedPorts(KAFKA_PORT)
+        addExposedPorts(KAFKA_PORT)
         withEmbeddedZookeeper()
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
-        setWaitStrategy(Wait.forListeningPort())
 
         // HINT: Transaction 관련 테스트를 위해서는 다음과 같은 값을 넣어줘야 합니다.
         // HINT: 테스트 시에는 transaction log replica 를 1로 설정해야 합니다. (기본은 3)

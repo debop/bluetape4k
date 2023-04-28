@@ -8,8 +8,6 @@ import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.GenericContainer
-import org.testcontainers.containers.output.Slf4jLogConsumer
-import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
 class HazelcastServer private constructor(
@@ -47,11 +45,8 @@ class HazelcastServer private constructor(
     private lateinit var config: RestApiConfig
 
     init {
-        withExposedPorts(PORT)
-        withLogConsumer(Slf4jLogConsumer(log))
+        addExposedPorts(PORT)
         withReuse(reuse)
-
-        setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {
             exposeCustomPorts(PORT)

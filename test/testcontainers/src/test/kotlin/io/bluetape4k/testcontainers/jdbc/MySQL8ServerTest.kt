@@ -23,7 +23,7 @@ class MySQL8ServerTest: AbstractJdbcServerTest() {
     fun `launch mysql 8 server with default port`() {
         MySQL8Server(useDefaultPort = true).use { mysql ->
             mysql.start()
-            mysql.port shouldBeEqualTo MySQL8Server.DEFAULT_PORT
+            mysql.port shouldBeEqualTo MySQL8Server.PORT
             assertConnection(mysql)
         }
     }

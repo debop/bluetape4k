@@ -14,16 +14,16 @@ class ElasticsearchServerTest {
 
     @Test
     fun `launch elasticsearch oss version`() {
-        val ess = ElasticsearchServer.Launcher.elasticsearchOss
-        ess.isRunning.shouldBeTrue()
+        val es = ElasticsearchServer.Launcher.elasticsearchOss
+        es.isRunning.shouldBeTrue()
     }
 
     @Test
     fun `launch elasticsearch oss version with default port`() {
-        ElasticsearchServer(useDefaultPort = true).use { ess ->
-            ess.start()
-            ess.isRunning.shouldBeTrue()
-            ess.port shouldBeEqualTo ElasticsearchServer.PORT
+        ElasticsearchServer(useDefaultPort = true).use { es ->
+            es.start()
+            es.isRunning.shouldBeTrue()
+            es.port shouldBeEqualTo ElasticsearchServer.PORT
         }
     }
 }

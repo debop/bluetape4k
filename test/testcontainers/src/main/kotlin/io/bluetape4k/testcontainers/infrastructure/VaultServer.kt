@@ -7,7 +7,6 @@ import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
-import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.utility.DockerImageName
 import org.testcontainers.vault.VaultContainer
 
@@ -23,6 +22,7 @@ class VaultServer private constructor(
 ): VaultContainer<VaultServer>(imageName), GenericServer {
 
     companion object: KLogging() {
+        const val IMAGE = "hashicorp/vault"
         const val TAG = "1.13.1"
         const val NAME = "vault"
         const val PORT = 8200
@@ -40,7 +40,7 @@ class VaultServer private constructor(
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): VaultServer {
-            val imageName = DockerImageName.parse(NAME).withTag(tag)
+            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
             return VaultServer(imageName, useDefaultPort, reuse)
         }
     }
@@ -49,8 +49,8 @@ class VaultServer private constructor(
     override val port: Int get() = getMappedPort(PORT)
 
     init {
+        addExposedPorts(PORT)
         withReuse(reuse)
-        withLogConsumer(Slf4jLogConsumer(log))
 
         if (useDefaultPort) {
             exposeCustomPorts(PORT)
