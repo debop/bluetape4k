@@ -5,7 +5,6 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatement
 import com.datastax.oss.driver.api.core.cql.Statement
 import io.bluetape4k.core.requireNotBlank
 import kotlinx.coroutines.reactor.awaitSingle
-import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.data.cassandra.ReactiveResultSet
 import org.springframework.data.cassandra.ReactiveSession
 
@@ -16,9 +15,9 @@ import org.springframework.data.cassandra.ReactiveSession
  * @param values 인자 값
  * @return [ReactiveResultSet] instance
  */
-suspend fun ReactiveSession.executeSuspending(cql: String, vararg values: Any?): ReactiveResultSet? {
+suspend fun ReactiveSession.executeSuspending(cql: String, vararg values: Any?): ReactiveResultSet {
     cql.requireNotBlank("cql")
-    return execute(cql, *values).awaitSingleOrNull()
+    return execute(cql, *values).awaitSingle()
 }
 
 /**
@@ -28,9 +27,9 @@ suspend fun ReactiveSession.executeSuspending(cql: String, vararg values: Any?):
  * @param values parameter name-value map
  * @return [ReactiveResultSet] instance
  */
-suspend fun ReactiveSession.executeSuspending(cql: String, values: Map<String, Any?>): ReactiveResultSet? {
+suspend fun ReactiveSession.executeSuspending(cql: String, values: Map<String, Any?>): ReactiveResultSet {
     cql.requireNotBlank("cql")
-    return execute(cql, values).awaitSingleOrNull()
+    return execute(cql, values).awaitSingle()
 }
 
 /**
@@ -39,8 +38,8 @@ suspend fun ReactiveSession.executeSuspending(cql: String, values: Map<String, A
  * @param statement 실행할 [Statement]
  * @return [ReactiveResultSet] instance
  */
-suspend fun ReactiveSession.executeSuspending(statement: Statement<*>): ReactiveResultSet? {
-    return execute(statement).awaitSingleOrNull()
+suspend fun ReactiveSession.executeSuspending(statement: Statement<*>): ReactiveResultSet {
+    return execute(statement).awaitSingle()
 }
 
 /**

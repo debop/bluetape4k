@@ -3,7 +3,7 @@ package io.bluetape4k.spring.cassandra.domain.schema
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.spring.cassandra.AbstractCassandraTest
 import io.bluetape4k.spring.cassandra.domain.model.AllPossibleTypes
-import io.bluetape4k.spring.cassandra.schema.SchemaBuilder
+import io.bluetape4k.spring.cassandra.schema.SchemaGenerator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,8 +18,8 @@ class SchemaBuilderTest(
 
     @Test
     fun `generate table schema for entity`() {
-        SchemaBuilder.truncate<AllPossibleTypes>(operations)
-        SchemaBuilder.potentiallyCreateTableFor<AllPossibleTypes>(operations)
-        SchemaBuilder.truncate<AllPossibleTypes>(operations)
+        SchemaGenerator.truncate<AllPossibleTypes>(operations)
+        SchemaGenerator.potentiallyCreateTableFor<AllPossibleTypes>(operations)
+        SchemaGenerator.truncate<AllPossibleTypes>(operations)
     }
 }

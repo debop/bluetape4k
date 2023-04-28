@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
 /**
  * Spring Data Cassandra 용 Entity 정의를 바탕으로 Schema 를 생성합니다.
  */
-object SchemaBuilder: KLogging() {
+object SchemaGenerator: KLogging() {
 
     fun <T: Any> createTableAndTypes(operations: CassandraOperations, entityKClass: KClass<T>) {
         val persistentEntity = operations.converter.mappingContext.getRequiredPersistentEntity(entityKClass.java)
