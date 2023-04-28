@@ -1,6 +1,8 @@
 package io.bluetape4k.testcontainers.storage
 
 import com.datastax.oss.driver.api.core.CqlSessionBuilder
+import com.datastax.oss.driver.api.core.config.DriverConfigLoader
+import com.datastax.oss.driver.api.core.cql.SimpleStatementBuilder
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
@@ -45,10 +47,31 @@ class Cassandra4ServerTest {
             CqlSessionBuilder()
                 .addContactPoint(server.contactPoint)
                 .withLocalDatacenter(LOCAL_DATACENTER1)
+                .withConfigLoader(DriverConfigLoader.fromClasspath("application.conf"))
                 .build()
                 .use { session ->
                     log.debug { "Execute cql script. $CQL_GET_VERSION" }
                     session.execute(CQL_GET_VERSION).wasApplied().shouldBeTrue()
+                }
+        }
+    }
+
+    @Test
+    fun `build cql with custom driver configuration`() {
+        Cassandra4Server().use { server ->
+            server.start()
+
+            CqlSessionBuilder()
+                .addContactPoint(server.contactPoint)
+                .withLocalDatacenter(LOCAL_DATACENTER1)
+                .withConfigLoader(DriverConfigLoader.fromClasspath("application.conf"))
+                .build()
+                .use { session ->
+                    log.debug { "Execute cql script. $CQL_GET_VERSION" }
+                    val stmt = SimpleStatementBuilder(CQL_GET_VERSION)
+                        .setExecutionProfileName("oltp")
+                        .build()
+                    session.execute(stmt).wasApplied().shouldBeTrue()
                 }
         }
     }

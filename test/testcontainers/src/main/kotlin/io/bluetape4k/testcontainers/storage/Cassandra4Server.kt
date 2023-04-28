@@ -2,6 +2,7 @@ package io.bluetape4k.testcontainers.storage
 
 import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.core.CqlSessionBuilder
+import com.datastax.oss.driver.api.core.config.DriverConfigLoader
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder
 import com.github.dockerjava.api.command.InspectContainerResponse
 import io.bluetape4k.core.requireNotBlank
@@ -91,7 +92,6 @@ class Cassandra4Server private constructor(
         }
     }
 
-
     override fun containerIsStarted(containerInfo: InspectContainerResponse) {
         runInitScriptIfRequired()
     }
@@ -146,6 +146,7 @@ class Cassandra4Server private constructor(
         CqlSessionBuilder()
             .addContactPoint(contactPoint)
             .withLocalDatacenter(LOCAL_DATACENTER1)
+            .withConfigLoader(DriverConfigLoader.fromClasspath("application.conf"))
 
 
     /**
@@ -173,6 +174,7 @@ class Cassandra4Server private constructor(
             return CqlSessionBuilder()
                 .addContactPoint(cassandra4.contactPoint)
                 .withLocalDatacenter(localDataCenter)
+                .withConfigLoader(DriverConfigLoader.fromClasspath("application.conf"))
         }
 
         fun getOrCreateSession(
