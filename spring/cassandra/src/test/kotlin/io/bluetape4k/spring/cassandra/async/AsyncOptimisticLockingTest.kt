@@ -26,10 +26,6 @@ class AsyncOptimisticLockingTest: AbstractCassandraCoroutineTest("async-optimist
 
     companion object: KLogging()
 
-//    @Configuration
-//    @EntityScan(basePackageClasses = [VersionedEntity::class])
-//    class TestConfiguration: AbstractCassandraTestConfiguration()
-
     private val operations: AsyncCassandraOperations by lazy { AsyncCassandraTemplate(session) }
 
     @BeforeEach

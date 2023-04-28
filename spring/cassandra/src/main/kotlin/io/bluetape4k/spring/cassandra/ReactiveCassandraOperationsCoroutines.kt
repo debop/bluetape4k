@@ -37,13 +37,13 @@ inline fun <reified T: Any> ReactiveCassandraOperations.selectForFlow(cql: Strin
 inline fun <reified T: Any> ReactiveCassandraOperations.selectForFlow(query: Query): Flow<T> =
     select(query, T::class.java).asFlow()
 
-suspend inline fun <reified T: Any> ReactiveCassandraOperations.selectSingleOrNullSuspending(statement: Statement<*>): T? =
+suspend inline fun <reified T: Any> ReactiveCassandraOperations.selectOneSuspending(statement: Statement<*>): T? =
     selectOne(statement, T::class.java).awaitSingleOrNull()
 
-suspend inline fun <reified T: Any> ReactiveCassandraOperations.selectSingleOrNullSuspending(cql: String): T? =
+suspend inline fun <reified T: Any> ReactiveCassandraOperations.selectOneSuspending(cql: String): T? =
     selectOne(cql, T::class.java).awaitSingleOrNull()
 
-suspend inline fun <reified T: Any> ReactiveCassandraOperations.selectSingleOrNullSuspending(query: Query): T? =
+suspend inline fun <reified T: Any> ReactiveCassandraOperations.selectOneSuspending(query: Query): T? =
     selectOne(query, T::class.java).awaitSingleOrNull()
 
 suspend inline fun <reified T: Any> ReactiveCassandraOperations.selectOneByIdSuspending(id: Any): T? =
@@ -59,41 +59,50 @@ suspend inline fun <reified T: Any> ReactiveCassandraOperations.truncateSuspendi
     truncate(T::class.java).awaitSingleOrNull()
 }
 
-suspend inline fun <T: Any> ReactiveCassandraOperations.insertSuspending(entity: T): T? =
-    insert(entity).awaitSingleOrNull()
+suspend fun <T: Any> ReactiveCassandraOperations.insertSuspending(entity: T): T? {
+    return insert(entity).awaitSingleOrNull()
+}
 
-suspend inline fun <T: Any> ReactiveCassandraOperations.insertSuspending(
+suspend fun <T: Any> ReactiveCassandraOperations.insertSuspending(
     entity: T,
     options: InsertOptions
-): EntityWriteResult<T> =
-    insert(entity, options).awaitSingle()
+): EntityWriteResult<T> {
+    return insert(entity, options).awaitSingle()
+}
 
-suspend inline fun <reified T: Any> ReactiveCassandraOperations.updateSuspending(entity: T): T? =
-    update(entity).awaitSingleOrNull()
+suspend fun <T: Any> ReactiveCassandraOperations.updateSuspending(entity: T): T? {
+    return update(entity).awaitSingleOrNull()
+}
 
-suspend inline fun <reified T: Any> ReactiveCassandraOperations.updateSuspending(
+suspend fun <T: Any> ReactiveCassandraOperations.updateSuspending(
     entity: T,
     options: UpdateOptions
-): EntityWriteResult<T> =
-    update(entity, options).awaitSingle()
+): EntityWriteResult<T> {
+    return update(entity, options).awaitSingle()
+}
 
 suspend inline fun <reified T: Any> ReactiveCassandraOperations.updateSuspending(
     query: Query,
     update: Update
-): Boolean? =
-    update(query, update, T::class.java).awaitSingleOrNull()
+): Boolean? {
+    return update(query, update, T::class.java).awaitSingleOrNull()
+}
 
-suspend inline fun <T: Any> ReactiveCassandraOperations.deleteSuspending(entity: T): T? =
-    delete(entity).awaitSingleOrNull()
+suspend fun <T: Any> ReactiveCassandraOperations.deleteSuspending(entity: T): T? {
+    return delete(entity).awaitSingleOrNull()
+}
 
-suspend inline fun <T: Any> ReactiveCassandraOperations.deleteSuspending(
+suspend fun <T: Any> ReactiveCassandraOperations.deleteSuspending(
     entity: T,
     options: DeleteOptions
-): WriteResult =
-    delete(entity, options).awaitSingle()
+): WriteResult {
+    return delete(entity, options).awaitSingle()
+}
 
-suspend inline fun <reified T: Any> ReactiveCassandraOperations.deleteSuspending(query: Query): Boolean? =
-    delete(query, T::class.java).awaitSingleOrNull()
+suspend inline fun <reified T: Any> ReactiveCassandraOperations.deleteSuspending(query: Query): Boolean? {
+    return delete(query, T::class.java).awaitSingleOrNull()
+}
 
-suspend inline fun <reified T: Any> ReactiveCassandraOperations.deleteByIdSuspending(id: Any): Boolean? =
-    deleteById(id, T::class.java).awaitSingleOrNull()
+suspend inline fun <reified T: Any> ReactiveCassandraOperations.deleteByIdSuspending(id: Any): Boolean? {
+    return deleteById(id, T::class.java).awaitSingleOrNull()
+}
