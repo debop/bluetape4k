@@ -1,5 +1,6 @@
 package io.bluetape4k.spring.cassandra.async
 
+import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder
 import com.datastax.oss.driver.api.core.uuid.Uuids
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder
@@ -26,6 +27,7 @@ import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.cassandra.core.AsyncCassandraTemplate
 import org.springframework.data.cassandra.core.EntityWriteResult
@@ -47,12 +49,15 @@ import org.springframework.data.cassandra.core.truncate
 import org.springframework.data.domain.Sort
 
 @SpringBootTest(classes = [DomainTestConfiguration::class])
-class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template") {
+class AsyncCassandraTemplateTest(
+    @Autowired private val cqlSession: CqlSession,
+): AbstractCassandraCoroutineTest("async-template") {
 
     companion object: KLogging()
 
+    // NOTE: AsyncCassandraTemplate 는 직접 Injection 받을 수 없고, 이렇게 생성해야 한다.
     private val operations: AsyncCassandraTemplate by lazy {
-        AsyncCassandraTemplate(session)
+        AsyncCassandraTemplate(cqlSession)
     }
 
     private fun newUser(): User =

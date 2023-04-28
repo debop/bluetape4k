@@ -20,7 +20,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-data-cassandra"))
-    api(project(":bluetape4k-spring-support"))
+    api(project(":bluetape4k-spring-cassandra"))
     api(project(":bluetape4k-kotlinx-coroutines"))
     testImplementation(project(":bluetape4k-io-json"))
     testImplementation(project(":bluetape4k-test-junit5"))

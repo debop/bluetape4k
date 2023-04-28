@@ -1,5 +1,6 @@
 package io.bluetape4k.spring.cassandra.async
 
+import com.datastax.oss.driver.api.core.CqlSession
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest
@@ -12,6 +13,7 @@ import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.data.cassandra.core.AsyncCassandraOperations
@@ -22,12 +24,15 @@ import org.springframework.data.cassandra.core.truncate
 import kotlin.test.assertFailsWith
 
 @SpringBootTest(classes = [DomainTestConfiguration::class])
-class AsyncOptimisticLockingTest: AbstractCassandraCoroutineTest("async-optimistic-locking") {
+class AsyncOptimisticLockingTest(
+    @Autowired private val cqlSession: CqlSession,
+): AbstractCassandraCoroutineTest("async-optimistic-locking") {
 
     companion object: KLogging()
 
+    // NOTE: AsyncCassandraTemplate 는 직접 Injection 받을 수 없고, 이렇게 생성해야 한다.
     private val operations: AsyncCassandraOperations by lazy {
-        AsyncCassandraTemplate(session)
+        AsyncCassandraTemplate(cqlSession)
     }
 
     @BeforeEach
