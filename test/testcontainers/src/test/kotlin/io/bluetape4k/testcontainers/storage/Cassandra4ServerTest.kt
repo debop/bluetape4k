@@ -67,6 +67,11 @@ class Cassandra4ServerTest {
                 .withConfigLoader(DriverConfigLoader.fromClasspath("application.conf"))
                 .build()
                 .use { session ->
+                    session.context.config.profiles.forEach { (name, profile) ->
+                        println("profile name : $name")
+                        println("profile options : ${profile.entrySet().joinToString()}")
+                    }
+
                     log.debug { "Execute cql script. $CQL_GET_VERSION" }
                     val stmt = SimpleStatementBuilder(CQL_GET_VERSION)
                         .setExecutionProfileName("oltp")

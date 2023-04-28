@@ -21,6 +21,7 @@ import io.bluetape4k.spring.cassandra.updateSuspending
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.runBlocking
@@ -153,6 +154,8 @@ class ReactiveCassandraTemplateTest(
         val lwtOptions = updateOptions { withIfExists() }
         val result = operations.updateSuspending(user, lwtOptions)
         result.wasApplied().shouldBeTrue()
+
+        delay(1000)
         getUserById(user.id) shouldBeEqualTo user
     }
 
@@ -208,6 +211,9 @@ class ReactiveCassandraTemplateTest(
 
         val lwtOptions = deleteOptions { withIfExists() }
         operations.deleteSuspending(user, lwtOptions).wasApplied().shouldBeTrue()
+
+        delay(1000)
+
         getUserById(user.id).shouldBeNull()
 
         // 이미 삭제되었으므로, 재삭제 요청은 처리되지 않습니다.
@@ -223,6 +229,8 @@ class ReactiveCassandraTemplateTest(
         val query = query(where("id").eq(user.id)).queryOptions(lwtOptions)
 
         operations.deleteSuspending<User>(query)!!.shouldBeTrue()
+
+        delay(1000)
         getUserById(user.id).shouldBeNull()
 
         // 이미 삭제되었으므로, 재삭제 요청은 처리되지 않습니다.

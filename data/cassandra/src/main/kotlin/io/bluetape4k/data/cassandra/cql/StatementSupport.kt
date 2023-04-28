@@ -12,7 +12,13 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatementBuilder
 import com.datastax.oss.driver.internal.core.cql.DefaultPrepareRequest
 import io.bluetape4k.core.requireNotBlank
 
+
 fun SimpleStatement.toPrepareRequest(): PrepareRequest = DefaultPrepareRequest(this)
+
+inline fun simpleStatement(query: String, initializer: SimpleStatementBuilder.() -> Unit): SimpleStatement {
+    query.requireNotBlank("query")
+    return SimpleStatement.builder(query).apply(initializer).build()
+}
 
 fun statementOf(cql: String): SimpleStatement {
     cql.requireNotBlank("cql")
@@ -29,10 +35,6 @@ fun statementOf(cql: String, nameValues: Map<String, Any?>): SimpleStatement {
     return SimpleStatement.newInstance(cql, nameValues)
 }
 
-inline fun simpleStatement(query: String, initializer: SimpleStatementBuilder.() -> Unit): SimpleStatement {
-    query.requireNotBlank("query")
-    return SimpleStatementBuilder(query).apply(initializer).build()
-}
 
 inline fun boundStatement(
     boundStatement: BoundStatement,

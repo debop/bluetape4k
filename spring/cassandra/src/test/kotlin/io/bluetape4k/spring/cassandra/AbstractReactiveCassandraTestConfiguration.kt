@@ -1,10 +1,13 @@
 package io.bluetape4k.spring.cassandra
 
+import com.datastax.oss.driver.api.core.CqlSession
+import com.datastax.oss.driver.api.core.config.DriverConfigLoader
 import io.bluetape4k.spring.cassandra.domain.model.AllPossibleTypes
 import io.bluetape4k.testcontainers.storage.Cassandra4Server
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.data.cassandra.config.AbstractReactiveCassandraConfiguration
 import org.springframework.data.cassandra.config.SchemaAction
+import org.springframework.data.cassandra.config.SessionBuilderConfigurer
 
 @EntityScan(basePackageClasses = [AllPossibleTypes::class])
 abstract class AbstractReactiveCassandraTestConfiguration: AbstractReactiveCassandraConfiguration() {
@@ -28,7 +31,25 @@ abstract class AbstractReactiveCassandraTestConfiguration: AbstractReactiveCassa
 
     override fun getKeyspaceName(): String = DEFAULT_KEYSPACE
 
+    override fun getLocalDataCenter(): String = Cassandra4Server.LOCAL_DATACENTER1
+
     override fun getSchemaAction(): SchemaAction = SchemaAction.RECREATE
+
+    override fun getRequiredSession(): CqlSession {
+        return Cassandra4Server.Launcher.newCqlSessionBuilder()
+            .withKeyspace(keyspaceName)
+            .apply { sessionBuilderConfigurer.configure(this) }
+            .build()
+    }
+
+    /**
+     * Custom Configuration을 사용하기 위해 (Profiles 등)
+     */
+    override fun getSessionBuilderConfigurer(): SessionBuilderConfigurer {
+        return SessionBuilderConfigurer {
+            it.withConfigLoader(DriverConfigLoader.fromClasspath("application.conf"))
+        }
+    }
 
     // NOTE: 테스트 대상 Entity가 있는 Package를 지정하거나 @EntityScan 을 사용하세요
     // override fun getEntityBasePackages(): Array<String> = arrayOf(AllPossibleTypes::class.packageName)

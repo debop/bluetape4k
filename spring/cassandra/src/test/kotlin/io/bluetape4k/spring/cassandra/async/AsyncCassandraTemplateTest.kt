@@ -192,8 +192,8 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
 
         val lwtOptions = updateOptions { withIfExists() }
         val result: EntityWriteResult<User> = operations.update(user, lwtOptions).await()
-
         result.wasApplied().shouldBeFalse()
+
         getUserById(user.id).shouldBeNull()
     }
 
@@ -203,9 +203,12 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
         operations.insert(user).await()
 
         user.firstname = "성혁"
-        val lwtOptions = updateOptions { withIfExists() }
-        val result = operations.update(user, lwtOptions).await()
+        val options = updateOptions { withIfExists() }
+        val result = operations.update(user, options).await()
         result.wasApplied().shouldBeTrue()
+
+        Thread.sleep(100)
+
         getUserById(user.id) shouldBeEqualTo user
     }
 
@@ -262,7 +265,8 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
         val lwtOptions = deleteOptions { withIfExists() }
         operations.delete(user, lwtOptions).await().wasApplied().shouldBeTrue()
 
-        Thread.sleep(10)
+        Thread.sleep(100)
+
         getUserById(user.id).shouldBeNull()
         // 이미 삭제되었으므로, 재삭제 요청은 처리되지 않습니다.
         operations.delete(user, lwtOptions).await().wasApplied().shouldBeFalse()
@@ -278,7 +282,8 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
 
         operations.delete<User>(query).await().shouldBeTrue()
 
-        Thread.sleep(10)
+        Thread.sleep(100)
+
         getUserById(user.id).shouldBeNull()
         // 이미 삭제되었으므로, 재삭제 요청은 처리되지 않습니다.
         operations.delete<User>(query).await().shouldBeFalse()
