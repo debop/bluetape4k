@@ -5,13 +5,18 @@
         <withJansi>true</withJansi>
         <immediateFlush>true</immediateFlush>
         <encoder>
-            <pattern>%d{ISO8601} %highlight(%-5level) [%blue(%t)] %yellow(%logger):%method:%line: %msg%n%throwable
-            </pattern>
+            <!-- @formatter:off -->
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%.24thread] %logger{36}:%line: %msg%n%throwable</pattern>
+            <!-- @formatter:on -->
             <charset>UTF-8</charset>
         </encoder>
     </appender>
 
     <logger name="io.bluetape4k.spring.cassandra" level="TRACE"/>
+    <logger name="io.bluetape4k.data.cassandra" level="TRACE"/>
+
+    <logger name="org.springframework.data.cassandra" level="DEBUG"/>
+    <logger name="com.datastax.oss.driver.api" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="Console"/>

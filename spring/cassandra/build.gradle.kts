@@ -38,6 +38,7 @@ dependencies {
     kaptTest(Libs.cassandra_java_driver_mapper_processor)
 
     api(Libs.springBootStarter("data-cassandra"))
+    api(Libs.springBootStarter("aop"))
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
