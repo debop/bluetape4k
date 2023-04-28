@@ -286,6 +286,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
     @Test
     fun `PageRequest를 이용하여 Slice로 조회`() = runSuspendWithIO {
         val entitySize = 100
+        val sliceSize = 10
         val expectedIds = mutableSetOf<String>()
 
         val jobs = List(entitySize) { index ->
@@ -298,7 +299,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
         jobs.joinAll()
 
         val query = Query.empty()
-        var slice = operations.slice<User>(query.pageRequest(CassandraPageRequest.first(10))).await()
+        var slice = operations.slice<User>(query.pageRequest(CassandraPageRequest.first(sliceSize))).await()
 
         val loadIds = mutableSetOf<String>()
         var iterations = 0
@@ -306,7 +307,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
         do {
             iterations++
 
-            slice.size shouldBeEqualTo 10
+            slice.size shouldBeEqualTo sliceSize
             loadIds.addAll(slice.map { it.id })
 
             if (slice.hasNext()) {
@@ -318,7 +319,7 @@ class AsyncCassandraTemplateTest: AbstractCassandraCoroutineTest("async-template
 
         loadIds.size shouldBeEqualTo expectedIds.size
         loadIds shouldContainSame expectedIds
-        iterations shouldBeEqualTo entitySize / 10
+        iterations shouldBeEqualTo entitySize / sliceSize
     }
 
     private suspend fun getUserById(id: String): User? =
