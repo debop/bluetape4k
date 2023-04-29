@@ -34,6 +34,7 @@ open class NearCacheConfig<K: Any, V: Any>(
 ): Serializable {
 
     companion object {
+        const val MIN_EXPIRY_CHECK_PERIOD = 1000L
         const val DEFAULT_EXPIRY_CHECK_PERIOD = 30_000L
         const val DEFAULT_SYNC_REMOTE_TIMEOUT = 500L
         val CaffeineCacheManagerFactory = Factory { jcacheManager<CaffeineCachingProvider>() }

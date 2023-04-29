@@ -73,10 +73,10 @@ object Versions {
     const val netty = "4.1.91.Final"
 
     // https://mvnrepository.com/artifact/com.amazonaws
-    const val aws = "1.12.454"
+    const val aws = "1.12.459"
 
     // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
-    const val aws2 = "2.20.51"
+    const val aws2 = "2.20.56"
 
     const val grpc = "1.54.1"
     const val grpc_kotlin = "1.3.0"

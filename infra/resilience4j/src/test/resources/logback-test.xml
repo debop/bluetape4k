@@ -12,7 +12,7 @@
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.utils" level="TRACE"/>
+    <logger name="io.bluetape4k.infra.resilience4j" level="TRACE"/>
 
     <root level="INFO">
         <appender-ref ref="Console"/>

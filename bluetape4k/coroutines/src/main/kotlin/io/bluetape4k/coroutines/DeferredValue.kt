@@ -31,15 +31,17 @@ data class DeferredValue<T>(private inline val factory: suspend () -> T): Defaul
     val isActive: Boolean get() = deferredValue.isActive
     val isCancelled: Boolean get() = deferredValue.isCancelled
 
-    override fun equals(other: Any?): Boolean =
-        other is DeferredValue<*> && deferredValue == other.deferredValue
+    override fun equals(other: Any?): Boolean {
+        return other is DeferredValue<*> && deferredValue == other.deferredValue
+    }
 
     override fun hashCode(): Int = value.hashCode()
 
-    override fun toString(): String =
-        ToStringBuilder(this)
+    override fun toString(): String {
+        return ToStringBuilder(this)
             .add("value", value)
             .toString()
+    }
 
     inline fun <S> map(crossinline mapper: suspend (T) -> S): DeferredValue<S> =
         DeferredValue { mapper(await()) }

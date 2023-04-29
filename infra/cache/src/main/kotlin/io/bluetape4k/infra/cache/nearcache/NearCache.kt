@@ -65,7 +65,7 @@ class NearCache<K: Any, V: Any> private constructor(
     }
 
     init {
-        if (config.checkExpiryPeriod in 1000..Int.MAX_VALUE) {
+        if (config.checkExpiryPeriod >= NearCacheConfig.MIN_EXPIRY_CHECK_PERIOD) {
             checkBackCacheExpiration()
         }
     }
@@ -79,13 +79,13 @@ class NearCache<K: Any, V: Any> private constructor(
         ) {
             try {
                 Thread.sleep(config.checkExpiryPeriod)
-                while (!isClosed) {
+                while (!isClosed && !Thread.currentThread().isInterrupted) {
                     log.trace { "backCache의 cache entry가 expire 되었는지 검사합니다... check expiration period=${config.checkExpiryPeriod}" }
                     var entrySize = 0
                     val elapsed = measureTimeMillis {
                         runCatching {
                             this.chunked(100) { entries ->
-                                if (isClosed) {
+                                if (isClosed || Thread.currentThread().isInterrupted) {
                                     return@chunked
                                 }
                                 val frontKeys = entries.map { it.key }.toSet()

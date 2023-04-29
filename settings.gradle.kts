@@ -12,6 +12,7 @@ rootProject.name = "$PROJECT_NAME-root"
 
 includeModules(PROJECT_NAME, false)
 
+includeModules("aws")
 includeModules("data")
 includeModules("infra")
 includeModules("io")
