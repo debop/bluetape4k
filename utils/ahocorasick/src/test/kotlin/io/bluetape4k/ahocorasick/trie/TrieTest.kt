@@ -1,5 +1,6 @@
 package io.bluetape4k.ahocorasick.trie
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
@@ -7,18 +8,16 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
-import java.util.concurrent.ThreadLocalRandom
+import kotlin.random.Random
 
-
-@Suppress("RemoveExplicitTypeArguments")
 class TrieTest {
 
-    companion object : KLogging() {
-        val ALPHABET = arrayOf("abc", "bcd", "cde")
-        val PRONOUNS = arrayOf("hers", "his", "she", "he")
-        val FOOD = arrayOf("veal", "cauliflower", "broccoli", "tomatoes")
-        val GREEK_LETTERS = arrayOf("Alpha", "Beta", "Gamma")
-        val UNICODE = arrayOf("turning", "once", "again", "börkü")
+    companion object: KLogging() {
+        val ALPHABET = fastListOf("abc", "bcd", "cde")
+        val PRONOUNS = fastListOf("hers", "his", "she", "he")
+        val FOOD = fastListOf("veal", "cauliflower", "broccoli", "tomatoes")
+        val GREEK_LETTERS = fastListOf("Alpha", "Beta", "Gamma")
+        val UNICODE = fastListOf("turning", "once", "again", "börkü")
     }
 
     @Test
@@ -64,7 +63,7 @@ class TrieTest {
     @Test
     fun `various keywords on match`() {
         val trie = Trie.builder()
-            .addKeywords(*ALPHABET)
+            .addKeywords(ALPHABET)
             .build()
 
         val emits = trie.parseText("bcd")
@@ -74,7 +73,7 @@ class TrieTest {
     @Test
     fun `various keywords first match`() {
         val trie = Trie.builder()
-            .addKeywords(*ALPHABET)
+            .addKeywords(ALPHABET)
             .build()
 
         val emits = trie.firstMatch("bcd")
@@ -84,7 +83,7 @@ class TrieTest {
     @Test
     fun `ushers test and stop on hit`() {
         val trie = Trie.builder()
-            .addKeywords(*PRONOUNS)
+            .addKeywords(PRONOUNS)
             .stopOnHit()
             .build()
 
@@ -96,11 +95,11 @@ class TrieTest {
     @Test
     fun `ushers test stop on hit skip first one`() {
         val trie = Trie.builder()
-            .addKeywords(*PRONOUNS)
+            .addKeywords(PRONOUNS)
             .stopOnHit()
             .build()
 
-        val testEmitHandler = object : AbstractStatefulEmitHandler() {
+        val testEmitHandler = object: AbstractStatefulEmitHandler() {
             var first = true
             override fun emit(emit: Emit): Boolean {
                 if (first) {
@@ -120,7 +119,7 @@ class TrieTest {
     @Test
     fun `ushers test`() {
         val trie = Trie.builder()
-            .addKeywords(*PRONOUNS)
+            .addKeywords(PRONOUNS)
             .build()
 
         val emits = trie.parseText("ushers")
@@ -147,7 +146,7 @@ class TrieTest {
     @Test
     fun `ushers test first match`() {
         val trie = Trie.builder()
-            .addKeywords(*PRONOUNS)
+            .addKeywords(PRONOUNS)
             .build()
 
         val emits = trie.firstMatch("ushers")
@@ -157,11 +156,11 @@ class TrieTest {
     @Test
     fun `ushers test by callback`() {
         val trie = Trie.builder()
-            .addKeywords(*PRONOUNS)
+            .addKeywords(PRONOUNS)
             .build()
 
         val emits = mutableListOf<Emit>()
-        val emitHandler = object : EmitHandler {
+        val emitHandler = object: EmitHandler {
             override fun emit(emit: Emit): Boolean = emits.add(emit)
         }
         trie.runParseText("ushers", emitHandler)
@@ -185,7 +184,7 @@ class TrieTest {
     @Test
     fun `food recipes`() {
         val trie = Trie.builder()
-            .addKeywords(*FOOD)
+            .addKeywords(FOOD)
             .build()
 
         val emits = trie.parseText("2 cauliflowers, 3 tomatoes, 4 slices of veal, 100g broccoli")
@@ -199,7 +198,7 @@ class TrieTest {
     @Test
     fun `food recipes first match`() {
         val trie = Trie.builder()
-            .addKeywords(*FOOD)
+            .addKeywords(FOOD)
             .build()
 
         val firstMatch = trie.firstMatch("2 cauliflowers, 3 tomatoes, 4 slices of veal, 100g broccoli")
@@ -304,7 +303,7 @@ class TrieTest {
     @Test
     fun `tokenize full sentence`() {
         val trie = Trie.builder()
-            .addKeywords(*GREEK_LETTERS)
+            .addKeywords(GREEK_LETTERS)
             .build()
 
         val tokens = trie.tokenize("Hear: Alpha team first, Beta from the rear, Gamma in reserve")
@@ -324,7 +323,7 @@ class TrieTest {
         val trie = Trie.builder()
             .ignoreCase()
             .onlyWholeWords()
-            .addKeywords(*UNICODE)
+            .addKeywords(UNICODE)
             .build()
 
         val emits = trie.parseText("TurninG OnCe AgAiN BÖRKÜ")
@@ -342,7 +341,7 @@ class TrieTest {
         val trie = Trie.builder()
             .ignoreCase()
             .onlyWholeWords()
-            .addKeywords(*UNICODE)
+            .addKeywords(UNICODE)
             .build()
 
         val emits = trie.parseText("TurninG OnCe AgAiN BÖRKÜ")
@@ -360,7 +359,7 @@ class TrieTest {
         val trie = Trie.builder()
             .ignoreCase()
             .onlyWholeWords()
-            .addKeywords(*UNICODE)
+            .addKeywords(UNICODE)
             .build()
 
         val firstMatch = trie.firstMatch("TurninG OnCe AgAiN BÖRKÜ")
@@ -371,7 +370,7 @@ class TrieTest {
     @Test
     fun `tokenize Tokens in sequence`() {
         val trie = Trie.builder()
-            .addKeywords(*GREEK_LETTERS)
+            .addKeywords(GREEK_LETTERS)
             .build()
         val tokens = trie.tokenize("Alpha Beta Gamma")
         log.debug { "tokens=$tokens" }
@@ -461,7 +460,7 @@ class TrieTest {
         emits.size shouldBeEqualTo textSize / interval
     }
 
-    private fun randomInt(min: Int, max: Int): Int = ThreadLocalRandom.current().nextInt(min, max)
+    private fun randomInt(min: Int, max: Int): Int = Random.nextInt(min, max)
 
     private fun randomNumbers(count: Int): StringBuilder {
         return StringBuilder(count).apply {

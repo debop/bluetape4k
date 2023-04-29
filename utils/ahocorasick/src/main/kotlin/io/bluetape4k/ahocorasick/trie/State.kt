@@ -1,16 +1,17 @@
 package io.bluetape4k.ahocorasick.trie
 
+import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.core.ValueObject
 import io.bluetape4k.logging.KLogging
-import java.util.*
+import org.eclipse.collections.api.factory.SortedSets
 
-class State(val depth: Int = 0) : ValueObject {
+class State(val depth: Int = 0): ValueObject {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     private val rootState: State? get() = if (depth == 0) this else null
-    private val success = HashMap<Char, State>()
-    private val emits = TreeSet<String>()
+    private val success = unifiedMapOf<Char, State>()
+    private val emits = SortedSets.mutable.of<String>()
 
     var failure: State? = null
 
@@ -39,6 +40,14 @@ class State(val depth: Int = 0) : ValueObject {
             success[ch] = nextState
         }
         return nextState
+    }
+
+    fun addStates(vararg chars: Char): State {
+        var state = this
+        chars.forEach {
+            state = state.addState(it)
+        }
+        return state
     }
 
     fun addEmit(keyword: String) {

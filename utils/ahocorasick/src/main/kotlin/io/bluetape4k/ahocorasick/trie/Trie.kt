@@ -1,9 +1,11 @@
 package io.bluetape4k.ahocorasick.trie
 
 import io.bluetape4k.ahocorasick.interval.IntervalTree
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import java.util.*
+import java.util.ArrayDeque
+import java.util.LinkedList
 
 
 /**
@@ -17,7 +19,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
         fun builder(): TrieBuilder = TrieBuilder()
     }
 
-    val rootState = State()
+    private val rootState = State()
 
     private val ignoreCase: Boolean get() = config.ignoreCase
 
@@ -43,7 +45,6 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
         }
 
         var lastCollectionIndex = -1
-
         val collectedEmits = parseText(text)
 
         collectedEmits.forEach { emit ->
@@ -63,7 +64,6 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
 
     fun parseText(text: CharSequence, emitHandler: StatefulEmitHandler = DefaultEmitHandler()): List<Emit> {
         runParseText(text, emitHandler)
-
         var collectedEmits = emitHandler.emits
 
         if (config.onlyWholeWords) {
@@ -249,7 +249,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
 
     class TrieBuilder {
         private val configBuilder = TrieConfig.builder()
-        private val keywords: MutableList<String> = mutableListOf()
+        private val keywords: MutableList<String> = fastListOf() // mutableListOf()
 
         fun addKeyword(keyword: String) = apply {
             this.keywords.add(keyword)

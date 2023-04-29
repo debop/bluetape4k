@@ -1,15 +1,16 @@
 package io.bluetape4k.ahocorasick.interval
 
+import io.bluetape4k.ahocorasick.interval.IntervalableComparators.PositionComparator
+import io.bluetape4k.ahocorasick.interval.IntervalableComparators.ReverseSizeComparator
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.core.ValueObject
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import java.util.*
 
-class IntervalTree private constructor(private val rootNode: IntervalNode) : ValueObject {
+class IntervalTree private constructor(private val rootNode: IntervalNode): ValueObject {
 
-    constructor(intervals: List<Intervalable>) : this(IntervalNode(intervals))
-
-    companion object : KLogging() {
+    companion object: KLogging() {
         @JvmStatic
         operator fun invoke(rootNode: IntervalNode): IntervalTree {
             return IntervalTree(rootNode)
@@ -19,20 +20,18 @@ class IntervalTree private constructor(private val rootNode: IntervalNode) : Val
         operator fun invoke(intervals: List<Intervalable>): IntervalTree {
             return invoke(IntervalNode(intervals))
         }
-
-        val reverseSizeComparator: Comparator<Intervalable> = IntervalableComparators.ReverseSizeComparator
-        val positionComparator: Comparator<Intervalable> = IntervalableComparators.PositionComparator
     }
 
-    fun findOverlaps(interval: Intervalable): MutableList<Intervalable> =
-        rootNode.findOverlaps(interval)
+    fun findOverlaps(interval: Intervalable): List<Intervalable> {
+        return rootNode.findOverlaps(interval).sortedWith(PositionComparator)
+    }
 
-    fun <T : Intervalable> removeOverlaps(intervals: Iterable<T>): MutableList<T> {
+    fun <T: Intervalable> removeOverlaps(intervals: Collection<T>): MutableList<T> {
         // size가 큰 것부터
-        val results = LinkedList<T>().apply { addAll(intervals) }
-        results.sortWith(reverseSizeComparator)
+        val results = fastListOf(intervals)
+        results.sortWith(ReverseSizeComparator)
 
-        val removed = LinkedHashSet<Intervalable>()
+        val removed = unifiedSetOf<Intervalable>()
 
         // 꼭 Sequence 방식으로 수행해야 updated된 removed를 사용할 수 있습니다.
         results
@@ -49,8 +48,7 @@ class IntervalTree private constructor(private val rootNode: IntervalNode) : Val
         results.removeAll(removed)
 
         // sort the intervals, now on left-most position only
-        results.sortWith(positionComparator)
+        results.sortWith(PositionComparator)
         return results
     }
-
 }

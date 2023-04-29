@@ -1,39 +1,40 @@
 package io.bluetape4k.ahocorasick.interval
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.core.AbstractValueObject
-import java.util.*
 
-class IntervalNode(inputs: Iterable<Intervalable>) : AbstractValueObject() {
+class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
 
     enum class Direction { LEFT, RIGHT }
 
     var left: IntervalNode? = null
     var right: IntervalNode? = null
-    val intervals: MutableList<Intervalable> = mutableListOf()
+    val intervals: MutableList<Intervalable> = fastListOf()
     val median = determineMedian(inputs)
 
     init {
         buildTree(inputs)
     }
 
-    private fun determineMedian(inputs: Iterable<Intervalable>): Int {
-        val start = inputs.map { it.start }.minOrNull() ?: 0
-        val end = inputs.map { it.end }.maxOrNull() ?: 0
+    private fun determineMedian(inputs: Collection<Intervalable>): Int {
+        val start = inputs.minOfOrNull { it.start } ?: 0
+        val end = inputs.maxOfOrNull { it.end } ?: 0
         return (start + end) / 2
     }
 
-    private fun buildTree(inputs: Iterable<Intervalable>) {
-        if (inputs.count() == 0) {
+    private fun buildTree(inputs: Collection<Intervalable>) {
+        if (inputs.isEmpty()) {
             return
         }
-        val toLeft = LinkedList<Intervalable>()
-        val toRight = LinkedList<Intervalable>()
+
+        val toLeft = fastListOf<Intervalable>()
+        val toRight = fastListOf<Intervalable>()
 
         inputs.forEach { input ->
             when {
-                input.end < median -> toLeft.add(input)
+                input.end < median   -> toLeft.add(input)
                 input.start > median -> toRight.add(input)
-                else -> intervals.add(input)
+                else                 -> intervals.add(input)
             }
         }
         if (toLeft.isNotEmpty()) {
@@ -45,7 +46,7 @@ class IntervalNode(inputs: Iterable<Intervalable>) : AbstractValueObject() {
     }
 
     fun findOverlaps(interval: Intervalable): MutableList<Intervalable> {
-        val overlaps = LinkedList<Intervalable>()
+        val overlaps = fastListOf<Intervalable>()
 
         when {
             interval.start > median -> {
@@ -58,7 +59,7 @@ class IntervalNode(inputs: Iterable<Intervalable>) : AbstractValueObject() {
                 addToOverlaps(interval, overlaps, checkForOverlapsToLeft(interval))
             }
 
-            else -> {
+            else                  -> {
                 addToOverlaps(interval, overlaps, this.intervals)
                 addToOverlaps(interval, overlaps, findOverlappingRanges(left, interval))
                 addToOverlaps(interval, overlaps, findOverlappingRanges(right, interval))
@@ -83,7 +84,7 @@ class IntervalNode(inputs: Iterable<Intervalable>) : AbstractValueObject() {
 
 
     private fun checkForOverlaps(interval: Intervalable, direction: Direction): List<Intervalable> {
-        val overlaps = LinkedList<Intervalable>()
+        val overlaps = fastListOf<Intervalable>()
 
         this.intervals.forEach {
             when (direction) {
@@ -102,13 +103,13 @@ class IntervalNode(inputs: Iterable<Intervalable>) : AbstractValueObject() {
     }
 
     private fun findOverlappingRanges(node: IntervalNode?, interval: Intervalable): List<Intervalable> =
-        node?.findOverlaps(interval) ?: LinkedList()
+        node?.findOverlaps(interval) ?: fastListOf()
 
     override fun equalProperties(other: Any): Boolean {
         return other is IntervalNode &&
-                left == other.left &&
-                right == other.right &&
-                median == other.median &&
-                intervals == other.intervals
+            left == other.left &&
+            right == other.right &&
+            median == other.median &&
+            intervals == other.intervals
     }
 }

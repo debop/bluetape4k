@@ -5,8 +5,8 @@ import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldBeLessThan
 import org.amshove.kluent.shouldBeTrue
+import org.eclipse.collections.api.factory.SortedSets
 import org.junit.jupiter.api.Test
-import java.util.*
 
 class IntervalTest {
 
@@ -41,7 +41,6 @@ class IntervalTest {
 
     @Test
     fun `interval overlaps with point`() {
-
         val i1 = Interval(1, 3)
 
         i1.overlapsWith(i1.start).shouldBeTrue()
@@ -62,7 +61,7 @@ class IntervalTest {
 
     @Test
     fun `interval sort with comparable`() {
-        val intervals = TreeSet<Interval>()
+        val intervals = SortedSets.mutable.of<Interval>()
 
         intervals.add(Interval(4, 6))
         intervals.add(Interval(2, 7))

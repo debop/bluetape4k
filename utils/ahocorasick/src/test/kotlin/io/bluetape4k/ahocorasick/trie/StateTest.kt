@@ -1,7 +1,7 @@
 package io.bluetape4k.ahocorasick.trie
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
 
@@ -10,11 +10,7 @@ class StateTest {
     @Test
     fun `ctor sequence of characters`() {
         val rootState = State()
-
-        rootState
-            .addState('a')
-            .addState('b')
-            .addState('c')
+        rootState.addStates('a', 'b', 'c')
 
         val nextState1 = rootState.nextState('a')
 
@@ -34,10 +30,19 @@ class StateTest {
     fun `addEmit to State`() {
         val rootState = State()
 
-        rootState.addEmit("abc")
-        rootState.addEmit("def")
         rootState.addEmit("ghi")
+        rootState.addEmit("def")
+        rootState.addEmit("abc")
 
-        rootState.emit() shouldContainSame listOf("abc", "def", "ghi")
+        rootState.emit().toList() shouldBeEqualTo fastListOf("abc", "def", "ghi")
+    }
+
+    @Test
+    fun `addEmits to State`() {
+        val rootState = State()
+
+        rootState.addEmits("ghi", "def", "abc")
+
+        rootState.emit().toList() shouldBeEqualTo fastListOf("abc", "def", "ghi")
     }
 }
