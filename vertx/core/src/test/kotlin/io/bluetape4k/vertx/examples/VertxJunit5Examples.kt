@@ -24,7 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(VertxExtension::class)
 class VertxJunit5Examples {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     /**
      * [A test context for asynchronous executions](https://vertx.io/docs/vertx-junit5/java/#_a_test_context_for_asynchronous_executions)
@@ -108,7 +108,7 @@ class VertxJunit5Examples {
     @Nested
     inner class RepeatedTestExample {
 
-        inner class HttpServerVerticle : AbstractVerticle() {
+        inner class HttpServerVerticle: AbstractVerticle() {
             override fun start() {
                 vertx.createHttpServer().requestHandler { req ->
                     req.response()
