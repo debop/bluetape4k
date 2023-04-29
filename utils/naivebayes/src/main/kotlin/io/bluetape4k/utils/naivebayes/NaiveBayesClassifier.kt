@@ -1,5 +1,8 @@
 package io.bluetape4k.utils.naivebayes
 
+import io.bluetape4k.collections.eclipse.toUnifiedMap
+import io.bluetape4k.collections.eclipse.toUnifiedSet
+import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import kotlin.math.exp
 import kotlin.math.ln
@@ -28,7 +31,7 @@ class NaiveBayesClassifier<F: Any, C: Any>(
 
     @Volatile
     private var probabilities =
-        mapOf<FeatureProbability.Key<F, C>, FeatureProbability<F, C>>()
+        unifiedMapOf<FeatureProbability.Key<F, C>, FeatureProbability<F, C>>()
 
     private val _population = mutableListOf<BayesInput<F, C>>()
     val population: List<BayesInput<F, C>> get() = _population.toList()
@@ -43,7 +46,7 @@ class NaiveBayesClassifier<F: Any, C: Any>(
         if (_population.size == observationLimit) {
             _population.removeAt(0)
         }
-        _population += BayesInput(category, features.toSet())
+        _population += BayesInput(category, features.toUnifiedSet())
         modelStale = true
     }
 
@@ -65,7 +68,7 @@ class NaiveBayesClassifier<F: Any, C: Any>(
                     .map { c -> FeatureProbability.Key(f, c) }
             }
             .map { it to FeatureProbability(it.feature, it.category, this) }
-            .toMap()
+            .toUnifiedMap()
 
         modelStale = false
     }
@@ -74,7 +77,7 @@ class NaiveBayesClassifier<F: Any, C: Any>(
      * Returns the categories that have been captured by the model so far.
      */
     val categories: Set<C>
-        get() = probabilities.keys.asSequence().map { it.category }.toSet()
+        get() = probabilities.keys.map { it.category }.toUnifiedSet()
 
     /**
      *  Predicts a category `C` for a given set of `F` features
