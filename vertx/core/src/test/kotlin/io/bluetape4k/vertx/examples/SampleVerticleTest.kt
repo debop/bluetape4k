@@ -4,7 +4,6 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.vertx.tests.withTestContextAwait
 import io.vertx.core.Vertx
-import io.vertx.ext.web.client.HttpResponse
 import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.codec.BodyCodec
 import io.vertx.junit5.VertxExtension
@@ -20,7 +19,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(VertxExtension::class)
 class SampleVerticleTest {
 
-    companion object : KLogging()
+    companion object: KLogging() {
+        const val REPEAT_SIZE = 10
+    }
 
     @Test
     fun `count three ticks`(vertx: Vertx, testContext: VertxTestContext) {
@@ -43,24 +44,26 @@ class SampleVerticleTest {
 
     @Test
     fun `use SampleVerticle`(vertx: Vertx, testContext: VertxTestContext) {
-        val requestCount = 10
         val webClient = WebClient.create(vertx)
         val deploymentCheckpoint = testContext.checkpoint()
-        val requestCheckpoint = testContext.checkpoint(requestCount)
+        val requestCheckpoint = testContext.checkpoint(REPEAT_SIZE)
 
         vertx.deployVerticle(SampleVerticle(), testContext.succeeding {
             deploymentCheckpoint.flag()
 
-            repeat(requestCount) {
+            repeat(REPEAT_SIZE) {
                 webClient.get(11981, "localhost", "/")
                     .`as`(BodyCodec.string())
-                    .send(testContext.succeeding { resp ->
-                        testContext.verify {
-                            resp.statusCode() shouldBeEqualTo 200
-                            resp.body() shouldContain "Yo!"
-                            requestCheckpoint.flag()
+                    .send(
+                        testContext.succeeding { resp ->
+                            testContext.verify {
+                                log.debug { "Response $resp" }
+                                resp.statusCode() shouldBeEqualTo 200
+                                resp.body() shouldContain "Yo!"
+                                requestCheckpoint.flag()
+                            }
                         }
-                    })
+                    )
             }
         })
     }
@@ -68,24 +71,24 @@ class SampleVerticleTest {
     @Test
     fun `use SampleVerticle in coroutines`(vertx: Vertx, testContext: VertxTestContext) {
         withTestContextAwait(vertx, testContext) {
-            val requestCount = 10
             val webClient = WebClient.create(vertx)
             val deploymentCheckpoint = testContext.checkpoint()
-            val requestCheckpoint = testContext.checkpoint(requestCount)
+            val requestCheckpoint = testContext.checkpoint(REPEAT_SIZE)
 
             log.debug { "Deply SampleVerticle" }
             awaitResult<String> { vertx.deployVerticle(SampleVerticle(), it) }
             deploymentCheckpoint.flag()  //testContext 에게 현 단계까지 완료되었음을 알린다.
 
-            repeat(requestCount) { requestIndex ->
+            repeat(REPEAT_SIZE) { requestIndex ->
                 launch {
-                    val resp = awaitResult<HttpResponse<String>> { handler ->
+                    val resp = awaitResult { handler ->
                         log.debug { "Request $requestIndex" }
                         webClient.get(11981, "localhost", "/")
                             .`as`(BodyCodec.string())
                             .send(handler)
                     }
                     testContext.verify {
+                        log.debug { "Response $resp" }
                         resp.statusCode() shouldBeEqualTo 200
                         resp.body() shouldContain "Yo!"
                         // testContext에 완료되었음을 알린다 (CountDownLatch와 유사)

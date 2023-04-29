@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture
 
 class AsyncVertxHttpClient private constructor(
     private val vertxClient: HttpClient,
-): AsyncClient<Any> {
+): AsyncClient<Any>, AutoCloseable {
 
     companion object: KLogging() {
 
@@ -27,5 +27,9 @@ class AsyncVertxHttpClient private constructor(
         requestContext: Optional<Any>,
     ): CompletableFuture<Response> {
         return vertxClient.sendAsync(feignRequest, feignOptions)
+    }
+
+    override fun close() {
+        vertxClient.close()
     }
 }
