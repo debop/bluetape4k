@@ -14,18 +14,16 @@ class ResourcexTest {
 
     @Test
     fun `load existing resource as stream`() {
-        Resourcex.getInputStream(resourcePath)
-            .use { inputStream ->
-                inputStream.shouldNotBeNull()
-            }
-        Resourcex.getInputStream(resourcePath.removePrefix("/"))
-            .use { inputStream ->
-                inputStream.shouldNotBeNull()
-            }
-        Resourcex.getInputStream(resourcePath, Thread.currentThread().contextClassLoader)
-            .use { inputStream ->
-                inputStream.shouldNotBeNull()
-            }
+        Resourcex.getInputStream(resourcePath).use { inputStream ->
+            inputStream.shouldNotBeNull()
+        }
+
+        Resourcex.getInputStream(resourcePath.removePrefix("/")).use { inputStream ->
+            inputStream.shouldNotBeNull()
+        }
+        Resourcex.getInputStream(resourcePath, Thread.currentThread().contextClassLoader).use { inputStream ->
+            inputStream.shouldNotBeNull()
+        }
     }
 
     @Test

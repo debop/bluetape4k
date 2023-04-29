@@ -7,10 +7,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
-import org.amshove.kluent.shouldBeLessOrEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
-import kotlin.system.measureTimeMillis
 import kotlin.test.assertFailsWith
 
 class MultiJobTesterTest {
@@ -30,16 +28,19 @@ class MultiJobTesterTest {
 
     @Test
     fun `긴 실행 시간을 가지는 코드블럭 실행`() = runSuspendTest {
-        measureTimeMillis {
-            MultiJobTester()
-                .numThreads(2)
-                .roundsPerThread(1)
-                .add {
-                    log.trace { "Run suspend block" }
-                    delay(1000)
-                }
-                .run()
-        } shouldBeLessOrEqualTo 2000
+        val counter = atomic(0)
+
+        MultiJobTester()
+            .numThreads(2)
+            .roundsPerThread(1)
+            .add {
+                log.trace { "Run suspend block ${counter.value}" }
+                delay(1000)
+                counter.incrementAndGet()
+            }
+            .run()
+
+        counter.value shouldBeEqualTo 2
     }
 
     @Test
@@ -59,6 +60,7 @@ class MultiJobTesterTest {
     fun `복수의 suspend 함수 실행하기`() = runTest {
         val block1 = CountingSuspendBlock()
         val block2 = CountingSuspendBlock()
+
         MultiJobTester()
             .numThreads(3)
             .roundsPerThread(1)

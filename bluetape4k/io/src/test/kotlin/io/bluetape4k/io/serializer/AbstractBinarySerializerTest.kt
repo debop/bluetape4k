@@ -16,6 +16,7 @@ import io.bluetape4k.logging.debug
 import java.io.Serializable
 import java.util.*
 import java.util.stream.Stream
+import net.datafaker.Faker
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldNotBeEmpty
@@ -28,8 +29,10 @@ import org.junit.jupiter.params.provider.MethodSource
 @RandomizedTest
 abstract class AbstractBinarySerializerTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         const val REPEAT_SIZE = 10
+
+        val faker = Faker()
     }
 
     abstract val serializer: BinarySerializer
@@ -42,7 +45,7 @@ abstract class AbstractBinarySerializerTest {
         val biography: String,
         val zip: String,
         val address: String,
-    ) : Serializable
+    ): Serializable
 
 
     @RepeatedTest(REPEAT_SIZE)
@@ -70,8 +73,6 @@ abstract class AbstractBinarySerializerTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `serialize data class`(@RandomValue expected: SimpleData) {
-        log.debug { "expected=$expected" }
-
         val bytes = serializer.serialize(expected)
         bytes.shouldNotBeEmpty()
 
@@ -139,7 +140,7 @@ abstract class AbstractBinarySerializerTest {
         open val name: String,
         open val email: String,
         open val age: Int,
-    ) : AbstractValueObject() {
+    ): AbstractValueObject() {
         override fun equalProperties(other: Any): Boolean =
             other is PersonV1 && name == other.name && email == other.email && age == other.age
     }
@@ -149,28 +150,41 @@ abstract class AbstractBinarySerializerTest {
         override val email: String,
         override val age: Int,
         open val ssn: String = "123",
-    ) : PersonV1(name, email, age) {
+    ): PersonV1(name, email, age) {
         override fun equalProperties(other: Any): Boolean =
             other is PersonV2 && name == other.name && email == other.email && age == other.age
     }
 
     @Test
     fun `serialize person v1`() {
-        val expected = PersonV1("debop", "debop@example.com", 52)
+        val expected = PersonV1(
+            faker.name().name(),
+            faker.internet().emailAddress(),
+            faker.random().nextInt(15, 99),
+        )
         val actual = serializer.deserialize<PersonV1>(serializer.serialize(expected))
         actual shouldBeEqualTo expected
     }
 
     @Test
     fun `serialize person v2`() {
-        val expected = PersonV2("debop", "debop@example.com", 52, "1234567")
+        val expected = PersonV2(
+            faker.name().name(),
+            faker.internet().emailAddress(),
+            faker.random().nextInt(15, 99),
+            faker.idNumber().ssnValid()
+        )
         val actual = serializer.deserialize<PersonV2>(serializer.serialize(expected))
         actual shouldBeEqualTo expected
     }
 
     @Test
     fun `serialize person V1 then deserialize as person V2`() {
-        val expected = PersonV1("debop", "debop@example.com", 52)
+        val expected = PersonV1(
+            faker.name().name(),
+            faker.internet().emailAddress(),
+            faker.random().nextInt(15, 99),
+        )
         val actual = serializer.deserialize<Any>(serializer.serialize(expected))
 
         actual.shouldNotBeNull()
@@ -180,7 +194,12 @@ abstract class AbstractBinarySerializerTest {
 
     @Test
     fun `serialize person V2 then deserialize as person V1`() {
-        val expected = PersonV2("debop", "debop@example.com", 52, "1234567")
+        val expected = PersonV2(
+            faker.name().name(),
+            faker.internet().emailAddress(),
+            faker.random().nextInt(15, 99),
+            faker.idNumber().ssnValid()
+        )
         val actual = serializer.deserialize<PersonV1>(serializer.serialize(expected))
         actual shouldBeEqualTo expected
     }

@@ -73,13 +73,13 @@ object Kryox : KLogging() {
 
     private val inputPool by lazy {
         object : Pool<Input>(true, false, 512) {
-            override fun create(): Input = Input(8192)
+            override fun create(): Input = Input(DEFAULT_BUFFER_SIZE)
         }
     }
 
     private val outputPool by lazy {
         object : Pool<Output>(true, false, 512) {
-            override fun create(): Output = Output(8192, -1)
+            override fun create(): Output = Output(DEFAULT_BUFFER_SIZE, -1)
         }
     }
 

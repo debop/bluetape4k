@@ -16,7 +16,8 @@ import java.nio.charset.Charset
  */
 object Resourcex : KLogging() {
 
-    private val currentClassLoader: ClassLoader = Resourcex::class.java.classLoader
+    private val currentClassLoader: ClassLoader get() = Thread.currentThread().contextClassLoader
+    // Resourcex::class.java.classLoader
 
     /**
      * 리소스 파일을 읽어드리는 [InputStream]을 반환합니다.

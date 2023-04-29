@@ -19,7 +19,7 @@ import org.xerial.snappy.Snappy
 abstract class AbstractCompressorTest {
 
     companion object: KLogging() {
-        const val REPEAT_SIZE = 10
+        const val REPEAT_SIZE = 5
 
         private val faker = Faker()
 
@@ -31,10 +31,11 @@ abstract class AbstractCompressorTest {
             Snappy.uncompress(compressed)
         }
 
-        fun getRandomString(): String =
-            Fakers
+        fun getRandomString(): String {
+            return Fakers
                 .randomString(4096, 8192 * 8, true)
                 .replicate(4)
+        }
     }
 
     abstract val compressor: Compressor

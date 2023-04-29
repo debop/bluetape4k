@@ -60,6 +60,7 @@ class MultithreadingTesterTest {
     fun `두개의 RunnableAssert 실행`() {
         val ra1 = CountingRunnableAssert()
         val ra2 = CountingRunnableAssert()
+
         MultithreadingTester()
             .numThreads(3)
             .roundsPerThread(1)
