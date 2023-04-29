@@ -4,7 +4,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    testImplementation(project(":bluetape4k-test-junit5"))
+    testImplementation(project(":bluetape4k-junit5"))
 
     // https://github.com/cowtowncoder/java-uuid-generator
     api(Libs.java_uuid_generator)

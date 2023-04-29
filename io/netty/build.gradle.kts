@@ -3,8 +3,8 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-io-core"))
-    testImplementation(project(":bluetape4k-test-junit5"))
+    api(project(":bluetape4k-io"))
+    testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.netty_buffer)
     api(Libs.netty_all)

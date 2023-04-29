@@ -1,7 +1,7 @@
 package io.bluetape4k.spring.util
 
-import org.springframework.util.NumberUtils
 import java.text.NumberFormat
+import org.springframework.util.NumberUtils
 
 inline fun <reified T: Number> String.parseNumber(): T =
     NumberUtils.parseNumber(this, T::class.java)

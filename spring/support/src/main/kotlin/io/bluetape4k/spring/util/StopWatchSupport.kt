@@ -2,8 +2,8 @@ package io.bluetape4k.spring.util
 
 import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.logging.KotlinLogging
+import java.util.UUID
 import org.springframework.util.StopWatch
-import java.util.*
 
 private val log = KotlinLogging.logger { }
 

@@ -1,12 +1,12 @@
 package io.bluetape4k.spring.cassandra.domain.model
 
-import org.springframework.data.cassandra.core.cql.PrimaryKeyType
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn
-import org.springframework.data.cassandra.core.mapping.Table
 import java.io.Serializable
 import java.time.LocalDate
 import java.time.ZoneId
-import java.util.*
+import java.util.Date
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn
+import org.springframework.data.cassandra.core.mapping.Table
 
 @Table
 data class Person(

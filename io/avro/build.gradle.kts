@@ -24,9 +24,9 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-io-core"))
+    api(project(":bluetape4k-io"))
     testImplementation(project(":bluetape4k-io-http"))
-    testImplementation(project(":bluetape4k-test-junit5"))
+    testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.avro)
     api(Libs.avro_kotlin)

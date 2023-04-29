@@ -1,9 +1,9 @@
 package io.bluetape4k.spring.cassandra.domain.model
 
+import java.io.Serializable
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyClass
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn
-import java.io.Serializable
 
 /**
  * 엔티티에 복합키 적용 예제

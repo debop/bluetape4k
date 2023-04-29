@@ -1,7 +1,7 @@
 package io.bluetape4k.data.hibernate.model
 
 import io.bluetape4k.core.ValueObject
-import java.util.*
+import java.util.Locale
 
 interface JpaLocalizedEntity<LV : JpaLocalizedEntity.LocalizedValue> : PersistenceObject {
 

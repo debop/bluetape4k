@@ -3,10 +3,6 @@ package io.bluetape4k.data.hibernate.mapping.associations.onetomany.list
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.support.hashOf
-import org.hibernate.annotations.DynamicInsert
-import org.hibernate.annotations.DynamicUpdate
-import org.hibernate.annotations.LazyCollection
-import org.hibernate.annotations.LazyCollectionOption
 import java.time.LocalDate
 import javax.persistence.Access
 import javax.persistence.AccessType
@@ -24,6 +20,10 @@ import javax.persistence.OneToMany
 import javax.persistence.OrderBy
 import javax.persistence.OrderColumn
 import javax.validation.constraints.NotBlank
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
+import org.hibernate.annotations.LazyCollection
+import org.hibernate.annotations.LazyCollectionOption
 
 
 @Entity(name = "onetomany_father")

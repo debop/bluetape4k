@@ -3,12 +3,6 @@ package io.bluetape4k.data.hibernate.mapping.associations.onetoone
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeFalse
-import org.amshove.kluent.shouldBeTrue
-import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.jpa.repository.JpaRepository
 import javax.persistence.Access
 import javax.persistence.AccessType
 import javax.persistence.CascadeType
@@ -18,6 +12,12 @@ import javax.persistence.Id
 import javax.persistence.MapsId
 import javax.persistence.OneToOne
 import javax.persistence.PrimaryKeyJoinColumn
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeTrue
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.JpaRepository
 
 class UnidirectionalOneToOneTest(
     @Autowired private val carRepo: CarRepository,

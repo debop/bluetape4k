@@ -2,11 +2,11 @@ package io.bluetape4k.data.cassandra.data
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 import java.time.temporal.UnsupportedTemporalTypeException
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
 class CqlDurationSupportTest {

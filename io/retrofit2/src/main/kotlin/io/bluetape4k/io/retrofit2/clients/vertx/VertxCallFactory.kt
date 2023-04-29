@@ -59,7 +59,7 @@ class VertxCallFactory private constructor(
 
             return try {
                 val promise = CompletableFuture<okhttp3.Response>()
-                val future = futureWithTimeout(callTimeout.toMillis()) {
+                futureWithTimeout(callTimeout.toMillis()) {
                     enqueue(object: okhttp3.Callback {
                         override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
                             promise.complete(response)

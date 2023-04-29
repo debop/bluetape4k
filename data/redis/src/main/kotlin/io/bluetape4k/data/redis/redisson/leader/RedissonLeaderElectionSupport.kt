@@ -1,9 +1,9 @@
 package io.bluetape4k.data.redis.redisson.leader
 
-import org.redisson.api.RedissonClient
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import java.util.concurrent.ForkJoinPool
+import org.redisson.api.RedissonClient
 
 fun <T> RedissonClient.runIfLeader(
     jobName: String,

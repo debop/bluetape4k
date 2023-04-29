@@ -3,9 +3,6 @@ package io.bluetape4k.data.hibernate.mapping.lifecycle
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedDate
-import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 import javax.persistence.Access
 import javax.persistence.AccessType
@@ -13,6 +10,9 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EntityListeners
 import javax.validation.constraints.NotBlank
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 
 /**
  * AuditingEntityListener 를 등록하면 @CreatedDate, @LastModifiedDate 가 자동으로 채워진다.

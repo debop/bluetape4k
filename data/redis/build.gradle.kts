@@ -42,15 +42,15 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-io-core"))
+    api(project(":bluetape4k-io"))
     api(project(":bluetape4k-io-netty"))
     compileOnly(project(":bluetape4k-io-json"))
     compileOnly(project(":bluetape4k-io-grpc"))
-    compileOnly(project(":bluetape4k-kotlinx-coroutines"))
-    compileOnly(project(":bluetape4k-utils-cache"))
+    compileOnly(project(":bluetape4k-coroutines"))
+    compileOnly(project(":bluetape4k-infra-cache"))
     testImplementation(project(":bluetape4k-utils-idgenerators"))
-    testImplementation(project(":bluetape4k-test-junit5"))
-    testImplementation(project(":bluetape4k-test-testcontainers"))
+    testImplementation(project(":bluetape4k-junit5"))
+    testImplementation(project(":bluetape4k-testcontainers"))
     // Redisson Map Read/Write Through 예제
     testImplementation(project(":bluetape4k-data-jdbc"))
 

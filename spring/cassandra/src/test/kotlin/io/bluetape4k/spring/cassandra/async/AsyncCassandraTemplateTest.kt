@@ -299,7 +299,7 @@ class AsyncCassandraTemplateTest(
         val entitySize = 100
         val sliceSize = 10
 
-        val insertTasks = List(entitySize) { index ->
+        val insertTasks = List(entitySize) {
             async(Dispatchers.IO) {
                 val user = newUser()
                 operations.insert(user).await()

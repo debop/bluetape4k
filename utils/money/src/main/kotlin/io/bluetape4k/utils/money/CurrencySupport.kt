@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.money
 
 import io.bluetape4k.core.requireNotBlank
-import java.util.*
+import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import javax.money.CurrencyUnit
 import javax.money.Monetary

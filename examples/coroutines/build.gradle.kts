@@ -3,10 +3,10 @@ configurations {
 }
 
 dependencies {
-    implementation(project(":bluetape4k-kotlinx-coroutines"))
+    implementation(project(":bluetape4k-coroutines"))
     implementation(project(":bluetape4k-utils-idgenerators"))
-    testImplementation(project(":bluetape4k-test-junit5"))
-    testImplementation(project(":bluetape4k-test-testcontainers"))
+    testImplementation(project(":bluetape4k-junit5"))
+    testImplementation(project(":bluetape4k-testcontainers"))
 
     implementation(Libs.kotlinx_atomicfu)
 

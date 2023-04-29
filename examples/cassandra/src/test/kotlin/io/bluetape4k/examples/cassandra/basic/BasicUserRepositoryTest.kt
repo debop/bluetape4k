@@ -49,7 +49,7 @@ class BasicUserRepositoryTest(
     @Test
     fun `find saved user by id`() = runSuspendWithIO {
         val user = newBasicUser()
-        val saved = repository.save(user)
+        repository.save(user)
         repository.findById(user.id) shouldBeEqualTo user
     }
 

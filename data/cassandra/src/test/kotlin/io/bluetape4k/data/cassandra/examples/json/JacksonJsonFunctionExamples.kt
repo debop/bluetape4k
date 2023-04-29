@@ -22,12 +22,12 @@ import io.bluetape4k.io.json.jackson.readValueOrNull
 import io.bluetape4k.io.json.jackson.writeAsString
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import java.io.Serializable
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
-import java.io.Serializable
 
 class JacksonJsonFunctionExamples: AbstractCassandraTest() {
 

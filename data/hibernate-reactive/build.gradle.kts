@@ -40,7 +40,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-data-hibernate"))
-    api(project(":bluetape4k-kotlinx-mutiny"))
+    api(project(":bluetape4k-utils-mutiny"))
     api(project(":bluetape4k-vertx-core"))
 
     // NOTE: Java 9+ 환경에서 kapt가 제대로 동작하려면 javax.annotation-api 를 참조해야 합니다.
@@ -66,8 +66,8 @@ dependencies {
     testImplementation(Libs.hikaricp)
     testImplementation(Libs.mysql_connector_j)
 
-    testImplementation(project(":bluetape4k-test-junit5"))
-    testImplementation(project(":bluetape4k-test-testcontainers"))
+    testImplementation(project(":bluetape4k-junit5"))
+    testImplementation(project(":bluetape4k-testcontainers"))
     testImplementation(Libs.testcontainers_mysql)
 
     // bluetape4k-data-hibernate의 entity 들을 재사용하려고 testArchives 를 참조한다

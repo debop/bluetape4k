@@ -6,10 +6,10 @@ import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.support.toUtf8Bytes
+import java.io.Serializable
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
-import java.io.Serializable
 
 
 /**

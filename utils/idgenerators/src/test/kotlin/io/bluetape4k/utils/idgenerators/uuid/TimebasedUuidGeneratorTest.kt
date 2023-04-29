@@ -13,6 +13,7 @@ import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.RepeatedTest
+import kotlin.streams.toList
 
 class TimebasedUuidGeneratorTest {
 

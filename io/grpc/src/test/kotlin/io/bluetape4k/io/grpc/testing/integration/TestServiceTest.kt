@@ -1,10 +1,6 @@
 package io.bluetape4k.io.grpc.testing.integration
 
 import com.google.protobuf.ByteString
-import io.bluetape4k.io.grpc.testing.integration.Messages.BoolValue
-import io.bluetape4k.io.grpc.testing.integration.Messages.Payload
-import io.bluetape4k.io.grpc.testing.integration.Messages.ResponseParameters
-import io.bluetape4k.io.grpc.testing.integration.Messages.StreamingInputCallRequest
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.junit5.output.CaptureOutput
 import io.bluetape4k.junit5.output.OutputCapturer
@@ -15,6 +11,7 @@ import io.bluetape4k.support.toUtf8Bytes
 import io.grpc.ServerBuilder
 import io.grpc.StatusException
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.NonCancellable.message
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.first
@@ -160,8 +157,8 @@ class TestServiceTest {
 
     private fun getStreamingInputCallRequests(size: Int = 100, delayMs: Long = 10L) = flow {
         repeat(size) {
-            val request = StreamingInputCallRequest.newBuilder()
-                .setExpectCompressed(BoolValue.newBuilder().setValue(true))
+            val request = Messages.StreamingInputCallRequest.newBuilder()
+                .setExpectCompressed(Messages.BoolValue.newBuilder().setValue(true))
                 .setPayload(Payload.newBuilder().setBody(ByteString.copyFrom(randomString(512).toUtf8Bytes())))
                 .build()
 

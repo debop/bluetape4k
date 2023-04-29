@@ -15,11 +15,11 @@ configurations {
 dependencies {
     api(project(":bluetape4k-io-http"))
     api(project(":bluetape4k-io-netty"))
-    api(project(":bluetape4k-utils-resilience4j"))
-    testImplementation(project(":bluetape4k-test-junit5"))
+    api(project(":bluetape4k-infra-resilience4j"))
+    testImplementation(project(":bluetape4k-junit5"))
 
     // Coroutines
-    api(project(":bluetape4k-kotlinx-coroutines"))
+    api(project(":bluetape4k-coroutines"))
     api(Libs.kotlinx_coroutines_core)
     api(Libs.kotlinx_coroutines_jdk8)
     compileOnly(Libs.kotlinx_coroutines_reactive)
@@ -68,7 +68,7 @@ dependencies {
     compileOnly(Libs.gson_javatime_serializers)
 
     // Resilience4j
-    compileOnly(project(":bluetape4k-utils-resilience4j"))
+    compileOnly(project(":bluetape4k-infra-resilience4j"))
     compileOnly(Libs.resilience4j_all)
     compileOnly(Libs.resilience4j_kotlin)
     compileOnly(Libs.resilience4j_feign)

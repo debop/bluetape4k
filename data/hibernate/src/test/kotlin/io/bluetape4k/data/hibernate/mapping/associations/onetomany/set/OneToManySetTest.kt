@@ -3,6 +3,11 @@ package io.bluetape4k.data.hibernate.mapping.associations.onetomany.set
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
+import java.io.Serializable
+import java.math.BigDecimal
+import java.sql.Timestamp
+import java.time.LocalDate
+import javax.persistence.*
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
@@ -13,11 +18,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
-import java.io.Serializable
-import java.math.BigDecimal
-import java.sql.Timestamp
-import java.time.LocalDate
-import javax.persistence.*
 
 class OneToManySetTest @Autowired constructor(
     private val biddingItemRepo: BiddingItemRepository,

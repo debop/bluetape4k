@@ -2,12 +2,12 @@ package io.bluetape4k.data.redis.redisson.memorizer
 
 import io.bluetape4k.concurrent.flatMap
 import io.bluetape4k.concurrent.map
+import io.bluetape4k.infra.cache.memorizer.AsyncMemorizer
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.utils.cache.memorizer.AsyncMemorizer
-import org.redisson.api.RMap
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
+import org.redisson.api.RMap
 
 /**
  * [evaluator] 결과를 Redis에 저장하도록 합니다.

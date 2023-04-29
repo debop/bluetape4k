@@ -1,13 +1,13 @@
 package io.bluetape4k.data.redis.redisson
 
+import java.io.File
+import java.io.InputStream
+import java.net.URL
 import org.redisson.Redisson
 import org.redisson.api.RedissonClient
 import org.redisson.api.RedissonReactiveClient
 import org.redisson.client.codec.Codec
 import org.redisson.config.Config
-import java.io.File
-import java.io.InputStream
-import java.net.URL
 
 fun configFromYamlOf(input: InputStream, codec: Codec = RedissonCodecs.Default): Config {
     return Config.fromYAML(input).apply { this.codec = codec }

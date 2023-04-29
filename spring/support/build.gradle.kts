@@ -4,7 +4,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    testImplementation(project(":bluetape4k-test-junit5"))
+    testImplementation(project(":bluetape4k-junit5"))
 
     compileOnly(Libs.spring("context-support"))
 

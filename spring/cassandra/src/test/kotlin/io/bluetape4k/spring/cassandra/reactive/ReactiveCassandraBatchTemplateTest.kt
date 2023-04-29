@@ -15,6 +15,7 @@ import io.bluetape4k.spring.cassandra.insertSuspending
 import io.bluetape4k.spring.cassandra.selectOneByIdSuspending
 import io.bluetape4k.spring.cassandra.truncateSuspending
 import io.bluetape4k.spring.cassandra.updateFlow
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
@@ -35,7 +36,6 @@ import org.springframework.data.cassandra.core.InsertOptions
 import org.springframework.data.cassandra.core.ReactiveCassandraOperations
 import org.springframework.data.cassandra.core.cql.WriteOptions
 import org.springframework.data.cassandra.repository.config.EnableReactiveCassandraRepositories
-import java.util.concurrent.TimeUnit
 import kotlin.test.assertFailsWith
 
 @SpringBootTest(classes = [ReactiveDomainTestConfiguration::class])

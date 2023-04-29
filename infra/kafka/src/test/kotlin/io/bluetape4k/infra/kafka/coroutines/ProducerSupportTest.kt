@@ -3,15 +3,16 @@ package io.bluetape4k.infra.kafka.coroutines
 import io.bluetape4k.concurrent.asCompletableFuture
 import io.bluetape4k.concurrent.onComplete
 import io.bluetape4k.concurrent.sequence
+import io.bluetape4k.coroutines.support.awaitSuspending
 import io.bluetape4k.infra.kafka.AbstractKafkaTest
 import io.bluetape4k.infra.kafka.getMetricValue
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
-import io.bluetape4k.kotlinx.coroutines.support.awaitSuspending
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.testcontainers.massage.KafkaServer
+import java.util.concurrent.CompletableFuture
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.last
@@ -21,7 +22,6 @@ import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.junit.jupiter.api.RepeatedTest
-import java.util.concurrent.CompletableFuture
 import kotlin.system.measureTimeMillis
 
 @RandomizedTest

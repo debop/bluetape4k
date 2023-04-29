@@ -2,7 +2,11 @@ package io.bluetape4k.infra.kafka.spring
 
 import io.bluetape4k.support.asDouble
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.Metric

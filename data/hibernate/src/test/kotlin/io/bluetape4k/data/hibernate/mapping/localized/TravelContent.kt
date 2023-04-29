@@ -3,11 +3,11 @@ package io.bluetape4k.data.hibernate.mapping.localized
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.data.hibernate.model.JpaLocalizedEntity
+import java.util.*
+import javax.persistence.*
 import org.hibernate.annotations.Cascade
 import org.hibernate.annotations.LazyCollection
 import org.hibernate.annotations.LazyCollectionOption
-import java.util.*
-import javax.persistence.*
 
 @Entity(name = "travel_content")
 @Access(AccessType.FIELD)

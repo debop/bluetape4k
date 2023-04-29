@@ -1,16 +1,16 @@
 package io.bluetape4k.data.redis.redisson.memorizer
 
 import io.bluetape4k.data.redis.redisson.AbstractRedissonTest
+import io.bluetape4k.infra.cache.memorizer.Memorizer
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import io.bluetape4k.utils.cache.memorizer.Memorizer
+import java.time.Duration
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertTimeout
 import org.redisson.api.RedissonClient
 import org.redisson.client.codec.IntegerCodec
 import org.redisson.client.codec.LongCodec
-import java.time.Duration
 import kotlin.system.measureTimeMillis
 
 class RedissonMemoerizerTest: AbstractRedissonTest() {

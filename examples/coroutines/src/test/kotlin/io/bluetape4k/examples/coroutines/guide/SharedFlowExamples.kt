@@ -1,6 +1,6 @@
 package io.bluetape4k.examples.coroutines.guide
 
-import io.bluetape4k.junit5.coroutines.runSuspendTest
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -66,7 +66,7 @@ class SharedFlowExamples {
     }
 
     @Test
-    fun `복수개의 Producer로 event 발송과 복수개의 Consumer로 수신 예제`() = runSuspendTest {
+    fun `복수개의 Producer로 event 발송과 복수개의 Consumer로 수신 예제`() = runSuspendWithIO {
         val totalProduced = atomic(0L)
         val totalConsumed = atomic(0L)
 

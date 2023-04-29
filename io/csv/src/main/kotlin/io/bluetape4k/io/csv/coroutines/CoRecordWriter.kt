@@ -1,9 +1,9 @@
 package io.bluetape4k.io.csv.coroutines
 
+import java.io.Closeable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.io.Closeable
 
 /**
  * Coroutines 환경하에서 CSV/TSV Record를 쓰는 Writer 입니다.

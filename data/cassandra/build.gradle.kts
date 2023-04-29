@@ -18,12 +18,12 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-kotlinx-coroutines"))
-    api(project(":bluetape4k-io-core"))
+    api(project(":bluetape4k-coroutines"))
+    api(project(":bluetape4k-io"))
     testImplementation(project(":bluetape4k-io-json"))
-    testImplementation(project(":bluetape4k-test-junit5"))
+    testImplementation(project(":bluetape4k-junit5"))
 
-    testImplementation(project(":bluetape4k-test-testcontainers"))
+    testImplementation(project(":bluetape4k-testcontainers"))
 
     // NOTE: Cassandra 4 oss 버전을 사용합니다.
     api(Libs.cassandra_java_driver_core)

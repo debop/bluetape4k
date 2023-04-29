@@ -1,11 +1,11 @@
 package io.bluetape4k.data.hibernate.mapping.localized
 
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
+import java.util.Locale
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
-import java.util.*
 
 class TravelContentTest(
     @Autowired private val repository: TravelContentRepository

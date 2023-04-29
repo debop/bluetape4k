@@ -5,16 +5,16 @@ import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.model.AbstractJpaEntity
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.support.hashOf
+import java.io.Serializable
+import java.time.LocalDateTime
+import javax.persistence.*
+import javax.validation.constraints.NotBlank
 import org.hibernate.annotations.Cascade
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.io.Serializable
-import java.time.LocalDateTime
-import javax.persistence.*
-import javax.validation.constraints.NotBlank
 
 @Embeddable
 data class Address(

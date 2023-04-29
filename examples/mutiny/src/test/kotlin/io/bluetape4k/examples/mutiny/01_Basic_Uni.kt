@@ -1,12 +1,12 @@
 package io.bluetape4k.examples.mutiny
 
-import io.bluetape4k.kotlinx.mutiny.asUni
-import io.bluetape4k.kotlinx.mutiny.onEach
-import io.bluetape4k.kotlinx.mutiny.uniConvertOf
-import io.bluetape4k.kotlinx.mutiny.uniFailureOf
-import io.bluetape4k.kotlinx.mutiny.uniOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.utils.mutiny.asUni
+import io.bluetape4k.utils.mutiny.onEach
+import io.bluetape4k.utils.mutiny.uniConvertOf
+import io.bluetape4k.utils.mutiny.uniFailureOf
+import io.bluetape4k.utils.mutiny.uniOf
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.smallrye.mutiny.subscription.UniSubscriber

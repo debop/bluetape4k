@@ -1,12 +1,12 @@
 package io.bluetape4k.examples.mutiny
 
-import io.bluetape4k.kotlinx.mutiny.multiRangeOf
-import io.bluetape4k.kotlinx.mutiny.onEach
-import io.bluetape4k.kotlinx.mutiny.uniOf
-import io.bluetape4k.kotlinx.mutiny.voidUni
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
+import io.bluetape4k.utils.mutiny.multiRangeOf
+import io.bluetape4k.utils.mutiny.onEach
+import io.bluetape4k.utils.mutiny.uniOf
+import io.bluetape4k.utils.mutiny.voidUni
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.asFlow
 import java.time.Duration

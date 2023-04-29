@@ -1,12 +1,12 @@
 package io.bluetape4k.spring.cassandra.domain.model
 
 import com.datastax.oss.driver.api.core.uuid.Uuids
+import java.io.Serializable
+import java.util.*
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType
 import org.springframework.data.cassandra.core.mapping.Column
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn
 import org.springframework.data.cassandra.core.mapping.Table
-import java.io.Serializable
-import java.util.*
 
 @Table("user_tokens")
 data class UserToken(

@@ -6,14 +6,15 @@ import io.bluetape4k.data.redis.redisson.AbstractRedissonTest
 import io.bluetape4k.data.redis.redisson.RedissonCodecs
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
+import java.io.Serializable
+import java.time.Instant
 import org.amshove.kluent.shouldBeEqualTo
+import org.apache.logging.log4j.message.SimpleMessage
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.redisson.client.codec.Codec
 import org.redisson.client.handler.State
-import java.io.Serializable
-import java.time.Instant
 
 class ProtobufCodecTest : AbstractRedissonTest() {
 

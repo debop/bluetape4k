@@ -5,6 +5,7 @@ import io.bluetape4k.data.cassandra.AbstractCassandraTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import java.io.Serializable
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -13,7 +14,6 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import java.io.Serializable
 
 class AsyncResultSetSupportTest: AbstractCassandraTest() {
 

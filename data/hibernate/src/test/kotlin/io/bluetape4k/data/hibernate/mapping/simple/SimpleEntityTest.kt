@@ -3,6 +3,8 @@ package io.bluetape4k.data.hibernate.mapping.simple
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.findAll
 import io.bluetape4k.logging.KLogging
+import javax.persistence.EntityManager
+import javax.persistence.PersistenceContext
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
 import org.amshove.kluent.shouldNotBeEmpty
@@ -10,8 +12,6 @@ import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
-import javax.persistence.EntityManager
-import javax.persistence.PersistenceContext
 import kotlin.test.assertFailsWith
 
 class SimpleEntityTest(

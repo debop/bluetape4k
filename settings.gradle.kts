@@ -6,15 +6,15 @@ pluginManagement {
     }
 }
 
-rootProject.name = "bluetape4k"
+val PROJECT_NAME = "bluetape4k"
 
-include(rootProject.name + "-bom")
-include(rootProject.name + "-core")
+rootProject.name = "$PROJECT_NAME-root"
+
+includeModules(PROJECT_NAME, false)
 
 includeModules("data")
 includeModules("infra")
 includeModules("io")
-includeModules("kotlinx")
 includeModules("spring")
 includeModules("test")
 includeModules("tokenizer")
@@ -22,9 +22,9 @@ includeModules("utils")
 includeModules("vertx")
 
 // for example
-includeModules("examples")
+includeModules("examples", false)
 
-fun includeModules(baseDir: String) {
+fun includeModules(baseDir: String, withProjectName: Boolean = true) {
     files("$rootDir/$baseDir").files
         .filter { it.isDirectory }
         .forEach { moduleDir ->
@@ -32,8 +32,8 @@ fun includeModules(baseDir: String) {
                 ?.filter { it.isDirectory }
                 ?.forEach { dir ->
                     val projectName = when {
-                        baseDir.contains("examples") -> baseDir + "-" + dir.name
-                        else -> rootProject.name + "-" + baseDir + "-" + dir.name
+                        withProjectName -> PROJECT_NAME + "-" + baseDir + "-" + dir.name
+                        else -> baseDir + "-" + dir.name
                     }
                     // println("include modules: $projectName")
 

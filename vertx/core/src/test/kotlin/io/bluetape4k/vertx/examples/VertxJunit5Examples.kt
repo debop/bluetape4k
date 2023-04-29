@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.coroutines.CoroutineContext
 
 @ExtendWith(VertxExtension::class)
 class VertxJunit5Examples {
@@ -121,7 +122,7 @@ class VertxJunit5Examples {
 
         @BeforeEach
         fun `deploy verticle`(vertx: Vertx, testContext: VertxTestContext) {
-            runBlocking(vertx.dispatcher()) {
+            runBlocking(vertx.dispatcher() as CoroutineContext) {
                 vertx.deployVerticle(HttpServerVerticle()).await()
                 testContext.completeNow()
             }
@@ -131,7 +132,7 @@ class VertxJunit5Examples {
         fun `check http server response`(
             vertx: Vertx,
             testContext: VertxTestContext,
-        ) = runSuspendTest(vertx.dispatcher()) {
+        ) = runSuspendTest(vertx.dispatcher() as CoroutineContext) {
             val client = vertx.createHttpClient()
             val request = client.request(HttpMethod.GET, 8080, "localhost", "/").await()
 

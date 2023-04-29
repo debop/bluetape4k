@@ -1,7 +1,8 @@
 package io.bluetape4k.spring.cassandra.convert.converter
 
+import java.util.Currency
+import java.util.Locale
 import org.springframework.core.convert.converter.Converter
-import java.util.*
 
 enum class CurrencyConverter: Converter<Currency, String> {
 

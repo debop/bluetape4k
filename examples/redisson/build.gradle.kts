@@ -11,11 +11,11 @@ dependencies {
     api(project(":bluetape4k-data-redis"))
     implementation(project(":bluetape4k-io-json"))
     implementation(project(":bluetape4k-io-grpc"))
-    implementation(project(":bluetape4k-kotlinx-coroutines"))
-    implementation(project(":bluetape4k-utils-cache"))
+    implementation(project(":bluetape4k-coroutines"))
+    implementation(project(":bluetape4k-infra-cache"))
     testImplementation(project(":bluetape4k-utils-idgenerators"))
-    testImplementation(project(":bluetape4k-test-junit5"))
-    testImplementation(project(":bluetape4k-test-testcontainers"))
+    testImplementation(project(":bluetape4k-junit5"))
+    testImplementation(project(":bluetape4k-testcontainers"))
 
     // Redisson
     api(Libs.redisson)

@@ -9,6 +9,8 @@ import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
+import java.time.Duration
+import javax.sql.DataSource
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import org.amshove.kluent.*
@@ -26,8 +28,6 @@ import org.redisson.api.map.MapWriter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.Duration
-import javax.sql.DataSource
 import kotlin.system.measureTimeMillis
 
 

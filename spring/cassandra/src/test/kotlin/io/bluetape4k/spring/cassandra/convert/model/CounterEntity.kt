@@ -1,9 +1,9 @@
 package io.bluetape4k.spring.cassandra.convert.model
 
+import java.io.Serializable
 import org.springframework.data.cassandra.core.mapping.CassandraType
 import org.springframework.data.cassandra.core.mapping.PrimaryKey
 import org.springframework.data.cassandra.core.mapping.Table
-import java.io.Serializable
 
 @Table
 data class CounterEntity(

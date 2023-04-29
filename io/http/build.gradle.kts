@@ -4,11 +4,11 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-io-json"))
-    api(project(":bluetape4k-utils-resilience4j"))
-    testImplementation(project(":bluetape4k-test-junit5"))
+    api(project(":bluetape4k-infra-resilience4j"))
+    testImplementation(project(":bluetape4k-junit5"))
 
     // Coroutines
-    api(project(":bluetape4k-kotlinx-coroutines"))
+    api(project(":bluetape4k-coroutines"))
     compileOnly(Libs.kotlinx_coroutines_core)
     compileOnly(Libs.kotlinx_coroutines_jdk8)
     compileOnly(Libs.kotlinx_coroutines_reactive)

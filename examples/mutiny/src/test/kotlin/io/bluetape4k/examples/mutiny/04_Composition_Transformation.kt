@@ -2,28 +2,21 @@ package io.bluetape4k.examples.mutiny
 
 import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
-import io.bluetape4k.kotlinx.mutiny.asUni
-import io.bluetape4k.kotlinx.mutiny.multiOf
-import io.bluetape4k.kotlinx.mutiny.multiRangeOf
-import io.bluetape4k.kotlinx.mutiny.uniOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
+import io.bluetape4k.utils.mutiny.asUni
+import io.bluetape4k.utils.mutiny.multiOf
+import io.bluetape4k.utils.mutiny.multiRangeOf
+import io.bluetape4k.utils.mutiny.uniOf
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.asFlow
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.smallrye.mutiny.tuples.Tuple2
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
-import org.amshove.kluent.*
-import org.junit.jupiter.api.Test
 import java.io.IOException
 import java.time.Duration
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -31,6 +24,17 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 import java.util.stream.Collectors
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeIn
+import org.amshove.kluent.shouldContain
+import org.amshove.kluent.shouldContainSame
+import org.amshove.kluent.shouldHaveSize
+import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
 class CompositionTransformationExamples {

@@ -1,6 +1,11 @@
 package io.bluetape4k.io.avro
 
-import io.bluetape4k.io.avro.message.examples.*
+import io.bluetape4k.io.avro.message.examples.Employee
+import io.bluetape4k.io.avro.message.examples.EmployeeList
+import io.bluetape4k.io.avro.message.examples.EventType
+import io.bluetape4k.io.avro.message.examples.ProductProperty
+import io.bluetape4k.io.avro.message.examples.ProductRoot
+import io.bluetape4k.io.avro.message.examples.Suit
 import net.datafaker.Faker
 
 object TestMessageProvider {

@@ -5,7 +5,7 @@ configurations {
 dependencies {
     api(project(":bluetape4k-core"))
     api(project(":bluetape4k-tokenizer-core"))
-    testImplementation(project(":bluetape4k-test-junit5"))
+    testImplementation(project(":bluetape4k-junit5"))
 
     // 한글 분석을 위한 기본적인 통계 정보를 Twitter에서 제공합니다
     // implementation(Libs.twitter_text)

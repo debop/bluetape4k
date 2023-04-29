@@ -4,10 +4,10 @@ import io.bluetape4k.io.netty.AbstractNettyTest
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.netty.buffer.ByteBufAllocator
+import java.nio.charset.Charset
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import java.nio.charset.Charset
 
 class ByteBufStringTest : AbstractNettyTest() {
 

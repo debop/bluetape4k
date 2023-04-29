@@ -5,17 +5,17 @@ import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import java.io.Serializable
+import java.math.BigDecimal
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.apache.kafka.common.header.internals.RecordHeaders
 import org.junit.jupiter.api.RepeatedTest
-import java.io.Serializable
-import java.math.BigDecimal
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
 
 @RandomizedTest
 abstract class AbstractKafkaCodecTest: AbstractKafkaTest() {

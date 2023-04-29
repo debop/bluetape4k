@@ -1,6 +1,6 @@
 package io.bluetape4k.examples.coroutines.builders
 
-import io.bluetape4k.kotlinx.coroutines.context.PropertyCoroutineContext
+import io.bluetape4k.coroutines.context.PropertyCoroutineContext
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.CoroutineName

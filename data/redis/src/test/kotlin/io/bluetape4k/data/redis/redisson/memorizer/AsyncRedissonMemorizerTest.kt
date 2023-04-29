@@ -3,6 +3,8 @@ package io.bluetape4k.data.redis.redisson.memorizer
 import io.bluetape4k.data.redis.redisson.AbstractRedissonTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import java.time.Duration
+import java.util.concurrent.CompletableFuture
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertTimeout
@@ -10,8 +12,6 @@ import org.redisson.api.RMap
 import org.redisson.api.RedissonClient
 import org.redisson.client.codec.IntegerCodec
 import org.redisson.client.codec.LongCodec
-import java.time.Duration
-import java.util.concurrent.CompletableFuture
 import kotlin.system.measureTimeMillis
 
 class AsyncRedissonMemorizerTest: AbstractRedissonTest() {

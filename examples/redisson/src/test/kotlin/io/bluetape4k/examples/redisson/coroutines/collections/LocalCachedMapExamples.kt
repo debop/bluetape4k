@@ -2,6 +2,8 @@ package io.bluetape4k.examples.redisson.coroutines.collections
 
 import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
+import java.util.UUID
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
@@ -9,8 +11,6 @@ import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import org.redisson.api.LocalCachedMapOptions
 import org.redisson.api.RLocalCachedMap
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * Redisson [RLocalCachedMap] 은 NearCache 와 같은 역할을 수행한다.

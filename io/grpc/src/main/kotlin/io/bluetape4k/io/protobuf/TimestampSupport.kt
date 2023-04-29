@@ -4,7 +4,7 @@ import com.google.protobuf.Timestamp
 import com.google.protobuf.timestamp
 import com.google.protobuf.util.Timestamps
 import java.time.Instant
-import java.util.*
+import java.util.Date
 
 
 @JvmField

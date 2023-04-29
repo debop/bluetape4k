@@ -1,9 +1,9 @@
 package io.bluetape4k.infra.kafka
 
+import java.util.Properties
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.Deserializer
-import java.util.*
 
 fun <K, V> consumerOf(
     configs: Map<String, Any?>,

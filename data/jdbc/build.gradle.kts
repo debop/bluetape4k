@@ -9,8 +9,8 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    testImplementation(project(":bluetape4k-test-junit5"))
-    testImplementation(project(":bluetape4k-test-testcontainers"))
+    testImplementation(project(":bluetape4k-junit5"))
+    testImplementation(project(":bluetape4k-testcontainers"))
 
     compileOnly(Libs.hikaricp)
     compileOnly(Libs.tomcat_jdbc)

@@ -4,11 +4,11 @@ import io.bluetape4k.concurrent.futureOf
 import io.bluetape4k.data.redis.redisson.AbstractRedissonTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.Test
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.Test
 
 class RedissonLeaderElectionTest: AbstractRedissonTest() {
 

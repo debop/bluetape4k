@@ -1,10 +1,10 @@
 package io.bluetape4k.examples.mutiny
 
-import io.bluetape4k.kotlinx.mutiny.multiOf
-import io.bluetape4k.kotlinx.mutiny.uniOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.warn
+import io.bluetape4k.utils.mutiny.multiOf
+import io.bluetape4k.utils.mutiny.uniOf
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.asFlow

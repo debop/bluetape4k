@@ -4,12 +4,12 @@ import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import org.redisson.api.BatchOptions
-import java.util.concurrent.TimeUnit
 
 /**
  * List based Multimap
