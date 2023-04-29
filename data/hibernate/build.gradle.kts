@@ -46,9 +46,11 @@ dependencies {
 
     api(Libs.javax_persistence_api)
     api(Libs.hibernate_core)
-    kapt(Libs.hibernate_jpamodelgen)
-    kaptTest(Libs.hibernate_jpamodelgen)
     testImplementation(Libs.hibernate_testing)
+
+    // NOTE: Querydsl 과 같이 사용할 시에 가끔 예외를 일으킨다. 
+    // kapt(Libs.hibernate_jpamodelgen)
+    // kaptTest(Libs.hibernate_jpamodelgen)
 
     // Querydsl
     compileOnly(Libs.querydsl_jpa)
