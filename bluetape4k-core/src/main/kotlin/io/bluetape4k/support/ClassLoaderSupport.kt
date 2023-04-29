@@ -21,9 +21,5 @@ fun getContextClassLoader(): ClassLoader = getClassLoader { Thread.currentThread
 fun getSystemClassLoader(): ClassLoader = getClassLoader { ClassLoader.getSystemClassLoader() }
 
 private inline fun getClassLoader(crossinline loader: () -> ClassLoader): ClassLoader {
-    return loader()
-//    System.getSecurityManager()?.run {
-//        AccessController.doPrivileged(PrivilegedAction { loader() })
-//    }
-//        ?: loader()
+    return runCatching { loader() }.getOrElse { Thread.currentThread().contextClassLoader }
 }

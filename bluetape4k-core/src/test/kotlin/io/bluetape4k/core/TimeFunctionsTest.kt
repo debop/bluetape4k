@@ -21,7 +21,7 @@ class TimeFunctionsTest {
     @Test
     fun `함수 실행이 timeout에 걸릴때는 예외를 발생시키는 CompletableFuture 반환한다`() {
         val isWorking = atomic(false)
-        val future = asyncWithTimeout(500) {
+        val future = asyncRunWithTimeout(500) {
             var i = 0
             isWorking.value = true
             while (true) {
@@ -45,7 +45,7 @@ class TimeFunctionsTest {
     @Test
     fun `함수 실행이 timeout 에 걸리지 않으면 작업 결과를 반환한다`() {
         val isWorking = atomic(false)
-        val future = asyncWithTimeout(500) {
+        val future = asyncRunWithTimeout(500) {
             isWorking.value = true
             var i = 0
             while (i < 2) {

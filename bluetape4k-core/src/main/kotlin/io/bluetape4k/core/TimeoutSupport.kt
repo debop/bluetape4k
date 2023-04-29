@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
  * @param action 비동기로 실행할 코드 블럭
  * @return [action]의 실행 결과를 담은 [CompletableFuture], 제한시간이 초과되면 [TimeoutException]을 담은 [CompletableFuture]를 반환합니다.
  */
-inline fun <T> asyncWithTimeout(timeoutMillis: Long, crossinline action: () -> T): CompletableFuture<T> {
+inline fun <T> asyncRunWithTimeout(timeoutMillis: Long, crossinline action: () -> T): CompletableFuture<T> {
     val executor = Executors.newSingleThreadExecutor()
     return CompletableFuture
         .supplyAsync({ action() }, executor)
@@ -34,8 +34,8 @@ inline fun <T> asyncWithTimeout(timeoutMillis: Long, crossinline action: () -> T
  * @param action 비동기로 실행할 코드 블럭
  * @return [action]의 실행 결과를 담은 [CompletableFuture], 제한시간이 초과되면 [TimeoutException]을 담은 [CompletableFuture]를 반환합니다.
  */
-inline fun <T> asyncWithTimeout(timeout: Duration, crossinline action: () -> T): CompletableFuture<T> {
-    return asyncWithTimeout(timeout.toMillis(), action)
+inline fun <T> asyncRunWithTimeout(timeout: Duration, crossinline action: () -> T): CompletableFuture<T> {
+    return asyncRunWithTimeout(timeout.toMillis(), action)
 }
 
 /**
@@ -47,7 +47,7 @@ inline fun <T> asyncWithTimeout(timeout: Duration, crossinline action: () -> T):
  */
 inline fun <T : Any> withTimeoutOrNull(timeoutMillis: Long, crossinline action: () -> T): T? {
     return try {
-        asyncWithTimeout(timeoutMillis, action).get()
+        asyncRunWithTimeout(timeoutMillis, action).get()
     } catch (e: Exception) {
         null
     }

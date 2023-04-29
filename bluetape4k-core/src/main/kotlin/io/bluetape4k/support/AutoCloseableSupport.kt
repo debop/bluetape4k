@@ -1,6 +1,6 @@
 package io.bluetape4k.support
 
-import io.bluetape4k.core.asyncWithTimeout
+import io.bluetape4k.core.asyncRunWithTimeout
 import java.time.Duration
 
 @JvmField
@@ -30,7 +30,7 @@ inline fun AutoCloseable.closeTimeout(
     crossinline errorHandler: (error: Throwable) -> Unit = {},
 ) {
     try {
-        asyncWithTimeout(timeoutMillis) { closeSafe(errorHandler) }.get()
+        asyncRunWithTimeout(timeoutMillis) { closeSafe(errorHandler) }.get()
     } catch (e: Throwable) {
         errorHandler(e.cause ?: e)
     }
