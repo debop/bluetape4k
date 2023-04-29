@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.times.period.samples
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.utils.times.isNotNegative
 import io.bluetape4k.utils.times.period.ITimeBlock
 import io.bluetape4k.utils.times.period.ITimePeriod
@@ -14,7 +15,7 @@ class TimeBlockPeriodRelationTestData(
     val duration: Duration,
 ) {
 
-    val allPeriods = mutableListOf<ITimePeriod>()
+    val allPeriods = fastListOf<ITimePeriod>()
 
     var reference: ITimeBlock
     var before: ITimeBlock
@@ -58,7 +59,7 @@ class TimeBlockPeriodRelationTestData(
         before = TimeBlock(afterStart, afterEnd, true)
 
         allPeriods.addAll(
-            listOf(
+            fastListOf(
                 reference,
                 after,
                 startTouching,

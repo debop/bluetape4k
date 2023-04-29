@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.times.period
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.utils.times.MaxDuration
 import io.bluetape4k.utils.times.MaxPeriodTime
@@ -12,7 +13,7 @@ import java.time.ZonedDateTime
  * [ITimePeriodContainer]의 기본 구현체
  */
 open class TimePeriodContainer @JvmOverloads constructor(
-    override val periods: MutableList<ITimePeriod> = mutableListOf(),
+    override val periods: MutableList<ITimePeriod> = fastListOf(),
 ): TimePeriod(), ITimePeriodContainer, MutableList<ITimePeriod> by periods {
 
     companion object: KLogging() {
@@ -70,7 +71,7 @@ open class TimePeriodContainer @JvmOverloads constructor(
 
     override fun addAll(elements: Collection<ITimePeriod>): Boolean {
         return if (elements.isNotEmpty()) {
-            elements.map { add(it) }.toList().any()
+            elements.map { add(it) }.any()
         } else false
     }
 

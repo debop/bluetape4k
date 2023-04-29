@@ -23,9 +23,7 @@ class TimeLine<T: ITimePeriod> private constructor(
 ): ITimeLine {
 
     companion object: KLogging() {
-
         @JvmStatic
-        @JvmOverloads
         operator fun <T: ITimePeriod> invoke(
             periods: ITimePeriodContainer,
             limits: ITimePeriod? = null,

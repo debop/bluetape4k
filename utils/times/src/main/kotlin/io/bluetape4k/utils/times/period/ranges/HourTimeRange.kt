@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.times.period.ranges
 
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.utils.times.MinutesPerHour
 import io.bluetape4k.utils.times.period.ITimeCalendar
 import io.bluetape4k.utils.times.period.TimeCalendar
@@ -17,5 +18,5 @@ open class HourTimeRange(
     fun minuteSequence(): Sequence<MinuteRange> =
         minuteRanges(startMinuteOfStart, hourCount * MinutesPerHour, calendar)
 
-    fun minutes(): List<MinuteRange> = minuteSequence().toList()
+    fun minutes(): List<MinuteRange> = minuteSequence().toFastList()
 }

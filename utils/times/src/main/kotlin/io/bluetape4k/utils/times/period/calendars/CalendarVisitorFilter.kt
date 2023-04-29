@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.times.period.calendars
 
+import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.utils.times.Weekdays
@@ -25,7 +26,7 @@ open class CalendarVisitorFilter: AbstractValueObject(), ICalendarVisitorFilter,
 
     override val dayOfMonths: IntArrayList = IntArrayList()
 
-    override val dayOfWeeks: MutableSet<DayOfWeek> = hashSetOf()
+    override val dayOfWeeks: MutableSet<DayOfWeek> = unifiedSetOf()
 
     override val hourOfDays: IntArrayList = IntArrayList()
 

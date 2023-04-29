@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.times.period.ranges
 
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.utils.times.MonthsPerYear
 import io.bluetape4k.utils.times.QuartersPerYear
 import io.bluetape4k.utils.times.period.ITimeCalendar
@@ -32,5 +33,5 @@ open class YearTimeRange(
 
     fun minuteSequence(): Sequence<MinuteRange> = hourSequence().flatMap { it.minuteSequence() }
 
-    fun minutes(): List<MinuteRange> = minuteSequence().toList()
+    fun minutes(): List<MinuteRange> = minuteSequence().toFastList()
 }

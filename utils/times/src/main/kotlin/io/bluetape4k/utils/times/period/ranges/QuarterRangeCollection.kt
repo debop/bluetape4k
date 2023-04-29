@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.times.period.ranges
 
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.utils.times.Quarter
 import io.bluetape4k.utils.times.period.ITimeCalendar
 import io.bluetape4k.utils.times.period.TimeCalendar
@@ -18,5 +19,5 @@ open class QuarterRangeCollection(
 
     fun quarterSequence(): Sequence<QuarterRange> = quarterRanges(start, quarterCount, calendar)
 
-    fun quarters(): List<QuarterRange> = quarterSequence().toList()
+    fun quarters(): List<QuarterRange> = quarterSequence().toFastList()
 }

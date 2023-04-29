@@ -20,11 +20,11 @@ import java.time.ZonedDateTime
 /**
  * DateAdd
  */
-open class DateAdd {
+open class DateAdd protected constructor() {
 
     companion object: KLogging() {
         @JvmStatic
-        fun of(): DateAdd = DateAdd()
+        operator fun invoke(): DateAdd = DateAdd()
     }
 
     protected val _includePeriods = TimePeriodCollection()
@@ -101,7 +101,6 @@ open class DateAdd {
         seekBoundary: SeekBoundaryMode = SeekBoundaryMode.NEXT,
     ): Pair<ZonedDateTime?, Duration?> {
         check(offset?.isNotNegative ?: false) { "offset 값은 0 이상이어야 합니다." }
-
         log.trace { "calculateEnd start=$start, offset=$offset, seekDir=$seekDir, seekBoundary=$seekBoundary" }
 
         val searchPeriods = TimePeriodCollection.ofAll(_includePeriods.periods)

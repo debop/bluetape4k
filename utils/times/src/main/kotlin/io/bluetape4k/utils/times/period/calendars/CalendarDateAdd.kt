@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.times.period.calendars
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.times.MaxPeriodTime
@@ -22,17 +23,17 @@ import java.time.DayOfWeek
 import java.time.Duration
 import java.time.ZonedDateTime
 
-open class CalendarDateAdd: DateAdd() {
+open class CalendarDateAdd private constructor(): DateAdd() {
 
     companion object: KLogging() {
         @JvmStatic
-        fun of(): CalendarDateAdd = CalendarDateAdd()
+        operator fun invoke(): CalendarDateAdd = CalendarDateAdd()
     }
 
     val calendar: TimeCalendar = TimeCalendar.EmptyOffset
-    val weekDays: MutableList<DayOfWeek> = mutableListOf()
-    val workingHours: MutableList<HourRangeInDay> = mutableListOf()
-    val workingDayOfWeekHours: MutableList<DayOfWeekHourRange> = mutableListOf()
+    val weekDays: MutableList<DayOfWeek> = fastListOf()
+    val workingHours: MutableList<HourRangeInDay> = fastListOf()
+    val workingDayOfWeekHours: MutableList<DayOfWeekHourRange> = fastListOf()
 
     override val includePeriods: TimePeriodCollection
         get() = throw UnsupportedOperationException("Does not support IncludePeriods")

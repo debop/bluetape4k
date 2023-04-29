@@ -28,7 +28,7 @@ import java.time.ZonedDateTime
 import kotlin.math.absoluteValue
 import kotlin.math.roundToLong
 
-open class DateDiff @JvmOverloads constructor(
+open class DateDiff private constructor(
     val start: ZonedDateTime,
     val end: ZonedDateTime = ZonedDateTime.now(),
     val calendar: ITimeCalendar = TimeCalendar.Default,
@@ -36,8 +36,7 @@ open class DateDiff @JvmOverloads constructor(
 
     companion object: KLogging() {
         @JvmStatic
-        @JvmOverloads
-        fun of(
+        operator fun invoke(
             start: ZonedDateTime,
             end: ZonedDateTime = ZonedDateTime.now(),
             calendar: ITimeCalendar = TimeCalendar.Default,

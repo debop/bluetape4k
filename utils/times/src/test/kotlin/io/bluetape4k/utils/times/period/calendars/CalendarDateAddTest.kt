@@ -161,7 +161,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
 
     @Test
     fun `calendar date add 1`() {
-        val dateAdd = CalendarDateAdd.of().apply {
+        val dateAdd = CalendarDateAdd().apply {
             addWorkingWeekdays()
             excludePeriods.add(DayRange(zonedDateTimeOf(2011, 4, 4), calendar))
             workingHours.add(HourRangeInDay(8, 18))
@@ -178,7 +178,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
 
     @Test
     fun `calendar date add 2`() {
-        val dateAdd = CalendarDateAdd.of().apply {
+        val dateAdd = CalendarDateAdd().apply {
             addWorkingWeekdays()
             excludePeriods.add(DayRange(zonedDateTimeOf(2011, 4, 4), calendar))
             workingHours.add(HourRangeInDay(8, 12))

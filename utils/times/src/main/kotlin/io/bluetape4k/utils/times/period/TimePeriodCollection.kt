@@ -11,12 +11,15 @@ open class TimePeriodCollection: TimePeriodContainer(), ITimePeriodCollection {
     companion object: KLogging() {
         val EMPTY: TimePeriodCollection = TimePeriodCollection()
 
-        operator fun invoke(element: ITimePeriod, vararg elements: ITimePeriod): TimePeriodCollection =
-            TimePeriodCollection().apply {
+        @JvmStatic
+        operator fun invoke(element: ITimePeriod, vararg elements: ITimePeriod): TimePeriodCollection {
+            return TimePeriodCollection().apply {
                 add(element)
                 addAll(elements)
             }
+        }
 
+        @JvmStatic
         fun ofAll(elements: Collection<ITimePeriod>): TimePeriodCollection {
             return TimePeriodCollection().apply {
                 addAll(elements)
