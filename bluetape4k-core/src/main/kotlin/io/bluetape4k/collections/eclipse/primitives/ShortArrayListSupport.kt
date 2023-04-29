@@ -1,7 +1,11 @@
 package io.bluetape4k.collections.eclipse.primitives
 
+import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.collections.eclipse.toUnifiedSet
 import org.eclipse.collections.api.ShortIterable
+import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList
+import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun ShortArray.toShortArrayList(): ShortArrayList = ShortArrayList.newListWith(*this)
 
@@ -40,6 +44,9 @@ fun ShortIterable.asList(): List<Short> = asIterable().toList()
 fun ShortIterable.asMutableList(): MutableList<Short> = asIterable().toMutableList()
 fun ShortIterable.asSet(): Set<Short> = asIterable().toSet()
 fun ShortIterable.asMutableSet(): MutableSet<Short> = asIterable().toMutableSet()
+
+fun ShortIterable.asFastList(): FastList<Short> = asIterable().toFastList()
+fun ShortIterable.asUnifiedSet(): UnifiedSet<Short> = asIterable().toUnifiedSet()
 
 fun ShortIterable.maxOrNull(): Short? = if (isEmpty) null else max()
 fun ShortIterable.minOrNull(): Short? = if (isEmpty) null else min()

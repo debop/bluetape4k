@@ -33,7 +33,11 @@ fun <T> fastListOf(source: Iterable<T>): FastList<T> = FastList.newList(source)
 fun <T> fastListOf(source: Sequence<T>): FastList<T> = FastList.newList(source.asIterable())
 fun <T> fastListOf(vararg elements: T): FastList<T> = FastList.newListWith(*elements)
 
-fun <T> Iterable<T>.toFastList(): FastList<T> = FastList.newList(this)
-fun <T> Sequence<T>.toFastList(): FastList<T> = FastList.newList(asIterable())
-fun <T> Iterator<T>.toFastList(): FastList<T> = FastList.newList(asIterable())
-fun <T> Array<out T>.toFastList(): FastList<T> = FastList.newListWith(*this)
+fun <T> Iterable<T>.toFastList(): FastList<T> = when (this) {
+    is FastList<T> -> this
+    else           -> FastList.newList(this)
+}
+
+fun <T> Sequence<T>.toFastList(): FastList<T> = fastListOf(asIterable())
+fun <T> Iterator<T>.toFastList(): FastList<T> = fastListOf(asIterable())
+fun <T> Array<out T>.toFastList(): FastList<T> = fastListOf(*this)

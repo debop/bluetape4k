@@ -12,6 +12,7 @@ import org.amshove.kluent.shouldNotBeEqualTo
 import org.eclipse.collections.impl.list.mutable.FastList
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
+import kotlin.streams.toList
 import kotlin.system.measureTimeMillis
 
 class ParallelSupportTest {
@@ -52,15 +53,19 @@ class ParallelSupportTest {
 
         val fastTime = measureTimeMillis {
             xs.parCount(count / 10) {
-                Thread.sleep(1); it % 2 == 0
+                Thread.sleep(1)
+                it % 2 == 0
             } shouldBeEqualTo count / 2
         }
 
         val slowTime = measureTimeMillis {
-            xs.parCount { Thread.sleep(1); it % 2 == 0 } shouldBeEqualTo count / 2
+            xs.parCount {
+                Thread.sleep(1)
+                it % 2 == 0
+            } shouldBeEqualTo count / 2
         }
 
-        // log.trace { "fastTime=$fastTime, slowTime=$slowTime" }
+        log.trace { "fastTime=$fastTime, slowTime=$slowTime" }
         fastTime shouldBeLessThan slowTime
     }
 
@@ -170,7 +175,7 @@ class ParallelSupportTest {
     @Test
     fun `benchmark array with java parallelStream`() {
         val suffix = "value"
-        val xs = List(COUNT) { "$suffix-$it" }
+        val xs = FastList(COUNT) { "$suffix-$it" }
 
         val mapper: (String) -> Int = { it.drop(suffix.length + 1).toInt() }
 

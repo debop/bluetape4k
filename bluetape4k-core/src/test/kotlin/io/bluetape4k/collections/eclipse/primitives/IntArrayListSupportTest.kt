@@ -1,5 +1,6 @@
 package io.bluetape4k.collections.eclipse.primitives
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.intSequence
 import io.bluetape4k.collections.toList
 import java.util.stream.IntStream
@@ -8,7 +9,6 @@ import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Test
 
 class IntArrayListSupportTest {
-
 
     private val kotlinList = List(5) { it + 1 }
     private val kotlinSet = kotlinList.toSet()
@@ -64,8 +64,7 @@ class IntArrayListSupportTest {
 
     @Test
     fun `primitive array list to list`() {
-
-        val expected = listOf(1, 2, 3, 4, 4, 5)
+        val expected = fastListOf(1, 2, 3, 4, 4, 5)
         val array = intArrayListOf(1, 2, 3, 4, 4, 5)
 
         array.toArray() shouldContainSame expected.toIntArray()
@@ -77,6 +76,9 @@ class IntArrayListSupportTest {
 
         array.asList() shouldBeEqualTo expected
         array.asSet() shouldBeEqualTo expected.toSet()
+
+        array.asFastList() shouldBeEqualTo expected
+        array.asUnifiedSet() shouldBeEqualTo expected.toSet()
     }
 
     @Test

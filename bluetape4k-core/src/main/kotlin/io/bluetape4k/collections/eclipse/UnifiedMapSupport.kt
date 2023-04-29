@@ -20,18 +20,6 @@ inline fun <K, V> UnifiedMap(size: Int, initializer: (Int) -> Pair<K, V>): Unifi
     }
 }
 
-@Deprecated("use UnifiedMap", ReplaceWith("UnifiedMap(size, initializer)"))
-inline fun <K, V> unifiedMap(size: Int, initializer: (Int) -> Pair<K, V>): UnifiedMap<K, V> {
-    size.assertZeroOrPositiveNumber("size")
-
-    return UnifiedMap.newMap<K, V>(size).apply {
-        List(size) {
-            val pair = initializer(it)
-            put(pair.first, pair.second)
-        }
-    }
-}
-
 fun <K, V> unifiedMapOf(vararg pairs: Pair<K, V>): UnifiedMap<K, V> =
     UnifiedMap.newMapWith(pairs.map { Tuples.pair(it.first, it.second) })
 
@@ -44,7 +32,7 @@ fun <K, V> unifiedMapWithCapacity(capacity: Int): UnifiedMap<K, V> =
 
 fun <K, V> Map<K, V>.toUnifiedMap(): UnifiedMap<K, V> = when (this) {
     is UnifiedMap<K, V> -> this
-    else -> UnifiedMap.newMap(this)
+    else                -> UnifiedMap.newMap(this)
 }
 
 fun <K, V> Iterable<Pair<K, V>>.toUnifiedMap(): UnifiedMap<K, V> = unifiedMapOf(this)

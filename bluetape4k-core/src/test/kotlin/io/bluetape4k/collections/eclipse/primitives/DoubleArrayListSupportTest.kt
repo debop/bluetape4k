@@ -1,6 +1,7 @@
 package io.bluetape4k.collections.eclipse.primitives
 
 import io.bluetape4k.collections.doubleSequence
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.toList
 import java.util.stream.IntStream
 import org.amshove.kluent.shouldBeEqualTo
@@ -63,7 +64,7 @@ class DoubleArrayListSupportTest {
     @Test
     fun `primitive array list to list`() {
 
-        val expected = listOf(1.0, 2.0, 3.0, 4.0, 4.0, 5.0)
+        val expected = fastListOf(1.0, 2.0, 3.0, 4.0, 4.0, 5.0)
         val array = doubleArrayListOf(1.0, 2.0, 3.0, 4.0, 4.0, 5.0)
 
         array.toArray() shouldBeEqualTo expected.toDoubleArray()
@@ -75,5 +76,8 @@ class DoubleArrayListSupportTest {
 
         array.asList() shouldBeEqualTo expected
         array.asSet() shouldBeEqualTo expected.toSet()
+
+        array.asFastList() shouldBeEqualTo expected
+        array.asUnifiedSet() shouldBeEqualTo expected.toSet()
     }
 }

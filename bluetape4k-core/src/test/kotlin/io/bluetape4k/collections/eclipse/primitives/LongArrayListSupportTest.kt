@@ -1,5 +1,6 @@
 package io.bluetape4k.collections.eclipse.primitives
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.longSequence
 import io.bluetape4k.collections.toList
 import java.util.stream.LongStream
@@ -63,7 +64,7 @@ class LongArrayListSupportTest {
     @Test
     fun `primitive array list to list`() {
 
-        val expected = listOf<Long>(1, 2, 3, 4, 4, 5)
+        val expected = fastListOf<Long>(1, 2, 3, 4, 4, 5)
         val array = longArrayListOf(1, 2, 3, 4, 4, 5)
 
         array.toArray() shouldBeEqualTo expected.toLongArray()
@@ -75,6 +76,9 @@ class LongArrayListSupportTest {
 
         array.asList() shouldBeEqualTo expected
         array.asSet() shouldBeEqualTo expected.toSet()
+
+        array.asFastList() shouldBeEqualTo expected
+        array.asUnifiedSet() shouldBeEqualTo expected.toSet()
     }
 
     @Test

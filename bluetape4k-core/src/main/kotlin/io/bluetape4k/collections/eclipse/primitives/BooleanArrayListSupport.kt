@@ -1,7 +1,11 @@
 package io.bluetape4k.collections.eclipse.primitives
 
+import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.core.assertZeroOrPositiveNumber
+import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.list.mutable.primitive.BooleanArrayList
+import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun BooleanArray.toBooleanArrayList(): BooleanArrayList = BooleanArrayList.newListWith(*this)
 
@@ -39,3 +43,6 @@ fun BooleanArrayList.asList(): List<Boolean> = asIterable().toList()
 fun BooleanArrayList.asMutableList(): List<Boolean> = asIterable().toMutableList()
 fun BooleanArrayList.asSet(): Set<Boolean> = asIterable().toSet()
 fun BooleanArrayList.asMutableSet(): Set<Boolean> = asIterable().toMutableSet()
+
+fun BooleanArrayList.asFastList(): FastList<Boolean> = asIterable().toFastList()
+fun BooleanArrayList.asUnifiedSet(): UnifiedSet<Boolean> = asIterable().toUnifiedSet()

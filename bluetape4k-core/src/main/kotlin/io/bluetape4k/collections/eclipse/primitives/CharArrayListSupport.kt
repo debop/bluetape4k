@@ -1,7 +1,11 @@
 package io.bluetape4k.collections.eclipse.primitives
 
+import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.core.assertZeroOrPositiveNumber
+import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList
+import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun CharArray.toCharArrayList(): CharArrayList = CharArrayList.newListWith(*this)
 
@@ -43,6 +47,9 @@ fun CharArrayList.asList(): List<Char> = asIterable().toList()
 fun CharArrayList.asMutableList(): MutableList<Char> = asIterable().toMutableList()
 fun CharArrayList.asSet(): Set<Char> = asIterable().toSet()
 fun CharArrayList.asMutableSet(): MutableSet<Char> = asIterable().toMutableSet()
+
+fun CharArrayList.asFastList(): FastList<Char> = asIterable().toFastList()
+fun CharArrayList.asUnifiedSet(): UnifiedSet<Char> = asIterable().toUnifiedSet()
 
 fun CharArrayList.maxOrNull(): Char? = if (isEmpty) null else max()
 fun CharArrayList.minOrNull(): Char? = if (isEmpty) null else min()

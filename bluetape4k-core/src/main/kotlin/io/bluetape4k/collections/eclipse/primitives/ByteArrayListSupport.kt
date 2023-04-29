@@ -1,7 +1,11 @@
 package io.bluetape4k.collections.eclipse.primitives
 
+import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.collections.eclipse.toUnifiedSet
 import org.eclipse.collections.api.ByteIterable
+import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.list.mutable.primitive.ByteArrayList
+import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun ByteArray.toByteArrayList(): ByteArrayList = ByteArrayList.newListWith(*this)
 
@@ -54,6 +58,9 @@ fun ByteArrayList.asList(): List<Byte> = asIterable().toList()
 fun ByteArrayList.asMutableList(): MutableList<Byte> = asIterable().toMutableList()
 fun ByteArrayList.asSet(): Set<Byte> = asIterable().toSet()
 fun ByteArrayList.asMutableSet(): MutableSet<Byte> = asIterable().toMutableSet()
+
+fun ByteArrayList.asFastList(): FastList<Byte> = asIterable().toFastList()
+fun ByteArrayList.asUnifiedSet(): UnifiedSet<Byte> = asIterable().toUnifiedSet()
 
 fun ByteArrayList.maxOrNull(): Byte? = if (isEmpty) null else max()
 fun ByteArrayList.minOrNull(): Byte? = if (isEmpty) null else min()

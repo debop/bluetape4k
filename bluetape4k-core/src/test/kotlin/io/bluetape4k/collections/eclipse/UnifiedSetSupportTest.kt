@@ -28,15 +28,13 @@ class UnifiedSetSupportTest {
     fun `create unified set from collection`() {
         val list = List(3) { 'a' + it }
 
-        verifyUnifiedSet(list.asIterable().toUnifiedSet())
+        verifyUnifiedSet(list.toUnifiedSet())
         verifyUnifiedSet(list.asSequence().toUnifiedSet())
         verifyUnifiedSet(list.toTypedArray().toUnifiedSet())
     }
-
 
     private fun verifyUnifiedSet(set: UnifiedSet<Char>) {
         set.size shouldBeEqualTo 3
         set shouldBeEqualTo setOf('a', 'b', 'c')
     }
-
 }

@@ -1,7 +1,11 @@
 package io.bluetape4k.collections.eclipse.primitives
 
+import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.collections.eclipse.toUnifiedSet
 import org.eclipse.collections.api.IntIterable
+import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList
+import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun IntArray.toIntArrayList(): IntArrayList = IntArrayList.newListWith(*this)
 
@@ -40,6 +44,9 @@ fun IntIterable.asList(): List<Int> = asIterable().toList()
 fun IntIterable.asMutableList(): MutableList<Int> = asIterable().toMutableList()
 fun IntIterable.asSet(): Set<Int> = asIterable().toSet()
 fun IntIterable.asMutableSet(): MutableSet<Int> = asIterable().toMutableSet()
+
+fun IntIterable.asFastList(): FastList<Int> = asIterable().toFastList()
+fun IntIterable.asUnifiedSet(): UnifiedSet<Int> = asIterable().toUnifiedSet()
 
 fun IntIterable.maxOrNull(): Int? = if (isEmpty) null else max()
 fun IntIterable.minOrNull(): Int? = if (isEmpty) null else min()
