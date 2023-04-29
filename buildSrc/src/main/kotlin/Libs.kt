@@ -121,7 +121,7 @@ object Versions {
     const val blaze_persistence = "1.6.8"
 
     const val slf4j = "1.7.36"
-    const val logback = "1.2.12"
+    const val logback = "1.2.11"
     const val log4j = "2.17.2"
 
     const val metrics = "4.1.25"
@@ -133,10 +133,8 @@ object Versions {
 
     // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom
     const val opentelemetry = "1.25.0"
-
     // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom-alpha
     const val opentelemetryAlpha = "$opentelemetry-alpha"
-
     // https://mvnrepository.com/artifact/io.opentelemetry.instrumentation/opentelemetry-instrumentation-bom-alpha
     const val opentelemetryInstrumentationAlpha = "$opentelemetry-alpha"
 
