@@ -263,8 +263,8 @@ subprojects {
             mavenBom(Libs.spring_boot_dependencies)
             mavenBom(Libs.vertx_dependencies)
             mavenBom(Libs.log4j_bom)
-            mavenBom(Libs.junit_bom)
             mavenBom(Libs.testcontainers_bom)
+            mavenBom(Libs.junit_bom)
             mavenBom(Libs.aws_bom)
             mavenBom(Libs.aws2_bom)
             mavenBom(Libs.okhttp3_bom)
@@ -427,11 +427,20 @@ subprojects {
             dependency(Libs.bouncycastle_bcpkix)
             dependency(Libs.bouncycastle_bcprov)
 
+            // Prometheus
             dependency(Libs.prometheus_simpleclient)
             dependency(Libs.prometheus_simpleclient_common)
             dependency(Libs.prometheus_simpleclient_httpserver)
             dependency(Libs.prometheus_simpleclient_pushgateway)
             dependency(Libs.prometheus_simpleclient_spring_boot)
+            dependency(Libs.prometheus_simpleclient_tracer_common)
+            dependency(Libs.prometheus_simpleclient_tracer_otel)
+            dependency(Libs.prometheus_simpleclient_tracer_otel_agent)
+
+            // Apache HttpClient5
+            dependency(Libs.httpclient5)
+            dependency(Libs.httpcore5)
+            dependency(Libs.httpcore5_h2)
 
             // OW2 ASM
             dependency(Libs.ow2_asm)

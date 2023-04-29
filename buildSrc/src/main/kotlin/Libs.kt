@@ -125,7 +125,7 @@ object Versions {
     const val log4j = "2.17.2"
 
     const val metrics = "4.1.25"
-    const val prometheus = "0.12.0"
+    const val prometheus = "0.16.0"
 
     //NOTE: spring boot 2.7.x 를 사용할 시 micrometer는 1.9+ 를 사용해야 합니다.
     const val micrometer = "1.10.6"
@@ -158,8 +158,8 @@ object Versions {
 
     const val ow2_asm = "9.5"
 
-    const val junit_jupiter = "5.9.2"
-    const val junit_platform = "1.9.2"
+    const val junit_jupiter = "5.9.3"
+    const val junit_platform = "1.9.3"
     const val assertj_core = "3.23.1"
     const val kluent = "1.72"
     const val mockk = "1.13.5"
@@ -738,12 +738,17 @@ object Libs {
     val metrics_jmx get() = metrics("jmx")
 
     // Prometheus
+    fun prometheusSimple(module: String) = "io.prometheus:simpleclient_$module:${Versions.prometheus}"
     val prometheus_simpleclient get() = "io.prometheus:simpleclient:${Versions.prometheus}"
-    val prometheus_simpleclient_common get() = "io.prometheus:simpleclient_common:${Versions.prometheus}"
-    val prometheus_simpleclient_dropwizard get() = "io.prometheus:simpleclient_dropwizard:${Versions.prometheus}"
-    val prometheus_simpleclient_httpserver get() = "io.prometheus:simpleclient_httpserver:${Versions.prometheus}"
-    val prometheus_simpleclient_pushgateway get() = "io.prometheus:simpleclient_pushgateway:${Versions.prometheus}"
-    val prometheus_simpleclient_spring_boot get() = "io.prometheus:simpleclient_spring_boot:${Versions.prometheus}"
+    val prometheus_simpleclient_common get() = prometheusSimple("common")
+    val prometheus_simpleclient_dropwizard get() = prometheusSimple("dropwizard")
+    val prometheus_simpleclient_httpserver get() = prometheusSimple("httpserver")
+    val prometheus_simpleclient_pushgateway get() = prometheusSimple("pushgateway")
+    val prometheus_simpleclient_spring_boot get() = prometheusSimple("spring_boot")
+
+    val prometheus_simpleclient_tracer_common get() = prometheusSimple("tracer_common")
+    val prometheus_simpleclient_tracer_otel get() = prometheusSimple("tracer_otel")
+    val prometheus_simpleclient_tracer_otel_agent get() = prometheusSimple("tracer_otel_agent")
 
     // Micrometer
     fun micrometer(module: String) = "io.micrometer:micrometer-$module:${Versions.micrometer}"
