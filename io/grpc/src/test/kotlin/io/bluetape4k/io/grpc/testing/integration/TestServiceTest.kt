@@ -14,7 +14,7 @@ import io.bluetape4k.support.randomString
 import io.bluetape4k.support.toUtf8Bytes
 import io.grpc.ServerBuilder
 import io.grpc.StatusException
-import java.util.concurrent.atomic.LongAdder
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.first
@@ -98,18 +98,18 @@ class TestServiceTest {
         val requests = getStreamingOutputCallRequests(times = 1).first()
         val responses = client.streamingOutputCall(requests)
 
-        val responseCount = LongAdder()
+        val responseCount = atomic(0L)
         responses
             .buffer()
             .collect { response ->
                 log.debug { "Response. $response" }
-                responseCount.increment()
+                responseCount.incrementAndGet()
             }
 
         with(output.capture()) {
             this shouldContain "Response. payload {"
         }
-        responseCount.toLong() shouldBeEqualTo 4L
+        responseCount.value shouldBeEqualTo 4L
     }
 
     @Test

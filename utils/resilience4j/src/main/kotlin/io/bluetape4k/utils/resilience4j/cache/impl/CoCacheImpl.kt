@@ -9,7 +9,8 @@ import io.github.resilience4j.cache.event.CacheOnHitEvent
 import io.github.resilience4j.cache.event.CacheOnMissEvent
 import io.github.resilience4j.core.EventConsumer
 import io.github.resilience4j.core.EventProcessor
-import java.util.concurrent.atomic.LongAdder
+import kotlinx.atomicfu.atomic
+
 
 /**
  * [CoCache]의 기본 구현체입니다.
@@ -130,25 +131,25 @@ class CoroutinesCacheImpl<K: Any, V>(private val jcache: javax.cache.Cache<K, V>
     }
 
     private class CoCacheMetrics: CoCache.Metrics {
-        private val cacheMisses = LongAdder()
-        private val cacheHits = LongAdder()
+        private val cacheMisses = atomic(0L)
+        private val cacheHits = atomic(0L)
 
         fun onCacheMiss() {
-            cacheMisses.increment()
+            cacheMisses.incrementAndGet()
         }
 
         fun onCacheHit() {
-            cacheHits.increment()
+            cacheHits.incrementAndGet()
         }
 
         /**
          * Returns the current number of cache hits
          */
-        override fun getNumberOfCacheHits(): Long = cacheHits.toLong()
+        override fun getNumberOfCacheHits(): Long = cacheHits.value
 
         /**
          * Retruns the current number of cache misses
          */
-        override fun getNumberOfCacheMisses(): Long = cacheMisses.toLong()
+        override fun getNumberOfCacheMisses(): Long = cacheMisses.value
     }
 }

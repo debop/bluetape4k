@@ -42,7 +42,7 @@ class LongArrayListSupportTest {
 
     @Test
     fun `convert primitive array list`() {
-        val array = longArrayList(5) { it + 1L }
+        val array = LongArrayList(5) { it + 1L }
         array.size() shouldBeEqualTo 5
         array shouldBeEqualTo expectedArrayList
     }

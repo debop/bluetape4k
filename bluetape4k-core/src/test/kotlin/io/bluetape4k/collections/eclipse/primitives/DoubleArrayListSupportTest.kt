@@ -42,7 +42,7 @@ class DoubleArrayListSupportTest {
 
     @Test
     fun `convert primitive array list`() {
-        val array = doubleArrayList(5) { it + 1.0 }
+        val array = DoubleArrayList(5) { it + 1.0 }
         array.size() shouldBeEqualTo 5
         array shouldBeEqualTo expectedArrayList
     }

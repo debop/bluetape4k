@@ -1,20 +1,21 @@
 package io.bluetape4k.utils.idgenerators.hashids
 
+import io.bluetape4k.collections.eclipse.FastList
 import io.bluetape4k.collections.stream.asParallelStream
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.idgenerators.snowflake.DefaultSnowflake
 import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuidGenerator
+import java.util.UUID
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.util.*
 
 class HashIdsSupportTest {
 
     companion object : KLogging() {
-        const val REPEAT_SIZE = 1000
+        const val ITEM_SIZE = 1000
     }
 
     private val hashids = Hashids()
@@ -26,21 +27,21 @@ class HashIdsSupportTest {
 
         @Test
         fun `encode random UUID`() {
-            repeat(REPEAT_SIZE) {
+            repeat(ITEM_SIZE) {
                 verifyUuidEncode(UUID.randomUUID())
             }
         }
 
         @Test
         fun `encode time based uuid`() {
-            repeat(REPEAT_SIZE) {
+            repeat(ITEM_SIZE) {
                 verifyUuidEncode(uuidGenerator.nextUUID())
             }
         }
 
         @Test
         fun `encode time based uuid as parallel`() {
-            val uuids = List(REPEAT_SIZE) { uuidGenerator.nextUUID() }
+            val uuids = FastList(ITEM_SIZE) { uuidGenerator.nextUUID() }
             uuids.parallelStream()
                 .forEach {
                     verifyUuidEncode(it)
@@ -55,7 +56,7 @@ class HashIdsSupportTest {
 
         @Test
         fun `정렬된 UUID에 대한 hashid는 정렬되지 않습니다`() {
-            val uuids = List(100) { uuidGenerator.nextUUID() }
+            val uuids = FastList(100) { uuidGenerator.nextUUID() }
             val encodeds = uuids.map { hashids.encodeUUID(it) }.onEach { log.debug { it } }
             encodeds.sorted() shouldNotBeEqualTo encodeds
         }
@@ -63,11 +64,11 @@ class HashIdsSupportTest {
 
     @Nested
     inner class SnowflakeTest {
-        val snowflake = DefaultSnowflake()
+        private val snowflake = DefaultSnowflake()
 
         @Test
         fun `encode snowflake id`() {
-            repeat(REPEAT_SIZE) {
+            repeat(ITEM_SIZE) {
                 val id = snowflake.nextId()
                 verifySnowflakeId(id)
             }
@@ -76,7 +77,7 @@ class HashIdsSupportTest {
         @Test
         fun `encode snowflake id as parallel`() {
             snowflake
-                .nextIds(REPEAT_SIZE)
+                .nextIds(ITEM_SIZE)
                 .asParallelStream()
                 .forEach {
                     verifySnowflakeId(it)

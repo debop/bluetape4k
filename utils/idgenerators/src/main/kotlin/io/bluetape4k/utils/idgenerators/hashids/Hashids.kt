@@ -1,6 +1,8 @@
 package io.bluetape4k.utils.idgenerators.hashids
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
+import java.io.Serializable
 import kotlin.math.ceil
 import kotlin.math.pow
 import kotlin.math.sign
@@ -19,19 +21,19 @@ import kotlin.math.sign
  */
 class Hashids(
     salt: String = DEFAULT_SALT,
-    minHashLength: Int = DEFAULT_MIN_HASH_LENGTH,
+    minHashLength: Int = DEFAULT_MIN_HASH_LEN,
     customAlphabet: String = DEFAULT_ALPHABET,
 ) {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         /** 기본 알고리즘에서 변환을 지원하는 최대 값 */
         const val MAX_NUMBER = 9007199254740992L
 
         private const val DEFAULT_SALT = ""
-        private const val DEFAULT_MIN_HASH_LENGTH = 0
+        private const val DEFAULT_MIN_HASH_LEN = 0
         private const val DEFAULT_ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
         private const val DEFAULT_SEPARATORS = "cfhistuCFHISTU"
-        private const val MINIMAL_ALPHABET_LENGTH = 16
+        private const val MIN_ALPHABET_LEN = 16
         private const val SEPARATOR_DIV = 3.5
         private const val GUARD_DIV = 12
 
@@ -44,7 +46,7 @@ class Hashids(
         private val numRegex: Regex = "[\\w\\W]{1,12}".toRegex()
 
 
-        private fun String.calculateSeparatorsLength(): Int {
+        private fun String.calcSeparatorsLength(): Int {
             val separatorCount = ceil(this.length / SEPARATOR_DIV).toInt()
             return if (separatorCount == 1) 2 else separatorCount
         }
@@ -57,7 +59,7 @@ class Hashids(
     }
 
     private val salt: String = if (salt.isEmpty()) DEFAULT_SALT else salt
-    private val hashLength: Int = if (minHashLength > 0) minHashLength else DEFAULT_MIN_HASH_LENGTH
+    private val hashLength: Int = if (minHashLength > 0) minHashLength else DEFAULT_MIN_HASH_LEN
 
     private val alphabetAndSeparators: AlphabetAndSeparators by lazy { calculateAlphabetAndSeparators(customAlphabet) }
     private val alphabet: String = alphabetAndSeparators.alphabet
@@ -101,7 +103,7 @@ class Hashids(
     }
 
     private fun numbersToArrayList(numbers: LongArray): List<Pair<Boolean, LongArray>> {
-        val result = mutableListOf<Pair<Boolean, LongArray>>()
+        val result = fastListOf<Pair<Boolean, LongArray>>()
         val current = mutableListOf<Long>()
 
         numbers.forEach {
@@ -134,12 +136,12 @@ class Hashids(
     }
 
     private fun encodeArray(vararg numbers: Long): String {
-        val numbersHash = numbers.indices.map { (numbers[it] % (it + 100)).toInt() }.sum()
+        val numbersHash = numbers.indices.sumOf { (numbers[it] % (it + 100)).toInt() }
         val initialChar = alphabet[numbersHash % alphabet.length].toString()
         // log.trace { "numbersHash=$numbersHash, initialChar=$initialChar" }
 
         val (encodedString, encodingAlphabet) =
-            initialEncode(
+            initEncode(
                 numbers.asList(),
                 separators,
                 initialChar,
@@ -150,7 +152,7 @@ class Hashids(
         val tempReturnString = addGuardsIfNecessary(encodedString, numbersHash)
 
         val halfLength = alphabet.length / 2
-        return ensureMinimalLength(halfLength, encodingAlphabet, tempReturnString)
+        return ensureMinLength(halfLength, encodingAlphabet, tempReturnString)
     }
 
     /**
@@ -198,7 +200,7 @@ class Hashids(
         val (lottery, hashBreakdown) = extractLotteryCharAndHashArray(initialSplit)
 
         // log.trace { "lottery=$lottery, hashBreakdown=${hashBreakdown.joinToString()}" }
-        val returnValue = unhashSubHashes(hashBreakdown.iterator(), lottery, mutableListOf(), alphabet)
+        val returnValue = unhashSubHashes(hashBreakdown.iterator(), lottery, fastListOf(), alphabet)
         // log.trace { "returnValue=${returnValue.joinToString()}" }
 
         val decodedValue = when {
@@ -247,8 +249,8 @@ class Hashids(
 
     private fun calculateAlphabetAndSeparators(userAlphabet: String): AlphabetAndSeparators {
         val uniqueAlphabet = userAlphabet.unique()
-        assert(uniqueAlphabet.length >= MINIMAL_ALPHABET_LENGTH) {
-            "alphabet must contain at least $MINIMAL_ALPHABET_LENGTH unique characters"
+        assert(uniqueAlphabet.length >= MIN_ALPHABET_LEN) {
+            "alphabet must contain at least $MIN_ALPHABET_LEN unique characters"
         }
         require(!uniqueAlphabet.contains(SPACE)) { "alphabet cannot contains spaces" }
 
@@ -282,7 +284,7 @@ class Hashids(
         val moreSeparators = (alphabetWithoutSeparators.length / shuffledSeparators.length).toFloat() > SEPARATOR_DIV
 
         return if (shuffledSeparators.isEmpty() || moreSeparators) {
-            val sepsLength = alphabetWithoutSeparators.calculateSeparatorsLength()
+            val sepsLength = alphabetWithoutSeparators.calcSeparatorsLength()
 
             when {
                 sepsLength > shuffledSeparators.length -> {
@@ -316,8 +318,7 @@ class Hashids(
                 retStr + guard2
             }
 
-            else ->
-                retStr
+            else -> retStr
         }
     }
 
@@ -348,6 +349,7 @@ class Hashids(
         val buffer = "$lottery$salt$alphabet"
         val newAlphabet = consistentShuffle(alphabet, buffer.substring(0, alphabet.length))
         currentReturn.add(unhash(subHash, newAlphabet))
+
         return unhashSubHashes(hashes, lottery, currentReturn, newAlphabet)
     }
 
@@ -355,14 +357,13 @@ class Hashids(
         return doHash(input, alphabet, HashData(EMPTY_STRING, input)).hash
     }
 
-    private tailrec fun doHash(number: Long, alphabet: String, data: HashData): HashData {
-        return if (data.current > 0) {
+    private tailrec fun doHash(number: Long, alphabet: String, data: HashData): HashData = when {
+        data.current > 0 -> {
             val newHashChar = alphabet[(data.current % alphabet.length).toInt()]
             val newCurrent = data.current / alphabet.length
             doHash(number, alphabet, HashData("$newHashChar${data.hash}", newCurrent))
-        } else {
-            data
         }
+        else -> data
     }
 
     private fun unhash(input: String, alphabet: String): Long {
@@ -415,7 +416,7 @@ class Hashids(
         )
     }
 
-    private tailrec fun initialEncode(
+    private tailrec fun initEncode(
         numbers: List<Long>,
         separators: String,
         bufferSeed: String,
@@ -445,10 +446,10 @@ class Hashids(
             }
         }
 
-        return initialEncode(numbers, separators, bufferSeed, currentIndex + 1, nextAlphabet, newReturnStr)
+        return initEncode(numbers, separators, bufferSeed, currentIndex + 1, nextAlphabet, newReturnStr)
     }
 
-    private tailrec fun ensureMinimalLength(
+    private tailrec fun ensureMinLength(
         halfLength: Int,
         alphabet: String,
         returnStr: String,
@@ -465,27 +466,27 @@ class Hashids(
                 val pos = excess / 2
                 tempReturnStr.substring(pos, pos + hashLength)
             }
-
-            else ->
-                tempReturnStr
+            else -> tempReturnStr
         }
 
-        return ensureMinimalLength(halfLength, newAlphabet, newReturnStr)
+        return ensureMinLength(halfLength, newAlphabet, newReturnStr)
     }
 
-
-    internal data class HashData(val hash: String, val current: Long)
+    internal data class HashData(
+        val hash: String,
+        val current: Long,
+    ): Serializable
 
     internal data class ShuffleData(
         val alphabet: String,
         val salt: String,
         val cumulative: Int,
         val saltReminder: Int,
-    )
+    ): Serializable
 
     internal data class AlphabetAndSeparators(
         val alphabet: String,
         val separators: String,
         val guards: String = "",
-    )
+    ): Serializable
 }

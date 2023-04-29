@@ -8,9 +8,9 @@ import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.time.Clock
 import java.util.UUID
-import java.util.concurrent.atomic.LongAdder
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
+import kotlinx.atomicfu.atomic
 import kotlin.concurrent.withLock
 
 typealias NodeIdentifier = () -> Long
@@ -87,7 +87,7 @@ class Flake private constructor(
     @Volatile
     private var lastTime: Long = clock.millis()
 
-    private val sequence = LongAdder()
+    private val sequence = atomic(0)
 
     /**
      * Generate a 128-bit Flake ID
@@ -101,7 +101,7 @@ class Flake private constructor(
             return idBuffer
                 .putLong(currentTime)
                 .put(nodeId)
-                .putShort(sequence.toShort())
+                .putShort(sequence.value.toShort())
                 .array()
         }
     }
@@ -114,16 +114,16 @@ class Flake private constructor(
         currentTime = clock.millis()
 
         if (currentTime != lastTime) {
-            sequence.reset()
+            sequence.value = 0
             lastTime = currentTime
-        } else if (sequence.toInt() == MAX_SEQ) {
+        } else if (sequence.value == MAX_SEQ) {
             while (currentTime <= lastTime) {
                 currentTime = clock.millis()
             }
-            sequence.reset()
+            sequence.value = 0
             lastTime = currentTime
         } else {
-            sequence.increment()
+            sequence.incrementAndGet()
         }
     }
 }

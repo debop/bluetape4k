@@ -2,6 +2,7 @@ package io.bluetape4k.collections.eclipse.primitives
 
 import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet
+import io.bluetape4k.core.assertZeroOrPositiveNumber
 import org.eclipse.collections.api.DoubleIterable
 import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList
@@ -19,7 +20,9 @@ fun Iterable<Double>.toDoubleArrayList(): DoubleArrayList =
         forEach { array.add(it) }
     }
 
-inline fun doubleArrayList(size: Int, initializer: (Int) -> Double): DoubleArrayList {
+inline fun DoubleArrayList(size: Int, initializer: (Int) -> Double): DoubleArrayList {
+    size.assertZeroOrPositiveNumber("size")
+
     val array = DoubleArrayList(size)
     repeat(size) {
         array.add(initializer(it))

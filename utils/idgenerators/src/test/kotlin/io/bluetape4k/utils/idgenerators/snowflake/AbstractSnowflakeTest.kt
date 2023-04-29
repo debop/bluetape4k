@@ -1,23 +1,26 @@
 package io.bluetape4k.utils.idgenerators.snowflake
 
+import io.bluetape4k.collections.eclipse.FastList
+import io.bluetape4k.collections.eclipse.primitives.LongArrayList
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.stream.asParallelStream
+import io.bluetape4k.collections.stream.toFastList
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.idgenerators.getMachineId
 import io.bluetape4k.utils.idgenerators.parseAsLong
+import java.util.concurrent.ConcurrentHashMap
 import org.amshove.kluent.*
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
-import java.util.concurrent.ConcurrentHashMap
-import kotlin.streams.toList
 
 abstract class AbstractSnowflakeTest {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 10
         private const val TEST_COUNT = MAX_SEQUENCE * 4
-        private val TEST_LIST = List(TEST_COUNT) { it }
+        private val TEST_LIST = FastList(TEST_COUNT) { it }
     }
 
     abstract val snowflake: Snowflake
@@ -32,7 +35,7 @@ abstract class AbstractSnowflakeTest {
     fun `generate snowflake id`() {
         snowflake.nextId()
 
-        val ids = List(3) { snowflake.nextId() }
+        val ids = LongArrayList(3) { snowflake.nextId() }
 
         ids[1] shouldBeGreaterThan ids[0]
         ids[2] shouldBeGreaterThan ids[1]
@@ -44,14 +47,14 @@ abstract class AbstractSnowflakeTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `generate snowflake ids`() {
-        val ids = snowflake.nextIds(TEST_COUNT).toList()
-        verifyIds(ids)
+        val ids = snowflake.nextIds(TEST_COUNT).toFastList()
+        ids.distinct() shouldBeEqualTo ids
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `generate snowflake as parallel`() {
-        val ids = TEST_LIST.parallelStream().map { snowflake.nextId() }.sorted().toList()
-        verifyIds(ids)
+        val ids = TEST_LIST.parallelStream().map { snowflake.nextId() }.sorted().toFastList()
+        ids.distinct() shouldBeEqualTo ids
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -75,19 +78,21 @@ abstract class AbstractSnowflakeTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `generate snowflake ids as string`() {
-        val ids = snowflake.nextIdsAsString(TEST_COUNT).toList()
-        verifyIdsAsString(ids)
+        val ids = snowflake.nextIdsAsString(TEST_COUNT).toFastList()
+        ids.distinct() shouldBeEqualTo ids
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `generate snowflake id as String as parallel`() {
-        val ids = TEST_LIST.parallelStream().map { snowflake.nextIdAsString() }.sorted().toList()
-        verifyIdsAsString(ids)
+        val ids = TEST_LIST.parallelStream().map { snowflake.nextIdAsString() }.sorted().toFastList()
+
+        ids.distinct() shouldBeEqualTo ids
     }
 
     @Test
     fun `generate snowflake id in multithread`() {
         val idMap = ConcurrentHashMap<Long, Int>()
+
         MultithreadingTester().numThreads(100).roundsPerThread(TEST_COUNT)
             .add {
                 val id = snowflake.nextId()
@@ -140,19 +145,17 @@ abstract class AbstractSnowflakeTest {
     @RepeatedTest(REPEAT_SIZE)
     fun `parse snowflake ids as sequence`() {
         val ids = snowflake.nextIds(TEST_COUNT).toList()
-        val snowflakeIds = ids.map { snowflake.parse(it) }.toList()
+        val snowflakeIds = ids.map { snowflake.parse(it) }.toFastList()
 
-        snowflakeIds.size shouldBeEqualTo ids.size
-        snowflakeIds.all { ids.contains(it.value) }.shouldBeTrue()
+        snowflakeIds.map { it.value } shouldBeEqualTo ids
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `parse snowflake ids as parallel`() {
         val ids = snowflake.nextIds(TEST_COUNT).toList()
-        val snowflakeIds = ids.asParallelStream().map { snowflake.parse(it) }.toList()
+        val snowflakeIds = ids.asParallelStream().map { snowflake.parse(it) }.toFastList()
 
-        snowflakeIds.size shouldBeEqualTo ids.size
-        snowflakeIds.all { ids.contains(it.value) }.shouldBeTrue()
+        snowflakeIds.map { it.value } shouldBeEqualTo ids
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -192,38 +195,14 @@ abstract class AbstractSnowflakeTest {
         val ids = snowflake.nextIdsAsString(TEST_COUNT)
         val snowflakeIds = ids.map { snowflake.parse(it).value }
 
-        snowflakeIds.forEachIndexed { index, snowflakeId ->
-            snowflakeId shouldBeEqualTo ids[index].parseAsLong()
-        }
-        snowflakeIds.toSet().size shouldBeEqualTo ids.size
+        snowflakeIds.distinct() shouldBeEqualTo ids.map { it.parseAsLong() }
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `parse snowflake id as String as parallel`() {
         val ids = snowflake.nextIdsAsString(TEST_COUNT)
-        val snowflakeIds = ids.asParallelStream().map { snowflake.parse(it).value }.sorted().toList()
+        val snowflakeIds = ids.asParallelStream().map { snowflake.parse(it).value }.sorted().toFastList()
 
-        snowflakeIds.forEachIndexed { index, snowflakeId ->
-            snowflakeId shouldBeEqualTo ids[index].parseAsLong()
-        }
-        snowflakeIds.toSet().size shouldBeEqualTo ids.size
-    }
-
-    private fun verifyIds(ids: List<Long>) {
-        val sorted = ids.sorted()
-        sorted.forEachIndexed { index, id ->
-            id shouldBeEqualTo ids[index]
-            // log.trace { "id[$index]=$id" }
-        }
-        ids.toSet().size shouldBeEqualTo ids.size
-    }
-
-    private fun verifyIdsAsString(ids: List<String>) {
-        val sorted = ids.sorted()
-        sorted.forEachIndexed { index, id ->
-            id shouldBeEqualTo ids[index]
-            // log.trace { "id[$index]=$id" }
-        }
-        ids.toSet().size shouldBeEqualTo ids.size
+        snowflakeIds.distinct() shouldBeEqualTo ids.map { it.parseAsLong() }
     }
 }

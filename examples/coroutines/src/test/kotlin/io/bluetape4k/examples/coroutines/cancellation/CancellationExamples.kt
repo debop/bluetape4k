@@ -5,7 +5,6 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.info
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.LongAdder
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
@@ -28,21 +27,21 @@ class CancellationExamples {
 
     @Test
     fun `Basic cancellation`() = runTest {
-        val counter = LongAdder()
+        val counter = atomic(0L)
 
         log.debug { "Start Job." }
 
         val job = launch {
             repeat(1000) { i ->
                 delay(200)
-                counter.increment()
+                counter.incrementAndGet()
                 log.debug { "Printing $i" }
             }
         }
         delay(1100)
         job.cancel()
         job.join()
-        counter.toLong() shouldBeEqualTo 5L
+        counter.value shouldBeEqualTo 5L
         log.debug { "Cancelled successfully." }
     }
 

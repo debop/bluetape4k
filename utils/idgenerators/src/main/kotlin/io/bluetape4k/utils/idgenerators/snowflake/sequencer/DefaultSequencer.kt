@@ -1,12 +1,13 @@
 package io.bluetape4k.utils.idgenerators.snowflake.sequencer
 
+import io.bluetape4k.collections.eclipse.FastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.utils.idgenerators.getMachineId
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_MACHINE_ID
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_SEQUENCE
 import io.bluetape4k.utils.idgenerators.snowflake.SnowflakeId
-import java.util.concurrent.atomic.LongAdder
 import java.util.concurrent.locks.ReentrantLock
+import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.locks.withLock
 import kotlin.math.absoluteValue
 
@@ -21,7 +22,7 @@ internal class DefaultSequencer(machineId: Int = getMachineId(MAX_MACHINE_ID)): 
 
     @Volatile
     private var lastTimestamp: Long = -1L
-    private val sequencer = LongAdder()
+    private val sequencer = atomic(0)
     private val lock = ReentrantLock()
 
     /**
@@ -34,15 +35,15 @@ internal class DefaultSequencer(machineId: Int = getMachineId(MAX_MACHINE_ID)): 
     override fun nextSequence(): SnowflakeId {
         lock.withLock {
             updateState()
-            return SnowflakeId(lastTimestamp, machineId, sequencer.toInt())
+            return SnowflakeId(lastTimestamp, machineId, sequencer.value)
         }
     }
 
     override fun nextSequences(size: Int): List<SnowflakeId> {
         lock.withLock {
-            return List(size) {
+            return FastList(size) {
                 updateState()
-                SnowflakeId(lastTimestamp, machineId, sequencer.toInt())
+                SnowflakeId(lastTimestamp, machineId, sequencer.value)
             }
         }
     }
@@ -51,17 +52,17 @@ internal class DefaultSequencer(machineId: Int = getMachineId(MAX_MACHINE_ID)): 
         currentTimestamp = System.currentTimeMillis()
 
         if (currentTimestamp == lastTimestamp) {
-            sequencer.increment()
+            sequencer.incrementAndGet()
             // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
-            if (sequencer.toLong() >= MAX_SEQUENCE) {
+            if (sequencer.value >= MAX_SEQUENCE) {
                 while (currentTimestamp == lastTimestamp) {
                     currentTimestamp = System.currentTimeMillis()
                 }
-                sequencer.reset()
+                sequencer.value = 0
                 lastTimestamp = currentTimestamp
             }
         } else {
-            sequencer.reset()
+            sequencer.value = 0
             lastTimestamp = currentTimestamp
         }
     }

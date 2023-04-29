@@ -1,10 +1,11 @@
 package io.bluetape4k.utils.idgenerators.snowflake.sequencer
 
+import io.bluetape4k.collections.eclipse.FastList
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_MACHINE_ID
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_SEQUENCE
 import io.bluetape4k.utils.idgenerators.snowflake.SnowflakeId
-import java.util.concurrent.atomic.LongAdder
 import java.util.concurrent.locks.ReentrantLock
+import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.locks.withLock
 
 /**
@@ -24,18 +25,12 @@ class GlobalSequencer: Sequencer {
     @Volatile
     private var lastTimestamp: Long = -1L
 
-    private val machineIdSequencer = LongAdder()
-    private val sequencer = LongAdder()
+    private val machineIdSequencer = atomic(0)
+    private val sequencer = atomic(0)
 
     private val lock = ReentrantLock()
 
-    override var machineId: Int
-        get() = machineIdSequencer.toInt()
-        private set(value) {
-            machineIdSequencer.reset()
-            machineIdSequencer.add(value.toLong())
-        }
-
+    override var machineId: Int by machineIdSequencer
 
     /**
      * 현재의 Timestamp와 순 증가되는 sequence 값을 제공합니다.
@@ -49,15 +44,15 @@ class GlobalSequencer: Sequencer {
     override fun nextSequence(): SnowflakeId {
         lock.withLock {
             updateState()
-            return SnowflakeId(lastTimestamp, machineId, sequencer.toInt())
+            return SnowflakeId(lastTimestamp, machineId, sequencer.value)
         }
     }
 
     override fun nextSequences(size: Int): List<SnowflakeId> {
         lock.withLock {
-            return List(size) {
+            return FastList(size) {
                 updateState()
-                SnowflakeId(lastTimestamp, machineId, sequencer.toInt())
+                SnowflakeId(lastTimestamp, machineId, sequencer.value)
             }
         }
     }
@@ -66,23 +61,23 @@ class GlobalSequencer: Sequencer {
         currentTimestamp = System.currentTimeMillis()
 
         if (currentTimestamp == lastTimestamp) {
-            sequencer.increment()
-            if (sequencer.toLong() >= MAX_SEQUENCE) {
-                machineIdSequencer.increment()
+            sequencer.incrementAndGet()
+            if (sequencer.value >= MAX_SEQUENCE) {
+                machineIdSequencer.incrementAndGet()
 
                 // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
                 if (machineId >= MAX_MACHINE_ID) {
                     while (currentTimestamp == lastTimestamp) {
                         currentTimestamp = System.currentTimeMillis()
                     }
-                    machineIdSequencer.reset()
+                    machineIdSequencer.value = 0
                     lastTimestamp = currentTimestamp
                 }
-                sequencer.reset()
+                sequencer.value = 0
             }
         } else {
             // Reset sequence and machine id
-            sequencer.reset()
+            sequencer.value = 0
             machineId = 0
             lastTimestamp = currentTimestamp
         }

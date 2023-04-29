@@ -6,7 +6,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.github.resilience4j.cache.Cache
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.atomic.LongAdder
+import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
@@ -49,12 +49,12 @@ class CacheExtensionsTest {
         val jcache = CaffeineJCacheProvider.getJCache<String, String>("future")
         val cache = Cache.of(jcache)
 
-        val callCount = LongAdder()
+        val callCount = atomic(0L)
         val function: (String) -> CompletableFuture<String> = { name ->
             futureOf {
-                log.trace { "Run function ... call count=${callCount.toLong() + 1}" }
+                log.trace { "Run function ... call count=${callCount.value + 1}" }
                 Thread.sleep(100L)
-                callCount.increment()
+                callCount.incrementAndGet()
                 "Hi $name!"
             }
         }
@@ -63,22 +63,22 @@ class CacheExtensionsTest {
 
 
         cachedFunc("debop").onSuccess {
-            callCount.toLong() shouldBeEqualTo 1L
+            callCount.value shouldBeEqualTo 1L
             it shouldBeEqualTo "Hi debop!"
         }.join()
 
         cachedFunc("debop").onSuccess {
-            callCount.toLong() shouldBeEqualTo 1L
+            callCount.value shouldBeEqualTo 1L
             it shouldBeEqualTo "Hi debop!"
         }.join()
 
         cachedFunc("Sunghyouk").onSuccess {
-            callCount.toLong() shouldBeEqualTo 2L
+            callCount.value shouldBeEqualTo 2L
             it shouldBeEqualTo "Hi Sunghyouk!"
         }.join()
 
         cachedFunc("Sunghyouk").onSuccess {
-            callCount.toLong() shouldBeEqualTo 2L
+            callCount.value shouldBeEqualTo 2L
             it shouldBeEqualTo "Hi Sunghyouk!"
         }.join()
     }

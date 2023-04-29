@@ -12,7 +12,7 @@ plugins {
     kotlin("plugin.noarg") version Versions.kotlin apply false
     kotlin("plugin.jpa") version Versions.kotlin apply false
     kotlin("plugin.serialization") version Versions.kotlin apply false
-    // kotlin("plugin.atomicfu") version Versions.kotlin apply false
+    kotlin("plugin.atomicfu") version Versions.kotlin apply false
     kotlin("kapt") version Versions.kotlin apply false
 
     id(Plugins.dependency_management) version Plugins.Versions.dependency_management
@@ -36,12 +36,6 @@ allprojects {
         mavenLocal()
         mavenCentral()
         google()
-
-//        // for Kotlinx Benchmark
-//        maven {
-//            name = "Kotlinx"
-//            url = uri("https://dl.bintray.com/kotlin/kotlinx/")
-//        }
     }
 }
 
@@ -463,7 +457,8 @@ subprojects {
 
         api(Libs.kotlin_stdlib)
         api(Libs.kotlin_stdlib_jdk8)
-        implementation(Libs.kotlin_reflect)
+        api(Libs.kotlin_reflect)
+        api(Libs.kotlinx_atomicfu)
         testImplementation(Libs.kotlin_test)
         testImplementation(Libs.kotlin_test_junit5)
 

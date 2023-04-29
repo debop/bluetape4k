@@ -2,6 +2,7 @@ package io.bluetape4k.collections.eclipse.primitives
 
 import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet
+import io.bluetape4k.core.assertZeroOrPositiveNumber
 import org.eclipse.collections.api.ShortIterable
 import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.list.mutable.primitive.ShortArrayList
@@ -19,7 +20,8 @@ fun Iterable<Short>.toShortArrayList(): ShortArrayList =
         forEach { array.add(it) }
     }
 
-inline fun shortArrayList(size: Int, initializer: (Int) -> Short): ShortArrayList {
+inline fun ShortArrayList(size: Int, initializer: (Int) -> Short): ShortArrayList {
+    size.assertZeroOrPositiveNumber("size")
     val array = ShortArrayList(size)
     repeat(size) {
         array.add(initializer(it))

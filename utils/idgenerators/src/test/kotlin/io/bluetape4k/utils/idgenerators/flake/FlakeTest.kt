@@ -1,6 +1,7 @@
 package io.bluetape4k.utils.idgenerators.flake
 
 import io.bluetape4k.codec.encodeHexString
+import io.bluetape4k.collections.eclipse.FastList
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
@@ -8,6 +9,7 @@ import io.bluetape4k.logging.trace
 import java.time.Clock
 import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import org.amshove.kluent.shouldBeEqualTo
@@ -30,7 +32,7 @@ class FlakeTest {
     @RepeatedTest(REPEAT_SIZE)
     fun `generate flake id`() {
 
-        val ids = List(3) { flake.nextId() }
+        val ids = FastList(3) { flake.nextId() }
 
         ids[1] shouldNotBeEqualTo ids[0]
         ids[2] shouldNotBeEqualTo ids[1]
@@ -54,7 +56,7 @@ class FlakeTest {
         val flake = Flake(nodeIdentifier, clock)
 
 
-        val ids = List(ID_SIZE) {
+        val ids = FastList(ID_SIZE) {
             Flake.asBase62String(flake.nextId())
         }
         ids.forEachIndexed { index, id ->
@@ -85,6 +87,7 @@ class FlakeTest {
     fun `generate id in multi threading`() {
         val flake = Flake()
         val idMap = ConcurrentHashMap<String, Int>()
+
         MultithreadingTester().numThreads(100).roundsPerThread(1000)
             .add {
                 val id = Flake.asBase62String(flake.nextId())
@@ -94,13 +97,13 @@ class FlakeTest {
     }
 
     @Test
-    fun `generate id in corotunes`() = runSuspendTest {
-        val deferred = List(ID_SIZE) {
+    fun `generate id in corotunes`() = runSuspendTest(Dispatchers.Default) {
+        val tasks = FastList(ID_SIZE) {
             async {
                 flake.nextId()
             }
         }
-        val ids = deferred.awaitAll()
+        val ids = tasks.awaitAll()
         ids shouldHaveSize ID_SIZE
         ids.distinct() shouldHaveSize ID_SIZE
     }
