@@ -89,7 +89,7 @@ class UniBasicExamples {
     @Test
     fun `05 deferred - Supplier와 상태를 이용하여, 구독 시마다 값을 계산해서 제공한다`() {
         // 구독 시점에 값을 계산해서 제공해준다
-        val ids = AtomicLong()
+        val ids = AtomicLong(0L)
         val deferred = Uni.createFrom().deferred { Uni.createFrom().item(ids::incrementAndGet) }
 
         val results = mutableListOf<Long>()

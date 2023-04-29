@@ -4,7 +4,6 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.info
-import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
@@ -123,7 +122,7 @@ class CancellationExamples {
 
     @Test
     fun `Job isActive 를 활용하여 suspend point 잡기`() = runTest {
-        val counter = AtomicInteger()
+        val counter = atomic(0)
         val job = Job()
         launch(job) {
             while (isActive) {
@@ -139,7 +138,7 @@ class CancellationExamples {
         delay(550)
 
         job.cancelAndJoin()
-        counter.get() shouldBeGreaterOrEqualTo 5
+        counter.value shouldBeGreaterOrEqualTo 5
         log.info { "Cancelled successfully." }
     }
 }

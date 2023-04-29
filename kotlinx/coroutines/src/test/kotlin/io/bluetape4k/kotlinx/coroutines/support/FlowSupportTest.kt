@@ -4,7 +4,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import io.bluetape4k.support.randomString
-import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -68,7 +68,7 @@ class FlowSupportTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `chunk flow`() = runTest {
-        val chunkCount = AtomicInteger(0)
+        val chunkCount = atomic(0)
         val chunkSize = 5
 
         (1..20).asFlow()
@@ -79,13 +79,13 @@ class FlowSupportTest {
                 chunkCount.incrementAndGet()
             }
 
-        chunkCount.get() shouldBeEqualTo 4
+        chunkCount.value shouldBeEqualTo 4
     }
 
 
     @RepeatedTest(REPEAT_SIZE)
     fun `chunk flow with remaining`() = runTest {
-        val chunkCount = AtomicInteger(0)
+        val chunkCount = atomic(0)
         val chunkSize = 3
 
         (1..20).asFlow()
@@ -96,12 +96,12 @@ class FlowSupportTest {
                 chunkCount.incrementAndGet()
             }
             .collect()
-        chunkCount.get() shouldBeEqualTo 7
+        chunkCount.value shouldBeEqualTo 7
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `sliding flow`() = runTest {
-        val slidingCount = AtomicInteger(0)
+        val slidingCount = atomic(0)
         val slidingSize = 5
 
         (1..20).asFlow()
@@ -112,12 +112,12 @@ class FlowSupportTest {
                 slidingCount.incrementAndGet()
             }
             .collect()
-        slidingCount.get() shouldBeEqualTo 20
+        slidingCount.value shouldBeEqualTo 20
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `sliding flow with remaining`() = runTest {
-        val slidiingCount = AtomicInteger(0)
+        val slidiingCount = atomic(0)
         val slidingSize = 3
 
         (1..20).asFlow()
@@ -128,12 +128,12 @@ class FlowSupportTest {
                 slidiingCount.incrementAndGet()
             }
             .collect()
-        slidiingCount.get() shouldBeEqualTo 20
+        slidiingCount.value shouldBeEqualTo 20
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `windowed flow`() = runTest {
-        val windowedCount = AtomicInteger(0)
+        val windowedCount = atomic(0)
         val windowedSize = 5
         val windowedStep = 1
 
@@ -145,12 +145,12 @@ class FlowSupportTest {
                 windowedCount.incrementAndGet()
             }
             .collect()
-        windowedCount.get() shouldBeEqualTo 20
+        windowedCount.value shouldBeEqualTo 20
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `windowed flow with remaining`() = runTest {
-        val windowedCount = AtomicInteger(0)
+        val windowedCount = atomic(0)
         val windowedSize = 5
         val windowedStep = 4
 
@@ -162,12 +162,12 @@ class FlowSupportTest {
                 windowedCount.incrementAndGet()
             }
             .collect()
-        windowedCount.get() shouldBeEqualTo 5
+        windowedCount.value shouldBeEqualTo 5
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `windowed flow no duplicated`() = runTest {
-        val windowedCount = AtomicInteger(0)
+        val windowedCount = atomic(0)
         val windowedSize = 5
         val windowedStep = 5
 
@@ -179,14 +179,14 @@ class FlowSupportTest {
                 windowedCount.incrementAndGet()
             }
             .collect()
-        windowedCount.get() shouldBeEqualTo 4
+        windowedCount.value shouldBeEqualTo 4
     }
 
     @Nested
     inner class Windowed2 {
         @RepeatedTest(REPEAT_SIZE)
         fun `windowed flow`() = runTest {
-            val windowedCount = AtomicInteger(0)
+            val windowedCount = atomic(0)
             val windowedSize = 5
             val windowedStep = 1
 
@@ -199,12 +199,12 @@ class FlowSupportTest {
                     windowedCount.incrementAndGet()
                 }
                 .collect()
-            windowedCount.get() shouldBeEqualTo 20
+            windowedCount.value shouldBeEqualTo 20
         }
 
         @RepeatedTest(REPEAT_SIZE)
         fun `windowed flow with remaining`() = runTest {
-            val windowedCount = AtomicInteger(0)
+            val windowedCount = atomic(0)
             val windowedSize = 5
             val windowedStep = 4
 
@@ -217,12 +217,12 @@ class FlowSupportTest {
                     windowedCount.incrementAndGet()
                 }
                 .collect()
-            windowedCount.get() shouldBeEqualTo 5
+            windowedCount.value shouldBeEqualTo 5
         }
 
         @RepeatedTest(REPEAT_SIZE)
         fun `windowed flow no duplicated`() = runTest {
-            val windowedCount = AtomicInteger(0)
+            val windowedCount = atomic(0)
             val windowedSize = 5
             val windowedStep = 5
 
@@ -235,7 +235,7 @@ class FlowSupportTest {
                     windowedCount.incrementAndGet()
                 }
                 .collect()
-            windowedCount.get() shouldBeEqualTo 4
+            windowedCount.value shouldBeEqualTo 4
         }
     }
 

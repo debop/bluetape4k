@@ -13,11 +13,11 @@ import kotlinx.coroutines.asCoroutineDispatcher
  * withSingle { dispatcher ->
  *      val subject = PublishSubject<Int>()
  *      val n = 10_000
- *      val counter = AtomicInteger()
+ *      val counter = atomic(0)
  *
  *      val job = launch(dispatcher) {
  *          subject.collect {
- *              counter.lazySet(counter.get() + 1)
+ *              counter.lazySet(counter.value + 1)
  *          }
  *      }
  *      ...
@@ -41,11 +41,11 @@ suspend fun withSingle(block: suspend (executor: CoroutineDispatcher) -> Unit) {
  * withSingleThread { dispatcher ->
  *      val subject = PublishSubject<Int>()
  *      val n = 10_000
- *      val counter = AtomicInteger()
+ *      val counter = atomic(0)
  *
  *      val job = launch(dispatcher) {
  *          subject.collect {
- *              counter.lazySet(counter.get() + 1)
+ *              counter.lazySet(counter.value + 1)
  *          }
  *      }
  *      ...

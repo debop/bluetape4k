@@ -11,11 +11,6 @@ import io.bluetape4k.data.cassandra.querybuilder.bindMarker
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.RepeatedTest
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
@@ -23,7 +18,12 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.RepeatedTest
 import kotlin.system.measureTimeMillis
 
 class LimitConcurrencyExamples: AbstractCassandraTest() {
@@ -32,19 +32,21 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
         private const val CONCURRENCY_LEVEL = 32
         private const val TOTAL_NUMBER_OF_INSERTS = 10_000
         private const val IN_FLIGHT_REQUESTS = 500
+
+        private const val REPEAT_SIZE = 3
     }
 
     private val semaphore = Semaphore(IN_FLIGHT_REQUESTS)
     private val requestLatch = CountDownLatch(TOTAL_NUMBER_OF_INSERTS)
 
-    private val insertAsyncCounter = AtomicInteger()
+    private val insertAsyncCounter = atomic(0)
 
     @BeforeAll
     fun setup() {
         createSchema(session)
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(REPEAT_SIZE)
     fun `동기 방식의 Session 작업을 Thread Pool 을 이용하여 작업`() {
         val elapsed = measureTimeMillis {
             insertConcurrent(session)
@@ -69,7 +71,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
     private fun insertConcurrent(session: CqlSession) {
         val pst = prepareStatemet(session)
 
-        val insertsCounter = AtomicInteger()
+        val insertsCounter = atomic(0)
         val executor = Executors.newFixedThreadPool(CONCURRENCY_LEVEL)
 
         repeat(TOTAL_NUMBER_OF_INSERTS) {
@@ -91,12 +93,12 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
 
         requestLatch.await(10, TimeUnit.SECONDS)
 
-        println("Finish executing ${insertsCounter.get()} queries with a concurrency level of $CONCURRENCY_LEVEL")
+        println("Finish executing ${insertsCounter.value} queries with a concurrency level of $CONCURRENCY_LEVEL")
         executor.shutdown()
         executor.awaitTermination(10, TimeUnit.SECONDS)
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(REPEAT_SIZE)
     fun `비동기 방식으로 Session 작업`() {
         val elapsed = measureTimeMillis {
             insertConcurrentAsync(session)
@@ -116,13 +118,13 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
         }
 
         CompletableFuture.allOf(*pending.map { it.toCompletableFuture() }.toTypedArray()).get()
-        println("Finish executing async ${insertAsyncCounter.get()} queries with a concurrency level of $CONCURRENCY_LEVEL")
+        println("Finish executing async ${insertAsyncCounter.value} queries with a concurrency level of $CONCURRENCY_LEVEL")
     }
 
     private fun executeOneAtATime(
         session: CqlSession,
         pst: PreparedStatement,
-        range: Range
+        range: Range,
     ): CompletionStage<AsyncResultSet> {
         var lastFeature: CompletionStage<AsyncResultSet>? = null
         for (i in range.first until range.last) {
@@ -134,7 +136,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
     private fun insertAsync(
         session: CqlSession,
         pst: PreparedStatement,
-        counter: Int
+        counter: Int,
     ): CompletionStage<AsyncResultSet> {
         val stmt = pst.bind().setUuid("id", UUID.randomUUID()).setInt("value", counter)
 
@@ -162,7 +164,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
 
     private data class Range(val first: Int, val last: Int)
 
-    @RepeatedTest(3)
+    @RepeatedTest(REPEAT_SIZE)
     fun `개별 작업을 모두 비동기로 수행 - 기본 Throttle 적용`() {
         val elapsed = measureTimeMillis {
             insertIndividual(session)
@@ -189,7 +191,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
         println("Finish executing ${pending.size} queries with a concurrency level of $throttle")
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(REPEAT_SIZE)
     fun `개발 작업을 Coroutines 로 수행 - 기본 Throttle 적용`() {
         val elapsed = measureTimeMillis {
             insertIndividualInCoroutines(session)

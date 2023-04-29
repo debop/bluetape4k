@@ -3,8 +3,8 @@ package io.bluetape4k.junit5.concurrency
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantLock
+import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeLessOrEqualTo
@@ -53,7 +53,7 @@ class MultithreadingTesterTest {
             .add(ra1)
             .run()
 
-        ra1.count.get() shouldBeEqualTo 11 * 13
+        ra1.count shouldBeEqualTo 11 * 13
     }
 
     @Test
@@ -66,8 +66,8 @@ class MultithreadingTesterTest {
             .addAll(ra1, ra2)
             .run()
 
-        ra1.count.get() shouldBeEqualTo 2
-        ra2.count.get() shouldBeEqualTo 1
+        ra1.count shouldBeEqualTo 2
+        ra2.count shouldBeEqualTo 1
     }
 
     @Test
@@ -135,12 +135,13 @@ class MultithreadingTesterTest {
 
         companion object: KLogging()
 
-        val count = AtomicInteger(0)
+        val counter = atomic(0)
+
+        val count: Int by counter
 
         override fun run() {
             // log.trace { "count: ${count.get()}" }
-            count.incrementAndGet()
+            counter.incrementAndGet()
         }
     }
-
 }

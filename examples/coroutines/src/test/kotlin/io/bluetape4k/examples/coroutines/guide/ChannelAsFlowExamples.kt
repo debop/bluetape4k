@@ -3,7 +3,7 @@ package io.bluetape4k.examples.coroutines.guide
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
-import java.util.concurrent.atomic.AtomicLong
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.Job
@@ -62,8 +62,8 @@ class ChannelAsFlowExamples {
         val eventBus = SingleShotEventBus()
         val jobs = ArrayList<Job>()
 
-        val totalProduced = AtomicLong(0L)
-        val totalConsumed = AtomicLong(0L)
+        val totalProduced = atomic(0L)
+        val totalConsumed = atomic(0L)
 
         jobs += List(10) {
             launch(producerDispatcher) {
@@ -99,6 +99,6 @@ class ChannelAsFlowExamples {
         delay(100)
         consumedJob.forEach { it.cancelAndJoin() }
 
-        log.debug { "Produced: ${totalProduced.get()}, Consumed: ${totalConsumed.get()}" }
+        log.debug { "Produced: ${totalProduced.value}, Consumed: ${totalConsumed.value}" }
     }
 }

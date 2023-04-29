@@ -1,7 +1,7 @@
 package io.bluetape4k.concurrent
 
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeInstanceOf
@@ -181,9 +181,9 @@ class CompletableFutureSupportTest {
     inner class OnSuccess {
         @Test
         fun `onSuccess callback with success future`() {
-            val capturedResult = AtomicInteger(0)
-            success.onSuccess(DirectExecutor) { capturedResult.set(it) }.get()
-            capturedResult.get() shouldBeEqualTo 1
+            val capturedResult = atomic(0)
+            success.onSuccess(DirectExecutor) { capturedResult.value = it }.get()
+            capturedResult.value shouldBeEqualTo 1
         }
 
         @Test

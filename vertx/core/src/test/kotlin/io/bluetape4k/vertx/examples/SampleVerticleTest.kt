@@ -9,7 +9,7 @@ import io.vertx.ext.web.codec.BodyCodec
 import io.vertx.junit5.VertxExtension
 import io.vertx.junit5.VertxTestContext
 import io.vertx.kotlin.coroutines.awaitResult
-import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.launch
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
@@ -25,14 +25,13 @@ class SampleVerticleTest {
 
     @Test
     fun `count three ticks`(vertx: Vertx, testContext: VertxTestContext) {
-        val counter = AtomicInteger()
+        val counter = atomic(0)
         vertx.setPeriodic(100) {
             if (counter.incrementAndGet() == 3) {
                 testContext.completeNow()
             }
         }
     }
-
 
     @Test
     fun `count three ticks with checkpoints`(vertx: Vertx, testContext: VertxTestContext) {

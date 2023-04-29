@@ -2,7 +2,7 @@ package io.bluetape4k.kotlinx.coroutines
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
@@ -19,7 +19,7 @@ class SuspendLazyTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `get suspend lazy value in coroutine scope`() = runTest {
-        val called = AtomicInteger()
+        val called = atomic(0)
 
         val lazyValue = suspendLazy {
             delay(Random.nextLong(100))
@@ -27,19 +27,19 @@ class SuspendLazyTest {
             called.incrementAndGet()
             42
         }
-        called.get() shouldBeEqualTo 0
+        called.value shouldBeEqualTo 0
 
         yield()
 
         lazyValue() shouldBeEqualTo 42
         lazyValue() shouldBeEqualTo 42
 
-        called.get() shouldBeEqualTo 1
+        called.value shouldBeEqualTo 1
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `get lazy value in blocking mode`() = runTest {
-        val called = AtomicInteger()
+        val called = atomic(0)
 
         val lazyValue = suspendBlockingLazy {
             Thread.sleep(Random.nextLong(100))
@@ -47,19 +47,19 @@ class SuspendLazyTest {
             called.incrementAndGet()
             42
         }
-        called.get() shouldBeEqualTo 0
+        called.value shouldBeEqualTo 0
 
         yield()
 
         lazyValue() shouldBeEqualTo 42
         lazyValue() shouldBeEqualTo 42
 
-        called.get() shouldBeEqualTo 1
+        called.value shouldBeEqualTo 1
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `get lazy value in blocking mode with IO dispatchers`() = runTest {
-        val called = AtomicInteger()
+        val called = atomic(0)
 
         val lazyValue = suspendBlockingLazyIO {
             Thread.sleep(Random.nextLong(100))
@@ -67,7 +67,7 @@ class SuspendLazyTest {
             called.incrementAndGet()
             42
         }
-        called.get() shouldBeEqualTo 0
+        called.value shouldBeEqualTo 0
 
         yield()
 
@@ -79,6 +79,6 @@ class SuspendLazyTest {
         lazy1.await() shouldBeEqualTo 42
         lazy2.await() shouldBeEqualTo 42
 
-        called.get() shouldBeEqualTo 1
+        called.value shouldBeEqualTo 1
     }
 }

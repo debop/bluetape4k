@@ -4,7 +4,7 @@ import io.bluetape4k.core.assertPositiveNumber
 import io.bluetape4k.core.requireGe
 import io.bluetape4k.core.requireGt
 import io.bluetape4k.core.requirePositiveNumber
-import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.DEFAULT_CONCURRENCY
 import kotlinx.coroutines.flow.Flow
@@ -94,7 +94,7 @@ fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> {
 
     return flow {
         var elements = mutableListOf<T>()
-        val counter = AtomicInteger(0)
+        val counter = atomic(0)
 
         this@windowed.onEach { element ->
             elements.add(element)
@@ -105,8 +105,8 @@ fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> {
             }
         }.collect()
 
-        while (counter.get() > 0) {
-            emit(elements.take(counter.get()))
+        while (counter.value > 0) {
+            emit(elements.take(counter.value))
             elements = elements.drop(step).toMutableList()
             counter.addAndGet(-step)
         }
@@ -132,7 +132,7 @@ fun <T> Flow<T>.windowed2(size: Int, step: Int): Flow<Flow<T>> {
 
     return channelFlow {
         var elements = mutableListOf<T>()
-        val counter = AtomicInteger(0)
+        val counter = atomic(0)
 
         this@windowed2.collect { element ->
             elements.add(element)
@@ -143,8 +143,8 @@ fun <T> Flow<T>.windowed2(size: Int, step: Int): Flow<Flow<T>> {
             }
         }
 
-        while (counter.get() > 0) {
-            send(elements.take(counter.get()).asFlow())
+        while (counter.value > 0) {
+            send(elements.take(counter.value).asFlow())
             elements = elements.drop(step).toMutableList()
             counter.addAndGet(-step)
         }

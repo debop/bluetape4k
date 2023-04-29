@@ -8,8 +8,8 @@ import io.bluetape4k.logging.warn
 import io.bluetape4k.utils.Runtimex
 import io.bluetape4k.utils.cache.jcache.coroutines.CoCache
 import io.bluetape4k.utils.cache.jcache.coroutines.CoCacheEntry
-import java.util.concurrent.atomic.AtomicInteger
 import javax.cache.configuration.MutableCacheEntryListenerConfiguration
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -82,12 +82,12 @@ class NearCoCache<K: Any, V: Any> private constructor(
     private suspend fun checkBackCacheExpiration() {
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         val job = scope.launch {
-            val entrySize = AtomicInteger(0)
+            val entrySize = atomic(0)
             while (!isClosed()) {
                 runCatching {
                     delay(checkExpiryPeriod)
                     log.trace { "backCache의 cache entry가 expire 되었는지 검사합니다... check expiration period=$checkExpiryPeriod" }
-                    entrySize.set(0)
+                    entrySize.value = 0
                     val elapsed = measureTimeMillis {
                         entries().chunked(100)
                             .onEach { entries ->
@@ -109,7 +109,7 @@ class NearCoCache<K: Any, V: Any> private constructor(
                             }
                             .collect()
                     }
-                    log.trace { "bachCache cache entry expire 검사 완료. entrySize=${entrySize.get()}, elapsed=$elapsed msec" }
+                    log.trace { "bachCache cache entry expire 검사 완료. entrySize=${entrySize.value}, elapsed=$elapsed msec" }
                 }
             }
         }

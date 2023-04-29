@@ -2,7 +2,7 @@ package io.bluetape4k.junit5.coroutines
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -52,7 +52,7 @@ class MultiJobTesterTest {
             .add(block)
             .run()
 
-        block.counter.get() shouldBeEqualTo 11 * 13
+        block.count shouldBeEqualTo 11 * 13
     }
 
     @Test
@@ -65,8 +65,8 @@ class MultiJobTesterTest {
             .addAll(block1, block2)
             .run()
 
-        block1.counter.get() shouldBeEqualTo 2
-        block2.counter.get() shouldBeEqualTo 1
+        block1.count shouldBeEqualTo 2
+        block2.count shouldBeEqualTo 1
     }
 
     @Test
@@ -92,7 +92,9 @@ class MultiJobTesterTest {
     }
 
     private inner class CountingSuspendBlock: suspend () -> Unit {
-        val counter = AtomicInteger(0)
+        val counter = atomic(0)
+
+        val count by counter
 
         override suspend fun invoke() {
             counter.incrementAndGet()

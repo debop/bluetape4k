@@ -5,7 +5,8 @@ import io.bluetape4k.logging.debug
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.atomicfu.AtomicInt
+import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeInstanceOf
@@ -143,8 +144,8 @@ class ConcurrencyReducerTest {
 
     @Test
     fun `when task long running`() {
-        val activeCount = AtomicInteger()
-        val maxCount = AtomicInteger()
+        val activeCount = atomic(0)
+        val maxCount = atomic(0)
         val queueSize = 11
         val maxConcurrency = 10
         val limiter = ConcurrencyReducer<String>(maxConcurrency, queueSize)
@@ -167,12 +168,12 @@ class ConcurrencyReducerTest {
         }
 
         promises.all { it.isDone }.shouldBeTrue()
-        activeCount.get() shouldBeEqualTo 0
+        activeCount.value shouldBeEqualTo 0
         limiter.activeCount shouldBeEqualTo 0
         limiter.queuedCount shouldBeEqualTo 0
         limiter.remainingActiveCapacity shouldBeEqualTo maxConcurrency
-        maxCount.get() shouldBeEqualTo maxConcurrency
         limiter.remainingQueueCapacity shouldBeEqualTo queueSize
+        maxCount.value shouldBeEqualTo maxConcurrency
     }
 
     @Test
@@ -212,18 +213,18 @@ class ConcurrencyReducerTest {
 
     private class CountingJob(
         private val activeCount: () -> Int,
-        private val maxCount: AtomicInteger,
-    ) : () -> CompletionStage<String>? {
+        private val maxCount: AtomicInt,
+    ): () -> CompletionStage<String>? {
 
-        companion object : KLogging()
+        companion object: KLogging()
 
         val future = CompletableFuture<String>()
 
         override fun invoke(): CompletionStage<String>? {
             val count = activeCount()
-            log.debug { "Active count=$count, maxCount=${maxCount.get()}" }
-            if (count > maxCount.get()) {
-                maxCount.set(count)
+            log.debug { "Active count=$count, maxCount=${maxCount.value}" }
+            if (count > maxCount.value) {
+                maxCount.value = count
             }
             return future
         }
