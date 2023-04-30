@@ -18,8 +18,8 @@ allOpen {
 
 kapt {
     showProcessorStats = true
-    // kapt 가 제대로 동작하지 않는 경우, 아래 옵션을 추가해보세요.
-    correctErrorTypes = true
+    // kapt 가 제대로 동작하지 않는 경우, 아래 옵션을 제거해보세요.
+    // correctErrorTypes = true
 }
 
 idea {
@@ -67,6 +67,32 @@ dependencies {
     testImplementation(Libs.mysql_connector_j)
 
     testImplementation(project(":bluetape4k-junit5"))
+
+    // bluetape4k-data-hibernate 의 테스트용 엔티티를 사용하기 위해 추가합니다
+    testImplementation(project(path = ":bluetape4k-data-hibernate", configuration = "testJar"))
+
+    // Converter 때문에
+    testImplementation(project(":bluetape4k-io"))
+    testImplementation(project(":bluetape4k-io-json"))
+    testImplementation(Libs.kryo)
+    testImplementation(Libs.marshalling)
+    testImplementation(Libs.marshalling_river)
+
+    testImplementation(Libs.snappy_java)
+    testImplementation(Libs.lz4_java)
+
+    testImplementation(Libs.jasypt)
+    testImplementation(Libs.bouncycastle_bcprov)
+    testImplementation(Libs.bouncycastle_bcpkix)
+
+    testImplementation(project(":bluetape4k-utils-idgenerators"))
+
+    // Caching 테스트
+    compileOnly(project(":bluetape4k-infra-cache"))
+    testImplementation(Libs.springBootStarter("cache"))
+    testImplementation(Libs.caffeine)
+    testImplementation(Libs.caffeine_jcache)
+
     testImplementation(project(":bluetape4k-testcontainers"))
     testImplementation(Libs.testcontainers_mysql)
 
