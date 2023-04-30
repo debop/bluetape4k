@@ -30,7 +30,7 @@
     <logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
 
     <!-- Slow queries -->
-    <logger name="org.hibernate.SQL_SLOW" level="INFO"/>
+    <logger name="org.hibernate.SQL_SLOW" level="DEBUG"/>
     <!-- Query 빌드 전략 -->
     <logger name="org.hibernate.loader.plan.build.spi.LoadPlanTreePrinter" level="DEBUG"/>
 

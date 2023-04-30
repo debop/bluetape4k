@@ -12,7 +12,7 @@
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.data.redis" level="TRACE"/>
+    <logger name="io.bluetape4k.examples.redisson" level="TRACE"/>
 
     <!--    <logger name="io.lettuce.core" level="DEBUG"/>-->
     <!--    <logger name="org.redisson" level="DEBUG"/>-->

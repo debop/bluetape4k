@@ -1,29 +1,32 @@
-package io.bluetape4k.data.hibernate.reactive.examples.mutiny
+package io.bluetape4k.data.hibernate.reactive.examples.stage
 
 import io.bluetape4k.data.hibernate.reactive.examples.model.Author
 import io.bluetape4k.data.hibernate.reactive.examples.model.Author_
 import io.bluetape4k.data.hibernate.reactive.examples.model.Book
 import io.bluetape4k.data.hibernate.reactive.examples.model.Book_
-import io.bluetape4k.data.hibernate.reactive.mutiny.findAs
-import io.bluetape4k.data.hibernate.reactive.mutiny.withSessionAndAwait
-import io.bluetape4k.data.hibernate.reactive.mutiny.withTransactionAndAwait
+import io.bluetape4k.data.hibernate.reactive.stage.findAs
+import io.bluetape4k.data.hibernate.reactive.stage.getAs
+import io.bluetape4k.data.hibernate.reactive.stage.withSessionAndAwait
+import io.bluetape4k.data.hibernate.reactive.stage.withStatelessSessionAndAwait
+import io.bluetape4k.data.hibernate.reactive.stage.withTransactionAndAwait
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
-import io.smallrye.mutiny.coroutines.awaitSuspending
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import java.time.LocalDate
 import java.time.Month
 import javax.persistence.criteria.CriteriaQuery
-import org.amshove.kluent.shouldBeEqualTo
+import kotlinx.coroutines.future.await
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldHaveSize
-import org.amshove.kluent.shouldNotBeNull
-import org.hibernate.graph.RootGraph
-import org.hibernate.reactive.mutiny.Mutiny
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 
 @Execution(ExecutionMode.SAME_THREAD)
-class MutinySessionFactoryExamples: AbstractMutinyTest() {
+class StageStatelessSessionExamples: AbstractStageTest() {
+
+    companion object: KLogging()
 
     private val author1 = Author(faker.name().name())
     private val author2 = Author(faker.name().name())
@@ -44,36 +47,49 @@ class MutinySessionFactoryExamples: AbstractMutinyTest() {
     )
 
     @BeforeAll
-    fun beforeAll() = runSuspendWithIO {
+    fun beforeAll() {
         author1.addBook(book1)
         author2.addBook(book2)
         author2.addBook(book3)
 
-        sf.withTransactionAndAwait { session ->
-            session.persistAll(author1, author2).awaitSuspending()
+        runSuspendWithIO {
+            sf.withTransactionAndAwait { session ->
+                session.persist(author1, author2).await()
+            }
         }
     }
 
     @Test
-    fun `mutiny session example`() = runSuspendWithIO {
-        sf.withSessionAndAwait { session -> // NOTE: many-to-one 을 lazy로 fetch 하기 위해서 EntityGraph나 @FetchProfile 을 사용해야 합니다.
-            val book = session.enableFetchProfile("withAuthor").findAs<Book>(book2.id).awaitSuspending()
+    fun `load entity with stage session`() = runSuspendWithIO {
+        sf.withSessionAndAwait { session ->
+            // NOTE: many-to-one 을 lazy로 fetch 하기 위해서 EntityGraph나 @FetchProfile 을 사용해야 합니다.
+            //
+            val book = session.enableFetchProfile("withAuthor").findAs<Book>(book1.id).await()
+            val authors = session.findAs<Author>(author1.id, author2.id).await()
 
-            book.shouldNotBeNull()
-            book.author.shouldNotBeNull()
+            log.debug { "book=${book}" }
+            log.debug { "authors=${authors.joinToString()}" }
         }
-
-        val authors = sf.withSessionAndAwait { session ->
-            session.findAs<Author>(author1.id, author2.id).awaitSuspending()
-        }
-        authors shouldBeEqualTo listOf(author1, author2)
     }
+
+    @Test
+    fun `find author and fetch books`() = runTest {
+        sf.withStatelessSessionAndAwait { session ->
+            val author = session.getAs<Author>(author2.id).await()
+            val books = session.fetch(author.books).await()
+            log.debug { "${author.name} wrote ${books.size} books." }
+            books.forEach { book ->
+                log.debug { "title:${book.title}" }
+            }
+        }
+    }
+
 
     @Test
     fun `find all book with fetch join`() = runSuspendWithIO {
         val sql = "SELECT b FROM Book b LEFT JOIN FETCH b.author a"
-        val books = sf.withSessionAndAwait { session ->
-            session.createQuery<Book>(sql).resultList.awaitSuspending()
+        val books = sf.withStatelessSessionAndAwait { session ->
+            session.createQuery<Book>(sql).resultList.await()
         }
         books.forEach {
             println(it)
@@ -82,21 +98,20 @@ class MutinySessionFactoryExamples: AbstractMutinyTest() {
         books shouldHaveSize 3
     }
 
-
     @Test
     fun `find all by entity graph`() = runSuspendWithIO {
         val criteria = sf.criteriaBuilder.createQuery(Book::class.java)
         val root = criteria.from(Book::class.java)
         criteria.select(root)
 
-        val books = sf.withSessionAndAwait { session ->
+        val books = sf.withStatelessSessionAndAwait { session ->
             val graph = session.createEntityGraph(Book::class.java)
             graph.addAttributeNodes(Book::author.name)
 
-            val query: Mutiny.Query<Book> = session.createQuery(criteria)
+            val query = session.createQuery(criteria)
             query.setPlan(graph)
 
-            query.resultList.awaitSuspending()
+            query.resultList.await()
         }
         books.forEach {
             println(it)
@@ -111,15 +126,13 @@ class MutinySessionFactoryExamples: AbstractMutinyTest() {
         val book = criteria.from(Book::class.java)
         val author = book.join(Book_.author)
 
-        criteria.select(book).where(cb.equal(author.get(Author_.name), author1.name))
+        criteria.where(cb.equal(author.get(Author_.name), author1.name))
 
-        val books = sf.withSessionAndAwait { session ->
+        val books = sf.withStatelessSessionAndAwait { session ->
             val graph = session.createEntityGraph(Book::class.java)
             graph.addAttributeNodes(Book_.author)
 
-            val query = session.createQuery(criteria)
-            query.setPlan(graph)
-            query.resultList.awaitSuspending()
+            session.createQuery(criteria).setPlan(graph).resultList.await()
         }
         books.forEach {
             println(it)
@@ -133,18 +146,20 @@ class MutinySessionFactoryExamples: AbstractMutinyTest() {
         val criteria = cb.createQuery(Author::class.java)
         val author = criteria.from(Author::class.java)
         val book = author.join(Author_.books)
-        criteria.select(author).where(cb.equal(book.get(Book_.isbn), book1.isbn))
+        criteria.select(author)
+            .where(cb.equal(book.get(Book_.isbn), book1.isbn))
 
-        val authors = sf.withSessionAndAwait { session ->
-            session.createQuery(criteria).resultList.awaitSuspending()
-        } // NOTE: author 만 로딩했으므로, books 에 접근하면 lazy initialization 예외가 발생합니다.
+        val authors = sf.withStatelessSessionAndAwait { session ->
+            session.createQuery(criteria).resultList.await()
+        }
+        // NOTE: author 만 로딩했으므로, books 에 접근하면 lazy initialization 예외가 발생합니다.
         authors.forEach {
-            println(it) //            it.books.forEach { book ->
+            println(it)
+            //            it.books.forEach { book ->
             //                println("book=$book")
             //            }
         }
     }
-
 
     @Test
     fun `find author and book by book isbn`() = runSuspendWithIO {
@@ -154,16 +169,20 @@ class MutinySessionFactoryExamples: AbstractMutinyTest() {
         val book = author.join(Author_.books)
 
         // where 조건
-        criteria.select(author).where(cb.equal(book.get(Book_.isbn), book2.isbn))
+        criteria.select(author)
+            .where(cb.equal(book.get(Book_.isbn), book2.isbn))
 
-        val authors = sf.withSessionAndAwait { session -> // inner join fetch
-            val graph = session.createEntityGraph(Author::class.java).apply {
-                addAttributeNodes(Author_.books)
-            } as RootGraph<Author>
+        val authors = sf.withStatelessSessionAndAwait { session ->
+            // inner join fetch
+            val graph = session.createEntityGraph(Author::class.java)
+            // graph.addSubgraph(Author_.books)
+            graph.addAttributeNodes(Author_.books)
 
-            session.createQuery(criteria).setPlan(graph).resultList.awaitSuspending()
+            session.createQuery(criteria)
+                .setPlan(graph)
+                .resultList
+                .await()
         }
-
         authors.forEach { a ->
             println(a)
             a.books.forEach { b ->
@@ -173,35 +192,6 @@ class MutinySessionFactoryExamples: AbstractMutinyTest() {
         authors shouldHaveSize 1
         authors.forEach {
             it.books shouldHaveSize 1
-        }
-    }
-
-    @Test
-    fun `find author by book isbn and fetch book`() = runSuspendWithIO {
-        val cb = sf.criteriaBuilder
-        val criteria: CriteriaQuery<Author> = cb.createQuery(Author::class.java)
-        val author = criteria.from(Author::class.java)
-        val book = author.join(Author_.books)
-
-        // where 조건
-        criteria.select(author).where(cb.equal(book.get(Book_.isbn), book2.isbn))
-
-        val authors = sf.withSessionAndAwait { session ->
-            session.createQuery(criteria).resultList.awaitSuspending().apply {
-                forEach { author ->
-                    session.fetch(author.books).awaitSuspending()
-                }
-            }
-        }
-        authors.forEach { a ->
-            println(a)
-            a.books.forEach { b ->
-                println("\t$b")
-            }
-        }
-        authors shouldHaveSize 1
-        authors.forEach {
-            it.books shouldHaveSize 2
         }
     }
 }

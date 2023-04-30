@@ -50,11 +50,11 @@ suspend fun <T> Stage.SessionFactory.withStatelessSessionAndAwait(
 }
 
 suspend fun <T> Stage.SessionFactory.withTransactionAndAwait(
-    work: suspend (session: Stage.Session, trasaction: Stage.Transaction) -> T,
+    work: suspend (session: Stage.Session) -> T,
 ): T = coroutineScope {
-    withTransaction { session: Stage.Session, transaction: Stage.Transaction ->
+    withTransaction { session: Stage.Session ->
         async(currentVertxDispatcher()) {
-            work(session, transaction)
+            work(session)
         }.asCompletableFuture()
     }.await()
 }

@@ -27,6 +27,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 
         "spring.jpa.properties.hibernate.show_sql=false",
         "spring.jpa.properties.hibernate.format_sql=true",
+        "spring.jpa.properties.hibernate.highlight_sql=true",
         // 성능 측정 정보 제공
         "spring.jpa.properties.hibernate.generate_statistics=true",
         //"spring.jpa.properties.hibernate.use_sql_comments=true",

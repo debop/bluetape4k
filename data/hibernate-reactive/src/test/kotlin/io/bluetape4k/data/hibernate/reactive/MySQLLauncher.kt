@@ -4,7 +4,7 @@ import io.bluetape4k.testcontainers.jdbc.MySQL8Server
 
 object MySQLLauncher {
 
-    val mysql8 by lazy { MySQL8Server.Launcher.mysql }
+    private val mysql8: MySQL8Server by lazy { MySQL8Server.Launcher.mysql }
 
     val hibernateProperties: Map<String, Any?> by lazy {
         val props = mutableMapOf<String, Any?>()
@@ -17,11 +17,11 @@ object MySQLLauncher {
         // props["javax.persistence.jdbc.password"] = "test"
 
         // Testcontainers 사용 시
-        props["jakarta.persistence.jdbc.url"] = mysql8.jdbcUrl
-        props["jakarta.persistence.jdbc.user"] = mysql8.username
-        props["jakarta.persistence.jdbc.password"] = mysql8.password
+        props["javax.persistence.jdbc.url"] = mysql8.jdbcUrl
+        props["javax.persistence.jdbc.user"] = mysql8.username
+        props["javax.persistence.jdbc.password"] = mysql8.password
 
-        props["jakarta.persistence.schema-generation.database.action"] = "drop-and-create"
+        props["javax.persistence.schema-generation.database.action"] = "drop-and-create"
 
         props
     }
