@@ -11,7 +11,6 @@ import io.bluetape4k.support.toUtf8Bytes
 import io.grpc.ServerBuilder
 import io.grpc.StatusException
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.NonCancellable.message
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.first
@@ -159,7 +158,7 @@ class TestServiceTest {
         repeat(size) {
             val request = Messages.StreamingInputCallRequest.newBuilder()
                 .setExpectCompressed(Messages.BoolValue.newBuilder().setValue(true))
-                .setPayload(Payload.newBuilder().setBody(ByteString.copyFrom(randomString(512).toUtf8Bytes())))
+                .setPayload(Messages.Payload.newBuilder().setBody(ByteString.copyFrom(randomString(512).toUtf8Bytes())))
                 .build()
 
             emit(request)
@@ -171,12 +170,12 @@ class TestServiceTest {
     private fun getStreamingOutputCallRequests(times: Int = 100, delayMs: Long = 10L) = flow {
         repeat(times) {
             val request = Messages.StreamingOutputCallRequest.newBuilder()
-                .addResponseParameters(ResponseParameters.newBuilder().setIntervalUs(3000).setSize(128))
-                .addResponseParameters(ResponseParameters.newBuilder().setIntervalUs(3000).setSize(128))
-                .addResponseParameters(ResponseParameters.newBuilder().setIntervalUs(3000).setSize(128))
-                .addResponseParameters(ResponseParameters.newBuilder().setIntervalUs(3000).setSize(128))
+                .addResponseParameters(Messages.ResponseParameters.newBuilder().setIntervalUs(3000).setSize(128))
+                .addResponseParameters(Messages.ResponseParameters.newBuilder().setIntervalUs(3000).setSize(128))
+                .addResponseParameters(Messages.ResponseParameters.newBuilder().setIntervalUs(3000).setSize(128))
+                .addResponseParameters(Messages.ResponseParameters.newBuilder().setIntervalUs(3000).setSize(128))
                 .setPayload(
-                    Payload.newBuilder().setBody(ByteString.copyFrom(randomString(1024 / 4).toUtf8Bytes()))
+                    Messages.Payload.newBuilder().setBody(ByteString.copyFrom(randomString(1024 / 4).toUtf8Bytes()))
                 )
                 .build()
 

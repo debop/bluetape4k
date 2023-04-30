@@ -9,7 +9,6 @@ import io.bluetape4k.logging.KLogging
 import java.io.Serializable
 import java.time.Instant
 import org.amshove.kluent.shouldBeEqualTo
-import org.apache.logging.log4j.message.SimpleMessage
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -41,14 +40,14 @@ class ProtobufCodecTest : AbstractRedissonTest() {
         }
     }
 
-    private fun newSimpleMessage(): SimpleMessage = simpleMessage {
+    private fun newSimpleMessage() = simpleMessage {
         id = faker.random().nextLong()
         name = faker.name().fullName()
         description = Fakers.randomString(1024, 4096, true)
         timestamp = Instant.now().toProtobufTimestamp()
     }
 
-    private fun newNestedMessage(): NestedMessage = nestedMessage {
+    private fun newNestedMessage() = nestedMessage {
         id = faker.random().nextLong()
         name = faker.name().fullName()
         dayOfTheWeek = DayOfTheWeek.FRIDAY
