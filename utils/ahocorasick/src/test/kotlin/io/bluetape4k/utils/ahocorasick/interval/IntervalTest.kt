@@ -1,4 +1,4 @@
-package io.bluetape4k.ahocorasick.interval
+package io.bluetape4k.utils.ahocorasick.interval
 
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse

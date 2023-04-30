@@ -1,4 +1,4 @@
-package io.bluetape4k.ahocorasick.interval
+package io.bluetape4k.utils.ahocorasick.interval
 
 import io.bluetape4k.core.AbstractValueObject
 import java.util.Objects

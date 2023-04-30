@@ -1,8 +1,8 @@
-package io.bluetape4k.ahocorasick.interval
+package io.bluetape4k.utils.ahocorasick.interval
 
-import io.bluetape4k.ahocorasick.interval.IntervalableComparators.ReverseSizeComparator
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.utils.ahocorasick.interval.IntervalableComparators.ReverseSizeComparator
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 

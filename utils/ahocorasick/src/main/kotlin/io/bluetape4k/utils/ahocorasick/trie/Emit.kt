@@ -1,6 +1,6 @@
-package io.bluetape4k.ahocorasick.trie
+package io.bluetape4k.utils.ahocorasick.trie
 
-import io.bluetape4k.ahocorasick.interval.Interval
+import io.bluetape4k.utils.ahocorasick.interval.Interval
 
 class Emit(
     override val start: Int,

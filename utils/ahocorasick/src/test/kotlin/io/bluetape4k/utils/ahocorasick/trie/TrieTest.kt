@@ -1,4 +1,4 @@
-package io.bluetape4k.ahocorasick.trie
+package io.bluetape4k.utils.ahocorasick.trie
 
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging

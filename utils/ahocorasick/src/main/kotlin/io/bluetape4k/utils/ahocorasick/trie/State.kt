@@ -1,4 +1,4 @@
-package io.bluetape4k.ahocorasick.trie
+package io.bluetape4k.utils.ahocorasick.trie
 
 import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.core.ValueObject

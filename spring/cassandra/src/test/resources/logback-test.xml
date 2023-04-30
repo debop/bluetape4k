@@ -6,14 +6,14 @@
         <immediateFlush>true</immediateFlush>
         <encoder>
             <!-- @formatter:off -->
-            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%.24thread] %logger{36}:%line: %msg%n%throwable</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%blue(%.24t)] %yellow(%logger{36}):%line: %msg%n%throwable</pattern>
             <!-- @formatter:on -->
             <charset>UTF-8</charset>
         </encoder>
     </appender>
 
     <logger name="io.bluetape4k.spring.cassandra" level="TRACE"/>
-    <logger name="io.bluetape4k.data.cassandra" level="TRACE"/>
+    <logger name="io.bluetape4k.data.cassandra" level="DEBUG"/>
 
     <logger name="org.springframework.data.cassandra" level="DEBUG"/>
     <logger name="com.datastax.oss.driver.api" level="DEBUG"/>

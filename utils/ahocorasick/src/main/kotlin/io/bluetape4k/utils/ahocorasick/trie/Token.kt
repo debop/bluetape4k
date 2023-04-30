@@ -1,4 +1,4 @@
-package io.bluetape4k.ahocorasick.trie
+package io.bluetape4k.utils.ahocorasick.trie
 
 interface Token {
     val fragment: String
