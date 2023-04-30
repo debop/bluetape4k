@@ -83,6 +83,7 @@ dependencies {
 
     // Converter
     compileOnly(project(":bluetape4k-io"))
+    compileOnly(project(":bluetape4k-io-cryptography"))
     compileOnly(project(":bluetape4k-io-json"))
 
     testImplementation(Libs.kryo)
@@ -91,10 +92,6 @@ dependencies {
 
     testImplementation(Libs.snappy_java)
     testImplementation(Libs.lz4_java)
-
-    testImplementation(Libs.jasypt)
-    testImplementation(Libs.bouncycastle_bcprov)
-    testImplementation(Libs.bouncycastle_bcpkix)
 
     compileOnly(project(":bluetape4k-utils-idgenerators"))
 

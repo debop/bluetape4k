@@ -6,16 +6,11 @@ import io.bluetape4k.data.hibernate.converters.LZ4KryoObjectAsByteArrayConverter
 import io.bluetape4k.data.hibernate.converters.LocaleAsStringConverter
 import io.bluetape4k.data.hibernate.converters.RC2StringConverter
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
-import io.bluetape4k.io.crypto.randomBytes
+import io.bluetape4k.io.cryptography.randomBytes
 import java.io.Serializable
 import java.time.Duration
 import java.util.*
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.Basic
-import javax.persistence.Convert
-import javax.persistence.Entity
-import javax.persistence.FetchType
+import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
 @Entity(name = "convertable_entity")

@@ -37,12 +37,6 @@ dependencies {
     compileOnly(Libs.xz)
     compileOnly(Libs.brotli4j)
 
-    // Cryptography
-    compileOnly(Libs.jasypt)
-    compileOnly(Libs.bouncycastle_bcprov)
-    compileOnly(Libs.bouncycastle_bcpkix)
-    compileOnly(Libs.commons_codec)
-
     // Binary Serializers
     compileOnly(Libs.kryo)
     compileOnly(Libs.marshalling)

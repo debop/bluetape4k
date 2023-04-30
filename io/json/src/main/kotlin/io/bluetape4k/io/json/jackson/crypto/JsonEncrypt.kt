@@ -3,8 +3,8 @@ package io.bluetape4k.io.json.jackson.crypto
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import io.bluetape4k.io.crypto.encrypt.Encryptor
-import io.bluetape4k.io.crypto.encrypt.Encryptors.AES
+import io.bluetape4k.io.cryptography.encrypt.Encryptor
+import io.bluetape4k.io.cryptography.encrypt.Encryptors.AES
 import kotlin.reflect.KClass
 
 

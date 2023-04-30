@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.ContextualSerializer
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import io.bluetape4k.io.crypto.encrypt.Encryptor
+import io.bluetape4k.io.cryptography.encrypt.Encryptor
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.safeLet

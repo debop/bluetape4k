@@ -1,7 +1,7 @@
 package io.bluetape4k.data.hibernate.converters
 
-import io.bluetape4k.io.crypto.encrypt.Encryptor
-import io.bluetape4k.io.crypto.encrypt.Encryptors
+import io.bluetape4k.io.cryptography.encrypt.Encryptor
+import io.bluetape4k.io.cryptography.encrypt.Encryptors
 import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 

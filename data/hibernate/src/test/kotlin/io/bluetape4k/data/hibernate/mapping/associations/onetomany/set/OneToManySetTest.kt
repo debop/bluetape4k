@@ -3,11 +3,6 @@ package io.bluetape4k.data.hibernate.mapping.associations.onetomany.set
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
-import java.io.Serializable
-import java.math.BigDecimal
-import java.sql.Timestamp
-import java.time.LocalDate
-import javax.persistence.*
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
@@ -18,12 +13,17 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
+import java.io.Serializable
+import java.math.BigDecimal
+import java.sql.Timestamp
+import java.time.LocalDate
+import javax.persistence.*
 
 class OneToManySetTest @Autowired constructor(
     private val biddingItemRepo: BiddingItemRepository,
     private val bidRepo: BidRepository,
     private val productRepo: ProductRepository
-): AbstractHibernateTest() {
+) : AbstractHibernateTest() {
 
     @Test
     fun `one-to-many set with bidirectional`() {
@@ -90,7 +90,7 @@ class OneToManySetTest @Autowired constructor(
 
 @Entity(name = "onetomany_bidding_item")
 @Access(AccessType.FIELD)
-class BiddingItem(val name: String): IntJpaEntity() {
+class BiddingItem(val name: String) : IntJpaEntity() {
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.EXTRA)
@@ -117,7 +117,7 @@ class BiddingItem(val name: String): IntJpaEntity() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -132,7 +132,7 @@ class BiddingItem(val name: String): IntJpaEntity() {
 
 @Entity(name = "onetomany_bid")
 @Access(AccessType.FIELD)
-class Bid(val amount: BigDecimal = BigDecimal.ZERO): IntJpaEntity() {
+class Bid(val amount: BigDecimal = BigDecimal.ZERO) : IntJpaEntity() {
 
     @ManyToOne(fetch = FetchType.LAZY)
     var item: BiddingItem? = null
@@ -145,7 +145,7 @@ class Bid(val amount: BigDecimal = BigDecimal.ZERO): IntJpaEntity() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -160,7 +160,7 @@ class Bid(val amount: BigDecimal = BigDecimal.ZERO): IntJpaEntity() {
 
 @Entity(name = "onetomany_product")
 @Access(AccessType.FIELD)
-class Product(val name: String): IntJpaEntity() {
+class Product(val name: String) : IntJpaEntity() {
 
     var description: String? = null
     var initialPrice: BigDecimal? = null
@@ -197,7 +197,7 @@ class Product(val name: String): IntJpaEntity() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -220,7 +220,7 @@ enum class ProductStatus {
 data class ProductImage(
     @Column(nullable = false)
     val name: String
-): Serializable {
+) : Serializable {
 
     // NOTE: 소유자를 지정합니다.
     @Parent
@@ -231,6 +231,6 @@ data class ProductImage(
     var sizeY: Int? = null
 }
 
-interface BiddingItemRepository: JpaRepository<BiddingItem, Int>
-interface BidRepository: JpaRepository<Bid, Int>
-interface ProductRepository: JpaRepository<Product, Int>
+interface BiddingItemRepository : JpaRepository<BiddingItem, Int>
+interface BidRepository : JpaRepository<Bid, Int>
+interface ProductRepository : JpaRepository<Product, Int>

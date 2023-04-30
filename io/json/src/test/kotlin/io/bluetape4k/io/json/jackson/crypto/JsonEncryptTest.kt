@@ -1,8 +1,8 @@
 package io.bluetape4k.io.json.jackson.crypto
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.bluetape4k.io.crypto.encrypt.AES
-import io.bluetape4k.io.crypto.encrypt.RC4
+import io.bluetape4k.io.cryptography.encrypt.AES
+import io.bluetape4k.io.cryptography.encrypt.RC4
 import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.io.json.jackson.prettyWriteAsString
 import io.bluetape4k.io.json.jackson.writeAsString

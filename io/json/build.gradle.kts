@@ -4,6 +4,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-io"))
+    compileOnly(project(":bluetape4k-io-cryptography"))
     testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.jakarta_json_api)
@@ -29,8 +30,4 @@ dependencies {
     testImplementation(Libs.jsonpath)
     testImplementation(Libs.jsonassert)
 
-    // cryptography
-    compileOnly(Libs.jasypt)
-    compileOnly(Libs.bouncycastle_bcprov)
-    compileOnly(Libs.bouncycastle_bcpkix)
 }

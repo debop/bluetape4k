@@ -68,15 +68,15 @@ dependencies {
 
     // Converter
     compileOnly(project(":bluetape4k-io"))
+    compileOnly(project(":bluetape4k-io-cryptography"))
     compileOnly(project(":bluetape4k-io-json"))
+
     testImplementation(Libs.kryo)
     testImplementation(Libs.marshalling)
     testImplementation(Libs.marshalling_river)
+
     testImplementation(Libs.snappy_java)
     testImplementation(Libs.lz4_java)
-    testImplementation(Libs.jasypt)
-    testImplementation(Libs.bouncycastle_bcprov)
-    testImplementation(Libs.bouncycastle_bcpkix)
 
     // TODO: querydsl-kotlin-codegen 은 tree entity 도 못 만들고, spring-data-jpa 의 repository에서 문제가 생긴다.
     // https://github.com/querydsl/querydsl/issues/3454
