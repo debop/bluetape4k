@@ -1,7 +1,6 @@
 package io.bluetape4k.infra.resilience4j.cache
 
 import io.github.resilience4j.cache.Cache
-import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
 
@@ -23,18 +22,20 @@ fun <K: Any, V> Cache<K, V>.decorateCompletionStage(
 fun <K: Any, V> Cache<K, V>.decorateCompletableFutureFunction(
     func: (K) -> CompletableFuture<V>,
 ): (K) -> CompletableFuture<V> = { key: K ->
+
     val promise = CompletableFuture<V>()
+    val cachedValue = runCatching { computeIfAbsent(key) { null } }.getOrNull()
 
-    val value = Optional.ofNullable(this.computeIfAbsent(key) { null })
-
-    if (value.isPresent) {
-        promise.complete(value.get())
+    if (cachedValue != null) {
+        promise.complete(cachedValue)
     } else {
         func(key).whenComplete { result, error ->
             if (error != null) {
-                promise.completeExceptionally(error)
+                promise.completeExceptionally(error.cause ?: error)
             } else {
-                this.computeIfAbsent(key) { result }
+                if (result != null) {
+                    this.computeIfAbsent(key) { result }
+                }
                 promise.complete(result)
             }
         }
