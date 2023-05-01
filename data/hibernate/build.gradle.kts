@@ -38,7 +38,6 @@ configurations {
     create("testJar")
 }
 
-
 // 테스트 코드를 Jar로 만들어서 다른 프로젝트에서 참조할 수 있도록 합니다.
 tasks.register<Jar>("testJar") {
     dependsOn(tasks.testClasses)
@@ -63,9 +62,8 @@ dependencies {
     api(Libs.hibernate_core)
     testImplementation(Libs.hibernate_testing)
 
-    // NOTE: Querydsl 과 같이 사용할 시에 가끔 예외를 일으킨다. 
-    // kapt(Libs.hibernate_jpamodelgen)
-    // kaptTest(Libs.hibernate_jpamodelgen)
+    kapt(Libs.hibernate_jpamodelgen)
+    kaptTest(Libs.hibernate_jpamodelgen)
 
     // Querydsl
     compileOnly(Libs.querydsl_jpa)

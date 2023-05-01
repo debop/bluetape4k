@@ -14,16 +14,7 @@ import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.asFlow
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.smallrye.mutiny.tuples.Tuple2
-import java.io.IOException
-import java.time.Duration
-import java.util.UUID
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicLong
-import java.util.stream.Collectors
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
@@ -35,6 +26,15 @@ import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Test
+import java.io.IOException
+import java.time.Duration
+import java.util.*
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicLong
+import java.util.stream.Collectors
 import kotlin.random.Random
 
 class CompositionTransformationExamples {
@@ -284,7 +284,7 @@ class CompositionTransformationExamples {
 
     @Test
     fun `13 Multi Broadcast`() {
-        val counter = AtomicInteger()
+        val counter = atomic(0)
         val executor = Executors.newCachedThreadPool()
 
         val multi = Multi.createBy()
@@ -313,7 +313,7 @@ class CompositionTransformationExamples {
 
     @Test
     fun `13-1 Multi Broadcast in coroutines`() = runSuspendWithIO {
-        val counter = AtomicInteger()
+        val counter = atomic(0)
 
         val multi: Multi<Int> = Multi.createBy()
             .repeating().supplier(counter::getAndIncrement)

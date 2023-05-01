@@ -59,7 +59,7 @@ object Versions {
 
     const val quarkus = Plugins.Versions.quarkus
     const val resteasy = "6.2.3.Final"
-    const val mutiny = "2.1.0"
+    const val mutiny = "2.2.0"
     const val vertx = "4.4.1"
     const val agroal = "1.16"
 

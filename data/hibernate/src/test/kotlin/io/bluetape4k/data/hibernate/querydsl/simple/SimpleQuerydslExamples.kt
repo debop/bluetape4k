@@ -70,7 +70,7 @@ class SimpleQuerydslExamples : AbstractHibernateTest() {
 
     @Test
     fun `using covering index`() {
-        val queryFactory = JPAQueryFactory(HQLTemplates.DEFAULT, tem.entityManager)
+        val queryFactory = JPAQueryFactory(HQLTemplates.DEFAULT, em)
 
         val self = QExampleEntity.exampleEntity
         val sub = QExampleEntity("sub")
@@ -95,7 +95,7 @@ class SimpleQuerydslExamples : AbstractHibernateTest() {
 
     @Test
     fun `projections by constructor`() {
-        val queryFactory = JPAQueryFactory(HQLTemplates.DEFAULT, tem.entityManager)
+        val queryFactory = JPAQueryFactory(HQLTemplates.DEFAULT, em)
         val example = QExampleEntity.exampleEntity
 
         val constructor = Projections.constructor(ExampleDto::class.java, example.id, example.name)
@@ -111,7 +111,7 @@ class SimpleQuerydslExamples : AbstractHibernateTest() {
 
     @Test
     fun `use QueryProjection annotation`() {
-        val queryFactory = JPAQueryFactory(HQLTemplates.DEFAULT, tem.entityManager)
+        val queryFactory = JPAQueryFactory(HQLTemplates.DEFAULT, em)
         val example = QExampleEntity.exampleEntity
 
         val dtos = queryFactory

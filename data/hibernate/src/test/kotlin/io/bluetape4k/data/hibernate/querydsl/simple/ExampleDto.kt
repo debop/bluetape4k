@@ -7,6 +7,6 @@ import java.io.Serializable
  * [QueryProjection] 을 활용하여 Entity를 거지치 않고, 바로 DTO로 변환할 수 있다.
  */
 data class ExampleDto @QueryProjection constructor(
-    val id: Int,
-    val name: String
+    val id: Long,
+    val name: String,
 ) : Serializable

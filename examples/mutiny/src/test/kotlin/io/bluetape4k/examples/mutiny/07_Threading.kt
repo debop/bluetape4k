@@ -9,13 +9,7 @@ import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.asFlow
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.smallrye.mutiny.infrastructure.Infrastructure
-import java.time.Duration
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.function.Supplier
-import java.util.stream.Collectors
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -26,6 +20,12 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.awaitility.kotlin.await
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.function.Supplier
+import java.util.stream.Collectors
 import kotlin.concurrent.thread
 import kotlin.random.Random
 
@@ -34,13 +34,13 @@ class ThreadingExamples {
 
     companion object: KLogging()
 
-    private val counter = AtomicInteger()
+    private val counter = atomic(0)
 
     private val executor = Executors.newFixedThreadPool(4, NamedThreadFactory("mutiny"))
 
     @BeforeEach
     fun setup() {
-        counter.set(0)
+        counter.value = 0
     }
 
     @Test
@@ -53,7 +53,7 @@ class ThreadingExamples {
             .runSubscriptionOn(executor)
             .subscribe().with { log.debug { it } }
 
-        await.until { counter.get() >= 10 }
+        await.until { counter.value >= 10 }
     }
 
     @Test
@@ -66,7 +66,7 @@ class ThreadingExamples {
             .emitOn(executor)
             .subscribe().with { log.debug { it } }
 
-        await.until { counter.get() >= 10 }
+        await.until { counter.value >= 10 }
     }
 
     private fun generate(): Uni<Int> = Uni.createFrom().completionStage {
@@ -89,7 +89,7 @@ class ThreadingExamples {
             .emitOn(executor)
             .subscribe().with { log.debug { it } }
 
-        await.until { counter.get() >= 10 }
+        await.until { counter.value >= 10 }
     }
 
     private fun generateInWorkerPool(): Uni<Int> =

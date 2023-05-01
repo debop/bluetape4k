@@ -7,7 +7,7 @@
         <encoder>
             <!-- @formatter:off -->
             <pattern>
-                %d{HH:mm:ss.SSS} %highlight(%-5level) trace_id=%X{trace_id} span_id=%X{span_id} trace_flags=%X{trace_flags}  [%blue(%.24t)] %yellow(%logger{36}):%line: %msg%n%throwable
+                %d{HH:mm:ss.SSS} %highlight(%-5level) trace_id=%yellow(%X{trace_id}) span_id=%yellow(%X{span_id}) trace_flags=%X{trace_flags}  [%blue(%.24t)] %yellow(%logger{36}):%line: %msg%n%throwable
             </pattern>
             <!-- @formatter:on -->
             <charset>UTF-8</charset>

@@ -2,13 +2,13 @@ package io.bluetape4k.data.hibernate.mapping.tree
 
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.core.requireNotBlank
-import io.bluetape4k.data.hibernate.model.IntJpaTreeEntity
+import io.bluetape4k.data.hibernate.model.LongJpaTreeEntity
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
 import javax.persistence.Entity
 import javax.persistence.Index
 import javax.persistence.Table
 import javax.validation.constraints.NotBlank
-import org.hibernate.annotations.DynamicInsert
-import org.hibernate.annotations.DynamicUpdate
 
 @Entity(name = "tree_treenode")
 @Table(indexes = [Index(name = "ix_treenode_parent", columnList = "parent_id")])
@@ -16,8 +16,8 @@ import org.hibernate.annotations.DynamicUpdate
 @DynamicUpdate
 class TreeNode private constructor(
     @NotBlank
-    var title: String
-) : IntJpaTreeEntity<TreeNode>() {
+    var title: String,
+): LongJpaTreeEntity<TreeNode>() {
 
     companion object {
         operator fun invoke(title: String): TreeNode {

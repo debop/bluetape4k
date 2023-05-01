@@ -2,15 +2,15 @@ package io.bluetape4k.concurrent
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.atomicfu.atomic
 import java.util.concurrent.ThreadFactory
-import java.util.concurrent.atomic.AtomicInteger
 
 class NamedThreadFactory private constructor(
     val prefix: String,
     val isDaemon: Boolean,
-) : ThreadFactory {
+): ThreadFactory {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         const val DEFAULT_PREFIX = "thread"
 
         @JvmStatic
@@ -24,14 +24,14 @@ class NamedThreadFactory private constructor(
 
     val group: ThreadGroup by lazy { ThreadGroup(Thread.currentThread().threadGroup, name) }
 
-    private val threadNumber = AtomicInteger(1)
+    private val threadNumber = atomic(1)
 
     fun newThread(body: () -> Unit): Thread {
         return newThread(Runnable { body() })
     }
 
     override fun newThread(runnable: Runnable): Thread {
-        val threadName = name + "-" + threadNumber.andIncrement
+        val threadName = name + "-" + threadNumber.getAndIncrement()
         return Thread(group, runnable, threadName)
             .also {
                 it.isDaemon = isDaemon
