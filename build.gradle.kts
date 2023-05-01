@@ -453,6 +453,7 @@ subprojects {
             dependency(Libs.ow2_asm_tree)
 
             dependency(Libs.snakeyaml)
+            dependency(Libs.jna)
         }
     }
 

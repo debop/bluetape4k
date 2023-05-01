@@ -11,9 +11,12 @@ import io.bluetape4k.infra.cache.nearcache.management.NearCacheStatisticsMXBean
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
+import org.redisson.Redisson
+import org.redisson.jcache.configuration.JCacheConfiguration
+import org.redisson.jcache.configuration.RedissonConfiguration
 import java.lang.management.ManagementFactory
 import java.net.URI
-import java.util.Properties
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import javax.cache.Cache
 import javax.cache.CacheException
@@ -23,9 +26,6 @@ import javax.cache.management.CacheStatisticsMXBean
 import javax.cache.spi.CachingProvider
 import javax.management.MBeanServer
 import javax.management.ObjectName
-import org.redisson.Redisson
-import org.redisson.jcache.configuration.JCacheConfiguration
-import org.redisson.jcache.configuration.RedissonConfiguration
 
 
 /**
@@ -494,7 +494,7 @@ class RedisNearCacheManager(
             if (!isClosed) {
                 log.info { "Close NearCacheManager." }
 
-                cacheProvider?.close(uri, classLoader)
+                cacheProvider.close(uri, classLoader)
 
                 caches.values.forEach { cache ->
                     runCatching { cache.close() }

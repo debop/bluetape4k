@@ -91,19 +91,17 @@ object Versions {
     const val okhttp3 = "4.10.0"
     const val asynchttpclient = "2.12.3"
 
-    const val jackson = "2.14.2"
+    const val jackson = "2.15.0"
     const val jjwt = "0.11.5"
 
-    const val mapstruct = "1.4.1.Final"
+    const val mapstruct = "1.5.5.Final"
     const val reflectasm = "1.11.9"
 
     const val mongo_driver = "4.9.1"
-    const val lettuce = "6.2.3.RELEASE"
+    const val lettuce = "6.2.4.RELEASE"
 
-    // NOTE: Redisson 3.19.1 사용 시, NearCache 에서 kotlin.collections.LinkedHashMap 에 대해 역직렬화에 실패하는 버그가 있습니다.
-    // NOTE: java.util.HashMap 을 사용하면, 성공합니다.
     // 참고: https://github.com/redisson/redisson/issues/4809
-    const val redisson = "3.20.1"
+    const val redisson = "3.21.0"
 
     // NOTE: Hibernate 는 jakarta 버전인 경우 orm, validator 등이 group 에 포함됩니다.
     // NOTE: 이 경우 기존 javax 를 사용하는 버전과 충돌이 생길 수 있으니 조심하세요 
