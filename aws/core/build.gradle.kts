@@ -10,6 +10,7 @@ dependencies {
     api(Libs.aws2_aws_core)
     testImplementation(Libs.aws2_ec2)
     testImplementation(Libs.aws2_s3)
+    testImplementation(Libs.aws2_test_utils)
 
     // Coroutines
     compileOnly(Libs.kotlinx_coroutines_core)

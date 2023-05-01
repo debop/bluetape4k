@@ -1,0 +1,194 @@
+package io.bluetape4k.aws.s3
+
+import io.bluetape4k.core.requireNotBlank
+import software.amazon.awssdk.core.async.AsyncRequestBody
+import software.amazon.awssdk.core.async.AsyncResponseTransformer
+import software.amazon.awssdk.services.s3.S3AsyncClient
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest
+import software.amazon.awssdk.services.s3.model.CopyObjectResult
+import software.amazon.awssdk.services.s3.model.CreateBucketConfiguration
+import software.amazon.awssdk.services.s3.model.CreateBucketResponse
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest
+import software.amazon.awssdk.services.s3.model.GetObjectRequest
+import software.amazon.awssdk.services.s3.model.GetObjectResponse
+import software.amazon.awssdk.services.s3.model.PutObjectRequest
+import software.amazon.awssdk.services.s3.model.PutObjectResponse
+import software.amazon.awssdk.services.s3.model.S3Object
+import java.nio.file.Path
+import java.util.concurrent.CompletableFuture
+
+/**
+ * [bucketName]의 Bucket 이 존재하는지 알아봅니다.
+ *
+ * @param bucketName 존재를 파악할 Bucket name
+ * @return 존재 여부
+ */
+fun S3AsyncClient.existsBucket(bucketName: String): CompletableFuture<Boolean> {
+    bucketName.requireNotBlank("bucketName")
+
+    return headBucket { it.bucket(bucketName) }
+        .handle { _, error -> error == null }
+}
+
+/**
+ * [bucketName]의 Bucket을 생성합니다.
+ *
+ * @param bucketName  생성할 Bucket name
+ * @param createBucketConfiguration 생성할 Bucket을 위한 Configuration
+ * @return Bucket 생성 결과. [CreateBucketResponse]
+ */
+fun S3AsyncClient.createBucket(
+    bucketName: String,
+    createBucketConfiguration: (CreateBucketConfiguration.Builder) -> Unit,
+): CompletableFuture<CreateBucketResponse> {
+    bucketName.requireNotBlank("bucketName")
+
+    return createBucket {
+        it.bucket(bucketName).createBucketConfiguration(createBucketConfiguration)
+    }
+}
+
+//
+// Get Object
+//
+
+/**
+ * S3 Object 를 download 한 후, ByteArray 로 반환합니다.
+ *
+ * @param getObjectRequest 요청 정보 Builder
+ * @return 다운받은 S3 Object의 ByteArray 형태의 정보
+ */
+fun S3AsyncClient.getAsByteArray(
+    getObjectRequest: (GetObjectRequest.Builder) -> Unit,
+): CompletableFuture<ByteArray> =
+    getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
+        .thenApply { it.asByteArray() }
+
+/**
+ * S3 Object 를 download 한 후, 문자열로 반환합니다.
+ *
+ * @param getObjectRequest 요청 정보 Builder
+ * @return 다운받은 S3 Object의 문자열 형태의 정보
+ */
+fun S3AsyncClient.getAsString(
+    getObjectRequest: (GetObjectRequest.Builder) -> Unit,
+): CompletableFuture<String> =
+    getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
+        .thenApply { it.asString(Charsets.UTF_8) }
+
+
+fun S3AsyncClient.getAsFile(
+    destinationPath: Path,
+    getObjectRequest: (GetObjectRequest.Builder) -> Unit,
+): CompletableFuture<GetObjectResponse> {
+    return getObject(getObjectRequest, destinationPath)
+}
+
+//
+// Put Object
+//
+
+/**
+ * S3 서버로 [value]를 Upload 합니다.
+ *
+ * @param body              Upload 할 [AsyncRequestBody]
+ * @param putObjectRequest  PutObjectRequest builder
+ * @return S3에 저장된 결과
+ */
+fun S3AsyncClient.put(
+    body: AsyncRequestBody,
+    putObjectRequest: (PutObjectRequest.Builder) -> Unit,
+): CompletableFuture<PutObjectResponse> =
+    putObject(putObjectRequest, body)
+
+/**
+ * S3 서버로 [bytes]를 Upload 합니다.
+ *
+ * @param bytes             Upload 할 Byte Array
+ * @param putObjectRequest  PutObjectRequest builder
+ * @return S3에 저장된 결과
+ */
+fun S3AsyncClient.putAsByteArray(
+    bytes: ByteArray,
+    putObjectRequest: (PutObjectRequest.Builder) -> Unit,
+): CompletableFuture<PutObjectResponse> {
+    return put(AsyncRequestBody.fromBytes(bytes), putObjectRequest)
+}
+
+/**
+ * S3 서버로 [contents]를 Upload 합니다.
+ *
+ * @param contents          Upload 할 문자열
+ * @param putObjectRequest  PutObjectRequest builder
+ * @return S3에 저장된 결과
+ */
+fun S3AsyncClient.putAsString(
+    contents: String,
+    putObjectRequest: (PutObjectRequest.Builder) -> Unit,
+): CompletableFuture<PutObjectResponse> {
+    return put(AsyncRequestBody.fromString(contents), putObjectRequest)
+}
+
+fun S3AsyncClient.putAsFile(
+    sourcePath: Path,
+    putObjectRequest: (PutObjectRequest.Builder) -> Unit,
+): CompletableFuture<PutObjectResponse> {
+    return put(AsyncRequestBody.fromFile(sourcePath), putObjectRequest)
+}
+
+//
+// Move Object
+//
+
+/**
+ * [S3Object]를 Move 합니다.
+ *
+ * @param srcBucketName 원본 bucket name
+ * @param srcKey        원본 object key
+ * @param destBucketName 대상 bucket name
+ * @param destKey        대상 object key
+ * @return
+ */
+fun S3AsyncClient.moveObject(
+    srcBucketName: String,
+    srcKey: String,
+    destBucketName: String,
+    destKey: String,
+): CompletableFuture<CopyObjectResult> {
+    return copyObject {
+        it.sourceBucket(srcBucketName)
+            .sourceKey(srcKey)
+            .destinationBucket(destBucketName)
+            .destinationKey(destKey)
+    }.thenApply {
+        if (it.copyObjectResult().eTag().isNotBlank()) {
+            deleteObject { it.bucket(srcBucketName).key(srcKey) }
+        }
+        it
+    }.thenApply {
+        it.copyObjectResult()
+    }
+}
+
+/**
+ * [S3Object]를 Move 합니다.
+ *
+ * @param copyObjectRequest   복사 Request
+ * @param deleteObjectRequest 원복 복제품 삭제 request
+ * @return 복사 결과
+ */
+fun S3AsyncClient.moveObject(
+    copyObjectRequest: (CopyObjectRequest.Builder) -> Unit,
+    deleteObjectRequest: (DeleteObjectRequest.Builder) -> Unit,
+): CompletableFuture<CopyObjectResult> {
+    return copyObject(copyObjectRequest)
+        .thenCompose { copyResponse ->
+            if (copyResponse.copyObjectResult().eTag().isNotBlank()) {
+                deleteObject(deleteObjectRequest).thenApply { copyResponse }
+            } else {
+                CompletableFuture.completedFuture(copyResponse)
+            }
+        }.thenApply {
+            it.copyObjectResult()
+        }
+}

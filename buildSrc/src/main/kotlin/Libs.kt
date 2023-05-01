@@ -563,7 +563,7 @@ object Libs {
     val aws2_kms get() = awsSdkV2("kms")
     val aws2_lambda get() = awsSdkV2("lambda")
     val aws2_s3 get() = awsSdkV2("s3")
-    val aws2_s3_transfer_manager get() = awsSdkV2("s3-transfer-manager", Versions.aws2 + "-PREVIEW")
+    val aws2_s3_transfer_manager get() = awsSdkV2("s3-transfer-manager")
     val aws2_ses get() = awsSdkV2("ses")
     val aws2_sqs get() = awsSdkV2("sqs")
     val aws2_sts get() = awsSdkV2("sts")
