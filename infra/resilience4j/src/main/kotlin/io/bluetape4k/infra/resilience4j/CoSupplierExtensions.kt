@@ -2,15 +2,16 @@ package io.bluetape4k.infra.resilience4j
 
 import kotlin.reflect.KClass
 
-inline fun <T, R> (() -> T).andThen(
-    crossinline resultHandler: (result: T) -> R
-): () -> R = {
+
+inline fun <T, R> (suspend () -> T).andThen(
+    crossinline resultHandler: suspend (T) -> R
+): suspend () -> R = {
     resultHandler.invoke(this.invoke())
 }
 
-inline fun <T, R> (() -> T).andThen(
-    crossinline handler: (result: T?, error: Throwable?) -> R,
-): () -> R = {
+inline fun <T, R> (suspend () -> T).andThen(
+    crossinline handler: suspend (T?, Throwable?) -> R
+): (suspend () -> R) = {
     try {
         val result = this.invoke()
         handler.invoke(result, null)
@@ -19,10 +20,10 @@ inline fun <T, R> (() -> T).andThen(
     }
 }
 
-inline fun <T, R> (() -> T).andThen(
-    crossinline resultHandler: (T) -> R,
-    crossinline exceptionHandler: (Throwable?) -> R,
-): () -> R = {
+inline fun <T, R> (suspend () -> T).andThen(
+    crossinline resultHandler: suspend (T) -> R,
+    crossinline exceptionHandler: suspend (Throwable?) -> R
+): (suspend () -> R) = {
     try {
         val result = this.invoke()
         resultHandler(result)
@@ -31,14 +32,10 @@ inline fun <T, R> (() -> T).andThen(
     }
 }
 
-/**
- * `Provider` 실행 시 예외가 발생하면 데체 값을 제공하도록 합니다.
- *
- * @receiver (()->T)
- * @param exceptionHandler Function1<[@kotlin.ParameterName] Exception, T>
- * @return (()->T)
- */
-inline fun <T> (() -> T).recover(crossinline exceptionHandler: (Throwable?) -> T): () -> T = {
+
+inline fun <T> (suspend () -> T).recover(
+    crossinline exceptionHandler: suspend (Throwable?) -> T
+): (suspend () -> T) = {
     try {
         this.invoke()
     } catch (e: Exception) {
@@ -46,10 +43,10 @@ inline fun <T> (() -> T).recover(crossinline exceptionHandler: (Throwable?) -> T
     }
 }
 
-inline fun <T> (() -> T).recover(
-    crossinline resultPredicatoe: (T) -> Boolean,
-    crossinline resultHandler: (T) -> T
-): () -> T = {
+inline fun <T> (suspend () -> T).recover(
+    crossinline resultPredicatoe: suspend (T) -> Boolean,
+    crossinline resultHandler: suspend (T) -> T
+): suspend () -> T = {
     val result = this.invoke()
 
     if (resultPredicatoe.invoke(result)) {
@@ -59,10 +56,10 @@ inline fun <T> (() -> T).recover(
     }
 }
 
-inline fun <X : Throwable, T> (() -> T).recover(
+inline fun <X : Throwable, T> (suspend () -> T).recover(
     exceptionType: KClass<X>,
-    crossinline exceptionHandler: (Throwable?) -> T
-): () -> T = {
+    crossinline exceptionHandler: suspend (Throwable?) -> T,
+): (suspend () -> T) = {
     try {
         this.invoke()
     } catch (e: Throwable) {
@@ -74,10 +71,10 @@ inline fun <X : Throwable, T> (() -> T).recover(
     }
 }
 
-inline fun <T> (() -> T).recover(
-    exceptionTypes: Iterable<Class<out Throwable>>,
-    crossinline exceptionHandler: (Throwable?) -> T
-): () -> T = {
+inline fun <X : Throwable, T> (suspend () -> T).recover(
+    exceptionTypes: Iterable<Class<X>>,
+    crossinline exceptionHandler: suspend (Throwable?) -> T,
+): (suspend () -> T) = {
     try {
         this.invoke()
     } catch (e: Exception) {

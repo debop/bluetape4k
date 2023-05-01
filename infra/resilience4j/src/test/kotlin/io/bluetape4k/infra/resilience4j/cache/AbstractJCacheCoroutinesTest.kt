@@ -8,7 +8,6 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.trace
 import io.github.resilience4j.cache.Cache
-import java.util.concurrent.CompletableFuture
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -16,6 +15,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CompletableFuture
 
 abstract class AbstractJCacheCoroutinesTest {
 
@@ -106,11 +106,11 @@ abstract class AbstractJCacheCoroutinesTest {
 
     @Test
     fun `using coroutinesCache`() {
-        val coroutinesCache = CoCache.of(jcache)
+        val coCache = CoCache.of(jcache)
 
         var hits = 0
         var missed = 0
-        coroutinesCache.eventPublisher
+        coCache.eventPublisher
             .onCacheHit { hits++ }
             .onCacheMiss { missed++ }
             .onError { evt -> log.error { "Fail to get cache. $evt" } }
@@ -122,27 +122,27 @@ abstract class AbstractJCacheCoroutinesTest {
             "Cached"
         }
 
-        coroutinesCache.containsKey("a").shouldBeFalse()
-        coroutinesCache.containsKey("b").shouldBeFalse()
+        coCache.containsKey("a").shouldBeFalse()
+        coCache.containsKey("b").shouldBeFalse()
 
         runBlocking {
-            coroutinesCache.computeIfAbsent("a", loader) shouldBeEqualTo "Cached"
+            coCache.computeIfAbsent("a", loader) shouldBeEqualTo "Cached"
         }
 
         runBlocking {
-            coroutinesCache.computeIfAbsent("b", loader) shouldBeEqualTo "Cached"
+            coCache.computeIfAbsent("b", loader) shouldBeEqualTo "Cached"
         }
 
-        coroutinesCache.metrics.getNumberOfCacheHits() shouldBeEqualTo 0
-        coroutinesCache.metrics.getNumberOfCacheMisses() shouldBeEqualTo 2
+        coCache.metrics.getNumberOfCacheHits() shouldBeEqualTo 0
+        coCache.metrics.getNumberOfCacheMisses() shouldBeEqualTo 2
 
 
         runBlocking {
-            coroutinesCache.computeIfAbsent("a", loader) shouldBeEqualTo "Cached"
-            coroutinesCache.computeIfAbsent("b", loader) shouldBeEqualTo "Cached"
+            coCache.computeIfAbsent("a", loader) shouldBeEqualTo "Cached"
+            coCache.computeIfAbsent("b", loader) shouldBeEqualTo "Cached"
         }
 
-        coroutinesCache.metrics.getNumberOfCacheHits() shouldBeEqualTo 2
-        coroutinesCache.metrics.getNumberOfCacheMisses() shouldBeEqualTo 2
+        coCache.metrics.getNumberOfCacheHits() shouldBeEqualTo 2
+        coCache.metrics.getNumberOfCacheMisses() shouldBeEqualTo 2
     }
 }

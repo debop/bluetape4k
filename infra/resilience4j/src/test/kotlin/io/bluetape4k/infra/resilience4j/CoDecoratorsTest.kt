@@ -1,5 +1,7 @@
 package io.bluetape4k.infra.resilience4j
 
+import io.bluetape4k.infra.resilience4j.cache.Cache2kJCacheProvider
+import io.bluetape4k.infra.resilience4j.cache.CoCache
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
@@ -7,13 +9,7 @@ import io.bluetape4k.logging.info
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.ratelimiter.RateLimiter
 import io.github.resilience4j.retry.Retry
-import io.mockk.clearMocks
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.confirmVerified
-import io.mockk.mockk
-import java.io.IOException
-import java.time.LocalDateTime
+import io.mockk.*
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeTrue
@@ -21,6 +17,8 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.io.IOException
+import java.time.LocalDateTime
 
 class CoDecoratorsTest {
 
@@ -32,7 +30,7 @@ class CoDecoratorsTest {
         suspend fun bifunction(a: Int, b: Int): Int
     }
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     val retry = Retry.ofDefaults("coDecorator")
     val circuitBreaker = CircuitBreaker.ofDefaults("coDecorator")
@@ -298,190 +296,190 @@ class CoDecoratorsTest {
         }
     }
 
-//    @Nested
-//    inner class CoDecoratorsForFunction1Test {
-//
-//        val input = "Hello world!"
-//        val output = LocalDateTime.now()
-//
-//        @Test
-//        fun `성공하는 function 대한 retry decoration 하기`() = runSuspendTest {
-//            coEvery { service.execute(input) } returns output
-//
-//            val decorated = CoDecorators
-//                .ofFunction1 { s: String -> service.execute(s) }
-//                .withRetry(retry)
-//                .decoreate()
-//
-//            val result = runCatching { decorated(input) }
-//
-//            result.isSuccess.shouldBeTrue()
-//            result.getOrNull() shouldBeEqualTo output
-//            coVerify(exactly = 1) { service.execute(input) }
-//            confirmVerified(service)
-//        }
-//
-//        @Test
-//        fun `성공하는 function 대해 retry 와 circuit breaker를 decoration 하기`() = runSuspendTest {
-//            coEvery { service.execute(input) } returns output
-//
-//            val decorated = CoDecorators
-//                .ofFunction1 { s: String -> service.execute(s) }
-//                .withRetry(retry)
-//                .withCircuitBreaker(circuitBreaker)
-//                .decoreate()
-//
-//            val result = runCatching { decorated(input) }
-//
-//            result.isSuccess.shouldBeTrue()
-//            result.getOrNull() shouldBeEqualTo output
-//            coVerify(exactly = 1) { service.execute(input) }
-//            confirmVerified(service)
-//        }
-//
-//        @Test
-//        fun `예외를 발생하는 function 대한 retry decoration하기`() = runSuspendTest {
-//            coEvery { service.execute(input) } throws IOException("BAM!")
-//
-//            val decorated = CoDecorators
-//                .ofFunction1 { s: String -> service.execute(s) }
-//                .withRetry(retry)
-//                .decoreate()
-//
-//            val result = runCatching { decorated(input) }
-//
-//            result.isFailure.shouldBeTrue()
-//            result.exceptionOrNull() shouldBeInstanceOf IOException::class
-//            coVerify(exactly = retry.retryConfig.maxAttempts) { service.execute(input) }
-//            confirmVerified(service)
-//        }
-//
-//        @Test
-//        fun `예외를 발생하는 function 대한 retry와 circuit breaker를 decoration하기`() = runSuspendTest {
-//            coEvery { service.execute(input) } throws IOException("BAM!")
-//
-//            val decorated = CoDecorators
-//                .ofFunction1 { s: String -> service.execute(s) }
-//                .withRetry(retry)
-//                .withCircuitBreaker(circuitBreaker)
-//                .decoreate()
-//
-//            val result = runCatching { decorated(input) }
-//
-//            result.isFailure.shouldBeTrue()
-//            result.exceptionOrNull() shouldBeInstanceOf IOException::class
-//            coVerify(exactly = retry.retryConfig.maxAttempts) { service.execute(input) }
-//            confirmVerified(service)
-//        }
-//
-//        @Test
-//        fun `성공하는 function 에 대해 CoroutinesCache decorate하기`() = runSuspendTest {
-//            coEvery { service.execute(input) } returns output
-//
-//            val jcache = Cache2kJCacheProvider.getJCache<String, LocalDateTime>("CoDecorators")
-//            jcache.clear()
-//            val coroutinesCache = CoroutinesCache.of(jcache)
-//
-//            val decorated = CoDecorators
-//                .ofFunction1 { s: String -> service.execute(s) }
-//                .withCoroutinesCache(coroutinesCache)
-//                .decoreate()
-//
-//
-//            val result = runCatching { decorated.invoke(input) }
-//
-//            result.isSuccess.shouldBeTrue()
-//            result.getOrNull() shouldBeEqualTo output
-//
-//            val result2 = runCatching { decorated.invoke(input) }
-//
-//            result2.isSuccess.shouldBeTrue()
-//            result2.getOrNull() shouldBeEqualTo output
-//
-//            coroutinesCache.metrics.getNumberOfCacheMisses() shouldBeEqualTo 1
-//            coroutinesCache.metrics.getNumberOfCacheHits() shouldBeEqualTo 1
-//
-//            // Cache 된 값을 가져 오기 때문에 한번만 수행합니다.
-//            coVerify(exactly = 1) { service.execute(input) }
-//            confirmVerified(service)
-//        }
-//    }
-//
-//    @Nested
-//    inner class CoDecoratorsForFunction2Test {
-//
-//        val input1 = 21
-//        val input2 = 23
-//        val output = 44
-//
-//        @Test
-//        fun `성공하는 bi-function 대한 retry decoration 하기`() = runSuspendTest {
-//            coEvery { service.bifunction(input1, input2) } returns output
-//
-//            val decorated = CoDecorators
-//                .ofFunction2 { a: Int, b: Int -> service.bifunction(a, b) }
-//                .withRetry(retry)
-//                .decoreate()
-//
-//            val result = runCatching { decorated(input1, input2) }
-//
-//            result.isSuccess.shouldBeTrue()
-//            result.getOrNull() shouldBeEqualTo output
-//            coVerify(exactly = 1) { service.bifunction(input1, input2) }
-//            confirmVerified(service)
-//        }
-//
-//        @Test
-//        fun `성공하는 bi-function 대해 retry 와 circuit breaker를 decoration 하기`() = runSuspendTest {
-//            coEvery { service.bifunction(input1, input2) } returns output
-//
-//            val decorated = CoDecorators
-//                .ofFunction2 { a: Int, b: Int -> service.bifunction(a, b) }
-//                .withRetry(retry)
-//                .withCircuitBreaker(circuitBreaker)
-//                .decoreate()
-//
-//            val result = runCatching { decorated(input1, input2) }
-//
-//            result.isSuccess.shouldBeTrue()
-//            result.getOrNull() shouldBeEqualTo output
-//            coVerify(exactly = 1) { service.bifunction(input1, input2) }
-//            confirmVerified(service)
-//        }
-//
-//        @Test
-//        fun `예외를 발생하는 bi-function 대한 retry decoration하기`() = runSuspendTest {
-//            coEvery { service.bifunction(input1, input2) } throws IOException("BAM!")
-//
-//            val decorated = CoDecorators
-//                .ofFunction2 { a: Int, b: Int -> service.bifunction(a, b) }
-//                .withRetry(retry)
-//                .decoreate()
-//
-//            val result = runCatching { decorated(input1, input2) }
-//
-//            result.isFailure.shouldBeTrue()
-//            result.exceptionOrNull() shouldBeInstanceOf IOException::class
-//            coVerify(exactly = retry.retryConfig.maxAttempts) { service.bifunction(input1, input2) }
-//            confirmVerified(service)
-//        }
-//
-//        @Test
-//        fun `예외를 발생하는 bi-function 대한 retry와 circuit breaker를 decoration하기`() = runSuspendTest {
-//            coEvery { service.bifunction(input1, input2) } throws IOException("BAM!")
-//
-//            val decorated = CoDecorators
-//                .ofFunction2 { a: Int, b: Int -> service.bifunction(a, b) }
-//                .withRetry(retry)
-//                .withCircuitBreaker(circuitBreaker)
-//                .decoreate()
-//
-//            val result = runCatching { decorated(input1, input2) }
-//
-//            result.isFailure.shouldBeTrue()
-//            result.exceptionOrNull() shouldBeInstanceOf IOException::class
-//            coVerify(exactly = retry.retryConfig.maxAttempts) { service.bifunction(input1, input2) }
-//            confirmVerified(service)
-//        }
-//    }
+    @Nested
+    inner class CoDecoratorsForFunction1Test {
+
+        val input = "Hello world!"
+        val output = LocalDateTime.now()
+
+        @Test
+        fun `성공하는 function 대한 retry decoration 하기`() = runSuspendTest {
+            coEvery { service.execute(input) } returns output
+
+            val decorated = CoDecorators
+                .ofFunction1 { s: String -> service.execute(s) }
+                .withRetry(retry)
+                .decoreate()
+
+            val result = runCatching { decorated(input) }
+
+            result.isSuccess.shouldBeTrue()
+            result.getOrNull() shouldBeEqualTo output
+            coVerify(exactly = 1) { service.execute(input) }
+            confirmVerified(service)
+        }
+
+        @Test
+        fun `성공하는 function 대해 retry 와 circuit breaker를 decoration 하기`() = runSuspendTest {
+            coEvery { service.execute(input) } returns output
+
+            val decorated = CoDecorators
+                .ofFunction1 { s: String -> service.execute(s) }
+                .withRetry(retry)
+                .withCircuitBreaker(circuitBreaker)
+                .decoreate()
+
+            val result = runCatching { decorated(input) }
+
+            result.isSuccess.shouldBeTrue()
+            result.getOrNull() shouldBeEqualTo output
+            coVerify(exactly = 1) { service.execute(input) }
+            confirmVerified(service)
+        }
+
+        @Test
+        fun `예외를 발생하는 function 대한 retry decoration하기`() = runSuspendTest {
+            coEvery { service.execute(input) } throws IOException("BAM!")
+
+            val decorated = CoDecorators
+                .ofFunction1 { s: String -> service.execute(s) }
+                .withRetry(retry)
+                .decoreate()
+
+            val result = runCatching { decorated(input) }
+
+            result.isFailure.shouldBeTrue()
+            result.exceptionOrNull() shouldBeInstanceOf IOException::class
+            coVerify(exactly = retry.retryConfig.maxAttempts) { service.execute(input) }
+            confirmVerified(service)
+        }
+
+        @Test
+        fun `예외를 발생하는 function 대한 retry와 circuit breaker를 decoration하기`() = runSuspendTest {
+            coEvery { service.execute(input) } throws IOException("BAM!")
+
+            val decorated = CoDecorators
+                .ofFunction1 { s: String -> service.execute(s) }
+                .withRetry(retry)
+                .withCircuitBreaker(circuitBreaker)
+                .decoreate()
+
+            val result = runCatching { decorated(input) }
+
+            result.isFailure.shouldBeTrue()
+            result.exceptionOrNull() shouldBeInstanceOf IOException::class
+            coVerify(exactly = retry.retryConfig.maxAttempts) { service.execute(input) }
+            confirmVerified(service)
+        }
+
+        @Test
+        fun `성공하는 function 에 대해 CoroutinesCache decorate하기`() = runSuspendTest {
+            coEvery { service.execute(input) } returns output
+
+            val jcache = Cache2kJCacheProvider.getJCache<String, LocalDateTime>("CoDecorators")
+            jcache.clear()
+            val coroutinesCache = CoCache.of(jcache)
+
+            val decorated = CoDecorators
+                .ofFunction1 { s: String -> service.execute(s) }
+                .withCoroutinesCache(coroutinesCache)
+                .decoreate()
+
+
+            val result = runCatching { decorated.invoke(input) }
+
+            result.isSuccess.shouldBeTrue()
+            result.getOrNull() shouldBeEqualTo output
+
+            val result2 = runCatching { decorated.invoke(input) }
+
+            result2.isSuccess.shouldBeTrue()
+            result2.getOrNull() shouldBeEqualTo output
+
+            coroutinesCache.metrics.getNumberOfCacheMisses() shouldBeEqualTo 1
+            coroutinesCache.metrics.getNumberOfCacheHits() shouldBeEqualTo 1
+
+            // Cache 된 값을 가져 오기 때문에 한번만 수행합니다.
+            coVerify(exactly = 1) { service.execute(input) }
+            confirmVerified(service)
+        }
+    }
+
+    @Nested
+    inner class CoDecoratorsForBiFunctionTest {
+
+        val input1 = 21
+        val input2 = 23
+        val output = 44
+
+        @Test
+        fun `성공하는 bi-function 대한 retry decoration 하기`() = runSuspendTest {
+            coEvery { service.bifunction(input1, input2) } returns output
+
+            val decorated = CoDecorators
+                .ofFunction2 { a: Int, b: Int -> service.bifunction(a, b) }
+                .withRetry(retry)
+                .decoreate()
+
+            val result = runCatching { decorated(input1, input2) }
+
+            result.isSuccess.shouldBeTrue()
+            result.getOrNull() shouldBeEqualTo output
+            coVerify(exactly = 1) { service.bifunction(input1, input2) }
+            confirmVerified(service)
+        }
+
+        @Test
+        fun `성공하는 bi-function 대해 retry 와 circuit breaker를 decoration 하기`() = runSuspendTest {
+            coEvery { service.bifunction(input1, input2) } returns output
+
+            val decorated = CoDecorators
+                .ofFunction2 { a: Int, b: Int -> service.bifunction(a, b) }
+                .withRetry(retry)
+                .withCircuitBreaker(circuitBreaker)
+                .decoreate()
+
+            val result = runCatching { decorated(input1, input2) }
+
+            result.isSuccess.shouldBeTrue()
+            result.getOrNull() shouldBeEqualTo output
+            coVerify(exactly = 1) { service.bifunction(input1, input2) }
+            confirmVerified(service)
+        }
+
+        @Test
+        fun `예외를 발생하는 bi-function 대한 retry decoration하기`() = runSuspendTest {
+            coEvery { service.bifunction(input1, input2) } throws IOException("BAM!")
+
+            val decorated = CoDecorators
+                .ofFunction2 { a: Int, b: Int -> service.bifunction(a, b) }
+                .withRetry(retry)
+                .decoreate()
+
+            val result = runCatching { decorated(input1, input2) }
+
+            result.isFailure.shouldBeTrue()
+            result.exceptionOrNull() shouldBeInstanceOf IOException::class
+            coVerify(exactly = retry.retryConfig.maxAttempts) { service.bifunction(input1, input2) }
+            confirmVerified(service)
+        }
+
+        @Test
+        fun `예외를 발생하는 bi-function 대한 retry와 circuit breaker를 decoration하기`() = runSuspendTest {
+            coEvery { service.bifunction(input1, input2) } throws IOException("BAM!")
+
+            val decorated = CoDecorators
+                .ofFunction2 { a: Int, b: Int -> service.bifunction(a, b) }
+                .withRetry(retry)
+                .withCircuitBreaker(circuitBreaker)
+                .decoreate()
+
+            val result = runCatching { decorated(input1, input2) }
+
+            result.isFailure.shouldBeTrue()
+            result.exceptionOrNull() shouldBeInstanceOf IOException::class
+            coVerify(exactly = retry.retryConfig.maxAttempts) { service.bifunction(input1, input2) }
+            confirmVerified(service)
+        }
+    }
 }
