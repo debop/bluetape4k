@@ -104,6 +104,8 @@ abstract class AbstractS3Test {
             "garden.jpg",
             "landscape.jpg",
             "wabull.jpg",
+            "coroutines.pdf",
+            "kotlin.key",
         )
     }
 }

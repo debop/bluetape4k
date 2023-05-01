@@ -149,7 +149,7 @@ subprojects {
 
             // 테스트 시 아래와 같은 예외 메시지를 제거하기 위해서 
             // OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-            jvmArgs("-XX:+UseZGC", "-Xshare:off")
+            jvmArgs("-Xshare:off")
 
             testLogging {
                 showExceptions = true
