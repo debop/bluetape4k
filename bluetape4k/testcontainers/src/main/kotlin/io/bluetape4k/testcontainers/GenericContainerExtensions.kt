@@ -12,13 +12,13 @@ import org.testcontainers.containers.GenericContainer
  * @param T Server type
  * @param exposedPorts port numbers to exposed, 아무것도 지정하지 않으면 기본적인 exposedPorts 를 이용합니다.
  */
-fun <T: GenericContainer<T>> GenericContainer<T>.exposeCustomPorts(vararg exposedPorts: Int) {
+fun <T : GenericContainer<T>> GenericContainer<T>.exposeCustomPorts(vararg exposedPorts: Int) {
     val portsToExpose = exposedPorts + this.exposedPorts
     if (portsToExpose.isNotEmpty()) {
         val bindings = portsToExpose.toSet().map { PortBinding(Ports.Binding.bindPort(it), ExposedPort(it)) }
         if (bindings.isNotEmpty()) {
             withCreateContainerCmdModifier { cmd ->
-                cmd.withPortBindings(bindings)
+                cmd.hostConfig?.withPortBindings(bindings)
             }
         }
     }
