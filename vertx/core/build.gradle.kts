@@ -4,6 +4,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
+    api(project(":bluetape4k-io-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Vertx
@@ -21,6 +22,4 @@ dependencies {
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 
-    // Netty 를 Mac M1 에서 사용하기 위한 설정
-    testImplementation(Libs.netty_resolver_dns_native_macos + ":osx-aarch_64")
 }

@@ -918,9 +918,9 @@ object Libs {
     val querydsl_kotlin_codegen get() = querydsl("kotlin-codegen")
 
     // MyBais
-    val mybatis get() = "org.mybatis:mybatis:3.5.10"
-    val mybatis_spring get() = "org.mybatis:mybatis-spring:2.0.7"
-    val mybatis_dynamic_sql get() = "org.mybatis.dynamic-sql:mybatis-dynamic-sql:1.4.0"
+    val mybatis get() = "org.mybatis:mybatis:3.5.13"
+    val mybatis_spring get() = "org.mybatis:mybatis-spring:2.1.0"
+    val mybatis_dynamic_sql get() = "org.mybatis.dynamic-sql:mybatis-dynamic-sql:1.5.0"
 
     // blaze-persistence
     fun blazePersistence(module: String, version: String = Versions.blaze_persistence): String =
@@ -942,7 +942,7 @@ object Libs {
     val blaze_persistence_integration_entity_view_spring get() = blazePersistenceIntegration("entity-view-spring")
 
     // MyBatis Mapping 에 사용한다
-    val byte_buddy = "net.bytebuddy:byte-buddy:1.12.10"
+    val byte_buddy = "net.bytebuddy:byte-buddy:1.14.4"
 
     val hikaricp get() = "com.zaxxer:HikariCP:5.0.1"
     val tomcat_jdbc get() = "org.apache.tomcat:tomcat-jdbc:9.0.36"
@@ -954,7 +954,6 @@ object Libs {
 
     // NOTE: Apache Ignite 에서는 꼭 1.4.197 를 써야 합니다.
     val h2 get() = "com.h2database:h2:1.4.197"
-
     // MyBatis 테스트 시에 h2 v2 를 사용한다
     val h2_v2 get() = "com.h2database:h2:2.1.214"
     val hsqldb get() = "org.hsqldb:hsqldb:2.5.1"
