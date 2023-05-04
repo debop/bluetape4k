@@ -5,6 +5,7 @@ import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.junit.jupiter.api.Test
@@ -27,12 +28,12 @@ class MultiJobTesterTest {
     }
 
     @Test
-    fun `긴 실행 시간을 가지는 코드블럭 실행`() = runSuspendTest {
+    fun `긴 실행 시간을 가지는 코드블럭 실행`() = runTest {
         val counter = atomic(0)
 
         MultiJobTester()
             .numThreads(2)
-            .roundsPerThread(1)
+            .roundsPerThread(2)
             .add {
                 log.trace { "Run suspend block ${counter.value}" }
                 delay(1000)
@@ -40,7 +41,7 @@ class MultiJobTesterTest {
             }
             .run()
 
-        counter.value shouldBeEqualTo 2
+        counter.value shouldBeEqualTo 4
     }
 
     @Test
@@ -100,6 +101,7 @@ class MultiJobTesterTest {
 
         override suspend fun invoke() {
             counter.incrementAndGet()
+            yield()
         }
     }
 }

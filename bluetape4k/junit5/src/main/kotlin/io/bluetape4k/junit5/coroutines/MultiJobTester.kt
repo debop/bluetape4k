@@ -5,8 +5,8 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.withTimeout
@@ -109,8 +109,8 @@ class MultiJobTester {
 
     private suspend fun awaitWorkerJobs() {
         log.debug { "Await worker jobs ..." }
-        withTimeout(1000) {
-            workerJobs.forEach { it.cancelAndJoin() }
+        withTimeout(30000) {
+            workerJobs.joinAll()
         }
     }
 }
