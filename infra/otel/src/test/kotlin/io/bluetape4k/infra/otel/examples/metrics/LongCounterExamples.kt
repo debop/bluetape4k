@@ -12,11 +12,11 @@ import io.opentelemetry.api.OpenTelemetry
 import io.opentelemetry.api.metrics.LongCounter
 import io.opentelemetry.api.trace.SpanKind
 import io.opentelemetry.api.trace.StatusCode
-import java.io.File
-import java.nio.file.Path
 import kotlinx.coroutines.delay
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import java.io.File
+import java.nio.file.Path
 
 
 /**
@@ -32,7 +32,7 @@ class LongCounterExamples: AbstractOtelTest() {
 
     private lateinit var directoryCounter: LongCounter
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "measure directory count. name={0}")
     @MethodSource(JUNIT_METHOD_SOURCE_NAME)
     fun `measure directory count`(name: String, otel: OpenTelemetry) {
         log.debug { "use $name OpenTelemetry" }
@@ -79,7 +79,7 @@ class LongCounterExamples: AbstractOtelTest() {
             }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "measure directory count in coroutines. name={0}")
     @MethodSource(JUNIT_METHOD_SOURCE_NAME)
     fun `measure directory count in coroutines`(name: String, otel: OpenTelemetry) = runSuspendWithIO {
         log.debug { "use $name OpenTelemetry" }

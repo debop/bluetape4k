@@ -1,5 +1,7 @@
 package io.bluetape4k.utils.times.period.ranges
 
+import io.bluetape4k.junit5.coroutines.MultiJobTester
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
@@ -24,7 +26,7 @@ class WeekRangeCollectionTest: AbstractPeriodTest() {
 
     companion object: KLogging()
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "single week collection. day={0}")
     @ValueSource(ints = [1, 15, 31])
     fun `single week collection`(day: Int) {
         val now = zonedDateTimeOf(2019, 12, day)
@@ -102,5 +104,47 @@ class WeekRangeCollectionTest: AbstractPeriodTest() {
                 tasks.awaitAll()
             }
         }
+    }
+
+    @Test
+    fun `various weekCount in coroutines`() = runSuspendWithIO {
+        val weekCounts = listOf(1, 6, 48, 180, 365)
+
+        val now = nowZonedDateTime()
+        val today = todayZonedDateTime()
+
+        MultiJobTester()
+            .numThreads(64)
+            .roundsPerThread(10)
+            .add {
+                weekCounts.forEach { weekCount ->
+                    val wrs = WeekRangeCollection(now, weekCount)
+
+                    val startTime = wrs.calendar.mapStart(today.startOfWeek())
+                    val endTime = wrs.calendar.mapEnd(startTime.plusWeeks(weekCount.toLong()))
+
+                    wrs.start shouldBeEqualTo startTime
+                    wrs.end shouldBeEqualTo endTime
+
+                    val wrSeq = wrs.weekSequence()
+                    wrSeq.count() shouldBeEqualTo weekCount
+
+                    val tasks = wrSeq.mapIndexed { w, wr ->
+                        async {
+                            wr.start shouldBeEqualTo startTime.plusWeeks(w.toLong())
+                            wr.end shouldBeEqualTo wr.calendar.mapEnd(startTime.plusWeeks(w + 1L))
+
+                            wr.unmappedStart shouldBeEqualTo startTime.plusWeeks(w.toLong())
+                            wr.unmappedEnd shouldBeEqualTo startTime.plusWeeks(w + 1L)
+
+                            wr shouldBeEqualTo WeekRange(wrs.start.plusWeeks(w.toLong()))
+                            val afterWeek = now.startOfWeek().plusWeeks(w.toLong())
+                            wr shouldBeEqualTo WeekRange(afterWeek)
+                        }
+                    }.toList()
+                    tasks.awaitAll()
+                }
+            }
+            .run()
     }
 }

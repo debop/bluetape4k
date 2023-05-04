@@ -4,24 +4,26 @@ import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.time.DayOfWeek
-import java.time.Instant
-import java.time.Month
-import java.time.ZonedDateTime
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.ValueSource
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.Month
+import java.time.ZonedDateTime
 import kotlin.math.absoluteValue
 
 @RandomizedTest
 class InstantSupportTest {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        private const val REPEAT_SIZE = 10
+    }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "start of year for instant: {0}")
     @ValueSource(longs = [1980, 2002, 2019, 2020, 2049, 2999])
     fun `start of year for instant`(year: Long) {
         val instant = Instant.now()
@@ -36,7 +38,7 @@ class InstantSupportTest {
         verifyStartOfDay(utcStart)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "start of month for instant: {0}")
     @EnumSource(Month::class)
     fun `start of month for instant`(month: Month) {
         val start = nowLocalDateTime().withMonth(month.value).withDayOfMonth(5).startOfMonth()
@@ -49,7 +51,7 @@ class InstantSupportTest {
         verifyStartOfDay(utcStart)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "start of week for instant: {0}")
     @EnumSource(DayOfWeek::class)
     fun `start of week for instant`(dayOfWeek: DayOfWeek) {
 
@@ -80,7 +82,7 @@ class InstantSupportTest {
         utcStart.nano shouldBeEqualTo 0
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `start of hour for instant`(@RandomValue hour: Int) {
         val instant = nowInstant()
 
@@ -93,7 +95,7 @@ class InstantSupportTest {
         utcStart.nano shouldBeEqualTo 0
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `start of minute for instant`(@RandomValue minute: Int) {
         val instant = nowInstant()
 
@@ -105,7 +107,7 @@ class InstantSupportTest {
         utcStart.nano shouldBeEqualTo 0
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `start of second for instant`(@RandomValue second: Int) {
         val instant = nowInstant()
 

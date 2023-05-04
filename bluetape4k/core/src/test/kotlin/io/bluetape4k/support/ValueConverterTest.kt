@@ -5,8 +5,6 @@ import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import java.math.BigDecimal
-import java.math.BigInteger
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.RepeatedTest
@@ -14,6 +12,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import java.math.BigDecimal
+import java.math.BigInteger
 
 @RandomizedTest
 class ValueConverterTest {
@@ -198,7 +198,7 @@ class ValueConverterTest {
         argumentOf("9223372036854775806", 9223372036854775806L)
     )
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "source={0}, expected={1}")
     @MethodSource("getLongValues")
     fun `convert any parameter asLong`(src: Any?, expected: Long) {
         src.asLong() shouldBeEqualTo expected

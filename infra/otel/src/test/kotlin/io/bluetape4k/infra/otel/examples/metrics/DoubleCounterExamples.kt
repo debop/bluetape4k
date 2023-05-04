@@ -11,11 +11,11 @@ import io.opentelemetry.api.OpenTelemetry
 import io.opentelemetry.api.metrics.DoubleCounter
 import io.opentelemetry.api.trace.SpanKind
 import io.opentelemetry.api.trace.StatusCode
-import java.io.File
-import java.nio.file.Path
 import kotlinx.coroutines.delay
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import java.io.File
+import java.nio.file.Path
 
 class DoubleCounterExamples: AbstractOtelTest() {
 
@@ -24,7 +24,7 @@ class DoubleCounterExamples: AbstractOtelTest() {
         private val fileExtensionAttrKey = "file_extension".toAttributeKey()
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "measure file size in coroutines. name={0}")
     @MethodSource(JUNIT_METHOD_SOURCE_NAME)
     fun `measure file size in coroutines`(name: String, otel: OpenTelemetry) = runSuspendWithIO {
         log.debug { "Use $name OpenTelemetry in Coroutines" }

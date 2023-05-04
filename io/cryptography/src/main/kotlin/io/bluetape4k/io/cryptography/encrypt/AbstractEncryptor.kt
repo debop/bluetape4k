@@ -54,4 +54,8 @@ abstract class AbstractEncryptor protected constructor(
     override fun decrypt(encrypted: ByteArray?): ByteArray {
         return encrypted?.run { encryptor.decrypt(this) } ?: emptyByteArray
     }
+
+    override fun toString(): String {
+        return "Encryptor(algorithm=$algorithm)"
+    }
 }

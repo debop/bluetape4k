@@ -4,6 +4,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
+    api(project(":bluetape4k-data-jdbc"))
     api(project(":bluetape4k-io-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 

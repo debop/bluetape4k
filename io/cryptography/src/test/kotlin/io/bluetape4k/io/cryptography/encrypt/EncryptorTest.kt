@@ -15,21 +15,23 @@ class EncryptorTest {
         private const val REPEAT_SIZE = 10
 
         private fun getRandomString() =
-            Fakers.randomString(100, 4096, true)
+            Fakers.randomString(256, 4096, true)
     }
 
-    private val encryptors: List<Arguments> = listOf(
-        Encryptors.AES,
-        Encryptors.DES,
-        Encryptors.RC2,
-        Encryptors.RC4,
-        Encryptors.TripleDES
-    ).map { Arguments.of(it) }
+    private val encryptors: List<Arguments> =
+        listOf(
+            Encryptors.AES,
+            Encryptors.DES,
+            Encryptors.RC2,
+            Encryptors.RC4,
+            Encryptors.TripleDES
+        ).map {
+            Arguments.of(it)
+        }
 
-
-    @ParameterizedTest(name = "encryptor {0}")
+    @ParameterizedTest(name = "encrypt byte array. encryptor={0}")
     @FieldSource("encryptors")
-    fun `encrypt and decrypt simple bytes`(encryptor: Encryptor) {
+    fun `encrypt and decrypt byte array`(encryptor: Encryptor) {
         repeat(REPEAT_SIZE) {
             val message = getRandomString().toUtf8Bytes()
 
@@ -40,7 +42,7 @@ class EncryptorTest {
         }
     }
 
-    @ParameterizedTest(name = "encryptor {0}")
+    @ParameterizedTest(name = "encrypt string. encryptor={0}")
     @FieldSource("encryptors")
     fun `encrypt and decrypt string`(encryptor: Encryptor) {
         repeat(REPEAT_SIZE) {
@@ -53,7 +55,7 @@ class EncryptorTest {
         }
     }
 
-    @ParameterizedTest(name = "encryptor {0}")
+    @ParameterizedTest(name = "encrypt char array. encryptor={0}")
     @FieldSource("encryptors")
     fun `encrypt and decrypt char array`(encryptor: Encryptor) {
         repeat(REPEAT_SIZE) {

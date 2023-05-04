@@ -29,7 +29,7 @@ class DigesterTest {
         Digesters.SHA512
     ).map { Arguments.of(it) }
 
-    @ParameterizedTest(name = "digester={0}")
+    @ParameterizedTest(name = "digest byte array. digester={0}")
     @FieldSource("digesters")
     fun `digest message as byte array`(digester: Digester) {
         repeat(REPEAT_SIZE) {
@@ -39,7 +39,7 @@ class DigesterTest {
         }
     }
 
-    @ParameterizedTest(name = "digester={0}")
+    @ParameterizedTest(name = "digest string. digester={0}")
     @FieldSource("digesters")
     fun `digest message as string`(digester: Digester) {
         repeat(REPEAT_SIZE) {
@@ -49,7 +49,7 @@ class DigesterTest {
         }
     }
 
-    @ParameterizedTest(name = "digester={0}")
+    @ParameterizedTest(name = "digest char array. digester={0}")
     @FieldSource("digesters")
     fun `digest message with char array`(digester: Digester) {
         log.debug { "Digest CharArray with ${digester.javaClass.simpleName}" }

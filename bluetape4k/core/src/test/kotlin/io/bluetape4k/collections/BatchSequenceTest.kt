@@ -33,7 +33,7 @@ class BatchSequenceTest {
         count shouldBeEqualTo 5
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "batch size {0}")
     @ValueSource(ints = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     fun `batch sequence with batch size`(batchSize: Int) {
         val max = 1000
@@ -100,7 +100,7 @@ class BatchSequenceTest {
         verifyAsStream(listOf(1, 3, 5), 1, 3)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "batch size {0}")
     @ValueSource(ints = [-100, -10, -1, 0])
     fun `batch size is invalid number`(batchSize: Int) {
         assertFailsWith<AssertionError> {

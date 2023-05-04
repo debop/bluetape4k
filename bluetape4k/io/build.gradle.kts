@@ -5,9 +5,10 @@ plugins {
 }
 
 allOpen {
+    // https://github.com/Kotlin/kotlinx-benchmark
     annotation("org.openjdk.jmh.annotations.State")
 }
-
+// https://github.com/Kotlin/kotlinx-benchmark
 benchmark {
     targets {
         register("test") {

@@ -64,7 +64,7 @@ class QuarterTest {
         }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "increment quarter {0}")
     @ValueSource(ints = [0, 1, 2, 3, 4, 100, -1, -5, -11])
     fun `increment quarter`(quarterCount: Int) {
         Quarter.VALS.forEach { q ->
@@ -89,7 +89,7 @@ class QuarterTest {
         }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "decrement quarter {0}")
     @ValueSource(ints = [0, 1, 2, 3, 4, 100, -1, -5, -11])
     fun `decrement quarter`(quarterCount: Int) {
         Quarter.VALS.forEach { q ->

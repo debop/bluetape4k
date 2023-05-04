@@ -9,11 +9,11 @@ import io.bluetape4k.data.redis.messages.simpleMessage
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.lettuce.core.codec.RedisCodec
-import java.time.Instant
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import java.time.Instant
 import kotlin.random.Random
 
 class LettuceBinaryCodecTest: AbstractLettuceTest() {
@@ -52,7 +52,7 @@ class LettuceBinaryCodecTest: AbstractLettuceTest() {
         LettuceBinaryCodecs.zstdProtobuf(),
     )
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "codec={0}")
     @MethodSource("getRedisCodecs")
     fun `codec for kotlin data class`(codec: RedisCodec<String, Any>) {
         LettuceClients.connect(client, codec).use { connection ->
@@ -69,7 +69,7 @@ class LettuceBinaryCodecTest: AbstractLettuceTest() {
         }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "codec={0}")
     @MethodSource("getRedisCodecs")
     fun `codec for collection of kotlin data class`(codec: RedisCodec<String, Any>) {
         LettuceClients.connect(client, codec).use { connection ->
@@ -88,7 +88,7 @@ class LettuceBinaryCodecTest: AbstractLettuceTest() {
         }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "codec={0}")
     @MethodSource("getRedisCodecs")
     fun `codec for protobuf message`(codec: RedisCodec<String, Any>) {
         client.connect(codec).use { connection ->
@@ -104,7 +104,7 @@ class LettuceBinaryCodecTest: AbstractLettuceTest() {
         }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "codec={0}")
     @MethodSource("getRedisCodecs")
     fun `codec for collection of protobuf message`(codec: RedisCodec<String, Any>) {
         client.connect(codec).use { connection ->
@@ -120,7 +120,7 @@ class LettuceBinaryCodecTest: AbstractLettuceTest() {
         }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "codec={0}")
     @MethodSource("getRedisCodecs")
     fun `codec for hset with data class`(codec: RedisCodec<String, Any>) {
         client.connect(codec).use { connection ->
@@ -136,7 +136,7 @@ class LettuceBinaryCodecTest: AbstractLettuceTest() {
         }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "codec={0}")
     @MethodSource("getRedisCodecs")
     fun `codec for hset with protobuf message`(codec: RedisCodec<String, Any>) {
         client.connect(codec).use { connection ->

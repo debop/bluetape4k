@@ -131,8 +131,10 @@ object Versions {
 
     // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom
     const val opentelemetry = "1.25.0"
+
     // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom-alpha
     const val opentelemetryAlpha = "$opentelemetry-alpha"
+
     // https://mvnrepository.com/artifact/io.opentelemetry.instrumentation/opentelemetry-instrumentation-bom-alpha
     const val opentelemetryInstrumentationAlpha = "$opentelemetry-alpha"
 
@@ -173,6 +175,7 @@ object Versions {
 
     // https://mvnrepository.com/artifact/com.github.maricn/logback-slack-appender
     const val logback_slack_appender = "1.6.1"
+
     // https://mvnrepository.com/artifact/io.sentry/sentry-logback
     const val sentry_logback = "6.17.0"
 }
@@ -182,10 +185,10 @@ object Libs {
     fun getOsClassifier(): String {
         val os = DefaultNativePlatform.getCurrentOperatingSystem()
         val osName = when {
-            os.isMacOsX -> "osx"
-            os.isLinux -> "linux"
+            os.isMacOsX  -> "osx"
+            os.isLinux   -> "linux"
             os.isWindows -> "windows"
-            else -> ""
+            else         -> ""
         }
         if (osName.isEmpty()) {
             return osName
@@ -372,7 +375,8 @@ object Libs {
     val marshalling_serial get() = "org.jboss.marshalling:jboss-marshalling-serial:2.1.1.Final"
 
     // Spring Boot
-    val spring_boot_dependencies get() = "org.springframework.boot:spring-boot-dependencies:${Versions.spring_boot}"
+    val spring_boot_dependencies
+        get() = "org.springframework.boot:spring-boot-dependencies:${Versions.spring_boot}"
 
     fun spring(module: String) = "org.springframework:spring-$module"
     fun springBoot(module: String) = "org.springframework.boot:spring-boot-$module"
@@ -381,7 +385,8 @@ object Libs {
     fun springSecurity(module: String) = "org.springframework.security:spring-security-$module"
 
     // Spring Cloud
-    const val spring_cloud_dependencies = "org.springframework.cloud:spring-cloud-dependencies:${Versions.spring_cloud}"
+    val spring_cloud_dependencies
+        get() = "org.springframework.cloud:spring-cloud-dependencies:${Versions.spring_cloud}"
 
     fun springCloud(module: String) = "org.springframework.cloud:spring-cloud-$module"
     fun springCloudStarter(module: String) = "org.springframework.cloud:spring-cloud-starter-$module"
@@ -399,12 +404,12 @@ object Libs {
     // Quarkus
     fun quarkus(extension: String) = "io.quarkus:quarkus-$extension:${Versions.quarkus}"
 
-    val quarkus_bom = "io.quarkus.platform:quarkus-bom:${Versions.quarkus}"
+    val quarkus_bom get() = "io.quarkus.platform:quarkus-bom:${Versions.quarkus}"
 
     // rest-assured
     fun restAssured(module: String) = "io.rest-assured:$module"
-    val rest_assured = restAssured("rest-assured")
-    val rest_assured_kotlin = restAssured("kotlin-extensions")
+    val rest_assured get() = restAssured("rest-assured")
+    val rest_assured_kotlin get() = restAssured("kotlin-extensions")
 
     // Vert.x (https://vertx.io/docs/)
     fun vertx(module: String, version: String = Versions.vertx) = "io.vertx:vertx-$module:$version"
@@ -953,6 +958,7 @@ object Libs {
 
     // NOTE: Apache Ignite 에서는 꼭 1.4.197 를 써야 합니다.
     val h2 get() = "com.h2database:h2:1.4.197"
+
     // MyBatis 테스트 시에 h2 v2 를 사용한다
     val h2_v2 get() = "com.h2database:h2:2.1.214"
     val hsqldb get() = "org.hsqldb:hsqldb:2.5.1"

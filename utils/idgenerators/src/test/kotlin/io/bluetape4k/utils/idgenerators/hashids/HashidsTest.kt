@@ -24,7 +24,7 @@ class HashidsTest {
 
     private val hashids = Hashids(salt = "great korea")
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "encode number: {0}")
     @ValueSource(longs = [0, 1, 1014, Hashids.MAX_NUMBER])
     fun `encode number in valid range`(number: Long) {
         val encoded = hashids.encode(number)

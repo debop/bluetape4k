@@ -51,9 +51,13 @@ class LettuceBinaryCodec<V: Any>(
 
     override fun estimateSize(keyOrValue: Any?): Int {
         return when (keyOrValue) {
-            is String -> keyOrValue.length
+            is String    -> keyOrValue.length
             is ByteArray -> keyOrValue.size
-            else -> 0
+            else         -> 0
         }
+    }
+
+    override fun toString(): String {
+        return "LettuceBinaryCodec(serializer=${serializer.javaClass.simpleName})"
     }
 }

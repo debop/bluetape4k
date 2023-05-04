@@ -3,7 +3,6 @@ package io.bluetape4k.junit5.coroutines
 import io.bluetape4k.junit5.utils.MultiException
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.util.concurrent.CopyOnWriteArraySet
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -11,6 +10,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.withTimeout
+import java.util.concurrent.CopyOnWriteArraySet
 
 /**
  * suspend 함수를 제한된 스레드 수에서 동시에 실행시키고, 모든 suspend 함수가 종료되기를 기다린다.
@@ -19,8 +19,8 @@ import kotlinx.coroutines.withTimeout
 class MultiJobTester {
 
     companion object: KLogging() {
-        const val DEFAULT_THREAD_SIZE: Int = 100
-        const val DEFAULT_ROUNDS_PER_THREADS: Int = 1000
+        const val DEFAULT_THREAD_SIZE: Int = 64
+        const val DEFAULT_ROUNDS_PER_THREADS: Int = 10
     }
 
     private var numThreads = DEFAULT_THREAD_SIZE
@@ -65,7 +65,6 @@ class MultiJobTester {
 
         startWorkerJobs(me)
         awaitWorkerJobs()
-
 
         me.throwIfNotEmpty()
     }

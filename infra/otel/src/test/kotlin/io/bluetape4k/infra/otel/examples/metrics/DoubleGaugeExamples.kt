@@ -10,12 +10,11 @@ import io.opentelemetry.api.metrics.ObservableDoubleMeasurement
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 
-
 class DoubleGaugeExamples: AbstractOtelTest() {
 
     companion object: KLogging()
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "use gauge with opentelemetry. name={0}")
     @MethodSource(JUNIT_METHOD_SOURCE_NAME)
     fun `use gauge with opentelemetry`(name: String, otel: OpenTelemetry) {
         log.debug { "Use $name opentelemetry" }

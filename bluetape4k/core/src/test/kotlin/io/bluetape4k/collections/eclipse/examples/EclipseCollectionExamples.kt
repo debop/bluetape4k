@@ -4,8 +4,6 @@ import io.bluetape4k.collections.eclipse.emptyFastList
 import io.bluetape4k.collections.eclipse.primitives.toIntArrayList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.ForkJoinPool
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeNull
@@ -17,6 +15,8 @@ import org.eclipse.collections.impl.list.mutable.FastList
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.ForkJoinPool
 
 class EclipseCollectionExamples {
 
@@ -36,7 +36,7 @@ class EclipseCollectionExamples {
         even2 shouldContainSame even
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "batch size {0}")
     @ValueSource(ints = [100, 1000])
     fun `execute in parallel mode`(size: Int) {
         var count = 0
@@ -62,7 +62,7 @@ class EclipseCollectionExamples {
         odd.shouldBeNull()
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "partitioning size={0}")
     @ValueSource(ints = [100, 1000])
     fun `partitioning list`(size: Int) {
         var count = 0
@@ -78,7 +78,7 @@ class EclipseCollectionExamples {
         evenOdd.rejected.size shouldBeEqualTo size / 2
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "array size={0}")
     @ValueSource(ints = [100, 1000])
     fun `build IntArrayList`(size: Int) {
         val xs = (0 until size).toIntArrayList()
@@ -87,7 +87,7 @@ class EclipseCollectionExamples {
         xs.asLazy().select { it % 2 == 0 }.size() shouldBeEqualTo size / 2
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "group size={0}")
     @ValueSource(ints = [100, 1000])
     fun `groupBy list`(size: Int) {
         var count = 0

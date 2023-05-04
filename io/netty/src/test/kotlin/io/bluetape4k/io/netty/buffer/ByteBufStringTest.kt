@@ -4,14 +4,14 @@ import io.bluetape4k.io.netty.AbstractNettyTest
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.netty.buffer.ByteBufAllocator
-import java.nio.charset.Charset
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import java.nio.charset.Charset
 
-class ByteBufStringTest : AbstractNettyTest() {
+class ByteBufStringTest: AbstractNettyTest() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val LIST_SIZE = 20
         private const val STRING_SIZE = 1024
     }
@@ -27,7 +27,7 @@ class ByteBufStringTest : AbstractNettyTest() {
         Charset.forName("CESU-8"),
     )
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "read write string. charset={0}")
     @MethodSource("getCharsets")
     fun `read write string`(charset: Charset) {
         val buf = ByteBufAllocator.DEFAULT.buffer()
@@ -42,7 +42,7 @@ class ByteBufStringTest : AbstractNettyTest() {
         }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "read write versioned string. charset={0}")
     @MethodSource("getCharsets")
     fun `read write versioned string`(charset: Charset) {
         val buf = ByteBufAllocator.DEFAULT.buffer()

@@ -13,9 +13,6 @@ import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.io.Serializable
-import java.util.*
-import java.util.stream.Stream
 import net.datafaker.Faker
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
@@ -25,6 +22,9 @@ import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import java.io.Serializable
+import java.util.*
+import java.util.stream.Stream
 
 @RandomizedTest
 abstract class AbstractBinarySerializerTest {
@@ -105,7 +105,7 @@ abstract class AbstractBinarySerializerTest {
 
     private fun getCompressors(): Stream<out Compressor> = compressorList.stream()
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "serialize and compress data - {0}")
     @MethodSource("getCompressors")
     fun `serialize and compress data`(compressor: Compressor, @RandomValue origin: SimpleData) {
         val serde = CompressableBinarySerializer(serializer, compressor)
@@ -117,7 +117,7 @@ abstract class AbstractBinarySerializerTest {
         actual shouldBeEqualTo origin
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "serialize and compress collection - {0}")
     @MethodSource("getCompressors")
     fun `serialize and compress collection`(
         compressor: Compressor,

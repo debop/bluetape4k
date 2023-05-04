@@ -9,9 +9,9 @@ import net.jpountz.lz4.LZ4Factory
 /**
  * LZ4 Compressor
  */
-class LZ4Compressor : AbstractCompressor() {
+class LZ4Compressor: AbstractCompressor() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val MAGIC_NUMBER_SIZE: Int = Integer.BYTES
         private val factory = LZ4Factory.fastestInstance()
         private val compressor = factory.fastCompressor()
@@ -21,6 +21,8 @@ class LZ4Compressor : AbstractCompressor() {
     override fun doCompress(plain: ByteArray): ByteArray {
         val sourceSize = plain.size
         val maxOutputSize = compressor.maxCompressedLength(sourceSize)
+
+        // TODO: ByteBuffer 를 사용하는 것이 더 효율적일 수 있음
 
         val compressedArray = ByteArray(MAGIC_NUMBER_SIZE + maxOutputSize)
         val compressedSize = compressor.compress(
@@ -41,6 +43,8 @@ class LZ4Compressor : AbstractCompressor() {
         if (originSize <= 0) {
             return emptyByteArray
         }
+
+        // TODO: ByteBuffer 를 사용하는 것이 더 효율적일 수 있음
 
         val originArray = ByteArray(originSize)
         decompressor.decompress(compressed, MAGIC_NUMBER_SIZE, originArray, 0, originArray.size)

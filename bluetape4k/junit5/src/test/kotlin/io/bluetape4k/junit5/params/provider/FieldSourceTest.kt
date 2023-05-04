@@ -12,13 +12,13 @@ class FieldSourceTest {
         argumentOf("not blank", false)
     )
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "isBlank should return `{1}` for `{0}`")
     @FieldSource("arguments")
     fun `isBlank should return true for null or blank string variable`(input: String?, expected: Boolean) {
         input.isNullOrBlank() shouldBeEqualTo expected
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "isBlank should return `{1}` for `{0}`")
     @FieldSource("arguments")
     fun `isBlank should return true for null or blank string variable 2`(input: String?, expected: Boolean) {
         input.isNullOrBlank() shouldBeEqualTo expected

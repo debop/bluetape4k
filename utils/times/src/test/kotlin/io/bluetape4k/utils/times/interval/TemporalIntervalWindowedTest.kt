@@ -6,13 +6,13 @@ import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.times.nowZonedDateTime
 import io.bluetape4k.utils.times.startOf
 import io.bluetape4k.utils.times.temporalAmount
-import java.time.temporal.ChronoUnit
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeLessOrEqualTo
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import java.time.temporal.ChronoUnit
 import kotlin.test.assertFailsWith
 
 class TemporalIntervalWindowedTest {
@@ -22,7 +22,7 @@ class TemporalIntervalWindowedTest {
     @Nested
     inner class ChunkedTest {
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "chunk interval by {0}")
         @EnumSource(
             ChronoUnit::class,
             names = ["YEARS", "MONTHS", "WEEKS", "DAYS", "HOURS", "MINUTES", "SECONDS", "MILLIS"]
@@ -53,7 +53,7 @@ class TemporalIntervalWindowedTest {
             }
         }
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "chunk interval and aggregate by {0}")
         @EnumSource(
             ChronoUnit::class,
             names = ["YEARS", "MONTHS", "WEEKS", "DAYS", "HOURS", "MINUTES", "SECONDS", "MILLIS"]
@@ -78,7 +78,7 @@ class TemporalIntervalWindowedTest {
     @Nested
     inner class WindowedTest {
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "windowed interval by {0}")
         @EnumSource(
             ChronoUnit::class,
             names = ["YEARS", "MONTHS", "WEEKS", "DAYS", "HOURS", "MINUTES", "SECONDS", "MILLIS"]
@@ -114,7 +114,7 @@ class TemporalIntervalWindowedTest {
 
     @Nested
     inner class ZipWithNextTest {
-        @ParameterizedTest
+        @ParameterizedTest(name = "zip with next with interval by {0}")
         @EnumSource(
             ChronoUnit::class,
             names = ["YEARS", "MONTHS", "WEEKS", "DAYS", "HOURS", "MINUTES", "SECONDS", "MILLIS"]

@@ -26,4 +26,8 @@ abstract class AbstractDigester protected constructor(
 
     override fun matches(message: ByteArray, digest: ByteArray): Boolean =
         digester.matches(message, digest)
+
+    override fun toString(): String {
+        return "Digester(algorithm=$algorithm)"
+    }
 }
