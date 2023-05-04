@@ -14,6 +14,21 @@ import java.util.concurrent.CopyOnWriteArraySet
 
 /**
  * suspend 함수를 제한된 스레드 수에서 동시에 실행시키고, 모든 suspend 함수가 종료되기를 기다린다.
+ *
+ * ```
+ * val block1 = CountingSuspendBlock()
+ * val block2 = CountingSuspendBlock()
+ *
+ * // block1은 2번, block2는 1번 실행된다.
+ * MultiJobTester()
+ *     .numThreads(3)
+ *     .roundsPerThread(1)
+ *     .addAll(block1, block2)
+ *     .run()
+ *
+ * block1.count shouldBeEqualTo 2
+ * block2.count shouldBeEqualTo 1
+ * ```
  */
 @Suppress("OPT_IN_USAGE")
 class MultiJobTester {

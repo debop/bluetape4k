@@ -11,6 +11,30 @@ import kotlin.concurrent.thread
 
 /**
  * Multi threading 환경에서 주어진 테스트 코드를 수행할 수 있게 하는 Tester 입니다.
+ *
+ * ```
+ * // 주어진 테스트 코드는 [MultithreadingTester]의 [add] 메소드를 통해 추가할 수 있습니다.
+ * MultithreadingTester().numThreads(2).roundsPerThread(1)
+ *     .add {
+ *         lock1.withLock {
+ *             latch2.countDown()
+ *             latch1.await()
+ *             lock2.withLock {
+ *                 fail("Reached unreachable code")
+ *             }
+ *         }
+ *     }
+ *     .add {
+ *         lock2.withLock {
+ *             latch1.countDown()
+ *             latch2.await()
+ *             lock1.withLock {
+ *                 fail("Reached unreachable code")
+ *             }
+ *         }
+ *     }
+ *     .run()
+ * ```
  */
 class MultithreadingTester {
 
