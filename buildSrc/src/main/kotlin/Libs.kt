@@ -324,6 +324,7 @@ object Libs {
     val commons_compress get() = "org.apache.commons:commons-compress:1.21"
     val commons_codec get() = "commons-codec:commons-codec:1.15"
     val commons_collections4 get() = "org.apache.commons:commons-collections4:4.4"
+    val commons_cryto get() = "org.apache.commons:commons-crypto:1.2.0"
     val commons_csv get() = "org.apache.commons:commons-csv:1.9.0"
     val commons_digest3 get() = "org.apache.commons:commons-digester3:3.2"
     val commons_exec get() = "org.apache.commons:commons-exec:1.3"
