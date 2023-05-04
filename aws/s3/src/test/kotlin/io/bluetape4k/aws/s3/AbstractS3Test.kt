@@ -4,6 +4,7 @@ import io.bluetape4k.aws.auth.staticCredentialsProviderOf
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.error
 import io.bluetape4k.testcontainers.aws.LocalStackServer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
@@ -78,8 +79,10 @@ abstract class AbstractS3Test {
             listObjects
                 .map { it.key() }
                 .forEach { key ->
+                    log.debug { "Delete object... bucket=${bucket.name()}, key=$key" }
                     s3Client.deleteObject { it.bucket(bucket.name()).key(key) }
                 }
+            log.debug { "Delete bucket... name=${bucket.name()}" }
             s3Client.deleteBucket { it.bucket(bucket.name()) }
         }
     }
@@ -87,9 +90,14 @@ abstract class AbstractS3Test {
     protected fun createBucketsIfNotExists(vararg bucketNames: String) {
         bucketNames.forEach { bucket ->
             if (!s3Client.existsBucket(bucket)) {
+                log.debug { "Create bucket... name=$bucket" }
                 runCatching {
                     val response = s3Client.createBucket { it.bucket(bucket) }
-                    log.debug { "Create new bucket. name=$bucket, location=${response.location()}" }
+                    if (response.sdkHttpResponse().isSuccessful) {
+                        log.debug { "Create new bucket. name=$bucket, location=${response.location()}" }
+                    } else {
+                        log.error { "Fail to create bucket. name=$bucket, response=${response.sdkHttpResponse()}" }
+                    }
                 }
             }
         }

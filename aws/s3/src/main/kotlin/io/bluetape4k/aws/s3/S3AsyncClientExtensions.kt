@@ -1,5 +1,6 @@
 package io.bluetape4k.aws.s3
 
+import io.bluetape4k.aws.s3.model.putObjectRequest
 import io.bluetape4k.core.requireNotBlank
 import software.amazon.awssdk.core.async.AsyncRequestBody
 import software.amazon.awssdk.core.async.AsyncResponseTransformer
@@ -14,6 +15,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.model.PutObjectResponse
 import software.amazon.awssdk.services.s3.model.S3Object
+import java.io.File
 import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 
@@ -92,48 +94,70 @@ fun S3AsyncClient.getAsFile(
  * S3 서버로 [value]를 Upload 합니다.
  *
  * @param body              Upload 할 [AsyncRequestBody]
- * @param putObjectRequest  PutObjectRequest builder
+ * @param requestBuilder  PutObjectRequest builder
  * @return S3에 저장된 결과
  */
 fun S3AsyncClient.put(
+    bucket: String,
+    key: String,
     body: AsyncRequestBody,
-    putObjectRequest: (PutObjectRequest.Builder) -> Unit,
-): CompletableFuture<PutObjectResponse> =
-    putObject(putObjectRequest, body)
+    requestBuilder: (PutObjectRequest.Builder) -> Unit = {},
+): CompletableFuture<PutObjectResponse> {
+    bucket.requireNotBlank("bucket")
+    key.requireNotBlank("key")
+    val request = putObjectRequest(bucket, key, requestBuilder)
+    return putObject(request, body)
+}
 
 /**
  * S3 서버로 [bytes]를 Upload 합니다.
  *
  * @param bytes             Upload 할 Byte Array
- * @param putObjectRequest  PutObjectRequest builder
+ * @param requestBuilder  PutObjectRequest builder
  * @return S3에 저장된 결과
  */
 fun S3AsyncClient.putAsByteArray(
+    bucket: String,
+    key: String,
     bytes: ByteArray,
-    putObjectRequest: (PutObjectRequest.Builder) -> Unit,
+    requestBuilder: (PutObjectRequest.Builder) -> Unit = {},
 ): CompletableFuture<PutObjectResponse> {
-    return put(AsyncRequestBody.fromBytes(bytes), putObjectRequest)
+    return put(bucket, key, AsyncRequestBody.fromBytes(bytes), requestBuilder)
 }
 
 /**
  * S3 서버로 [contents]를 Upload 합니다.
  *
  * @param contents          Upload 할 문자열
- * @param putObjectRequest  PutObjectRequest builder
+ * @param requestBuilder  PutObjectRequest builder
  * @return S3에 저장된 결과
  */
 fun S3AsyncClient.putAsString(
+    bucket: String,
+    key: String,
     contents: String,
-    putObjectRequest: (PutObjectRequest.Builder) -> Unit,
+    requestBuilder: (PutObjectRequest.Builder) -> Unit = {},
 ): CompletableFuture<PutObjectResponse> {
-    return put(AsyncRequestBody.fromString(contents), putObjectRequest)
+    return put(bucket, key, AsyncRequestBody.fromString(contents), requestBuilder)
 }
 
 fun S3AsyncClient.putAsFile(
-    sourcePath: Path,
-    putObjectRequest: (PutObjectRequest.Builder) -> Unit,
+    bucket: String,
+    key: String,
+    file: File,
+    requestBuilder: (PutObjectRequest.Builder) -> Unit = {},
 ): CompletableFuture<PutObjectResponse> {
-    return put(AsyncRequestBody.fromFile(sourcePath), putObjectRequest)
+    return put(bucket, key, AsyncRequestBody.fromFile(file), requestBuilder)
+}
+
+
+fun S3AsyncClient.putAsFile(
+    bucket: String,
+    key: String,
+    path: Path,
+    requestBuilder: (PutObjectRequest.Builder) -> Unit = {},
+): CompletableFuture<PutObjectResponse> {
+    return put(bucket, key, AsyncRequestBody.fromFile(path), requestBuilder)
 }
 
 //
