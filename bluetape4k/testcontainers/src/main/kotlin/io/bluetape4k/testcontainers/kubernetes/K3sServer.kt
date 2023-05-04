@@ -17,6 +17,7 @@ import org.testcontainers.utility.DockerImageName
  * @param useDefaultPort
  * @param reuse
  */
+@Deprecated("실행이 안된다")
 class K3sServer private constructor(
     imageName: DockerImageName,
     useDefaultPort: Boolean,
