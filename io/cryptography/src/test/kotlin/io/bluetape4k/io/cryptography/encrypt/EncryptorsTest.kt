@@ -15,10 +15,10 @@ class EncryptorsTest {
         val algorithms = Encryptors.getAlgorithmes()
         log.info { algorithms.joinToString(LINE_SEPARATOR) }
 
-        algorithms shouldContain AES.ALGORITHM
-        algorithms shouldContain DES.ALGORITHM
-        algorithms shouldContain RC2.ALGORITHM
-        algorithms shouldContain RC4.ALGORITHM
-        algorithms shouldContain TripleDES.ALGORITHM
+        algorithms shouldContain AES.ALGORITHM.uppercase()
+        algorithms shouldContain DES.ALGORITHM.uppercase()
+        algorithms shouldContain RC2.ALGORITHM.uppercase()
+        algorithms shouldContain RC4.ALGORITHM.uppercase()
+        algorithms shouldContain TripleDES.ALGORITHM.uppercase()
     }
 }
