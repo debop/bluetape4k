@@ -14,6 +14,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3AsyncClient
 import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.transfer.s3.S3TransferManager
 
 abstract class AbstractS3Test {
 
@@ -54,7 +55,7 @@ abstract class AbstractS3Test {
         }
     }
 
-    val s3TransferManager by lazy {
+    val s3TransferManager: S3TransferManager by lazy {
         S3Factory.TransferManager.create(
             endpoint,
             Region.AP_NORTHEAST_2,
