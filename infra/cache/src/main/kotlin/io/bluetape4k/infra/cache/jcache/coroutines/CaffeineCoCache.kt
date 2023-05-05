@@ -4,8 +4,6 @@ import com.github.benmanes.caffeine.cache.AsyncCache
 import com.github.benmanes.caffeine.cache.Caffeine
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.util.concurrent.CompletableFuture
-import javax.cache.configuration.CacheEntryListenerConfiguration
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -13,7 +11,16 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.future.future
+import java.util.concurrent.CompletableFuture
+import javax.cache.configuration.CacheEntryListenerConfiguration
 
+/**
+ * Caffeine based [CoCache] implementation.
+ *
+ * @param K key type
+ * @param V value type
+ * @property cache caffeine [AsyncCache] instance
+ */
 class CaffeineCoCache<K: Any, V: Any>(private val cache: AsyncCache<K, V>): CoCache<K, V> {
 
     companion object: KLogging() {

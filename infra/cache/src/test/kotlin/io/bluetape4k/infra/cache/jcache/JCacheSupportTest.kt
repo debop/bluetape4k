@@ -13,13 +13,13 @@ class JCacheSupportTest {
 
     @Test
     fun `load caffeine jcache manager`() {
-        jcacheManager<CaffeineCachingProvider>().shouldNotBeNull()
-        jcacheManager<EhcacheCachingProvider>().shouldNotBeNull()
+        JcacheManager<CaffeineCachingProvider>().shouldNotBeNull()
+        JcacheManager<EhcacheCachingProvider>().shouldNotBeNull()
     }
 
     @Test
     fun `get or create jcache`() {
-        val manager = jcacheManager<CaffeineCachingProvider>()
+        val manager = JcacheManager<CaffeineCachingProvider>()
         val cache = manager.getOrCreate<String, Any>("caffeine-jcache")
         cache.shouldNotBeNull()
 

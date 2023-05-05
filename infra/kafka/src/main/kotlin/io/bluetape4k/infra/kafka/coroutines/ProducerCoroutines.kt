@@ -3,6 +3,7 @@ package io.bluetape4k.infra.kafka.coroutines
 import io.bluetape4k.coroutines.support.awaitSuspending
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
@@ -19,7 +20,7 @@ import org.apache.kafka.clients.producer.RecordMetadata
  * @param record record to produce
  * @return [RecordMetadata] instance
  */
-suspend fun <K, V> Producer<K, V>.sendAwait(record: ProducerRecord<K, V>): RecordMetadata {
+suspend fun <K, V> Producer<K, V>.sendSuspending(record: ProducerRecord<K, V>): RecordMetadata {
     return send(record).awaitSuspending()
 }
 
@@ -29,10 +30,31 @@ suspend fun <K, V> Producer<K, V>.sendAwait(record: ProducerRecord<K, V>): Recor
  * @param records producing 할 record의 flow
  * @return producing 된 결과 ([RecordMetadata])의 flow
  */
-fun <K, V> Producer<K, V>.sendFlow(records: Flow<ProducerRecord<K, V>>): Flow<RecordMetadata> {
+suspend fun <K, V> Producer<K, V>.sendFlow(records: Flow<ProducerRecord<K, V>>): Flow<RecordMetadata> {
+    // TODO: callback flow 를 이용하는 게 낫지 않나?
     return records
-        .map { record -> sendAwait(record) }
+        .buffer()
+        .map { record -> sendSuspending(record) }
         .onCompletion { flush() }
+//    val producer = this
+//    return callbackFlow {
+//        records.buffer()
+//            //.catch { cause -> close(cause) }
+//            .collect { record ->
+//                producer.send(record) { metadata, error ->
+//                    if (error != null) {
+//                        close(error)
+//
+//                    } else {
+//                        trySend(metadata)
+//                    }
+//                }
+//            }
+//
+//        awaitClose {
+//            producer.flush()
+//        }
+//    }
 }
 
 /**
@@ -44,8 +66,9 @@ fun <K, V> Producer<K, V>.sendFlow(records: Flow<ProducerRecord<K, V>>): Flow<Re
 suspend fun <K, V> Producer<K, V>.sendFlowParallel(records: Flow<ProducerRecord<K, V>>): RecordMetadata {
     return coroutineScope {
         records
+            .buffer()
             .flatMapMerge { record ->
-                flowOf(sendAwait(record))
+                flowOf(sendSuspending(record))
             }
             .onCompletion { flush() }
             .last()
@@ -59,7 +82,7 @@ suspend fun <K, V> Producer<K, V>.sendFlowParallel(records: Flow<ProducerRecord<
  */
 suspend fun <K, V> Producer<K, V>.sendAndForget(
     records: Flow<ProducerRecord<K, V>>,
-    needFlush: Boolean = false
+    needFlush: Boolean = false,
 ) {
     records
         .map { record -> send(record) }

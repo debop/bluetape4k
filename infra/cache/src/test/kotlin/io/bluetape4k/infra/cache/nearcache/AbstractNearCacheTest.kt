@@ -30,7 +30,7 @@ abstract class AbstractNearCacheTest {
         const val TEST_SIZE = 5
 
         private fun randomKey(): String = TimebasedUuid.nextBase62String()
-        private fun randomValue(): String = Fakers.randomString(256, 2048, true)
+        private fun randomValue(): String = Fakers.randomString(1024, 8192, true)
     }
 
     abstract val backCache: JCache<String, Any>
@@ -47,13 +47,6 @@ abstract class AbstractNearCacheTest {
         nearCache2.clear()
         backCache.clear()
     }
-    //
-    //    /**
-    //     * NearCache 작업이 backCache를 거쳐 다른 NearCache에 전파될 수 있도록 기다립니다.
-    //     */
-    //    protected fun waitPropagation(millis: Long = 100L) {
-    //        Thread.sleep(millis)
-    //    }
 
     @Test
     fun `create near cache`() {

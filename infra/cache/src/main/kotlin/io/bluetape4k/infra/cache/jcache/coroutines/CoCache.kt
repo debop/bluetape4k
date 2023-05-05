@@ -1,8 +1,14 @@
 package io.bluetape4k.infra.cache.jcache.coroutines
 
-import javax.cache.configuration.CacheEntryListenerConfiguration
 import kotlinx.coroutines.flow.Flow
+import javax.cache.configuration.CacheEntryListenerConfiguration
 
+/**
+ * Coroutines 환경에서 [javax.cache.Cache]와 같은 기능을 제공하는 Cache 입니다.
+ *
+ * @param K key type
+ * @param V value type
+ */
 interface CoCache<K: Any, V: Any> {
 
     fun entries(): Flow<CoCacheEntry<K, V>>

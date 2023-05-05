@@ -13,7 +13,7 @@ abstract class AbstractKafkaTest {
 
         @JvmStatic
         fun randomString(): String =
-            Fakers.randomString(128, 1024, true)
+            Fakers.randomString(1024, 8192, true)
 
         val kafka: KafkaServer by lazy { KafkaServer.Launcher.kafka }
     }

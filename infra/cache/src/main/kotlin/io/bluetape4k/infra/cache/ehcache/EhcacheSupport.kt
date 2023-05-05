@@ -1,5 +1,6 @@
 package io.bluetape4k.infra.cache.ehcache
 
+import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.utils.ShutdownQueue
 import org.ehcache.Cache
 import org.ehcache.CacheManager
@@ -12,15 +13,15 @@ import org.ehcache.config.units.EntryUnit
 import org.ehcache.config.units.MemoryUnit
 
 val DefaultEhCacheCacheManager: CacheManager by lazy {
-    ehcacheManager {
+    EhcacheManager {
         this.withDefaultClassLoader()
     }
 }
 
-fun ehcacheManager(builder: ConfigurationBuilder.() -> Unit): CacheManager {
+inline fun EhcacheManager(initializer: ConfigurationBuilder.() -> Unit): CacheManager {
     val configuration = ConfigurationBuilder.newConfigurationBuilder()
         .withDefaultClassLoader()
-        .apply(builder)
+        .apply(initializer)
         .build()
 
     return CacheManagerBuilder.newCacheManager(configuration).apply {
@@ -35,6 +36,8 @@ inline fun <reified K: Any, reified V: Any> CacheManager.getOrCreateCache(
         this.heap(10_000L, EntryUnit.ENTRIES)
     },
 ): Cache<K, V> {
+    cacheName.requireNotBlank("cacheName")
+
     return getCache(cacheName, K::class.java, V::class.java)
         ?: run {
             val resourcePools = ResourcePoolsBuilder

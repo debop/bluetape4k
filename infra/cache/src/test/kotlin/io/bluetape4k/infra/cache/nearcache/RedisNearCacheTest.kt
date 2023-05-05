@@ -3,22 +3,21 @@ package io.bluetape4k.infra.cache.nearcache
 import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.infra.cache.jcache.JCache
 import io.bluetape4k.infra.cache.jcache.JCaching
-import io.bluetape4k.infra.cache.jcache.jcacheConfiguration
+import io.bluetape4k.infra.cache.jcache.JcacheConfiguration
 import io.bluetape4k.junit5.faker.Fakers
-import io.bluetape4k.junit5.faker.Fakers.randomString
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.testcontainers.storage.RedisServer
-import java.io.Serializable
-import java.util.UUID
-import java.util.concurrent.TimeUnit
-import javax.cache.configuration.CompleteConfiguration
-import javax.cache.expiry.CreatedExpiryPolicy
-import javax.cache.expiry.Duration
 import org.amshove.kluent.shouldBeFalse
 import org.awaitility.kotlin.await
 import org.junit.jupiter.api.Test
 import org.redisson.api.RedissonClient
+import java.io.Serializable
+import java.util.*
+import java.util.concurrent.TimeUnit
+import javax.cache.configuration.CompleteConfiguration
+import javax.cache.expiry.CreatedExpiryPolicy
+import javax.cache.expiry.Duration
 
 class RedisNearCacheTest: AbstractNearCacheTest() {
 
@@ -41,7 +40,7 @@ class RedisNearCacheTest: AbstractNearCacheTest() {
     override val nearCacheCfg2 = NearCacheConfig<String, Any>(checkExpiryPeriod = 1_000)
 
     override val backCache: JCache<String, Any> by lazy {
-        val jcacheConfiguration: CompleteConfiguration<String, Any> = jcacheConfiguration<String, Any> {
+        val jcacheConfiguration: CompleteConfiguration<String, Any> = JcacheConfiguration<String, Any> {
             // NOTE: CreatedExpiryPolicy, AccessedExpiryPolicy 등이 있다
             // AccessedExpiryPolicy 는 access 한 이후로 TTL이 갱신된다
             setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration(TimeUnit.MILLISECONDS, 3_000)))
@@ -58,17 +57,17 @@ class RedisNearCacheTest: AbstractNearCacheTest() {
     // NOTE: java.util.HashMap 을 사용하면, 성공합니다.
     // 참고: https://github.com/redisson/redisson/issues/4809
     data class CacheItem(
-        val key: String = randomString(16),
-        val value: String = randomString(16),
+        val key: String = Fakers.randomString(16),
+        val value: String = Fakers.randomString(256, 1024, true),
         val header: Map<String, Any?> = randomHashMap(),
         val claims: Map<String, Any?> = randomHashMap(),
-        val signature: String? = randomString(16),
+        val signature: String? = Fakers.randomString(16),
     ): Serializable
 
     @Test
     fun `Redisson Cache Expire 동작 여부`() {
-        val key1 = randomString(16)
-        val key2 = randomString(16)
+        val key1 = Fakers.randomString(16)
+        val key2 = Fakers.randomString(16)
         val value1 = CacheItem()
         val value2 = CacheItem()
 

@@ -1,11 +1,11 @@
 package io.bluetape4k.infra.cache.caffeine
 
 import com.github.benmanes.caffeine.cache.*
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.future.future
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 
 /**
  * [CaffeineSpec] 을 빌드합니다.
@@ -19,11 +19,11 @@ fun caffeineSpecOf(specification: String): CaffeineSpec =
 /**
  * [Caffeine]을 빌드합니다.
  *
- * @param builder Caffeine builder method
+ * @param initializer Caffeine builder method
  * @return [Caffeine] instance
  */
-inline fun caffeine(builder: Caffeine<Any, Any>.() -> Unit): Caffeine<Any, Any> =
-    Caffeine.newBuilder().apply(builder)
+inline fun Caffeine(initializer: Caffeine<Any, Any>.() -> Unit): Caffeine<Any, Any> =
+    Caffeine.newBuilder().apply(initializer)
 
 /**
  * Caffeine Cache를 생성합니다.
@@ -110,7 +110,7 @@ inline fun <K: Any, V: Any> Caffeine<Any, Any>.suspendLoadingCache(
  * @param loader  cache value loader
  * @return [CompletableFuture] for cache value
  */
-fun <K: Any, V: Any> AsyncCache<K, V>.getSuspend(
+fun <K: Any, V: Any> AsyncCache<K, V>.getSuspending(
     key: K,
     loader: suspend (K) -> V,
 ): CompletableFuture<V> {

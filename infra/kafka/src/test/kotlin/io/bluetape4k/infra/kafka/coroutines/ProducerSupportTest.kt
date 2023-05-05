@@ -1,7 +1,6 @@
 package io.bluetape4k.infra.kafka.coroutines
 
 import io.bluetape4k.concurrent.asCompletableFuture
-import io.bluetape4k.concurrent.onComplete
 import io.bluetape4k.concurrent.sequence
 import io.bluetape4k.coroutines.support.awaitSuspending
 import io.bluetape4k.infra.kafka.AbstractKafkaTest
@@ -12,7 +11,6 @@ import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.testcontainers.massage.KafkaServer
-import java.util.concurrent.CompletableFuture
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.last
@@ -22,13 +20,14 @@ import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.junit.jupiter.api.RepeatedTest
+import java.util.concurrent.CompletableFuture
 import kotlin.system.measureTimeMillis
 
 @RandomizedTest
 class ProducerSupportTest: AbstractKafkaTest() {
 
     companion object: KLogging() {
-        private const val MESSAGE_SIZE = 100
+        private const val MESSAGE_SIZE = 1000
 
         fun randomStrings(size: Int = MESSAGE_SIZE): List<String> {
             return List(size) { randomString() }
@@ -51,7 +50,7 @@ class ProducerSupportTest: AbstractKafkaTest() {
     fun `send one message in suspend`(@RandomValue message: String) = runSuspendWithIO {
         val record = ProducerRecord<String, String>(TEST_TOPIC_NAME, null, message)
 
-        val metadata = producer.sendAwait(record)
+        val metadata = producer.sendSuspending(record)
         metadata.verifyRecordMetadata()
     }
 
@@ -62,13 +61,13 @@ class ProducerSupportTest: AbstractKafkaTest() {
         measureSendRecords(MESSAGE_SIZE) {
             val futures = messages.map { message ->
                 val record = ProducerRecord<String, String>(TEST_TOPIC_NAME, null, message)
-
                 producer.send(record).asCompletableFuture()
-                    .onComplete { metadata, _ ->
-                        metadata!!.verifyRecordMetadata()
-                    }
             }
-            futures.sequence().join()
+
+            val metadatas = futures.sequence().get()
+            metadatas.forEach { metadata ->
+                metadata.verifyRecordMetadata()
+            }
         }
     }
 
@@ -79,7 +78,7 @@ class ProducerSupportTest: AbstractKafkaTest() {
         measureSendRecords(MESSAGE_SIZE) {
             val defers = messages.map { message ->
                 val record = ProducerRecord<String, String>(TEST_TOPIC_NAME, null, message)
-                async(Dispatchers.IO) { producer.sendAwait(record) }
+                async(Dispatchers.IO) { producer.sendSuspending(record) }
             }
 
             defers.awaitAll().forEach { metadata ->
@@ -105,7 +104,7 @@ class ProducerSupportTest: AbstractKafkaTest() {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `send flow messages in bulk mode`() {
+    fun `send flow messages as parallel mode`() {
         val messages = randomStrings()
 
         measureSendRecords(MESSAGE_SIZE) {

@@ -2,10 +2,9 @@ package io.bluetape4k.infra.cache.nearcache
 
 import com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider
 import io.bluetape4k.codec.encodeBase62
-import io.bluetape4k.infra.cache.jcache.jcacheManager
+import io.bluetape4k.infra.cache.jcache.JcacheManager
 import java.io.Serializable
-import java.util.Objects
-import java.util.UUID
+import java.util.*
 import javax.cache.CacheManager
 import javax.cache.configuration.Factory
 import javax.cache.configuration.MutableConfiguration
@@ -37,7 +36,7 @@ open class NearCacheConfig<K: Any, V: Any>(
         const val MIN_EXPIRY_CHECK_PERIOD = 1000L
         const val DEFAULT_EXPIRY_CHECK_PERIOD = 30_000L
         const val DEFAULT_SYNC_REMOTE_TIMEOUT = 500L
-        val CaffeineCacheManagerFactory = Factory { jcacheManager<CaffeineCachingProvider>() }
+        val CaffeineCacheManagerFactory = Factory { JcacheManager<CaffeineCachingProvider>() }
 
         fun <K, V> getDefaultFrontCacheConfiguration(): MutableConfiguration<K, V> {
             return MutableConfiguration<K, V>().apply {

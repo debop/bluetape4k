@@ -2,15 +2,15 @@ package io.bluetape4k.infra.cache.jcache
 
 import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.junit5.faker.Fakers
-import java.util.UUID
-import javax.cache.Cache
-import javax.cache.integration.CacheLoader
-import javax.cache.integration.CacheWriter
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
+import javax.cache.Cache
+import javax.cache.integration.CacheLoader
+import javax.cache.integration.CacheWriter
 
 class JCacheReadWriteThroughExample {
 
@@ -45,7 +45,7 @@ class JCacheReadWriteThroughExample {
             }
         }
 
-    private val configuration = jcacheConfiguration<String, Any> {
+    private val configuration = JcacheConfiguration<String, Any> {
         isReadThrough = true
         setCacheLoaderFactory { cacheLoader(remoteCache) }
 

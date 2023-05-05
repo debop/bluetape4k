@@ -3,9 +3,6 @@ package io.bluetape4k.infra.cache.jcache.coroutines
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.infra.cache.jcache.JCaching
 import io.bluetape4k.logging.KLogging
-import javax.cache.configuration.CacheEntryListenerConfiguration
-import javax.cache.configuration.CompleteConfiguration
-import javax.cache.configuration.MutableConfiguration
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -16,7 +13,17 @@ import kotlinx.coroutines.joinAll
 import org.redisson.api.RedissonClient
 import org.redisson.config.Config
 import org.redisson.jcache.JCache
+import javax.cache.configuration.CacheEntryListenerConfiguration
+import javax.cache.configuration.CompleteConfiguration
+import javax.cache.configuration.MutableConfiguration
 
+/**
+ * Redisson based [CoCache] implementation.
+ *
+ * @param K key type
+ * @param V value type
+ * @property cache Redisson [JCache] instance
+ */
 class RedissonCoCache<K: Any, V: Any>(private val cache: JCache<K, V>): CoCache<K, V> {
 
     companion object: KLogging() {

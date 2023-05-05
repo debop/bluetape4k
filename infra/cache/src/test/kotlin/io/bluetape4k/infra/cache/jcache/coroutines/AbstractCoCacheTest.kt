@@ -20,12 +20,15 @@ abstract class AbstractCoCacheTest {
     companion object: KLogging() {
         const val CACHE_ENTRY_SIZE = 100
         const val TEST_SIZE = 3
+
+        fun randomString(): String =
+            Fakers.randomString(1024, 8192, true)
     }
 
     protected abstract val coCache: CoCache<String, Any>
 
     open fun getKey() = TimebasedUuid.nextBase62String()
-    open fun getValue() = Fakers.randomString(128, 2048, true)
+    open fun getValue() = randomString()
 
     @BeforeEach
     fun setup() {

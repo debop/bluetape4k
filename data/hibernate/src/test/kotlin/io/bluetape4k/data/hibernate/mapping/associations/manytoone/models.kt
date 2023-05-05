@@ -2,6 +2,8 @@ package io.bluetape4k.data.hibernate.mapping.associations.manytoone
 
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
+import org.hibernate.annotations.LazyToOne
+import org.hibernate.annotations.LazyToOneOption
 import javax.persistence.Access
 import javax.persistence.AccessType
 import javax.persistence.CascadeType.*
@@ -10,8 +12,6 @@ import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
-import org.hibernate.annotations.LazyToOne
-import org.hibernate.annotations.LazyToOneOption
 
 
 @Entity(name = "manytoone_bear")
@@ -25,6 +25,10 @@ class Beer(val name: String): IntJpaEntity() {
 
     override fun equalProperties(other: Any): Boolean {
         return other is Beer && name == other.name
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -64,6 +68,10 @@ class Brewery(val name: String): IntJpaEntity() {
         return other is Brewery && name == other.name
     }
 
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
     override fun hashCode(): Int {
         return id?.hashCode() ?: name.hashCode()
     }
@@ -77,6 +85,13 @@ class Brewery(val name: String): IntJpaEntity() {
 @Entity(name = "manytoone_jug")
 @Access(AccessType.FIELD)
 class Jug(val name: String): IntJpaEntity() {
+
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
+    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
+
     override fun equalProperties(other: Any): Boolean {
         return other is Jug && name == other.name
     }
@@ -99,6 +114,12 @@ class JugMeter(val name: String): IntJpaEntity() {
         return other is JugMeter && name == other.name
     }
 
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
+    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
+
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()
             .add("name", name)
@@ -117,6 +138,12 @@ class SalesGuy(val name: String): IntJpaEntity() {
     override fun equalProperties(other: Any): Boolean {
         return other is SalesGuy && name == other.name
     }
+
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
+    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
 
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()
@@ -150,6 +177,12 @@ class SalesForce(val name: String): IntJpaEntity() {
     override fun equalProperties(other: Any): Boolean {
         return other is SalesForce && name == other.name
     }
+
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
+    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
 
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()

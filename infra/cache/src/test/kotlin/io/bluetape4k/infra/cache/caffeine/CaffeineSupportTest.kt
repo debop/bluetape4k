@@ -2,19 +2,20 @@ package io.bluetape4k.infra.cache.caffeine
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.time.Duration
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 
 class CaffeineSupportTest {
 
     companion object: KLogging()
 
-    private val caffeine = io.bluetape4k.infra.cache.caffeine.caffeine {
+    private val caffeine = Caffeine {
         expireAfterWrite(Duration.ofSeconds(60))
         maximumSize(10_000)
     }
@@ -96,34 +97,44 @@ class CaffeineSupportTest {
 
     @Test
     fun `loading async cache by suspend function`() {
+        val counter = atomic(0)
         val asyncCache = caffeine.suspendLoadingCache { key: String ->
             log.debug { "loading cache value of [$key] by suspend function..." }
             delay(100)
+            counter.incrementAndGet()
             "value of $key"
         }
 
         asyncCache.getIfPresent("key").shouldBeNull()
         asyncCache.get("key").get() shouldBeEqualTo "value of key"
+        counter.value shouldBeEqualTo 1
 
         val valueFuture = asyncCache.get("key")
         valueFuture.get() shouldBeEqualTo "value of key"
+        counter.value shouldBeEqualTo 1
 
         asyncCache.getIfPresent("key")!!.get() shouldBeEqualTo "value of key"
-        asyncCache.synchronous().invalidate("key")
+        counter.value shouldBeEqualTo 1
 
+        asyncCache.synchronous().invalidate("key")
         asyncCache.getIfPresent("key").shouldBeNull()
     }
 
     @Test
     fun `get suspend method with AsyncCache`() {
         val asyncCache = caffeine.asyncCache<String, String>()
+        val counter = atomic(0)
 
-        val suspendValue = asyncCache.getSuspend("key") { key ->
+        val suspendValue = asyncCache.getSuspending("key") { key ->
             log.debug { "run suspend function to evaluate value of $key" }
             delay(100)
+            counter.incrementAndGet()
             "suspend value of $key"
         }
-        suspendValue.join() shouldBeEqualTo "suspend value of key"
-        asyncCache.getIfPresent("key")!!.join() shouldBeEqualTo "suspend value of key"
+        suspendValue.get() shouldBeEqualTo "suspend value of key"
+        counter.value shouldBeEqualTo 1
+
+        asyncCache.getIfPresent("key")!!.get() shouldBeEqualTo "suspend value of key"
+        counter.value shouldBeEqualTo 1
     }
 }

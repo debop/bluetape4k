@@ -1,6 +1,6 @@
 package io.bluetape4k.infra.cache.memorizer.ehcache
 
-import io.bluetape4k.infra.cache.ehcache.ehcacheManager
+import io.bluetape4k.infra.cache.ehcache.EhcacheManager
 import io.bluetape4k.infra.cache.ehcache.getOrCreateCache
 import io.bluetape4k.infra.cache.memorizer.AbstractMemorizerTest
 import io.bluetape4k.infra.cache.memorizer.FactorialProvider
@@ -11,7 +11,7 @@ class EhcacheMemorizerTest: AbstractMemorizerTest() {
     override val factorial: FactorialProvider = EhcacheFactorialProvider()
     override val fibonacci: FibonacciProvider = EhcacheFibonacciProvider()
 
-    private val ehcacheManager = ehcacheManager {}
+    private val ehcacheManager = EhcacheManager {}
 
     val cache = ehcacheManager.getOrCreateCache<Int, Int>("heavy")
 
@@ -21,7 +21,7 @@ class EhcacheMemorizerTest: AbstractMemorizerTest() {
     }
 
     private class EhcacheFactorialProvider: FactorialProvider() {
-        private val ehcacheManager = ehcacheManager {}
+        private val ehcacheManager = EhcacheManager {}
         val cache = ehcacheManager.getOrCreateCache<Long, Long>("factorial")
 
         override val cachedCalc: (Long) -> Long by lazy {
@@ -30,7 +30,7 @@ class EhcacheMemorizerTest: AbstractMemorizerTest() {
     }
 
     private class EhcacheFibonacciProvider: FibonacciProvider() {
-        private val ehcacheManager = ehcacheManager {}
+        private val ehcacheManager = EhcacheManager {}
         val cache = ehcacheManager.getOrCreateCache<Long, Long>("fibonacci")
 
         override val cachedCalc: (Long) -> Long by lazy {
