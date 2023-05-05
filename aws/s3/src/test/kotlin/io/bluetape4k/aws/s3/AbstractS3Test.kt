@@ -35,6 +35,9 @@ abstract class AbstractS3Test {
             staticCredentialsProviderOf(AwsS3.accessKey, AwsS3.secretKey)
         }
 
+        private val region: Region
+            get() = Region.of(AwsS3.region)
+
         fun randomString(): String =
             Fakers.randomString(256, 2048, true)
     }
@@ -42,7 +45,7 @@ abstract class AbstractS3Test {
     val s3Client: S3Client by lazy {
         S3Factory.Sync.create {
             endpointOverride(endpoint)
-            region(Region.US_WEST_1)
+            region(region)
             credentialsProvider(credentialsProvider)
         }
     }
@@ -50,7 +53,7 @@ abstract class AbstractS3Test {
     val s3AsyncClient: S3AsyncClient by lazy {
         S3Factory.Async.create {
             endpointOverride(endpoint)
-            region(Region.US_WEST_1)
+            region(region)
             credentialsProvider(credentialsProvider)
         }
     }
@@ -58,7 +61,7 @@ abstract class AbstractS3Test {
     val s3TransferManager: S3TransferManager by lazy {
         S3Factory.TransferManager.create(
             endpoint,
-            Region.AP_NORTHEAST_2,
+            region,
             credentialsProvider
         ) {
             this.executor(Dispatchers.IO.asExecutor())
