@@ -6,8 +6,6 @@ import io.github.resilience4j.bulkhead.Bulkhead
 import io.github.resilience4j.bulkhead.BulkheadConfig
 import io.github.resilience4j.bulkhead.BulkheadFullException
 import io.github.resilience4j.kotlin.bulkhead.bulkhead
-import java.time.Duration
-import java.util.concurrent.Phaser
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -24,6 +22,8 @@ import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.util.concurrent.Phaser
 import kotlin.test.assertFailsWith
 
 class BulkheadFlowTest {
@@ -115,7 +115,7 @@ class BulkheadFlowTest {
         rejectedEvents shouldBeEqualTo 1
         finishedEvents shouldBeEqualTo 1
         results shouldContainSame listOf(1, 2)
-        helloWorldService.invocationCounter shouldBeEqualTo 0
+        helloWorldService.invocationCount shouldBeEqualTo 0
     }
 
     @Test

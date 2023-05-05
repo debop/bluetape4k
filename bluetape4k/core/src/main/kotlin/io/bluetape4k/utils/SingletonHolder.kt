@@ -1,5 +1,7 @@
 package io.bluetape4k.utils
 
+import kotlinx.atomicfu.atomic
+
 /**
  * Singleton 객체를 보관해주는 객체입니다.
  *
@@ -14,23 +16,32 @@ package io.bluetape4k.utils
  * manager.doStuff()
  * ````
  */
-open class SingletonHolder<out T>(factory: () -> T) {
+open class SingletonHolder<out T: Any>(factory: () -> T) {
 
     private var _factory: (() -> T)? = factory
-
-    @Volatile
-    private var instance: T? = null
+    private val instance = atomic<T?>(null)
 
     fun getInstance(): T {
-        val result: T? = instance
+        val result: T? = instance.value
         return result ?: synchronized(this) {
-            val result2: T? = instance
-            result2 ?: run {
-                val created = _factory?.invoke()
-                instance = created
-                _factory = null
-                created!!
-            }
+            instance.value = _factory?.invoke()
+            instance.value!!
         }
     }
+
+    //    @Volatile
+//    private var instance: T? = null
+//
+//    fun getInstance(): T {
+//        val result: T? = instance
+//        return result ?: synchronized(this) {
+//            val result2: T? = instance
+//            result2 ?: run {
+//                val created = _factory?.invoke()
+//                instance = created
+//                _factory = null
+//                created!!
+//            }
+//        }
+//    }
 }

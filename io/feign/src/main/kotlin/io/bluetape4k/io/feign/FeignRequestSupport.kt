@@ -13,7 +13,7 @@ inline fun requestOptions(intializer: Options.() -> Unit): Options {
     return Options().apply(intializer)
 }
 
-fun requestOf(
+fun feignRequestOf(
     url: String,
     httpMetho: HttpMethod = HttpMethod.GET,
     headers: Map<String, Collection<String>> = emptyMap(),

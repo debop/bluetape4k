@@ -8,7 +8,6 @@ import io.github.resilience4j.bulkhead.BulkheadFullException
 import io.github.resilience4j.kotlin.bulkhead.bulkhead
 import io.github.resilience4j.kotlin.bulkhead.decorateSuspendFunction
 import io.github.resilience4j.kotlin.bulkhead.executeSuspendFunction
-import java.time.Duration
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
@@ -17,6 +16,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import kotlin.test.assertFailsWith
 
 class BulkheadCoroutinesTest {
@@ -54,7 +54,7 @@ class BulkheadCoroutinesTest {
         rejectedEvents shouldBeEqualTo 0
         finishedEvents shouldBeEqualTo 1
 
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 
     @Test
@@ -105,7 +105,7 @@ class BulkheadCoroutinesTest {
         finishedEvents shouldBeEqualTo 1
         results shouldContainSame listOf(1, 2)
 
-        helloWorldService.invocationCounter shouldBeEqualTo 0
+        helloWorldService.invocationCount shouldBeEqualTo 0
     }
 
     @Test
@@ -123,7 +123,7 @@ class BulkheadCoroutinesTest {
         rejectedEvents shouldBeEqualTo 0
         finishedEvents shouldBeEqualTo 1
 
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 
     @Test
@@ -141,6 +141,6 @@ class BulkheadCoroutinesTest {
         rejectedEvents shouldBeEqualTo 0
         finishedEvents shouldBeEqualTo 1
 
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 }

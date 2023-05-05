@@ -2,6 +2,7 @@ package io.bluetape4k.junit5.coroutines
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
@@ -30,6 +31,7 @@ class MultiJobTesterTest {
     @Test
     fun `긴 실행 시간을 가지는 코드블럭 실행`() = runTest {
         val counter = atomic(0)
+        val count by counter
 
         MultiJobTester()
             .numThreads(2)
@@ -41,7 +43,8 @@ class MultiJobTesterTest {
             }
             .run()
 
-        counter.value shouldBeEqualTo 4
+        yield()
+        count shouldBeEqualTo 4
     }
 
     @Test
@@ -95,9 +98,8 @@ class MultiJobTesterTest {
     }
 
     private inner class CountingSuspendBlock: suspend () -> Unit {
-        val counter = atomic(0)
-
-        val count by counter
+        val counter: AtomicInt = atomic(0)
+        var count: Int by counter
 
         override suspend fun invoke() {
             counter.incrementAndGet()

@@ -2,8 +2,8 @@ package io.bluetape4k.junit5.concurrency
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.locks.ReentrantLock
+import io.bluetape4k.logging.trace
+import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
@@ -11,6 +11,8 @@ import org.amshove.kluent.shouldBeLessOrEqualTo
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.system.measureTimeMillis
 import kotlin.test.assertFailsWith
@@ -136,13 +138,12 @@ class MultithreadingTesterTest {
 
         companion object: KLogging()
 
-        val counter = atomic(0)
-
-        val count: Int by counter
+        val counter: AtomicInt = atomic(0)
+        var count: Int by counter
 
         override fun run() {
-            // log.trace { "count: ${count.get()}" }
-            counter.incrementAndGet()
+            count++
+            log.trace { "count: $count" }
         }
     }
 }

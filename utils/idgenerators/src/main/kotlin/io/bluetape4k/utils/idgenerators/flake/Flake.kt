@@ -4,13 +4,13 @@ import io.bluetape4k.codec.Url62
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.utils.idgenerators.IdGenerator
 import io.bluetape4k.utils.idgenerators.getMachineId
+import kotlinx.atomicfu.atomic
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.time.Clock
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
-import kotlinx.atomicfu.atomic
 import kotlin.concurrent.withLock
 
 typealias NodeIdentifier = () -> Long
@@ -87,7 +87,8 @@ class Flake private constructor(
     @Volatile
     private var lastTime: Long = clock.millis()
 
-    private val sequence = atomic(0)
+    private val sequencer = atomic(0)
+    private var sequence by sequencer
 
     /**
      * Generate a 128-bit Flake ID
@@ -101,7 +102,7 @@ class Flake private constructor(
             return idBuffer
                 .putLong(currentTime)
                 .put(nodeId)
-                .putShort(sequence.value.toShort())
+                .putShort(sequence.toShort())
                 .array()
         }
     }
@@ -114,16 +115,16 @@ class Flake private constructor(
         currentTime = clock.millis()
 
         if (currentTime != lastTime) {
-            sequence.value = 0
+            sequence = 0
             lastTime = currentTime
-        } else if (sequence.value == MAX_SEQ) {
+        } else if (sequence == MAX_SEQ) {
             while (currentTime <= lastTime) {
                 currentTime = clock.millis()
             }
-            sequence.value = 0
+            sequence = 0
             lastTime = currentTime
         } else {
-            sequence.incrementAndGet()
+            sequencer.incrementAndGet()
         }
     }
 }

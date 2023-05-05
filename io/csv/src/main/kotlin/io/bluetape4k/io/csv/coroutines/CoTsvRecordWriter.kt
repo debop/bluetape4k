@@ -4,12 +4,12 @@ import com.univocity.parsers.tsv.TsvWriter
 import com.univocity.parsers.tsv.TsvWriterSettings
 import io.bluetape4k.io.csv.DefaultTsvWriterSettings
 import io.bluetape4k.logging.KLogging
-import java.io.Writer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
+import java.io.Writer
 import kotlin.coroutines.CoroutineContext
 
 class CoTsvRecordWriter private constructor(
@@ -51,8 +51,8 @@ class CoTsvRecordWriter private constructor(
     }
 
     override fun close() {
-        job.cancelChildren()
-        job.cancel()
-        writer.close()
+        runCatching { job.cancelChildren() }
+        runCatching { job.cancel() }
+        runCatching { writer.close() }
     }
 }

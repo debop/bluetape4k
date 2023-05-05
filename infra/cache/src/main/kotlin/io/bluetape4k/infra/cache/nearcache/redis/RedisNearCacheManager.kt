@@ -11,6 +11,7 @@ import io.bluetape4k.infra.cache.nearcache.management.NearCacheStatisticsMXBean
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
+import kotlinx.atomicfu.atomic
 import org.redisson.Redisson
 import org.redisson.jcache.configuration.JCacheConfiguration
 import org.redisson.jcache.configuration.RedissonConfiguration
@@ -54,8 +55,10 @@ class RedisNearCacheManager(
     private val statBeans = ConcurrentHashMap<NearCache<*, *>, NearCacheStatisticsMXBean>()
     private val managementBeans = ConcurrentHashMap<NearCache<*, *>, NearCacheManagementMXBean>()
 
-    @Volatile
-    private var closed: Boolean = false
+    private val closed = atomic(false)
+
+//    @Volatile
+//    private var closed: Boolean = false
 
     /**
      * Get the [CachingProvider] that created and is responsible for
@@ -94,7 +97,7 @@ class RedisNearCacheManager(
     override fun getProperties(): Properties? = properties
 
     private fun checkNotClosed() {
-        if (closed) {
+        if (isClosed) {
             error("NearCacheManager is closed.")
         }
     }
@@ -501,7 +504,7 @@ class RedisNearCacheManager(
                 }
                 log.debug { "Shutdown redisson instance. redisson=$redisson" }
                 redisson?.shutdown()
-                closed = true
+                closed.value = true
             }
         }
     }
@@ -525,7 +528,7 @@ class RedisNearCacheManager(
      * @return true if this [CacheManager] instance is closed; false if it
      * is still open
      */
-    override fun isClosed(): Boolean = closed
+    override fun isClosed(): Boolean = closed.value
 
     /**
      * Provides a standard mechanism to access the underlying concrete caching

@@ -11,6 +11,12 @@ import io.bluetape4k.data.cassandra.querybuilder.bindMarker
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.RepeatedTest
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
@@ -18,12 +24,6 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
-import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.RepeatedTest
 import kotlin.system.measureTimeMillis
 
 class LimitConcurrencyExamples: AbstractCassandraTest() {
@@ -40,6 +40,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
     private val requestLatch = CountDownLatch(TOTAL_NUMBER_OF_INSERTS)
 
     private val insertAsyncCounter = atomic(0)
+    private var insertAsyncCount by insertAsyncCounter
 
     @BeforeAll
     fun setup() {
@@ -72,6 +73,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
         val pst = prepareStatemet(session)
 
         val insertsCounter = atomic(0)
+        var insertsCount by insertsCounter
         val executor = Executors.newFixedThreadPool(CONCURRENCY_LEVEL)
 
         repeat(TOTAL_NUMBER_OF_INSERTS) {
@@ -81,7 +83,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
             executor.submit {
                 try {
                     session.execute(pst.bind().setUuid("id", UUID.randomUUID()).setInt("value", counter))
-                    insertsCounter.incrementAndGet()
+                    insertsCount++
                 } catch (e: Throwable) {
                     e.printStackTrace()
                 } finally {
@@ -93,7 +95,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
 
         requestLatch.await(10, TimeUnit.SECONDS)
 
-        println("Finish executing ${insertsCounter.value} queries with a concurrency level of $CONCURRENCY_LEVEL")
+        println("Finish executing $insertsCount queries with a concurrency level of $CONCURRENCY_LEVEL")
         executor.shutdown()
         executor.awaitTermination(10, TimeUnit.SECONDS)
     }
@@ -118,7 +120,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
         }
 
         CompletableFuture.allOf(*pending.map { it.toCompletableFuture() }.toTypedArray()).get()
-        println("Finish executing async ${insertAsyncCounter.value} queries with a concurrency level of $CONCURRENCY_LEVEL")
+        println("Finish executing async $insertAsyncCount queries with a concurrency level of $CONCURRENCY_LEVEL")
     }
 
     private fun executeOneAtATime(
@@ -142,7 +144,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
 
         return session.executeAsync(stmt)
             .whenComplete { _, err ->
-                if (err == null) insertAsyncCounter.incrementAndGet()
+                if (err == null) insertAsyncCount++
                 else err.printStackTrace()
             }
     }

@@ -1,5 +1,7 @@
 package io.bluetape4k.coroutines.support
 
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.core.assertPositiveNumber
 import io.bluetape4k.core.requireGe
 import io.bluetape4k.core.requireGt
@@ -93,22 +95,23 @@ fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> {
     size.requireGe(step, "step")
 
     return flow {
-        var elements = mutableListOf<T>()
+        var elements = fastListOf<T>()
         val counter = atomic(0)
+        var count by counter
 
         this@windowed.onEach { element ->
             elements.add(element)
             if (counter.incrementAndGet() == size) {
                 emit(elements)
-                elements = elements.drop(step).toMutableList()
-                counter.addAndGet(-step)
+                elements = elements.drop(step).toFastList()
+                count -= step
             }
         }.collect()
 
         while (counter.value > 0) {
             emit(elements.take(counter.value))
-            elements = elements.drop(step).toMutableList()
-            counter.addAndGet(-step)
+            elements = elements.drop(step).toFastList()
+            count -= step
         }
     }
 }
@@ -131,22 +134,23 @@ fun <T> Flow<T>.windowed2(size: Int, step: Int): Flow<Flow<T>> {
     size.requireGe(step, "step")
 
     return channelFlow {
-        var elements = mutableListOf<T>()
+        var elements = fastListOf<T>()
         val counter = atomic(0)
+        var count by counter
 
         this@windowed2.collect { element ->
             elements.add(element)
             if (counter.incrementAndGet() == size) {
                 send(elements.asFlow())
-                elements = elements.drop(step).toMutableList()
-                counter.addAndGet(-step)
+                elements = elements.drop(step).toFastList()
+                count -= step
             }
         }
 
         while (counter.value > 0) {
             send(elements.take(counter.value).asFlow())
-            elements = elements.drop(step).toMutableList()
-            counter.addAndGet(-step)
+            elements = elements.drop(step).toFastList()
+            count -= step
         }
     }
 }
@@ -164,7 +168,7 @@ fun <T, V: Any> Flow<T>.bufferUntilChanged(groupSelector: (T) -> V): Flow<List<T
     //        .flatMapMerge { it.toList() }
 
     return channelFlow {
-        var elements = mutableListOf<T>()
+        var elements = fastListOf<T>()
         var prevGroup: V? = null
 
         this@bufferUntilChanged.collect { element ->
@@ -176,7 +180,7 @@ fun <T, V: Any> Flow<T>.bufferUntilChanged(groupSelector: (T) -> V): Flow<List<T
                 elements.add(element)
             } else {
                 send(elements)
-                elements = mutableListOf(element)
+                elements = fastListOf(element)
                 prevGroup = currentGroup
             }
         }

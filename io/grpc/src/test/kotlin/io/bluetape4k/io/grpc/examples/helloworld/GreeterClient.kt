@@ -9,7 +9,6 @@ import io.bluetape4k.logging.debug
 class GreeterClient private constructor(name: String): AbstractGrpcInprocessClient(name) {
 
     companion object: KLogging() {
-
         @JvmStatic
         operator fun invoke(name: String): GreeterClient {
             name.requireNotBlank("name")

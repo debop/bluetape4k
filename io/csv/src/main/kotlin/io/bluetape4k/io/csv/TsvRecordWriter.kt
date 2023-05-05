@@ -40,6 +40,6 @@ class TsvRecordWriter private constructor(
     }
 
     override fun close() {
-        writer.close()
+        runCatching { writer.close() }
     }
 }

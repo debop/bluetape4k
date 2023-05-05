@@ -49,7 +49,7 @@ class CircuitBreakerExamples {
         metrics.numberOfFailedCalls shouldBeEqualTo 0
         metrics.numberOfSuccessfulCalls shouldBeEqualTo 1
 
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 
     @Test

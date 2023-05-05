@@ -85,7 +85,6 @@ class CaffeineSupportTest {
         asyncCache.getIfPresent("key").shouldBeNull()
 
         val valueFuture = asyncCache.get("key")
-
         valueFuture.get() shouldBeEqualTo "value of key"
         asyncCache.put("key", valueFuture)
 
@@ -98,23 +97,25 @@ class CaffeineSupportTest {
     @Test
     fun `loading async cache by suspend function`() {
         val counter = atomic(0)
+        var count by counter
+
         val asyncCache = caffeine.suspendLoadingCache { key: String ->
             log.debug { "loading cache value of [$key] by suspend function..." }
             delay(100)
-            counter.incrementAndGet()
+            count++
             "value of $key"
         }
 
         asyncCache.getIfPresent("key").shouldBeNull()
         asyncCache.get("key").get() shouldBeEqualTo "value of key"
-        counter.value shouldBeEqualTo 1
+        count shouldBeEqualTo 1
 
         val valueFuture = asyncCache.get("key")
         valueFuture.get() shouldBeEqualTo "value of key"
-        counter.value shouldBeEqualTo 1
+        count shouldBeEqualTo 1
 
         asyncCache.getIfPresent("key")!!.get() shouldBeEqualTo "value of key"
-        counter.value shouldBeEqualTo 1
+        count shouldBeEqualTo 1
 
         asyncCache.synchronous().invalidate("key")
         asyncCache.getIfPresent("key").shouldBeNull()
@@ -124,17 +125,18 @@ class CaffeineSupportTest {
     fun `get suspend method with AsyncCache`() {
         val asyncCache = caffeine.asyncCache<String, String>()
         val counter = atomic(0)
+        var count by counter
 
         val suspendValue = asyncCache.getSuspending("key") { key ->
             log.debug { "run suspend function to evaluate value of $key" }
             delay(100)
-            counter.incrementAndGet()
+            count++
             "suspend value of $key"
         }
         suspendValue.get() shouldBeEqualTo "suspend value of key"
-        counter.value shouldBeEqualTo 1
+        count shouldBeEqualTo 1
 
         asyncCache.getIfPresent("key")!!.get() shouldBeEqualTo "suspend value of key"
-        counter.value shouldBeEqualTo 1
+        count shouldBeEqualTo 1
     }
 }

@@ -19,55 +19,58 @@ class SuspendLazyTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `get suspend lazy value in coroutine scope`() = runTest {
-        val called = atomic(0)
+        val calledCounter = atomic(0)
+        var called by calledCounter
 
         val lazyValue = suspendLazy {
             delay(Random.nextLong(100))
             log.debug { "Calculate lazy value in suspend function." }
-            called.incrementAndGet()
+            called++
             42
         }
-        called.value shouldBeEqualTo 0
+        called shouldBeEqualTo 0
 
         yield()
 
         lazyValue() shouldBeEqualTo 42
         lazyValue() shouldBeEqualTo 42
 
-        called.value shouldBeEqualTo 1
+        called shouldBeEqualTo 1
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `get lazy value in blocking mode`() = runTest {
-        val called = atomic(0)
+        val calledCounter = atomic(0)
+        var called by calledCounter
 
         val lazyValue = suspendBlockingLazy {
             Thread.sleep(Random.nextLong(100))
             log.debug { "Calculate lazy value in blocking mode." }
-            called.incrementAndGet()
+            called++
             42
         }
-        called.value shouldBeEqualTo 0
+        called shouldBeEqualTo 0
 
         yield()
 
         lazyValue() shouldBeEqualTo 42
         lazyValue() shouldBeEqualTo 42
 
-        called.value shouldBeEqualTo 1
+        called shouldBeEqualTo 1
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `get lazy value in blocking mode with IO dispatchers`() = runTest {
-        val called = atomic(0)
+        val calledCounter = atomic(0)
+        var called by calledCounter
 
         val lazyValue = suspendBlockingLazyIO {
             Thread.sleep(Random.nextLong(100))
             log.debug { "Calculate lazy value in blocking mode with IO dispatchers" }
-            called.incrementAndGet()
+            called++
             42
         }
-        called.value shouldBeEqualTo 0
+        called shouldBeEqualTo 0
 
         yield()
 
@@ -79,6 +82,6 @@ class SuspendLazyTest {
         lazy1.await() shouldBeEqualTo 42
         lazy2.await() shouldBeEqualTo 42
 
-        called.value shouldBeEqualTo 1
+        called shouldBeEqualTo 1
     }
 }

@@ -7,10 +7,10 @@ import io.github.resilience4j.kotlin.timelimiter.decorateSuspendFunction
 import io.github.resilience4j.kotlin.timelimiter.executeSuspendFunction
 import io.github.resilience4j.timelimiter.TimeLimiter
 import io.github.resilience4j.timelimiter.TimeLimiterConfig
-import java.time.Duration
-import java.util.concurrent.TimeoutException
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.util.concurrent.TimeoutException
 import kotlin.test.assertFailsWith
 
 class TimeLimiterCoroutinesTest {
@@ -27,7 +27,7 @@ class TimeLimiterCoroutinesTest {
         }
 
         result shouldBeEqualTo "Hello world"
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 
     @Test
@@ -40,7 +40,7 @@ class TimeLimiterCoroutinesTest {
                 helloWorldService.throwException()
             }
         }
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 
     @Test
@@ -57,7 +57,7 @@ class TimeLimiterCoroutinesTest {
             }
         }
 
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 
     @Test
@@ -70,6 +70,6 @@ class TimeLimiterCoroutinesTest {
         }
 
         function() shouldBeEqualTo "Hello world"
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 }

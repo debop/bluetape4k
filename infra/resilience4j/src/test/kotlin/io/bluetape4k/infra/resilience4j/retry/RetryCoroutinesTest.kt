@@ -6,9 +6,9 @@ import io.github.resilience4j.kotlin.retry.decorateSuspendFunction
 import io.github.resilience4j.kotlin.retry.executeSuspendFunction
 import io.github.resilience4j.retry.Retry
 import io.github.resilience4j.retry.RetryConfig
-import java.time.Duration
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import kotlin.test.assertFailsWith
 
 class RetryCoroutinesTest {
@@ -29,7 +29,7 @@ class RetryCoroutinesTest {
         metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
         metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
 
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 
     @Test
@@ -39,8 +39,8 @@ class RetryCoroutinesTest {
         val helloWorldService = CoHelloWorldService()
 
         val result = retry.executeSuspendFunction {
-            when (helloWorldService.invocationCounter) {
-                0 -> helloWorldService.throwException()
+            when (helloWorldService.invocationCount) {
+                0    -> helloWorldService.throwException()
                 else -> helloWorldService.returnHelloWorld()
             }
         }
@@ -51,7 +51,7 @@ class RetryCoroutinesTest {
         metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
         metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
 
-        helloWorldService.invocationCounter shouldBeEqualTo 2
+        helloWorldService.invocationCount shouldBeEqualTo 2
     }
 
     @Test
@@ -60,7 +60,7 @@ class RetryCoroutinesTest {
         val retry = Retry.of("testName") {
             RetryConfig.custom<Any?>()
                 .waitDuration(Duration.ofMillis(10))
-                .retryOnResult { helloWorldService.invocationCounter < 2 }
+                .retryOnResult { helloWorldService.invocationCount < 2 }
                 .build()
         }
         val metrics = retry.metrics
@@ -75,7 +75,7 @@ class RetryCoroutinesTest {
         metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
         metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
 
-        helloWorldService.invocationCounter shouldBeEqualTo 2
+        helloWorldService.invocationCount shouldBeEqualTo 2
     }
 
     @Test
@@ -100,7 +100,7 @@ class RetryCoroutinesTest {
         metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
         metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 1
 
-        helloWorldService.invocationCounter shouldBeEqualTo retry.retryConfig.maxAttempts
+        helloWorldService.invocationCount shouldBeEqualTo retry.retryConfig.maxAttempts
     }
 
     @Test
@@ -119,6 +119,6 @@ class RetryCoroutinesTest {
         metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
         metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
 
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 }

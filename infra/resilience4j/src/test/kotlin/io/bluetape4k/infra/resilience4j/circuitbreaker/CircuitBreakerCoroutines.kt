@@ -52,7 +52,7 @@ class CircuitBreakerCoroutines {
         metrics.numberOfFailedCalls shouldBeEqualTo 0
         metrics.numberOfSuccessfulCalls shouldBeEqualTo 1
 
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 
     @Test
@@ -83,7 +83,7 @@ class CircuitBreakerCoroutines {
             }
         }
 
-        helloWorldService.invocationCounter shouldBeEqualTo 0
+        helloWorldService.invocationCount shouldBeEqualTo 0
 
         metrics.numberOfBufferedCalls shouldBeEqualTo 0
         metrics.numberOfFailedCalls shouldBeEqualTo 0
@@ -104,7 +104,7 @@ class CircuitBreakerCoroutines {
         }
 
         function() shouldBeEqualTo "Hello world"
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
 
         metrics.numberOfBufferedCalls shouldBeEqualTo 1
         metrics.numberOfFailedCalls shouldBeEqualTo 0
@@ -126,7 +126,7 @@ class CircuitBreakerCoroutines {
         assertFailsWith<IllegalStateException> {
             function()
         }
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
 
         metrics.numberOfBufferedCalls shouldBeEqualTo 1
         metrics.numberOfFailedCalls shouldBeEqualTo 1
@@ -147,7 +147,7 @@ class CircuitBreakerCoroutines {
 
         function() shouldBeEqualTo "Hello world"
 
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
 
         metrics.numberOfBufferedCalls shouldBeEqualTo 1
         metrics.numberOfFailedCalls shouldBeEqualTo 0
@@ -169,7 +169,7 @@ class CircuitBreakerCoroutines {
         assertFailsWith<IllegalStateException> {
             function()
         }
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
 
         metrics.numberOfBufferedCalls shouldBeEqualTo 1
         metrics.numberOfFailedCalls shouldBeEqualTo 1

@@ -1,6 +1,6 @@
 package io.bluetape4k.coroutines
 
-import java.util.concurrent.locks.ReentrantLock
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.map
+import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.coroutines.CoroutineContext
 
@@ -29,20 +30,17 @@ internal class LazyDeferred<T>(
 
     private val lock = ReentrantLock()
 
-    @Volatile
-    private var deferred: Deferred<T>? = null
+    private val deferred = atomic<Deferred<T>?>(null)
 
     internal fun start(scope: CoroutineScope) {
-        if (deferred == null) {
+        if (deferred.value == null) {
             lock.withLock {
-                if (deferred == null) {
-                    deferred = scope.async(coroutineContext, block = block)
-                }
+                deferred.value = scope.async(coroutineContext, block = block)
             }
         }
     }
 
-    suspend fun await(): T = deferred?.await() ?: error("Coroutine not started")
+    suspend fun await(): T = deferred.value?.await() ?: error("Coroutine not started")
 }
 
 

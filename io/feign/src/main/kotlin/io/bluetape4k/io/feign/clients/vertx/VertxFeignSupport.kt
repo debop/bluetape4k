@@ -2,7 +2,7 @@ package io.bluetape4k.io.feign.clients.vertx
 
 import feign.Request
 import feign.Request.Options
-import io.bluetape4k.io.feign.responseBuilder
+import io.bluetape4k.io.feign.feignResponseBuilder
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.trace
@@ -60,7 +60,7 @@ internal fun HttpClientResponse.convertToFeignResponse(
                 names().associateWith { getAll(it) }
             }.toMap()
 
-            val builder = responseBuilder {
+            val builder = feignResponseBuilder {
                 protocolVersion(Request.ProtocolVersion.valueOf(self.version().name))
                 request(feignRequest)
                 status(self.statusCode())

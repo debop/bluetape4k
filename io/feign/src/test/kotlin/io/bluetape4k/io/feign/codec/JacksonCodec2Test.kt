@@ -4,7 +4,7 @@ import feign.Request
 import feign.Request.HttpMethod
 import feign.RequestTemplate
 import io.bluetape4k.io.feign.AbstractFeignTest
-import io.bluetape4k.io.feign.response
+import io.bluetape4k.io.feign.feignResponse
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.toUtf8String
 import org.amshove.kluent.shouldBeEqualTo
@@ -40,7 +40,7 @@ class JacksonCodec2Test: AbstractFeignTest() {
     fun `decode basic type`() {
         val expected = "HELLO"
 
-        val response = response {
+        val response = feignResponse {
             status(200)
             reason("OK")
             request(Request.create(HttpMethod.GET, "/api", emptyMap(), null, Charsets.UTF_8, null))

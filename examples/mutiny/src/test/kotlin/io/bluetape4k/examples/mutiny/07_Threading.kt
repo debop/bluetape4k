@@ -35,12 +35,13 @@ class ThreadingExamples {
     companion object: KLogging()
 
     private val counter = atomic(0)
+    private var count by counter
 
     private val executor = Executors.newFixedThreadPool(4, NamedThreadFactory("mutiny"))
 
     @BeforeEach
     fun setup() {
-        counter.value = 0
+        count = 0
     }
 
     @Test
@@ -53,7 +54,7 @@ class ThreadingExamples {
             .runSubscriptionOn(executor)
             .subscribe().with { log.debug { it } }
 
-        await.until { counter.value >= 10 }
+        await.until { count >= 10 }
     }
 
     @Test
@@ -89,7 +90,7 @@ class ThreadingExamples {
             .emitOn(executor)
             .subscribe().with { log.debug { it } }
 
-        await.until { counter.value >= 10 }
+        await.until { count >= 10 }
     }
 
     private fun generateInWorkerPool(): Uni<Int> =

@@ -5,13 +5,13 @@ import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.github.resilience4j.kotlin.timelimiter.timeLimiter
 import io.github.resilience4j.timelimiter.TimeLimiter
 import io.github.resilience4j.timelimiter.TimeLimiterConfig
-import java.time.Duration
-import java.util.concurrent.TimeoutException
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.util.concurrent.TimeoutException
 import kotlin.test.assertFailsWith
 
 class TimeLimiterFlowTest {
@@ -35,7 +35,7 @@ class TimeLimiterFlowTest {
         }
 
         results.size shouldBeEqualTo 3
-        helloWorldService.invocationCounter shouldBeEqualTo 3
+        helloWorldService.invocationCount shouldBeEqualTo 3
     }
 
     @Test
@@ -52,7 +52,7 @@ class TimeLimiterFlowTest {
                 .toList(results)
         }
         results.shouldBeEmpty()
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 
     @Test
@@ -73,6 +73,6 @@ class TimeLimiterFlowTest {
         }
 
         results.size shouldBeEqualTo 0
-        helloWorldService.invocationCounter shouldBeEqualTo 1
+        helloWorldService.invocationCount shouldBeEqualTo 1
     }
 }

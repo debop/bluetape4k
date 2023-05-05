@@ -6,9 +6,9 @@ import io.bluetape4k.utils.idgenerators.getMachineId
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_MACHINE_ID
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_SEQUENCE
 import io.bluetape4k.utils.idgenerators.snowflake.SnowflakeId
-import java.util.concurrent.locks.ReentrantLock
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.locks.withLock
+import java.util.concurrent.locks.ReentrantLock
 import kotlin.math.absoluteValue
 
 internal class DefaultSequencer(machineId: Int = getMachineId(MAX_MACHINE_ID)): Sequencer {
@@ -22,7 +22,10 @@ internal class DefaultSequencer(machineId: Int = getMachineId(MAX_MACHINE_ID)): 
 
     @Volatile
     private var lastTimestamp: Long = -1L
+
     private val sequencer = atomic(0)
+    private var sequence: Int by sequencer
+
     private val lock = ReentrantLock()
 
     /**
@@ -35,7 +38,7 @@ internal class DefaultSequencer(machineId: Int = getMachineId(MAX_MACHINE_ID)): 
     override fun nextSequence(): SnowflakeId {
         lock.withLock {
             updateState()
-            return SnowflakeId(lastTimestamp, machineId, sequencer.value)
+            return SnowflakeId(lastTimestamp, machineId, sequence)
         }
     }
 
@@ -43,7 +46,7 @@ internal class DefaultSequencer(machineId: Int = getMachineId(MAX_MACHINE_ID)): 
         lock.withLock {
             return FastList(size) {
                 updateState()
-                SnowflakeId(lastTimestamp, machineId, sequencer.value)
+                SnowflakeId(lastTimestamp, machineId, sequence)
             }
         }
     }
@@ -58,11 +61,11 @@ internal class DefaultSequencer(machineId: Int = getMachineId(MAX_MACHINE_ID)): 
                 while (currentTimestamp == lastTimestamp) {
                     currentTimestamp = System.currentTimeMillis()
                 }
-                sequencer.value = 0
+                sequence = 0
                 lastTimestamp = currentTimestamp
             }
         } else {
-            sequencer.value = 0
+            sequence = 0
             lastTimestamp = currentTimestamp
         }
     }

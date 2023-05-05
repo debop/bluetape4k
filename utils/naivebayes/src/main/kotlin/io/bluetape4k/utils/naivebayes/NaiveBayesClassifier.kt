@@ -4,6 +4,7 @@ import io.bluetape4k.collections.eclipse.toUnifiedMap
 import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
+import kotlinx.atomicfu.atomic
 import kotlin.math.exp
 import kotlin.math.ln
 
@@ -36,8 +37,8 @@ class NaiveBayesClassifier<F: Any, C: Any>(
     private val _population = mutableListOf<BayesInput<F, C>>()
     val population: List<BayesInput<F, C>> get() = _population.toList()
 
-    @Volatile
-    private var modelStale = false
+    private val modelStaler = atomic(false)
+    private var modelStale: Boolean by modelStaler
 
     /**
      * Adds an observation of features to a category

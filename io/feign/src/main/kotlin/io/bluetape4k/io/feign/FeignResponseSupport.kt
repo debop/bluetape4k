@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType
  * @param initializer [feign.Response.Builder]를 초기화하는 함수
  * @return [feign.Response] 인스턴스
  */
-inline fun responseBuilder(initializer: feign.Response.Builder.() -> Unit): feign.Response.Builder {
+inline fun feignResponseBuilder(initializer: feign.Response.Builder.() -> Unit): feign.Response.Builder {
     return feign.Response.builder().apply(initializer)
 }
 
@@ -20,8 +20,8 @@ inline fun responseBuilder(initializer: feign.Response.Builder.() -> Unit): feig
  * @param initializer [feign.Response.Builder]를 초기화하는 함수
  * @return [feign.Response] 인스턴스
  */
-inline fun response(initializer: feign.Response.Builder.() -> Unit): feign.Response {
-    return responseBuilder(initializer).build()
+inline fun feignResponse(initializer: feign.Response.Builder.() -> Unit): feign.Response {
+    return feignResponseBuilder(initializer).build()
 }
 
 /**

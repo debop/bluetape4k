@@ -15,25 +15,21 @@ class AtomicIntRoundrobin private constructor(val maximum: Int) {
         }
     }
 
-    private val currentValue = atomic(0)
+    private val atomicValue = atomic(0)
+    private var currentValue: Int by atomicValue
 
-    fun get(): Int = currentValue.value
+    fun get(): Int = currentValue
 
     fun set(value: Int) {
         value.requireInRange(0, maximum - 1, "value")
-        currentValue.value = value
+        currentValue = value
     }
 
-    fun next(): Int {
-        if (maximum <= 1) {
-            return 0
+    fun next(): Int = synchronized(this) {
+        currentValue++
+        if (currentValue >= maximum) {
+            currentValue = 0
         }
-        while (true) {
-            val current = get()
-            val next = if (current == maximum - 1) 0 else current + 1
-            if (currentValue.compareAndSet(current, next)) {
-                return next
-            }
-        }
+        currentValue
     }
 }

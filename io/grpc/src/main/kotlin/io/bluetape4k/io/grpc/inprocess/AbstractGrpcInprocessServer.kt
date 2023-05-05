@@ -8,6 +8,7 @@ import io.bluetape4k.utils.ShutdownQueue
 import io.grpc.BindableService
 import io.grpc.Server
 import io.grpc.inprocess.InProcessServerBuilder
+import kotlinx.atomicfu.atomic
 import java.util.concurrent.TimeUnit
 
 
@@ -29,10 +30,9 @@ abstract class AbstractGrpcInprocessServer(
 
     private val server: Server = builder.apply { services.forEach { addService(it) } }.build()
 
-    @Volatile
-    private var _running = false
+    private val running = atomic(false)
 
-    override val isRunning: Boolean get() = _running
+    override val isRunning: Boolean by running
     override val isShutdown: Boolean get() = server.isShutdown
 
     @Synchronized
@@ -40,7 +40,7 @@ abstract class AbstractGrpcInprocessServer(
         log.debug { "Starting InProcess gRPC Server..." }
         server.start()
         log.info { "Start InProcess gRPC Server." }
-        _running = true
+        running.value = true
 
         ShutdownQueue.register {
             if (!isShutdown) {
@@ -57,7 +57,7 @@ abstract class AbstractGrpcInprocessServer(
             runCatching {
                 server.shutdown().awaitTermination(5, TimeUnit.SECONDS)
             }
-            _running = false
+            running.value = false
         }
     }
 }

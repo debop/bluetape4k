@@ -8,7 +8,6 @@ import io.bluetape4k.logging.info
 import io.bluetape4k.logging.trace
 import io.bluetape4k.logging.warn
 import io.bluetape4k.utils.Runtimex
-import javax.cache.configuration.MutableCacheEntryListenerConfiguration
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +24,7 @@ import kotlinx.coroutines.flow.toSet
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import javax.cache.configuration.MutableCacheEntryListenerConfiguration
 import kotlin.system.measureTimeMillis
 
 
@@ -82,19 +82,21 @@ class NearCoCache<K: Any, V: Any> private constructor(
     private suspend fun checkBackCacheExpiration() {
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         val job = scope.launch {
-            val entrySize = atomic(0)
+            val entrySizer = atomic(0)
+            var entrySize by entrySizer
+
             while (!isClosed()) {
                 runCatching {
                     delay(checkExpiryPeriod)
                     log.trace { "backCache의 cache entry가 expire 되었는지 검사합니다... check expiration period=$checkExpiryPeriod" }
-                    entrySize.value = 0
+                    entrySize = 0
                     val elapsed = measureTimeMillis {
                         entries().chunked(100)
                             .onEach { entries ->
                                 runCatching {
                                     if (!isClosed()) {
                                         val frontKeys = entries.map { it.key }.toSet()
-                                        entrySize.addAndGet(frontKeys.size)
+                                        entrySize += frontKeys.size
 
                                         val backKeys = backCache.getAll(frontKeys).map { it.key }.toSet()
                                         val keysToRemove = frontKeys - backKeys
@@ -109,7 +111,7 @@ class NearCoCache<K: Any, V: Any> private constructor(
                             }
                             .collect()
                     }
-                    log.trace { "bachCache cache entry expire 검사 완료. entrySize=${entrySize.value}, elapsed=$elapsed msec" }
+                    log.trace { "bachCache cache entry expire 검사 완료. entrySize=$entrySize, elapsed=$elapsed msec" }
                 }
             }
         }

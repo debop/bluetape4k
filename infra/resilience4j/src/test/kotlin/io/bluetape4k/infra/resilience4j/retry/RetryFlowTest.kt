@@ -5,12 +5,12 @@ import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.github.resilience4j.kotlin.retry.retry
 import io.github.resilience4j.retry.Retry
 import io.github.resilience4j.retry.RetryConfig
-import java.time.Duration
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import kotlin.test.assertFailsWith
 
 class RetryFlowTest {
@@ -40,7 +40,7 @@ class RetryFlowTest {
         metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
         metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
 
-        helloWorldService.invocationCounter shouldBeEqualTo 3
+        helloWorldService.invocationCount shouldBeEqualTo 3
     }
 
     @Test
@@ -56,8 +56,8 @@ class RetryFlowTest {
 
         flow {
             repeat(3) {
-                when (helloWorldService.invocationCounter) {
-                    0 -> helloWorldService.throwException()
+                when (helloWorldService.invocationCount) {
+                    0    -> helloWorldService.throwException()
                     else -> emit(helloWorldService.returnHelloWorld() + it)
                 }
             }
@@ -75,7 +75,7 @@ class RetryFlowTest {
         metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
         metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
 
-        helloWorldService.invocationCounter shouldBeEqualTo 4
+        helloWorldService.invocationCount shouldBeEqualTo 4
     }
 
     @Test
@@ -84,7 +84,7 @@ class RetryFlowTest {
         val retry = Retry.of("testName") {
             RetryConfig.custom<Any?>()
                 .waitDuration(Duration.ofMillis(10))
-                .retryOnResult { helloWorldService.invocationCounter < 2 }
+                .retryOnResult { helloWorldService.invocationCount < 2 }
                 .build()
         }
         val metrics = retry.metrics
@@ -102,7 +102,7 @@ class RetryFlowTest {
         metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
         metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
 
-        helloWorldService.invocationCounter shouldBeEqualTo 2
+        helloWorldService.invocationCount shouldBeEqualTo 2
     }
 
     @Test
@@ -127,6 +127,6 @@ class RetryFlowTest {
         metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
         metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 1
 
-        helloWorldService.invocationCounter shouldBeEqualTo retry.retryConfig.maxAttempts
+        helloWorldService.invocationCount shouldBeEqualTo retry.retryConfig.maxAttempts
     }
 }

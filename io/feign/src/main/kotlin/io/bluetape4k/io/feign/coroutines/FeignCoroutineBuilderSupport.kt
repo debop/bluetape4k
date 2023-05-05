@@ -8,7 +8,14 @@ import feign.codec.Encoder
 import feign.kotlin.CoroutineFeign
 import io.bluetape4k.io.feign.defaultRequestOptions
 
-
+/**
+ * Coroutine 용 Feign Builder 를 생성합니다.
+ *
+ * @param C Context Type
+ * @param intializer CoroutineFeign.CoroutineBuilder 초기화 블럭
+ * @receiver CoroutineFeign.CoroutineBuilder
+ * @return [CoroutineFeign.CoroutineBuilder] instance
+ */
 inline fun <C: Any> coroutineFeignBuilder(
     intializer: CoroutineFeign.CoroutineBuilder<C>.() -> Unit,
 ): CoroutineFeign.CoroutineBuilder<C> {
@@ -16,7 +23,7 @@ inline fun <C: Any> coroutineFeignBuilder(
 }
 
 fun <C: Any> coroutineFeignBuilderOf(
-    asyncClient: AsyncClient<C> = AsyncClient.Default(null, null),
+    asyncClient: AsyncClient<C>, // = AsyncClient.Default(null, ForkJoinPool.commonPool()),
     encoder: Encoder = Encoder.Default(),
     decoder: Decoder = Decoder.Default(),
     opptions: Request.Options = defaultRequestOptions,
@@ -31,7 +38,14 @@ fun <C: Any> coroutineFeignBuilderOf(
     }
 }
 
+/**
+ * Feign 용 Client 를 생성합니다.
+ *
+ * @param T Client type
+ * @param baseUrl Base URL
+ * @return Feign Client instance
+ */
 inline fun <reified T: Any> CoroutineFeign.CoroutineBuilder<*>.client(baseUrl: String? = null): T = when {
     baseUrl.isNullOrBlank() -> target(Target.EmptyTarget.create(T::class.java))
-    else -> target(T::class.java, baseUrl)
+    else                    -> target(T::class.java, baseUrl)
 }
