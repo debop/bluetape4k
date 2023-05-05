@@ -4,9 +4,6 @@ import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.logging.KLogging
-import javax.persistence.*
-import javax.persistence.CascadeType.*
-import javax.persistence.FetchType.*
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
@@ -14,6 +11,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
+import javax.persistence.*
+import javax.persistence.CascadeType.*
+import javax.persistence.FetchType.*
 
 class ManyToManyTest(
     @Autowired private val accountRepo: BankAccountRepository,
@@ -138,7 +138,7 @@ class BankAccount(val number: String): IntJpaEntity() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -185,7 +185,7 @@ class AccountOwner(val ssn: String): IntJpaEntity() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {

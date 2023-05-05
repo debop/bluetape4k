@@ -37,6 +37,10 @@ class ConvertableEntity(
         return other is ConvertableEntity && name == other.name
     }
 
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
     override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
 
     override fun buildStringHelper(): ToStringBuilder {
@@ -45,7 +49,7 @@ class ConvertableEntity(
     }
 
     data class Component(
-        val name: String
+        val name: String,
     ) : Serializable {
         var largeText: ByteArray = randomBytes(512)
     }

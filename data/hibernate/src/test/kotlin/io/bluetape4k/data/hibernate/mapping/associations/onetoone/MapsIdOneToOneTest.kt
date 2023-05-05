@@ -8,6 +8,14 @@ import io.bluetape4k.data.hibernate.model.AbstractJpaEntity
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.hashOf
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeNull
+import org.amshove.kluent.shouldNotBeNull
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.repository.findByIdOrNull
 import javax.persistence.Access
 import javax.persistence.AccessType
 import javax.persistence.CascadeType
@@ -18,14 +26,6 @@ import javax.persistence.MapsId
 import javax.persistence.OneToOne
 import javax.persistence.PrimaryKeyJoinColumn
 import javax.validation.constraints.NotBlank
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeFalse
-import org.amshove.kluent.shouldBeNull
-import org.amshove.kluent.shouldNotBeNull
-import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.repository.findByIdOrNull
 
 class MapsIdOneToOneTest(
     @Autowired private val authorRepo: AuthorRepository
@@ -85,6 +85,7 @@ class Author private constructor(
 ): IntJpaEntity() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(name: String): Author {
             name.requireNotBlank("name")
             return Author(name)
@@ -101,7 +102,7 @@ class Author private constructor(
         other is Author && name == other.name
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
@@ -117,6 +118,7 @@ class Author private constructor(
 class Picture private constructor(): IntJpaEntity() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(author: Author): Picture {
             return Picture().apply {
                 this.author = author
@@ -139,7 +141,7 @@ class Picture private constructor(): IntJpaEntity() {
         other is Picture && author == other.author
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -158,6 +160,7 @@ class Picture private constructor(): IntJpaEntity() {
 class Biography private constructor(): AbstractJpaEntity<Int>() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(author: Author): Biography {
             return Biography().apply {
                 this.author = author
@@ -180,7 +183,7 @@ class Biography private constructor(): AbstractJpaEntity<Int>() {
         other is Biography && author == other.author
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {

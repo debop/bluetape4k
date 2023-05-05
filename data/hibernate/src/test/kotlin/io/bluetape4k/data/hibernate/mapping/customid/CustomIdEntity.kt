@@ -4,6 +4,8 @@ import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.model.AbstractJpaEntity
 import io.bluetape4k.support.hashOf
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
 import java.io.Serializable
 import java.time.Instant
 import javax.persistence.Access
@@ -12,8 +14,6 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.Transient
-import org.hibernate.annotations.DynamicInsert
-import org.hibernate.annotations.DynamicUpdate
 
 /**
  * value class 를 속성으로 사용할 수 있습니다.
@@ -65,6 +65,10 @@ class CustomIdEntity private constructor(): AbstractJpaEntity<Email>() {
 
     override fun hashCode(): Int {
         return id?.hashCode() ?: hashOf(id, name)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
     }
 
     override fun equalProperties(other: Any): Boolean {

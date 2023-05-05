@@ -2,6 +2,8 @@ package io.bluetape4k.data.hibernate.stateless
 
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
 import javax.persistence.Access
 import javax.persistence.AccessType
 import javax.persistence.CascadeType
@@ -10,8 +12,6 @@ import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
-import org.hibernate.annotations.DynamicInsert
-import org.hibernate.annotations.DynamicUpdate
 
 
 @Entity
@@ -28,6 +28,14 @@ class StatelessEntity(val name: String): IntJpaEntity() {
 
     override fun equalProperties(other: Any): Boolean =
         other is StatelessEntity && name == other.name
+
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: name.hashCode()
+    }
 
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()
@@ -46,6 +54,12 @@ class StatelessMaster(val name: String): IntJpaEntity() {
 
     override fun equalProperties(other: Any): Boolean =
         other is StatelessMaster && name == other.name
+
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
+    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
 
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()
@@ -66,6 +80,12 @@ class StatelessDetail(val name: String): IntJpaEntity() {
 
     override fun equalProperties(other: Any): Boolean =
         other is StatelessDetail && name == other.name
+
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
+    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
 
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()

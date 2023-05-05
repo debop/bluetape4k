@@ -5,12 +5,12 @@ import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.findAs
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
-import javax.persistence.*
-import javax.validation.constraints.NotBlank
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
+import javax.persistence.*
+import javax.validation.constraints.NotBlank
 
 class CoupleTest(
     @Autowired private val husbandRepo: HusbandRepository,
@@ -71,7 +71,7 @@ class Husband: IntJpaEntity() {
     var wife: Wife? = null
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun equalProperties(other: Any): Boolean {
@@ -115,7 +115,7 @@ class Wife: IntJpaEntity() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {

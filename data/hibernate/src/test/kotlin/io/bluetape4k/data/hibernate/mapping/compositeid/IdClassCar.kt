@@ -56,6 +56,10 @@ class IdClassCar private constructor(): AbstractPersistenceObject() {
         return other is IdClassCar && other.brand == brand && other.carYear == carYear
     }
 
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
     override fun hashCode(): Int {
         return hashOf(brand, carYear)
     }

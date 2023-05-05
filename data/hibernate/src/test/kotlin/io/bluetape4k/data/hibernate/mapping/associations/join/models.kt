@@ -5,16 +5,16 @@ import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.model.AbstractJpaEntity
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.support.hashOf
-import java.io.Serializable
-import java.time.LocalDateTime
-import javax.persistence.*
-import javax.validation.constraints.NotBlank
 import org.hibernate.annotations.Cascade
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.io.Serializable
+import java.time.LocalDateTime
+import javax.persistence.*
+import javax.validation.constraints.NotBlank
 
 @Embeddable
 data class Address(
@@ -37,7 +37,7 @@ class AddressEntity(
     override var id: Int? = null
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun equalProperties(other: Any): Boolean {
@@ -97,7 +97,8 @@ class JoinUser private constructor(
     override fun equalProperties(other: Any): Boolean =
         other is JoinUser && name == other.name
 
-    override fun equals(other: Any?): Boolean = super.equals(other)
+    override fun equals(other: Any?): Boolean =
+        other != null && super.equals(other)
 
     override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
 
@@ -119,6 +120,7 @@ class JoinCustomer private constructor(
 ): IntJpaEntity() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(name: String, email: String? = null): JoinCustomer {
             name.requireNotBlank("name")
             return JoinCustomer(name, email)
@@ -158,7 +160,8 @@ class JoinCustomer private constructor(
     @LastModifiedDate
     var updatedAt: LocalDateTime? = null
 
-    override fun equals(other: Any?): Boolean = super.equals(other)
+    override fun equals(other: Any?): Boolean =
+        other != null && super.equals(other)
 
     override fun equalProperties(other: Any): Boolean =
         other is JoinCustomer && name == other.name && email == other.email

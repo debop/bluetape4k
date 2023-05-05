@@ -3,11 +3,12 @@ package io.bluetape4k.data.hibernate.mapping.localized
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.data.hibernate.model.JpaLocalizedEntity
-import java.util.*
-import javax.persistence.*
+import io.bluetape4k.support.hashOf
 import org.hibernate.annotations.Cascade
 import org.hibernate.annotations.LazyCollection
 import org.hibernate.annotations.LazyCollectionOption
+import java.util.*
+import javax.persistence.*
 
 @Entity(name = "travel_content")
 @Access(AccessType.FIELD)
@@ -15,7 +16,7 @@ class TravelContent(
     var title: String,
     var contents: String,
     var creator: String,
-) : IntJpaEntity(), JpaLocalizedEntity<LocalTravelContent> {
+): IntJpaEntity(), JpaLocalizedEntity<LocalTravelContent> {
 
     @CollectionTable(name = "travel_content_locale_map", joinColumns = [JoinColumn(name = "travel_content_id")])
     @MapKeyClass(Locale::class)
@@ -36,6 +37,14 @@ class TravelContent(
             creator == other.creator
     }
 
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: hashOf(title, contents, creator)
+    }
+
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()
             .add("title", title)
@@ -47,5 +56,5 @@ class TravelContent(
 @Embeddable
 data class LocalTravelContent(
     var title: String,
-    var content: String
-) : JpaLocalizedEntity.LocalizedValue
+    var content: String,
+): JpaLocalizedEntity.LocalizedValue

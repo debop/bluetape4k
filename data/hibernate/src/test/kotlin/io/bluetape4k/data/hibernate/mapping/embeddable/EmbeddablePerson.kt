@@ -5,6 +5,8 @@ import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.converters.RC4StringConverter
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.support.hashOf
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
 import javax.persistence.Access
 import javax.persistence.AccessType
 import javax.persistence.AttributeOverride
@@ -16,8 +18,6 @@ import javax.persistence.Entity
 import javax.persistence.Index
 import javax.persistence.Table
 import javax.validation.constraints.NotBlank
-import org.hibernate.annotations.DynamicInsert
-import org.hibernate.annotations.DynamicUpdate
 
 @Entity
 @Table(
@@ -75,6 +75,10 @@ class EmbeddablePerson private constructor(
         return other is EmbeddablePerson &&
             userId == other.userId &&
             email == other.email
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {

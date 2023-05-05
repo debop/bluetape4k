@@ -33,6 +33,10 @@ class EmbeddedIdCar(
         return other is EmbeddedIdCar && other.id == id
     }
 
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
     override fun hashCode(): Int {
         return id.hashCode()
     }

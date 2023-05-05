@@ -60,10 +60,11 @@ dependencies {
 
     api(Libs.javax_persistence_api)
     api(Libs.hibernate_core)
+    api(Libs.hibernate_micrometer)
     testImplementation(Libs.hibernate_testing)
 
-    kapt(Libs.hibernate_jpamodelgen)
-    kaptTest(Libs.hibernate_jpamodelgen)
+//    kapt(Libs.hibernate_jpamodelgen)
+//    kaptTest(Libs.hibernate_jpamodelgen)
 
     // Querydsl
     compileOnly(Libs.querydsl_jpa)

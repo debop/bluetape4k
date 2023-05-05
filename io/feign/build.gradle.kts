@@ -35,8 +35,10 @@ dependencies {
     api(Libs.feign_kotlin)
     api(Libs.feign_slf4j)
     api(Libs.feign_jackson)
+    compileOnly(Libs.feign_micrometer)
     compileOnly(Libs.feign_jaxrs)
     compileOnly(Libs.feign_jaxrs2)
+    testImplementation(Libs.feign_mock)
 
     // OkHttp3
     compileOnly(Libs.okhttp3)

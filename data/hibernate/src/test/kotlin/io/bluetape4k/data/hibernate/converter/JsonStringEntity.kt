@@ -24,6 +24,10 @@ class Purchase : IntJpaEntity() {
         return other is Purchase && option == other.option
     }
 
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
     override fun hashCode(): Int {
         return id?.hashCode() ?: option.hashCode()
     }

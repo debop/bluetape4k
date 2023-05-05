@@ -20,6 +20,7 @@ import javax.persistence.OrderBy
 class Cloud private constructor(var kind: String, var length: Double): IntJpaEntity() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(kind: String, length: Double = 0.0): Cloud {
             kind.requireNotBlank("kind")
             length.requireZeroOrPositiveNumber("length")
@@ -41,7 +42,7 @@ class Cloud private constructor(var kind: String, var length: Double): IntJpaEnt
         other is Cloud && kind == other.kind && length == other.length
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int = id?.hashCode() ?: hashOf(kind, length)
@@ -58,6 +59,7 @@ class Cloud private constructor(var kind: String, var length: Double): IntJpaEnt
 class Snowflake private constructor(val name: String): IntJpaEntity() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(name: String, description: String? = null): Snowflake {
             name.requireNotBlank("name")
             return Snowflake(name).also {
@@ -72,7 +74,7 @@ class Snowflake private constructor(val name: String): IntJpaEntity() {
         other is Snowflake && name == other.name
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()

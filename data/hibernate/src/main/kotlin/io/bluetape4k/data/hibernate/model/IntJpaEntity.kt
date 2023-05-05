@@ -10,6 +10,7 @@ import javax.persistence.MappedSuperclass
  */
 @MappedSuperclass
 abstract class IntJpaEntity: AbstractJpaEntity<Int>() {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     override var id: Int? = null

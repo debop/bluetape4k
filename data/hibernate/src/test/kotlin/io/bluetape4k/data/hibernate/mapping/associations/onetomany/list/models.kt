@@ -3,6 +3,10 @@ package io.bluetape4k.data.hibernate.mapping.associations.onetomany.list
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.support.hashOf
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
+import org.hibernate.annotations.LazyCollection
+import org.hibernate.annotations.LazyCollectionOption
 import java.time.LocalDate
 import javax.persistence.Access
 import javax.persistence.AccessType
@@ -20,10 +24,6 @@ import javax.persistence.OneToMany
 import javax.persistence.OrderBy
 import javax.persistence.OrderColumn
 import javax.validation.constraints.NotBlank
-import org.hibernate.annotations.DynamicInsert
-import org.hibernate.annotations.DynamicUpdate
-import org.hibernate.annotations.LazyCollection
-import org.hibernate.annotations.LazyCollectionOption
 
 
 @Entity(name = "onetomany_father")
@@ -49,7 +49,7 @@ class Father(val name: String): IntJpaEntity() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -76,7 +76,7 @@ class Child(
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -122,7 +122,7 @@ class Order(@NotBlank val no: String): IntJpaEntity() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -150,7 +150,7 @@ class OrderItem(val name: String): IntJpaEntity() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -202,7 +202,7 @@ class Batch(
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -236,7 +236,7 @@ class BatchItem(
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {

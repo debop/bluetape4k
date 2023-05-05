@@ -4,13 +4,6 @@ import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.logging.KLogging
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.JoinColumn
-import javax.persistence.OneToOne
-import javax.validation.constraints.NotBlank
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
@@ -18,6 +11,13 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
+import javax.persistence.Access
+import javax.persistence.AccessType
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.JoinColumn
+import javax.persistence.OneToOne
+import javax.validation.constraints.NotBlank
 
 class CavalierHorseTest(
     @Autowired private val cavalierRepo: CavalierRepository,
@@ -60,6 +60,7 @@ class CavalierHorseTest(
 class Cavalier private constructor(): IntJpaEntity() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(name: String, horse: Horse? = null): Cavalier {
             return Cavalier().apply {
                 this.name = name
@@ -80,7 +81,7 @@ class Cavalier private constructor(): IntJpaEntity() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {
@@ -98,6 +99,7 @@ class Cavalier private constructor(): IntJpaEntity() {
 class Horse private constructor(): IntJpaEntity() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(name: String): Horse {
             return Horse().apply {
                 this.name = name
@@ -113,7 +115,7 @@ class Horse private constructor(): IntJpaEntity() {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun hashCode(): Int {

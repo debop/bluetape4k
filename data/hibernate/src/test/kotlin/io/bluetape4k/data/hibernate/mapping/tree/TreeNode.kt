@@ -20,6 +20,7 @@ class TreeNode private constructor(
 ): LongJpaTreeEntity<TreeNode>() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(title: String): TreeNode {
             title.requireNotBlank("title")
             return TreeNode(title)
@@ -29,7 +30,9 @@ class TreeNode private constructor(
     var description: String? = null
 
     // NOTE: equals 를 재정의하지 않으면, Querydsl kapt 작업이 실패하는 경우가 있습니다.
-    override fun equals(other: Any?): Boolean = super.equals(other)
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
 
     override fun equalProperties(other: Any): Boolean {
         return other is TreeNode && title == other.title

@@ -944,6 +944,7 @@ object Libs {
     fun hibernate(module: String) = "org.hibernate:hibernate-$module:${Versions.hibernate}"
     val hibernate_core get() = hibernate("core")
     val hibernate_jcache get() = hibernate("jcache")
+    val hibernate_micrometer get() = hibernate("micrometer")
     val hibernate_testing get() = hibernate("testing")
     val hibernate_envers get() = hibernate("envers")
     val hibernate_jpamodelgen get() = hibernate("jpamodelgen")

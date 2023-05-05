@@ -36,6 +36,10 @@ class SimpleEntity private constructor(
     override fun equalProperties(other: Any): Boolean =
         other is SimpleEntity && name == other.name
 
+    override fun equals(other: Any?): Boolean {
+        return other != null && super.equals(other)
+    }
+
     override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
 
     override fun buildStringHelper(): ToStringBuilder {
