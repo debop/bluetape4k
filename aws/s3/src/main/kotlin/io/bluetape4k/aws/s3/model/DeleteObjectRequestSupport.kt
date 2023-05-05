@@ -4,6 +4,7 @@ import io.bluetape4k.core.requireNotBlank
 import software.amazon.awssdk.services.s3.model.Delete
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest
+import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 
 inline fun deleteObjectRequest(
     bucket: String,
@@ -48,8 +49,16 @@ fun deleteObjectsRequestOf(
     requestPlayer: String? = null,
 ): DeleteObjectsRequest {
     return deleteObjectsRequest(bucket, delete) {
-        this.bucket(bucket)
-        this.delete(delete)
+        requestPayer(requestPlayer)
+    }
+}
+
+fun deleteObjectsRequestOf(
+    bucket: String,
+    identifiers: Collection<ObjectIdentifier>,
+    requestPlayer: String? = null,
+): DeleteObjectsRequest {
+    return deleteObjectsRequest(bucket, deleteOf(identifiers)) {
         requestPayer(requestPlayer)
     }
 }

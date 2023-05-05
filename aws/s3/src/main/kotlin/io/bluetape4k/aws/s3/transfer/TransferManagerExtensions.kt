@@ -38,7 +38,7 @@ fun <T> S3TransferManager.download(
 fun S3TransferManager.downloadAsByteArray(
     bucket: String,
     key: String,
-    getObjectRequestBuilder: (GetObjectRequest.Builder) -> Unit,
+    getObjectRequestBuilder: (GetObjectRequest.Builder) -> Unit = {},
 ): Download<ResponseBytes<GetObjectResponse>> {
     bucket.requireNotBlank("bucket")
     key.requireNotBlank("key")
@@ -55,7 +55,7 @@ fun S3TransferManager.downloadAsFile(
     bucket: String,
     key: String,
     objectPath: Path,
-    getObjectRequestBuilder: (GetObjectRequest.Builder) -> Unit,
+    getObjectRequestBuilder: (GetObjectRequest.Builder) -> Unit = {},
 ): FileDownload {
     bucket.requireNotBlank("bucket")
     key.requireNotBlank("key")
@@ -71,33 +71,51 @@ fun S3TransferManager.downloadAsFile(
 }
 
 fun S3TransferManager.upload(
+    bucket: String,
+    key: String,
     asyncRequestBody: AsyncRequestBody,
-    putObjectRequest: PutObjectRequest.Builder.() -> Unit,
+    putObjectRequest: PutObjectRequest.Builder.() -> Unit = {},
 ): Upload {
     val request = uploadRequest {
-        putObjectRequest(putObjectRequest)
+        putObjectRequest {
+            it.bucket(bucket)
+            it.key(key)
+            putObjectRequest(it)
+        }
         requestBody(asyncRequestBody)
     }
     return upload(request)
 }
 
 fun S3TransferManager.uploadByteArray(
+    bucket: String,
+    key: String,
     content: ByteArray,
-    putObjectRequest: PutObjectRequest.Builder.() -> Unit,
+    putObjectRequest: PutObjectRequest.Builder.() -> Unit = {},
 ): Upload {
     val request = uploadRequest {
-        putObjectRequest(putObjectRequest)
+        putObjectRequest {
+            it.bucket(bucket)
+            it.key(key)
+            putObjectRequest(it)
+        }
         requestBody(content.toAsyncRequestBody())
     }
     return upload(request)
 }
 
 fun S3TransferManager.uploadFile(
+    bucket: String,
+    key: String,
     source: Path,
-    putObjectRequest: PutObjectRequest.Builder.() -> Unit,
+    putObjectRequest: PutObjectRequest.Builder.() -> Unit = {},
 ): Upload {
     val request = uploadRequest {
-        putObjectRequest(putObjectRequest)
+        putObjectRequest {
+            it.bucket(bucket)
+            it.key(key)
+            putObjectRequest(it)
+        }
         requestBody(source.toAsyncRequestBody())
     }
     return upload(request)

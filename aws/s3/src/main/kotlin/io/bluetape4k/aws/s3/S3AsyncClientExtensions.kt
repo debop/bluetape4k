@@ -1,5 +1,6 @@
 package io.bluetape4k.aws.s3
 
+import io.bluetape4k.aws.s3.model.getObjectRequest
 import io.bluetape4k.aws.s3.model.putObjectRequest
 import io.bluetape4k.core.requireNotBlank
 import software.amazon.awssdk.core.async.AsyncRequestBody
@@ -61,10 +62,15 @@ fun S3AsyncClient.createBucket(
  * @return 다운받은 S3 Object의 ByteArray 형태의 정보
  */
 fun S3AsyncClient.getAsByteArray(
-    getObjectRequest: (GetObjectRequest.Builder) -> Unit,
-): CompletableFuture<ByteArray> =
-    getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
+    bucket: String,
+    key: String,
+    getObjectRequest: (GetObjectRequest.Builder) -> Unit = {},
+): CompletableFuture<ByteArray> {
+    val request = getObjectRequest(bucket, key, getObjectRequest)
+
+    return getObject(request, AsyncResponseTransformer.toBytes())
         .thenApply { it.asByteArray() }
+}
 
 /**
  * S3 Object 를 download 한 후, 문자열로 반환합니다.
@@ -73,17 +79,25 @@ fun S3AsyncClient.getAsByteArray(
  * @return 다운받은 S3 Object의 문자열 형태의 정보
  */
 fun S3AsyncClient.getAsString(
-    getObjectRequest: (GetObjectRequest.Builder) -> Unit,
-): CompletableFuture<String> =
-    getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
+    bucket: String,
+    key: String,
+    getObjectRequest: (GetObjectRequest.Builder) -> Unit = {},
+): CompletableFuture<String> {
+    val request = getObjectRequest(bucket, key, getObjectRequest)
+
+    return getObject(request, AsyncResponseTransformer.toBytes())
         .thenApply { it.asString(Charsets.UTF_8) }
+}
 
 
 fun S3AsyncClient.getAsFile(
+    bucket: String,
+    key: String,
     destinationPath: Path,
-    getObjectRequest: (GetObjectRequest.Builder) -> Unit,
+    getObjectRequest: (GetObjectRequest.Builder) -> Unit = {},
 ): CompletableFuture<GetObjectResponse> {
-    return getObject(getObjectRequest, destinationPath)
+    val request = getObjectRequest(bucket, key, getObjectRequest)
+    return getObject(request, destinationPath)
 }
 
 //

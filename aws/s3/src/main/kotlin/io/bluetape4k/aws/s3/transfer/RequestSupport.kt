@@ -7,6 +7,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.transfer.s3.model.DownloadRequest
 import software.amazon.awssdk.transfer.s3.model.UploadRequest
+import java.nio.file.Path
 
 inline fun <T> downloadRequest(
     responseTransformer: AsyncResponseTransformer<GetObjectResponse, T>,
@@ -29,6 +30,19 @@ fun <T> downloadRequestOf(
             it.bucket(bucket)
             it.key(key)
             getObjectRequestBuilder(it)
+        }
+    }
+}
+
+fun downloadRequestOf(
+    bucket: String,
+    key: String,
+    downloadPath: Path,
+): DownloadRequest<GetObjectResponse> {
+    return downloadRequest(AsyncResponseTransformer.toFile(downloadPath)) {
+        getObjectRequest {
+            it.bucket(bucket)
+            it.key(key)
         }
     }
 }
