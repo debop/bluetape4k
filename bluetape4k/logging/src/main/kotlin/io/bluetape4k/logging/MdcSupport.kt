@@ -23,7 +23,7 @@ import org.slf4j.MDC
 inline fun <T> withLoggingContext(
     pair: Pair<String, Any?>,
     restorePrevious: Boolean = true,
-    block: () -> T
+    block: () -> T,
 ): T {
     return if (pair.second == null) {
         block()
@@ -56,7 +56,7 @@ inline fun <T> withLoggingContext(
 inline fun <T> withLoggingContext(
     vararg pairs: Pair<String, Any?>,
     restorePrevious: Boolean = true,
-    block: () -> T
+    block: () -> T,
 ): T {
     return withLoggingContext(pairs.filter { it.second != null }.toMap(), restorePrevious, block)
 }
@@ -78,7 +78,7 @@ inline fun <T> withLoggingContext(
 inline fun <T> withLoggingContext(
     map: Map<String, Any?>,
     restorePrevious: Boolean = true,
-    block: () -> T
+    block: () -> T,
 ): T {
     val mdcMap = map.filter { it.value != null }
     val cleanupCallback: List<() -> Unit> = mdcMap.keys.map { key ->

@@ -57,6 +57,13 @@ object Versions {
 
     const val blockhound = "1.0.8.RELEASE"
 
+    // GraphQL
+    // Netflix DGS 의 bom (5.5.x) 에서 graph-java 버전이 낮아서 (18.3) 최신 버전 (19.2)으로 강제 update 해야 한다
+    // https://github.com/Netflix/dgs-framework/issues/1281#issuecomment-1284694300
+    const val graphql_java = "19.2"
+    const val graphql_dgs = "5.5.1"
+    const val apollo_kotlin = "3.7.4"
+
     const val quarkus = Plugins.Versions.quarkus
     const val resteasy = "6.2.3.Final"
     const val mutiny = "2.2.0"
@@ -400,6 +407,45 @@ object Libs {
 
     val spring_statemachine_bom get() = springStatemachine("bom")
     val spring_statemachine_core get() = springStatemachine("core")
+
+    // GraphQL JAVA
+    fun graphqlJava(module: String) = "com.graphql-java:$module:${Versions.graphql_java}"
+    val graphql_java get() = graphqlJava("graphql-java")
+
+    // GraphQL DGS
+    fun graphqlDgs(module: String) = "com.netflix.graphql.dgs:graphql-dgs-$module:${Versions.graphql_dgs}"
+
+    val graphql_dgs_platform_dependencies get() = graphqlDgs("platform-dependencies")
+    val graphql_dgs_client get() = graphqlDgs("client")
+    val graphql_dgs_extended_shaded get() = graphqlDgs("extended-shaded")
+    val graphql_dgs_extended_scalars get() = graphqlDgs("extended-scalars")
+    val graphql_dgs_extended_validation get() = graphqlDgs("extended-validation")
+    val graphql_dgs_mocking get() = graphqlDgs("mocking")
+    val graphql_dgs_pagination get() = graphqlDgs("pagination")
+    val graphql_dgs_reactive get() = graphqlDgs("reactive")
+    val graphql_dgs_spring_boot_starter get() = graphqlDgs("spring-boot-starter")
+    val graphql_dgs_spring_webmvc get() = graphqlDgs("spring-webmvc")
+    val graphql_dgs_spring_webmvc_autoconfigure get() = graphqlDgs("spring-webmvc-autoconfigure")
+    val graphql_dgs_subscriptions_sse get() = graphqlDgs("subscriptions-sse")
+    val graphql_dgs_subscriptions_sse_autoconfigure get() = graphqlDgs("subscriptions-sse-autoconfigure")
+    val graphql_dgs_subscriptions_websockets get() = graphqlDgs("subscriptions-websockets")
+    val graphql_dgs_subscriptions_websockets_autoconfigure get() = graphqlDgs("subscriptions-websockets-autoconfigure")
+    val graphql_dgs_webflux_starter get() = graphqlDgs("webflux-starter")
+    val graphql_dgs_error_types get() = "com.netflix.graphql.dgs:graphql-error-types:${Versions.graphql_dgs}"
+
+    // Apollo Kotlin
+    fun apolloKotlin(module: String) = "com.apollographql.apollo3:apollo-$module:${Versions.apollo_kotlin}"
+    val apollo_adapters get() = apolloKotlin("adapters")
+    val apollo_mockserver get() = apolloKotlin("mockserver")
+    val apollo_normalized_cache get() = apolloKotlin("normalized-cache")
+    val apollo_runtime get() = apolloKotlin("runtime")
+    val apollo_runtime_jvm get() = apolloKotlin("runtime-jvm")
+    val apollo_testing_support get() = apolloKotlin("testing-support")
+
+    // Apollo Federation (DGS bom에 정의되어 있다)
+    fun apolloFederation(module: String) = "com.apollographql.federation:federation-$module"
+    val apollo_federation_graphql_java_support get() = apolloFederation("graphql-java-support")
+
 
     // Quarkus
     fun quarkus(extension: String) = "io.quarkus:quarkus-$extension:${Versions.quarkus}"
