@@ -13,20 +13,26 @@ import software.amazon.awssdk.services.sqs.SqsClient
 abstract class AbstractSqsTest {
 
     companion object: KLogging() {
+        @JvmStatic
         private val AwsSQS: LocalStackServer by lazy {
             LocalStackServer.Launcher.locakStack.withServices(LocalStackContainer.Service.SQS)
         }
 
+        @JvmStatic
         private val endpoint by lazy {
             AwsSQS.getEndpointOverride(LocalStackContainer.Service.S3)
         }
+
+        @JvmStatic
         private val credentialsProvider: StaticCredentialsProvider by lazy {
             staticCredentialsProviderOf(AwsSQS.accessKey, AwsSQS.secretKey)
         }
 
+        @JvmStatic
         private val region: Region
             get() = Region.of(AwsSQS.region)
 
+        @JvmStatic
         val client: SqsClient by lazy {
             SqsClient {
                 credentialsProvider(credentialsProvider)
@@ -35,6 +41,7 @@ abstract class AbstractSqsTest {
             }
         }
 
+        @JvmStatic
         val asyncClient: SqsAsyncClient by lazy {
             SqsAsyncClient {
                 credentialsProvider(credentialsProvider)
@@ -43,6 +50,7 @@ abstract class AbstractSqsTest {
             }
         }
 
+        @JvmStatic
         fun randomString(): String {
             return Fakers.randomString(256, 2048, true)
         }

@@ -24,20 +24,26 @@ abstract class AbstractS3Test {
         const val BUCKET_NAME: String = "test-bucket"
         const val BUCKET_NAME2: String = "test-bucket-2"
 
+        @JvmStatic
         private val AwsS3: LocalStackServer by lazy {
             LocalStackServer.Launcher.locakStack.withServices(LocalStackContainer.Service.S3)
         }
 
+        @JvmStatic
         private val endpoint by lazy {
             AwsS3.getEndpointOverride(LocalStackContainer.Service.S3)
         }
+
+        @JvmStatic
         private val credentialsProvider: StaticCredentialsProvider by lazy {
             staticCredentialsProviderOf(AwsS3.accessKey, AwsS3.secretKey)
         }
 
+        @JvmStatic
         private val region: Region
             get() = Region.of(AwsS3.region)
 
+        @JvmStatic
         fun randomString(): String =
             Fakers.randomString(256, 2048, true)
     }
