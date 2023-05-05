@@ -2,6 +2,7 @@ package io.bluetape4k.examples.coroutines.dispatchers
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -109,10 +110,12 @@ class DispatcherExamples {
     @Test
     fun `dispatcher with single thread`() = runTest {
         newSingleThreadContext("single").use { dispatcher ->
-            var count = 0
+            val counter = atomic(0)
+            val count by counter
+
             val jobs = List(REPEAT_SIZE) {
                 launch(dispatcher) {
-                    count++
+                    counter.incrementAndGet()
                     log.debug { "count=$count" }
                 }
             }

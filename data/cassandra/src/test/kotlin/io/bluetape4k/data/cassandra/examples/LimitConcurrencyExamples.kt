@@ -83,7 +83,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
             executor.submit {
                 try {
                     session.execute(pst.bind().setUuid("id", UUID.randomUUID()).setInt("value", counter))
-                    insertsCount++
+                    insertsCounter.incrementAndGet()
                 } catch (e: Throwable) {
                     e.printStackTrace()
                 } finally {
@@ -144,7 +144,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
 
         return session.executeAsync(stmt)
             .whenComplete { _, err ->
-                if (err == null) insertAsyncCount++
+                if (err == null) insertAsyncCounter.incrementAndGet()
                 else err.printStackTrace()
             }
     }

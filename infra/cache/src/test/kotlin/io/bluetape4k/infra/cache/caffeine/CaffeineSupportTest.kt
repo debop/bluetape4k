@@ -97,12 +97,12 @@ class CaffeineSupportTest {
     @Test
     fun `loading async cache by suspend function`() {
         val counter = atomic(0)
-        var count by counter
+        val count by counter
 
         val asyncCache = caffeine.suspendLoadingCache { key: String ->
             log.debug { "loading cache value of [$key] by suspend function..." }
             delay(100)
-            count++
+            counter.incrementAndGet()
             "value of $key"
         }
 
@@ -125,12 +125,12 @@ class CaffeineSupportTest {
     fun `get suspend method with AsyncCache`() {
         val asyncCache = caffeine.asyncCache<String, String>()
         val counter = atomic(0)
-        var count by counter
+        val count by counter
 
         val suspendValue = asyncCache.getSuspending("key") { key ->
             log.debug { "run suspend function to evaluate value of $key" }
             delay(100)
-            count++
+            counter.incrementAndGet()
             "suspend value of $key"
         }
         suspendValue.get() shouldBeEqualTo "suspend value of key"

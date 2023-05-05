@@ -15,8 +15,8 @@ class AtomicIntRoundrobin private constructor(val maximum: Int) {
         }
     }
 
-    private val atomicValue = atomic(0)
-    private var currentValue: Int by atomicValue
+    private val valueSequencer = atomic(0)
+    private var currentValue: Int by valueSequencer
 
     fun get(): Int = currentValue
 
@@ -26,9 +26,9 @@ class AtomicIntRoundrobin private constructor(val maximum: Int) {
     }
 
     fun next(): Int = synchronized(this) {
-        currentValue++
+        valueSequencer.incrementAndGet()
         if (currentValue >= maximum) {
-            currentValue = 0
+            valueSequencer.value = 0
         }
         currentValue
     }

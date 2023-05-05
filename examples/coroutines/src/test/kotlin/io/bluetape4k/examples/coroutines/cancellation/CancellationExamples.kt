@@ -27,6 +27,7 @@ class CancellationExamples {
     @Test
     fun `Basic cancellation`() = runTest {
         val counter = atomic(0L)
+        val count by counter
 
         log.debug { "Start Job." }
 
@@ -40,7 +41,7 @@ class CancellationExamples {
         delay(1100)
         job.cancel()
         job.join()
-        counter.value shouldBeEqualTo 5L
+        count shouldBeEqualTo 5L
         log.debug { "Cancelled successfully." }
     }
 
@@ -66,14 +67,15 @@ class CancellationExamples {
 
     @Test
     fun `NonCancellable context 하에서 취소 시에도 정리 작업 수행하기`() = runTest {
-        var counter = 0
+        val counter = atomic(0)
+        val count by counter
         var cleanup = false
         val job = Job()
         launch(job) {
             try {
                 delay(200)
                 // 이 작업은 수행되지 않습니다.
-                counter++
+                counter.incrementAndGet()
                 log.debug { "Coroutine finished" }
             } finally {
                 log.debug { "Finally" }
@@ -90,7 +92,7 @@ class CancellationExamples {
         job.cancelAndJoin()
         log.info { "Done" }
 
-        counter shouldBeEqualTo 0 // 작업이 cancel 되므로 ...
+        count shouldBeEqualTo 0 // 작업이 cancel 되므로 ...
         cleanup.shouldBeTrue()
     }
 
@@ -108,12 +110,7 @@ class CancellationExamples {
                 log.info { "Finished" }
             }
         }
-        //        job.invokeOnCompletion(false, true) {
-        //            if (it != null) {
-        //                canceled.set(true)
-        //                log.info(it) { "Cancelled" }
-        //            }
-        //        }
+
         delay(100)
         job.cancelAndJoin()     // Cancelled
 
@@ -123,6 +120,7 @@ class CancellationExamples {
     @Test
     fun `Job isActive 를 활용하여 suspend point 잡기`() = runTest {
         val counter = atomic(0)
+        val count by counter
         val job = Job()
         launch(job) {
             while (isActive) {
@@ -131,14 +129,10 @@ class CancellationExamples {
                 log.debug { "Printing" }
             }
         }
-        // runBlocking 으로 테스트 시에는 withContext 내에서 await 를 수행해야 합니다.
-        //        withContext(Dispatchers.Default) {
-        //            await until { counter.get() == 5 }
-        //        }
         delay(550)
 
         job.cancelAndJoin()
-        counter.value shouldBeGreaterOrEqualTo 5
+        count shouldBeGreaterOrEqualTo 5
         log.info { "Cancelled successfully." }
     }
 }

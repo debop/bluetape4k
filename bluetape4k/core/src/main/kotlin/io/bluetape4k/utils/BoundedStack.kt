@@ -1,13 +1,14 @@
 package io.bluetape4k.utils
 
 import io.bluetape4k.core.requirePositiveNumber
-import java.util.Stack
+import kotlinx.atomicfu.atomic
+import java.util.*
 
 @Suppress("UNCHECKED_CAST")
 class BoundedStack<E : Any> private constructor(val maxSize: Int) : Stack<E>() {
 
     companion object {
-        operator fun <E : Any> invoke(maxSize: Int): BoundedStack<E> {
+        operator fun <E: Any> invoke(maxSize: Int): BoundedStack<E> {
             maxSize.requirePositiveNumber("maxSize")
             return BoundedStack(maxSize)
         }
@@ -16,7 +17,9 @@ class BoundedStack<E : Any> private constructor(val maxSize: Int) : Stack<E>() {
     val array: Array<E?> = arrayOfNulls<Any?>(maxSize) as Array<E?>
 
     private var top = 0
-    private var count = 0
+
+    private val counter = atomic(0)
+    private var count by counter
 
     override val size: Int get() = count
 
@@ -60,7 +63,7 @@ class BoundedStack<E : Any> private constructor(val maxSize: Int) : Stack<E>() {
         top = if (top == 0) maxSize - 1 else top - 1
         array[top] = item
         if (count < maxSize) {
-            count++
+            counter.incrementAndGet()
         }
         return item
     }
@@ -78,7 +81,7 @@ class BoundedStack<E : Any> private constructor(val maxSize: Int) : Stack<E>() {
 
         val item = array[top]
         top = (++top) % maxSize
-        count--
+        counter.decrementAndGet()
         return item!!
     }
 
@@ -97,7 +100,7 @@ class BoundedStack<E : Any> private constructor(val maxSize: Int) : Stack<E>() {
             index > count -> throw java.lang.IndexOutOfBoundsException(index.toString())
             index == count -> {
                 array[(top + index) % maxSize] = elem
-                count++
+                counter.incrementAndGet()
             }
 
             else -> {

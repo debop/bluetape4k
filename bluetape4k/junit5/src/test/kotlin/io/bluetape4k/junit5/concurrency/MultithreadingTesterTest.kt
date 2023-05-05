@@ -139,10 +139,10 @@ class MultithreadingTesterTest {
         companion object: KLogging()
 
         val counter: AtomicInt = atomic(0)
-        var count: Int by counter
+        val count: Int by counter
 
         override fun run() {
-            count++
+            counter.incrementAndGet()
             log.trace { "count: $count" }
         }
     }

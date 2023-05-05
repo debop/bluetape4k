@@ -5,7 +5,7 @@ import io.bluetape4k.data.cassandra.AbstractCassandraTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.io.Serializable
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -14,6 +14,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import java.io.Serializable
 
 class AsyncResultSetSupportTest: AbstractCassandraTest() {
 
@@ -42,13 +43,14 @@ class AsyncResultSetSupportTest: AbstractCassandraTest() {
     @Test
     fun `load as flow`() = runSuspendWithIO {
         log.debug { "Load all bulks" }
-        var count = 0
+        val counter = atomic(0)
+        val count by counter
 
         val flow = session.executeSuspending("SELECT * FROM bulks").asFlow()
         flow
             .buffer()
             .onEach { row ->
-                count++
+                counter.incrementAndGet()
                 val id = row.getStringOrEmpty(0)
                 val name = row.getStringOrEmpty(1)
 
@@ -66,14 +68,15 @@ class AsyncResultSetSupportTest: AbstractCassandraTest() {
     @Test
     fun `load as flow with row mapper`() = runSuspendWithIO {
         log.debug { "Load all bulks" }
-        var count = 0
+        val counter = atomic(0)
+        val count by counter
         val flow = session
             .executeSuspending("SELECT * FROM bulks")
             .asFlow { row -> Bulk(row.getStringOrEmpty(0), row.getStringOrEmpty(1)) }
 
         flow.buffer()
             .onEach { bulk ->
-                count++
+                counter.incrementAndGet()
                 bulk.id.shouldNotBeEmpty()
                 bulk.name.shouldNotBeEmpty()
             }
