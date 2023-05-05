@@ -3,7 +3,7 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-core"))
+    api(project(":bluetape4k-io"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // AWS SDK V2
