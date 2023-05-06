@@ -2,8 +2,8 @@
 <configuration>
 
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
-        <withJansi>true</withJansi>
-        <immediateFlush>true</immediateFlush>
+
+    <immediateFlush>true</immediateFlush>
         <encoder>
             <!-- @formatter:off -->
             <pattern>%d{ISO8601} %highlight(%-5level)[%blue(%t)] %yellow(%logger):%method:%line: %msg%n%throwable</pattern>

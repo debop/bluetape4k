@@ -127,7 +127,7 @@ object Versions {
 
     const val slf4j = "1.7.36"
     const val logback = "1.2.11"
-    const val log4j = "2.17.2"
+    const val log4j = "2.20.0"
 
     const val metrics = "4.1.25"
     const val prometheus = "0.16.0"

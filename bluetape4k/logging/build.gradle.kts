@@ -8,7 +8,7 @@ dependencies {
 
     api(Libs.slf4j_api)
     implementation(Libs.jcl_over_slf4j)
-    testImplementation(Libs.logback)
+    compileOnly(Libs.logback)
 
     compileOnly(Libs.kotlinx_coroutines_core)
     compileOnly(Libs.kotlinx_coroutines_slf4j)
