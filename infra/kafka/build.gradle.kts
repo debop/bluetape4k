@@ -11,7 +11,11 @@ dependencies {
 
     // Kafka
     api(Libs.kafka_clients)
+    api(Libs.kafka_streams)
     compileOnly(Libs.spring_kafka)
+    compileOnly(Libs.kafka_generator)
+    testImplementation(Libs.kafka_streams_test_utils)
+    testImplementation(Libs.kafka_server_common)
     testImplementation(Libs.testcontainers_kafka)
 
     // Codecs

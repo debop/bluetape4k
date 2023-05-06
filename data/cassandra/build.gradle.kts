@@ -30,6 +30,7 @@ dependencies {
     api(Libs.cassandra_java_driver_query_builder)
     compileOnly(Libs.cassandra_java_driver_mapper_runtime)
     compileOnly(Libs.cassandra_java_driver_metrics_micrometer)
+    testImplementation(Libs.cassandra_java_driver_test_infra)
 
     // cassandra 의 @Mapper, @Dao 를 활용할 때 사용합니다.
     // 참고: https://docs.datastax.com/en/developer/java-driver/4.13/manual/mapper/
@@ -38,6 +39,6 @@ dependencies {
 
     compileOnly(Libs.kotlinx_coroutines_core)
     compileOnly(Libs.kotlinx_coroutines_jdk8)
+    compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
-
 }

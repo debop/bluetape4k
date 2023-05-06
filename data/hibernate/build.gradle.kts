@@ -19,7 +19,7 @@ allOpen {
 kapt {
     showProcessorStats = true
     // kapt 가 제대로 동작하지 않는 경우, 아래 옵션을 제거해보세요.
-    // correctErrorTypes = true
+    correctErrorTypes = true
 }
 
 idea {

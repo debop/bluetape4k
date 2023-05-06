@@ -22,6 +22,9 @@ dependencies {
     testImplementation(Libs.micrometer_tracing_test)
     testImplementation(Libs.micrometer_tracing_integeration_test)
 
+    // Instrumentations
+    compileOnly(Libs.cache2k_micrometer)
+
     // Coroutines
     compileOnly(Libs.kotlinx_coroutines_core)
     compileOnly(Libs.kotlinx_coroutines_jdk8)

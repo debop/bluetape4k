@@ -11,9 +11,17 @@ dependencies {
 
     api(Libs.javax_cache_api)
 
+    // Cache Providers
     api(Libs.caffeine)
     api(Libs.caffeine_jcache)
+
     compileOnly(Libs.ehcache)
+    compileOnly(Libs.ehcache_clustered)
+    compileOnly(Libs.ehcache_transactions)
+
+    compileOnly(Libs.cache2k_core)
+    compileOnly(Libs.cache2k_jcache)
+
     compileOnly(Libs.redisson)
 
     // testImplementation(Libs.springBoot("starter"))

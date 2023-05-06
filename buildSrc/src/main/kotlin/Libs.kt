@@ -95,7 +95,7 @@ object Versions {
     const val feign = "12.3"
     const val httpclient5 = "5.2.1"
     const val retrofit2 = "2.9.0"
-    const val okhttp3 = "4.10.0"
+    const val okhttp3 = "4.11.0"
     const val asynchttpclient = "2.12.3"
 
     const val jackson = "2.15.0"
@@ -158,6 +158,8 @@ object Versions {
     const val scylla_java = "4.13.0.0"
     const val elasticsearch = "8.7.0"
 
+    const val kafka = "3.4.0"
+
     const val eclipse_collections = "11.1.0"
     const val jctools = "3.3.0"
 
@@ -165,8 +167,8 @@ object Versions {
 
     const val junit_jupiter = "5.9.3"
     const val junit_platform = "1.9.3"
-    const val assertj_core = "3.23.1"
-    const val kluent = "1.72"
+    const val assertj_core = "3.24.2"
+    const val kluent = "1.73"
     const val mockk = "1.13.5"
     const val springmockk = "4.0.2"
     const val mockito = "3.12.4"
@@ -630,8 +632,11 @@ object Libs {
 
     // Apache HttpComponents
     val httpclient5 get() = "org.apache.httpcomponents.client5:httpclient5:${Versions.httpclient5}"
+    val httpclient5_cache get() = "org.apache.httpcomponents.client5:httpclient5-cache:${Versions.httpclient5}"
+    val httpclient5_fluent get() = "org.apache.httpcomponents.client5:httpclient5-fluent:${Versions.httpclient5}"
     val httpcore5 get() = "org.apache.httpcomponents.core5:httpcore5:${Versions.httpclient5}"
     val httpcore5_h2 get() = "org.apache.httpcomponents.core5:httpcore5-h2:${Versions.httpclient5}"
+    val httpcore5_reactive get() = "org.apache.httpcomponents.core5:httpcore5-reactive:${Versions.httpclient5}"
 
     // OpenFeign
     fun feign(module: String) = "io.github.openfeign:feign-$module:${Versions.feign}"
@@ -895,10 +900,13 @@ object Libs {
         "com.datastax.oss:java-driver-$module:$version"
 
     val cassandra_java_driver_core get() = cassandra("core")
-    val cassandra_java_driver_query_builder get() = cassandra("query-builder")
+    val cassandra_java_driver_core_shaded get() = cassandra("core-shaded")
     val cassandra_java_driver_mapper_processor get() = cassandra("mapper-processor")
     val cassandra_java_driver_mapper_runtime get() = cassandra("mapper-runtime")
     val cassandra_java_driver_metrics_micrometer get() = cassandra("metrics-micrometer")
+    val cassandra_java_driver_metrics_microprofile get() = cassandra("metrics-microprofile")
+    val cassandra_java_driver_query_builder get() = cassandra("query-builder")
+    val cassandra_java_driver_test_infra get() = cassandra("test-infra")
 
     // ScyllaDB
     fun scyllaJava(module: String, version: String = Versions.scylla_java) = "com.scylladb:java-driver-$module:$version"
@@ -922,7 +930,12 @@ object Libs {
     val amqp_client get() = "com.rabbitmq:amqp-client:5.17.0"
 
     // Kafka
-    val kafka_clients get() = "org.apache.kafka:kafka-clients:3.4.0"
+    fun kafka(module: String) = "org.apache.kafka:$module:${Versions.kafka}"
+    val kafka_clients get() = kafka("kafka-clients")
+    val kafka_generator get() = kafka("generator")
+    val kafka_server_common get() = kafka("kafka-server-common")
+    val kafka_streams get() = kafka("kafka-streams")
+    val kafka_streams_test_utils get() = kafka("kafka-streams-test-utils")
 
     // Spring Kafka
     val spring_kafka get() = "org.springframework.kafka:spring-kafka:2.9.4"
@@ -935,7 +948,8 @@ object Libs {
     val jnats get() = "io.nats:jnats:2.16.10"
 
     // Zipkin
-    val zipkin_brave get() = "io.zipkin.brave:brave:5.13.3"
+    val zipkin_brave get() = "io.zipkin.brave:brave:5.15.1"
+    val zipkin_brave_tests get() = "io.zipkin.brave:brave-tests:5.15.1"
 
     // Hashicorp Vault
     val vault_java_driver get() = "com.bettercloud:vault-java-driver:5.1.0"
@@ -1020,6 +1034,7 @@ object Libs {
     val cache2k_api get() = cache2k("api")
     val cache2k_core get() = cache2k("core")
     val cache2k_jcache get() = cache2k("jcache")
+    val cache2k_micrometer get() = cache2k("micrometer")
     val cache2k_spring get() = cache2k("srping")
 
     // Caffeine
@@ -1028,6 +1043,8 @@ object Libs {
     val caffeine_jcache get() = caffeine("jcache")
 
     val ehcache get() = "org.ehcache:ehcache:${Versions.ehcache}"
+    val ehcache_clustered get() = "org.ehcache:ehcache-clustered:${Versions.ehcache}"
+    val ehcache_transactions get() = "org.ehcache:ehcache-transactions:${Versions.ehcache}"
 
     // Apache Ignite
     fun ignite(module: String, version: String = Versions.ignite) = "org.apache.ignite:ignite-$module:$version"
@@ -1079,16 +1096,19 @@ object Libs {
     val junit_jupiter get() = junitJupiter()
     val junit_jupiter_api get() = junitJupiter("api")
     val junit_jupiter_engine get() = junitJupiter("engine")
-    val junit_jupiter_params get() = junitJupiter("params")
     val junit_jupiter_migrationsupport get() = junitJupiter("migrationsupport")
+    val junit_jupiter_params get() = junitJupiter("params")
 
     fun junitPlatform(module: String) = "org.junit.platform:junit-platform-$module"
 
     val junit_platform_commons get() = junitPlatform("commons")
     val junit_platform_engine get() = junitPlatform("engine")
-    val junit_platform_runner get() = junitPlatform("runner")
     val junit_platform_launcher get() = junitPlatform("launcher")
+    val junit_platform_runner get() = junitPlatform("runner")
     val junit_platform_suite_api get() = junitPlatform("suite-api")
+    val junit_platform_suite_engine get() = junitPlatform("suite-engine")
+
+    val junit_vintage_engine get() = "org.junit.vintage:junit-vintage-engine:${Versions.junit_jupiter}"
 
     val kluent get() = "org.amshove.kluent:kluent:${Versions.kluent}"
     val assertj_core get() = "org.assertj:assertj-core:${Versions.assertj_core}"
@@ -1102,6 +1122,7 @@ object Libs {
     val jmock_junit5 get() = "org.jmock:jmock-junit5:2.12.0"
 
     // Awaitility (https://github.com/awaitility/awaitility)
+    val awaitility get() = "org.awaitility:awaitility:${Versions.awaitility}"
     val awaitility_kotlin get() = "org.awaitility:awaitility-kotlin:${Versions.awaitility}"
 
     val datafaker get() = "net.datafaker:datafaker:${Versions.datafaker}"

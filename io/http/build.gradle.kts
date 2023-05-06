@@ -25,8 +25,11 @@ dependencies {
 
     // Apache HttpCompoents HttpClient 5
     compileOnly(Libs.httpclient5)
+    compileOnly(Libs.httpclient5_cache)
+    compileOnly(Libs.httpclient5_fluent)
     compileOnly(Libs.httpcore5)
     compileOnly(Libs.httpcore5_h2)
+    compileOnly(Libs.httpcore5_reactive)
 
     // Vertx
     compileOnly(project(":bluetape4k-vertx-core"))
