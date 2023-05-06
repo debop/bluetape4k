@@ -1,6 +1,5 @@
 package io.bluetape4k.aws.dynamodb.examples.food
 
-import io.bluetape4k.aws.dynamodb.AbstractDynamodbTest
 import io.bluetape4k.aws.dynamodb.examples.food.repository.FoodRepository
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
@@ -12,12 +11,9 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class FoodApplicationTest: AbstractDynamodbTest() {
+class FoodApplicationTest: AbstractFoodApplicationTest() {
 
-    companion object: KLogging() {
-        // Localstack 을 실행하기 위해 참조한다
-        private val expectedEndpoint = endpoint
-    }
+    companion object: KLogging()
 
     @Autowired
     private lateinit var repository: FoodRepository

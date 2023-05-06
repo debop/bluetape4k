@@ -589,7 +589,7 @@ object Libs {
     val avro_protobuf get() = "org.apache.avro:avro-protobuf:${Versions.avro}"
 
     // https://mvnrepository.com/artifact/com.github.avro-kotlin.avro4k/avro4k-core
-    val avro_kotlin get() = "com.github.avro-kotlin.avro4k:avro4k-core:1.7.0"
+    val avro_kotlin get() = "com.github.avro-kotlin.avro4k:avro4k-core:1.8.0"
 
     fun awsSdk(name: String, version: String = Versions.aws) = "com.amazonaws:aws-java-sdk-$name:$version"
     val aws_bom get() = awsSdk("bom")

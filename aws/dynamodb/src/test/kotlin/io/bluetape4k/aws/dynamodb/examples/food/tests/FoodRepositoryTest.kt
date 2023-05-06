@@ -1,6 +1,6 @@
 package io.bluetape4k.aws.dynamodb.examples.food.tests
 
-import io.bluetape4k.aws.dynamodb.AbstractDynamodbTest
+import io.bluetape4k.aws.dynamodb.examples.food.AbstractFoodApplicationTest
 import io.bluetape4k.aws.dynamodb.examples.food.model.FoodDocument
 import io.bluetape4k.aws.dynamodb.examples.food.model.FoodState
 import io.bluetape4k.aws.dynamodb.examples.food.repository.FoodRepository
@@ -8,7 +8,6 @@ import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
-import io.bluetape4k.utils.idgenerators.snowflake.GlobalSnowflake
 import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.toList
@@ -25,12 +24,9 @@ import java.time.Instant
 import kotlin.random.Random
 
 @SpringBootTest
-class FoodRepositoryTest: AbstractDynamodbTest() {
+class FoodRepositoryTest: AbstractFoodApplicationTest() {
 
-    companion object: KLogging() {
-        private val dynmodb = DynamoDb
-        private val snowflake = GlobalSnowflake()
-    }
+    companion object: KLogging()
 
     @Autowired
     private lateinit var repository: FoodRepository

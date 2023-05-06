@@ -5,6 +5,7 @@ import io.bluetape4k.aws.dynamodb.enhanced.dynamoDbEnhancedAsyncClientOf
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.aws.LocalStackServer
+import net.datafaker.Faker
 import org.testcontainers.containers.localstack.LocalStackContainer
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedAsyncClient
@@ -16,6 +17,10 @@ import java.net.URI
 abstract class AbstractDynamodbTest {
 
     companion object: KLogging() {
+
+        @JvmStatic
+        val faker = Faker()
+
         @JvmStatic
         protected val DynamoDb: LocalStackServer by lazy {
             LocalStackServer.Launcher.locakStack.withServices(LocalStackContainer.Service.DYNAMODB)

@@ -13,10 +13,10 @@ import kotlin.coroutines.EmptyCoroutineContext
  * @param method 실행할 메소드
  * @return 메소드 실행 결과
  */
-suspend inline fun <RESULT: Any> suspendCommand(
+suspend inline fun <RES: Any> suspendCommand(
     context: CoroutineContext = EmptyCoroutineContext,
-    crossinline method: () -> RESULT,
-): RESULT = coroutineScope {
+    crossinline method: () -> RES,
+): RES = coroutineScope {
     withContext(newCoroutineContext(context)) {
         method()
     }
@@ -30,11 +30,11 @@ suspend inline fun <RESULT: Any> suspendCommand(
  * @param method 실행할 메소드
  * @return 메소드 실행 결과
  */
-suspend inline fun <REQUEST, RESULT: Any> suspendCommand(
+suspend inline fun <REQ, RES: Any> suspendCommand(
     context: CoroutineContext = EmptyCoroutineContext,
-    request: REQUEST,
-    crossinline method: (request: REQUEST) -> RESULT,
-): RESULT = coroutineScope {
+    request: REQ,
+    crossinline method: (request: REQ) -> RES,
+): RES = coroutineScope {
     withContext(newCoroutineContext(context)) {
         method(request)
     }
