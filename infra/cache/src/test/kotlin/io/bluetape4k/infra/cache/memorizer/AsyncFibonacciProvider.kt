@@ -15,7 +15,7 @@ abstract class AsyncFibonacciProvider {
         return when {
             x <= 0L -> CompletableFuture.completedFuture(0L)
             x <= 2L -> CompletableFuture.completedFuture(1L)
-            else -> cachedCalc(x - 1)
+            else    -> cachedCalc(x - 1)
                 .thenComposeAsync { x1 ->
                     cachedCalc(x - 2).thenApplyAsync { x2 -> x1 + x2 }
                 }

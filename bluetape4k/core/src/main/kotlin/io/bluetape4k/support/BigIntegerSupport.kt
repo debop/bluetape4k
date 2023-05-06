@@ -7,9 +7,9 @@ import java.math.BigInteger
  */
 fun Number.toBigInt(): BigInteger = when (this) {
     is BigInteger -> this
-    is Int -> BigInteger.valueOf(this.toLong())
-    is Long -> BigInteger.valueOf(this)
-    else -> BigInteger(this.asLong().toString())
+    is Int        -> BigInteger.valueOf(this.toLong())
+    is Long       -> BigInteger.valueOf(this)
+    else          -> BigInteger(this.asLong().toString())
 }
 
 operator fun BigInteger.plus(other: Number): BigInteger = this.add(other.toBigInt())
@@ -19,7 +19,7 @@ operator fun BigInteger.div(other: Number): BigInteger = this.divide(other.toBig
 
 operator fun BigInteger.compareTo(other: Number): Int = this.compareTo(other.toBigInt())
 
-operator fun <T : Number> T.times(other: BigInteger): BigInteger = other.times(this)
+operator fun <T: Number> T.times(other: BigInteger): BigInteger = other.times(this)
 
 /**
  * [BigInteger] 컬렉션의 모든 요소의 합을 구합니다.

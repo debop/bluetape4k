@@ -234,7 +234,7 @@ object KoreanPhraseExtractor: KLogging(), Serializable {
                     curTrie = nt
                 }
 
-                else -> {
+                else                                        -> {
                     // Add a single word
                     phrases.add(KoreanPhrase(arrayListOf(token), token.pos))
                     curTrie = CollapseTrie

@@ -8,7 +8,7 @@ import io.bluetape4k.io.feign.codec.JacksonDecoder2
 import io.bluetape4k.io.feign.codec.JacksonEncoder2
 import io.bluetape4k.io.feign.feignBuilder
 
-class VertxJsonPlaceHolderSyncTest : AbstractJsonPlaceHolderSyncTest() {
+class VertxJsonPlaceHolderSyncTest: AbstractJsonPlaceHolderSyncTest() {
 
     override fun newBuilder(): Feign.Builder {
         return feignBuilder {

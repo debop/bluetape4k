@@ -1,6 +1,5 @@
 package io.bluetape4k.junit5.folder
 
-import java.nio.file.Files
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContainAll
@@ -8,7 +7,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import kotlin.streams.toList
+import java.nio.file.Files
 
 @TempFolderTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

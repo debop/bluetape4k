@@ -28,7 +28,7 @@ import javax.persistence.PrimaryKeyJoinColumn
 import javax.validation.constraints.NotBlank
 
 class MapsIdOneToOneTest(
-    @Autowired private val authorRepo: AuthorRepository
+    @Autowired private val authorRepo: AuthorRepository,
 ): AbstractHibernateTest() {
 
     companion object: KLogging() {
@@ -81,7 +81,7 @@ class MapsIdOneToOneTest(
 @Access(AccessType.FIELD)
 class Author private constructor(
     @NotBlank
-    val name: String
+    val name: String,
 ): IntJpaEntity() {
 
     companion object {

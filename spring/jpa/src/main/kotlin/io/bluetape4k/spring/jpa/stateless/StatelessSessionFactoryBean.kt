@@ -4,7 +4,6 @@ import io.bluetape4k.data.hibernate.asSessionImpl
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
-import java.sql.Connection
 import org.aopalliance.intercept.MethodInvocation
 import org.hibernate.SessionFactory
 import org.hibernate.StatelessSession
@@ -16,6 +15,7 @@ import org.springframework.orm.jpa.EntityManagerFactoryUtils
 import org.springframework.transaction.support.TransactionSynchronization
 import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.springframework.util.ReflectionUtils
+import java.sql.Connection
 
 /**
  * Hibernate의 [StatelessSession]을 Spring Data Jpa 의 Transaction 환경에서 사용할 수 있도록,

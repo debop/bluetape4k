@@ -18,7 +18,11 @@ import io.vertx.core.Vertx
 import io.vertx.junit5.VertxTestContext
 import io.vertx.sqlclient.SqlConnection
 import io.vertx.sqlclient.SqlResult
-import org.amshove.kluent.*
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeGreaterThan
+import org.amshove.kluent.shouldBeNull
+import org.amshove.kluent.shouldHaveSize
+import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mybatis.dynamic.sql.insert.render.GeneralInsertStatementProvider
@@ -27,14 +31,25 @@ import org.mybatis.dynamic.sql.util.kotlin.KInvalidSQLException
 import org.mybatis.dynamic.sql.util.kotlin.elements.add
 import org.mybatis.dynamic.sql.util.kotlin.elements.constant
 import org.mybatis.dynamic.sql.util.kotlin.elements.upper
-import org.mybatis.dynamic.sql.util.kotlin.model.*
+import org.mybatis.dynamic.sql.util.kotlin.model.count
+import org.mybatis.dynamic.sql.util.kotlin.model.countDistinct
+import org.mybatis.dynamic.sql.util.kotlin.model.countFrom
+import org.mybatis.dynamic.sql.util.kotlin.model.deleteFrom
+import org.mybatis.dynamic.sql.util.kotlin.model.insert
+import org.mybatis.dynamic.sql.util.kotlin.model.insertBatch
+import org.mybatis.dynamic.sql.util.kotlin.model.insertInto
+import org.mybatis.dynamic.sql.util.kotlin.model.insertMultiple
+import org.mybatis.dynamic.sql.util.kotlin.model.insertSelect
+import org.mybatis.dynamic.sql.util.kotlin.model.select
+import org.mybatis.dynamic.sql.util.kotlin.model.selectDistinct
+import org.mybatis.dynamic.sql.util.kotlin.model.update
 import java.io.Serializable
 import java.time.LocalDate
 import kotlin.test.assertFailsWith
 
-abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
+abstract class AbstractSqlClientExtensionsTest: AbstractVertxSqlClientTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     override val schemaFileNames: List<String> = listOf("person.sql", "generatedAlways.sql")
 
@@ -48,7 +63,7 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 countStatement.selectStatement shouldBeEqualTo
-                        "select count(*) from Person where id < #{p1}"
+                    "select count(*) from Person where id < #{p1}"
 
                 val count = conn.count(countStatement)
                 count shouldBeEqualTo 2L
@@ -63,7 +78,7 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 countStatement.selectStatement shouldBeEqualTo
-                        "select count(*) from Person"
+                    "select count(*) from Person"
 
                 val count = conn.count(countStatement)
                 count shouldBeGreaterThan 0L
@@ -78,7 +93,7 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 countStatement.selectStatement shouldBeEqualTo
-                        "select count(last_name) from Person"
+                    "select count(last_name) from Person"
 
                 val count = conn.count(countStatement)
                 count shouldBeGreaterThan 0L
@@ -93,7 +108,7 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 countStatement.selectStatement shouldBeEqualTo
-                        "select count(distinct last_name) from Person"
+                    "select count(distinct last_name) from Person"
 
                 val count = conn.count(countStatement)
                 count shouldBeGreaterThan 0L
@@ -112,7 +127,7 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 deleteProvider.deleteStatement shouldBeEqualTo
-                        "delete from Person where id < #{p1}"
+                    "delete from Person where id < #{p1}"
 
                 val result = conn.delete(deleteProvider)
                 result.rowCount() shouldBeGreaterThan 0
@@ -130,7 +145,7 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 deleteProvider.deleteStatement shouldBeEqualTo
-                        "delete from Person where id < #{p1} and occupation is not null"
+                    "delete from Person where id < #{p1} and occupation is not null"
 
                 val result = conn.delete(deleteProvider)
                 result.rowCount() shouldBeGreaterThan 0
@@ -148,7 +163,7 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 deleteProvider.deleteStatement shouldBeEqualTo
-                        "delete from Person where id < #{p1} or occupation is not null"
+                    "delete from Person where id < #{p1} or occupation is not null"
 
                 val result = conn.delete(deleteProvider)
                 result.rowCount() shouldBeGreaterThan 0
@@ -170,9 +185,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 deleteProvider.deleteStatement shouldBeEqualTo
-                        "delete from Person " +
-                        "where (id < #{p1} or occupation is not null) " +
-                        "and employed = #{p2}"
+                    "delete from Person " +
+                    "where (id < #{p1} or occupation is not null) " +
+                    "and employed = #{p2}"
 
                 val result = conn.delete(deleteProvider)
                 result.rowCount() shouldBeGreaterThan 0
@@ -193,9 +208,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 deleteProvider.deleteStatement shouldBeEqualTo
-                        "delete from Person " +
-                        "where id < #{p1} " +
-                        "or (occupation is not null and employed = #{p2})"
+                    "delete from Person " +
+                    "where id < #{p1} " +
+                    "or (occupation is not null and employed = #{p2})"
 
                 val result = conn.delete(deleteProvider)
                 result.rowCount() shouldBeGreaterThan 0
@@ -216,9 +231,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 deleteProvider.deleteStatement shouldBeEqualTo
-                        "delete from Person " +
-                        "where id < #{p1} " +
-                        "and (occupation is not null and employed = #{p2})"
+                    "delete from Person " +
+                    "where id < #{p1} " +
+                    "and (occupation is not null and employed = #{p2})"
 
                 val result = conn.delete(deleteProvider)
                 result.rowCount() shouldBeGreaterThan 0
@@ -248,8 +263,8 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 log.debug { "SQL: ${insertProvider.insertStatement}" }
 
                 insertProvider.insertStatement shouldBeEqualTo
-                        "insert into Person (id, first_name, last_name, birth_date, employed, occupation, address_id) " +
-                        "values (#{id}, #{firstName}, #{lastName}, #{birthDate}, #{employed}, #{occupation}, #{addressId})"
+                    "insert into Person (id, first_name, last_name, birth_date, employed, occupation, address_id) " +
+                    "values (#{id}, #{firstName}, #{lastName}, #{birthDate}, #{employed}, #{occupation}, #{addressId})"
 
                 val result = conn.insert(insertProvider)
                 result.rowCount() shouldBeEqualTo 1
@@ -272,8 +287,8 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 log.debug { "SQL: ${insertProvider.insertStatement}" }
 
                 insertProvider.insertStatement shouldBeEqualTo
-                        "insert into Person (id, first_name, last_name, birth_date, employed, occupation, address_id) " +
-                        "values (100, 'Joe', #{p1}, #{p2}, #{p3}, null, #{p4})"
+                    "insert into Person (id, first_name, last_name, birth_date, employed, occupation, address_id) " +
+                    "values (100, 'Joe', #{p1}, #{p2}, #{p3}, null, #{p4})"
 
                 val result = conn.generalInsert(insertProvider)
                 result.rowCount() shouldBeEqualTo 1
@@ -300,8 +315,8 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 insertProvider.insertStatement shouldBeEqualTo
-                        "insert into Person (id, first_name, last_name, birth_date, employed, address_id) " +
-                        "values (100, 'Joe', #{p1}, #{p2}, #{p3}, #{p4})"
+                    "insert into Person (id, first_name, last_name, birth_date, employed, address_id) " +
+                    "values (100, 'Joe', #{p1}, #{p2}, #{p3}, #{p4})"
 
                 val result = conn.generalInsert(insertProvider)
                 result.rowCount() shouldBeEqualTo 1
@@ -335,9 +350,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 log.debug { "Parameters: ${insertProvider.records.toParameters()}" }
 
                 insertProvider.insertStatement shouldBeEqualTo
-                        "insert into Person (id, first_name, last_name, birth_date, employed, occupation, address_id) " +
-                        "values (#{id0}, #{firstName0}, #{lastName0}, #{birthDate0}, #{employed0}, #{occupation0}, #{addressId0}), " +
-                        "(#{id1}, #{firstName1}, #{lastName1}, #{birthDate1}, #{employed1}, #{occupation1}, #{addressId1})"
+                    "insert into Person (id, first_name, last_name, birth_date, employed, occupation, address_id) " +
+                    "values (#{id0}, #{firstName0}, #{lastName0}, #{birthDate0}, #{employed0}, #{occupation0}, #{addressId0}), " +
+                    "(#{id1}, #{firstName1}, #{lastName1}, #{birthDate1}, #{employed1}, #{occupation1}, #{addressId1})"
 
                 val result = conn.insertMultiple(insertProvider)
                 result.rowCount() shouldBeEqualTo 2
@@ -419,10 +434,10 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 insertProvider.insertStatement shouldBeEqualTo
-                        "insert into Person (id, first_name, last_name, birth_date, employed, occupation, address_id) " +
-                        "select (id + 100), first_name, last_name, birth_date, employed, occupation, address_id " +
-                        "from Person " +
-                        "order by id"
+                    "insert into Person (id, first_name, last_name, birth_date, employed, occupation, address_id) " +
+                    "select (id + 100), first_name, last_name, birth_date, employed, occupation, address_id " +
+                    "from Person " +
+                    "order by id"
 
                 val result = conn.insertSelect(insertProvider)
 
@@ -549,7 +564,7 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 insertProvider.insertStatement shouldBeEqualTo
-                        "insert into GeneratedAlways (first_name, last_name) values (#{p1}, #{p2})"
+                    "insert into GeneratedAlways (first_name, last_name) values (#{p1}, #{p2})"
 
                 val result: SqlResult<Void> = conn.generalInsert(insertProvider)
 
@@ -574,7 +589,7 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 insertProvider.insertStatement shouldBeEqualTo
-                        "insert into GeneratedAlways (first_name, last_name) select first_name, last_name from Person"
+                    "insert into GeneratedAlways (first_name, last_name) select first_name, last_name from Person"
 
                 val result: SqlResult<Void> = conn.insertSelect(insertProvider)
 
@@ -692,10 +707,10 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 selectProvider.selectStatement shouldBeEqualTo
-                        "select * from Person where id = #{p1} " +
-                        "union select * from Person where id = #{p2} " +
-                        "union select * from Person where id = #{p3} " +
-                        "order by id"
+                    "select * from Person where id = #{p1} " +
+                    "union select * from Person where id = #{p2} " +
+                    "union select * from Person where id = #{p3} " +
+                    "order by id"
 
                 val persons = conn.selectList(selectProvider, PersonMapper)
                 log.debug { "person=$persons" }
@@ -726,10 +741,10 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 selectProvider.selectStatement shouldBeEqualTo
-                        "select id as A_ID, first_name from Person where id = #{p1} " +
-                        "union select id as A_ID, first_name from Person where id = #{p2} " +
-                        "union select id as A_ID, first_name from Person where id = #{p3} " +
-                        "order by A_ID"
+                    "select id as A_ID, first_name from Person where id = #{p1} " +
+                    "union select id as A_ID, first_name from Person where id = #{p2} " +
+                    "union select id as A_ID, first_name from Person where id = #{p3} " +
+                    "order by A_ID"
 
                 val persons = conn.selectList(selectProvider, PersonMapper)
                 log.debug { "person=$persons" }
@@ -760,10 +775,10 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 selectProvider.selectStatement shouldBeEqualTo
-                        "select id as A_ID, first_name from Person where id = #{p1} " +
-                        "union select id as A_ID, first_name from Person where id = #{p2} " +
-                        "union select distinct p.id as A_ID, p.first_name from Person p where p.id = #{p3} " +
-                        "order by A_ID"
+                    "select id as A_ID, first_name from Person where id = #{p1} " +
+                    "union select id as A_ID, first_name from Person where id = #{p2} " +
+                    "union select distinct p.id as A_ID, p.first_name from Person p where p.id = #{p3} " +
+                    "order by A_ID"
 
                 val persons = conn.selectList(selectProvider, PersonMapper)
                 log.debug { "person=$persons" }
@@ -794,10 +809,10 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 selectProvider.selectStatement shouldBeEqualTo
-                        "select id as A_ID, first_name from Person where id = #{p1} " +
-                        "union select id as A_ID, first_name from Person where id = #{p2} " +
-                        "union all select distinct p.id as A_ID, p.first_name from Person p where p.id = #{p3} " +
-                        "order by A_ID"
+                    "select id as A_ID, first_name from Person where id = #{p1} " +
+                    "union select id as A_ID, first_name from Person where id = #{p2} " +
+                    "union all select distinct p.id as A_ID, p.first_name from Person p where p.id = #{p3} " +
+                    "order by A_ID"
 
                 val persons = conn.selectList(selectProvider, PersonMapper)
                 log.debug { "person=$persons" }
@@ -829,13 +844,13 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 selectProvider.selectStatement shouldBeEqualTo
-                        "select p.id as A_ID, p.first_name, p.last_name, p.birth_date, p.employed, p.occupation, " +
-                        "a.address_id, a.street_address, a.city, a.state " +
-                        "from Person p " +
-                        "join Address a on p.address_id = a.address_id " +
-                        "where p.id < #{p1} " +
-                        "order by id " +
-                        "limit #{p2}"
+                    "select p.id as A_ID, p.first_name, p.last_name, p.birth_date, p.employed, p.occupation, " +
+                    "a.address_id, a.street_address, a.city, a.state " +
+                    "from Person p " +
+                    "join Address a on p.address_id = a.address_id " +
+                    "where p.id < #{p1} " +
+                    "order by id " +
+                    "limit #{p2}"
 
                 val personWithAddresses = conn.selectList(selectProvider, PersonAddressMapper)
                 log.debug { personWithAddresses }
@@ -864,11 +879,11 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 selectProvider.selectStatement shouldBeEqualTo
-                        "select * from Person " +
-                        "where id < #{p1} " +
-                        "and (id < #{p2} and (id < #{p3} and id < #{p4})) " +
-                        "order by id " +
-                        "limit #{p5}"
+                    "select * from Person " +
+                    "where id < #{p1} " +
+                    "and (id < #{p2} and (id < #{p3} and id < #{p4})) " +
+                    "order by id " +
+                    "limit #{p5}"
 
                 val persons = conn.selectList(selectProvider, PersonMapper)
                 log.debug { persons }
@@ -897,11 +912,11 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 selectProvider.selectStatement shouldBeEqualTo
-                        "select * from Person " +
-                        "where id = #{p1} " +
-                        "or (id = #{p2} or (id = #{p3} or id = #{p4})) " +
-                        "order by id " +
-                        "limit #{p5}"
+                    "select * from Person " +
+                    "where id = #{p1} " +
+                    "or (id = #{p2} or (id = #{p3} or id = #{p4})) " +
+                    "order by id " +
+                    "limit #{p5}"
 
                 val persons = conn.selectList(selectProvider, PersonMapper)
                 log.debug { persons }
@@ -921,10 +936,10 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 selectProvider.selectStatement shouldBeEqualTo
-                        "select * from Person " +
-                        "where id in (#{p1},#{p2},#{p3},#{p4}) " +
-                        "order by id " +
-                        "limit #{p5}"
+                    "select * from Person " +
+                    "where id in (#{p1},#{p2},#{p3},#{p4}) " +
+                    "order by id " +
+                    "limit #{p5}"
 
                 val persons = conn.selectList(selectProvider, PersonMapper)
                 log.debug { persons }
@@ -946,9 +961,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 updateProvider.updateStatement shouldBeEqualTo
-                        "update Person " +
-                        "set last_name = #{p1} " +
-                        "where first_name = #{p2}"
+                    "update Person " +
+                    "set last_name = #{p1} " +
+                    "where first_name = #{p2}"
 
                 updateProvider.parameters shouldBeEqualTo mapOf("p1" to "Smith", "p2" to "Fred")
 
@@ -980,9 +995,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 updateProvider.updateStatement shouldBeEqualTo
-                        "update Person " +
-                        "set first_name = #{p1} " +
-                        "where first_name = #{p2} or id > #{p3}"
+                    "update Person " +
+                    "set first_name = #{p1} " +
+                    "where first_name = #{p2} or id > #{p3}"
 
                 val result = conn.update(updateProvider)
                 result.rowCount() shouldBeEqualTo 4
@@ -1005,10 +1020,10 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 updateProvider.updateStatement shouldBeEqualTo
-                        "update Person " +
-                        "set first_name = #{p1} " +
-                        "where first_name = #{p2} " +
-                        "or (id = #{p3} or id = #{p4})"
+                    "update Person " +
+                    "set first_name = #{p1} " +
+                    "where first_name = #{p2} " +
+                    "or (id = #{p3} or id = #{p4})"
 
                 val result = conn.update(updateProvider)
                 result.rowCount() shouldBeEqualTo 3
@@ -1030,10 +1045,10 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 updateProvider.updateStatement shouldBeEqualTo
-                        "update Person " +
-                        "set first_name = #{p1} " +
-                        "where first_name = #{p2} " +
-                        "and (id = #{p3} or id = #{p4})"
+                    "update Person " +
+                    "set first_name = #{p1} " +
+                    "where first_name = #{p2} " +
+                    "and (id = #{p3} or id = #{p4})"
 
                 val result = conn.update(updateProvider)
                 result.rowCount() shouldBeEqualTo 1
@@ -1052,10 +1067,10 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 updateProvider.updateStatement shouldBeEqualTo
-                        "update Person " +
-                        "set first_name = #{p1} " +
-                        "where first_name = #{p2} " +
-                        "or id = #{p3}"
+                    "update Person " +
+                    "set first_name = #{p1} " +
+                    "where first_name = #{p2} " +
+                    "or id = #{p3}"
 
                 val result = conn.update(updateProvider)
                 result.rowCount() shouldBeEqualTo 2
@@ -1076,10 +1091,10 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 updateProvider.updateStatement shouldBeEqualTo
-                        "update Person " +
-                        "set occupation = null " +
-                        "where first_name = #{p1} " +
-                        "or id = #{p2}"
+                    "update Person " +
+                    "set occupation = null " +
+                    "where first_name = #{p1} " +
+                    "or id = #{p2}"
 
                 val result = conn.update(updateProvider)
                 result.rowCount() shouldBeEqualTo 2
@@ -1112,9 +1127,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                     }.renderForVertx()
 
                     updateProvider.updateStatement shouldBeEqualTo
-                            "update Person " +
-                            "set first_name = #{p1}, last_name = null " +
-                            "where id = #{p2}"
+                        "update Person " +
+                        "set first_name = #{p1}, last_name = null " +
+                        "where id = #{p2}"
 
                     updateProvider.parameters shouldBeEqualTo mapOf("p1" to "Sam", "p2" to 3)
 
@@ -1144,9 +1159,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                     }.renderForVertx()
 
                     updateProvider.updateStatement shouldBeEqualTo
-                            "update Person " +
-                            "set first_name = #{p1}, last_name = #{p2} " +
-                            "where id = #{p3}"
+                        "update Person " +
+                        "set first_name = #{p1}, last_name = #{p2} " +
+                        "where id = #{p3}"
 
                     updateProvider.parameters shouldBeEqualTo mapOf("p1" to "Sam", "p2" to "Smith", "p3" to 3)
 
@@ -1173,9 +1188,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 updateProvider.updateStatement shouldBeEqualTo
-                        "update Person " +
-                        "set address_id = null " +
-                        "where id = #{p1}"
+                    "update Person " +
+                    "set address_id = null " +
+                    "where id = #{p1}"
 
                 updateProvider.parameters shouldBeEqualTo mapOf("p1" to 3)
 
@@ -1201,9 +1216,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 updateProvider.updateStatement shouldBeEqualTo
-                        "update Person " +
-                        "set address_id = 5 " +
-                        "where id = #{p1}"
+                    "update Person " +
+                    "set address_id = 5 " +
+                    "where id = #{p1}"
 
                 updateProvider.parameters shouldBeEqualTo mapOf("p1" to 3)
 
@@ -1230,9 +1245,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 updateProvider.updateStatement shouldBeEqualTo
-                        "update Person " +
-                        "set address_id = id " +
-                        "where id = #{p1}"
+                    "update Person " +
+                    "set address_id = id " +
+                    "where id = #{p1}"
 
                 updateProvider.parameters shouldBeEqualTo mapOf("p1" to 3)
 
@@ -1259,9 +1274,9 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 updateProvider.updateStatement shouldBeEqualTo
-                        "update Person " +
-                        "set address_id = #{p1} " +
-                        "where id = #{p2}"
+                    "update Person " +
+                    "set address_id = #{p1} " +
+                    "where id = #{p2}"
 
                 updateProvider.parameters shouldBeEqualTo mapOf("p1" to 5, "p2" to 3)
 
@@ -1282,7 +1297,7 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
         val id: Int?,
         val firstName: String?,
         val lastName: String?,
-    ) : Serializable
+    ): Serializable
 
     @Nested
     inner class SearchTest {
@@ -1309,10 +1324,10 @@ abstract class AbstractSqlClientExtensionsTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 selectProvider.selectStatement shouldBeEqualTo
-                        "select * from Person " +
-                        "where upper(first_name) like #{p1} " +
-                        "order by id " +
-                        "limit #{p2}"
+                    "select * from Person " +
+                    "where upper(first_name) like #{p1} " +
+                    "order by id " +
+                    "limit #{p2}"
 
                 selectProvider.parameters shouldBeEqualTo mapOf("p1" to "%F%", "p2" to 3L)
 

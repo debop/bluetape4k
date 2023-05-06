@@ -16,9 +16,9 @@ import kotlinx.atomicfu.atomic
  * [CoCache]의 기본 구현체입니다.
  * jCache의 저장소를 사용합니다.
  */
-class CoroutinesCacheImpl<K : Any, V>(override val jcache: javax.cache.Cache<K, V>) : CoCache<K, V> {
+class CoroutinesCacheImpl<K: Any, V>(override val jcache: javax.cache.Cache<K, V>): CoCache<K, V> {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     private val _eventProcessor = CoCacheEventProcessor()
     private val _metrics = CoCacheMetrics()

@@ -8,7 +8,6 @@ import io.bluetape4k.io.http.okhttp3.okhttp3Request
 import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.time.Duration
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.shouldBeEqualTo
@@ -17,6 +16,7 @@ import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.Duration
 
 class MockWebServerExamples {
 

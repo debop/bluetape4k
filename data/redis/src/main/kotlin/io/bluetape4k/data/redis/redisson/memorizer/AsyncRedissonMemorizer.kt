@@ -5,9 +5,9 @@ import io.bluetape4k.concurrent.map
 import io.bluetape4k.infra.cache.memorizer.AsyncMemorizer
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import org.redisson.api.RMap
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
-import org.redisson.api.RMap
 
 /**
  * [evaluator] 결과를 Redis에 저장하도록 합니다.
@@ -36,7 +36,7 @@ fun <T: Any, R: Any> ((T) -> CompletionStage<R>).asyncMemorizer(map: RMap<T, R>)
  */
 class AsyncRedissonMemorizer<T: Any, R: Any>(
     val map: RMap<T, R>,
-    val evaluator: (T) -> CompletionStage<R>
+    val evaluator: (T) -> CompletionStage<R>,
 ): AsyncMemorizer<T, R> {
 
     companion object: KLogging()

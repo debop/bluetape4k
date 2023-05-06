@@ -68,7 +68,7 @@ class Father(val name: String): IntJpaEntity() {
 @DynamicUpdate
 class Child(
     @NotBlank val name: String,
-    val birthday: LocalDate
+    val birthday: LocalDate,
 ): IntJpaEntity() {
 
     override fun equalProperties(other: Any): Boolean {
@@ -168,7 +168,7 @@ class OrderItem(val name: String): IntJpaEntity() {
 @DynamicInsert
 @DynamicUpdate
 class Batch(
-    val name: String
+    val name: String,
 ): IntJpaEntity() {
 
     @Id
@@ -220,7 +220,7 @@ class Batch(
 @DynamicInsert
 @DynamicUpdate
 class BatchItem(
-    val name: String
+    val name: String,
 ): IntJpaEntity() {
 
     @Id

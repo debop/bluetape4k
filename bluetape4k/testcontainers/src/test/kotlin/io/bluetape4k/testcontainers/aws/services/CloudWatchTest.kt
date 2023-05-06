@@ -2,7 +2,6 @@ package io.bluetape4k.testcontainers.aws.services
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.aws.LocalStackServer
-import java.net.URI
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -16,6 +15,7 @@ import org.testcontainers.containers.localstack.LocalStackContainer
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.cloudwatch.CloudWatchClient
 import software.amazon.awssdk.services.cloudwatchlogs.CloudWatchLogsClient
+import java.net.URI
 
 @Execution(ExecutionMode.SAME_THREAD)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)

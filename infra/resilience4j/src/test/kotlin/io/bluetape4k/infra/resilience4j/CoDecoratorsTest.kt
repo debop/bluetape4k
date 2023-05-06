@@ -9,7 +9,11 @@ import io.bluetape4k.logging.info
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.ratelimiter.RateLimiter
 import io.github.resilience4j.retry.Retry
-import io.mockk.*
+import io.mockk.clearMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.confirmVerified
+import io.mockk.mockk
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeTrue
@@ -30,7 +34,7 @@ class CoDecoratorsTest {
         suspend fun bifunction(a: Int, b: Int): Int
     }
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     val retry = Retry.ofDefaults("coDecorator")
     val circuitBreaker = CircuitBreaker.ofDefaults("coDecorator")

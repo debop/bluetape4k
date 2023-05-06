@@ -7,7 +7,7 @@ import java.io.Serializable
  *
  * @see AbstractValueObject
  */
-class ToStringBuilder private constructor(private val className: String) : Serializable {
+class ToStringBuilder private constructor(private val className: String): Serializable {
 
     companion object {
         operator fun invoke(className: String): ToStringBuilder {

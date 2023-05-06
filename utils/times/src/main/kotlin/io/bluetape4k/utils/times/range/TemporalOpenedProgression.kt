@@ -37,7 +37,7 @@ open class TemporalOpenedProgression<T> protected constructor(
         fun canContinue(current: T): Boolean = when {
             step.isPositive -> current < last
             step.isNegative -> current > last
-            else -> false
+            else            -> false
         }
 
         var current = first

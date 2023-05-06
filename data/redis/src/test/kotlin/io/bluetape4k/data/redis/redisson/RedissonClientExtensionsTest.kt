@@ -6,9 +6,9 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.RepeatedTest
 
-class RedissonClientExtensionsTest : AbstractRedissonTest() {
+class RedissonClientExtensionsTest: AbstractRedissonTest() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 5
     }
 

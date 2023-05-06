@@ -1,7 +1,6 @@
 package io.bluetape4k.support
 
-import java.util.Objects
-import java.util.Optional
+import java.util.*
 
 /**
  * var 로 선언된 필드 중 non null 수형에 대해 초기화 값을 지정하고자 할 때 사용합니다.
@@ -17,7 +16,7 @@ fun <T> uninitialized(): T = null as T
 /**
  * 인스턴스를 [Optional]로 변환합니다.
  */
-fun <T : Any> T?.toOptional(): Optional<T> = Optional.ofNullable(this)
+fun <T: Any> T?.toOptional(): Optional<T> = Optional.ofNullable(this)
 
 /**
  * 객체들을 조합하여 hash 값을 계산합니다.
@@ -87,7 +86,7 @@ fun arrayEquals(a: Any, b: Any): Boolean {
 /**
  * 컬렉션의 모든 요소가 not null 인 경우에만 [block]을 수행합니다.
  */
-infix fun <T : Any, R : Any> Collection<T?>.whenAllNotNull(block: (Collection<T>) -> R) {
+infix fun <T: Any, R: Any> Collection<T?>.whenAllNotNull(block: (Collection<T>) -> R) {
     if (this.all { it != null }) {
         block(this.filterNotNull())
     }
@@ -96,7 +95,7 @@ infix fun <T : Any, R : Any> Collection<T?>.whenAllNotNull(block: (Collection<T>
 /**
  * 컬렉션의 요소중 하나라도 null이 아니라면 [block]을 수행합니다.
  */
-infix fun <T : Any, R : Any> Collection<T?>.whenAnyNotNull(block: (Collection<T>) -> R) {
+infix fun <T: Any, R: Any> Collection<T?>.whenAnyNotNull(block: (Collection<T>) -> R) {
     if (this.any { it != null }) {
         block(this.filterNotNull())
     }

@@ -1,8 +1,8 @@
 package io.bluetape4k.infra.cache.memorizer.ehcache
 
 import io.bluetape4k.infra.cache.memorizer.AsyncMemorizer
-import java.util.concurrent.CompletableFuture
 import org.ehcache.Cache
+import java.util.concurrent.CompletableFuture
 
 /**
  * Ehcache 이용하여 메소드의 실행 결과를 캐시하여 , 재 실행 시에 빠르게 응닫할 수 있도록 합니다.

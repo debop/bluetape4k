@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 
 class RuntimexTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `컴퓨터 CPU Core 수를 얻습니다`() {

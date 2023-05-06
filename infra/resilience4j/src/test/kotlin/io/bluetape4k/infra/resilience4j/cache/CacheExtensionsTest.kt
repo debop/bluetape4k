@@ -5,10 +5,10 @@ import io.bluetape4k.concurrent.onSuccess
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.github.resilience4j.cache.Cache
-import java.util.concurrent.CompletableFuture
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CompletableFuture
 
 class CacheExtensionsTest {
 

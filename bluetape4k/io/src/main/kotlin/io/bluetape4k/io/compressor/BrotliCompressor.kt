@@ -17,9 +17,9 @@ import java.io.ByteArrayOutputStream
  */
 class BrotliCompressor private constructor(
     private val options: BrotliOptions,
-) : AbstractCompressor() {
+): AbstractCompressor() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private var brotliIsPresent: Boolean = false
         private var cause: Throwable? = null
 

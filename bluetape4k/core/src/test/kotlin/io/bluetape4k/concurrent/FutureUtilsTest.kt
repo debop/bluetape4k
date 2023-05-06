@@ -1,9 +1,9 @@
 package io.bluetape4k.concurrent
 
-import java.util.concurrent.CompletableFuture
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CompletableFuture
 import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 

@@ -4,6 +4,6 @@ import io.bluetape4k.logging.KLogging
 
 abstract class AbstractNettyTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
 }

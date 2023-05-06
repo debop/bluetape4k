@@ -2,16 +2,16 @@ package io.bluetape4k.junit5.benchmark
 
 import io.bluetape4k.junit5.store
 import io.bluetape4k.logging.KLogging
-import java.util.concurrent.TimeUnit
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
+import java.util.concurrent.TimeUnit
 
 class BenchmarkExtension(
-    private val unit: TimeUnit = TimeUnit.MILLISECONDS
-) : BeforeTestExecutionCallback, AfterTestExecutionCallback {
+    private val unit: TimeUnit = TimeUnit.MILLISECONDS,
+): BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPORT_FORMAT = "Elapsed time[%s] for `%s`"
     }
 

@@ -7,16 +7,16 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import java.util.concurrent.TimeoutException
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.concurrent.TimeoutException
 
 class AutoCloseableSupportTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     private val closeable = mockk<AutoCloseable>(relaxUnitFun = true)
 

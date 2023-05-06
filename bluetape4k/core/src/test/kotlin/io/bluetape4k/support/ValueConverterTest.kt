@@ -18,7 +18,7 @@ import java.math.BigInteger
 @RandomizedTest
 class ValueConverterTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 10
     }
 
@@ -329,7 +329,12 @@ class ValueConverterTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `convert random value asBigDecimal`(@RandomValue(type = BigDecimal::class, size = 100) expects: List<BigDecimal>) {
+    fun `convert random value asBigDecimal`(
+        @RandomValue(
+            type = BigDecimal::class,
+            size = 100
+        ) expects: List<BigDecimal>,
+    ) {
         expects.forEach { expected ->
             val target = expected.toString()
             target.asBigDecimal() shouldBeEqualTo expected

@@ -5,7 +5,7 @@ import io.bluetape4k.io.serializer.BinarySerializers
 import org.apache.kafka.common.header.Headers
 
 abstract class BinaryKafkaCodec<T: Any>(
-    private val serializer: BinarySerializer
+    private val serializer: BinarySerializer,
 ): AbstractKafkaCodec<T>() {
 
     override fun doSerialize(topic: String?, headers: Headers?, graph: T): ByteArray? {

@@ -7,7 +7,7 @@ data class SnowflakeId(
     val timestamp: Long,
     val machineId: Int,
     val sequence: Int,
-) : Serializable {
+): Serializable {
 
     /**
      * Snowflake Id 값

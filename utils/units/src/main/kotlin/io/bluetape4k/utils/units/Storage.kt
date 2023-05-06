@@ -8,19 +8,19 @@ import kotlin.math.sign
 
 fun storageOf(value: Number = 0.0, unit: StorageUnit = StorageUnit.BYTE) = Storage(value, unit)
 
-fun <T : Number> T.storageBy(unit: StorageUnit): Storage = storageOf(this.toDouble(), unit)
+fun <T: Number> T.storageBy(unit: StorageUnit): Storage = storageOf(this.toDouble(), unit)
 
-fun <T : Number> T.bytes(): Storage = storageBy(StorageUnit.BYTE)
-fun <T : Number> T.kbytes(): Storage = storageBy(StorageUnit.KBYTE)
-fun <T : Number> T.mbytes(): Storage = storageBy(StorageUnit.MBYTE)
-fun <T : Number> T.gbytes(): Storage = storageBy(StorageUnit.GBYTE)
-fun <T : Number> T.tbytes(): Storage = storageBy(StorageUnit.TBYTE)
-fun <T : Number> T.pbytes(): Storage = storageBy(StorageUnit.PBYTE)
-fun <T : Number> T.xbytes(): Storage = storageBy(StorageUnit.XBYTE)
-fun <T : Number> T.zbytes(): Storage = storageBy(StorageUnit.ZBYTE)
-fun <T : Number> T.ybytes(): Storage = storageBy(StorageUnit.YBYTE)
+fun <T: Number> T.bytes(): Storage = storageBy(StorageUnit.BYTE)
+fun <T: Number> T.kbytes(): Storage = storageBy(StorageUnit.KBYTE)
+fun <T: Number> T.mbytes(): Storage = storageBy(StorageUnit.MBYTE)
+fun <T: Number> T.gbytes(): Storage = storageBy(StorageUnit.GBYTE)
+fun <T: Number> T.tbytes(): Storage = storageBy(StorageUnit.TBYTE)
+fun <T: Number> T.pbytes(): Storage = storageBy(StorageUnit.PBYTE)
+fun <T: Number> T.xbytes(): Storage = storageBy(StorageUnit.XBYTE)
+fun <T: Number> T.zbytes(): Storage = storageBy(StorageUnit.ZBYTE)
+fun <T: Number> T.ybytes(): Storage = storageBy(StorageUnit.YBYTE)
 
-operator fun <T : Number> T.times(storage: Storage): Storage = storage.times(this)
+operator fun <T: Number> T.times(storage: Storage): Storage = storage.times(this)
 
 /**
  * 저장장치 크기 단위 (Bytes)
@@ -63,7 +63,7 @@ enum class StorageUnit(val abbrName: String, val factor: Double) {
  * @property value 저장장치의 크기의 byte 단위의 값
  */
 @JvmInline
-value class Storage(val value: Double = 0.0) : Comparable<Storage>, Serializable {
+value class Storage(val value: Double = 0.0): Comparable<Storage>, Serializable {
 
     operator fun plus(that: Storage): Storage = Storage(value + that.value)
     operator fun plus(scalar: Number): Storage = Storage(value + scalar.toDouble())
@@ -108,7 +108,7 @@ value class Storage(val value: Double = 0.0) : Comparable<Storage>, Serializable
 
     fun toHuman(unit: StorageUnit): String = "%.1f %s".format(getBytesBy(unit), unit.abbrName)
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         const val KBYTES: Double = 1024.0
         const val MBYTES: Double = KBYTES * KBYTES
 

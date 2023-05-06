@@ -7,6 +7,7 @@ import io.bluetape4k.support.LINE_SEPARATOR
 import io.bluetape4k.support.closeSafe
 import io.bluetape4k.support.emptyByteArray
 import io.bluetape4k.utils.Runtimex
+import org.apache.commons.io.FileUtils
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.File
@@ -22,7 +23,6 @@ import java.nio.charset.Charset
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.util.concurrent.CompletableFuture
-import org.apache.commons.io.FileUtils
 import kotlin.text.Charsets.UTF_8
 
 private val log = KotlinLogging.logger {}
@@ -164,7 +164,7 @@ fun Path.readAllBytesAsync(): CompletableFuture<ByteArray> {
     val channel = AsynchronousFileChannel.open(this, StandardOpenOption.READ)
 
     val buffer = ByteBuffer.allocateDirect(channel.size().toInt())
-    val handler = object : CompletionHandler<Int?, Void?> {
+    val handler = object: CompletionHandler<Int?, Void?> {
         override fun completed(result: Int?, attachment: Void?) {
             if (result != null) {
                 buffer.flip()
@@ -218,7 +218,7 @@ fun Path.writeAsync(bytes: ByteArray, append: Boolean = false): CompletableFutur
     val content = bytes.toByteBufferDirect()
 
     // TODO: 이렇게 Callback 방식 이외에 Future 방식 (channel.write(content, pos)) 를 사용하면 Coroutines로 사용할 수 있다.
-    val handler = object : CompletionHandler<Int, ByteBuffer?> {
+    val handler = object: CompletionHandler<Int, ByteBuffer?> {
         override fun completed(result: Int, attachment: ByteBuffer?) {
             promise.complete(result.toLong())
             log.trace { "Write bytearray to file. path=[${this@writeAsync}], written=$result" }

@@ -16,7 +16,7 @@ import java.sql.RowId
 import java.sql.SQLXML
 import java.sql.Time
 import java.sql.Timestamp
-import java.util.Calendar
+import java.util.*
 
 
 /**
@@ -29,8 +29,6 @@ import java.util.Calendar
  * }
  * ```
  * @property preparedStatement 인자를 설정할 [PreparedStatement] 인스턴스
- *
- * @author debop
  */
 class PreparedStatementArgumentSetter private constructor(
     private val preparedStatement: PreparedStatement,

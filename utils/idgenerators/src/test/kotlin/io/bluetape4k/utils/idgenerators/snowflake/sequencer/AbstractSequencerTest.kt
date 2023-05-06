@@ -20,7 +20,7 @@ import kotlin.math.absoluteValue
 
 abstract class AbstractSequencerTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val TEST_SIZE: Int = MAX_SEQUENCE * 4
     }
 

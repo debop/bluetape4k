@@ -43,7 +43,7 @@ fun TemporalAccessor.toIsoInstantString(): String = DateTimeFormatter.ISO_INSTAN
  */
 fun TemporalAccessor.toIsoString(): String = when (this) {
     is Instant -> DateTimeFormatter.ISO_INSTANT.format(this)
-    else -> DateTimeFormatter.ISO_DATE_TIME.format(this)
+    else       -> DateTimeFormatter.ISO_DATE_TIME.format(this)
 }
 
 /**

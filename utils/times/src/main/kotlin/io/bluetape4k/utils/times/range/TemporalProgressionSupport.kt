@@ -6,7 +6,7 @@ import io.bluetape4k.utils.times.toEpochDay
 import io.bluetape4k.utils.times.toEpochMillis
 import java.time.temporal.ChronoUnit
 import java.time.temporal.Temporal
-import java.util.Date
+import java.util.*
 
 private fun mod(a: Int, b: Int): Int {
     val mod = a % b
@@ -34,7 +34,7 @@ private fun differenceModulo(a: Long, b: Long, c: Long): Long =
 internal fun <T: Date> getProgressionLastElement(start: T, end: T, stepMillis: Long): T = when {
     stepMillis > 0 -> (end - differenceModulo(end.time, start.time, stepMillis)) as T
     stepMillis < 0 -> (end + differenceModulo(start.time, end.time, -stepMillis)) as T
-    else -> throw IllegalArgumentException("stepMillis must not be zero")
+    else           -> throw IllegalArgumentException("stepMillis must not be zero")
 }
 
 @Suppress("UNCHECKED_CAST")

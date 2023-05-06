@@ -2,7 +2,7 @@ package io.bluetape4k.io.netty.util
 
 import io.netty.util.internal.ThrowableUtil
 
-fun <T : Throwable> T.unknownStackTrace(clazz: Class<*>, method: String): T =
+fun <T: Throwable> T.unknownStackTrace(clazz: Class<*>, method: String): T =
     ThrowableUtil.unknownStackTrace(this, clazz, method)
 
 fun Throwable.stackTraceToString(): String =

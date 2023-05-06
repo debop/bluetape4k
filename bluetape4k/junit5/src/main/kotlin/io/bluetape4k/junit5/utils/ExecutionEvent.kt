@@ -26,12 +26,12 @@ data class ExecutionEvent(
         REPORTING_ENTRY_PUBLISHED
     }
 
-    fun <T : Any> getPayload(payloadClass: Class<T>): T? {
+    fun <T: Any> getPayload(payloadClass: Class<T>): T? {
         return if (payload != null && payloadClass.isInstance(payload)) payloadClass.cast(payload)
         else null
     }
 
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         fun reportingEntryPublished(testDescriptor: TestDescriptor, entry: ReportEntry): ExecutionEvent {
             log.trace { "reporting entry published. entry=$entry" }
@@ -67,7 +67,7 @@ data class ExecutionEvent(
         fun byTestDescriptor(predicate: (TestDescriptor) -> Boolean) =
             { evt: ExecutionEvent -> predicate.invoke(evt.testDescriptor) }
 
-        fun <T : Any> byPayload(payloadClass: KClass<T>, predicate: (T) -> Boolean) =
+        fun <T: Any> byPayload(payloadClass: KClass<T>, predicate: (T) -> Boolean) =
             { evt: ExecutionEvent -> evt.getPayload(payloadClass.java)?.run { predicate(this) } ?: false }
     }
 }

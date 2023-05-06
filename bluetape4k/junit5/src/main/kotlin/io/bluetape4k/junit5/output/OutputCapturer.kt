@@ -10,7 +10,7 @@ import java.io.PrintStream
  */
 class OutputCapturer {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     private var copy: ByteArrayOutputStream? = null
     private var captureOut: CaptureOutputStream? = null
@@ -51,7 +51,7 @@ class OutputCapturer {
         captureErr?.let { runCatching { it.flush() } }
     }
 
-    private class CaptureOutputStream(val original: PrintStream, val copy: OutputStream) : OutputStream() {
+    private class CaptureOutputStream(val original: PrintStream, val copy: OutputStream): OutputStream() {
 
         override fun write(b: Int) {
             copy.write(b)

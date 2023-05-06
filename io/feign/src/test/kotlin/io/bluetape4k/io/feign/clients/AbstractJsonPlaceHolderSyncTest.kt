@@ -17,9 +17,9 @@ import org.junit.jupiter.api.Test
 import kotlin.math.absoluteValue
 import kotlin.test.assertFailsWith
 
-abstract class AbstractJsonPlaceHolderSyncTest : AbstractJsonPlaceHolderTest() {
+abstract class AbstractJsonPlaceHolderSyncTest: AbstractJsonPlaceHolderTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     protected abstract fun newBuilder(): feign.Feign.Builder
     private lateinit var client: JsonPlaceHolder.JsonPlaceholderClient

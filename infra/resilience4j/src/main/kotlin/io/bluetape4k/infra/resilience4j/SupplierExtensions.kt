@@ -3,7 +3,7 @@ package io.bluetape4k.infra.resilience4j
 import kotlin.reflect.KClass
 
 inline fun <T, R> (() -> T).andThen(
-    crossinline resultHandler: (result: T) -> R
+    crossinline resultHandler: (result: T) -> R,
 ): () -> R = {
     resultHandler.invoke(this.invoke())
 }
@@ -48,7 +48,7 @@ inline fun <T> (() -> T).recover(crossinline exceptionHandler: (Throwable?) -> T
 
 inline fun <T> (() -> T).recover(
     crossinline resultPredicatoe: (T) -> Boolean,
-    crossinline resultHandler: (T) -> T
+    crossinline resultHandler: (T) -> T,
 ): () -> T = {
     val result = this.invoke()
 
@@ -59,9 +59,9 @@ inline fun <T> (() -> T).recover(
     }
 }
 
-inline fun <X : Throwable, T> (() -> T).recover(
+inline fun <X: Throwable, T> (() -> T).recover(
     exceptionType: KClass<X>,
-    crossinline exceptionHandler: (Throwable?) -> T
+    crossinline exceptionHandler: (Throwable?) -> T,
 ): () -> T = {
     try {
         this.invoke()
@@ -76,7 +76,7 @@ inline fun <X : Throwable, T> (() -> T).recover(
 
 inline fun <T> (() -> T).recover(
     exceptionTypes: Iterable<Class<out Throwable>>,
-    crossinline exceptionHandler: (Throwable?) -> T
+    crossinline exceptionHandler: (Throwable?) -> T,
 ): () -> T = {
     try {
         this.invoke()

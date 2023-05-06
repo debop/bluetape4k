@@ -14,15 +14,15 @@ import io.bluetape4k.data.cassandra.data.getValue
 import io.bluetape4k.data.cassandra.data.setValue
 import io.bluetape4k.io.getBytes
 import io.bluetape4k.logging.KLogging
-import java.net.InetAddress
-import java.time.ZonedDateTime
-import java.util.Optional
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
+import java.net.InetAddress
+import java.time.ZonedDateTime
+import java.util.*
 
 class CustomCodecExamples: AbstractCassandraTest() {
 

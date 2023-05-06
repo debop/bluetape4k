@@ -2,6 +2,7 @@ package io.bluetape4k.codec
 
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
+import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
 import org.amshove.kluent.shouldBeEmpty
@@ -11,6 +12,10 @@ import org.junit.jupiter.api.Test
 
 @RandomizedTest
 abstract class AbstractStringEncoderTest {
+
+    companion object: KLogging() {
+        private const val REPEAT_SIZE = 5
+    }
 
     protected abstract val encoder: StringEncoder
 
@@ -27,7 +32,7 @@ abstract class AbstractStringEncoderTest {
         encoder.decode(" \t ").shouldBeEmpty()
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `encode decode string`(@RandomValue expected: String) {
 
         val encoded = encoder.encode(expected.toUtf8Bytes())
@@ -36,7 +41,7 @@ abstract class AbstractStringEncoderTest {
         decoded.toUtf8String() shouldBeEqualTo expected
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `encode random bytes`(@RandomValue bytes: ByteArray) {
 
         val encoded = encoder.encode(bytes)

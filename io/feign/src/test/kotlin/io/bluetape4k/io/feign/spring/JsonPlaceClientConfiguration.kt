@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean
 
 class JsonPlaceClientConfiguration {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Bean
     fun jsonMapper(): JsonMapper {

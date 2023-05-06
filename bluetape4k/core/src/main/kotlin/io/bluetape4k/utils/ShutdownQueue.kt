@@ -4,9 +4,9 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import io.bluetape4k.support.closeTimeout
-import java.util.LinkedList
+import java.util.*
 
-object ShutdownQueue : KLogging() {
+object ShutdownQueue: KLogging() {
 
     private val queue: LinkedList<AutoCloseable> = LinkedList()
 

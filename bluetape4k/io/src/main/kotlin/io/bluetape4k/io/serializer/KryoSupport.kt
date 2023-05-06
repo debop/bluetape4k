@@ -11,8 +11,8 @@ import com.esotericsoftware.kryo.util.Pool
 import io.bluetape4k.io.serializer.Kryox.release
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
-import java.util.concurrent.CompletableFuture
 import org.objenesis.strategy.StdInstantiatorStrategy
+import java.util.concurrent.CompletableFuture
 
 /**
  * Kryo 를 이용한 작업을 함수로 표현
@@ -55,7 +55,7 @@ inline fun <T> withKryoInput(func: (input: Input) -> T): T {
  * Kryo 를 이용한 비동기 작업을 함수로 표현
  * Kryo 가 thread-safe 하지 않기 때문에 이 함수를 사용해야 합니다.
  */
-inline fun <T : Any> withKryoAsync(crossinline func: Kryo.() -> T?): CompletableFuture<T?> {
+inline fun <T: Any> withKryoAsync(crossinline func: Kryo.() -> T?): CompletableFuture<T?> {
     val kryo = Kryox.obtainKryo()
     return CompletableFuture.supplyAsync { func(kryo) }
         .whenCompleteAsync { _, _ ->
@@ -63,22 +63,22 @@ inline fun <T : Any> withKryoAsync(crossinline func: Kryo.() -> T?): Completable
         }
 }
 
-object Kryox : KLogging() {
+object Kryox: KLogging() {
 
     private val kryoPool by lazy {
-        object : Pool<Kryo>(true, false, 1024) {
+        object: Pool<Kryo>(true, false, 1024) {
             override fun create(): Kryo = createKryo()
         }
     }
 
     private val inputPool by lazy {
-        object : Pool<Input>(true, false, 512) {
+        object: Pool<Input>(true, false, 512) {
             override fun create(): Input = Input(DEFAULT_BUFFER_SIZE)
         }
     }
 
     private val outputPool by lazy {
-        object : Pool<Output>(true, false, 512) {
+        object: Pool<Output>(true, false, 512) {
             override fun create(): Output = Output(DEFAULT_BUFFER_SIZE, -1)
         }
     }

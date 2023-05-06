@@ -25,7 +25,7 @@ fun <T> temporalIntervalOf(
 ): TemporalInterval<T> where T: Temporal, T: Comparable<T> {
     return when {
         start < end -> TemporalInterval(start, end, zoneId)
-        else -> TemporalInterval(end, start, zoneId)
+        else        -> TemporalInterval(end, start, zoneId)
     }
 }
 
@@ -66,7 +66,7 @@ fun <T> mutableTemporalIntervalOf(
 ): MutableTemporalInterval<T> where T: Temporal, T: Comparable<T> {
     return when {
         start < end -> MutableTemporalInterval(start, end, zoneId)
-        else -> MutableTemporalInterval(end, start, zoneId)
+        else        -> MutableTemporalInterval(end, start, zoneId)
     }
 }
 
@@ -139,11 +139,11 @@ fun <T> ReadableTemporalInterval<T>.toPeriod(): Period where T: Temporal, T: Com
  */
 fun <T> ReadableTemporalInterval<T>.toPeriod(unit: ChronoUnit): Period where T: Temporal, T: Comparable<T> {
     return when (unit) {
-        ChronoUnit.DAYS -> Period.ofDays(toPeriod().days)
-        ChronoUnit.WEEKS -> Period.ofWeeks(toPeriod().days / 7)
+        ChronoUnit.DAYS   -> Period.ofDays(toPeriod().days)
+        ChronoUnit.WEEKS  -> Period.ofWeeks(toPeriod().days / 7)
         ChronoUnit.MONTHS -> Period.ofDays(toPeriod().months)
-        ChronoUnit.YEARS -> Period.ofDays(toPeriod().years)
-        else -> toPeriod()
+        ChronoUnit.YEARS  -> Period.ofDays(toPeriod().years)
+        else              -> toPeriod()
     }
 }
 

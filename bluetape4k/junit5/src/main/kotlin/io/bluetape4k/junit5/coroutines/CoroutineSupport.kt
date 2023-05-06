@@ -15,7 +15,7 @@ import kotlin.coroutines.EmptyCoroutineContext
  */
 fun runSuspendTest(
     context: CoroutineContext = EmptyCoroutineContext,
-    testBody: suspend CoroutineScope.() -> Unit
+    testBody: suspend CoroutineScope.() -> Unit,
 ) {
     runBlocking(context) {
         testBody()

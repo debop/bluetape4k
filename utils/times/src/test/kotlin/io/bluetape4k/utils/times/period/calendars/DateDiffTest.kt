@@ -18,10 +18,10 @@ import io.bluetape4k.utils.times.quarterPeriod
 import io.bluetape4k.utils.times.seconds
 import io.bluetape4k.utils.times.weekPeriod
 import io.bluetape4k.utils.times.zonedDateTimeOf
-import java.time.Duration
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
+import java.time.Duration
 
 
 class DateDiffTest: AbstractPeriodTest() {

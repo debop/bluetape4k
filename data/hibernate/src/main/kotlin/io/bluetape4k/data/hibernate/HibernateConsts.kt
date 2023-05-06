@@ -1,7 +1,7 @@
 package io.bluetape4k.data.hibernate
 
-import java.util.Properties
 import org.hibernate.cfg.AvailableSettings
+import java.util.*
 
 object HibernateConsts {
 

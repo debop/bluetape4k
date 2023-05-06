@@ -46,8 +46,10 @@ class SchoolDay(private val moment: ZonedDateTime = todayZonedDateTime() + 8.hou
     companion object {
         @JvmField
         val LessonDuration = durationOfMinute(50)
+
         @JvmField
         val LargeBreakDuration = durationOfMinute(15)
+
         @JvmField
         val ShortBreakDuration = durationOfMinute(5)
     }

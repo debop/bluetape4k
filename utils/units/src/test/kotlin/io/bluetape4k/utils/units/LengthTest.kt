@@ -11,7 +11,7 @@ import kotlin.test.assertTrue
 @RandomizedTest
 class LengthTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `convert length unit`() {

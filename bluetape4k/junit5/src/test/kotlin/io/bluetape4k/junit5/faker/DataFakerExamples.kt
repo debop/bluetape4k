@@ -5,16 +5,16 @@ import io.bluetape4k.junit5.model.NestedDomainObject
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
-import java.util.Locale
 import net.datafaker.Faker
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.amshove.kluent.shouldStartWith
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class DataFakerExamples {
-    companion object : KLogging()
+    companion object: KLogging()
 
     val faker = Faker(Locale.getDefault())
 

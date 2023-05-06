@@ -2,7 +2,7 @@ package io.bluetape4k.core
 
 import kotlin.contracts.contract
 
-fun <T : Any> T?.requireNotNull(parameterName: String): T {
+fun <T: Any> T?.requireNotNull(parameterName: String): T {
     contract {
         returns() implies (this@requireNotNull != null)
     }
@@ -10,7 +10,7 @@ fun <T : Any> T?.requireNotNull(parameterName: String): T {
     return this
 }
 
-fun <T : Any> T?.requireNull(parameterName: String): T? {
+fun <T: Any> T?.requireNull(parameterName: String): T? {
     contract {
         returns() implies (this@requireNull == null)
     }
@@ -18,7 +18,7 @@ fun <T : Any> T?.requireNull(parameterName: String): T? {
     return this
 }
 
-fun <T : CharSequence> T?.requireNotEmpty(parameterName: String): T {
+fun <T: CharSequence> T?.requireNotEmpty(parameterName: String): T {
     contract {
         returnsNotNull() implies (this@requireNotEmpty != null)
     }
@@ -27,7 +27,7 @@ fun <T : CharSequence> T?.requireNotEmpty(parameterName: String): T {
     return self
 }
 
-fun <T : CharSequence> T?.requireNullOrEmpty(parameterName: String): T? {
+fun <T: CharSequence> T?.requireNullOrEmpty(parameterName: String): T? {
     contract {
         returnsNotNull() implies (this@requireNullOrEmpty == null)
     }
@@ -35,7 +35,7 @@ fun <T : CharSequence> T?.requireNullOrEmpty(parameterName: String): T? {
     return this
 }
 
-fun <T : CharSequence> T?.requireNotBlank(parameterName: String): T {
+fun <T: CharSequence> T?.requireNotBlank(parameterName: String): T {
     contract {
         returnsNotNull() implies (this@requireNotBlank != null)
     }
@@ -44,7 +44,7 @@ fun <T : CharSequence> T?.requireNotBlank(parameterName: String): T {
     return self
 }
 
-fun <T : CharSequence> T?.requireNullOrBlank(parameterName: String): T? {
+fun <T: CharSequence> T?.requireNullOrBlank(parameterName: String): T? {
     contract {
         returnsNotNull() implies (this@requireNullOrBlank == null)
     }
@@ -53,23 +53,23 @@ fun <T : CharSequence> T?.requireNullOrBlank(parameterName: String): T? {
 }
 
 
-fun <T : CharSequence> T?.requireContains(other: CharSequence, parameterName: String): T {
+fun <T: CharSequence> T?.requireContains(other: CharSequence, parameterName: String): T {
     this.requireNotNull(parameterName)
     require(this.contains(other)) { "$parameterName[$this] must contain $other" }
     return this
 }
 
-fun <T : CharSequence> T?.requireStartsWith(
+fun <T: CharSequence> T?.requireStartsWith(
     prefix: CharSequence,
     parameterName: String,
-    ignoreCase: Boolean = false
+    ignoreCase: Boolean = false,
 ): T {
     this.requireNotNull(parameterName)
     require(this.startsWith(prefix, ignoreCase)) { "$parameterName[$this] must be starts with $prefix" }
     return this
 }
 
-fun <T : CharSequence> T?.requireEndsWith(prefix: CharSequence, parameterName: String, ignoreCase: Boolean = false): T {
+fun <T: CharSequence> T?.requireEndsWith(prefix: CharSequence, parameterName: String, ignoreCase: Boolean = false): T {
     this.requireNotNull(parameterName)
     require(this.endsWith(prefix, ignoreCase)) { "$parameterName[$this] must be ends with $prefix" }
     return this
@@ -80,62 +80,62 @@ fun <T> T.requireEquals(expected: T, parameterName: String): T = apply {
 }
 
 @Deprecated("use requireGt", replaceWith = ReplaceWith("requireGt(expected, parameterName)"))
-fun <T : Comparable<T>> T.requireGreaterThan(expected: T, parameterName: String): T = apply {
+fun <T: Comparable<T>> T.requireGreaterThan(expected: T, parameterName: String): T = apply {
     require(this > expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.requireGt(expected: T, parameterName: String): T = apply {
+fun <T: Comparable<T>> T.requireGt(expected: T, parameterName: String): T = apply {
     require(this > expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
 @Deprecated("use requireGe", replaceWith = ReplaceWith("requireGe(expected, parameterName)"))
-fun <T : Comparable<T>> T.requireGreaterThanOrEqualTo(expected: T, parameterName: String): T = apply {
+fun <T: Comparable<T>> T.requireGreaterThanOrEqualTo(expected: T, parameterName: String): T = apply {
     require(this >= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.requireGe(expected: T, parameterName: String): T = apply {
+fun <T: Comparable<T>> T.requireGe(expected: T, parameterName: String): T = apply {
     require(this >= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
 @Deprecated("use requireLt", replaceWith = ReplaceWith("requireLt(expected, parameterName)"))
-fun <T : Comparable<T>> T.requireLessThan(expected: T, parameterName: String): T = apply {
+fun <T: Comparable<T>> T.requireLessThan(expected: T, parameterName: String): T = apply {
     require(this < expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.requireLt(expected: T, parameterName: String): T = apply {
+fun <T: Comparable<T>> T.requireLt(expected: T, parameterName: String): T = apply {
     require(this < expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
 @Deprecated("use requireLe", replaceWith = ReplaceWith("requireLe(expected, parameterName)"))
-fun <T : Comparable<T>> T.requireLessThanOrEqualTo(expected: T, parameterName: String): T = apply {
+fun <T: Comparable<T>> T.requireLessThanOrEqualTo(expected: T, parameterName: String): T = apply {
     require(this <= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.requireLe(expected: T, parameterName: String): T = apply {
+fun <T: Comparable<T>> T.requireLe(expected: T, parameterName: String): T = apply {
     require(this <= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-fun <T : Comparable<T>> T.requireInRange(start: T, endInclusive: T, parameterName: String) = apply {
+fun <T: Comparable<T>> T.requireInRange(start: T, endInclusive: T, parameterName: String) = apply {
     require(this in start..endInclusive) { "$parameterName[$this] must be in range ($start .. $endInclusive)" }
 }
 
-fun <T : Comparable<T>> T.requireInOpenRange(start: T, endExclusive: T, parameterName: String): T = apply {
+fun <T: Comparable<T>> T.requireInOpenRange(start: T, endExclusive: T, parameterName: String): T = apply {
     require(this >= start && this < endExclusive) { "$start <= $parameterName[$this] < $endExclusive" }
 }
 
-fun <T> T.requireZeroOrPositiveNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+fun <T> T.requireZeroOrPositiveNumber(parameterName: String): T where T: Number, T: Comparable<T> = apply {
     toDouble().requireGe(0.0, parameterName)
 }
 
-fun <T> T.requirePositiveNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+fun <T> T.requirePositiveNumber(parameterName: String): T where T: Number, T: Comparable<T> = apply {
     toDouble().requireGt(0.0, parameterName)
 }
 
-fun <T> T.requireZeroOrNegativeNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+fun <T> T.requireZeroOrNegativeNumber(parameterName: String): T where T: Number, T: Comparable<T> = apply {
     toDouble().requireLe(0.0, parameterName)
 }
 
-fun <T> T.requireNegativeNumber(parameterName: String): T where T : Number, T : Comparable<T> = apply {
+fun <T> T.requireNegativeNumber(parameterName: String): T where T: Number, T: Comparable<T> = apply {
     toDouble().requireLt(0.0, parameterName)
 }
 

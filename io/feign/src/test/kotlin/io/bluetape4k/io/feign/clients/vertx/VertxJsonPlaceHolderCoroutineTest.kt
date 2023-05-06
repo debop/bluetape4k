@@ -8,7 +8,7 @@ import io.bluetape4k.io.feign.codec.JacksonDecoder2
 import io.bluetape4k.io.feign.codec.JacksonEncoder2
 import io.bluetape4k.io.feign.coroutines.coroutineFeignBuilder
 
-class VertxJsonPlaceHolderCoroutineTest : AbstractJsonPlaceHolderCoroutineTest() {
+class VertxJsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderCoroutineTest() {
 
     override fun newBuilder(): CoroutineFeign.CoroutineBuilder<*> {
         return coroutineFeignBuilder {

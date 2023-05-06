@@ -69,7 +69,7 @@ open class NearCacheStatisticsMXBean: CacheStatisticsMXBean {
      */
     override fun getCacheHitPercentage(): Float {
         return when (cacheGets) {
-            0L -> 0F
+            0L   -> 0F
             else -> (cacheHits * 100F) / cacheGets
         }
     }
@@ -121,7 +121,7 @@ open class NearCacheStatisticsMXBean: CacheStatisticsMXBean {
      */
     override fun getCacheMissPercentage(): Float {
         return when (cacheGets) {
-            0L -> 0F
+            0L   -> 0F
             else -> (cacheMisses * 100F) / cacheGets
         }
     }

@@ -77,9 +77,9 @@ object KoreanSubstantive: KLogging(), Serializable {
         // Recover missing 'ㅇ' (우혀니 -> 우현, 우현이, 빠순이 -> 빠순, 빠순이)
         val recovered: String = decomposed.mapIndexed { i, hc ->
             when (i) {
-                s.lastIndex -> '이'
+                s.lastIndex     -> '이'
                 s.lastIndex - 1 -> composeHangul(hc.copy(coda = decomposed.last().onset))
-                else -> composeHangul(hc)
+                else            -> composeHangul(hc)
             }
         }.joinToString("")
 

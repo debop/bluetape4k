@@ -17,4 +17,4 @@ import io.bluetape4k.utils.idgenerators.snowflake.sequencer.DefaultSequencer
  */
 class DefaultSnowflake(
     machineId: Int = getMachineId(MAX_MACHINE_ID),
-) : AbstractSnowflake(DefaultSequencer(machineId))
+): AbstractSnowflake(DefaultSequencer(machineId))

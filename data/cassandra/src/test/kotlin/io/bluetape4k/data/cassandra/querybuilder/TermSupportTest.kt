@@ -4,9 +4,9 @@ import com.datastax.oss.driver.api.core.type.DataTypes
 import io.bluetape4k.data.cassandra.cql.userDefinedType
 import io.bluetape4k.data.cassandra.toCqlIdentifier
 import io.bluetape4k.logging.KLogging
-import java.util.Date
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.util.*
 import kotlin.test.assertFailsWith
 
 class TermSupportTest {

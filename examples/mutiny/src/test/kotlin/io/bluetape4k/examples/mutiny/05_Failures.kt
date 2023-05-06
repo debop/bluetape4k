@@ -11,15 +11,15 @@ import io.smallrye.mutiny.coroutines.asFlow
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.smallrye.mutiny.subscription.MultiEmitter
 import io.smallrye.mutiny.subscription.UniEmitter
-import java.io.IOException
-import java.time.Duration
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldContainAll
 import org.junit.jupiter.api.Test
+import java.io.IOException
+import java.time.Duration
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.random.Random
 import kotlin.test.assertFailsWith
 

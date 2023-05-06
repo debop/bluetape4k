@@ -4,7 +4,7 @@ import io.bluetape4k.core.assertNotBlank
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
-import java.util.Locale
+import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
@@ -18,8 +18,8 @@ fun Locale?.orDefault(): Locale = this ?: Locale.getDefault()
 val Locale.parent: Locale?
     get() = when {
         variant.isNotEmpty() && (language.isNotEmpty() || country.isNotEmpty()) -> Locale(language, country)
-        country.isNotEmpty() -> Locale(language)
-        else -> null
+        country.isNotEmpty()                                                    -> Locale(language)
+        else                                                                    -> null
     }
 
 /**

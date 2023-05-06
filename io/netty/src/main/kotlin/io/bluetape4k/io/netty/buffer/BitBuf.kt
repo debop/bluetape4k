@@ -18,7 +18,7 @@ fun ByteBuf.toBitBuf(): BitBuf = BitBufImpl(this)
  *
  * To create a [BitBuf] use [ByteBuf.toBitBuf] factory method.
  */
-interface BitBuf : ReferenceCounted {
+interface BitBuf: ReferenceCounted {
 
     val byteBuf: ByteBuf
 

@@ -2,9 +2,9 @@ package io.bluetape4k.data.hibernate.model
 
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.logging.KLogging
+import org.hibernate.Hibernate
 import java.io.Serializable
 import javax.persistence.Transient
-import org.hibernate.Hibernate
 
 /**
  * [JpaEntity]의 최상위 추상화 클래스입니다.
@@ -50,7 +50,7 @@ abstract class AbstractJpaEntity<ID: Serializable>: AbstractPersistenceObject(),
         return when {
             isPersisted != target.isPersisted -> false
             isPersisted && target.isPersisted -> hasSameNonDefaultId(id, target)
-            else -> hasSameBusinessSignature<ID>(this, target)
+            else                              -> hasSameBusinessSignature<ID>(this, target)
         }
     }
 

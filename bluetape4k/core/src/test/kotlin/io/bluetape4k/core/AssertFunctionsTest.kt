@@ -9,13 +9,16 @@ import kotlin.test.assertFailsWith
 
 class AssertFunctionsTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     class TestClass
 
     @Test
     fun `assert without -ea`() {
-        AssertFunctionsTest::class.java.classLoader.setClassAssertionStatus(AssertFunctionsTest::class.qualifiedName, false)
+        AssertFunctionsTest::class.java.classLoader.setClassAssertionStatus(
+            AssertFunctionsTest::class.qualifiedName,
+            false
+        )
         AssertFunctionsTest::class.java.desiredAssertionStatus().shouldBeFalse()
     }
 

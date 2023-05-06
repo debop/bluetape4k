@@ -1,10 +1,10 @@
 package io.bluetape4k.data.hibernate.reactive.mutiny
 
 import io.smallrye.mutiny.Uni
-import javax.persistence.EntityGraph
 import org.hibernate.LockMode
 import org.hibernate.reactive.common.ResultSetMapping
 import org.hibernate.reactive.mutiny.Mutiny
+import javax.persistence.EntityGraph
 
 inline fun <reified T> Mutiny.StatelessSession.getAs(id: java.io.Serializable): Uni<T> =
     get(T::class.java, id)

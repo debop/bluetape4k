@@ -10,7 +10,7 @@ import org.junit.jupiter.api.RepeatedTest
 @RandomizedTest
 class StandardSupportTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 10
     }
 
@@ -35,7 +35,7 @@ class StandardSupportTest {
         coalesce(p1, p2) shouldBeEqualTo when {
             p1 != null -> p1
             p2 != null -> p2
-            else -> null
+            else       -> null
         }
     }
 }

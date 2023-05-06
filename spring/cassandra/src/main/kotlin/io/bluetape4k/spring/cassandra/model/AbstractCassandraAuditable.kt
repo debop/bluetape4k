@@ -1,9 +1,9 @@
 package io.bluetape4k.spring.cassandra.model
 
-import java.time.Instant
-import java.util.*
 import org.springframework.data.cassandra.core.mapping.Column
 import org.springframework.data.domain.Auditable
+import java.time.Instant
+import java.util.*
 
 /**
  * Auditable Entity 를 나타내는 추상화 클래스입니다.

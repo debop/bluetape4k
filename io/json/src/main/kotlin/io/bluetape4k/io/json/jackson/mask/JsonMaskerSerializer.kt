@@ -40,7 +40,7 @@ class JsonMaskerSerializer(
     override fun serialize(value: Any?, gen: JsonGenerator, provider: SerializerProvider?) {
         when {
             annotation != null -> gen.writeString(annotation.value)
-            else -> gen.writeRawValue(value.toString())
+            else               -> gen.writeRawValue(value.toString())
         }
     }
 }

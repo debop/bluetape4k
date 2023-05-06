@@ -6,12 +6,11 @@ import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Test
-import kotlin.streams.toList
 
 class SingletonHolderTest {
 
     class Manager private constructor(private val name: String) {
-        companion object : SingletonHolder<Manager>({ Manager("manager") }) {
+        companion object: SingletonHolder<Manager>({ Manager("manager") }) {
             val log = KotlinLogging.logger {}
         }
 

@@ -20,7 +20,7 @@ import kotlin.reflect.full.memberProperties
  * @param T
  * @return
  */
-fun <T : Any> tupleMapperOfRecord(): TupleMapper<T> = TupleMapper.mapper { record: T ->
+fun <T: Any> tupleMapperOfRecord(): TupleMapper<T> = TupleMapper.mapper { record: T ->
     record.javaClass.kotlin.memberProperties.associate { property ->
         property.name to runCatching { property.get(record) }.getOrNull()
     }
@@ -53,7 +53,7 @@ fun <T : Any> tupleMapperOfRecord(): TupleMapper<T> = TupleMapper.mapper { recor
  * @param T
  * @return parameter name to value map
  */
-fun <T : Any> List<T>.toParameters(): Map<String, Any?> {
+fun <T: Any> List<T>.toParameters(): Map<String, Any?> {
     return this.flatMapIndexed { index, record ->
         val properties = record.javaClass.kotlin.memberProperties
         properties.map { property ->

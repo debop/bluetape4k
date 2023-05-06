@@ -14,9 +14,9 @@ import java.lang.reflect.Type
  */
 class JacksonEncoder2 private constructor(
     private val mapper: JsonMapper,
-) : Encoder {
+): Encoder {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         val INSTANCE: JacksonEncoder2 by lazy { invoke() }
 

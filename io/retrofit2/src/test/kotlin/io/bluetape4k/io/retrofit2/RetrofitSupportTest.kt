@@ -16,9 +16,9 @@ import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
-class RetrofitSupportTest : AbstractRetrofitTest() {
+class RetrofitSupportTest: AbstractRetrofitTest() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 3
         private const val CALL_SIZE = 10
 

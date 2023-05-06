@@ -13,9 +13,9 @@ import io.bluetape4k.logging.KLogging
 class BatchSequence<T> private constructor(
     val source: Sequence<T>,
     val batchSize: Int,
-) : Sequence<Iterable<T>> {
+): Sequence<Iterable<T>> {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         operator fun <T> invoke(source: Sequence<T>, batchSize: Int = 1): BatchSequence<T> {
             batchSize.assertPositiveNumber("batchSize")
             return BatchSequence(source, batchSize)
@@ -23,13 +23,13 @@ class BatchSequence<T> private constructor(
     }
 
     override fun iterator(): Iterator<Iterable<T>> {
-        return object : AbstractIterator<Iterable<T>>() {
+        return object: AbstractIterator<Iterable<T>>() {
             private val iter = source.iterator()
 
             override fun computeNext() {
                 when {
                     iter.hasNext() -> setNext(iter.asSequence().take(batchSize).toList())
-                    else -> done()
+                    else           -> done()
                 }
             }
         }

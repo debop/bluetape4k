@@ -6,7 +6,7 @@ import java.io.ByteArrayOutputStream
 /**
  * Kryo Serializer
  */
-class KryoSerializer : AbstractBinarySerializer() {
+class KryoSerializer: AbstractBinarySerializer() {
 
     override fun doSerialize(graph: Any): ByteArray {
         return ByteArrayOutputStream(DEFAULT_BUFFER_SIZE).use { bos ->
@@ -22,7 +22,7 @@ class KryoSerializer : AbstractBinarySerializer() {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : Any> doDeserialize(bytes: ByteArray): T? {
+    override fun <T: Any> doDeserialize(bytes: ByteArray): T? {
         return withKryoInput { input ->
             input.inputStream = ByteArrayInputStream(bytes).buffered(DEFAULT_BUFFER_SIZE)
             withKryo {

@@ -58,9 +58,9 @@ interface Compressor {
 /**
  * [Compressor]의 최상위 추상화 클래스입니다.
  */
-abstract class AbstractCompressor : Compressor {
+abstract class AbstractCompressor: Compressor {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     protected abstract fun doCompress(plain: ByteArray): ByteArray
     protected abstract fun doDecompress(compressed: ByteArray): ByteArray

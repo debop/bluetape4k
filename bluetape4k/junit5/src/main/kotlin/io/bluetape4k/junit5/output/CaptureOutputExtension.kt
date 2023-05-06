@@ -11,9 +11,9 @@ import org.junit.platform.commons.support.ReflectionSupport
 /**
  * 테스트 시 Console에 출력되는 정보를 capture 해서 [OutputCapture]에 제공합니다.
  */
-class CaptureOutputExtension : BeforeEachCallback, AfterEachCallback, ParameterResolver {
+class CaptureOutputExtension: BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private val NAMESPACE = ExtensionContext.Namespace.create(CaptureOutputExtension::class)
     }
 
@@ -27,15 +27,15 @@ class CaptureOutputExtension : BeforeEachCallback, AfterEachCallback, ParameterR
 
     override fun supportsParameter(
         parameterContext: ParameterContext,
-        extensionContext: ExtensionContext
+        extensionContext: ExtensionContext,
     ): Boolean {
         return extensionContext.testMethod.isPresent &&
-                parameterContext.parameter.type == OutputCapturer::class.java
+            parameterContext.parameter.type == OutputCapturer::class.java
     }
 
     override fun resolveParameter(
         parameterContext: ParameterContext,
-        extensionContext: ExtensionContext
+        extensionContext: ExtensionContext,
     ): Any {
         return getOutputCapturer(extensionContext)
     }

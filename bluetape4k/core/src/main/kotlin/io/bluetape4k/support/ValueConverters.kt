@@ -4,7 +4,7 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.pow
@@ -13,11 +13,11 @@ import kotlin.math.roundToLong
 
 fun Any?.asDouble(defaultValue: Double = 0.0): Double = runCatching {
     when (this) {
-        null -> defaultValue
-        is Double -> this
-        is Number -> this.toDouble()
+        null            -> defaultValue
+        is Double       -> this
+        is Number       -> this.toDouble()
         is CharSequence -> this.toString().toDouble()
-        else -> this.toString().parseNumber()
+        else            -> this.toString().parseNumber()
     }
 }.getOrDefault(defaultValue)
 
@@ -34,11 +34,11 @@ fun Any?.asDoubleOrNull(): Double? =
 @JvmOverloads
 fun Any?.asFloat(defaultValue: Float = 0.0F): Float = runCatching {
     when (this) {
-        null -> defaultValue
-        is Float -> this
-        is Number -> this.toFloat()
+        null            -> defaultValue
+        is Float        -> this
+        is Number       -> this.toFloat()
         is CharSequence -> this.toString().parseNumber()
-        else -> this.asDouble(defaultValue.toDouble()).toFloat()
+        else            -> this.asDouble(defaultValue.toDouble()).toFloat()
     }
 }.getOrDefault(defaultValue)
 
@@ -55,11 +55,11 @@ fun Any?.asFloatOrNull(): Float? = runCatching {
 @JvmOverloads
 fun Any?.asLong(defaultValue: Long = 0L): Long = runCatching {
     when (this) {
-        null -> defaultValue
-        is Long -> this
-        is Number -> this.toLong()
+        null            -> defaultValue
+        is Long         -> this
+        is Number       -> this.toLong()
         is CharSequence -> this.toString().toLong()
-        else -> this.asBigDecimal(defaultValue.toBigDecimal()).toLong()
+        else            -> this.asBigDecimal(defaultValue.toBigDecimal()).toLong()
     }
 }.getOrDefault(defaultValue)
 
@@ -76,10 +76,10 @@ fun Any?.asLongOrNull(): Long? = runCatching {
 @JvmOverloads
 fun Any?.asInt(defaultValue: Int = 0): Int = runCatching {
     when (this) {
-        null -> defaultValue
-        is Int -> this
+        null      -> defaultValue
+        is Int    -> this
         is Number -> this.toInt()
-        else -> this.asLong(defaultValue.toLong()).toInt()
+        else      -> this.asLong(defaultValue.toLong()).toInt()
     }
 }.getOrDefault(defaultValue)
 
@@ -96,10 +96,10 @@ fun Any?.asIntOrNull(): Int? = runCatching {
 @JvmOverloads
 fun Any?.asShort(defaultValue: Short = 0): Short = runCatching {
     when (this) {
-        null -> defaultValue
-        is Short -> this
+        null      -> defaultValue
+        is Short  -> this
         is Number -> this.toShort()
-        else -> this.asLong(defaultValue.toLong()).toShort()
+        else      -> this.asLong(defaultValue.toLong()).toShort()
     }
 }.getOrDefault(defaultValue)
 
@@ -116,11 +116,11 @@ fun Any?.asShortOrNull(): Short? = runCatching {
 @JvmOverloads
 fun Any?.asByte(defaultValue: Byte = 0.toByte()): Byte = runCatching {
     when (this) {
-        null -> defaultValue
-        is Char -> this.code.toByte()
-        is Byte -> this
+        null      -> defaultValue
+        is Char   -> this.code.toByte()
+        is Byte   -> this
         is Number -> this.toByte()
-        else -> this.asLong(defaultValue.toLong()).toByte()
+        else      -> this.asLong(defaultValue.toLong()).toByte()
     }
 }.getOrDefault(defaultValue)
 
@@ -138,10 +138,10 @@ fun Any?.asByteOrNull(): Byte? = runCatching {
 @JvmOverloads
 fun Any?.asChar(defaultValue: Char = 0.toChar()): Char = runCatching {
     when (this) {
-        null -> defaultValue
-        is Char -> this
+        null            -> defaultValue
+        is Char         -> this
         is CharSequence -> if (this.length == 1) first() else asLong(defaultValue.code.toLong()).toInt().toChar()
-        else -> asLong(defaultValue.code.toLong()).toInt().toChar()
+        else            -> asLong(defaultValue.code.toLong()).toInt().toChar()
     }
 }.getOrDefault(defaultValue)
 
@@ -158,10 +158,10 @@ fun Any?.asCharOrNull(): Char? = runCatching {
 @JvmOverloads
 fun Any?.asBigDecimal(defaultValue: BigDecimal = BigDecimal.ZERO): BigDecimal = runCatching {
     when (this) {
-        null -> defaultValue
+        null          -> defaultValue
         is BigDecimal -> this
-        is Number -> this.toBigDecimal()
-        else -> BigDecimal(toString())
+        is Number     -> this.toBigDecimal()
+        else          -> BigDecimal(toString())
     }
 }.getOrDefault(defaultValue)
 
@@ -178,10 +178,10 @@ fun Any?.asBigDecimalOrNull(): BigDecimal? = runCatching {
 @JvmOverloads
 fun Any?.asBigInt(defaultValue: BigInteger = BigInteger.ZERO): BigInteger = runCatching {
     when (this) {
-        null -> defaultValue
+        null          -> defaultValue
         is BigInteger -> this
-        is Number -> this.toBigInt()
-        else -> BigInteger(toString())
+        is Number     -> this.toBigInt()
+        else          -> BigInteger(toString())
     }
 }.getOrDefault(defaultValue)
 
@@ -213,10 +213,10 @@ internal val SIMPLE_DATE_FORMAT = SimpleDateFormat()
 @JvmOverloads
 fun Any?.asDate(defaultValue: Date = Date(0L)): Date = runCatching {
     when (this) {
-        null -> defaultValue
+        null      -> defaultValue
         is Number -> Date(this.toLong())
-        is Date -> this
-        else -> SIMPLE_DATE_FORMAT.parse(asString())
+        is Date   -> this
+        else      -> SIMPLE_DATE_FORMAT.parse(asString())
     }
 }.getOrDefault(defaultValue)
 
@@ -226,13 +226,14 @@ fun Any?.asDateOrNull(): Date? =
     }
 
 @JvmOverloads
-fun Any?.asByteArray(charset: Charset = Charsets.UTF_8, defaultValue: ByteArray = emptyByteArray): ByteArray = runCatching {
-    when (this) {
-        null -> defaultValue
-        is ByteArray -> this
-        else -> toString().toByteArray(charset)
-    }
-}.getOrDefault(emptyByteArray)
+fun Any?.asByteArray(charset: Charset = Charsets.UTF_8, defaultValue: ByteArray = emptyByteArray): ByteArray =
+    runCatching {
+        when (this) {
+            null         -> defaultValue
+            is ByteArray -> this
+            else         -> toString().toByteArray(charset)
+        }
+    }.getOrDefault(emptyByteArray)
 
 @JvmOverloads
 fun Any?.asByteArrayOrNull(charset: Charset = Charsets.UTF_8): ByteArray? = runCatching {

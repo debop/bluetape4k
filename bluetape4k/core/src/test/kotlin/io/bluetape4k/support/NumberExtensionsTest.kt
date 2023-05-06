@@ -1,17 +1,17 @@
 package io.bluetape4k.support
 
 import io.bluetape4k.logging.KLogging
-import java.math.BigDecimal
-import java.math.BigInteger
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.test.assertFailsWith
 
 class NumberExtensionsTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `coerceIn operator`() {

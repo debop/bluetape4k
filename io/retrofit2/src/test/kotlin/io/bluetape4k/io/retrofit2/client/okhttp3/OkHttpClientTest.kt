@@ -7,9 +7,9 @@ import okhttp3.Call
 import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.Test
 
-class OkHttpClientTest : AbstractClientTest() {
+class OkHttpClientTest: AbstractClientTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     override val callFactory: Call.Factory = okhttp3Client { }
 

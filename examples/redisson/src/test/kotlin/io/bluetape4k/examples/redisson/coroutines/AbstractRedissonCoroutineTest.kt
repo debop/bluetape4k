@@ -1,6 +1,7 @@
 package io.bluetape4k.examples.redisson.coroutines
 
 import io.bluetape4k.data.redis.redisson.redissonClientOf
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.testcontainers.storage.RedisServer
@@ -27,8 +28,12 @@ abstract class AbstractRedissonCoroutineTest {
         val faker = Faker()
 
         @JvmStatic
+        protected fun randomString(): String =
+            Fakers.randomString(1024, 4096, true)
+
+        @JvmStatic
         protected fun randomName(): String =
-            "bluetape4k:${faker.name().username()}:${faker.random().nextLong(100, 99999)}"
+            "bluetape4k:${faker.name().username()}:${faker.random().nextLong(1000, 99999)}"
 
     }
 

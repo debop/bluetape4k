@@ -12,13 +12,13 @@ import io.bluetape4k.utils.times.period.ranges.MonthRange
 import io.bluetape4k.utils.times.period.ranges.WeekRangeCollection
 import io.bluetape4k.utils.times.period.ranges.YearRange
 import io.bluetape4k.utils.times.zonedDateTimeOf
-import java.time.DayOfWeek
-import java.time.LocalTime
-import java.time.Month
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Test
+import java.time.DayOfWeek
+import java.time.LocalTime
+import java.time.Month
 
 class CalendarPeriodCollectorTest: AbstractPeriodTest() {
 

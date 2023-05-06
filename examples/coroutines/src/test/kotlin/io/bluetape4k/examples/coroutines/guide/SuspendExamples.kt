@@ -2,13 +2,13 @@ package io.bluetape4k.examples.coroutines.guide
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import java.util.concurrent.CompletableFuture
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeoutOrNull
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CompletableFuture
 import kotlin.coroutines.resumeWithException
 import kotlin.random.Random
 

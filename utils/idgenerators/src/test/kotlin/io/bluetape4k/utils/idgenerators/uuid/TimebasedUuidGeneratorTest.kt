@@ -6,14 +6,13 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.support.toLongArray
 import io.bluetape4k.support.toUUID
 import io.bluetape4k.utils.idgenerators.hashids.Hashids
-import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.RepeatedTest
-import kotlin.streams.toList
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 class TimebasedUuidGeneratorTest {
 

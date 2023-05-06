@@ -7,10 +7,10 @@ import io.bluetape4k.utils.times.Weekdays
 import io.bluetape4k.utils.times.Weekends
 import io.bluetape4k.utils.times.period.ITimePeriodCollection
 import io.bluetape4k.utils.times.period.TimePeriodCollection
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList
 import java.io.Serializable
 import java.time.DayOfWeek
 import java.time.Month
-import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList
 
 
 /**

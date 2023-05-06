@@ -119,29 +119,29 @@ fun ZonedDateTime.prevDayOfWeek(): ZonedDateTime = this.minusWeeks(1)
 infix fun ZonedDateTime?.min(that: ZonedDateTime?): ZonedDateTime? = when {
     this == null -> that
     that == null -> this
-    this < that -> this
-    else -> that
+    this < that  -> this
+    else         -> that
 }
 
 infix fun ZonedDateTime?.max(that: ZonedDateTime?): ZonedDateTime? = when {
     this == null -> that
     that == null -> this
-    this > that -> this
-    else -> that
+    this > that  -> this
+    else         -> that
 }
 
 fun ZonedDateTime.equalTo(that: OffsetDateTime): Boolean = this == that.toZonedDateTime()
 
 fun ZonedDateTime?.equalToSeconds(that: ZonedDateTime?): Boolean = when {
-    this == null && that == null -> true
-    this === that -> true
+    this == null && that == null     -> true
+    this === that                    -> true
     (this == null) != (that == null) -> false
-    else -> this!!.truncatedTo(ChronoUnit.SECONDS) == that!!.truncatedTo(ChronoUnit.SECONDS)
+    else                             -> this!!.truncatedTo(ChronoUnit.SECONDS) == that!!.truncatedTo(ChronoUnit.SECONDS)
 }
 
 fun ZonedDateTime?.equalToMillis(that: ZonedDateTime?): Boolean = when {
-    this == null && that == null -> true
-    this === that -> true
+    this == null && that == null     -> true
+    this === that                    -> true
     (this == null) != (that == null) -> false
-    else -> this!!.truncatedTo(ChronoUnit.MILLIS) == that!!.truncatedTo(ChronoUnit.MILLIS)
+    else                             -> this!!.truncatedTo(ChronoUnit.MILLIS) == that!!.truncatedTo(ChronoUnit.MILLIS)
 }

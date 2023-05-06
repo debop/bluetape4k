@@ -1,10 +1,10 @@
 package io.bluetape4k.infra.cache.memorizer
 
-import java.time.Duration
-import java.util.concurrent.CompletableFuture
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertTimeout
+import java.time.Duration
+import java.util.concurrent.CompletableFuture
 import kotlin.system.measureTimeMillis
 
 abstract class AbstractAsyncMemorizerTest {

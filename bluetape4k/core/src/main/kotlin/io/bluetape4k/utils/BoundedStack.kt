@@ -5,7 +5,7 @@ import kotlinx.atomicfu.atomic
 import java.util.*
 
 @Suppress("UNCHECKED_CAST")
-class BoundedStack<E : Any> private constructor(val maxSize: Int) : Stack<E>() {
+class BoundedStack<E: Any> private constructor(val maxSize: Int): Stack<E>() {
 
     companion object {
         operator fun <E: Any> invoke(maxSize: Int): BoundedStack<E> {
@@ -96,14 +96,14 @@ class BoundedStack<E : Any> private constructor(val maxSize: Int) : Stack<E>() {
     @Synchronized
     fun insert(index: Int, elem: E): E {
         when {
-            index == 0 -> return push(elem)
-            index > count -> throw java.lang.IndexOutOfBoundsException(index.toString())
+            index == 0     -> return push(elem)
+            index > count  -> throw java.lang.IndexOutOfBoundsException(index.toString())
             index == count -> {
                 array[(top + index) % maxSize] = elem
                 counter.incrementAndGet()
             }
 
-            else -> {
+            else           -> {
                 val swapped = array[index]!!
                 array[index] = elem
                 insert(index - 1, swapped)
@@ -126,7 +126,7 @@ class BoundedStack<E : Any> private constructor(val maxSize: Int) : Stack<E>() {
 
     @Synchronized
     override fun iterator(): MutableIterator<E> {
-        return object : MutableIterator<E> {
+        return object: MutableIterator<E> {
 
             private var index = 0
             override fun hasNext(): Boolean = index != count

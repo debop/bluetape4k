@@ -10,9 +10,9 @@ import org.apache.commons.codec.binary.Hex
 /**
  * 문자열을 16진법 (Hex Decimal) 문자로 인코딩/디코딩 합니다
  */
-class HexStringEncoder : StringEncoder {
+class HexStringEncoder: StringEncoder {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private val hex = Hex(Charsets.UTF_8)
     }
 

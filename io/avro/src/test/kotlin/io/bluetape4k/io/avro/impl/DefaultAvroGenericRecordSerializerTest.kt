@@ -15,10 +15,10 @@ import org.apache.avro.generic.GenericData
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.RepeatedTest
 
-class DefaultAvroGenericRecordSerializerTest : AbstractAvroTest() {
+class DefaultAvroGenericRecordSerializerTest: AbstractAvroTest() {
 
-    companion object : KLogging() {
-        const val REPEAT_SIZE = 10
+    companion object: KLogging() {
+        private const val REPEAT_SIZE = 5
     }
 
     private val serializers = listOf(

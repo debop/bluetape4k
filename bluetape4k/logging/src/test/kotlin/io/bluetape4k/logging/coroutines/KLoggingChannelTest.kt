@@ -1,6 +1,5 @@
 package io.bluetape4k.logging.coroutines
 
-import java.time.Instant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.joinAll
@@ -8,10 +7,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
+import java.time.Instant
 
 class KLoggingChannelTest {
 
-    companion object : KLoggingChannel()
+    companion object: KLoggingChannel()
 
     private val error get() = RuntimeException("Boom!")
 

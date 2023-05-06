@@ -3,10 +3,6 @@ package io.bluetape4k.collections.eclipse.primitives
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.collections.stream.asIterable
-import java.util.stream.DoubleStream
-import java.util.stream.IntStream
-import java.util.stream.LongStream
-import java.util.stream.Stream
 import org.eclipse.collections.api.DoubleIterable
 import org.eclipse.collections.api.FloatIterable
 import org.eclipse.collections.api.IntIterable
@@ -15,6 +11,10 @@ import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList
 import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList
 import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList
+import java.util.stream.DoubleStream
+import java.util.stream.IntStream
+import java.util.stream.LongStream
+import java.util.stream.Stream
 
 fun <T> Stream<T>.toFastList() = fastListOf(asIterable())
 fun <T> Stream<T>.toUnifiedSet() = unifiedSetOf(asIterable())

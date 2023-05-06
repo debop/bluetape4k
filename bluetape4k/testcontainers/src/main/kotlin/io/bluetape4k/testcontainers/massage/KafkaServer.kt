@@ -6,7 +6,6 @@ import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
-import java.util.UUID
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -15,6 +14,7 @@ import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.utility.DockerImageName
+import java.util.*
 
 /**
  * Docker를 이용하여 [kafka](http://kafka.apache.org)를 구동해주는 container 입니다.
@@ -40,6 +40,7 @@ class KafkaServer private constructor(
         val NAME = "kafka"
         val TAG = "7.3.3"
 
+        @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useTransaction: Boolean = false,
@@ -50,6 +51,7 @@ class KafkaServer private constructor(
             return KafkaServer(imageName, useTransaction, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useTransaction: Boolean = false,

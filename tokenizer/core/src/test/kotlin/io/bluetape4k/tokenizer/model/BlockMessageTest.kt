@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 class BlockMessageTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         val faker = Faker()
     }
 

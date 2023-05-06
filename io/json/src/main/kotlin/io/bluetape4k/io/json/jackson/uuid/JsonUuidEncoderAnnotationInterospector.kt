@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector
 import com.fasterxml.jackson.databind.ser.std.UUIDSerializer
 import io.bluetape4k.logging.KLogging
-import java.util.UUID
+import java.util.*
 
 class JsonUuidEncoderAnnotationInterospector: JacksonAnnotationIntrospector() {
 
@@ -20,7 +20,7 @@ class JsonUuidEncoderAnnotationInterospector: JacksonAnnotationIntrospector() {
             return annotation?.let {
                 when (it.value) {
                     JsonUuidEncoderType.BASE62 -> JsonUuidBase62Serializer::class.java
-                    JsonUuidEncoderType.PLAIN -> UUIDSerializer::class.java
+                    JsonUuidEncoderType.PLAIN  -> UUIDSerializer::class.java
                 }
             } ?: UUIDSerializer::class.java
         }
@@ -34,7 +34,7 @@ class JsonUuidEncoderAnnotationInterospector: JacksonAnnotationIntrospector() {
             return annotation?.let {
                 when (it.value) {
                     JsonUuidEncoderType.BASE62 -> JsonUuidBase62Deserializer::class.java
-                    JsonUuidEncoderType.PLAIN -> UUIDDeserializer::class.java
+                    JsonUuidEncoderType.PLAIN  -> UUIDDeserializer::class.java
                 }
             } ?: UUIDDeserializer::class.java
         }

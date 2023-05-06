@@ -3,7 +3,6 @@ package io.bluetape4k.testcontainers.aws.services
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.testcontainers.aws.LocalStackServer
-import java.net.URI
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -17,6 +16,7 @@ import org.testcontainers.containers.localstack.LocalStackContainer
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sqs.SqsClient
 import software.amazon.awssdk.services.sqs.model.SendMessageBatchRequestEntry
+import java.net.URI
 
 @Execution(ExecutionMode.SAME_THREAD)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)

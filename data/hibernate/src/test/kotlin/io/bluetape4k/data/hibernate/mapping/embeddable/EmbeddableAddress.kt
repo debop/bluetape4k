@@ -7,5 +7,5 @@ import javax.persistence.Embeddable
 data class EmbeddableAddress(
     var street: String,
     var city: String,
-    var zipcode: String
+    var zipcode: String,
 ): Serializable

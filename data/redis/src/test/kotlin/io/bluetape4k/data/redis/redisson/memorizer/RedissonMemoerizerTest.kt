@@ -4,13 +4,13 @@ import io.bluetape4k.data.redis.redisson.AbstractRedissonTest
 import io.bluetape4k.infra.cache.memorizer.Memorizer
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import java.time.Duration
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertTimeout
 import org.redisson.api.RedissonClient
 import org.redisson.client.codec.IntegerCodec
 import org.redisson.client.codec.LongCodec
+import java.time.Duration
 import kotlin.system.measureTimeMillis
 
 class RedissonMemoerizerTest: AbstractRedissonTest() {
@@ -66,7 +66,7 @@ abstract class FactorialProvider {
         log.trace { "factorial($n)" }
         return when {
             n <= 1L -> 1L
-            else -> n * cachedCalc(n - 1)
+            else    -> n * cachedCalc(n - 1)
         }
     }
 }
@@ -92,7 +92,7 @@ abstract class FibonacciProvider {
         return when {
             n <= 0L -> 0L
             n <= 2L -> 1L
-            else -> cachedCalc(n - 1) + cachedCalc(n - 2)
+            else    -> cachedCalc(n - 1) + cachedCalc(n - 2)
         }
     }
 }

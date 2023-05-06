@@ -1,8 +1,8 @@
 package io.bluetape4k.utils.money
 
+import org.javamoney.moneta.FastMoney
 import javax.money.CurrencyUnit
 import javax.money.NumberValue
-import org.javamoney.moneta.FastMoney
 
 
 /**

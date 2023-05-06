@@ -2,7 +2,6 @@ package io.bluetape4k.junit5.random
 
 import io.github.benas.randombeans.EnhancedRandomBuilder
 import io.github.benas.randombeans.api.EnhancedRandom
-import kotlin.streams.toList
 
 /**
  * [EnhancedRandom]을 생성해주는 함수
@@ -31,8 +30,8 @@ internal val DefaultEnhancedRandom: EnhancedRandom by lazy {
     }
 }
 
-inline fun <reified T : Any> EnhancedRandom.newObject(vararg excludeFields: String): T =
+inline fun <reified T: Any> EnhancedRandom.newObject(vararg excludeFields: String): T =
     nextObject(T::class.java, *excludeFields)
 
-inline fun <reified T : Any> EnhancedRandom.newList(size: Int, vararg excludeFields: String): List<T> =
+inline fun <reified T: Any> EnhancedRandom.newList(size: Int, vararg excludeFields: String): List<T> =
     objects(T::class.java, size, *excludeFields).toList()

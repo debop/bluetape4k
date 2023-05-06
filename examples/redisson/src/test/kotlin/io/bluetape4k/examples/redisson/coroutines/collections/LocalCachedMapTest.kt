@@ -3,8 +3,6 @@ package io.bluetape4k.examples.redisson.coroutines.collections
 import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
 import io.bluetape4k.logging.debug
-import java.time.Duration
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
@@ -18,6 +16,8 @@ import org.redisson.api.LocalCachedMapOptions
 import org.redisson.api.RLocalCachedMap
 import org.redisson.api.RMap
 import org.redisson.api.RedissonClient
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 /**
  * [RLocalCachedMap] 예제

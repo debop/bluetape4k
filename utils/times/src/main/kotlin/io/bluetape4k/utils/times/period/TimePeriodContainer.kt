@@ -58,7 +58,7 @@ open class TimePeriodContainer @JvmOverloads constructor(
 
     override fun add(element: ITimePeriod): Boolean = when (element) {
         is ITimePeriodContainer -> addAll(element)
-        else -> if (containsPeriod(element)) false else periods.add(element)
+        else                    -> if (containsPeriod(element)) false else periods.add(element)
     }
 
     override fun add(index: Int, element: ITimePeriod) {

@@ -1,8 +1,8 @@
 package io.bluetape4k.utils.times
 
+import org.apache.commons.lang3.time.DurationFormatUtils
 import java.time.Duration
 import java.time.temporal.Temporal
-import org.apache.commons.lang3.time.DurationFormatUtils
 
 
 operator fun Duration.unaryMinus(): Duration = this.negated()

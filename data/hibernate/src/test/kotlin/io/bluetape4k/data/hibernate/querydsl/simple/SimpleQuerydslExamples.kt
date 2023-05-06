@@ -14,9 +14,9 @@ import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class SimpleQuerydslExamples : AbstractHibernateTest() {
+class SimpleQuerydslExamples: AbstractHibernateTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @BeforeEach
     fun setup() {

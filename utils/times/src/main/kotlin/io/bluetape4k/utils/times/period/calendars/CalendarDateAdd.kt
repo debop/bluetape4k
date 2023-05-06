@@ -56,7 +56,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
 
         val (end, remaining) = when {
             offset.isNegative -> calculateEnd(start, offset.negated(), SeekDirection.BACKWARD, seekBoundary)
-            else -> calculateEnd(start, offset, SeekDirection.FORWARD, seekBoundary)
+            else              -> calculateEnd(start, offset, SeekDirection.FORWARD, seekBoundary)
         }
 
         log.trace { "added... endInclusive=$end, remaining=$remaining" }
@@ -73,7 +73,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
 
         val (endInclusive, remaining) = when {
             offset.isNegative -> calculateEnd(start, offset.negated(), SeekDirection.FORWARD, seekBoundary)
-            else -> calculateEnd(start, offset, SeekDirection.BACKWARD, seekBoundary)
+            else              -> calculateEnd(start, offset, SeekDirection.BACKWARD, seekBoundary)
         }
 
         log.trace { "subtract... endInclusive=$endInclusive, remaining=$remaining" }

@@ -8,9 +8,9 @@ import io.bluetape4k.io.feign.feignBuilder
 import io.bluetape4k.logging.KLogging
 import org.junit.jupiter.api.Assumptions
 
-class VertxClientTest : AbstractClientTest() {
+class VertxClientTest: AbstractClientTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     override fun newBuilder(): Feign.Builder {
         return feignBuilder {

@@ -58,7 +58,7 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         if (onVisitYears(years, context) && enterYears(years, context)) {
             val yearsToVisit = when {
                 isForward -> years.yearSequence()
-                else -> years.yearSequence().sortedByDescending { it.end }
+                else      -> years.yearSequence().sortedByDescending { it.end }
             }
             visitYears(yearsToVisit, period, context)
         }
@@ -70,7 +70,7 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
             if (canVisit) {
                 val monthsToVisit = when {
                     isForward -> year.monthSequence()
-                    else -> year.monthSequence().sortedByDescending { it.end }
+                    else      -> year.monthSequence().sortedByDescending { it.end }
                 }
                 visitMonths(monthsToVisit, period, context)
             }
@@ -83,7 +83,7 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
             if (canVisit) {
                 val daysToVisit = when {
                     isForward -> m.daySequence()
-                    else -> m.daySequence().sortedByDescending { it.end }
+                    else      -> m.daySequence().sortedByDescending { it.end }
                 }
                 visitDays(daysToVisit, period, context)
             }
@@ -96,7 +96,7 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
             if (canVisit) {
                 val hoursToVisit = when {
                     isForward -> day.hourSequence()
-                    else -> day.hourSequence().sortedByDescending { it.end }
+                    else      -> day.hourSequence().sortedByDescending { it.end }
                 }
                 visitHours(hoursToVisit, period, context)
             }
@@ -230,35 +230,37 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
             (filter.years.isEmpty || filter.years.contains(range.year))
 
     protected open fun isMatchingMonth(range: MonthRange, context: C): Boolean = when {
-        filter.years.notEmpty() && !filter.years.contains(range.year) -> false
+        filter.years.notEmpty() && !filter.years.contains(range.year)                      -> false
         filter.monthOfYears.notEmpty() && !filter.monthOfYears.contains(range.monthOfYear) -> false
-        else -> checkExcludePeriods(range)
+        else                                                                               -> checkExcludePeriods(range)
     }
 
     protected open fun isMatchingDay(range: DayRange, context: C): Boolean = when {
-        filter.years.notEmpty() && !filter.years.contains(range.year) -> false
+        filter.years.notEmpty() && !filter.years.contains(range.year)                      -> false
         filter.monthOfYears.notEmpty() && !filter.monthOfYears.contains(range.monthOfYear) -> false
-        filter.dayOfMonths.notEmpty() && !filter.dayOfMonths.contains(range.dayOfMonth) -> false
-        filter.dayOfWeeks.isNotEmpty() && !filter.dayOfWeeks.contains(range.dayOfWeek) -> false
-        else -> checkExcludePeriods(range)
+        filter.dayOfMonths.notEmpty() && !filter.dayOfMonths.contains(range.dayOfMonth)    -> false
+        filter.dayOfWeeks.isNotEmpty() && !filter.dayOfWeeks.contains(range.dayOfWeek)     -> false
+        else                                                                               -> checkExcludePeriods(range)
     }
 
     protected open fun isMatchingHour(range: HourRange, context: C): Boolean = when {
-        filter.years.notEmpty() && !filter.years.contains(range.year) -> false
-        filter.monthOfYears.notEmpty() && !filter.monthOfYears.contains(range.monthOfYear) -> false
-        filter.dayOfMonths.notEmpty() && !filter.dayOfMonths.contains(range.dayOfMonth) -> false
+        filter.years.notEmpty() && !filter.years.contains(range.year)                       -> false
+        filter.monthOfYears.notEmpty() && !filter.monthOfYears.contains(range.monthOfYear)  -> false
+        filter.dayOfMonths.notEmpty() && !filter.dayOfMonths.contains(range.dayOfMonth)     -> false
         filter.dayOfWeeks.isNotEmpty() && !filter.dayOfWeeks.contains(range.startDayOfWeek) -> false
-        filter.hourOfDays.notEmpty() && !filter.hourOfDays.contains(range.hourOfDay) -> false
-        else -> checkExcludePeriods(range)
+        filter.hourOfDays.notEmpty() && !filter.hourOfDays.contains(range.hourOfDay)        -> false
+        else                                                                                -> checkExcludePeriods(range)
     }
 
     protected open fun isMatchingMinute(range: MinuteRange, context: C): Boolean = when {
-        filter.years.notEmpty() && !filter.years.contains(range.year) -> false
-        filter.monthOfYears.notEmpty() && !filter.monthOfYears.contains(range.monthOfYear) -> false
-        filter.dayOfMonths.notEmpty() && !filter.dayOfMonths.contains(range.dayOfMonth) -> false
-        filter.dayOfWeeks.isNotEmpty() && !filter.dayOfWeeks.contains(range.startDayOfWeek) -> false
-        filter.hourOfDays.notEmpty() && !filter.hourOfDays.contains(range.hourOfDay) -> false
+        filter.years.notEmpty() && !filter.years.contains(range.year)                         -> false
+        filter.monthOfYears.notEmpty() && !filter.monthOfYears.contains(range.monthOfYear)    -> false
+        filter.dayOfMonths.notEmpty() && !filter.dayOfMonths.contains(range.dayOfMonth)       -> false
+        filter.dayOfWeeks.isNotEmpty() && !filter.dayOfWeeks.contains(range.startDayOfWeek)   -> false
+        filter.hourOfDays.notEmpty() && !filter.hourOfDays.contains(range.hourOfDay)          -> false
         filter.minuteOfHours.notEmpty() && !filter.minuteOfHours.contains(range.minuteOfHour) -> false
-        else -> checkExcludePeriods(range)
+        else                                                                                  -> checkExcludePeriods(
+            range
+        )
     }
 }

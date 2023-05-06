@@ -18,11 +18,11 @@ import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
+import org.testcontainers.containers.GenericContainer
+import org.testcontainers.utility.DockerImageName
 import java.io.IOException
 import java.net.InetSocketAddress
 import javax.script.ScriptException
-import org.testcontainers.containers.GenericContainer
-import org.testcontainers.utility.DockerImageName
 
 /**
  * Docker 를 이용하여 Cassandra 4.0+ Server를 실행합니다.
@@ -196,7 +196,7 @@ class Cassandra4Server private constructor(
         fun recreateKeyspace(keyspace: String) {
             if (keyspace.isNotBlank()) {
                 // 테스트 서버에 keyspace 가 존재하지 않을 수 있으므로, 새로 추가하도록 합니다.
-                log.info { "Recreate keyspace. $keyspace" }
+                log.info { "Recreate keyspace. keyspace=[$keyspace]" }
 
                 newCqlSessionBuilder().build().use { sysSession ->
                     dropKeyspace(sysSession, keyspace)
@@ -215,13 +215,13 @@ class Cassandra4Server private constructor(
                 .withSimpleStrategy(replicationFactor)
                 .build()
 
-            log.info { "Create keyspace. statement=$createKeyspaceStmt" }
+            log.info { "Create keyspace. statement=${createKeyspaceStmt.query}" }
             return session.execute(createKeyspaceStmt).wasApplied()
         }
 
         fun dropKeyspace(session: CqlSession, keyspace: String): Boolean {
             val dropKeyspaceStmt = SchemaBuilder.dropKeyspace(keyspace).ifExists().build()
-            log.info { "Drop keyspace if exists. statement=$dropKeyspaceStmt" }
+            log.info { "Drop keyspace if exists. statement=${dropKeyspaceStmt.query}" }
             return session.execute(dropKeyspaceStmt).wasApplied()
         }
     }

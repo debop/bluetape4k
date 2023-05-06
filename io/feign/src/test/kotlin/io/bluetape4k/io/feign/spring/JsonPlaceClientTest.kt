@@ -13,7 +13,7 @@ class JsonPlaceClientTest(
     @Autowired private val jsonPlaceClient: JsonPlaceClient,
 ) {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `context loading`() {

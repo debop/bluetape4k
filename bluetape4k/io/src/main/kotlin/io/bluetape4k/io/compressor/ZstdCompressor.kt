@@ -12,9 +12,9 @@ import io.bluetape4k.support.toInt
  *
  * 참고: [zstd-jni](https://github.com/luben/zstd-jni)
  */
-class ZstdCompressor private constructor(val level: Int) : AbstractCompressor() {
+class ZstdCompressor private constructor(val level: Int): AbstractCompressor() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val MAGIC_NUMBER_SIZE: Int = Integer.BYTES
         const val DEFAULT_LEVEL: Int = 3
 

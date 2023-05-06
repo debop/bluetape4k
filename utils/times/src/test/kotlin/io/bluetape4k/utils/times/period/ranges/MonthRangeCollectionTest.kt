@@ -6,10 +6,10 @@ import io.bluetape4k.utils.times.nowZonedDateTime
 import io.bluetape4k.utils.times.period.AbstractPeriodTest
 import io.bluetape4k.utils.times.startOfMonth
 import io.bluetape4k.utils.times.todayZonedDateTime
-import java.time.YearMonth
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.jupiter.api.Test
+import java.time.YearMonth
 
 
 class MonthRangeCollectionTest: AbstractPeriodTest() {

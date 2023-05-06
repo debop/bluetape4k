@@ -8,7 +8,7 @@ import kotlin.concurrent.thread
 
 class LocalTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `local value in thread local`() {

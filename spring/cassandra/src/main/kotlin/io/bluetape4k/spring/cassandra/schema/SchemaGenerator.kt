@@ -69,7 +69,7 @@ object SchemaGenerator: KLogging() {
                 .forEach { property: CassandraPersistentProperty ->
                     val propertyEntity = when {
                         property.isEmbedded -> EmbeddedEntityOperations(mappingContext).getEntity(property)
-                        else -> mappingContext.getRequiredPersistentEntity(property)
+                        else                -> mappingContext.getRequiredPersistentEntity(property)
                     }
                     log.debug { "property=$property, propertyEntity=$propertyEntity" }
                     potentiallyCreateUdtFor(operations, propertyEntity, schemaFactory)

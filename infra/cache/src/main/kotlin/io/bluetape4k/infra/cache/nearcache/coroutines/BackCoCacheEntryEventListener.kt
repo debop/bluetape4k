@@ -3,12 +3,12 @@ package io.bluetape4k.infra.cache.nearcache.coroutines
 import io.bluetape4k.infra.cache.jcache.coroutines.CoCache
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.coroutines.runBlocking
 import javax.cache.event.CacheEntryCreatedListener
 import javax.cache.event.CacheEntryEvent
 import javax.cache.event.CacheEntryExpiredListener
 import javax.cache.event.CacheEntryRemovedListener
 import javax.cache.event.CacheEntryUpdatedListener
-import kotlinx.coroutines.runBlocking
 
 class BackCoCacheEntryEventListener<K: Any, V: Any>(
     private val targetCache: CoCache<K, V>,

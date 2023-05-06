@@ -17,7 +17,7 @@ object CassandraAdmin: KLogging() {
     fun createKeyspace(
         session: CqlSession,
         keyspace: String = DEFAULT_KEYSPACE,
-        replicationFactor: Int = DEFAULT_REPLICATION_FACTOR
+        replicationFactor: Int = DEFAULT_REPLICATION_FACTOR,
     ): Boolean {
         keyspace.requireNotBlank("keySpace")
 

@@ -17,7 +17,7 @@ import javax.persistence.FetchType.*
 
 class ManyToManyTest(
     @Autowired private val accountRepo: BankAccountRepository,
-    @Autowired private val ownerRepo: AccountOwnerRepository
+    @Autowired private val ownerRepo: AccountOwnerRepository,
 ): AbstractHibernateTest() {
 
     companion object: KLogging()

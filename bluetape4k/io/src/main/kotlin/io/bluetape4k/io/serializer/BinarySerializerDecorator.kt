@@ -15,7 +15,7 @@ abstract class BinarySerializerDecorator(protected val serializer: BinarySeriali
 open class CompressableBinarySerializer(
     serializer: BinarySerializer,
     val compressor: Compressor,
-) : BinarySerializerDecorator(serializer) {
+): BinarySerializerDecorator(serializer) {
 
     override fun serialize(graph: Any?): ByteArray =
         graph?.run { compressor.compress(super.serialize(this)) } ?: emptyByteArray

@@ -55,7 +55,7 @@ import com.querydsl.core.types.dsl.TimeOperation
 import com.querydsl.core.types.dsl.TimePath
 import com.querydsl.core.types.dsl.TimeTemplate
 import java.sql.Time
-import java.util.Date
+import java.util.*
 
 
 fun currentDateExpr(): DateExpression<Date> = Expressions.currentDate()

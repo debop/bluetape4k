@@ -34,6 +34,7 @@ class RabbitMQServer private constructor(
         const val RABBITMQ_HTTP_PORT = 15672
         const val RABBITMQ_HTTPS_PORT = 15671
 
+        @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,
@@ -43,6 +44,7 @@ class RabbitMQServer private constructor(
             return RabbitMQServer(imageName, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             dockerImageName: DockerImageName,
             useDefaultPort: Boolean = false,

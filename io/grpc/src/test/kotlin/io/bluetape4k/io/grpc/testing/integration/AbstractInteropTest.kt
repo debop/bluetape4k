@@ -38,14 +38,6 @@ import io.grpc.internal.testing.TestClientStreamTracer
 import io.grpc.internal.testing.TestServerStreamTracer
 import io.grpc.internal.testing.TestStreamTracer
 import io.grpc.testing.TestUtils
-import java.io.IOException
-import java.io.InputStream
-import java.net.SocketAddress
-import java.util.concurrent.Executors
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
@@ -60,6 +52,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.rules.DisableOnDebug
 import org.junit.rules.TestRule
+import java.io.IOException
+import java.io.InputStream
+import java.net.SocketAddress
+import java.util.concurrent.Executors
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.test.assertTrue
 
 abstract class AbstractInteropTest {

@@ -21,7 +21,7 @@ interface ITimePeriod: ValueObject, Comparable<ITimePeriod> {
     val duration: Duration
         get() = when {
             hasPeriod -> Duration.between(start, end)
-            else -> EmptyDuration
+            else      -> EmptyDuration
         }
 
     val hasStart: Boolean

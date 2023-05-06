@@ -8,13 +8,13 @@ import io.bluetape4k.logging.trace
 import io.bluetape4k.logging.warn
 import io.vertx.core.http.HttpClient
 import io.vertx.kotlin.core.http.requestOptionsOf
-import java.io.IOException
-import java.time.Duration
-import java.util.concurrent.CompletableFuture
 import kotlinx.atomicfu.atomic
 import okhttp3.Call
 import okhttp3.Request
 import okio.Timeout
+import java.io.IOException
+import java.time.Duration
+import java.util.concurrent.CompletableFuture
 
 fun vertxCallFactoryOf(client: HttpClient = defaultVertxHttpClient): VertxCallFactory {
     return VertxCallFactory(client)

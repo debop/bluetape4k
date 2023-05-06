@@ -1,15 +1,15 @@
 package io.bluetape4k.infra.kafka
 
 import io.bluetape4k.support.asDoubleOrNull
-import java.util.Properties
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.common.serialization.Serializer
+import java.util.*
 
 fun <K, V> producerOf(
     configs: Map<String, Any?>,
     keySerializer: Serializer<K>? = null,
-    valueSerializer: Serializer<V>? = null
+    valueSerializer: Serializer<V>? = null,
 ): Producer<K, V> {
     return KafkaProducer(configs, keySerializer, valueSerializer)
 }
@@ -17,7 +17,7 @@ fun <K, V> producerOf(
 fun <K, V> producerOf(
     props: Properties,
     keySerializer: Serializer<K>? = null,
-    valueSerializer: Serializer<V>? = null
+    valueSerializer: Serializer<V>? = null,
 ): Producer<K, V> {
     return KafkaProducer(props, keySerializer, valueSerializer)
 }

@@ -8,11 +8,11 @@ import io.bluetape4k.infra.otel.trace.loggingSpanExporterOf
 import io.bluetape4k.infra.otel.trace.sdkTracerProvider
 import io.bluetape4k.infra.otel.trace.simpleSpanProcessorOf
 import io.opentelemetry.api.OpenTelemetry
-import java.time.Duration
 import org.springframework.boot.WebApplicationType
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import java.time.Duration
 
 @SpringBootApplication
 class OtelSpringBootApp {

@@ -50,7 +50,7 @@ fun retrofitBuilderOf(
 fun retrofit(
     baseUrl: String = "",
     converterFactory: retrofit2.Converter.Factory = defaultScalarsConverterFactory,
-    initialize: Retrofit.Builder.() -> Unit
+    initialize: Retrofit.Builder.() -> Unit,
 ): Retrofit {
     return retrofitBuilderOf(baseUrl, converterFactory).apply(initialize).build()
 }
@@ -61,7 +61,7 @@ fun retrofitOf(
     converterFactory: retrofit2.Converter.Factory = defaultScalarsConverterFactory,
     vararg callAdapterFactories: retrofit2.CallAdapter.Factory = arrayOf(ResultCallAdapterFactory()),
 ): Retrofit {
-    log.debug { "Retrofit2 baseUrl=$baseUrl" }
+    log.debug { "Create Retrofit. baseUrl=$baseUrl, callFactory=${callFactory.javaClass.simpleName}" }
     return retrofit(baseUrl, converterFactory) {
         callFactory(callFactory)
 
@@ -89,8 +89,8 @@ internal fun isPresentRetrofitAdapterRxJava3(): Boolean =
 internal fun isPresentRetrofitAdapterReactor(): Boolean =
     classIsPresent("com.jakewharton.retrofit2.adapter.reactor.ReactorCallAdapterFactory")
 
-fun <T : Any> Retrofit.service(serviceClass: Class<T>): T = create(serviceClass)
+fun <T: Any> Retrofit.service(serviceClass: Class<T>): T = create(serviceClass)
 
-fun <T : Any> Retrofit.service(serviceClass: KClass<T>): T = create(serviceClass.java)
+fun <T: Any> Retrofit.service(serviceClass: KClass<T>): T = create(serviceClass.java)
 
-inline fun <reified T : Any> Retrofit.service(): T = create(T::class.java)
+inline fun <reified T: Any> Retrofit.service(): T = create(T::class.java)

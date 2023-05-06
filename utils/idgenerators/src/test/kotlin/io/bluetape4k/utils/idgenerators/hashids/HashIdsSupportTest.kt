@@ -6,15 +6,15 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.idgenerators.snowflake.DefaultSnowflake
 import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuidGenerator
-import java.util.UUID
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class HashIdsSupportTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         const val ITEM_SIZE = 1000
     }
 

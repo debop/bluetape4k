@@ -1,7 +1,7 @@
 package io.bluetape4k.spring.cassandra.domain.model
 
-import java.io.Serializable
 import org.springframework.data.cassandra.core.mapping.UserDefinedType
+import java.io.Serializable
 
 /**
  * [UserDefinedType] 예제 (JPA Embeddable 에 해당)

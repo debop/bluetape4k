@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test
 @RandomizedTest
 class StringSupportTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 10
     }
 

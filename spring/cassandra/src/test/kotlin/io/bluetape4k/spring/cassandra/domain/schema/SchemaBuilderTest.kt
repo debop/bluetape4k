@@ -11,7 +11,7 @@ import org.springframework.data.cassandra.core.CassandraOperations
 
 @SpringBootTest(classes = [SchemaBuilderTestConfiguration::class])
 class SchemaBuilderTest(
-    @Autowired private val operations: CassandraOperations
+    @Autowired private val operations: CassandraOperations,
 ): AbstractCassandraTest() {
 
     companion object: KLogging()

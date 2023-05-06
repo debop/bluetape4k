@@ -17,9 +17,9 @@ import io.bluetape4k.io.avro.message.examples.v1.VersionedItem as ItemV1
 import io.bluetape4k.io.avro.message.examples.v2.VersionedItem as ItemV2
 
 @RandomizedTest
-class DefaultAvroSpecificRecordSerializerTest : AbstractAvroTest() {
+class DefaultAvroSpecificRecordSerializerTest: AbstractAvroTest() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 10
     }
 
@@ -29,7 +29,7 @@ class DefaultAvroSpecificRecordSerializerTest : AbstractAvroTest() {
         DefaultAvroSpecificRecordSerializer(CodecFactory.zstandardCodec(3)),
     )
 
-    private inline fun <reified T : SpecificRecord> verifySerialization(avroObject: T) {
+    private inline fun <reified T: SpecificRecord> verifySerialization(avroObject: T) {
         serializers.forEach { serializer ->
             val bytes = serializer.serialize(avroObject)!!
             bytes.shouldNotBeEmpty()

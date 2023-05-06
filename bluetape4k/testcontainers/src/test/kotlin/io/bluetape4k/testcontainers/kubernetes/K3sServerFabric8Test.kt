@@ -10,13 +10,13 @@ import io.fabric8.kubernetes.api.model.PodSpecBuilder
 import io.fabric8.kubernetes.api.model.ProbeBuilder
 import io.fabric8.kubernetes.client.Config
 import io.fabric8.kubernetes.client.DefaultKubernetesClient
-import java.util.concurrent.TimeUnit
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
+import java.util.concurrent.TimeUnit
 
 @Disabled("Apple Silicon 에서는 K3s를 사용할 수 없다")
 @Execution(ExecutionMode.SAME_THREAD)

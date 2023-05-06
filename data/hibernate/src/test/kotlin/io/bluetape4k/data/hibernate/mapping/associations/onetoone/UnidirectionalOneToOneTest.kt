@@ -21,7 +21,7 @@ import javax.persistence.PrimaryKeyJoinColumn
 
 class UnidirectionalOneToOneTest(
     @Autowired private val carRepo: CarRepository,
-    @Autowired private val wheelRepo: WheelRepository
+    @Autowired private val wheelRepo: WheelRepository,
 ): AbstractHibernateTest() {
 
     @Test

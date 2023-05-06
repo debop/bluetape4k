@@ -1,6 +1,6 @@
 package io.bluetape4k.data.hibernate.converters
 
-import java.util.Locale
+import java.util.*
 import javax.persistence.AttributeConverter
 
 class LocaleAsStringConverter: AttributeConverter<Locale?, String?> {

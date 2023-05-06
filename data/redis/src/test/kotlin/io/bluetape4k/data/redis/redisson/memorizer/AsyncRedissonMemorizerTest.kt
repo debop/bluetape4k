@@ -3,8 +3,6 @@ package io.bluetape4k.data.redis.redisson.memorizer
 import io.bluetape4k.data.redis.redisson.AbstractRedissonTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import java.time.Duration
-import java.util.concurrent.CompletableFuture
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertTimeout
@@ -12,6 +10,8 @@ import org.redisson.api.RMap
 import org.redisson.api.RedissonClient
 import org.redisson.client.codec.IntegerCodec
 import org.redisson.client.codec.LongCodec
+import java.time.Duration
+import java.util.concurrent.CompletableFuture
 import kotlin.system.measureTimeMillis
 
 class AsyncRedissonMemorizerTest: AbstractRedissonTest() {
@@ -70,7 +70,7 @@ abstract class AsyncFactorialProvider {
         log.trace { "factorial($x)" }
         return when {
             x <= 1L -> CompletableFuture.completedFuture(1L)
-            else -> cachedCalc(x - 1).thenApplyAsync { x * it }
+            else    -> cachedCalc(x - 1).thenApplyAsync { x * it }
         }
     }
 }
@@ -96,7 +96,7 @@ abstract class AsyncFibonacciProvider {
         return when {
             x <= 0L -> CompletableFuture.completedFuture(0L)
             x <= 2L -> CompletableFuture.completedFuture(1L)
-            else -> cachedCalc(x - 1).thenComposeAsync { x1 ->
+            else    -> cachedCalc(x - 1).thenComposeAsync { x1 ->
                 cachedCalc(x - 2).thenApplyAsync { x2 -> x1 + x2 }
             }
         }

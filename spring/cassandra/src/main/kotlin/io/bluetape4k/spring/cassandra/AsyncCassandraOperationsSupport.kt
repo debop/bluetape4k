@@ -24,7 +24,7 @@ suspend inline fun <reified T: Any> AsyncCassandraOperations.selectSuspending(st
 
 suspend inline fun <reified T: Any> AsyncCassandraOperations.selectSuspending(
     statement: Statement<*>,
-    crossinline consumer: (T) -> Unit
+    crossinline consumer: (T) -> Unit,
 ) {
     select(statement, { consumer(it) }, T::class.java).await()
 }
@@ -35,14 +35,14 @@ suspend inline fun <reified T: Any> AsyncCassandraOperations.selectSuspending(cq
 
 suspend inline fun <reified T: Any> AsyncCassandraOperations.selectSuspending(
     cql: String,
-    crossinline consumer: (T) -> Unit
+    crossinline consumer: (T) -> Unit,
 ) {
     selectSuspending(statementOf(cql), consumer)
 }
 
 suspend inline fun <reified T: Any> AsyncCassandraOperations.selectSuspending(
     query: Query,
-    crossinline consumer: (T) -> Unit
+    crossinline consumer: (T) -> Unit,
 ) {
     select(query, { consumer(it) }, T::class.java).await()
 }
@@ -102,7 +102,7 @@ suspend fun <T: Any> AsyncCassandraOperations.insertSuspending(entity: T): T? =
 
 suspend fun <T: Any> AsyncCassandraOperations.insertSuspending(
     entity: T,
-    options: InsertOptions
+    options: InsertOptions,
 ): EntityWriteResult<T> =
     insert(entity, options).await()
 
@@ -111,7 +111,7 @@ suspend fun <T: Any> AsyncCassandraOperations.updateSuspending(entity: T): T? =
 
 suspend fun <T: Any> AsyncCassandraOperations.updateSuspending(
     entity: T,
-    options: UpdateOptions
+    options: UpdateOptions,
 ): EntityWriteResult<T> =
     update(entity, options).await()
 

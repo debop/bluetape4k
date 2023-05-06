@@ -7,14 +7,12 @@ import java.nio.ByteBuffer
 
 /**
  * [ByteBuffer]를 저장소로 사용하는  [InputStream] 구현체입니다.
- *
- * @author debop
  */
 open class ByteBufferInputStream private constructor(
     private val buffer: ByteBuffer,
-) : InputStream() {
+): InputStream() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         @JvmStatic
         operator fun invoke(bufferSize: Int = DEFAULT_BUFFER_SIZE): ByteBufferInputStream {
             return ByteBufferInputStream(ByteBuffer.allocate(bufferSize))

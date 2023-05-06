@@ -4,11 +4,11 @@ import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.time.LocalDate
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.RepeatedTest
+import java.time.LocalDate
 
 class NaiveBayesClassifierEnglishTest: AbstractNaiveBayesClassifierTest() {
 

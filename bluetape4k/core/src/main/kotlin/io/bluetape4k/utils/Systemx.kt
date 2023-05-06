@@ -1,6 +1,6 @@
 package io.bluetape4k.utils
 
-import java.util.Properties
+import java.util.*
 
 /**
  * System Property 를 제공해주는 Object
@@ -143,8 +143,8 @@ object Systemx {
     @JvmStatic
     val isUnix: Boolean by lazy {
         OSName?.contains("nix") ?: false ||
-        OSName?.contains("nux") ?: false ||
-        OSName?.contains("aix") ?: false
+            OSName?.contains("nux") ?: false ||
+            OSName?.contains("aix") ?: false
     }
 
 }

@@ -7,13 +7,21 @@ import io.bluetape4k.vertx.sqlclient.AbstractVertxSqlClientTest
 import io.bluetape4k.vertx.sqlclient.mybatis.renderForVertx
 import io.bluetape4k.vertx.sqlclient.mybatis.select
 import io.bluetape4k.vertx.sqlclient.mybatis.selectList
-import io.bluetape4k.vertx.sqlclient.schema.*
+import io.bluetape4k.vertx.sqlclient.schema.JoinSchema
 import io.bluetape4k.vertx.sqlclient.schema.JoinSchema.itemMaster
 import io.bluetape4k.vertx.sqlclient.schema.JoinSchema.orderDetail
 import io.bluetape4k.vertx.sqlclient.schema.JoinSchema.orderLine
 import io.bluetape4k.vertx.sqlclient.schema.JoinSchema.orderMaster
 import io.bluetape4k.vertx.sqlclient.schema.JoinSchema.user
+import io.bluetape4k.vertx.sqlclient.schema.OrderDetail
+import io.bluetape4k.vertx.sqlclient.schema.OrderLineRowMapper
+import io.bluetape4k.vertx.sqlclient.schema.OrderMaster
+import io.bluetape4k.vertx.sqlclient.schema.OrderRecord
+import io.bluetape4k.vertx.sqlclient.schema.OrderRecordRowMapper
+import io.bluetape4k.vertx.sqlclient.schema.PersonMapper
 import io.bluetape4k.vertx.sqlclient.schema.PersonSchema.person
+import io.bluetape4k.vertx.sqlclient.schema.User
+import io.bluetape4k.vertx.sqlclient.schema.UserRowMapper
 import io.bluetape4k.vertx.sqlclient.tests.testWithRollback
 import io.vertx.core.Vertx
 import io.vertx.junit5.VertxTestContext
@@ -30,9 +38,9 @@ import org.mybatis.dynamic.sql.util.kotlin.elements.max
 import org.mybatis.dynamic.sql.util.kotlin.model.select
 import kotlin.test.assertFailsWith
 
-abstract class AbstractJoinTest : AbstractVertxSqlClientTest() {
+abstract class AbstractJoinTest: AbstractVertxSqlClientTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     override val schemaFileNames: List<String> = listOf("person.sql", "generatedAlways.sql", "joins.sql")
 
@@ -674,11 +682,11 @@ abstract class AbstractJoinTest : AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 selectProvider.selectStatement shouldBeEqualTo
-                        "select p1.* " +
-                        "from Person p1 " +
-                        "join (select p2.id from Person p2 where p2.address_id = #{p1} order by id) p2 " +
-                        "on p1.id = p2.id " +
-                        "where p1.id < #{p2}"
+                    "select p1.* " +
+                    "from Person p1 " +
+                    "join (select p2.id from Person p2 where p2.address_id = #{p1} order by id) p2 " +
+                    "on p1.id = p2.id " +
+                    "where p1.id < #{p2}"
 
                 val persons = conn.selectList(selectProvider, PersonMapper)
                 persons.forEach { log.debug { it } }

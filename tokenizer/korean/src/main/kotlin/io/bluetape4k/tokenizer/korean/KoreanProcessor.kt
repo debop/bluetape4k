@@ -172,7 +172,7 @@ object KoreanProcessor {
 
     private inline fun withBlockwordDictionary(severity: Severity, action: CharArraySet.() -> Unit) {
         when (severity) {
-            LOW -> {
+            LOW  -> {
                 KoreanDictionaryProvider.blockWords[LOW]?.action()
                 KoreanDictionaryProvider.blockWords[MIDDLE]?.action()
                 KoreanDictionaryProvider.blockWords[HIGH]?.action()

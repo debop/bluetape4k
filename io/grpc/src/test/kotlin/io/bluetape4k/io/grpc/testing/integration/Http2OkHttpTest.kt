@@ -14,12 +14,12 @@ import io.netty.handler.ssl.SslContext
 import io.netty.handler.ssl.SslContextBuilder
 import io.netty.handler.ssl.SslProvider
 import io.netty.handler.ssl.SupportedCipherSuiteFilter
-import java.io.IOException
-import java.net.InetSocketAddress
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.BeforeClass
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import java.io.IOException
+import java.net.InetSocketAddress
 
 @Disabled("보안관련 설정 후에 테스트해야 합니다")
 class Http2OkHttpTest: AbstractInteropTest() {

@@ -10,7 +10,7 @@ fun TypedQuery<java.lang.Long>.longList(): List<Long> = resultList.map { it.toLo
 fun TypedQuery<java.lang.Long>.longStream(): Stream<Long> = resultStream.map { it.toLong() }
 fun TypedQuery<java.lang.Long>.longResult(): Long? = findOneOrNull()?.toLong()
 
-fun <T : Any> TypedQuery<T>.findOneOrNull(): T? = try {
+fun <T: Any> TypedQuery<T>.findOneOrNull(): T? = try {
     singleResult
 } catch (e: NoResultException) {
     null

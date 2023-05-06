@@ -37,12 +37,12 @@ class MutableTemporalInterval<T>(
 
     override fun withStart(newStart: T): MutableTemporalInterval<T> = when {
         newStart < endExclusive -> mutableTemporalIntervalOf(newStart, this.endExclusive, zoneId)
-        else -> mutableTemporalIntervalOf(endExclusive, newStart, zoneId)
+        else                    -> mutableTemporalIntervalOf(endExclusive, newStart, zoneId)
     }
 
     override fun withEnd(newEnd: T): ReadableTemporalInterval<T> = when {
         newEnd > startInclusive -> mutableTemporalIntervalOf(this.startInclusive, newEnd, zoneId)
-        else -> mutableTemporalIntervalOf(newEnd, this.startInclusive, zoneId)
+        else                    -> mutableTemporalIntervalOf(newEnd, this.startInclusive, zoneId)
     }
 
 }

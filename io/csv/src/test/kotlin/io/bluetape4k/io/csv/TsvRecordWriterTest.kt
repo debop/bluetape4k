@@ -2,9 +2,9 @@ package io.bluetape4k.io.csv
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import java.io.StringWriter
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Test
+import java.io.StringWriter
 
 class TsvRecordWriterTest {
 

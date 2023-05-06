@@ -1,11 +1,11 @@
 package io.bluetape4k.io.csv.coroutines
 
 import com.univocity.parsers.common.record.Record
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import java.io.Closeable
 import java.io.InputStream
 import java.nio.charset.Charset
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 
 /**
  * Coroutines 환경하에서 CSV/TSV Record를 읽는 Reader입니다.

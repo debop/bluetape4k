@@ -10,9 +10,9 @@ import io.bluetape4k.io.feign.codec.JacksonEncoder2
 import io.bluetape4k.io.feign.coroutines.coroutineFeignBuilder
 import io.bluetape4k.logging.KLogging
 
-class ApacheHc5JsonPlaceHolderCoroutineTest : AbstractJsonPlaceHolderCoroutineTest() {
+class ApacheHc5JsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderCoroutineTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     override fun newBuilder(): CoroutineFeign.CoroutineBuilder<*> {
         return coroutineFeignBuilder {

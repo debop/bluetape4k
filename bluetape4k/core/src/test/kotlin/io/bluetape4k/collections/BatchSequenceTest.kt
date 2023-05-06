@@ -17,7 +17,7 @@ import kotlin.test.assertFailsWith
 @Suppress("DEPRECATION")
 class BatchSequenceTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `batch sequence with batch size 2`() {

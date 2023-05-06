@@ -73,7 +73,7 @@ open class TimeBlock(
         _duration = newDuration
         end = when (_duration) {
             MaxDuration -> MaxPeriodTime
-            else -> start + _duration
+            else        -> start + _duration
         }
     }
 
@@ -84,7 +84,7 @@ open class TimeBlock(
         _duration = newDuration
         start = when (_duration) {
             MaxDuration -> MinPeriodTime
-            else -> end - _duration
+            else        -> end - _duration
         }
     }
 

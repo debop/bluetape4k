@@ -45,7 +45,7 @@ object CoDecorators {
      * @param T return type
      * @param supplier Suspendable supplier
      */
-    fun <T : Any> ofSupplier(supplier: suspend () -> T): io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction<T> =
+    fun <T: Any> ofSupplier(supplier: suspend () -> T): io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction<T> =
         io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction(supplier)
 
     /**
@@ -54,12 +54,12 @@ object CoDecorators {
      * @param T input type
      * @param consumer Suspendable consumer
      */
-    fun <T : Any> ofConsumer(consumer: suspend (T) -> Unit): (T) -> io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction<Unit> =
+    fun <T: Any> ofConsumer(consumer: suspend (T) -> Unit): (T) -> io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction<Unit> =
         { input: T ->
             io.bluetape4k.infra.resilience4j.CoDecorators.ofRunnable { consumer(input) }
         }
 
-    fun <T : Any, R : Any> ofFunction(function: suspend (T) -> R): (T) -> io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction<R> =
+    fun <T: Any, R: Any> ofFunction(function: suspend (T) -> R): (T) -> io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction<R> =
         { input: T ->
             io.bluetape4k.infra.resilience4j.CoDecorators.ofSupplier { function(input) }
         }
@@ -71,7 +71,7 @@ object CoDecorators {
      * @param R return type
      * @param function Suspendable function
      */
-    fun <T : Any, R : Any> ofFunction1(function: suspend (T) -> R) =
+    fun <T: Any, R: Any> ofFunction1(function: suspend (T) -> R) =
         CoDecoratorForFunction1(function)
 
     /**
@@ -82,7 +82,7 @@ object CoDecorators {
      * @param R return type
      * @param function Suspendable function
      */
-    fun <T : Any, U : Any, R : Any> ofFunction2(function: suspend (T, U) -> R) =
+    fun <T: Any, U: Any, R: Any> ofFunction2(function: suspend (T, U) -> R) =
         CoDecoratorForFunction2(function)
 
     /**
@@ -92,7 +92,7 @@ object CoDecorators {
      * @param U second input type
      * @param consumer Suspendable bi consumer
      */
-    fun <T : Any, U : Any> ofBiConsumer(consumer: suspend (T, U) -> Unit) =
+    fun <T: Any, U: Any> ofBiConsumer(consumer: suspend (T, U) -> Unit) =
         CoDecoratorForFunction2(consumer)
 
 
@@ -125,7 +125,7 @@ object CoDecorators {
         suspend fun invoke(): T = supplier()
     }
 
-    class CoDecoratorForFunction1<T : Any, R : Any>(private var func: suspend (T) -> R) {
+    class CoDecoratorForFunction1<T: Any, R: Any>(private var func: suspend (T) -> R) {
 
         fun withCircuitBreaker(circuitBreaker: CircuitBreaker) = apply {
             func = circuitBreaker.decorateSuspendFunction1(func)
@@ -163,7 +163,7 @@ object CoDecorators {
         suspend fun invoke(input: T): R = func(input)
     }
 
-    class CoDecoratorForFunction2<T : Any, U : Any, R : Any>(private var func: suspend (T, U) -> R) {
+    class CoDecoratorForFunction2<T: Any, U: Any, R: Any>(private var func: suspend (T, U) -> R) {
 
         fun withCircuitBreaker(circuitBreaker: CircuitBreaker) = apply {
             func = circuitBreaker.decorateSuspendBiFunction(func)

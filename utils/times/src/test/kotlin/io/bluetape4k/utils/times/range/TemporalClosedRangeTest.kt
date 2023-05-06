@@ -11,6 +11,13 @@ import io.bluetape4k.utils.times.range.coroutines.chunkedFlowHours
 import io.bluetape4k.utils.times.range.coroutines.windowedFlowHours
 import io.bluetape4k.utils.times.seconds
 import io.bluetape4k.utils.times.startOfHour
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runTest
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeTrue
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -20,13 +27,6 @@ import java.time.OffsetTime
 import java.time.ZonedDateTime
 import java.time.temporal.Temporal
 import java.time.temporal.TemporalAmount
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.runTest
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeTrue
-import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
 abstract class TemporalClosedRangeTest<T> where T: Temporal, T: Comparable<T> {

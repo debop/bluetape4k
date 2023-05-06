@@ -3,8 +3,6 @@ package io.bluetape4k.examples.redisson.coroutines.collections
 import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
 import io.bluetape4k.logging.KLogging
-import java.time.Duration
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
@@ -15,6 +13,8 @@ import org.amshove.kluent.shouldBeInRange
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import org.redisson.api.RBucket
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 /**
  * [RBucket] 예제

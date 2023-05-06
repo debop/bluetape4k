@@ -1,12 +1,12 @@
 package io.bluetape4k.junit5.utils
 
-import java.util.concurrent.CopyOnWriteArrayList
 import org.junit.platform.engine.EngineExecutionListener
 import org.junit.platform.engine.TestDescriptor
 import org.junit.platform.engine.TestExecutionResult
 import org.junit.platform.engine.reporting.ReportEntry
+import java.util.concurrent.CopyOnWriteArrayList
 
-class RecordingExecutionListener : EngineExecutionListener {
+class RecordingExecutionListener: EngineExecutionListener {
 
     private val events = CopyOnWriteArrayList<ExecutionEvent>()
 

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.TestInstance
 @FakeValueTest
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class FakeValueExtensionFieldTest {
-    companion object : KLogging() {
+    companion object: KLogging() {
         const val TEST_COUNT = 10
     }
 

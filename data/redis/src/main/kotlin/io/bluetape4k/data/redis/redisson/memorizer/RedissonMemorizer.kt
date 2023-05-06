@@ -37,7 +37,7 @@ fun <T: Any, R: Any> ((T) -> R).memorizer(map: RMap<T, R>): RedissonMemorizer<T,
  */
 class RedissonMemorizer<T: Any, R: Any>(
     val map: RMap<T, R>,
-    val evaluator: (T) -> R
+    val evaluator: (T) -> R,
 ): Memorizer<T, R> {
 
     companion object: KLogging()

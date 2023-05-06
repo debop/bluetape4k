@@ -27,7 +27,7 @@ interface BinarySerializer {
      * @param bytes 직렬화된 데이터
      * @return 역직렬화한 객체
      */
-    fun <T : Any> deserialize(bytes: ByteArray?): T?
+    fun <T: Any> deserialize(bytes: ByteArray?): T?
 
     /**
      * 객체를 Binary 방식으로 직렬화를 하여 [ByteBuffer]로 반환합니다.
@@ -45,19 +45,19 @@ interface BinarySerializer {
      * @param bytes 직렬화된 데이터
      * @return 역직렬화한 객체
      */
-    fun <T : Any> deserialize(buffer: ByteBuffer): T? =
+    fun <T: Any> deserialize(buffer: ByteBuffer): T? =
         deserialize(buffer.getBytes())
 }
 
 /**
  * [BinarySerializer]의 추상화 클래스
  */
-abstract class AbstractBinarySerializer : BinarySerializer {
+abstract class AbstractBinarySerializer: BinarySerializer {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     protected abstract fun doSerialize(graph: Any): ByteArray
-    protected abstract fun <T : Any> doDeserialize(bytes: ByteArray): T?
+    protected abstract fun <T: Any> doDeserialize(bytes: ByteArray): T?
 
     /**
      * 객체를 Binary 방식으로 직렬화합니다.
@@ -81,7 +81,7 @@ abstract class AbstractBinarySerializer : BinarySerializer {
      * @param bytes 직렬화된 데이터
      * @return 역직렬화한 객체
      */
-    override fun <T : Any> deserialize(bytes: ByteArray?): T? {
+    override fun <T: Any> deserialize(bytes: ByteArray?): T? {
         if (bytes.isNullOrEmpty()) {
             return null
         }

@@ -4,7 +4,6 @@ import io.bluetake4k.data.jdbc.sql.extract
 import io.bluetake4k.data.jdbc.sql.runQuery
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import javax.sql.DataSource
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
+import javax.sql.DataSource
 
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [JdbcConfiguration::class])

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
-import java.util.UUID
+import java.util.*
 
 class JsonUuidModule: SimpleModule() {
 

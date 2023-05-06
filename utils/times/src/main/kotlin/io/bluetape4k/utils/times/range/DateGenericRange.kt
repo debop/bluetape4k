@@ -2,7 +2,7 @@ package io.bluetape4k.utils.times.range
 
 import io.bluetape4k.logging.KLogging
 import java.time.Duration
-import java.util.Date
+import java.util.*
 
 /**
  * A range of [Date]

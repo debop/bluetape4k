@@ -1,14 +1,14 @@
 package io.bluetape4k.support
 
 import io.bluetape4k.logging.KLogging
-import java.math.BigDecimal
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
 
 class BigDecimalSupportTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `compare BigDecimal and Number`() {

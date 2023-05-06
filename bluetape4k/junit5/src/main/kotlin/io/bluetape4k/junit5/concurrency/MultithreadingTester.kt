@@ -45,7 +45,7 @@ class MultithreadingTester {
         private fun convertToRunnableAssert(runnable: () -> Unit): RunnableAssert {
             return when (runnable) {
                 is RunnableAssert -> runnable
-                else -> object: RunnableAssert(runnable.toString()) {
+                else              -> object: RunnableAssert(runnable.toString()) {
                     override fun run() {
                         runnable.invoke()
                     }

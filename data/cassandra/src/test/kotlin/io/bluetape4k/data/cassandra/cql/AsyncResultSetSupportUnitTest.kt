@@ -8,13 +8,13 @@ import io.bluetape4k.logging.KLogging
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import java.util.concurrent.CompletableFuture
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CompletableFuture
 import kotlin.test.assertFailsWith
 
 class AsyncResultSetSupportUnitTest: AbstractCassandraTest() {

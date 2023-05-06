@@ -3,7 +3,7 @@ package io.bluetape4k.utils
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import java.io.Serializable
-import java.util.UUID
+import java.util.*
 
 /**
  * Thread context 별로 Local storage를 제공하는 object 입니다.
@@ -11,10 +11,10 @@ import java.util.UUID
  * @see ThreadLocal
  */
 @Suppress("UNCHECKED_CAST")
-object Local : KLogging() {
+object Local: KLogging() {
 
     private val threadLocal: ThreadLocal<HashMap<Any, Any?>> by lazy {
-        object : ThreadLocal<HashMap<Any, Any?>>() {
+        object: ThreadLocal<HashMap<Any, Any?>>() {
             override fun initialValue(): HashMap<Any, Any?> {
                 return HashMap()
             }
@@ -29,9 +29,9 @@ object Local : KLogging() {
         threadLocal.set(saved)
     }
 
-    operator fun <T : Any> get(key: Any): T? = storage[key] as? T
+    operator fun <T: Any> get(key: Any): T? = storage[key] as? T
 
-    operator fun <T : Any> set(key: Any, value: T?) {
+    operator fun <T: Any> set(key: Any, value: T?) {
         when (value) {
             null -> storage.remove(key)
             else -> storage[key] = value
@@ -43,16 +43,16 @@ object Local : KLogging() {
         storage.clear()
     }
 
-    fun <T : Any> getOrPut(key: Any, defaultValue: () -> T?): T? {
+    fun <T: Any> getOrPut(key: Any, defaultValue: () -> T?): T? {
         return storage.getOrPut(key, defaultValue) as? T
     }
 
-    fun <T : Any> remove(key: Any): T? {
+    fun <T: Any> remove(key: Any): T? {
         return storage.remove(key) as? T
     }
 }
 
-internal class LocalStorage<T : Any> : Serializable {
+internal class LocalStorage<T: Any>: Serializable {
 
     private val key: UUID = UUID.randomUUID()
 

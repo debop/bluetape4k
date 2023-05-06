@@ -8,9 +8,7 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoField
-import java.util.Calendar
-import java.util.Date
-import java.util.TimeZone
+import java.util.*
 
 
 /**
@@ -130,8 +128,8 @@ fun Instant.with(
 infix fun Instant?.min(that: Instant?): Instant? = when {
     this == null -> that
     that == null -> this
-    this > that -> that
-    else -> this
+    this > that  -> that
+    else         -> this
 }
 
 /**
@@ -144,6 +142,6 @@ infix fun Instant?.min(that: Instant?): Instant? = when {
 infix fun Instant?.max(that: Instant?): Instant? = when {
     this == null -> that
     that == null -> this
-    this < that -> that
-    else -> this
+    this < that  -> that
+    else         -> this
 }

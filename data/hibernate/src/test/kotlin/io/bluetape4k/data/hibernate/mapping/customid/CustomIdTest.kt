@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 
 class CustomIdTest(
-    @Autowired private val repository: CustomIdRepository
+    @Autowired private val repository: CustomIdRepository,
 ): AbstractHibernateTest() {
 
     private fun newEntity(): CustomIdEntity {

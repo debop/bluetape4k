@@ -6,19 +6,19 @@ import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.RepeatedTest
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.StringReader
 import java.io.StringWriter
 import java.nio.ByteBuffer
 import java.nio.channels.Channels
-import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.RepeatedTest
 
 @RandomizedTest
 class InputStreamExtensionsTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 3
         private fun randomString() = Fakers.randomString(1024, 8192)
     }

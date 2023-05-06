@@ -8,7 +8,7 @@ import org.junit.jupiter.api.TestInstance
 @StopwatchTest
 class StopWatchExtensionTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `테스트 후 실행시간을 로그애 씁니다`() {

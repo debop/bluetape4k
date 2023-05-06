@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
-class ByteBufByteArrayTest : AbstractNettyTest() {
+class ByteBufByteArrayTest: AbstractNettyTest() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val ITEM_SIZE = 256
         private const val LIST_SIZE = 20
     }

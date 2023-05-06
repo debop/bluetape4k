@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 
 class SystemxTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `자바 버전 조회`() {

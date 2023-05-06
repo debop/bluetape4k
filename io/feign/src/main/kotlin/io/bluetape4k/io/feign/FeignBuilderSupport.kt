@@ -84,5 +84,5 @@ fun feingBuilderOf(
  */
 inline fun <reified T: Any> Feign.Builder.client(baseUrl: String? = null): T = when {
     baseUrl.isNullOrBlank() -> target(Target.EmptyTarget.create(T::class.java))
-    else -> target(T::class.java, baseUrl)
+    else                    -> target(T::class.java, baseUrl)
 }

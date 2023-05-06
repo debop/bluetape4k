@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 class KoreanSupportTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `초성 검출`() {

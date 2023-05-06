@@ -9,9 +9,9 @@ import io.bluetape4k.io.feign.coroutines.coroutineFeignBuilder
 import io.bluetape4k.logging.KLogging
 import org.apache.hc.client5.http.protocol.HttpClientContext
 
-class ApacheHc5CoroutineClientTest : AbstractCoroutineClientTest() {
+class ApacheHc5CoroutineClientTest: AbstractCoroutineClientTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     override fun newCoroutineBuilder(): CoroutineFeign.CoroutineBuilder<HttpClientContext> {
         return coroutineFeignBuilder {

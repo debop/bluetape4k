@@ -2,21 +2,21 @@ package io.bluetape4k.junit5.faker
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import java.util.stream.Stream
 import net.datafaker.Faker
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import org.junit.jupiter.api.extension.TestInstancePostProcessor
+import java.util.stream.Stream
 
 /**
  * [Faker]를 이용해 [FakeValue]를 제공하는 테스트를 수행하도록 합니다.
  *
  * @see net.datafaker.Faker
  */
-class FakeValueExtension : TestInstancePostProcessor, ParameterResolver {
+class FakeValueExtension: TestInstancePostProcessor, ParameterResolver {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         private val faker = Faker()
 
@@ -27,16 +27,16 @@ class FakeValueExtension : TestInstancePostProcessor, ParameterResolver {
                 targetType.isAssignableFrom(List::class.java) || targetType.isAssignableFrom(Collection::class.java) ->
                     faker.getValues(annotation).toList()
 
-                targetType.isAssignableFrom(Set::class.java) ->
+                targetType.isAssignableFrom(Set::class.java)                                                         ->
                     faker.getValues(annotation).toSet()
 
-                targetType.isAssignableFrom(Stream::class.java) ->
+                targetType.isAssignableFrom(Stream::class.java)                                                      ->
                     faker.getValues(annotation).toList().stream()
 
-                targetType.isAssignableFrom(Sequence::class.java) ->
+                targetType.isAssignableFrom(Sequence::class.java)                                                    ->
                     faker.getValues(annotation)
 
-                else ->
+                else                                                                                                 ->
                     faker.getValues(annotation).first()
             }
         }

@@ -16,13 +16,13 @@ class KeyspaceStatementExamples {
         alterKeyspace("ks")
             .withSimpleStrategy(3)
             .asCql() shouldBeEqualTo
-                "ALTER KEYSPACE ks WITH replication={'class':'SimpleStrategy','replication_factor':3}"
+            "ALTER KEYSPACE ks WITH replication={'class':'SimpleStrategy','replication_factor':3}"
 
         alterKeyspace("ks")
             .withDurableWrites(true)
             .withOption("hello", "world")
             .asCql() shouldBeEqualTo
-                "ALTER KEYSPACE ks WITH durable_writes=true AND hello='world'"
+            "ALTER KEYSPACE ks WITH durable_writes=true AND hello='world'"
     }
 
     @Test
@@ -31,20 +31,20 @@ class KeyspaceStatementExamples {
             .ifNotExists()
             .withSimpleStrategy(3)
             .asCql() shouldBeEqualTo
-                "CREATE KEYSPACE IF NOT EXISTS ks WITH replication={'class':'SimpleStrategy','replication_factor':3}"
+            "CREATE KEYSPACE IF NOT EXISTS ks WITH replication={'class':'SimpleStrategy','replication_factor':3}"
 
         createKeyspace("ks")
             .ifNotExists()
             .withSimpleStrategy(3)
             .withDurableWrites(true)
             .asCql() shouldBeEqualTo
-                "CREATE KEYSPACE IF NOT EXISTS ks WITH replication={'class':'SimpleStrategy','replication_factor':3} AND durable_writes=true"
+            "CREATE KEYSPACE IF NOT EXISTS ks WITH replication={'class':'SimpleStrategy','replication_factor':3} AND durable_writes=true"
 
         createKeyspace("ks")
             .ifNotExists()
             .withNetworkTopologyStrategy(mapOf("dc1" to 3, "dc2" to 4))
             .asCql() shouldBeEqualTo
-                "CREATE KEYSPACE IF NOT EXISTS ks WITH replication={'class':'NetworkTopologyStrategy','dc1':3,'dc2':4}"
+            "CREATE KEYSPACE IF NOT EXISTS ks WITH replication={'class':'NetworkTopologyStrategy','dc1':3,'dc2':4}"
 
         createKeyspace("ks")
             .ifNotExists()
@@ -52,7 +52,7 @@ class KeyspaceStatementExamples {
             .withOption("awesome_feature", true)
             .withOption("wow_factor", 11)
             .asCql() shouldBeEqualTo
-                "CREATE KEYSPACE IF NOT EXISTS ks WITH replication={'class':'SimpleStrategy','replication_factor':3} AND awesome_feature=true AND wow_factor=11"
+            "CREATE KEYSPACE IF NOT EXISTS ks WITH replication={'class':'SimpleStrategy','replication_factor':3} AND awesome_feature=true AND wow_factor=11"
     }
 
     @Test

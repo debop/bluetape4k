@@ -2,12 +2,12 @@ package io.bluetape4k.io
 
 import io.bluetape4k.junit5.folder.TempFolder
 import io.bluetape4k.junit5.folder.TempFolderTest
-import java.nio.file.Path
-import java.nio.file.Paths
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.nio.file.Path
+import java.nio.file.Paths
 
 @TempFolderTest
 class PathSupportTest {

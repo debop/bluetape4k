@@ -10,7 +10,7 @@ interface GetterOperator<in K, out V> {
 }
 
 fun <K, V> getterOperator(func: (K) -> V): GetterOperator<K, V> {
-    return object : GetterOperator<K, V> {
+    return object: GetterOperator<K, V> {
         override val getter: (K) -> V
             get() = func
     }
@@ -24,7 +24,7 @@ interface SetterOperator<in K, in V> {
 }
 
 fun <K, V> setterOperator(func: (K, V) -> Unit): SetterOperator<K, V> {
-    return object : SetterOperator<K, V> {
+    return object: SetterOperator<K, V> {
         override val setter: (K, V) -> Unit
             get() = func
     }

@@ -14,7 +14,7 @@ import java.nio.charset.Charset
 /**
  * Resource 관련 Helper object
  */
-object Resourcex : KLogging() {
+object Resourcex: KLogging() {
 
     private val currentClassLoader: ClassLoader get() = Thread.currentThread().contextClassLoader
     // Resourcex::class.java.classLoader

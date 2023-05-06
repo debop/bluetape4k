@@ -1,11 +1,11 @@
 package io.bluetape4k.concurrent
 
 import io.bluetape4k.logging.KLogging
-import java.util.concurrent.FutureTask
 import org.amshove.kluent.shouldBeEqualTo
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.junit.jupiter.api.Test
+import java.util.concurrent.FutureTask
 import kotlin.random.Random
 
 class FutureSupportTest {

@@ -70,13 +70,13 @@ fun <T: TemporalAccessor> T.toInstant(): Instant = Instant.from(this)
  * [Temporal] 을 Epoch 이후의 milli seconds 단위로 표현한 값 (기존 Date#time, Timestamp 와 같은 값을 나타낸다)
  */
 fun <T: Temporal> T.toEpochMillis(): Long = when (this) {
-    is Instant -> toEpochMilli()
-    is LocalDate -> zonedDateTimeOf(year, monthValue, dayOfMonth).toEpochMillis()
-    is LocalDateTime -> toZonedDateTime(UtcOffset).toEpochMillis()
+    is Instant        -> toEpochMilli()
+    is LocalDate      -> zonedDateTimeOf(year, monthValue, dayOfMonth).toEpochMillis()
+    is LocalDateTime  -> toZonedDateTime(UtcOffset).toEpochMillis()
     is OffsetDateTime -> toInstant().toEpochMilli()
     //    is OffsetTime     -> toInstant().toEpochMilli()
-    is ZonedDateTime -> toInstant().toEpochMilli()
-    else ->
+    is ZonedDateTime  -> toInstant().toEpochMilli()
+    else              ->
         if (isSupported(ChronoField.EPOCH_DAY) && isSupported(ChronoField.MILLI_OF_DAY)) {
             val days = getLong(ChronoField.EPOCH_DAY)
             val millis = getLong(ChronoField.MILLI_OF_DAY)
@@ -90,122 +90,122 @@ fun <T: Temporal> T.toEpochDay(): Long = toEpochMillis() / (24 * 60 * 60 * 1000)
 
 @Suppress("UNCHECKED_CAST")
 fun <T: Temporal> T.asTemporal(zoneId: ZoneId = SystemZoneId): T = when (this) {
-    is Instant -> Instant.ofEpochMilli(this.toEpochMillis()) as T
-    is LocalDate -> Instant.ofEpochMilli(this.toEpochMillis()).toLocalDate() as T
-    is LocalDateTime -> Instant.ofEpochMilli(this.toEpochMillis()).toLocalDateTime() as T
+    is Instant        -> Instant.ofEpochMilli(this.toEpochMillis()) as T
+    is LocalDate      -> Instant.ofEpochMilli(this.toEpochMillis()).toLocalDate() as T
+    is LocalDateTime  -> Instant.ofEpochMilli(this.toEpochMillis()).toLocalDateTime() as T
     is OffsetDateTime -> Instant.ofEpochMilli(this.toEpochMillis()).toOffsetDateTime(zoneId) as T
-    is ZonedDateTime -> Instant.ofEpochMilli(this.toEpochMillis()).toZonedDateTime(zoneId) as T
-    else -> error("Not supported class [${this.javaClass}]")
+    is ZonedDateTime  -> Instant.ofEpochMilli(this.toEpochMillis()).toZonedDateTime(zoneId) as T
+    else              -> error("Not supported class [${this.javaClass}]")
 }
 
 fun <T: Temporal> T.startOf(chronoUnit: ChronoUnit): T = when (chronoUnit) {
-    ChronoUnit.YEARS -> startOfYear()
-    ChronoUnit.MONTHS -> startOfMonth()
-    ChronoUnit.WEEKS -> previousOrSame(DayOfWeek.MONDAY)
-    ChronoUnit.DAYS -> startOfDay()
-    ChronoUnit.HOURS -> startOfHour()
+    ChronoUnit.YEARS   -> startOfYear()
+    ChronoUnit.MONTHS  -> startOfMonth()
+    ChronoUnit.WEEKS   -> previousOrSame(DayOfWeek.MONDAY)
+    ChronoUnit.DAYS    -> startOfDay()
+    ChronoUnit.HOURS   -> startOfHour()
     ChronoUnit.MINUTES -> startOfMinute()
     ChronoUnit.SECONDS -> startOfSecond()
-    ChronoUnit.MILLIS -> startOfMillis()
-    else -> throw IllegalArgumentException("Unsupported ChronoUnit. chronoUnit=$chronoUnit")
+    ChronoUnit.MILLIS  -> startOfMillis()
+    else               -> throw IllegalArgumentException("Unsupported ChronoUnit. chronoUnit=$chronoUnit")
 }
 
 
 @Suppress("UNCHECKED_CAST")
 fun <T: Temporal> T.startOfYear(): T = when (this) {
-    is Instant -> (startOfDay() as Instant).toZonedDateTime(UtcOffset).withDayOfYear(1).toInstant() as T
-    is LocalDate -> withDayOfYear(1).startOfDay() as T
-    is LocalDateTime -> withDayOfYear(1).startOfDay() as T
+    is Instant        -> (startOfDay() as Instant).toZonedDateTime(UtcOffset).withDayOfYear(1).toInstant() as T
+    is LocalDate      -> withDayOfYear(1).startOfDay() as T
+    is LocalDateTime  -> withDayOfYear(1).startOfDay() as T
     is OffsetDateTime -> offsetDateTimeOf(year, 1, 1) as T
-    is ZonedDateTime -> zonedDateTimeOf(year, 1, 1) as T
-    else -> error("Not supported class [${this.javaClass}]")
+    is ZonedDateTime  -> zonedDateTimeOf(year, 1, 1) as T
+    else              -> error("Not supported class [${this.javaClass}]")
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <T: Temporal> T.startOfMonth(): T = when (this) {
-    is Instant -> (startOfDay() as Instant).toZonedDateTime(UtcOffset).withDayOfMonth(1).toInstant() as T
-    is LocalDate -> withDayOfMonth(1).startOfDay() as T
-    is LocalDateTime -> withDayOfMonth(1).startOfDay() as T
+    is Instant        -> (startOfDay() as Instant).toZonedDateTime(UtcOffset).withDayOfMonth(1).toInstant() as T
+    is LocalDate      -> withDayOfMonth(1).startOfDay() as T
+    is LocalDateTime  -> withDayOfMonth(1).startOfDay() as T
     is OffsetDateTime -> offsetDateTimeOf(year, monthValue, 1) as T
-    is ZonedDateTime -> zonedDateTimeOf(year, monthValue, 1) as T
-    else -> error("Not supported class [${this.javaClass}]")
+    is ZonedDateTime  -> zonedDateTimeOf(year, monthValue, 1) as T
+    else              -> error("Not supported class [${this.javaClass}]")
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <T: Temporal> T.startOfWeek(): T = when (this) {
-    is Instant -> (startOfDay() as Instant).toZonedDateTime(UtcOffset).startOfWeek() as T
-    is LocalDate -> (startOfDay() - (dayOfWeek.value - DayOfWeek.MONDAY.value).days()) as T
-    is LocalDateTime -> (startOfDay() - (dayOfWeek.value - DayOfWeek.MONDAY.value).days()) as T
+    is Instant        -> (startOfDay() as Instant).toZonedDateTime(UtcOffset).startOfWeek() as T
+    is LocalDate      -> (startOfDay() - (dayOfWeek.value - DayOfWeek.MONDAY.value).days()) as T
+    is LocalDateTime  -> (startOfDay() - (dayOfWeek.value - DayOfWeek.MONDAY.value).days()) as T
     is OffsetDateTime -> (startOfDay() - (dayOfWeek.value - DayOfWeek.MONDAY.value).days()) as T
-    is ZonedDateTime -> (startOfDay() - (dayOfWeek.value - DayOfWeek.MONDAY.value).days()) as T
-    else -> error("Not supported class [${this.javaClass}]")
+    is ZonedDateTime  -> (startOfDay() - (dayOfWeek.value - DayOfWeek.MONDAY.value).days()) as T
+    else              -> error("Not supported class [${this.javaClass}]")
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <T: Temporal> T.startOfDay(): T = when (this) {
-    is Instant -> truncatedTo(ChronoUnit.DAYS) as T
-    is LocalDate -> this
-    is LocalTime -> this
-    is LocalDateTime -> truncatedTo(ChronoUnit.DAYS) as T
+    is Instant        -> truncatedTo(ChronoUnit.DAYS) as T
+    is LocalDate      -> this
+    is LocalTime      -> this
+    is LocalDateTime  -> truncatedTo(ChronoUnit.DAYS) as T
     is OffsetDateTime -> truncatedTo(ChronoUnit.DAYS) as T
-    is ZonedDateTime -> truncatedTo(ChronoUnit.DAYS) as T
-    else -> error("Not supported class [${this.javaClass}]")
+    is ZonedDateTime  -> truncatedTo(ChronoUnit.DAYS) as T
+    else              -> error("Not supported class [${this.javaClass}]")
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <T: Temporal> T.startOfHour(): T = when (this) {
-    is Instant -> truncatedTo(ChronoUnit.HOURS) as T
-    is LocalDateTime -> truncatedTo(ChronoUnit.HOURS) as T
+    is Instant        -> truncatedTo(ChronoUnit.HOURS) as T
+    is LocalDateTime  -> truncatedTo(ChronoUnit.HOURS) as T
     is OffsetDateTime -> truncatedTo(ChronoUnit.HOURS) as T
-    is ZonedDateTime -> truncatedTo(ChronoUnit.HOURS) as T
-    is LocalTime -> truncatedTo(ChronoUnit.HOURS) as T
-    is OffsetTime -> truncatedTo(ChronoUnit.HOURS) as T
-    else -> error("Not supported class [${this.javaClass}]")
+    is ZonedDateTime  -> truncatedTo(ChronoUnit.HOURS) as T
+    is LocalTime      -> truncatedTo(ChronoUnit.HOURS) as T
+    is OffsetTime     -> truncatedTo(ChronoUnit.HOURS) as T
+    else              -> error("Not supported class [${this.javaClass}]")
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <T: Temporal> T.startOfMinute(): T = when (this) {
-    is Instant -> truncatedTo(ChronoUnit.MINUTES) as T
-    is LocalDateTime -> truncatedTo(ChronoUnit.MINUTES) as T
+    is Instant        -> truncatedTo(ChronoUnit.MINUTES) as T
+    is LocalDateTime  -> truncatedTo(ChronoUnit.MINUTES) as T
     is OffsetDateTime -> truncatedTo(ChronoUnit.MINUTES) as T
-    is ZonedDateTime -> truncatedTo(ChronoUnit.MINUTES) as T
-    is LocalTime -> truncatedTo(ChronoUnit.MINUTES) as T
-    is OffsetTime -> truncatedTo(ChronoUnit.MINUTES) as T
-    else -> error("Not supported class [${this.javaClass}]")
+    is ZonedDateTime  -> truncatedTo(ChronoUnit.MINUTES) as T
+    is LocalTime      -> truncatedTo(ChronoUnit.MINUTES) as T
+    is OffsetTime     -> truncatedTo(ChronoUnit.MINUTES) as T
+    else              -> error("Not supported class [${this.javaClass}]")
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <T: Temporal> T.startOfSecond(): T = when (this) {
-    is Instant -> truncatedTo(ChronoUnit.SECONDS) as T
-    is LocalDateTime -> truncatedTo(ChronoUnit.SECONDS) as T
+    is Instant        -> truncatedTo(ChronoUnit.SECONDS) as T
+    is LocalDateTime  -> truncatedTo(ChronoUnit.SECONDS) as T
     is OffsetDateTime -> truncatedTo(ChronoUnit.SECONDS) as T
-    is ZonedDateTime -> truncatedTo(ChronoUnit.SECONDS) as T
-    is LocalTime -> truncatedTo(ChronoUnit.SECONDS) as T
-    is OffsetTime -> truncatedTo(ChronoUnit.SECONDS) as T
-    else -> error("Not supported class [${this.javaClass}]")
+    is ZonedDateTime  -> truncatedTo(ChronoUnit.SECONDS) as T
+    is LocalTime      -> truncatedTo(ChronoUnit.SECONDS) as T
+    is OffsetTime     -> truncatedTo(ChronoUnit.SECONDS) as T
+    else              -> error("Not supported class [${this.javaClass}]")
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <T: Temporal> T.startOfMillis(): T = when (this) {
-    is Instant -> truncatedTo(ChronoUnit.MILLIS) as T
-    is LocalDateTime -> truncatedTo(ChronoUnit.MILLIS) as T
+    is Instant        -> truncatedTo(ChronoUnit.MILLIS) as T
+    is LocalDateTime  -> truncatedTo(ChronoUnit.MILLIS) as T
     is OffsetDateTime -> truncatedTo(ChronoUnit.MILLIS) as T
-    is ZonedDateTime -> truncatedTo(ChronoUnit.MILLIS) as T
-    is LocalTime -> truncatedTo(ChronoUnit.MILLIS) as T
-    is OffsetTime -> truncatedTo(ChronoUnit.MILLIS) as T
-    else -> error("Not supported class [${this.javaClass}]")
+    is ZonedDateTime  -> truncatedTo(ChronoUnit.MILLIS) as T
+    is LocalTime      -> truncatedTo(ChronoUnit.MILLIS) as T
+    is OffsetTime     -> truncatedTo(ChronoUnit.MILLIS) as T
+    else              -> error("Not supported class [${this.javaClass}]")
 }
 
 infix fun <T> T?.min(that: T?): T? where T: Temporal, T: Comparable<T> = when {
     this == null -> that
     that == null -> this
-    this < that -> this
-    else -> that
+    this < that  -> this
+    else         -> that
 }
 
 infix fun <T> T?.max(that: T?): T? where T: Temporal, T: Comparable<T> = when {
     this == null -> that
     that == null -> this
-    this > that -> this
-    else -> that
+    this > that  -> this
+    else         -> that
 }

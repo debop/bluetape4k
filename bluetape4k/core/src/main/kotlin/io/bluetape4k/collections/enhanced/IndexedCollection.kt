@@ -2,8 +2,8 @@ package io.bluetape4k.collections.enhanced
 
 import io.bluetape4k.collections.AbstractCollectionDecorator
 import io.bluetape4k.logging.KLogging
-import java.util.function.Predicate
 import org.eclipse.collections.impl.factory.Multimaps
+import java.util.function.Predicate
 
 class IndexedCollection<K, E> private constructor(
     decorated: MutableCollection<E>,

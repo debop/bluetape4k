@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer
 import io.bluetape4k.codec.Url62
 import io.bluetape4k.logging.KLogging
-import java.util.UUID
+import java.util.*
 
 class JsonUuidBase62Deserializer: UUIDDeserializer() {
 

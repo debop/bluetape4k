@@ -9,4 +9,4 @@ import io.bluetape4k.utils.idgenerators.snowflake.sequencer.GlobalSequencer
  * Global Snowflake 알고리즘은 1 msec 당 4096 * 1024 개의 Id를 생성할 수 있습니다.
  * Global Snowflake는 machineId 구분 없이 id 값을 생성해 주므로, 중앙집중식으로 Id 생성 서비스에서 사용할 수 있습니다.
  */
-class GlobalSnowflake : AbstractSnowflake(GlobalSequencer())
+class GlobalSnowflake: AbstractSnowflake(GlobalSequencer())

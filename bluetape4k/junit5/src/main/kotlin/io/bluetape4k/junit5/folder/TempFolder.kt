@@ -2,7 +2,7 @@ package io.bluetape4k.junit5.folder
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.logging.info
+import org.junit.jupiter.api.extension.ExtensionContext
 import java.io.Closeable
 import java.io.File
 import java.io.IOException
@@ -12,11 +12,10 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
-import org.junit.jupiter.api.extension.ExtensionContext
 
-class TempFolder : ExtensionContext.Store.CloseableResource, Closeable {
+class TempFolder: ExtensionContext.Store.CloseableResource, Closeable {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val PREFIX = "bluetape4k_"
     }
 
@@ -27,7 +26,7 @@ class TempFolder : ExtensionContext.Store.CloseableResource, Closeable {
         try {
             rootPath = Files.createTempDirectory(PREFIX)
             rootFolder = rootPath.toFile()
-            log.info { "Create temporary folder. [$rootPath]" }
+            log.debug { "Create temporary folder. [$rootPath]" }
         } catch (e: IOException) {
             throw TempFolderException("Fail to create temporary root folder for testing", e)
         }
@@ -70,7 +69,7 @@ class TempFolder : ExtensionContext.Store.CloseableResource, Closeable {
     }
 
     private fun destroy() {
-        log.info { "Delete temporary folder. [$rootPath]" }
+        log.debug { "Delete temporary folder. [$rootPath]" }
         if (root.exists()) {
             try {
                 Files.walkFileTree(rootPath, CleanupFileVisitor())
@@ -84,7 +83,7 @@ class TempFolder : ExtensionContext.Store.CloseableResource, Closeable {
         }
     }
 
-    private class CleanupFileVisitor : SimpleFileVisitor<Path>() {
+    private class CleanupFileVisitor: SimpleFileVisitor<Path>() {
         override fun visitFile(file: Path?, attrs: BasicFileAttributes?): FileVisitResult {
             return file?.run { delete(this) } ?: FileVisitResult.CONTINUE
         }
@@ -99,10 +98,10 @@ class TempFolder : ExtensionContext.Store.CloseableResource, Closeable {
         }
     }
 
-    class TempFolderException : RuntimeException {
-        constructor() : super()
-        constructor(msg: String) : super(msg)
-        constructor(msg: String, cause: Throwable?) : super(msg, cause)
-        constructor(cause: Throwable?) : super(cause)
+    class TempFolderException: RuntimeException {
+        constructor(): super()
+        constructor(msg: String): super(msg)
+        constructor(msg: String, cause: Throwable?): super(msg, cause)
+        constructor(cause: Throwable?): super(cause)
     }
 }

@@ -22,7 +22,7 @@ class SimpleEntity private constructor(
     @Column(nullable = false)
     @NotBlank
     var name: String,
-) : IntJpaEntity() {
+): IntJpaEntity() {
 
     companion object {
         operator fun invoke(name: String): SimpleEntity {

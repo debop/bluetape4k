@@ -45,7 +45,7 @@ import kotlin.test.assertTrue
 
 @SpringBootTest
 class ReactiveSelectOperationsTest(
-    @Autowired private val operations: ReactiveCassandraOperations
+    @Autowired private val operations: ReactiveCassandraOperations,
 ): AbstractCassandraCoroutineTest("reactive-select-op") {
 
     companion object: KLogging() {

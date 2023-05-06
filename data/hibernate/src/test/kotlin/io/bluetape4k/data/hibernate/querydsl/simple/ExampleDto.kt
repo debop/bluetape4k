@@ -9,4 +9,4 @@ import java.io.Serializable
 data class ExampleDto @QueryProjection constructor(
     val id: Long,
     val name: String,
-) : Serializable
+): Serializable

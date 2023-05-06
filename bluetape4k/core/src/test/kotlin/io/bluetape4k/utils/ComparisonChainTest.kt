@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 
 class ComparisonChainTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `compare without properties`() {

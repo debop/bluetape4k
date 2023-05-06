@@ -3,11 +3,11 @@ package io.bluetape4k.io.retrofit2.result
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.logging.warn
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 
 /**
  * 일반적인 수형을 반환하는 API 를 [Result]를 반환하게끔 wrapping 하는

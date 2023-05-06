@@ -29,7 +29,7 @@ suspend fun massiveRun(
     times.requirePositiveNumber("times")
     val ctx = when {
         coroutineContext != EmptyCoroutineContext -> coroutineContext
-        else -> currentCoroutineContext()
+        else                                      -> currentCoroutineContext()
     }
 
     // withContext 이므로 내부의 Job을 완료한 후 반환합니다

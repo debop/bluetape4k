@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 
 class ClassLoaderSupportTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `load ClassLoader by current context`() {

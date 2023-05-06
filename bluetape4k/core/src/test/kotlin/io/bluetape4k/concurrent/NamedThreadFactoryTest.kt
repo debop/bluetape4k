@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 
 class NamedThreadFactoryTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `create named thread`() {

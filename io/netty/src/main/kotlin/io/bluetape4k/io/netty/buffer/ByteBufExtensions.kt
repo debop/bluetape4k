@@ -404,16 +404,16 @@ fun ByteBuf.writeShortSmart(value: Int): ByteBuf = when (value) {
     in Smart.MIN_SHORT_VALUE..Smart.MAX_SHORT_VALUE ->
         writeShort((Short.MAX_VALUE + 1) or (value + Smart.SHORT_MOD))
 
-    else ->
+    else                                          ->
         throw IllegalArgumentException(
             "Value should be between ${Smart.MIN_SHORT_VALUE} and ${Smart.MAX_SHORT_VALUE}, but was $value."
         )
 }
 
 fun ByteBuf.writeUShortSmart(value: Int): ByteBuf = when (value) {
-    in USmart.MIN_BYTE_VALUE..USmart.MAX_BYTE_VALUE -> writeByte(value)
+    in USmart.MIN_BYTE_VALUE..USmart.MAX_BYTE_VALUE   -> writeByte(value)
     in USmart.MIN_SHORT_VALUE..USmart.MAX_SHORT_VALUE -> writeShort((Short.MAX_VALUE + 1) or value)
-    else ->
+    else                                              ->
         throw IllegalArgumentException(
             "Value should be between ${USmart.MIN_SHORT_VALUE} and ${USmart.MAX_SHORT_VALUE}, but was $value."
         )
@@ -436,7 +436,7 @@ fun ByteBuf.writeIntSmart(value: Int): ByteBuf = when (value) {
         writeInt(Int.MIN_VALUE or (value + Smart.INT_MOD))
     }
 
-    else ->
+    else                                        ->
         throw IllegalArgumentException(
             "Value should be between ${Smart.MIN_INT_VALUE} and ${Smart.MAX_INT_VALUE}, but was $value."
         )
@@ -444,18 +444,18 @@ fun ByteBuf.writeIntSmart(value: Int): ByteBuf = when (value) {
 
 fun ByteBuf.writeUIntSmart(value: Int): ByteBuf = when (value) {
     in USmart.MIN_SHORT_VALUE..USmart.MAX_SHORT_VALUE -> writeShort(value)
-    in USmart.MIN_INT_VALUE..USmart.MAX_INT_VALUE -> writeInt(Int.MIN_VALUE or value)
-    else ->
+    in USmart.MIN_INT_VALUE..USmart.MAX_INT_VALUE     -> writeInt(Int.MIN_VALUE or value)
+    else                                              ->
         throw IllegalArgumentException(
             "Value should be between ${USmart.MIN_INT_VALUE} and ${USmart.MAX_INT_VALUE}, but was $value."
         )
 }
 
 fun ByteBuf.writeNullableUIntSmart(value: Int?): ByteBuf = when (value) {
-    null -> writeShort(USmart.MAX_SHORT_VALUE)
+    null                                                   -> writeShort(USmart.MAX_SHORT_VALUE)
     in USmart.MIN_SHORT_VALUE until USmart.MAX_SHORT_VALUE -> writeShort(value)
-    in USmart.MIN_INT_VALUE..USmart.MAX_INT_VALUE -> writeInt(Int.MIN_VALUE or value)
-    else ->
+    in USmart.MIN_INT_VALUE..USmart.MAX_INT_VALUE          -> writeInt(Int.MIN_VALUE or value)
+    else                                                   ->
         throw IllegalArgumentException(
             "Value should be between ${USmart.MIN_INT_VALUE} and ${USmart.MAX_INT_VALUE}, but was $value."
         )

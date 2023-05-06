@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test
 
 class EclipseCollectionInKotlinExamples {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `primitive array extension methods`() {

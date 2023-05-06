@@ -21,9 +21,9 @@ import org.mybatis.dynamic.sql.util.kotlin.elements.max
 import org.mybatis.dynamic.sql.util.kotlin.elements.min
 import org.mybatis.dynamic.sql.util.kotlin.model.select
 
-abstract class AbstractSubqueryTest : AbstractVertxSqlClientTest() {
+abstract class AbstractSubqueryTest: AbstractVertxSqlClientTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     override val schemaFileNames: List<String> = listOf("person.sql", "generatedAlways.sql")
 
@@ -38,7 +38,7 @@ abstract class AbstractSubqueryTest : AbstractVertxSqlClientTest() {
             }.renderForVertx()
 
             selectProvider.selectStatement shouldBeEqualTo
-                    "select * from Person where id <> (select max(id) from Person)"
+                "select * from Person where id <> (select max(id) from Person)"
 
             val persons = conn.selectList(selectProvider, PersonMapper)
             persons shouldHaveSize 5
@@ -60,7 +60,7 @@ abstract class AbstractSubqueryTest : AbstractVertxSqlClientTest() {
             }.renderForVertx()
 
             selectProvider.selectStatement shouldBeEqualTo
-                    "select * from Person where id = (select max(id) from Person)"
+                "select * from Person where id = (select max(id) from Person)"
 
             val person = conn.selectOne(selectProvider, PersonMapper)
             person.shouldNotBeNull()
@@ -85,8 +85,8 @@ abstract class AbstractSubqueryTest : AbstractVertxSqlClientTest() {
             }.renderForVertx()
 
             selectProvider.selectStatement shouldBeEqualTo
-                    "select * from Person " +
-                    "where id in (select id from Person where last_name = #{p1})"
+                "select * from Person " +
+                "where id in (select id from Person where last_name = #{p1})"
 
             val persons = conn.selectList(selectProvider, PersonMapper)
             persons.forEach { log.debug { it } }
@@ -111,8 +111,8 @@ abstract class AbstractSubqueryTest : AbstractVertxSqlClientTest() {
             }.renderForVertx()
 
             selectProvider.selectStatement shouldBeEqualTo
-                    "select * from Person " +
-                    "where id not in (select distinct id from Person where last_name = #{p1})"
+                "select * from Person " +
+                "where id not in (select distinct id from Person where last_name = #{p1})"
 
             val persons = conn.selectList(selectProvider, PersonMapper)
             persons.forEach { log.debug { it } }
@@ -132,8 +132,8 @@ abstract class AbstractSubqueryTest : AbstractVertxSqlClientTest() {
             }.renderForVertx()
 
             selectProvider.selectStatement shouldBeEqualTo
-                    "select * from Person " +
-                    "where id < (select max(id) from Person)"
+                "select * from Person " +
+                "where id < (select max(id) from Person)"
 
             val persons = conn.selectList(selectProvider, PersonMapper)
             persons.forEach { log.debug { it } }
@@ -154,9 +154,9 @@ abstract class AbstractSubqueryTest : AbstractVertxSqlClientTest() {
             }.renderForVertx()
 
             selectProvider.selectStatement shouldBeEqualTo
-                    "select * from Person " +
-                    "where id <= (select max(id) from Person) " +
-                    "order by id"
+                "select * from Person " +
+                "where id <= (select max(id) from Person) " +
+                "order by id"
 
             val persons = conn.selectList(selectProvider, PersonMapper)
             persons.forEach { log.debug { it } }
@@ -177,9 +177,9 @@ abstract class AbstractSubqueryTest : AbstractVertxSqlClientTest() {
             }.renderForVertx()
 
             selectProvider.selectStatement shouldBeEqualTo
-                    "select * from Person " +
-                    "where id > (select min(id) from Person) " +
-                    "order by id"
+                "select * from Person " +
+                "where id > (select min(id) from Person) " +
+                "order by id"
 
             val persons = conn.selectList(selectProvider, PersonMapper)
             persons.forEach { log.debug { it } }
@@ -200,9 +200,9 @@ abstract class AbstractSubqueryTest : AbstractVertxSqlClientTest() {
             }.renderForVertx()
 
             selectProvider.selectStatement shouldBeEqualTo
-                    "select * from Person " +
-                    "where id >= (select min(id) from Person) " +
-                    "order by id"
+                "select * from Person " +
+                "where id >= (select min(id) from Person) " +
+                "order by id"
 
             val persons = conn.selectList(selectProvider, PersonMapper)
             persons.forEach { log.debug { it } }

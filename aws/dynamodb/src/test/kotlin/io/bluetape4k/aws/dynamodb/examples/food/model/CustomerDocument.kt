@@ -11,7 +11,7 @@ import java.time.Instant
 class CustomerDocument: AbstractDynamoDocument() {
 
     companion object: KLogging() {
-
+        @JvmStatic
         operator fun invoke(
             customerId: String,
             nationId: String,

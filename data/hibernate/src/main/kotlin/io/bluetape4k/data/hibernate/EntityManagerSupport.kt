@@ -1,13 +1,13 @@
 package io.bluetape4k.data.hibernate
 
 import io.bluetape4k.data.hibernate.model.JpaEntity
+import org.hibernate.Session
+import org.hibernate.SessionFactory
+import org.hibernate.internal.SessionImpl
 import java.io.Serializable
 import java.sql.Connection
 import javax.persistence.EntityManager
 import javax.persistence.TypedQuery
-import org.hibernate.Session
-import org.hibernate.SessionFactory
-import org.hibernate.internal.SessionImpl
 
 fun EntityManager.currentSession(): Session = unwrap(Session::class.java)
 fun EntityManager.asSession(): Session = unwrap(Session::class.java)

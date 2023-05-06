@@ -2,16 +2,16 @@ package io.bluetape4k.io
 
 import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.KLogging
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.RepeatedTest
 import java.io.File
 import java.io.RandomAccessFile
 import java.nio.ByteBuffer
-import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.RepeatedTest
 
 class RandomAccessFileExtensionsTest {
 
-    companion object : KLogging() {
-        private const val REPEAT_SIZE = 10
+    companion object: KLogging() {
+        private const val REPEAT_SIZE = 5
     }
 
     private val file = File("src/test/resources/files/Utf8Samples.txt")

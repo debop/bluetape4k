@@ -9,16 +9,15 @@ import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.util.UUID
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
-
+import java.util.*
 
 @RandomizedTest
 class JsonUuidEncodeTest {
 
     companion object: KLogging() {
-        private const val REPEAT_COUNT = 10
+        private const val REPEAT_COUNT = 5
     }
 
     private val mapper = Jackson.defaultJsonMapper

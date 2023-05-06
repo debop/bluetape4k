@@ -80,9 +80,9 @@ class Hashids(
             return EMPTY_STRING
         }
         return when {
-            numbers.size == 1 -> encodeSingle(numbers[0])
+            numbers.size == 1                  -> encodeSingle(numbers[0])
             numbers.all { it.isValidNumber() } -> encodeArray(*numbers)
-            else ->
+            else                               ->
                 numbersToArrayList(numbers)
                     .joinToString(NUMBER_SEPARATOR) {
                         if (it.first) {  // valid number 인 경우
@@ -125,12 +125,12 @@ class Hashids(
 
     private fun numberToArray(number: Long): LongArray = when (number) {
         in 0..MAX_NUMBER -> longArrayOf(number)
-        else -> {
+        else             -> {
             val quotient = number / MAX_NUMBER
             val reminder = number % MAX_NUMBER
             when {
                 number.sign > 0 -> longArrayOf(reminder, quotient)
-                else -> longArrayOf(-reminder, 0, -quotient)
+                else            -> longArrayOf(-reminder, 0, -quotient)
             }
         }
     }
@@ -175,14 +175,14 @@ class Hashids(
     }
 
     private fun arrayToLong(array: LongArray): Long = when (array.size) {
-        1 -> array[0]
-        2 -> {
+        1    -> array[0]
+        2    -> {
             val reminder = array[0]
             val quotient = array[1]
             quotient * MAX_NUMBER + reminder
         }
 
-        3 -> {
+        3    -> {
             val reminder = array[0]
             val quotient = array[2]
             -(quotient * MAX_NUMBER + reminder)
@@ -205,7 +205,7 @@ class Hashids(
 
         val decodedValue = when {
             encode(*returnValue) != hash -> longArrayOf()
-            else -> returnValue
+            else                         -> returnValue
         }
         // log.trace { "Decode hash=[$hash], returnValue=${returnValue.joinToString()}, decodedValue=${decodedValue.joinToString()}" }
         return decodedValue
@@ -363,7 +363,7 @@ class Hashids(
             val newCurrent = data.current / alphabet.length
             doHash(number, alphabet, HashData("$newHashChar${data.hash}", newCurrent))
         }
-        else -> data
+        else             -> data
     }
 
     private fun unhash(input: String, alphabet: String): Long {
@@ -466,7 +466,7 @@ class Hashids(
                 val pos = excess / 2
                 tempReturnStr.substring(pos, pos + hashLength)
             }
-            else -> tempReturnStr
+            else       -> tempReturnStr
         }
 
         return ensureMinLength(halfLength, newAlphabet, newReturnStr)

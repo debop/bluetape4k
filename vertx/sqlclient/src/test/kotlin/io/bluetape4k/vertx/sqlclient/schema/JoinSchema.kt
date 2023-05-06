@@ -8,31 +8,31 @@ import java.time.LocalDate
 
 object JoinSchema {
 
-    class OrderMasterTable : AliasableSqlTable<OrderMasterTable>("OrderMaster", JoinSchema::OrderMasterTable) {
+    class OrderMasterTable: AliasableSqlTable<OrderMasterTable>("OrderMaster", JoinSchema::OrderMasterTable) {
         val orderId = column<Int>("order_id")
         val orderDate = column<LocalDate>("order_date")
     }
 
-    class OrderDetailTable : AliasableSqlTable<OrderDetailTable>("OrderDetail", JoinSchema::OrderDetailTable) {
+    class OrderDetailTable: AliasableSqlTable<OrderDetailTable>("OrderDetail", JoinSchema::OrderDetailTable) {
         val orderId = column<Int>("order_id")
         val lineNumber = column<Int>("line_number")
         val description = column<String>("description")
         val quantity = column<Int>("quantity")
     }
 
-    class ItemMasterTable : AliasableSqlTable<ItemMasterTable>("ItemMaster", JoinSchema::ItemMasterTable) {
+    class ItemMasterTable: AliasableSqlTable<ItemMasterTable>("ItemMaster", JoinSchema::ItemMasterTable) {
         val itemId = column<Int>("item_id")
         val description = column<String>("description")
     }
 
-    class OrderLineTable : AliasableSqlTable<OrderLineTable>("OrderLine", JoinSchema::OrderLineTable) {
+    class OrderLineTable: AliasableSqlTable<OrderLineTable>("OrderLine", JoinSchema::OrderLineTable) {
         val orderId = column<Int>("order_id")
         val itemId = column<Int>("item_id")
         val lineNumber = column<Int>("line_number")
         val quantity = column<Int>("quantity")
     }
 
-    class UsersTable : AliasableSqlTable<UsersTable>("Users", JoinSchema::UsersTable) {
+    class UsersTable: AliasableSqlTable<UsersTable>("Users", JoinSchema::UsersTable) {
         val userId = column<Int>("user_id")
         val userName = column<String>("user_name")
         val parentId = column<Int>("parent_id")
@@ -49,7 +49,7 @@ object JoinSchema {
 data class OrderMaster(
     val orderId: Int? = null,
     var orderDate: LocalDate? = null,
-) : Comparable<OrderMaster>, java.io.Serializable {
+): Comparable<OrderMaster>, java.io.Serializable {
     val details: MutableList<OrderDetail> = fastListOf()
 
     override fun compareTo(other: OrderMaster): Int {
@@ -62,7 +62,7 @@ data class OrderDetail(
     var lineNumber: Int? = null,
     var description: String? = null,
     var quantity: Int? = null,
-) : Comparable<OrderDetail>, java.io.Serializable {
+): Comparable<OrderDetail>, java.io.Serializable {
     override fun compareTo(other: OrderDetail): Int {
         return orderId?.compareTo(other.orderId ?: 0)
             ?: lineNumber?.compareTo(other.lineNumber ?: 0)
@@ -73,7 +73,7 @@ data class OrderDetail(
 data class ItemMaster(
     var itemId: Int? = null,
     var description: String? = null,
-) : Comparable<ItemMaster>, java.io.Serializable {
+): Comparable<ItemMaster>, java.io.Serializable {
     override fun compareTo(other: ItemMaster): Int {
         return itemId?.compareTo(other.itemId ?: 0) ?: 0
     }
@@ -84,7 +84,7 @@ data class OrderLine(
     var itemId: Int? = null,
     var lineNumber: Int? = null,
     var quantity: Int? = null,
-) : Comparable<OrderLine>, java.io.Serializable {
+): Comparable<OrderLine>, java.io.Serializable {
     override fun compareTo(other: OrderLine): Int {
         return orderId?.compareTo(other.orderId ?: 0)
             ?: itemId?.compareTo(other.itemId ?: 0)
@@ -97,7 +97,7 @@ data class User(
     var userId: Int? = null,
     var userName: String? = null,
     var parentId: Int? = null,
-) : Comparable<User>, java.io.Serializable {
+): Comparable<User>, java.io.Serializable {
     override fun compareTo(other: User): Int {
         return userId?.compareTo(other.userId ?: 0)
             ?: userName?.compareTo(other.userName ?: "")
@@ -109,8 +109,8 @@ data class OrderRecord(
     val itemId: Int?,
     val orderId: Int?,
     val quantity: Int?,
-    val description: String?
-) : Comparable<OrderRecord>, Serializable {
+    val description: String?,
+): Comparable<OrderRecord>, Serializable {
     override fun compareTo(other: OrderRecord): Int {
         return orderId?.compareTo(other.orderId ?: 0)
             ?: itemId?.compareTo(other.itemId ?: 0)

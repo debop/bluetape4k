@@ -12,7 +12,7 @@ import kotlin.random.nextUBytes
 
 class ByteBufByteTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val DATA_SIZE = 1024
     }
 

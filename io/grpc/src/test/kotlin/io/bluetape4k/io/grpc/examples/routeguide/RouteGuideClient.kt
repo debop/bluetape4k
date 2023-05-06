@@ -7,7 +7,6 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
-import java.util.concurrent.ForkJoinPool
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
@@ -16,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.ForkJoinPool
 import kotlin.random.Random
 
 /**

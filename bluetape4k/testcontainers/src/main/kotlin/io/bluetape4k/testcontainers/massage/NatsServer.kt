@@ -31,6 +31,7 @@ class NatsServer private constructor(
 
         val NATS_PORTS = intArrayOf(4222, 6222, 8222)
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,
@@ -39,6 +40,7 @@ class NatsServer private constructor(
             return NatsServer(imageName, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,

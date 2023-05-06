@@ -76,9 +76,9 @@ open class TemporalClosedProgression<T> protected constructor(
     override fun hashCode(): Int = if (isEmpty()) -1 else hashOf(first, last, step)
 
     override fun toString(): String = when {
-        step.isZero -> "$first..$last"
+        step.isZero     -> "$first..$last"
         step.isPositive -> "$first..$last step $step"
-        else -> "$first..$last step ${step.millis}"
+        else            -> "$first..$last step ${step.millis}"
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -86,7 +86,7 @@ open class TemporalClosedProgression<T> protected constructor(
         fun canContinue(current: T): Boolean = when {
             step.isPositive -> current <= last
             step.isNegative -> current >= last
-            else -> false
+            else            -> false
         }
 
         var current = first

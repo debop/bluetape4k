@@ -1,7 +1,6 @@
 package io.bluetape4k.spring.core
 
 import io.bluetape4k.logging.KLogging
-import java.util.Properties
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.BeforeEach
@@ -10,6 +9,7 @@ import org.springframework.core.env.MutablePropertySources
 import org.springframework.core.env.PropertiesPropertySource
 import org.springframework.core.env.PropertyResolver
 import org.springframework.core.env.PropertySourcesPropertyResolver
+import java.util.*
 import kotlin.test.assertFailsWith
 
 class PropertyResolverExtensionsTest {

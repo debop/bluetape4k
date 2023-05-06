@@ -4,11 +4,11 @@ import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.primitives.toIntArrayList
 import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
-import java.util.stream.IntStream
-import java.util.stream.Stream
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.util.stream.IntStream
+import java.util.stream.Stream
 import kotlin.streams.toList
 import kotlin.test.assertFailsWith
 

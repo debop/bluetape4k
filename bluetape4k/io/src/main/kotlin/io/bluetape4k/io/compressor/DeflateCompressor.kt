@@ -11,7 +11,7 @@ import java.util.zip.InflaterInputStream
  */
 class DeflateCompressor @JvmOverloads constructor(
     private val bufferSize: Int = DEFAULT_BUFFER_SIZE,
-) : AbstractCompressor() {
+): AbstractCompressor() {
 
     override fun doCompress(plain: ByteArray): ByteArray {
         return ByteArrayOutputStream(bufferSize).use { bos ->

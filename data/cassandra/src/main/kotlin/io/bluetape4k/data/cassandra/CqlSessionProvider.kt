@@ -45,7 +45,7 @@ object CqlSessionProvider: KLogging() {
     fun getOrCreateSession(
         keyspace: String = DEFAULT_KEYSPACE,
         builderSupplier: () -> CqlSessionBuilder = { newCqlSessionBuilder() },
-        initializer: CqlSessionBuilder.() -> Unit
+        initializer: CqlSessionBuilder.() -> Unit,
     ): CqlSession {
         val closedSessions = sessionCache.filterValues { it.isClosed }
         closedSessions.forEach {

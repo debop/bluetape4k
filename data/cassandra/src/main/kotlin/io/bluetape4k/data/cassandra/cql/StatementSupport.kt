@@ -38,7 +38,7 @@ fun statementOf(cql: String, nameValues: Map<String, Any?>): SimpleStatement {
 
 inline fun boundStatement(
     boundStatement: BoundStatement,
-    initializer: BoundStatementBuilder.() -> Unit
+    initializer: BoundStatementBuilder.() -> Unit,
 ): BoundStatement {
     return BoundStatementBuilder(boundStatement).apply(initializer).build()
 }

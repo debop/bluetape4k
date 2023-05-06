@@ -13,7 +13,7 @@ import org.springframework.data.cassandra.core.CassandraOperations
 
 @SpringBootTest(classes = [ConvertTestConfiguration::class])
 class CassandraTypeMappingTest(
-    @Autowired private val operations: CassandraOperations
+    @Autowired private val operations: CassandraOperations,
 ): AbstractCassandraTest() {
 
     companion object: KLogging() {

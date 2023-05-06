@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 
 class AwaitilityCoroutinesTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `await untilSuspending`() = runSuspendTest {

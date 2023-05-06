@@ -12,16 +12,16 @@ import kotlin.math.absoluteValue
 
 fun volumeOf(volumn: Number = 0.0, unit: VolumeUnit = LITER): Volume = Volume(volumn, unit)
 
-fun <T : Number> T.volumeBy(unit: VolumeUnit): Volume = Volume(this, unit)
+fun <T: Number> T.volumeBy(unit: VolumeUnit): Volume = Volume(this, unit)
 
-fun <T : Number> T.cc(): Volume = volumeBy(CC)
-fun <T : Number> T.milliliter(): Volume = volumeBy(MILLILETER)
-fun <T : Number> T.deciliter(): Volume = volumeBy(DECILITER)
-fun <T : Number> T.liter(): Volume = volumeBy(LITER)
-fun <T : Number> T.centimeter3(): Volume = volumeBy(CENTIMETER_3)
-fun <T : Number> T.meter3(): Volume = volumeBy(METER_3)
+fun <T: Number> T.cc(): Volume = volumeBy(CC)
+fun <T: Number> T.milliliter(): Volume = volumeBy(MILLILETER)
+fun <T: Number> T.deciliter(): Volume = volumeBy(DECILITER)
+fun <T: Number> T.liter(): Volume = volumeBy(LITER)
+fun <T: Number> T.centimeter3(): Volume = volumeBy(CENTIMETER_3)
+fun <T: Number> T.meter3(): Volume = volumeBy(METER_3)
 
-operator fun <T : Number> T.times(volume: Volume): Volume = volume * this
+operator fun <T: Number> T.times(volume: Volume): Volume = volume * this
 
 /**
  * 체적 (Volume) 종류 및 단위
@@ -64,7 +64,7 @@ enum class VolumeUnit(val unitName: String, val factor: Double) {
  * @property value CC 단위의 값
  */
 @JvmInline
-value class Volume(val value: Double = 0.0) : Comparable<Volume>, Serializable {
+value class Volume(val value: Double = 0.0): Comparable<Volume>, Serializable {
 
     operator fun plus(other: Volume): Volume = Volume(value + other.value)
     operator fun minus(other: Volume): Volume = Volume(value - other.value)
@@ -97,18 +97,23 @@ value class Volume(val value: Double = 0.0) : Comparable<Volume>, Serializable {
     fun toHuman(unit: VolumeUnit = LITER): String =
         "%.1f %s".format(value / unit.factor, unit.unitName)
 
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         @JvmStatic
         val Zero by lazy { Volume(0.0) }
+
         @JvmStatic
         val MaxValue by lazy { Volume(Double.MAX_VALUE) }
+
         @JvmStatic
         val MinValue by lazy { Volume(Double.MIN_VALUE) }
+
         @JvmStatic
         val PositiveInf by lazy { Volume(Double.POSITIVE_INFINITY) }
+
         @JvmStatic
         val NegativeInf by lazy { Volume(Double.NEGATIVE_INFINITY) }
+
         @JvmStatic
         val NaN by lazy { Volume(Double.NaN) }
 

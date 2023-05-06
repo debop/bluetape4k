@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.ahocorasick.interval
 
 import io.bluetape4k.core.AbstractValueObject
-import java.util.Objects
+import java.util.*
 
 open class Interval(
     override val start: Int,

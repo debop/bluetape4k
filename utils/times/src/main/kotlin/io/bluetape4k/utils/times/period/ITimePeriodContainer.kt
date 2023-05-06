@@ -18,21 +18,21 @@ interface ITimePeriodContainer: MutableList<ITimePeriod>, ITimePeriod {
 
     fun sortByStart(sortDir: SortDirection = SortDirection.ASC) {
         when (sortDir) {
-            SortDirection.ASC -> periods.sortBy { it.start }
+            SortDirection.ASC  -> periods.sortBy { it.start }
             SortDirection.DESC -> periods.sortByDescending { it.start }
         }
     }
 
     fun sortByEnd(sortDir: SortDirection = SortDirection.ASC) {
         when (sortDir) {
-            SortDirection.ASC -> periods.sortBy { it.end }
+            SortDirection.ASC  -> periods.sortBy { it.end }
             SortDirection.DESC -> periods.sortByDescending { it.end }
         }
     }
 
     fun sortByDuration(sortDir: SortDirection = SortDirection.ASC) {
         when (sortDir) {
-            SortDirection.ASC -> periods.sortBy { it.duration }
+            SortDirection.ASC  -> periods.sortBy { it.duration }
             SortDirection.DESC -> periods.sortByDescending { it.duration }
         }
     }

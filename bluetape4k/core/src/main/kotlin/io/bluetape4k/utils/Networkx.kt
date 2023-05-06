@@ -8,7 +8,7 @@ import java.net.UnknownHostException
 /**
  * Network 정보를 제공하는 ObjectNetworkx
  */
-object Networkx : KLogging() {
+object Networkx: KLogging() {
     const val LOCALHOST_NAME: String = "localhost"
     const val LOCALHOST_IP: String = "127.0.0.1"
     const val DEFAULT_MASK: String = "255.255.255.0"
@@ -157,8 +157,8 @@ object Networkx : KLogging() {
         val arr = cidr.split('/')
 
         return when (arr.size) {
-            1 -> ipToIpBlock(arr[0], null)
-            2 -> ipToIpBlock(arr[0], arr[1].toInt())
+            1    -> ipToIpBlock(arr[0], null)
+            2    -> ipToIpBlock(arr[0], arr[1].toInt())
             else ->
                 throw IllegalArgumentException("Invalid cidr. cidr=$cidr")
         }

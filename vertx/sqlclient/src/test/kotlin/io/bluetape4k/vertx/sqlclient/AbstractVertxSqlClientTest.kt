@@ -29,7 +29,7 @@ import kotlin.coroutines.CoroutineContext
 abstract class AbstractVertxSqlClientTest {
 
 
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         /**
          * Testcontainers 를 이용해 Loading 시 시간이 걸려서 Connection timeout 이 생깁니다. 무시하셔도 됩니다.

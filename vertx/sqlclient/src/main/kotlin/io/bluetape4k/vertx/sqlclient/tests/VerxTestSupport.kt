@@ -11,7 +11,7 @@ import io.vertx.sqlclient.SqlConnection
 suspend fun Vertx.testWithTransaction(
     testContext: VertxTestContext,
     pool: Pool,
-    block: suspend (conn: SqlConnection) -> Unit
+    block: suspend (conn: SqlConnection) -> Unit,
 ) {
     return withVertxDispatcher {
         try {
@@ -26,7 +26,7 @@ suspend fun Vertx.testWithTransaction(
 suspend fun Vertx.testWithRollback(
     testContext: VertxTestContext,
     pool: Pool,
-    block: suspend (conn: SqlConnection) -> Unit
+    block: suspend (conn: SqlConnection) -> Unit,
 ) {
     return withVertxDispatcher {
         try {

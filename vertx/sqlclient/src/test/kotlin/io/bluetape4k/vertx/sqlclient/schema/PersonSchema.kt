@@ -9,7 +9,7 @@ object PersonSchema {
     val address = AddressTable()
     val person = PersonTable()
 
-    class AddressTable : AliasableSqlTable<AddressTable>("Address", PersonSchema::AddressTable) {
+    class AddressTable: AliasableSqlTable<AddressTable>("Address", PersonSchema::AddressTable) {
         val id = column<Int>(name = "address_id")
         val streetAddress = column<String>(name = "street_address")
         val city = column<String>(name = "city")
@@ -33,7 +33,7 @@ object PersonSchema {
      * }
      * ```
      */
-    class PersonTable : AliasableSqlTable<PersonTable>("Person", PersonSchema::PersonTable) {
+    class PersonTable: AliasableSqlTable<PersonTable>("Person", PersonSchema::PersonTable) {
         val id = column<Int>("id")
         val firstName = column<String>("first_name")
         val lastName = column<String>("last_name")
@@ -50,7 +50,7 @@ data class Address(
     var city: String? = null,
     var state: String? = null,
     var addressType: AddressType? = null,
-) : java.io.Serializable
+): java.io.Serializable
 
 enum class AddressType {
     HOME,
@@ -66,7 +66,7 @@ data class Person(
     val employed: Boolean? = null,
     val occupation: String? = null,
     val addressId: Int? = null,
-) : java.io.Serializable
+): java.io.Serializable
 
 
 data class PersonWithAddress(
@@ -77,4 +77,4 @@ data class PersonWithAddress(
     val employed: Boolean? = null,
     val occupation: String? = null,
     val address: Address? = null,
-) : java.io.Serializable
+): java.io.Serializable

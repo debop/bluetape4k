@@ -14,13 +14,13 @@ import io.bluetape4k.utils.times.nowZonedDateTime
 import io.bluetape4k.utils.times.period.samples.TimeBlockPeriodRelationTestData
 import io.bluetape4k.utils.times.seconds
 import io.bluetape4k.utils.times.zonedDateTimeOf
-import java.time.Duration
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

@@ -4,17 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
+import org.redisson.Redisson
+import org.redisson.config.Config
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.net.URI
-import java.util.Properties
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import javax.cache.CacheException
 import javax.cache.CacheManager
 import javax.cache.configuration.OptionalFeature
 import javax.cache.spi.CachingProvider
-import org.redisson.Redisson
-import org.redisson.config.Config
 
 
 /**
@@ -100,7 +100,7 @@ class RedisNearCachingProvider: CachingProvider {
         try {
             val yamlUrl = when (DEFAULT_URI_PATH) {
                 uri.path -> javaClass.getResource(DEFAULT_REDISSON_JCACHE_CONFIG_YAML)
-                else -> uri.toURL()
+                else     -> uri.toURL()
             }
             yamlUrl?.let { config = Config.fromYAML(it) }
                 ?: throw FileNotFoundException("/redisson-jcache.yaml")
@@ -110,7 +110,7 @@ class RedisNearCachingProvider: CachingProvider {
             try {
                 val jsonUrl = when (DEFAULT_URI_PATH) {
                     uri.path -> javaClass.getResource(DEFAULT_REDISSON_JCACHE_CONFIG_JSON)
-                    else -> uri.toURL()
+                    else     -> uri.toURL()
                 }
                 if (jsonUrl != null) {
                     config = Config.fromYAML(jsonUrl)

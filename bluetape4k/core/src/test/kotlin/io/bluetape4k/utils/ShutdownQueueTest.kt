@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test
 
 class ShutdownQueueTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
-    class CleanUp(private val name: String) : AutoCloseable {
+    class CleanUp(private val name: String): AutoCloseable {
         override fun close() {
             println("Close CleanUp instance. [$name]")
             Thread.sleep(100L)

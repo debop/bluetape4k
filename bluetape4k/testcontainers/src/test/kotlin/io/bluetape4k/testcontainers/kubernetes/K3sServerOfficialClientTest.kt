@@ -4,12 +4,12 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.kubernetes.client.openapi.apis.CoreV1Api
 import io.kubernetes.client.util.Config
-import java.io.StringReader
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
+import java.io.StringReader
 
 @Disabled("Apple Silicon 에서는 K3s를 사용할 수 없다")
 @Execution(ExecutionMode.SAME_THREAD)

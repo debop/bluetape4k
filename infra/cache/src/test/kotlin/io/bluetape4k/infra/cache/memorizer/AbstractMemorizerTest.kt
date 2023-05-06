@@ -1,9 +1,9 @@
 package io.bluetape4k.infra.cache.memorizer
 
-import java.time.Duration
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertTimeout
+import java.time.Duration
 import kotlin.system.measureTimeMillis
 
 abstract class AbstractMemorizerTest {

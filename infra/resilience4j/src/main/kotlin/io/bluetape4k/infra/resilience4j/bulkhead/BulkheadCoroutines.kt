@@ -23,7 +23,7 @@ suspend fun <T, U, R> withBulkhead(
 /**
  * suspend [func] 실행에 실패하는 경우, Resilience4j의 Bulkhead 를 이용하여, 실행을 제어합니다.
  *
- * @param func com.hpcnt.kommons.resilience4j.Bulkhead 로 decorate 할 suspend 함수
+ * @param func Bulkhead 로 decorate 할 suspend 함수
  * @return retry로 decorated 된 suspend function
  */
 fun <T, R> Bulkhead.decorateSuspendFunction1(func: suspend (input: T) -> R): suspend (T) -> R = { input: T ->
@@ -33,7 +33,7 @@ fun <T, R> Bulkhead.decorateSuspendFunction1(func: suspend (input: T) -> R): sus
 /**
  * suspend [func] 실행에 실패하는 경우, Resilience4j의 Bulkhead 를 이용하여, 실행을 제어합니다.
  *
- * @param func com.hpcnt.kommons.resilience4j.Bulkhead 로 decorate 할 suspend 함수
+ * @param func Bulkhead 로 decorate 할 suspend 함수
  * @return retry로 decorated 된 suspend function
  */
 fun <T1, T2, R> Bulkhead.decorateSuspendBiFunction(func: suspend (input1: T1, input2: T2) -> R): suspend (T1, T2) -> R =

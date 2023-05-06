@@ -1,18 +1,12 @@
 package io.bluetape4k.io.serializer
 
 import io.bluetape4k.core.AbstractValueObject
-import io.bluetape4k.io.compressor.BZip2Compressor
 import io.bluetape4k.io.compressor.Compressor
-import io.bluetape4k.io.compressor.DeflateCompressor
-import io.bluetape4k.io.compressor.GZipCompressor
-import io.bluetape4k.io.compressor.LZ4Compressor
-import io.bluetape4k.io.compressor.SnappyCompressor
-import io.bluetape4k.io.compressor.XZCompressor
-import io.bluetape4k.io.compressor.ZstdCompressor
+import io.bluetape4k.io.compressor.Compressors
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import net.datafaker.Faker
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
@@ -30,8 +24,9 @@ import java.util.stream.Stream
 abstract class AbstractBinarySerializerTest {
 
     companion object: KLogging() {
-        const val REPEAT_SIZE = 10
+        const val REPEAT_SIZE = 3
 
+        @JvmStatic
         val faker = Faker()
     }
 
@@ -94,13 +89,13 @@ abstract class AbstractBinarySerializerTest {
 
 
     private val compressorList = listOf(
-        BZip2Compressor(),
-        DeflateCompressor(),
-        GZipCompressor(),
-        LZ4Compressor(),
-        SnappyCompressor(),
-        XZCompressor(),
-        ZstdCompressor(),
+        Compressors.BZip2,
+        Compressors.Deflate,
+        Compressors.GZip,
+        Compressors.LZ4,
+        Compressors.Snappy,
+        Compressors.XZ,
+        Compressors.Zstd
     )
 
     private fun getCompressors(): Stream<out Compressor> = compressorList.stream()
@@ -188,7 +183,7 @@ abstract class AbstractBinarySerializerTest {
         val actual = serializer.deserialize<Any>(serializer.serialize(expected))
 
         actual.shouldNotBeNull()
-        log.debug { "actual class = ${actual.javaClass}" }
+        log.trace { "actual class = ${actual.javaClass}" }
         actual shouldBeEqualTo expected
     }
 

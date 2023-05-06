@@ -3,7 +3,6 @@ package io.bluetape4k.data.hibernate.mapping.associations.onetomany.list
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
-import java.time.LocalDate
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
@@ -15,6 +14,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
+import java.time.LocalDate
 
 class OneToManyListTest @Autowired constructor(
     private val fatherRepo: FatherRepository,
@@ -22,7 +22,7 @@ class OneToManyListTest @Autowired constructor(
     private val orderRepo: OrderRepository,
     private val orderItemRepo: OrderItemRepository,
     private val batchRepo: BatchRepository,
-    private val batchItemRepo: BatchItemRepository
+    private val batchItemRepo: BatchItemRepository,
 ): AbstractHibernateTest() {
 
     companion object: KLogging()

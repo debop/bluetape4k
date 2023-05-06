@@ -5,8 +5,6 @@ import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.warn
-import java.io.Serializable
-import java.util.concurrent.TimeUnit
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
@@ -14,6 +12,8 @@ import org.junit.jupiter.api.Test
 import org.redisson.api.TransactionOptions
 import org.redisson.client.codec.IntegerCodec
 import org.redisson.transaction.TransactionException
+import java.io.Serializable
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
 @RandomizedTest

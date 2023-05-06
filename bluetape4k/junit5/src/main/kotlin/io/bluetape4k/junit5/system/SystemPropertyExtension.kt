@@ -2,13 +2,13 @@ package io.bluetape4k.junit5.system
 
 import io.bluetape4k.junit5.store
 import io.bluetape4k.logging.KLogging
-import java.lang.reflect.AnnotatedElement
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.platform.commons.util.AnnotationUtils
+import java.lang.reflect.AnnotatedElement
 
 /**
  * 테스트 시 시스템 속성 정보를 임시로 설정하고, 테스트 후에는 원래 시스템 속성 값으로 복구시키는 기능을 제공합니다.
@@ -16,9 +16,9 @@ import org.junit.platform.commons.util.AnnotationUtils
  * @see SystemProperty
  * @see SystemProperties
  */
-class SystemPropertyExtension : BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback {
+class SystemPropertyExtension: BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val KEY_PREFIX = "io.bluetape4k.junit5.restoreContext."
 
         private fun makeKey(key: String): String = KEY_PREFIX + key

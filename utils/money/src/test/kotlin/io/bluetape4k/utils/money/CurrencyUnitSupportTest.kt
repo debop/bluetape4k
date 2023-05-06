@@ -2,10 +2,10 @@ package io.bluetape4k.utils.money
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import javax.money.Monetary
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
+import javax.money.Monetary
 
 class CurrencyUnitSupportTest {
 

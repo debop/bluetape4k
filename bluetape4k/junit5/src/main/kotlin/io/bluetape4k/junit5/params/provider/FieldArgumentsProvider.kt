@@ -1,11 +1,11 @@
 package io.bluetape4k.junit5.params.provider
 
-import java.lang.reflect.Field
-import java.util.stream.Stream
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.support.AnnotationConsumer
+import java.lang.reflect.Field
+import java.util.stream.Stream
 
 /**
  * Field variable로 Arguments 를 제공하는 Provider 입니다.
@@ -26,7 +26,7 @@ import org.junit.jupiter.params.support.AnnotationConsumer
  * ```
  *
  */
-class FieldArgumentsProvider : ArgumentsProvider, AnnotationConsumer<FieldSource> {
+class FieldArgumentsProvider: ArgumentsProvider, AnnotationConsumer<FieldSource> {
 
     private lateinit var variableName: String
 

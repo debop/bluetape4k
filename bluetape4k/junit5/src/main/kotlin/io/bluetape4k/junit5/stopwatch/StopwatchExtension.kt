@@ -3,11 +3,11 @@ package io.bluetape4k.junit5.stopwatch
 import io.bluetape4k.junit5.store
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
-import java.time.Duration
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.slf4j.Logger
+import java.time.Duration
 
 /**
  * Stopwatch 를 이용하여 테스트 실행 시간을 측정하는 JUnit5 Extension 입니다.
@@ -19,9 +19,9 @@ import org.slf4j.Logger
  * }
  * ```
  */
-class StopwatchExtension(val logger: Logger = log) : BeforeTestExecutionCallback, AfterTestExecutionCallback {
+class StopwatchExtension(val logger: Logger = log): BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     override fun beforeTestExecution(context: ExtensionContext) {
         val testMethod = context.requiredTestMethod

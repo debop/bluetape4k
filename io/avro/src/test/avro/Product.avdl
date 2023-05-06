@@ -1,26 +1,26 @@
 @namespace("io.bluetape4k.io.avro.message.examples")
 protocol ExampleProtocol {
 
-    enum Suit {
-        SPADES, DIAMONDES, CLUBS, HEARTS
-    }
+	enum Suit {
+		SPADES, DIAMONDES, CLUBS, HEARTS
+	}
 
-    record ProductProperty {
-        long id;
-        string key;
-        map<string> values;
-        boolean valid;
-        long createdAt;
-        long updatedAt;
-    }
+	record ProductProperty {
+		long id;
+		string key;
+		map<string> values;
+		boolean valid;
+		long createdAt;
+		long updatedAt;
+	}
 
-    record ProductRoot {
-        long id;
-        long categoryId;
-        array<ProductProperty> productProperties;
+	record ProductRoot {
+		long id;
+		long categoryId;
+		array<ProductProperty> productProperties;
 
-        // default Suit
-        Suit suit = "HEARTS";
-    }
+		// default Suit
+		Suit suit = "HEARTS";
+	}
 
 }

@@ -17,8 +17,6 @@ import io.bluetape4k.io.json.jackson.writeAsString
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.closeSafe
-import java.io.Serializable
-import java.time.Duration
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
@@ -26,6 +24,8 @@ import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.io.Serializable
+import java.time.Duration
 
 abstract class AbstractCoroutineClientTest {
 

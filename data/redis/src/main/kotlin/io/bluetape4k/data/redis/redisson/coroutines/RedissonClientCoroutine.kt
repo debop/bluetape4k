@@ -1,7 +1,6 @@
 package io.bluetape4k.data.redis.redisson.coroutines
 
 import io.bluetape4k.coroutines.support.awaitSuspending
-import java.time.LocalDate
 import org.redisson.api.BatchOptions
 import org.redisson.api.BatchResult
 import org.redisson.api.RBatch
@@ -9,17 +8,18 @@ import org.redisson.api.RTransaction
 import org.redisson.api.RedissonClient
 import org.redisson.api.TransactionOptions
 import org.redisson.transaction.TransactionException
+import java.time.LocalDate
 
 suspend inline fun RedissonClient.withBatchAwait(
     options: BatchOptions = BatchOptions.defaults(),
-    action: RBatch.() -> Unit
+    action: RBatch.() -> Unit,
 ): BatchResult<*> {
     return createBatch(options).apply(action).executeAsync().awaitSuspending()
 }
 
 suspend inline fun RedissonClient.withTransactionAwait(
     options: TransactionOptions = TransactionOptions.defaults(),
-    action: RTransaction.() -> Unit
+    action: RTransaction.() -> Unit,
 ) {
     val tx = createTransaction(options)
     try {

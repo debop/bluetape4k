@@ -3,7 +3,7 @@
 
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
 
-    <immediateFlush>true</immediateFlush>
+        <immediateFlush>true</immediateFlush>
         <encoder>
             <!-- @formatter:off -->
             <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%blue(%.24t)] %yellow(%logger{36}):%line: %msg%n%throwable</pattern>
@@ -12,9 +12,9 @@
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.tokenizer.korean" level="TRACE"/>
+    <logger name="io.bluetape4k.tokenizer.korean" level="DEBUG"/>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="Console"/>
     </root>
 

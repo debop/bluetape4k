@@ -5,10 +5,8 @@ import io.bluetape4k.concurrent.onFailure
 import io.bluetape4k.concurrent.onSuccess
 import io.bluetape4k.io.http.AbstractHttpTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
-import java.time.Duration
-import java.util.concurrent.CompletableFuture
+import io.bluetape4k.logging.trace
 import okhttp3.OkHttpClient
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeBlank
@@ -16,6 +14,8 @@ import org.apache.commons.lang3.time.StopWatch
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.util.concurrent.CompletableFuture
 
 class OkHttp3SupportTest: AbstractHttpTest() {
 
@@ -50,7 +50,7 @@ class OkHttp3SupportTest: AbstractHttpTest() {
             client.executeAsync(request)
                 .onSuccess { response ->
                     sw.stop()
-                    log.debug { "Run $index elapsed time=${sw.formatTime()}" }
+                    log.trace { "Run $index elapsed time=${sw.formatTime()}" }
                     response.isSuccessful.shouldBeTrue()
                 }
                 .onFailure { error -> fail(error) }
@@ -64,7 +64,7 @@ class OkHttp3SupportTest: AbstractHttpTest() {
         this
             .onSuccess { response ->
                 val bodyStr = response.bodyAsString()
-                log.debug { "Response body=$bodyStr" }
+                log.trace { "Response body=$bodyStr" }
                 bodyStr!!.shouldNotBeBlank()
             }
             .onFailure { error ->

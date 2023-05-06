@@ -1,20 +1,20 @@
 package io.bluetape4k.core
 
 import io.bluetape4k.logging.KLogging
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
-import java.io.Serializable
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.Test
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.Serializable
 
 class ValueWrapperTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `create with null`() {
@@ -38,7 +38,7 @@ class ValueWrapperTest {
         wrapper shouldNotBeEqualTo ValueWrapper("42")
     }
 
-    data class Data(val value: String) : Serializable
+    data class Data(val value: String): Serializable
 
     @Test
     fun `serialize with wrapper`() {

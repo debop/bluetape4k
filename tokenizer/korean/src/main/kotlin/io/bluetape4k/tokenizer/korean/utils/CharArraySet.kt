@@ -15,16 +15,16 @@ open class CharArraySet(val map: CharArrayMap<Any>): java.util.AbstractSet<Any>(
         @Suppress("USELESS_IS_CHECK")
         fun unmodifiableSet(set: CharArraySet): CharArraySet {
             return when (set) {
-                EMPTY_SET -> EMPTY_SET
+                EMPTY_SET                                   -> EMPTY_SET
                 is CharArrayMap.UnmodifiableCharArrayMap<*> -> set
-                else -> CharArraySet(CharArrayMap.unmodifiableMap(set.map))
+                else                                        -> CharArraySet(CharArrayMap.unmodifiableMap(set.map))
             }
         }
 
         fun copy(set: Set<Any>): CharArraySet = when (set) {
-            EMPTY_SET -> EMPTY_SET
+            EMPTY_SET       -> EMPTY_SET
             is CharArraySet -> CharArraySet(CharArrayMap.copy(set.map))
-            else -> CharArraySet(set)
+            else            -> CharArraySet(set)
         }
     }
 
@@ -83,7 +83,7 @@ open class CharArraySet(val map: CharArrayMap<Any>): java.util.AbstractSet<Any>(
             if (sb.length > 1) sb.append(", ")
             when (item) {
                 is CharArray -> sb.append(item)
-                else -> sb.append(item.toString())
+                else         -> sb.append(item.toString())
             }
         }
         return sb.append("]").toString()

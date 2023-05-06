@@ -3,11 +3,11 @@ package io.bluetape4k.io.http.okhttp3.mock
 import io.bluetape4k.io.compressor.Compressors
 import io.bluetape4k.support.EMPTY_STRING
 import io.bluetape4k.support.toUtf8Bytes
-import java.time.Duration
-import java.util.concurrent.TimeUnit
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okio.Buffer
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 val MockWebServer.baseUrl: String get() = url("/").toString()
 

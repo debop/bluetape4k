@@ -8,7 +8,6 @@ import io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration
 import io.bluetape4k.spring.cassandra.insertSuspending
 import io.bluetape4k.spring.cassandra.query.eq
 import io.bluetape4k.spring.cassandra.truncateSuspending
-import java.io.Serializable
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
@@ -30,6 +29,7 @@ import org.springframework.data.cassandra.core.query.query
 import org.springframework.data.cassandra.core.query.where
 import org.springframework.data.cassandra.core.selectOne
 import org.springframework.data.cassandra.core.update
+import java.io.Serializable
 
 @SpringBootTest
 class ReactiveUpdateOperationsTest(

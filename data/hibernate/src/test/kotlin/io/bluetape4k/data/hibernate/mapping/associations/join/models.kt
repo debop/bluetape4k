@@ -20,7 +20,7 @@ import javax.validation.constraints.NotBlank
 data class Address(
     var street: String? = null,
     var city: String? = null,
-    var zipcode: String? = null
+    var zipcode: String? = null,
 ): Serializable
 
 // FIXME: QueryDSL 에서 data class 는 제대로 kapt 가 되는데, 일반 클래스에서는 안된다 -> equals 를 재정의하지 않았기 때문이다 !!!
@@ -61,7 +61,7 @@ class AddressEntity(
 @Access(AccessType.FIELD)
 class JoinUser private constructor(
     @NotBlank
-    val name: String
+    val name: String,
 ): IntJpaEntity() {
 
     companion object {

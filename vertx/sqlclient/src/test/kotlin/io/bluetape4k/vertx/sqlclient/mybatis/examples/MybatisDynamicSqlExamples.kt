@@ -16,9 +16,9 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.mybatis.dynamic.sql.util.kotlin.model.select
 
-class MybatisDynamicSqlExamples : AbstractVertxSqlClientTest() {
+class MybatisDynamicSqlExamples: AbstractVertxSqlClientTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     override fun Vertx.getPool() = this.getMySQLPool()
 
@@ -26,7 +26,7 @@ class MybatisDynamicSqlExamples : AbstractVertxSqlClientTest() {
 
     @Test
     fun `MyBatis 로 SQL 구문 생성하고 Vertx SQL Client 로 실행하기`(
-        vertx: Vertx, testContext: VertxTestContext
+        vertx: Vertx, testContext: VertxTestContext,
     ) = runSuspendWithIO {
         log.debug { "Use MyBatis Dynamic SQL..." }
 

@@ -4,7 +4,6 @@ import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.kotlin.circuitbreaker.circuitBreaker
-import java.util.concurrent.Phaser
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -18,6 +17,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
+import java.util.concurrent.Phaser
 import kotlin.test.assertFailsWith
 
 class CircuitBreakerFlowTest {

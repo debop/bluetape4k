@@ -2,16 +2,16 @@ package io.bluetape4k.support
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.util.Locale
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class LocaleSupportTest {
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `get system default locale`() {

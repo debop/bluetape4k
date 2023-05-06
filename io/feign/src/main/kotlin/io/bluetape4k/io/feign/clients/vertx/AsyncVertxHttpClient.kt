@@ -6,7 +6,7 @@ import feign.Response
 import io.bluetape4k.io.http.vertx.vertxHttpClientOf
 import io.bluetape4k.logging.KLogging
 import io.vertx.core.http.HttpClient
-import java.util.Optional
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 class AsyncVertxHttpClient private constructor(

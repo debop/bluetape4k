@@ -2,15 +2,15 @@ package io.bluetape4k.utils
 
 import io.bluetape4k.core.LazyValue
 import io.bluetape4k.logging.KLogging
-import java.time.Instant
-import java.util.Date
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Test
+import java.time.Instant
+import java.util.*
 
 class KotlinDetectorTest {
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `detect kotlin environment`() {

@@ -1,14 +1,14 @@
 package io.bluetape4k.logging
 
-import java.time.Instant
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.time.Instant
 
 private val packageLogger = KotlinLogging.logger {}
 
 class KLoggingTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     private val error = RuntimeException("Boom!")
 

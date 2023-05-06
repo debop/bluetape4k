@@ -1,10 +1,5 @@
 package io.bluetape4k.coroutines.support
 
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.stream.DoubleStream
-import java.util.stream.IntStream
-import java.util.stream.LongStream
-import java.util.stream.Stream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -15,6 +10,11 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.stream.consumeAsFlow
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.stream.DoubleStream
+import java.util.stream.IntStream
+import java.util.stream.LongStream
+import java.util.stream.Stream
 import kotlin.coroutines.CoroutineContext
 
 /**

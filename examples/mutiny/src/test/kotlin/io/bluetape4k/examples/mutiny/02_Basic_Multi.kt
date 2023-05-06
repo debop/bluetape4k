@@ -9,6 +9,9 @@ import io.bluetape4k.utils.mutiny.onEach
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.subscription.MultiSubscriber
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldHaveSize
+import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
@@ -19,9 +22,6 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldHaveSize
-import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
 class MultiBasicExamples {

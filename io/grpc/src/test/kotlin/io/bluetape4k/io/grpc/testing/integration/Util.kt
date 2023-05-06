@@ -4,10 +4,10 @@ import com.google.protobuf.MessageLite
 import io.grpc.Metadata
 import io.grpc.Metadata.Key
 import io.grpc.protobuf.lite.ProtoLiteUtils
-import java.net.URI
-import java.net.URISyntaxException
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEqualTo
+import java.net.URI
+import java.net.URISyntaxException
 
 object Util {
 

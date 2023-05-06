@@ -6,6 +6,7 @@ dependencies {
     api(project(":bluetape4k-core"))
     api(project(":bluetape4k-utils-idgenerators"))
     compileOnly(project(":bluetape4k-coroutines"))
+    testImplementation(project(":bluetape4k-io-netty"))
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-testcontainers"))
 

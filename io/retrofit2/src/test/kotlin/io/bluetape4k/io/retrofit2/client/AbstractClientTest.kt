@@ -9,6 +9,7 @@ import io.bluetape4k.io.retrofit2.service
 import io.bluetape4k.io.retrofit2.services.TestService
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import io.bluetape4k.support.toUtf8Bytes
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -26,15 +27,15 @@ import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
-abstract class AbstractClientTest : AbstractRetrofitTest() {
+abstract class AbstractClientTest: AbstractRetrofitTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
+
+    protected abstract val callFactory: okhttp3.Call.Factory
 
     private lateinit var server: MockWebServer
     private lateinit var service: TestService.EmptyService
     private lateinit var api: TestService.TestInterface
-
-    protected abstract val callFactory: okhttp3.Call.Factory
 
     @BeforeEach
     fun beforeEach() {
@@ -58,7 +59,7 @@ abstract class AbstractClientTest : AbstractRetrofitTest() {
     fun `service get Unit`() {
         server.enqueueBody("")
 
-        log.debug { "request=${service.empty().request()}" }
+        log.trace { "request=${service.empty().request()}" }
 
         val response = service.empty().execute()
         response.isSuccessful.shouldBeTrue()
@@ -82,7 +83,7 @@ abstract class AbstractClientTest : AbstractRetrofitTest() {
 
         val response = api.post("foo").execute()
 
-        log.debug { "response=$response" }
+        log.trace { "response=$response" }
         response.code() shouldBeEqualTo 200
         response.message() shouldBeEqualTo "OK"
         response.headers()["Content-Length"]!! shouldContain "3"
@@ -104,7 +105,7 @@ abstract class AbstractClientTest : AbstractRetrofitTest() {
 
         val response = api.post("foo").execute()
 
-        log.debug { "response=$response" }
+        log.trace { "response=$response" }
         response.code() shouldBeEqualTo 200
         response.message().shouldBeNullOrBlank()
     }
@@ -169,7 +170,6 @@ abstract class AbstractClientTest : AbstractRetrofitTest() {
 
         response.code() shouldBeEqualTo 200
         response.message() shouldBeEqualTo "OK"
-
         response.body() shouldBeEqualTo "foo"
     }
 

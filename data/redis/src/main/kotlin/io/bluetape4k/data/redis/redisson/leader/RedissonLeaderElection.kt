@@ -7,12 +7,12 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
 import io.bluetape4k.support.uninitialized
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
-import java.util.concurrent.TimeUnit
 import org.redisson.api.RLock
 import org.redisson.api.RedissonClient
 import org.redisson.client.RedisException
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
+import java.util.concurrent.TimeUnit
 
 /**
  * 여러 Process, Thread에서 같은 작업이 동시, 무작위로 실행되는 것을 방지하기 위해
@@ -20,14 +20,14 @@ import org.redisson.client.RedisException
  */
 class RedissonLeaderElection private constructor(
     private val redissonClient: RedissonClient,
-    private val options: RedissonLeaderElectionOptions
+    private val options: RedissonLeaderElectionOptions,
 ): LeaderElection {
 
     companion object: KLogging() {
         @JvmStatic
         operator fun invoke(
             redissonClient: RedissonClient,
-            options: RedissonLeaderElectionOptions = RedissonLeaderElectionOptions.Default
+            options: RedissonLeaderElectionOptions = RedissonLeaderElectionOptions.Default,
         ): RedissonLeaderElection {
             return RedissonLeaderElection(redissonClient, options)
         }
@@ -82,7 +82,7 @@ class RedissonLeaderElection private constructor(
     override fun <T> runAsyncIfLeader(
         lockName: String,
         executor: Executor,
-        action: () -> CompletableFuture<T>
+        action: () -> CompletableFuture<T>,
     ): CompletableFuture<T> {
         lockName.requireNotBlank("lockName")
 
@@ -121,7 +121,7 @@ class RedissonLeaderElection private constructor(
         lock: RLock,
         currentThreadId: Long,
         executor: Executor,
-        action: () -> CompletableFuture<T>
+        action: () -> CompletableFuture<T>,
     ): CompletableFuture<T> {
         val lockName = lock.name
         log.debug { "Leader로 승격하여 비동기 작업을 수행합니다. lock=$lockName, threadId=$currentThreadId" }

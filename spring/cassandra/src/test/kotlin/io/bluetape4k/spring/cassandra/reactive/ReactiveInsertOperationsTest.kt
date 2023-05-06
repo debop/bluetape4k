@@ -8,7 +8,6 @@ import io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration
 import io.bluetape4k.spring.cassandra.cql.insertOptions
 import io.bluetape4k.spring.cassandra.selectOneByIdSuspending
 import io.bluetape4k.spring.cassandra.truncateSuspending
-import java.io.Serializable
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
@@ -25,6 +24,7 @@ import org.springframework.data.cassandra.core.ReactiveCassandraOperations
 import org.springframework.data.cassandra.core.insert
 import org.springframework.data.cassandra.core.mapping.Indexed
 import org.springframework.data.cassandra.core.mapping.Table
+import java.io.Serializable
 
 @SpringBootTest
 class ReactiveInsertOperationsTest(
@@ -43,7 +43,7 @@ class ReactiveInsertOperationsTest(
     private data class Person(
         @field:Id val id: String,
         @field:Indexed var firstName: String,
-        @field:Indexed var lastName: String
+        @field:Indexed var lastName: String,
     ): Serializable
 
     private fun newPerson(): Person {

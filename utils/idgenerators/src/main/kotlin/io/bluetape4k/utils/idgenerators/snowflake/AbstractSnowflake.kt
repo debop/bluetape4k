@@ -8,7 +8,7 @@ import io.bluetape4k.utils.idgenerators.snowflake.sequencer.Sequencer
  *
  * @property sequencer Snowflake Id 생성에 사용하는 Sequencer
  */
-abstract class AbstractSnowflake(val sequencer: Sequencer) : Snowflake {
+abstract class AbstractSnowflake(val sequencer: Sequencer): Snowflake {
 
     /**
      * Snowflake 알고리즘으로 Long 수형의 Id를 생성합니다.

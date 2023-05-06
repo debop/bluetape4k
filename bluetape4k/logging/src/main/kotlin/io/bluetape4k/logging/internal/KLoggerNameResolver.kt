@@ -9,14 +9,14 @@ internal object KLoggerNameResolver {
 
         return when {
             name.contains("Kt$") -> name.substringBefore("Kt$")
-            name.contains("$") -> name.substringBefore("$")
-            else -> name
+            name.contains("$")   -> name.substringBefore("$")
+            else                 -> name
         }
     }
 
-    internal fun <T : Any> name(forClass: Class<T>): String = unwrapCompanionClass(forClass).name
+    internal fun <T: Any> name(forClass: Class<T>): String = unwrapCompanionClass(forClass).name
 
-    private fun <T : Any> unwrapCompanionClass(clazz: Class<T>): Class<*> {
+    private fun <T: Any> unwrapCompanionClass(clazz: Class<T>): Class<*> {
         if (clazz.enclosingClass != null) {
             try {
                 val field = clazz.enclosingClass.getField(clazz.simpleName)

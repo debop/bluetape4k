@@ -14,7 +14,7 @@ abstract class FibonacciProvider {
         return when {
             n <= 0L -> 0L
             n <= 2L -> 1L
-            else -> cachedCalc(n - 1) + cachedCalc(n - 2)
+            else    -> cachedCalc(n - 1) + cachedCalc(n - 2)
         }
     }
 }

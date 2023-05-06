@@ -1,10 +1,10 @@
 package io.bluetape4k.utils.naivebayes
 
-import java.time.LocalDate
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 
 class NaiveBayesClassifierKoreanTest: AbstractNaiveBayesClassifierTest() {
 

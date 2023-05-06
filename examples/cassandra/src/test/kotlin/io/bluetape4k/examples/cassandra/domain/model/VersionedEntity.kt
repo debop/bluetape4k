@@ -1,9 +1,9 @@
 package io.bluetape4k.spring.cassandra.domain.model
 
-import java.io.Serializable
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.Version
 import org.springframework.data.cassandra.core.mapping.Table
+import java.io.Serializable
 
 @Table("versioned_entity_oplock")
 data class VersionedEntity(

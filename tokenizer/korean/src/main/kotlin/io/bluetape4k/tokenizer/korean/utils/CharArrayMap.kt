@@ -2,15 +2,14 @@ package io.bluetape4k.tokenizer.korean.utils
 
 import io.bluetape4k.logging.KLogging
 import java.io.Serializable
-import java.util.AbstractSet
-import java.util.Arrays
+import java.util.*
 
 
 /**
  * Lucene 에 있는 CharArrayMap 을 porting 한 클래스로, 사전 정보를 관리합니다.
  */
 @Suppress("UNCHECKED_CAST")
-open class CharArrayMap<V> constructor(startSize: Int): java.util.AbstractMap<Any, V>(), Serializable {
+open class CharArrayMap<V>(startSize: Int): java.util.AbstractMap<Any, V>(), Serializable {
 
     companion object: KLogging() {
 
@@ -21,9 +20,9 @@ open class CharArrayMap<V> constructor(startSize: Int): java.util.AbstractMap<An
         fun <V> unmodifiableMap(map: CharArrayMap<V>): CharArrayMap<V> {
             return when {
                 map.isEmpty() -> emptyMap()
-                else -> when (map) {
+                else          -> when (map) {
                     is UnmodifiableCharArrayMap -> map
-                    else -> UnmodifiableCharArrayMap(map)
+                    else                        -> UnmodifiableCharArrayMap(map)
                 }
             }
         }
@@ -74,9 +73,9 @@ open class CharArrayMap<V> constructor(startSize: Int): java.util.AbstractMap<An
     open fun containsKey(cs: CharSequence): Boolean = _keys[getSlot(cs)] != null
 
     override fun containsKey(key: Any?): Boolean = when (key) {
-        null -> false
+        null         -> false
         is CharArray -> containsKey(key, 0, key.size)
-        else -> containsKey(key.toString())
+        else         -> containsKey(key.toString())
     }
 
     open fun get(text: CharArray, off: Int, len: Int): V? {
@@ -86,9 +85,9 @@ open class CharArrayMap<V> constructor(startSize: Int): java.util.AbstractMap<An
     open fun get(cs: CharSequence): V? = _values[getSlot(cs)]
 
     override fun get(key: Any?): V? = when (key) {
-        null -> null
+        null         -> null
         is CharArray -> get(key, 0, key.size)
-        else -> get(key.toString())
+        else         -> get(key.toString())
     }
 
     private fun getSlot(text: CharArray, off: Int, len: Int): Int {
@@ -129,7 +128,7 @@ open class CharArrayMap<V> constructor(startSize: Int): java.util.AbstractMap<An
 
     override fun put(key: Any?, value: V): V? = when (key) {
         is CharArray -> put(key, value)
-        else -> put(key.toString(), value)
+        else         -> put(key.toString(), value)
     }
 
     open fun put(text: String, value: V): V? = put(text.toCharArray(), value)

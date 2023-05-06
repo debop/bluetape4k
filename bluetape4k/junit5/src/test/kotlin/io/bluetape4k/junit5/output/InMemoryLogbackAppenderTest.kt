@@ -13,7 +13,7 @@ import org.junit.jupiter.api.RepeatedTest
 
 class InMemoryLogbackAppenderTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     private lateinit var appender: InMemoryLogbackAppender
 

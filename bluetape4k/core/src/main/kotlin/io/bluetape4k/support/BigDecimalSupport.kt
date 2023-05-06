@@ -8,8 +8,8 @@ import java.math.BigDecimal
  */
 fun Number.toBigDecimal(): BigDecimal = when (this) {
     is BigDecimal -> this
-    is Long -> BigDecimal(this)
-    else -> BigDecimal(this.asDouble().toString())
+    is Long       -> BigDecimal(this)
+    else          -> BigDecimal(this.asDouble().toString())
 }
 
 operator fun BigDecimal.plus(other: Number): BigDecimal = this.add(other.toBigDecimal())
@@ -19,7 +19,7 @@ operator fun BigDecimal.div(other: Number): BigDecimal = this.divide(other.toBig
 
 operator fun BigDecimal.compareTo(other: Number): Int = this.compareTo(other.toBigDecimal())
 
-operator fun <T : Number> T.times(other: BigDecimal): BigDecimal = other.times(this)
+operator fun <T: Number> T.times(other: BigDecimal): BigDecimal = other.times(this)
 
 /**
  * BigDecimal의 모든 요소를 더한다

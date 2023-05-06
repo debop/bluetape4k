@@ -18,7 +18,7 @@ import kotlin.math.absoluteValue
 @RandomizedTest
 class HashidsTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 10
     }
 

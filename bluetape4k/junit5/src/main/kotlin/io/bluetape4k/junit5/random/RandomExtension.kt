@@ -2,16 +2,15 @@ package io.bluetape4k.junit5.random
 
 import io.bluetape4k.logging.KLogging
 import io.github.benas.randombeans.api.EnhancedRandom
-import java.util.stream.Stream
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import org.junit.jupiter.api.extension.TestInstancePostProcessor
-import kotlin.streams.toList
+import java.util.stream.Stream
 
-class RandomExtension : TestInstancePostProcessor, ParameterResolver {
+class RandomExtension: TestInstancePostProcessor, ParameterResolver {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         private val randomizer: EnhancedRandom by lazy { DefaultEnhancedRandom }
 
@@ -19,22 +18,22 @@ class RandomExtension : TestInstancePostProcessor, ParameterResolver {
             targetType.isAssignableFrom(List::class.java) || targetType.isAssignableFrom(Collection::class.java) ->
                 randomizer.objects(annotation.type.java, annotation.size, *annotation.excludes).toList()
 
-            targetType.isAssignableFrom(Set::class.java) ->
+            targetType.isAssignableFrom(Set::class.java)                                                         ->
                 randomizer.objects(annotation.type.java, annotation.size, *annotation.excludes).toList().toSet()
 
-            targetType.isAssignableFrom(Stream::class.java) ->
+            targetType.isAssignableFrom(Stream::class.java)                                                      ->
                 randomizer.objects(annotation.type.java, annotation.size, *annotation.excludes)
 
-            targetType.isAssignableFrom(Sequence::class.java) ->
+            targetType.isAssignableFrom(Sequence::class.java)                                                    ->
                 randomizer.objects(annotation.type.java, annotation.size, *annotation.excludes).toList()
 
-            targetType.isAssignableFrom(Iterator::class.java) ->
+            targetType.isAssignableFrom(Iterator::class.java)                                                    ->
                 randomizer.objects(annotation.type.java, annotation.size, *annotation.excludes).iterator()
 
-            targetType.isAssignableFrom(Iterable::class.java) ->
+            targetType.isAssignableFrom(Iterable::class.java)                                                    ->
                 randomizer.objects(annotation.type.java, annotation.size, *annotation.excludes).toList()
 
-            else ->
+            else                                                                                                 ->
                 randomizer.nextObject(targetType, *annotation.excludes)
         }
 

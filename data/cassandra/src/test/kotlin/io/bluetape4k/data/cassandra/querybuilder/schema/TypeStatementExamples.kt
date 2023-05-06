@@ -51,7 +51,7 @@ class TypeStatementExamples {
             .withField("third", DataTypes.BLOB)
             .withField("fourth", DataTypes.BOOLEAN)
             .asCql() shouldBeEqualTo
-                "CREATE TYPE ks.type (first text,second int,third blob,fourth boolean)"
+            "CREATE TYPE ks.type (first text,second int,third blob,fourth boolean)"
     }
 
     @Test

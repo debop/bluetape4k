@@ -1,8 +1,8 @@
 package io.bluetape4k.infra.resilience4j
 
 import io.github.resilience4j.core.functions.Either
-import java.io.IOException
 import org.junit.platform.commons.function.Try
+import java.io.IOException
 
 interface HelloWorldService {
     fun returnHelloWorld(): String?

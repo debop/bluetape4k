@@ -15,7 +15,7 @@ import org.amshove.kluent.shouldNotBeNullOrBlank
 @RandomizedTest
 abstract class AbstractJsonPlaceHolderTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         const val REPEAT_SIZE = 3
 

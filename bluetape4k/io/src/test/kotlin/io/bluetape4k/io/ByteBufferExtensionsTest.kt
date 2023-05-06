@@ -7,12 +7,12 @@ import io.bluetape4k.logging.trace
 import io.bluetape4k.support.emptyByteArray
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
-import java.nio.ByteBuffer
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
+import java.nio.ByteBuffer
 
 @RandomizedTest
 class ByteBufferExtensionsTest {

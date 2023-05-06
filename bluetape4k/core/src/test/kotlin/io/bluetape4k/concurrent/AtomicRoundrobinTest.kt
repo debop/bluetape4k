@@ -3,12 +3,11 @@ package io.bluetape4k.concurrent
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
-import kotlin.streams.toList
 import kotlin.test.assertFailsWith
 
 class AtomicRoundrobinTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `병렬에서 Atomic 한가`() {

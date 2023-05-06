@@ -2,8 +2,7 @@
 <configuration>
 
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
-
-    <immediateFlush>true</immediateFlush>
+        <immediateFlush>true</immediateFlush>
         <encoder>
             <!-- @formatter:off -->
             <pattern>

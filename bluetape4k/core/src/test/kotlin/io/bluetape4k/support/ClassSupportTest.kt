@@ -9,7 +9,7 @@ import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
 
 class ClassSupportTest {
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `class is present`() {

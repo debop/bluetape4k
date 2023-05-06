@@ -29,7 +29,7 @@ abstract class AbstractTemporalInterval<T>: ReadableTemporalInterval<T> where T:
     override fun gap(interval: ReadableTemporalInterval<T>): ReadableTemporalInterval<T>? {
         return when {
             overlaps(interval) -> null
-            else -> temporalIntervalOf(
+            else               -> temporalIntervalOf(
                 maxOf(startInclusive, interval.startInclusive),
                 minOf(endExclusive, interval.endExclusive),
                 zoneId
@@ -86,12 +86,12 @@ abstract class AbstractTemporalInterval<T>: ReadableTemporalInterval<T> where T:
 
     override fun withStart(newStart: T): ReadableTemporalInterval<T> = when {
         newStart > this.endExclusive -> temporalIntervalOf(this.endExclusive, newStart, zoneId)
-        else -> temporalIntervalOf(newStart, this.endExclusive, zoneId)
+        else                         -> temporalIntervalOf(newStart, this.endExclusive, zoneId)
     }
 
     override fun withEnd(newEnd: T): ReadableTemporalInterval<T> = when {
         newEnd < this.startInclusive -> temporalIntervalOf(newEnd, this.startInclusive, zoneId)
-        else -> temporalIntervalOf(this.startInclusive, newEnd, zoneId)
+        else                         -> temporalIntervalOf(this.startInclusive, newEnd, zoneId)
     }
 
 

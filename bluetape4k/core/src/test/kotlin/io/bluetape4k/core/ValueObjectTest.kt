@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 
 class ValueObjectTest {
 
-    class Person(val name: String, val age: Int, val address: String? = null) : AbstractValueObject() {
+    class Person(val name: String, val age: Int, val address: String? = null): AbstractValueObject() {
         override fun equalProperties(other: Any): Boolean =
             other is Person && name == other.name && age == other.age
 

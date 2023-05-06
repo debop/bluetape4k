@@ -141,7 +141,7 @@ class QuarterRangeTest: AbstractPeriodTest() {
             val qr = q1.addQuarters(q)
             val qv = when {
                 q < 0 -> 4 + (q + 1) % 4
-                else -> q % 4 + 1
+                else  -> q % 4 + 1
             }
             log.trace { "q=$q, qv=$qv" }
             val quarter = Quarter.of(qv.absoluteValue)

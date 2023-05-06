@@ -1,10 +1,10 @@
 package io.bluetape4k.data.hibernate.reactive.stage
 
-import java.util.concurrent.CompletionStage
-import javax.persistence.EntityGraph
 import org.hibernate.LockMode
 import org.hibernate.reactive.common.ResultSetMapping
 import org.hibernate.reactive.stage.Stage
+import java.util.concurrent.CompletionStage
+import javax.persistence.EntityGraph
 
 inline fun <reified T> Stage.StatelessSession.getAs(id: java.io.Serializable): CompletionStage<T> =
     get(T::class.java, id)

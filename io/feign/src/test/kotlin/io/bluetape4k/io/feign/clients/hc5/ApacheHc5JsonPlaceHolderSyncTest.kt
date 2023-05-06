@@ -10,9 +10,9 @@ import io.bluetape4k.io.feign.codec.JacksonEncoder2
 import io.bluetape4k.io.feign.feignBuilder
 import io.bluetape4k.logging.KLogging
 
-class ApacheHc5JsonPlaceHolderSyncTest : AbstractJsonPlaceHolderSyncTest() {
+class ApacheHc5JsonPlaceHolderSyncTest: AbstractJsonPlaceHolderSyncTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     override fun newBuilder(): Feign.Builder {
         return feignBuilder {

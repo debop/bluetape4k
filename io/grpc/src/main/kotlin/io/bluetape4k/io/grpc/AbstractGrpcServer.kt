@@ -18,9 +18,6 @@ import java.util.concurrent.TimeUnit
  *
  * @property builder  builder of grpc server
  * @property services collection of grpc services
- *
- * @author debop
- * @since 2020/04/24
  */
 abstract class AbstractGrpcServer(
     protected val builder: ServerBuilder<*>,

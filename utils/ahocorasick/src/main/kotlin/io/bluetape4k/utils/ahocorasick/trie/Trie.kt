@@ -4,8 +4,7 @@ import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.ahocorasick.interval.IntervalTree
-import java.util.ArrayDeque
-import java.util.LinkedList
+import java.util.*
 
 
 /**
@@ -15,7 +14,7 @@ import java.util.LinkedList
  */
 class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         fun builder(): TrieBuilder = TrieBuilder()
     }
 
@@ -91,7 +90,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
         text.forEachIndexed { pos, ch ->
             currentState = when {
                 config.ignoreCase -> getState(currentState, ch.lowercaseChar())
-                else -> getState(currentState, ch)
+                else              -> getState(currentState, ch)
             }
             val stored = storeEmits(pos, currentState, emitHandler)
             if (stored && config.stopOnHit) {
@@ -116,7 +115,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
         text.forEachIndexed { pos, ch ->
             currentState = when {
                 config.ignoreCase -> getState(currentState, ch.lowercaseChar())
-                else -> getState(currentState, ch)
+                else              -> getState(currentState, ch)
             }
 
             currentState.emit().forEach { emitStr ->

@@ -2,9 +2,9 @@ package io.bluetape4k.io.grpc
 
 import io.bluetape4k.logging.KLogging
 import io.grpc.ManagedChannel
-import java.io.Closeable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
+import java.io.Closeable
 
 /**
  * gRPC 통신을 수행하는 Client의 최상위 추상화 클래스입니다.

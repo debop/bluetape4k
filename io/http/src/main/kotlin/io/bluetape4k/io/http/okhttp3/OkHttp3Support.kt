@@ -1,17 +1,17 @@
 package io.bluetape4k.io.http.okhttp3
 
 import io.bluetape4k.utils.Runtimex
-import java.io.IOException
-import java.io.InputStream
-import java.time.Duration
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.TimeUnit
 import okhttp3.CacheControl
 import okhttp3.Callback
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import java.io.IOException
+import java.io.InputStream
+import java.time.Duration
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 
 fun okHttp3ConnectionPool(
     maxIdleConnections: Int = Runtimex.availableProcessors,
@@ -117,8 +117,8 @@ inline fun OkHttpClient.executeAsync(
         override fun onResponse(call: okhttp3.Call, response: Response) {
             when {
                 response.isSuccessful -> promise.complete(response)
-                call.isCanceled() -> handleCanceled(IOException("Canceled"))
-                else -> handleCanceled(IOException("Unexpected code $response"))
+                call.isCanceled()     -> handleCanceled(IOException("Canceled"))
+                else                  -> handleCanceled(IOException("Unexpected code $response"))
             }
         }
 

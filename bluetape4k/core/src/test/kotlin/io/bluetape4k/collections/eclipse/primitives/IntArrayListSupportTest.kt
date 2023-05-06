@@ -3,10 +3,10 @@ package io.bluetape4k.collections.eclipse.primitives
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.intSequence
 import io.bluetape4k.collections.toList
-import java.util.stream.IntStream
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Test
+import java.util.stream.IntStream
 
 class IntArrayListSupportTest {
 

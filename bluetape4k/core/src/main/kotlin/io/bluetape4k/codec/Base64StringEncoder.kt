@@ -9,9 +9,9 @@ import org.apache.commons.codec.binary.Base64
 /**
  * 문자열을 Base64 형태로 인코딩/디코딩 합니다
  */
-class Base64StringEncoder : StringEncoder {
+class Base64StringEncoder: StringEncoder {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         // Url safe base64 encoder
         private val base64 = Base64(true)
     }

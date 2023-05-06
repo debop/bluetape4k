@@ -28,8 +28,8 @@ public class Annotations {
      */
     @Nullable
     public static <A extends Annotation> A findAnnotation(
-        final Class<?> clazz,
-        final Class<A> annotationType
+            final Class<?> clazz,
+            final Class<A> annotationType
     ) {
         return AnnotationUtils.findAnnotation(clazz, annotationType);
     }
@@ -45,8 +45,8 @@ public class Annotations {
      */
     @Nullable
     public static <A extends Annotation> A findAnnotation(
-        final Method method,
-        final Class<A> annotationType
+            final Method method,
+            final Class<A> annotationType
     ) {
         return AnnotationUtils.findAnnotation(method, annotationType);
     }

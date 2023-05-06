@@ -8,7 +8,7 @@ import javax.persistence.*
 
 @Entity(name = "converter_purchase")
 @Access(AccessType.FIELD)
-class Purchase : IntJpaEntity() {
+class Purchase: IntJpaEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,8 +39,8 @@ class Purchase : IntJpaEntity() {
 
     data class Option(
         var name: String? = null,
-        var value: String? = null
-    ) : Serializable
+        var value: String? = null,
+    ): Serializable
 }
 
 /**
@@ -48,4 +48,4 @@ class Purchase : IntJpaEntity() {
  */
 // autoApply=true 를 적용하면, 관련 객체에 모두 Converter가 적용된다.
 // @Converter(autoApply=true)
-class ComponentAsJsonConverter : AbstractObjectAsJsonConverter<Purchase.Option>(Purchase.Option::class.java)
+class ComponentAsJsonConverter: AbstractObjectAsJsonConverter<Purchase.Option>(Purchase.Option::class.java)

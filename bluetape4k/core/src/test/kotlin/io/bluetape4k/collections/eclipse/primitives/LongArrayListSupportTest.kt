@@ -3,9 +3,9 @@ package io.bluetape4k.collections.eclipse.primitives
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.longSequence
 import io.bluetape4k.collections.toList
-import java.util.stream.LongStream
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.util.stream.LongStream
 
 class LongArrayListSupportTest {
 

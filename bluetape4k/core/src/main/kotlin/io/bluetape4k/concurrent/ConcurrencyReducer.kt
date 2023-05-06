@@ -20,7 +20,7 @@ class ConcurrencyReducer<T> private constructor(
     private val maxConcurrency: Int,
     private val maxQueueSize: Int,
 ) {
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         operator fun <T> invoke(maxConcurrency: Int, maxQueueSize: Int): ConcurrencyReducer<T> {
             maxConcurrency.requirePositiveNumber("maxConcurrency")
@@ -117,10 +117,10 @@ class ConcurrencyReducer<T> private constructor(
         val promise: CompletableFuture<T>,
     )
 
-    class CapacityReachedException : RuntimeException {
-        constructor() : super()
-        constructor(message: String) : super(message)
-        constructor(message: String, cause: Throwable?) : super(message, cause)
-        constructor(cause: Throwable?) : super(cause)
+    class CapacityReachedException: RuntimeException {
+        constructor(): super()
+        constructor(message: String): super(message)
+        constructor(message: String, cause: Throwable?): super(message, cause)
+        constructor(cause: Throwable?): super(cause)
     }
 }

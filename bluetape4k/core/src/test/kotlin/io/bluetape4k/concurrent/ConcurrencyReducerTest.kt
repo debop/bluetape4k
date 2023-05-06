@@ -2,9 +2,6 @@ package io.bluetape4k.concurrent
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CompletionStage
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
@@ -12,6 +9,9 @@ import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CompletionStage
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.test.assertFailsWith
 
 class ConcurrencyReducerTest {

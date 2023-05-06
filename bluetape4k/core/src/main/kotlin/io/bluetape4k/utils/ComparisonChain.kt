@@ -21,8 +21,8 @@ abstract class ComparisonChain {
 
     abstract val result: Int
 
-    abstract fun <T : Comparable<T>> compare(left: T, right: T): ComparisonChain
-    abstract fun <T : Any> compare(left: T?, right: T?, comparator: Comparator<T>): ComparisonChain
+    abstract fun <T: Comparable<T>> compare(left: T, right: T): ComparisonChain
+    abstract fun <T: Any> compare(left: T?, right: T?, comparator: Comparator<T>): ComparisonChain
     abstract fun compare(left: Int, right: Int): ComparisonChain
     abstract fun compare(left: Long, right: Long): ComparisonChain
     abstract fun compare(left: Float, right: Float): ComparisonChain
@@ -30,26 +30,29 @@ abstract class ComparisonChain {
     abstract fun compareTrueFirst(left: Boolean, right: Boolean): ComparisonChain
     abstract fun compareFalseFirst(left: Boolean, right: Boolean): ComparisonChain
 
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         @JvmStatic
         val ACTIVE by lazy {
-            object : ComparisonChain() {
+            object: ComparisonChain() {
                 override val result: Int
                     get() = 0
 
-                override fun <T : Comparable<T>> compare(left: T, right: T): ComparisonChain =
+                override fun <T: Comparable<T>> compare(left: T, right: T): ComparisonChain =
                     classify(left.compareTo(right))
 
-                override fun <T : Any> compare(left: T?, right: T?, comparator: Comparator<T>): ComparisonChain =
+                override fun <T: Any> compare(left: T?, right: T?, comparator: Comparator<T>): ComparisonChain =
                     classify(comparator.compare(left, right))
 
                 override fun compare(left: Int, right: Int): ComparisonChain = classify(left.compareTo(right))
                 override fun compare(left: Long, right: Long): ComparisonChain = classify(left.compareTo(right))
                 override fun compare(left: Float, right: Float): ComparisonChain = classify(left.compareTo(right))
                 override fun compare(left: Double, right: Double): ComparisonChain = classify(left.compareTo(right))
-                override fun compareTrueFirst(left: Boolean, right: Boolean): ComparisonChain = classify(compareBoolean(right, left))
-                override fun compareFalseFirst(left: Boolean, right: Boolean): ComparisonChain = classify(compareBoolean(left, right))
+                override fun compareTrueFirst(left: Boolean, right: Boolean): ComparisonChain =
+                    classify(compareBoolean(right, left))
+
+                override fun compareFalseFirst(left: Boolean, right: Boolean): ComparisonChain =
+                    classify(compareBoolean(left, right))
             }
         }
 
@@ -62,7 +65,7 @@ abstract class ComparisonChain {
         private fun classify(result: Int): ComparisonChain = when {
             result < 0 -> LESS
             result > 0 -> GREATER
-            else -> ACTIVE
+            else       -> ACTIVE
         }
 
         @JvmStatic
@@ -70,9 +73,9 @@ abstract class ComparisonChain {
     }
 
 
-    private class InactiveComparisonChain(override val result: Int) : ComparisonChain() {
-        override fun <T : Comparable<T>> compare(left: T, right: T): ComparisonChain = this
-        override fun <T : Any> compare(left: T?, right: T?, comparator: Comparator<T>): ComparisonChain = this
+    private class InactiveComparisonChain(override val result: Int): ComparisonChain() {
+        override fun <T: Comparable<T>> compare(left: T, right: T): ComparisonChain = this
+        override fun <T: Any> compare(left: T?, right: T?, comparator: Comparator<T>): ComparisonChain = this
         override fun compare(left: Int, right: Int): ComparisonChain = this
         override fun compare(left: Long, right: Long): ComparisonChain = this
         override fun compare(left: Float, right: Float): ComparisonChain = this

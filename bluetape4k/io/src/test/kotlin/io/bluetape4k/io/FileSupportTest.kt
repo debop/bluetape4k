@@ -7,19 +7,19 @@ import io.bluetape4k.junit5.folder.TempFolderExtension
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
-import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.extension.ExtendWith
+import java.util.*
 
 @RandomizedTest
 @ExtendWith(TempFolderExtension::class)
 class FileSupportTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val REPEAT_SIZE = 3
     }
 

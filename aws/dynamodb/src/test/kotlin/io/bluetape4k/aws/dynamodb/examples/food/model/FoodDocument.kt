@@ -11,6 +11,7 @@ class FoodDocument: AbstractDynamoDocument() {
 
     companion object {
 
+        @JvmStatic
         operator fun invoke(
             id: String,
             restraurantId: String,

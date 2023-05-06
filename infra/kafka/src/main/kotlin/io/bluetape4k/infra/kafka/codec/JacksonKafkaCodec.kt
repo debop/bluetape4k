@@ -6,7 +6,7 @@ import io.bluetape4k.io.json.jackson.writeAsBytes
 import org.apache.kafka.common.header.Headers
 
 class JacksonKafkaCodec<T: Any>(
-    private val mapper: JsonMapper = Jackson.defaultJsonMapper
+    private val mapper: JsonMapper = Jackson.defaultJsonMapper,
 ): AbstractKafkaCodec<T>() {
 
     override fun doSerialize(topic: String?, headers: Headers?, graph: T): ByteArray? {

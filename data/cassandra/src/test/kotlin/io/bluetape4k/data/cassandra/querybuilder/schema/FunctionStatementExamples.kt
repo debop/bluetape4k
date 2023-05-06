@@ -19,7 +19,7 @@ class FunctionStatementExamples {
             .returnsNullOnNull()
             .returnsType(DataTypes.DOUBLE)
             .toString() shouldBeEqualTo
-                "CREATE FUNCTION ks.func1 (param1 timestamp) RETURNS NULL ON NULL INPUT RETURNS double"
+            "CREATE FUNCTION ks.func1 (param1 timestamp) RETURNS NULL ON NULL INPUT RETURNS double"
 
         createFunction("ks", "func1")
             .withParameter("param1", DataTypes.TIMESTAMP)
@@ -27,7 +27,7 @@ class FunctionStatementExamples {
             .returnsType(DataTypes.DOUBLE)
             .withJavaLanguage()
             .toString() shouldBeEqualTo
-                "CREATE FUNCTION ks.func1 (param1 timestamp) RETURNS NULL ON NULL INPUT RETURNS double LANGUAGE java"
+            "CREATE FUNCTION ks.func1 (param1 timestamp) RETURNS NULL ON NULL INPUT RETURNS double LANGUAGE java"
 
         createFunction("ks", "func1")
             .withParameter("param1", DataTypes.tupleOf(DataTypes.INT, DataTypes.INT))
@@ -36,8 +36,8 @@ class FunctionStatementExamples {
             .withJavaLanguage()
             .`as`("'return Integer.toString(param1);'")
             .toString() shouldBeEqualTo
-                "CREATE FUNCTION ks.func1 (param1 tuple<int, int>) RETURNS NULL ON NULL INPUT " +
-                "RETURNS person LANGUAGE java AS 'return Integer.toString(param1);'"
+            "CREATE FUNCTION ks.func1 (param1 tuple<int, int>) RETURNS NULL ON NULL INPUT " +
+            "RETURNS person LANGUAGE java AS 'return Integer.toString(param1);'"
 
         createFunction("ks", "func1")
             .withParameter("param1", DataTypes.tupleOf(DataTypes.INT, DataTypes.INT))
@@ -46,8 +46,8 @@ class FunctionStatementExamples {
             .withJavaLanguage()
             .asQuoted("return Integer.toString(param1);")
             .toString() shouldBeEqualTo
-                "CREATE FUNCTION ks.func1 (param1 tuple<int, int>) " +
-                "RETURNS NULL ON NULL INPUT RETURNS person LANGUAGE java AS 'return Integer.toString(param1);'"
+            "CREATE FUNCTION ks.func1 (param1 tuple<int, int>) " +
+            "RETURNS NULL ON NULL INPUT RETURNS person LANGUAGE java AS 'return Integer.toString(param1);'"
 
         createFunction("ks", "func1")
             .withParameter("param1", DataTypes.TIMESTAMP)
@@ -57,8 +57,8 @@ class FunctionStatementExamples {
             .returnsType(DataTypes.DOUBLE)
             .withJavaLanguage()
             .toString() shouldBeEqualTo
-                "CREATE FUNCTION ks.func1 (param1 timestamp,param2 int,param3 boolean) " +
-                "RETURNS NULL ON NULL INPUT RETURNS double LANGUAGE java"
+            "CREATE FUNCTION ks.func1 (param1 timestamp,param2 int,param3 boolean) " +
+            "RETURNS NULL ON NULL INPUT RETURNS double LANGUAGE java"
 
         createFunction("ks", "func1")
             .returnsNullOnNull()
@@ -66,7 +66,7 @@ class FunctionStatementExamples {
             .withJavaLanguage()
             .asQuoted("""return "hello world";""")
             .toString() shouldBeEqualTo
-                """CREATE FUNCTION ks.func1 () RETURNS NULL ON NULL INPUT RETURNS text LANGUAGE java AS 'return "hello world";'"""
+            """CREATE FUNCTION ks.func1 () RETURNS NULL ON NULL INPUT RETURNS text LANGUAGE java AS 'return "hello world";'"""
 
         createFunction("ks", "func1")
             .orReplace()
@@ -74,8 +74,8 @@ class FunctionStatementExamples {
             .returnsNullOnNull()
             .returnsType(DataTypes.DOUBLE)
             .toString() shouldBeEqualTo
-                "CREATE OR REPLACE FUNCTION ks.func1 (param1 timestamp) " +
-                "RETURNS NULL ON NULL INPUT RETURNS double"
+            "CREATE OR REPLACE FUNCTION ks.func1 (param1 timestamp) " +
+            "RETURNS NULL ON NULL INPUT RETURNS double"
     }
 
     @Test

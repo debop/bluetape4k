@@ -8,7 +8,7 @@ data class TrieConfig(
     var onlyWholeWordsWhiteSpaceSeparated: Boolean = false,
     var ignoreCase: Boolean = false,
     var stopOnHit: Boolean = false,
-) : Serializable {
+): Serializable {
 
     companion object {
         val DEFAULT = TrieConfig()

@@ -5,7 +5,6 @@ import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
 import io.nats.client.Connection
 import io.nats.client.Nats
-import java.time.Duration
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
@@ -14,6 +13,7 @@ import org.awaitility.kotlin.until
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
+import java.time.Duration
 
 @Execution(ExecutionMode.SAME_THREAD)
 class NatsServerTest {

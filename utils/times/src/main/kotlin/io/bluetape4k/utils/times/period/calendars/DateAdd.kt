@@ -56,7 +56,7 @@ open class DateAdd protected constructor() {
 
         val (end, remaining) = when {
             offset.isNegative -> calculateEnd(start, offset.negated(), SeekDirection.BACKWARD, seekBoundary)
-            else -> calculateEnd(start, offset, SeekDirection.FORWARD, seekBoundary)
+            else              -> calculateEnd(start, offset, SeekDirection.FORWARD, seekBoundary)
         }
 
         log.trace { "Add results. end=$end, remaining=$remaining" }
@@ -86,7 +86,7 @@ open class DateAdd protected constructor() {
 
         val (end, remaining) = when {
             offset.isNegative -> calculateEnd(start, offset.negated(), SeekDirection.FORWARD, seekBoundary)
-            else -> calculateEnd(start, offset, SeekDirection.BACKWARD, seekBoundary)
+            else              -> calculateEnd(start, offset, SeekDirection.BACKWARD, seekBoundary)
         }
 
         log.trace { "Substract results. end=$end, remaining=$remaining" }
@@ -119,7 +119,7 @@ open class DateAdd protected constructor() {
 
         val startPeriod = when {
             seekDir.isForward -> findNextPeriod(start, availablePeriods)
-            else -> findPrevPeriod(start, availablePeriods)
+            else              -> findPrevPeriod(start, availablePeriods)
         }
 
         // 첫 시작 기간이 없다면 중단한다.
@@ -144,7 +144,13 @@ open class DateAdd protected constructor() {
                 seekBoundary
             )
 
-            else -> findPeriodBackward(availablePeriods, offset, startPeriod.first, startPeriod.second, seekBoundary)
+            else              -> findPeriodBackward(
+                availablePeriods,
+                offset,
+                startPeriod.first,
+                startPeriod.second,
+                seekBoundary
+            )
         }
     }
 
@@ -193,7 +199,7 @@ open class DateAdd protected constructor() {
 
             val isTargetPeriod = when {
                 seekBoundary.isFill -> gapRemaining >= remaining
-                else -> gapRemaining > remaining
+                else                -> gapRemaining > remaining
             }
 
             if (isTargetPeriod) {
@@ -237,7 +243,7 @@ open class DateAdd protected constructor() {
 
             val isTargetPeriod = when {
                 seekBoundary.isFill -> gapRemaining >= remaining
-                else -> gapRemaining > remaining
+                else                -> gapRemaining > remaining
             }
 
             if (isTargetPeriod) {

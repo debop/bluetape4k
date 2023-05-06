@@ -6,4 +6,4 @@ import java.util.concurrent.ForkJoinPool
 /**
  * [ForkJoinPool.commonPool]을 사용하는 [ExecutorService]
  */
-object ForkJoinExecutor : ExecutorService by ForkJoinPool.commonPool()
+object ForkJoinExecutor: ExecutorService by ForkJoinPool.commonPool()

@@ -33,7 +33,7 @@ import kotlinx.coroutines.withContext
 suspend inline fun <T> withCoroutineLoggingContext(
     pair: Pair<String, Any?>,
     restorePrevious: Boolean = true,
-    crossinline block: suspend CoroutineScope.() -> T
+    crossinline block: suspend CoroutineScope.() -> T,
 ): T = coroutineScope {
     withContext(coroutineContext + MDCContext()) {
         withLoggingContext(pair, restorePrevious) {
@@ -70,7 +70,7 @@ suspend inline fun <T> withCoroutineLoggingContext(
 suspend inline fun <T> withCoroutineLoggingContext(
     vararg pairs: Pair<String, Any?>,
     restorePrevious: Boolean = true,
-    crossinline block: suspend CoroutineScope.() -> T
+    crossinline block: suspend CoroutineScope.() -> T,
 ): T = withCoroutineLoggingContext(pairs.toMap(), restorePrevious, block)
 
 /**
@@ -100,7 +100,7 @@ suspend inline fun <T> withCoroutineLoggingContext(
 suspend inline fun <T> withCoroutineLoggingContext(
     map: Map<String, Any?>,
     restorePrevious: Boolean = true,
-    crossinline block: suspend CoroutineScope.() -> T
+    crossinline block: suspend CoroutineScope.() -> T,
 ): T = coroutineScope {
     withContext(coroutineContext + MDCContext()) {
         withLoggingContext(map, restorePrevious) {

@@ -1,10 +1,10 @@
 package io.bluetape4k.utils.times
 
 import io.bluetape4k.logging.KLogging
-import java.time.DayOfWeek
-import java.time.temporal.ChronoUnit
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.time.DayOfWeek
+import java.time.temporal.ChronoUnit
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 

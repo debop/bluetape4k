@@ -18,7 +18,7 @@ fun ReactiveCassandraBatchOperations.insertFlow(entities: Flow<*>): ReactiveCass
 
 fun ReactiveCassandraBatchOperations.insertFlow(
     entities: Flow<*>,
-    options: WriteOptions
+    options: WriteOptions,
 ): ReactiveCassandraBatchOperations {
     return insert(mono { entities.toList() }, options)
 }
@@ -29,7 +29,7 @@ fun ReactiveCassandraBatchOperations.updateFlow(entities: Flow<*>): ReactiveCass
 
 fun ReactiveCassandraBatchOperations.updateFlow(
     entities: Flow<*>,
-    options: WriteOptions
+    options: WriteOptions,
 ): ReactiveCassandraBatchOperations {
     return update(mono { entities.toList() }, options)
 }
@@ -40,7 +40,7 @@ fun ReactiveCassandraBatchOperations.deleteFlow(entities: Flow<*>): ReactiveCass
 
 fun ReactiveCassandraBatchOperations.deleteFlow(
     entities: Flow<*>,
-    options: WriteOptions
+    options: WriteOptions,
 ): ReactiveCassandraBatchOperations {
     return delete(mono { entities.toList() }, options)
 }

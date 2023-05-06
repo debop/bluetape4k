@@ -45,7 +45,7 @@ inline fun <T> asyncRunWithTimeout(timeout: Duration, crossinline action: () -> 
  * @param block 실행할 block
  * @return [block]의 실행 결과, [timeoutMillis] 시간 내에 종료되지 않으면 null
  */
-inline fun <T : Any> withTimeoutOrNull(timeoutMillis: Long, crossinline action: () -> T): T? {
+inline fun <T: Any> withTimeoutOrNull(timeoutMillis: Long, crossinline action: () -> T): T? {
     return try {
         asyncRunWithTimeout(timeoutMillis, action).get()
     } catch (e: Exception) {
@@ -60,6 +60,6 @@ inline fun <T : Any> withTimeoutOrNull(timeoutMillis: Long, crossinline action: 
  * @param block 실행할 block
  * @return [block]의 실행 결과, [timeout] 시간 내에 종료되지 않으면 null
  */
-inline fun <T : Any> withTimeoutOrNull(timeout: Duration, crossinline action: () -> T): T? {
+inline fun <T: Any> withTimeoutOrNull(timeout: Duration, crossinline action: () -> T): T? {
     return withTimeoutOrNull(timeout.toMillis(), action)
 }

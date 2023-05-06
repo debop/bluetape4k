@@ -17,7 +17,7 @@ import org.slf4j.MDC
  */
 class CoroutineLoggingContextTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `withMDCConterxt in traceId`() = runTest {

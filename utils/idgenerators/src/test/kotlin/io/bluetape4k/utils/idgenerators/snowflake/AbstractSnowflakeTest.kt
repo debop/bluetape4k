@@ -10,10 +10,10 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.idgenerators.getMachineId
 import io.bluetape4k.utils.idgenerators.parseAsLong
-import java.util.concurrent.ConcurrentHashMap
 import org.amshove.kluent.*
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
+import java.util.concurrent.ConcurrentHashMap
 
 abstract class AbstractSnowflakeTest {
 

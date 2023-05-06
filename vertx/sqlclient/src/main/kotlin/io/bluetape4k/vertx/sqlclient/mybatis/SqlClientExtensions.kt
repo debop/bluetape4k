@@ -15,10 +15,26 @@ import org.mybatis.dynamic.sql.BasicColumn
 import org.mybatis.dynamic.sql.SqlBuilder
 import org.mybatis.dynamic.sql.SqlTable
 import org.mybatis.dynamic.sql.delete.render.DeleteStatementProvider
-import org.mybatis.dynamic.sql.insert.render.*
+import org.mybatis.dynamic.sql.insert.render.BatchInsert
+import org.mybatis.dynamic.sql.insert.render.GeneralInsertStatementProvider
+import org.mybatis.dynamic.sql.insert.render.InsertSelectStatementProvider
+import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider
+import org.mybatis.dynamic.sql.insert.render.MultiRowInsertStatementProvider
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider
-import org.mybatis.dynamic.sql.util.kotlin.*
+import org.mybatis.dynamic.sql.util.kotlin.CountCompleter
+import org.mybatis.dynamic.sql.util.kotlin.DeleteCompleter
+import org.mybatis.dynamic.sql.util.kotlin.GeneralInsertCompleter
+import org.mybatis.dynamic.sql.util.kotlin.InsertSelectCompleter
+import org.mybatis.dynamic.sql.util.kotlin.KotlinBatchInsertBuilder
+import org.mybatis.dynamic.sql.util.kotlin.KotlinCountBuilder
+import org.mybatis.dynamic.sql.util.kotlin.KotlinDeleteBuilder
+import org.mybatis.dynamic.sql.util.kotlin.KotlinInsertBuilder
+import org.mybatis.dynamic.sql.util.kotlin.KotlinInsertCompleter
+import org.mybatis.dynamic.sql.util.kotlin.KotlinMultiRowInsertBuilder
+import org.mybatis.dynamic.sql.util.kotlin.KotlinSelectBuilder
+import org.mybatis.dynamic.sql.util.kotlin.SelectCompleter
+import org.mybatis.dynamic.sql.util.kotlin.UpdateCompleter
 
 //
 // [SqlClient]를 Mybatis Dynamic SQL 을 이용하여 작업할 수 있도록 해주는 확장 함수들입니다.
@@ -93,7 +109,7 @@ suspend fun SqlClient.deleteFrom(table: SqlTable, completer: DeleteCompleter): S
  * @param batchInsert
  * @return
  */
-suspend fun <T : Any> SqlClient.insertBatch(batchInsert: BatchInsert<T>): SqlResult<Void> {
+suspend fun <T: Any> SqlClient.insertBatch(batchInsert: BatchInsert<T>): SqlResult<Void> {
     SqlLogger.logSQL(batchInsert.insertStatementSQL, batchInsert.records)
 
     return SqlTemplate.forUpdate(this, batchInsert.insertStatementSQL)
@@ -102,16 +118,16 @@ suspend fun <T : Any> SqlClient.insertBatch(batchInsert: BatchInsert<T>): SqlRes
         .await()
 }
 
-suspend fun <T : Any> SqlClient.insertBatch(
+suspend fun <T: Any> SqlClient.insertBatch(
     vararg records: T,
-    completer: KotlinBatchInsertBuilder<T>.() -> Unit
+    completer: KotlinBatchInsertBuilder<T>.() -> Unit,
 ): SqlResult<Void> {
     return insertBatch(records.asList(), completer)
 }
 
-suspend fun <T : Any> SqlClient.insertBatch(
+suspend fun <T: Any> SqlClient.insertBatch(
     records: List<T>,
-    completer: KotlinBatchInsertBuilder<T>.() -> Unit
+    completer: KotlinBatchInsertBuilder<T>.() -> Unit,
 ): SqlResult<Void> {
     val model = org.mybatis.dynamic.sql.util.kotlin.model.insertBatch(records, completer)
     val batchInsert = model.render(VERTX_SQL_CLIENT_RENDERING_STRATEGY)
@@ -122,7 +138,7 @@ suspend fun <T : Any> SqlClient.insertBatch(
 // INSERT
 //
 
-suspend fun <T : Any> SqlClient.insert(insertProvider: InsertStatementProvider<T>): SqlResult<Void> {
+suspend fun <T: Any> SqlClient.insert(insertProvider: InsertStatementProvider<T>): SqlResult<Void> {
     SqlLogger.logSQL(insertProvider.insertStatement, insertProvider.row)
 
     return SqlTemplate.forUpdate(this, insertProvider.insertStatement)
@@ -131,7 +147,7 @@ suspend fun <T : Any> SqlClient.insert(insertProvider: InsertStatementProvider<T
         .await()
 }
 
-suspend fun <T : Any> SqlClient.insert(entity: T, completer: KotlinInsertCompleter<T>): SqlResult<Void> {
+suspend fun <T: Any> SqlClient.insert(entity: T, completer: KotlinInsertCompleter<T>): SqlResult<Void> {
     val model = KotlinInsertBuilder(entity).apply(completer).build()
     val provider = model.render(VERTX_SQL_CLIENT_RENDERING_STRATEGY)
     return insert(provider)
@@ -154,16 +170,16 @@ suspend fun SqlClient.generalInsert(table: SqlTable, completer: GeneralInsertCom
 //
 // INSERT MULTIPLE
 //
-suspend fun <T : Any> SqlClient.insertMultiple(
+suspend fun <T: Any> SqlClient.insertMultiple(
     vararg records: T,
-    completer: KotlinMultiRowInsertBuilder<T>.() -> Unit
+    completer: KotlinMultiRowInsertBuilder<T>.() -> Unit,
 ): SqlResult<Void> {
     return insertMultiple(records.asList(), completer)
 }
 
-suspend fun <T : Any> SqlClient.insertMultiple(
+suspend fun <T: Any> SqlClient.insertMultiple(
     records: List<T>,
-    completer: KotlinMultiRowInsertBuilder<T>.() -> Unit
+    completer: KotlinMultiRowInsertBuilder<T>.() -> Unit,
 ): SqlResult<Void> {
     val model = org.mybatis.dynamic.sql.util.kotlin.model.insertMultiple(records, completer)
     val provider = model.render(VERTX_SQL_CLIENT_RENDERING_STRATEGY)
@@ -171,7 +187,7 @@ suspend fun <T : Any> SqlClient.insertMultiple(
     return insertMultiple(provider)
 }
 
-suspend fun <T : Any> SqlClient.insertMultiple(insertProvider: MultiRowInsertStatementProvider<T>): SqlResult<Void> {
+suspend fun <T: Any> SqlClient.insertMultiple(insertProvider: MultiRowInsertStatementProvider<T>): SqlResult<Void> {
     SqlLogger.logSQL(insertProvider.insertStatement, insertProvider.records)
 
     return SqlTemplate.forUpdate(this, insertProvider.insertStatement)
@@ -217,7 +233,7 @@ suspend fun SqlClient.select(columns: List<BasicColumn>, completer: SelectComple
     return select(provider)
 }
 
-suspend fun <T : Any> SqlClient.select(provider: SelectStatementProvider, rowMapper: RowMapper<T>): RowSet<T> {
+suspend fun <T: Any> SqlClient.select(provider: SelectStatementProvider, rowMapper: RowMapper<T>): RowSet<T> {
     SqlLogger.logSQL(provider.selectStatement, provider.parameters)
 
     return SqlTemplate.forQuery(this, provider.selectStatement)
@@ -226,10 +242,10 @@ suspend fun <T : Any> SqlClient.select(provider: SelectStatementProvider, rowMap
         .await()
 }
 
-suspend fun <T : Any> SqlClient.select(
+suspend fun <T: Any> SqlClient.select(
     columns: List<BasicColumn>,
     rowMapper: RowMapper<T>,
-    completer: SelectCompleter
+    completer: SelectCompleter,
 ): RowSet<T> {
     val model = org.mybatis.dynamic.sql.util.kotlin.model.select(columns, completer)
     val provider = model.render(VERTX_SQL_CLIENT_RENDERING_STRATEGY)
@@ -237,7 +253,7 @@ suspend fun <T : Any> SqlClient.select(
     return select(provider, rowMapper)
 }
 
-suspend inline fun <reified T : Any> SqlClient.selectAs(provider: SelectStatementProvider): RowSet<T> {
+suspend inline fun <reified T: Any> SqlClient.selectAs(provider: SelectStatementProvider): RowSet<T> {
     SqlLogger.logSQL(provider.selectStatement, provider.parameters)
 
     return SqlTemplate.forQuery(this, provider.selectStatement)
@@ -246,9 +262,9 @@ suspend inline fun <reified T : Any> SqlClient.selectAs(provider: SelectStatemen
         .await()
 }
 
-suspend inline fun <reified T : Any> SqlClient.selectAs(
+suspend inline fun <reified T: Any> SqlClient.selectAs(
     columns: List<BasicColumn>,
-    noinline completer: KotlinSelectBuilder.() -> Unit
+    noinline completer: KotlinSelectBuilder.() -> Unit,
 ): RowSet<T> {
     val model = org.mybatis.dynamic.sql.util.kotlin.model.select(columns, completer)
     val provider = model.render(VERTX_SQL_CLIENT_RENDERING_STRATEGY)
@@ -274,7 +290,7 @@ suspend fun SqlClient.selectDistinct(columns: List<BasicColumn>, completer: Sele
     return selectDistinct(provider)
 }
 
-suspend inline fun <reified T : Any> SqlClient.selectListAs(provider: SelectStatementProvider): List<T> {
+suspend inline fun <reified T: Any> SqlClient.selectListAs(provider: SelectStatementProvider): List<T> {
     return SqlTemplate.forQuery(this, provider.selectStatement)
         .mapTo(T::class.java)
         .execute(provider.parameters)
@@ -292,10 +308,10 @@ suspend fun <T> SqlClient.selectList(provider: SelectStatementProvider, mapper: 
         .map { it }
 }
 
-suspend fun <T : Any> SqlClient.selectList(
+suspend fun <T: Any> SqlClient.selectList(
     columns: List<BasicColumn>,
     rowMapper: RowMapper<T>,
-    completer: SelectCompleter
+    completer: SelectCompleter,
 ): List<T> {
     val model = org.mybatis.dynamic.sql.util.kotlin.model.selectDistinct(columns, completer)
     val provider = model.render(VERTX_SQL_CLIENT_RENDERING_STRATEGY)
@@ -321,7 +337,7 @@ suspend fun SqlClient.selectOne(columns: List<BasicColumn>, completer: SelectCom
     return selectOne(provider)
 }
 
-suspend fun <T : Any> SqlClient.selectOne(provider: SelectStatementProvider, mapper: RowMapper<T>): T? {
+suspend fun <T: Any> SqlClient.selectOne(provider: SelectStatementProvider, mapper: RowMapper<T>): T? {
     SqlLogger.logSQL(provider.selectStatement, provider.parameters)
 
     return SqlTemplate.forQuery(this, provider.selectStatement)
@@ -331,7 +347,7 @@ suspend fun <T : Any> SqlClient.selectOne(provider: SelectStatementProvider, map
         .firstOrNull()
 }
 
-suspend inline fun <reified T : Any> SqlClient.selectOneAs(provider: SelectStatementProvider): T? {
+suspend inline fun <reified T: Any> SqlClient.selectOneAs(provider: SelectStatementProvider): T? {
     // logSQL(provider.selectStatement, provider.parameters)
     return SqlTemplate.forQuery(this, provider.selectStatement)
         .mapTo(T::class.java)
@@ -340,10 +356,10 @@ suspend inline fun <reified T : Any> SqlClient.selectOneAs(provider: SelectState
         .firstOrNull()
 }
 
-suspend fun <T : Any> SqlClient.selectOne(
+suspend fun <T: Any> SqlClient.selectOne(
     columns: List<BasicColumn>,
     rowMapper: RowMapper<T>,
-    completer: SelectCompleter
+    completer: SelectCompleter,
 ): T? {
     return selectOne(columns, completer)?.let { rowMapper.map(it) }
 }

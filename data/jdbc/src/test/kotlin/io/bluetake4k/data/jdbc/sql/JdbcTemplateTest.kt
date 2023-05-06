@@ -1,10 +1,6 @@
 package io.bluetake4k.data.jdbc.sql
 
 import io.bluetape4k.logging.KLogging
-import java.sql.Connection
-import java.sql.Date
-import java.sql.PreparedStatement
-import java.sql.Types
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -14,6 +10,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
+import java.sql.Connection
+import java.sql.Date
+import java.sql.PreparedStatement
+import java.sql.Types
 
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [JdbcConfiguration::class])

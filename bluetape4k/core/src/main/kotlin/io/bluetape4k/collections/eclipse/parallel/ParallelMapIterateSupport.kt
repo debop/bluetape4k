@@ -1,7 +1,7 @@
 package io.bluetape4k.collections.eclipse.parallel
 
-import java.util.concurrent.Executor
 import org.eclipse.collections.impl.parallel.ParallelMapIterate
+import java.util.concurrent.Executor
 
 fun <K, V> Map<K, V>.parForEach(block: (key: K, value: V) -> Unit) {
     ParallelMapIterate.forEachKeyValue(this) { key: K, value: V ->

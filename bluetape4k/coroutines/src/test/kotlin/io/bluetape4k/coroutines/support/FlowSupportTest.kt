@@ -25,13 +25,13 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.RepeatedTest
 import kotlin.random.Random
 
+@OptIn(DelicateCoroutinesApi::class)
 class FlowSupportTest {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 3
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private val dispatcher = newFixedThreadPoolContext(4, "flowext")
 
     @RepeatedTest(REPEAT_SIZE)
@@ -264,7 +264,7 @@ class FlowSupportTest {
             orders shouldHaveSize orderCount
             orders.all { it.items.size == itemCount }.shouldBeTrue()
             orders.forEach { order ->
-                log.debug { "order=$order" }
+                log.trace { "order=$order" }
             }
         }
 

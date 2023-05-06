@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 
 class TreeNodeTest(
-    @Autowired private val repository: TreeNodeRepository
-) : AbstractHibernateTest() {
+    @Autowired private val repository: TreeNodeRepository,
+): AbstractHibernateTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `build tree nodes`() {

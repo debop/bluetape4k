@@ -22,8 +22,8 @@ import javax.persistence.*
 class OneToManySetTest @Autowired constructor(
     private val biddingItemRepo: BiddingItemRepository,
     private val bidRepo: BidRepository,
-    private val productRepo: ProductRepository
-) : AbstractHibernateTest() {
+    private val productRepo: ProductRepository,
+): AbstractHibernateTest() {
 
     @Test
     fun `one-to-many set with bidirectional`() {
@@ -90,7 +90,7 @@ class OneToManySetTest @Autowired constructor(
 
 @Entity(name = "onetomany_bidding_item")
 @Access(AccessType.FIELD)
-class BiddingItem(val name: String) : IntJpaEntity() {
+class BiddingItem(val name: String): IntJpaEntity() {
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.EXTRA)
@@ -132,7 +132,7 @@ class BiddingItem(val name: String) : IntJpaEntity() {
 
 @Entity(name = "onetomany_bid")
 @Access(AccessType.FIELD)
-class Bid(val amount: BigDecimal = BigDecimal.ZERO) : IntJpaEntity() {
+class Bid(val amount: BigDecimal = BigDecimal.ZERO): IntJpaEntity() {
 
     @ManyToOne(fetch = FetchType.LAZY)
     var item: BiddingItem? = null
@@ -160,7 +160,7 @@ class Bid(val amount: BigDecimal = BigDecimal.ZERO) : IntJpaEntity() {
 
 @Entity(name = "onetomany_product")
 @Access(AccessType.FIELD)
-class Product(val name: String) : IntJpaEntity() {
+class Product(val name: String): IntJpaEntity() {
 
     var description: String? = null
     var initialPrice: BigDecimal? = null
@@ -219,8 +219,8 @@ enum class ProductStatus {
 @Embeddable
 data class ProductImage(
     @Column(nullable = false)
-    val name: String
-) : Serializable {
+    val name: String,
+): Serializable {
 
     // NOTE: 소유자를 지정합니다.
     @Parent
@@ -231,6 +231,6 @@ data class ProductImage(
     var sizeY: Int? = null
 }
 
-interface BiddingItemRepository : JpaRepository<BiddingItem, Int>
-interface BidRepository : JpaRepository<Bid, Int>
-interface ProductRepository : JpaRepository<Product, Int>
+interface BiddingItemRepository: JpaRepository<BiddingItem, Int>
+interface BidRepository: JpaRepository<Bid, Int>
+interface ProductRepository: JpaRepository<Product, Int>

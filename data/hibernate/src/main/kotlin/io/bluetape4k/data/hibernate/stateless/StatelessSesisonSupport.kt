@@ -1,9 +1,9 @@
 package io.bluetape4k.data.hibernate.stateless
 
 import io.bluetape4k.data.hibernate.sessionFactory
-import javax.persistence.EntityManager
 import org.hibernate.SessionFactory
 import org.hibernate.StatelessSession
+import javax.persistence.EntityManager
 
 /**
  * [block]을 [StatelessSession] 환경하에서 작업을 수행합니다.

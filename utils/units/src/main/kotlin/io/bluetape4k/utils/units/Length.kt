@@ -6,14 +6,14 @@ import kotlin.math.absoluteValue
 
 fun lengthOf(value: Number = 0.0, unit: LengthUnit = LengthUnit.MILLIMETER): Length = Length(value, unit)
 
-fun <T : Number> T.lengthBy(unit: LengthUnit): Length = lengthOf(this.toDouble(), unit)
+fun <T: Number> T.lengthBy(unit: LengthUnit): Length = lengthOf(this.toDouble(), unit)
 
-fun <T : Number> T.millimeter(): Length = lengthBy(LengthUnit.MILLIMETER)
-fun <T : Number> T.centimeter(): Length = lengthBy(LengthUnit.CENTIMETER)
-fun <T : Number> T.meter(): Length = lengthBy(LengthUnit.METER)
-fun <T : Number> T.kilometer(): Length = lengthBy(LengthUnit.KILOMETER)
+fun <T: Number> T.millimeter(): Length = lengthBy(LengthUnit.MILLIMETER)
+fun <T: Number> T.centimeter(): Length = lengthBy(LengthUnit.CENTIMETER)
+fun <T: Number> T.meter(): Length = lengthBy(LengthUnit.METER)
+fun <T: Number> T.kilometer(): Length = lengthBy(LengthUnit.KILOMETER)
 
-operator fun <T : Number> T.times(length: Length): Length = length.times(this)
+operator fun <T: Number> T.times(length: Length): Length = length.times(this)
 
 /**
  * 길이 단위
@@ -46,7 +46,7 @@ enum class LengthUnit(val abbrName: String, val factor: Double) {
  * @property value  Millimeter 단위의 길이 값
  */
 @JvmInline
-value class Length(val value: Double = 0.0) : Comparable<Length>, Serializable {
+value class Length(val value: Double = 0.0): Comparable<Length>, Serializable {
 
     operator fun plus(other: Length): Length = Length(value + other.value)
     operator fun minus(other: Length): Length = Length(value - other.value)
@@ -73,7 +73,7 @@ value class Length(val value: Double = 0.0) : Comparable<Length>, Serializable {
     fun toUnit(unit: LengthUnit): String =
         "%.1f %s".format(value / unit.factor, unit.abbrName)
 
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         val ZERO = Length(0.0)
         val NaN = Length(Double.NaN)

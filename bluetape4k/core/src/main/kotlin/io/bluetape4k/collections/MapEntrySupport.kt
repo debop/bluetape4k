@@ -1,6 +1,6 @@
 package io.bluetape4k.collections
 
-import java.util.AbstractMap
+import java.util.*
 
 fun <K, V> Pair<K, V>.toMapEntry(): Map.Entry<K, V> =
     AbstractMap.SimpleEntry(first, second)

@@ -3,7 +3,6 @@ package io.bluetape4k.junit5.benchmark
 import io.bluetape4k.junit5.utils.ExecutionEvent
 import io.bluetape4k.junit5.utils.RecordingExecutionListener
 import io.bluetape4k.logging.KLogging
-import java.util.concurrent.TimeUnit
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,10 +16,11 @@ import org.junit.platform.engine.discovery.DiscoverySelectors
 import org.junit.platform.engine.reporting.ReportEntry
 import org.junit.platform.launcher.LauncherDiscoveryRequest
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder
+import java.util.concurrent.TimeUnit
 
 class BenchmarkExtensionTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     private lateinit var engine: JupiterTestEngine
     private lateinit var listener: RecordingExecutionListener

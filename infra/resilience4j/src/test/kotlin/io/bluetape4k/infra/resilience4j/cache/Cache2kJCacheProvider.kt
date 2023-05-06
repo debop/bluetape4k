@@ -3,14 +3,14 @@ package io.bluetape4k.infra.resilience4j.cache
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
+import org.cache2k.Cache2kBuilder
+import org.cache2k.jcache.ExtendedMutableConfiguration
+import org.cache2k.jcache.provider.JCacheProvider
 import java.util.concurrent.TimeUnit
 import javax.cache.Cache
 import javax.cache.CacheManager
 import javax.cache.Caching
 import javax.cache.spi.CachingProvider
-import org.cache2k.Cache2kBuilder
-import org.cache2k.jcache.ExtendedMutableConfiguration
-import org.cache2k.jcache.provider.JCacheProvider
 
 object Cache2kJCacheProvider: KLogging() {
 

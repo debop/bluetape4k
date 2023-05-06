@@ -19,7 +19,7 @@ interface CoCache<K: Any, V> {
             return cache.decorateSuspendedSupplier(loader)
         }
 
-        fun <K : Any, V> decorateSuspendedFunction(cache: CoCache<K, V>, loader: suspend (K) -> V): suspend (K) -> V {
+        fun <K: Any, V> decorateSuspendedFunction(cache: CoCache<K, V>, loader: suspend (K) -> V): suspend (K) -> V {
             return cache.decorateSuspendedFunction(loader)
         }
     }

@@ -6,7 +6,7 @@ class Emit(
     override val start: Int,
     override val end: Int,
     val keyword: String? = null,
-) : Interval(start, end) {
+): Interval(start, end) {
 
     override fun toString(): String = super.toString() + "=${keyword ?: "<null>"}"
 }

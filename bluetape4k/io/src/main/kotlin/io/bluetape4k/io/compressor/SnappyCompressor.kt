@@ -5,7 +5,7 @@ import org.xerial.snappy.Snappy
 /**
  * Snappy Compressor
  */
-class SnappyCompressor : AbstractCompressor() {
+class SnappyCompressor: AbstractCompressor() {
 
     override fun doCompress(plain: ByteArray): ByteArray {
         return Snappy.compress(plain)

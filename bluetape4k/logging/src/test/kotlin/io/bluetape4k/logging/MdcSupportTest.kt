@@ -14,7 +14,7 @@ import org.slf4j.MDC
  */
 class MDCSupportTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `withMDCConterxt in traceId`() {

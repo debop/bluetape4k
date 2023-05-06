@@ -6,10 +6,10 @@ import io.bluetape4k.utils.times.range.TemporalOpenedProgression
 import io.bluetape4k.utils.times.range.TemporalOpenedRange
 import io.bluetape4k.utils.times.startOf
 import io.bluetape4k.utils.times.temporalAmount
-import java.time.temporal.ChronoUnit
-import java.time.temporal.Temporal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.time.temporal.ChronoUnit
+import java.time.temporal.Temporal
 
 fun <T> TemporalOpenedProgression<T>.asFlow(): Flow<T> where T: Temporal, T: Comparable<T> =
     flow {

@@ -16,7 +16,7 @@ class ManyToOneTest @Autowired constructor(
     private val jugRepo: JugRepository,
     private val jugMeterRepo: JugMeterRepository,
     private val salesGuyRepo: SalesGuyRepository,
-    private val salesForceRepo: SalesForceRepository
+    private val salesForceRepo: SalesForceRepository,
 ): AbstractHibernateTest() {
 
     companion object: KLogging()

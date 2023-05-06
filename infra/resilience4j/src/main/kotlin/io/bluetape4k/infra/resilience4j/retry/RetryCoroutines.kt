@@ -5,26 +5,26 @@ import io.github.resilience4j.retry.Retry
 import kotlinx.coroutines.delay
 
 
-suspend fun <R : Any> withRetry(retry: Retry, block: suspend () -> R): R =
+suspend fun <R: Any> withRetry(retry: Retry, block: suspend () -> R): R =
     retry.executeSuspendFunction(block)
 
-suspend fun <T : Any, R : Any> withRetry(retry: Retry, input: T, func: suspend (T) -> R): R =
+suspend fun <T: Any, R: Any> withRetry(retry: Retry, input: T, func: suspend (T) -> R): R =
     retry.decorateSuspendFunction1(func).invoke(input)
 
-suspend fun <T : Any, U : Any, R : Any> withRetry(
+suspend fun <T: Any, U: Any, R: Any> withRetry(
     retry: Retry,
     param1: T,
     param2: U,
-    bifunc: suspend (T, U) -> R
+    bifunc: suspend (T, U) -> R,
 ): R {
     return retry.decorateSuspendBiFunction(bifunc).invoke(param1, param2)
 }
 
-fun <T : Any, R : Any> Retry.decorateSuspendFunction1(func: suspend (input: T) -> R): suspend (T) -> R = {
+fun <T: Any, R: Any> Retry.decorateSuspendFunction1(func: suspend (input: T) -> R): suspend (T) -> R = {
     executeSuspendFunction1(it, func)
 }
 
-fun <T : Any, U : Any, R : Any> Retry.decorateSuspendBiFunction(bifunc: suspend (t: T, u: U) -> R): suspend (T, U) -> R =
+fun <T: Any, U: Any, R: Any> Retry.decorateSuspendBiFunction(bifunc: suspend (t: T, u: U) -> R): suspend (T, U) -> R =
     { t: T, u: U ->
         executeSuspendBiFunction(t, u, bifunc)
     }
@@ -35,7 +35,7 @@ fun <T : Any, U : Any, R : Any> Retry.decorateSuspendBiFunction(bifunc: suspend 
  * @param func 실행할 Suspended 함수
  * @return Retry로 decorate 된 suspend 함수
  */
-suspend fun <T : Any, R : Any> Retry.executeSuspendFunction1(
+suspend fun <T: Any, R: Any> Retry.executeSuspendFunction1(
     input: T,
     func: suspend (input: T) -> R,
 ): R {
@@ -70,7 +70,7 @@ suspend fun <T : Any, R : Any> Retry.executeSuspendFunction1(
  * @param bifunc 실행할 함수
  * @return Retry로 decorate 된 suspended bifunction
  */
-suspend fun <T : Any, U : Any, R : Any> Retry.executeSuspendBiFunction(
+suspend fun <T: Any, U: Any, R: Any> Retry.executeSuspendBiFunction(
     t: T,
     u: U,
     bifunc: suspend (t: T, u: U) -> R,

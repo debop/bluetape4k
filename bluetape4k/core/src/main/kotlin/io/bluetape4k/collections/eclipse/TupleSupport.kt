@@ -1,7 +1,7 @@
 package io.bluetape4k.collections.eclipse
 
-import java.util.AbstractMap
 import org.eclipse.collections.impl.tuple.Tuples
+import java.util.*
 import kotlin.Pair
 import org.eclipse.collections.api.tuple.Pair as EcPair
 

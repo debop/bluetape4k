@@ -7,7 +7,7 @@ import kotlin.test.assertFailsWith
 
 class BoundedStackTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `invalid bound`() {

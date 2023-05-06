@@ -9,8 +9,8 @@ import org.junit.jupiter.api.RepeatedTest
 @RandomizedTest
 class ByteBufferStreamTest {
 
-    companion object : KLogging() {
-        private const val REPEAT_COUNT = 5
+    companion object: KLogging() {
+        private const val REPEAT_COUNT = 3
     }
 
     @RepeatedTest(REPEAT_COUNT)

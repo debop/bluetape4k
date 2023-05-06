@@ -6,7 +6,7 @@ object GeneratedAlwaysTable {
 
     val generatedAlways = GeneratedAlways()
 
-    class GeneratedAlways : SqlTable("GeneratedAlways") {
+    class GeneratedAlways: SqlTable("GeneratedAlways") {
         val id = column<Long>("id")
         val firstName = column<String>("first_name")
         val lastName = column<String>("last_name")
@@ -19,4 +19,4 @@ data class GeneratedAlwaysRecord(
     var firstName: String? = null,
     var lastName: String? = null,
     var fullName: String? = null,
-) : java.io.Serializable
+): java.io.Serializable

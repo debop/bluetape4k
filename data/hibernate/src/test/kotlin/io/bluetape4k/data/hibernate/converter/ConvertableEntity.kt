@@ -17,8 +17,8 @@ import javax.validation.constraints.NotBlank
 @Access(AccessType.FIELD)
 class ConvertableEntity(
     @NotBlank
-    val name: String
-) : IntJpaEntity() {
+    val name: String,
+): IntJpaEntity() {
 
     @Convert(converter = LocaleAsStringConverter::class)
     var locale: Locale = Locale.KOREA
@@ -50,7 +50,7 @@ class ConvertableEntity(
 
     data class Component(
         val name: String,
-    ) : Serializable {
+    ): Serializable {
         var largeText: ByteArray = randomBytes(512)
     }
 }

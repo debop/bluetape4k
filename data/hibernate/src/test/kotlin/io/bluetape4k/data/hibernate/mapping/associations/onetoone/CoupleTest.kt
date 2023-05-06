@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank
 
 class CoupleTest(
     @Autowired private val husbandRepo: HusbandRepository,
-    @Autowired private val wifeRepo: WifeRepository
+    @Autowired private val wifeRepo: WifeRepository,
 ): AbstractHibernateTest() {
 
     @Test

@@ -6,7 +6,7 @@ import org.redisson.api.RedissonClient
 suspend fun <T> RedissonClient.runIfLeaderAwait(
     jobName: String,
     options: RedissonLeaderElectionOptions = RedissonLeaderElectionOptions.Default,
-    action: suspend () -> T
+    action: suspend () -> T,
 ): T {
     val leaderElection = RedissonCoLeaderElection(this, options)
     return leaderElection.runIfLeader(jobName, action)

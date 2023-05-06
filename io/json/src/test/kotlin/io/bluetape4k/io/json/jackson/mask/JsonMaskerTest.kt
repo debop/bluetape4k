@@ -7,11 +7,11 @@ import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.io.Serializable
-import java.math.BigDecimal
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
+import java.io.Serializable
+import java.math.BigDecimal
 
 @RandomizedTest
 class JsonMaskerTest {

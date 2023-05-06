@@ -3,7 +3,7 @@ package io.bluetape4k.utils.times
 import java.sql.Timestamp
 import java.time.Duration
 import java.time.Period
-import java.util.Date
+import java.util.*
 
 fun dateOf(epochMillis: Long = System.currentTimeMillis()): Date = Date(epochMillis)
 

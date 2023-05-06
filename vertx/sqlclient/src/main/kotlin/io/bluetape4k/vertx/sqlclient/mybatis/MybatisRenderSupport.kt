@@ -2,8 +2,16 @@ package io.bluetape4k.vertx.sqlclient.mybatis
 
 import org.mybatis.dynamic.sql.delete.DeleteModel
 import org.mybatis.dynamic.sql.delete.render.DeleteStatementProvider
-import org.mybatis.dynamic.sql.insert.*
-import org.mybatis.dynamic.sql.insert.render.*
+import org.mybatis.dynamic.sql.insert.BatchInsertModel
+import org.mybatis.dynamic.sql.insert.GeneralInsertModel
+import org.mybatis.dynamic.sql.insert.InsertModel
+import org.mybatis.dynamic.sql.insert.InsertSelectModel
+import org.mybatis.dynamic.sql.insert.MultiRowInsertModel
+import org.mybatis.dynamic.sql.insert.render.BatchInsert
+import org.mybatis.dynamic.sql.insert.render.GeneralInsertStatementProvider
+import org.mybatis.dynamic.sql.insert.render.InsertSelectStatementProvider
+import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider
+import org.mybatis.dynamic.sql.insert.render.MultiRowInsertStatementProvider
 import org.mybatis.dynamic.sql.render.TableAliasCalculator
 import org.mybatis.dynamic.sql.select.SelectModel
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
@@ -49,6 +57,6 @@ fun WhereModel.renderForVertx(parameterName: String): Optional<WhereClauseProvid
 
 fun WhereModel.renderForVertx(
     tableAliasCalculator: TableAliasCalculator,
-    parameterName: String
+    parameterName: String,
 ): Optional<WhereClauseProvider> =
     render(VERTX_SQL_CLIENT_RENDERING_STRATEGY, tableAliasCalculator, parameterName)

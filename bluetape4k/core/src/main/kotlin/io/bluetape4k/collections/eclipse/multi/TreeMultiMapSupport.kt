@@ -7,7 +7,7 @@ typealias TreeMultimap<K, V> = TreeSortedMap<K, MutableList<V>>
 
 fun <K, V> TreeMultimap<K, V>.valueSize(): Int = this.valuesView().sumOf { it.size }
 
-inline fun <K : Comparable<K>, V> Iterable<V>.toTreeMultimap(keySelector: (V) -> K): TreeMultimap<K, V> {
+inline fun <K: Comparable<K>, V> Iterable<V>.toTreeMultimap(keySelector: (V) -> K): TreeMultimap<K, V> {
     val map = TreeMultimap<K, V>()
     forEach { elem ->
         map.getIfAbsentPut(keySelector(elem), fastListOf<V>()).add(elem)
@@ -15,7 +15,7 @@ inline fun <K : Comparable<K>, V> Iterable<V>.toTreeMultimap(keySelector: (V) ->
     return map
 }
 
-inline fun <K : Comparable<K>, V> Iterable<V>.toTreeMultimap(
+inline fun <K: Comparable<K>, V> Iterable<V>.toTreeMultimap(
     comparator: Comparator<K>,
     keySelector: (V) -> K,
 ): TreeMultimap<K, V> {
@@ -26,7 +26,7 @@ inline fun <K : Comparable<K>, V> Iterable<V>.toTreeMultimap(
     return map
 }
 
-inline fun <E, K : Comparable<K>, V> Iterable<E>.toTreeMultimap(
+inline fun <E, K: Comparable<K>, V> Iterable<E>.toTreeMultimap(
     keySelector: (E) -> K,
     valueSelector: (E) -> V,
 ): TreeMultimap<K, V> {
@@ -37,7 +37,7 @@ inline fun <E, K : Comparable<K>, V> Iterable<E>.toTreeMultimap(
     return map
 }
 
-inline fun <E, K : Comparable<K>, V> Iterable<E>.toTreeMultimap(
+inline fun <E, K: Comparable<K>, V> Iterable<E>.toTreeMultimap(
     comparator: Comparator<K>,
     keySelector: (E) -> K,
     valueSelector: (E) -> V,

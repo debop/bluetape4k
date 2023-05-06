@@ -4,11 +4,12 @@ import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.concurrent.futureWithTimeout
 import io.bluetape4k.infra.cache.jcache.JCache
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.Runtimex
 import java.time.Duration
-import java.util.UUID
+import java.util.*
 import javax.cache.Cache
 import javax.cache.configuration.MutableCacheEntryListenerConfiguration
 import kotlin.concurrent.thread
@@ -80,7 +81,7 @@ class NearCache<K: Any, V: Any> private constructor(
             try {
                 Thread.sleep(config.checkExpiryPeriod)
                 while (!isClosed && !Thread.currentThread().isInterrupted) {
-                    log.trace { "backCache의 cache entry가 expire 되었는지 검사합니다... check expiration period=${config.checkExpiryPeriod}" }
+                    log.debug { "backCache의 cache entry가 expire 되었는지 검사합니다... check expiration period=${config.checkExpiryPeriod}" }
                     var entrySize = 0
                     val elapsed = measureTimeMillis {
                         runCatching {
@@ -100,7 +101,7 @@ class NearCache<K: Any, V: Any> private constructor(
                             }
                         }
                     }
-                    log.trace { "backCache cache entry expire 검사 완료. front cache item size=$entrySize, elapsed=$elapsed msec" }
+                    log.debug { "backCache cache entry expire 검사 완료. front cache item size=$entrySize, elapsed=$elapsed msec" }
                     Thread.sleep(config.checkExpiryPeriod)
                 }
                 log.info { "backCache epiration 검사를 종료합니다" }

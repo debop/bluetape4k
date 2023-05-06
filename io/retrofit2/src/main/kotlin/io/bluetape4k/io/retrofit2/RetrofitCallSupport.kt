@@ -2,12 +2,12 @@ package io.bluetape4k.io.retrofit2
 
 import io.github.resilience4j.decorators.Decorators
 import io.github.resilience4j.retry.Retry
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
 import retrofit2.Call
 import retrofit2.HttpException
 import retrofit2.Response
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 
 inline fun <T> retrofit2.Call<T>.executeAsync(
     crossinline cancelHandler: (Throwable?) -> Unit = {},
@@ -18,7 +18,7 @@ inline fun <T> retrofit2.Call<T>.executeAsync(
         override fun onResponse(call: Call<T>, response: Response<T>) {
             when {
                 response.isSuccessful -> promise.complete(response)
-                else -> {
+                else                  -> {
                     val ex = HttpException(response)
                     if (call.isCanceled) {
                         cancelHandler(ex)

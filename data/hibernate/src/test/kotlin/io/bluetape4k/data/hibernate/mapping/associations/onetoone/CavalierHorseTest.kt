@@ -21,7 +21,7 @@ import javax.validation.constraints.NotBlank
 
 class CavalierHorseTest(
     @Autowired private val cavalierRepo: CavalierRepository,
-    @Autowired private val horseRepo: HorseRepository
+    @Autowired private val horseRepo: HorseRepository,
 ): AbstractHibernateTest() {
 
     companion object: KLogging()

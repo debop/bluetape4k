@@ -12,9 +12,6 @@ import io.bluetape4k.data.hibernate.reactive.stage.withTransactionAndAwait
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.time.LocalDate
-import java.time.Month
-import javax.persistence.criteria.CriteriaQuery
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldHaveSize
@@ -22,6 +19,9 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
+import java.time.LocalDate
+import java.time.Month
+import javax.persistence.criteria.CriteriaQuery
 
 @Execution(ExecutionMode.SAME_THREAD)
 class StageStatelessSessionExamples: AbstractStageTest() {

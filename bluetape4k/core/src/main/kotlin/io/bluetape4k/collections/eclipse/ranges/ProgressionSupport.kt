@@ -1,11 +1,11 @@
 package io.bluetape4k.collections.eclipse.ranges
 
 import io.bluetape4k.core.assertPositiveNumber
-import java.util.stream.IntStream
-import java.util.stream.LongStream
 import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList
 import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList
+import java.util.stream.IntStream
+import java.util.stream.LongStream
 import kotlin.math.sign
 
 fun charProgressionOf(start: Char, endInclusive: Char, step: Int = 1): CharProgression =
@@ -62,7 +62,7 @@ fun IntProgression.partitioning(partitionCount: Int = 1): Sequence<IntProgressio
         }
         endInclusive = when {
             step > 0 -> minOf(endInclusive, this@partitioning.last - 1 * stepSign)
-            else -> maxOf(endInclusive, this@partitioning.last - 1 * stepSign)
+            else     -> maxOf(endInclusive, this@partitioning.last - 1 * stepSign)
         }
         endInclusive += stepSign
 
@@ -115,7 +115,7 @@ fun LongProgression.partitioning(partitionCount: Int = 1): Sequence<LongProgress
         }
         endInclusive = when {
             step > 0 -> minOf(endInclusive, this@partitioning.last - 1 * stepSign)
-            else -> maxOf(endInclusive, this@partitioning.last - 1 * stepSign)
+            else     -> maxOf(endInclusive, this@partitioning.last - 1 * stepSign)
         }
         endInclusive += stepSign
 

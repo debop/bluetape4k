@@ -31,22 +31,22 @@ open class TimeCalendar @JvmOverloads constructor(
 
     override fun mapStart(moment: ZonedDateTime): ZonedDateTime = when {
         moment > MinPeriodTime -> moment + startOffset
-        else -> moment
+        else                   -> moment
     }
 
     override fun mapEnd(moment: ZonedDateTime): ZonedDateTime = when {
         moment < MaxPeriodTime -> moment + endOffset
-        else -> moment
+        else                   -> moment
     }
 
     override fun unmapStart(moment: ZonedDateTime): ZonedDateTime = when {
         moment > MinPeriodTime -> moment - startOffset
-        else -> moment
+        else                   -> moment
     }
 
     override fun unmapEnd(moment: ZonedDateTime): ZonedDateTime = when {
         moment < MaxPeriodTime -> moment - endOffset
-        else -> moment
+        else                   -> moment
     }
 
     override fun equalProperties(other: Any): Boolean {

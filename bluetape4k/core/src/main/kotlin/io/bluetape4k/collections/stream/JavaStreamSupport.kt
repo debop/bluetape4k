@@ -4,13 +4,12 @@ import io.bluetape4k.collections.asDoubleArray
 import io.bluetape4k.collections.asIntArray
 import io.bluetape4k.collections.asLongArray
 import io.bluetape4k.collections.eclipse.fastListOf
-import java.util.Arrays
+import org.eclipse.collections.impl.list.mutable.FastList
+import java.util.*
 import java.util.stream.DoubleStream
 import java.util.stream.IntStream
 import java.util.stream.LongStream
 import java.util.stream.Stream
-import org.eclipse.collections.impl.list.mutable.FastList
-import kotlin.streams.toList
 
 fun <T> Stream<T>.asSequence(): Sequence<T> = Sequence { iterator() }
 fun <T> Stream<T>.asIterable(): Iterable<T> = Iterable { iterator() }

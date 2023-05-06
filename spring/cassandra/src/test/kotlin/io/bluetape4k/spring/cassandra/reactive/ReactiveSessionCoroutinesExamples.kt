@@ -26,7 +26,7 @@ import org.springframework.data.cassandra.ReactiveSession
 
 @SpringBootTest(classes = [ReactiveTestConfiguration::class])
 class ReactiveSessionCoroutinesExamples(
-    @Autowired private val reactiveSession: ReactiveSession
+    @Autowired private val reactiveSession: ReactiveSession,
 ): AbstractCassandraCoroutineTest("reactive-session") {
 
     companion object: KLogging() {

@@ -8,7 +8,6 @@ import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.amshove.kluent.shouldBeEqualTo
@@ -16,6 +15,7 @@ import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Test
 import org.redisson.api.RStream
 import org.redisson.api.StreamMessageId
+import java.util.concurrent.TimeUnit
 
 /**
  * [RStream] Examples

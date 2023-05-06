@@ -4,12 +4,12 @@ package io.bluetape4k.support
 
 import io.bluetape4k.core.assertPositiveNumber
 import io.bluetape4k.core.assertZeroOrPositiveNumber
-import java.nio.ByteBuffer
-import java.nio.charset.Charset
-import java.util.Locale
-import java.util.regex.Pattern
 import org.apache.commons.lang3.RandomStringUtils
 import org.apache.commons.lang3.StringUtils
+import java.nio.ByteBuffer
+import java.nio.charset.Charset
+import java.util.*
+import java.util.regex.Pattern
 
 private typealias JChar = Character
 
@@ -72,7 +72,7 @@ fun ByteBuffer.toUtf8String(): String = UTF_8.decode(this).toString()
  */
 inline fun String?.ifEmpty(fallback: () -> String): String = when {
     isNullOrEmpty() -> fallback()
-    else -> this
+    else            -> this
 }
 
 /**
@@ -80,7 +80,7 @@ inline fun String?.ifEmpty(fallback: () -> String): String = when {
  */
 inline fun String?.ifNullOrEmpty(fallback: () -> String): String = when {
     isNullOrEmpty() -> fallback()
-    else -> this
+    else            -> this
 }
 
 /**
@@ -88,7 +88,7 @@ inline fun String?.ifNullOrEmpty(fallback: () -> String): String = when {
  */
 inline fun String?.ifNullOrBlank(fallback: () -> String): String = when {
     isNullOrBlank() -> fallback()
-    else -> this
+    else            -> this
 }
 
 fun String?.hasLength(): Boolean = (this != null && length > 0)
@@ -176,7 +176,7 @@ fun String?.ellipsisEnd(maxLength: Int = ELLIPSIS_LENGTH): String {
     return this?.let { self ->
         when {
             self.needEllipsis(maxLength) -> self.substring(0, maxLength - TRIMMING.length) + TRIMMING
-            else -> self
+            else                         -> self
         }
     } ?: EMPTY_STRING
 }
@@ -201,7 +201,7 @@ fun String?.ellipsisStart(maxLength: Int = ELLIPSIS_LENGTH): String {
     return this?.let { self ->
         when {
             self.needEllipsis(maxLength) -> TRIMMING + self.substring(self.length - maxLength + TRIMMING.length)
-            else -> self
+            else                         -> self
         }
     } ?: EMPTY_STRING
 }
@@ -417,9 +417,9 @@ fun String.toCamelcase(delimiter: String = "-"): String {
 fun String.toDashedString(delimiter: String = "-"): String = buildString {
     this@toDashedString.forEachIndexed { index, char ->
         when {
-            index == 0 -> append(char.lowercaseChar())
+            index == 0         -> append(char.lowercaseChar())
             char.isUpperCase() -> append(delimiter).append(char.lowercaseChar())
-            else -> append(char)
+            else               -> append(char)
         }
     }
 }

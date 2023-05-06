@@ -13,7 +13,7 @@ abstract class FactorialProvider {
         log.trace { "factorial($n)" }
         return when {
             n <= 1L -> 1L
-            else -> n * cachedCalc(n - 1)
+            else    -> n * cachedCalc(n - 1)
         }
     }
 }

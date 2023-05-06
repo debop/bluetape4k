@@ -29,7 +29,7 @@ import kotlin.concurrent.thread
  * ```
  *
  */
-open class KLoggingChannel : KLogging() {
+open class KLoggingChannel: KLogging() {
 
     private val sharedFlow = MutableSharedFlow<LogEvent>()
     private val scope = CoroutineScope(CoroutineName("logchannel") + Dispatchers.IO)
@@ -59,10 +59,10 @@ open class KLoggingChannel : KLogging() {
                     when (event.level) {
                         Level.TRACE -> log.trace(event.msg, event.error)
                         Level.DEBUG -> log.debug(event.msg, event.error)
-                        Level.INFO -> log.info(event.msg, event.error)
-                        Level.WARN -> log.warn(event.msg, event.error)
+                        Level.INFO  -> log.info(event.msg, event.error)
+                        Level.WARN  -> log.warn(event.msg, event.error)
                         Level.ERROR -> log.error(event.msg, event.error)
-                        else -> log.debug(event.msg, event.error)
+                        else        -> log.debug(event.msg, event.error)
                     }
                 }
                 .collect()

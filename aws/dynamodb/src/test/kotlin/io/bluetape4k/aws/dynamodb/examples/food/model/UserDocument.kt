@@ -9,6 +9,7 @@ import java.time.Instant
 class UserDocument: AbstractDynamoDocument() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(serviceId: String, userId: String, status: UserStatus = UserStatus.UNKNOWN): UserDocument {
             serviceId.requireNotBlank("serviceId")
             userId.requireNotBlank("userId")

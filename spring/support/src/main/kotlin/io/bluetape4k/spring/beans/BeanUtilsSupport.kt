@@ -3,13 +3,13 @@ package io.bluetape4k.spring.beans
 import io.bluetape4k.core.assertNotBlank
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.utils.KotlinDelegates
-import java.beans.PropertyDescriptor
-import java.lang.reflect.Constructor
-import java.lang.reflect.Method
 import org.springframework.beans.BeanInstantiationException
 import org.springframework.beans.BeanUtils
 import org.springframework.core.KotlinDetector
 import org.springframework.core.MethodParameter
+import java.beans.PropertyDescriptor
+import java.lang.reflect.Constructor
+import java.lang.reflect.Method
 
 
 private val log = KotlinLogging.logger {}

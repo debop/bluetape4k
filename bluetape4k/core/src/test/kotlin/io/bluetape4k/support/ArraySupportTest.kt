@@ -10,7 +10,7 @@ import kotlin.test.assertFailsWith
 
 class ArraySupportTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `길이가 0 인 array`() {

@@ -13,9 +13,9 @@ import io.bluetape4k.data.cassandra.data.getValue
 import io.bluetape4k.data.cassandra.data.setValue
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.io.Serializable
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
+import java.io.Serializable
 
 class UserDefinedTypesMappedExamples: AbstractCassandraTest() {
 

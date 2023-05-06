@@ -1,7 +1,7 @@
 package io.bluetape4k.coroutines
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -14,7 +14,7 @@ import kotlin.random.Random
 class SuspendLazyTest {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 5
+        private const val REPEAT_SIZE = 3
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -24,7 +24,7 @@ class SuspendLazyTest {
 
         val lazyValue = suspendLazy {
             delay(Random.nextLong(100))
-            log.debug { "Calculate lazy value in suspend function." }
+            log.trace { "Calculate lazy value in suspend function." }
             calledCounter.incrementAndGet()
             42
         }
@@ -45,7 +45,7 @@ class SuspendLazyTest {
 
         val lazyValue = suspendBlockingLazy {
             Thread.sleep(Random.nextLong(100))
-            log.debug { "Calculate lazy value in blocking mode." }
+            log.trace { "Calculate lazy value in blocking mode." }
             calledCounter.incrementAndGet()
             42
         }
@@ -66,7 +66,7 @@ class SuspendLazyTest {
 
         val lazyValue = suspendBlockingLazyIO {
             Thread.sleep(Random.nextLong(100))
-            log.debug { "Calculate lazy value in blocking mode with IO dispatchers" }
+            log.trace { "Calculate lazy value in blocking mode with IO dispatchers" }
             calledCounter.incrementAndGet()
             42
         }

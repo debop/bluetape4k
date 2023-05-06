@@ -17,7 +17,7 @@ import javax.persistence.*
 
 class OneToManyMapTest(
     @Autowired private val carRepo: OneToManyCarRepository,
-    @Autowired private val carPartRepo: OneToManyCarPartRepository
+    @Autowired private val carPartRepo: OneToManyCarPartRepository,
 ): AbstractHibernateTest() {
 
     companion object: KLogging()

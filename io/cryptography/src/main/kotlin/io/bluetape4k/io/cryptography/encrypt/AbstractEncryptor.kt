@@ -11,8 +11,6 @@ import org.jasypt.salt.SaltGenerator
 
 /**
  * [Encryptor] 의 추상 클래스입니다.
- *
- * @author debop
  */
 abstract class AbstractEncryptor protected constructor(
     override val algorithm: String,

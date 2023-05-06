@@ -1,15 +1,15 @@
 package io.bluetape4k.io.compressor
 
 import io.bluetape4k.io.toByteArray
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 /**
  * BZip2 Compressor
  */
-class BZip2Compressor : AbstractCompressor() {
+class BZip2Compressor: AbstractCompressor() {
 
     override fun doCompress(plain: ByteArray): ByteArray {
         return ByteArrayOutputStream().use { bos ->

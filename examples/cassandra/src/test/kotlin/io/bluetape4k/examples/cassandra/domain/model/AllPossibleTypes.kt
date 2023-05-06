@@ -1,6 +1,9 @@
 package io.bluetape4k.spring.cassandra.domain.model
 
 import com.datastax.oss.driver.api.core.data.TupleValue
+import org.springframework.data.cassandra.core.mapping.CassandraType
+import org.springframework.data.cassandra.core.mapping.PrimaryKey
+import org.springframework.data.cassandra.core.mapping.Table
 import java.io.Serializable
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -11,11 +14,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
-import java.util.Date
-import java.util.UUID
-import org.springframework.data.cassandra.core.mapping.CassandraType
-import org.springframework.data.cassandra.core.mapping.PrimaryKey
-import org.springframework.data.cassandra.core.mapping.Table
+import java.util.*
 
 @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 @Table

@@ -9,7 +9,7 @@ import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.kotlinFunction
 
 @Suppress("UNCHECKED_CAST")
-object KotlinDetector : KLogging() {
+object KotlinDetector: KLogging() {
 
     val kotlinMetadata: Class<out Annotation>? by lazy {
         try {
@@ -50,7 +50,7 @@ fun Class<*>.isKotlinType(): Boolean = KotlinDetector.isKotlinType(this)
  */
 fun KClass<*>.isSuspendableFunction(methodName: String): Boolean =
     memberFunctions.firstOrNull { it.name == methodName } != null ||
-    memberExtensionFunctions.firstOrNull { it.name == methodName } != null
+        memberExtensionFunctions.firstOrNull { it.name == methodName } != null
 
 /**
  * 현 클래스의 `suspend` 메소드들의 컬렉션을 조회합니다.
@@ -59,7 +59,7 @@ fun KClass<*>.isSuspendableFunction(methodName: String): Boolean =
  */
 fun KClass<*>.getSuspendableFunctions(): List<KFunction<*>> =
     memberFunctions.filter { it.isSuspend } +
-    memberExtensionFunctions.filter { it.isSuspend }
+        memberExtensionFunctions.filter { it.isSuspend }
 
 /**
  * Method가 `suspend` 메소드인지 판단합니다.

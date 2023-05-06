@@ -5,14 +5,13 @@ import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
-import java.util.concurrent.ConcurrentLinkedQueue
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeLessThan
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.eclipse.collections.impl.list.mutable.FastList
 import org.junit.jupiter.api.Test
+import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.random.Random
-import kotlin.streams.toList
 import kotlin.system.measureTimeMillis
 
 class ParallelSupportTest {

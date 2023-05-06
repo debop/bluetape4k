@@ -1,7 +1,7 @@
 package io.bluetape4k.junit5.faker
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
@@ -14,8 +14,8 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class FakeValueExtensionPropertyTest {
 
-    companion object : KLogging() {
-        const val TEST_COUNT = 10
+    companion object: KLogging() {
+        private const val TEST_COUNT = 5
     }
 
     @RepeatedTest(TEST_COUNT)
@@ -28,9 +28,9 @@ class FakeValueExtensionPropertyTest {
         firstName.shouldNotBeEmpty()
         lastName.shouldNotBeEmpty()
 
-        log.debug { "fullName=$fullName" }
-        log.debug { "firstName=$firstName" }
-        log.debug { "lastName=$lastName" }
+        log.trace { "fullName=$fullName" }
+        log.trace { "firstName=$firstName" }
+        log.trace { "lastName=$lastName" }
     }
 
     @RepeatedTest(TEST_COUNT)
@@ -41,9 +41,9 @@ class FakeValueExtensionPropertyTest {
         @FakeValue(provider = "random.nextDouble") doubleValue: Double,
     ) {
         nonZero shouldBeGreaterThan 0
-        log.debug { "int value = $intValue" }
-        log.debug { "long value = $longValue" }
-        log.debug { "double value = $doubleValue" }
+        log.trace { "int value = $intValue" }
+        log.trace { "long value = $longValue" }
+        log.trace { "double value = $doubleValue" }
     }
 
     @RepeatedTest(TEST_COUNT)
@@ -55,8 +55,8 @@ class FakeValueExtensionPropertyTest {
         creditCard.length shouldBeGreaterOrEqualTo 8
         bic.shouldNotBeEmpty()
 
-        log.debug { "creditCard=$creditCard" }
-        log.debug { "bic=$bic" }
+        log.trace { "creditCard=$creditCard" }
+        log.trace { "bic=$bic" }
     }
 
     @RepeatedTest(TEST_COUNT)

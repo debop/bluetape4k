@@ -57,7 +57,7 @@ class JacksonIteratorDecoder2 private constructor(
 
     override fun decode(response: Response, type: Type): Any? = when {
         response.isJsonBody() -> runCatching { jsonDecode(response, type) }.getOrElse { fallback(response, type) }
-        else -> fallback(response, type)
+        else                  -> fallback(response, type)
     }
 
     private fun jsonDecode(response: Response, type: Type): Any? {

@@ -7,13 +7,13 @@ import io.bluetape4k.logging.warn
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufAllocator
 import io.netty.buffer.Unpooled
-import java.util.concurrent.ConcurrentHashMap
 import org.redisson.client.codec.BaseCodec
 import org.redisson.client.codec.Codec
 import org.redisson.client.handler.State
 import org.redisson.client.protocol.Decoder
 import org.redisson.client.protocol.Encoder
 import org.redisson.codec.Kryo5Codec
+import java.util.concurrent.ConcurrentHashMap
 
 
 typealias AnyMessage = com.google.protobuf.Any
@@ -24,9 +24,9 @@ typealias AnyMessage = com.google.protobuf.Any
  * @property fallbackCodec 내부 코덱
  * @constructor Create empty Protobuf codec
  */
-class ProtobufCodec private constructor(private val fallbackCodec: Codec) : BaseCodec() {
+class ProtobufCodec private constructor(private val fallbackCodec: Codec): BaseCodec() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         @JvmStatic
         val INSTANCE: ProtobufCodec by lazy { ProtobufCodec() }

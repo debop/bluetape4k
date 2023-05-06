@@ -6,11 +6,8 @@ import io.bluetape4k.tokenizer.korean.utils.Hangul.decomposeHangul
 import io.bluetape4k.tokenizer.korean.utils.Hangul.hasCoda
 import java.io.Serializable
 
-
 /**
  * Expands Korean verbs and adjectives to all possible conjugation forms.
- *
- * @author debop
  */
 object KoreanConjugation: KLogging(), Serializable {
 
@@ -68,7 +65,7 @@ object KoreanConjugation: KLogging(), Serializable {
         val preEomi1 = addPreEomi(lastChar, PRE_EOMI_하다)
         val preEomi2 = CODAS_COMMON.map {
             when (it) {
-                'ㅆ' -> composeHangul('ㅎ', 'ㅐ', it).toString()
+                'ㅆ'  -> composeHangul('ㅎ', 'ㅐ', it).toString()
                 else -> composeHangul('ㅎ', 'ㅏ', it).toString()
             }
         }

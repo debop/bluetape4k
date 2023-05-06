@@ -3,7 +3,7 @@ package io.bluetape4k.infra.cache.jcache.coroutines
 import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.storage.RedisServer
-import java.util.UUID
+import java.util.*
 import javax.cache.configuration.MutableConfiguration
 
 class RedissonCoCacheTest: AbstractCoCacheTest() {

@@ -5,7 +5,7 @@ import io.bluetape4k.support.hashOf
 import io.bluetape4k.utils.times.isPositive
 import io.bluetape4k.utils.times.plus
 import java.time.Duration
-import java.util.Date
+import java.util.*
 
 /**
  * Create [DateGenericProgression] instance
@@ -68,19 +68,19 @@ open class DateGenericProgression<out T: Date> internal constructor(
 
     override fun equals(other: Any?): Boolean = when (other) {
         !is DateGenericProgression<*> -> false
-        else -> (isEmpty() && other.isEmpty()) ||
+        else                          -> (isEmpty() && other.isEmpty()) ||
             (first == other.first && last == other.last && step == other.step)
     }
 
     override fun hashCode(): Int = when {
         isEmpty() -> -1
-        else -> hashOf(first, last, step)
+        else      -> hashOf(first, last, step)
     }
 
     override fun toString(): String = when {
-        step.isZero -> "$first..$last"
+        step.isZero     -> "$first..$last"
         step.isPositive -> "$first..$last step $step"
-        else -> "$first downTo $last step ${step.negated()}"
+        else            -> "$first downTo $last step ${step.negated()}"
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -94,7 +94,7 @@ open class DateGenericProgression<out T: Date> internal constructor(
             return when {
                 step.isPositive -> current <= last
                 step.isNegative -> current >= last
-                else -> false
+                else            -> false
             }
         }
 

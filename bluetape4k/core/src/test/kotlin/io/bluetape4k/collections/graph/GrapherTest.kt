@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Test
 
 class GrapherTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
-    data class Node(val name: String) : Comparable<Node> {
+    data class Node(val name: String): Comparable<Node> {
         val children = mutableListOf<Node>()
 
         fun addChild(child: Node): Node = apply {

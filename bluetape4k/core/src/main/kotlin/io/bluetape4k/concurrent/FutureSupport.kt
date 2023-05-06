@@ -12,12 +12,12 @@ import java.util.concurrent.TimeUnit
 @Suppress("UNCHECKED_CAST")
 fun <T> Future<T>.asCompletionStage(): CompletionStage<T> = when (this) {
     is CompletionStage<*> -> this as CompletionStage<T>
-    else -> FutureToCompletableFutureWrapper(this)
+    else                  -> FutureToCompletableFutureWrapper(this)
 }
 
 fun <T> Future<T>.asCompletableFuture(): CompletableFuture<T> = when (this) {
     is CompletableFuture<*> -> this as CompletableFuture<T>
-    else -> FutureToCompletableFutureWrapper(this)
+    else                    -> FutureToCompletableFutureWrapper(this)
 }
 
 private class FutureToCompletableFutureWrapper<T> private constructor(

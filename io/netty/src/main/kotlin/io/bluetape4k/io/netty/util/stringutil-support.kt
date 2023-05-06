@@ -3,22 +3,22 @@ package io.bluetape4k.io.netty.util
 import io.netty.util.internal.StringUtil
 
 
-fun <T : Appendable> T.byteToHexStringPadded(value: Int): T =
+fun <T: Appendable> T.byteToHexStringPadded(value: Int): T =
     StringUtil.byteToHexStringPadded(this, value)
 
 fun ByteArray.toHexStringPadded(offset: Int = 0, length: Int = size): String =
     StringUtil.toHexStringPadded(this, offset, length)
 
-fun <T : Appendable> ByteArray.toHexStringPaddedAs(dest: T, offset: Int = 0, length: Int = size): T =
+fun <T: Appendable> ByteArray.toHexStringPaddedAs(dest: T, offset: Int = 0, length: Int = size): T =
     StringUtil.toHexStringPadded(dest, this, offset, length)
 
-fun <T : Appendable> T.byteToHexString(value: Int): T =
+fun <T: Appendable> T.byteToHexString(value: Int): T =
     StringUtil.byteToHexStringPadded(this, value)
 
 fun ByteArray.toHexString(offset: Int = 0, length: Int = size): String =
     StringUtil.toHexStringPadded(this, offset, length)
 
-fun <T : Appendable> ByteArray.toHexStringAs(dest: T, offset: Int = 0, length: Int = size): T =
+fun <T: Appendable> ByteArray.toHexStringAs(dest: T, offset: Int = 0, length: Int = size): T =
     StringUtil.toHexStringPadded(dest, this, offset, length)
 
 fun Char.decodeHexNibble(): Int = StringUtil.decodeHexNibble(this)
@@ -51,5 +51,5 @@ val Char.isDoubleQuote: Boolean get() = StringUtil.DOUBLE_QUOTE == this
 
 fun CharSequence.trimOws(): CharSequence = StringUtil.trimOws(this)
 
-fun <T : CharSequence> Iterable<T>.join(separator: CharSequence): CharSequence =
+fun <T: CharSequence> Iterable<T>.join(separator: CharSequence): CharSequence =
     StringUtil.join(separator, this)

@@ -159,7 +159,7 @@ object KoreanChunker: KLogging(), Serializable {
                     cm.end
                 }
 
-                else -> {
+                else               -> {
                     error("Non-disjoint chunk matches found. cm=$cm")
                 }
             }

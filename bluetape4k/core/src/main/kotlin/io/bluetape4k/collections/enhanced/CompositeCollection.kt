@@ -4,11 +4,11 @@ import io.bluetape4k.collections.asMutableIterator
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.stream.asStream
 import io.bluetape4k.logging.KLogging
+import org.eclipse.collections.impl.EmptyIterator
 import java.io.Serializable
 import java.util.function.Consumer
 import java.util.function.Predicate
 import java.util.stream.Stream
-import org.eclipse.collections.impl.EmptyIterator
 
 
 class CompositeCollection<E> private constructor(): MutableCollection<E>, Serializable {

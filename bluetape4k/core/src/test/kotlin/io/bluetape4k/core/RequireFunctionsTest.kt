@@ -8,7 +8,7 @@ import kotlin.test.assertFailsWith
 
 class RequireFunctionsTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `assert without -ea`() {

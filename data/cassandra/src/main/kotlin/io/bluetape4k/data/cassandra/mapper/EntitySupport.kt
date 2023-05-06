@@ -17,7 +17,7 @@ fun <T: Any> EntityHelper<T>.prepareInsertIfNotExists(session: CqlSession): Prep
 
 inline fun <T: Any> bindEntity(
     preparedStatement: PreparedStatement,
-    initializer: BoundStatementBuilder.() -> Unit
+    initializer: BoundStatementBuilder.() -> Unit,
 ): BoundStatement {
     return preparedStatement.boundStatementBuilder()
         .apply(initializer)
@@ -28,7 +28,7 @@ fun <T: Any> EntityHelper<T>.bind(
     preparedStatement: PreparedStatement,
     entity: T,
     nullSavingStrategy: NullSavingStrategy = NullSavingStrategy.DO_NOT_SET,
-    lenient: Boolean = true
+    lenient: Boolean = true,
 ): BoundStatement {
     return preparedStatement.boundStatementBuilder()
         .apply {
@@ -39,7 +39,7 @@ fun <T: Any> EntityHelper<T>.bind(
 
 inline fun <T: Any> CqlSession.prepare(
     entityHelper: EntityHelper<T>,
-    block: EntityHelper<T>.() -> String
+    block: EntityHelper<T>.() -> String,
 ): PreparedStatement {
     return prepare(block(entityHelper))
 }

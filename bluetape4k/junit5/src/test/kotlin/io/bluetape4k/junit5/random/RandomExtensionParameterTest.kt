@@ -2,7 +2,6 @@ package io.bluetape4k.junit5.random
 
 import io.bluetape4k.junit5.model.DomainObject
 import io.bluetape4k.logging.KLogging
-import java.util.stream.Stream
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
@@ -10,12 +9,13 @@ import org.amshove.kluent.shouldNotBeNullOrBlank
 import org.amshove.kluent.shouldNotContain
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.TestInstance
+import java.util.stream.Stream
 
 @RandomizedTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RandomExtensionParameterTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         const val TEST_COUNT = 20
     }
 

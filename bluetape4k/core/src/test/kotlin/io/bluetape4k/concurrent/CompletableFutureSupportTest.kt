@@ -1,6 +1,5 @@
 package io.bluetape4k.concurrent
 
-import java.util.concurrent.CompletableFuture
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
@@ -10,6 +9,7 @@ import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CompletableFuture
 import kotlin.test.assertFails
 
 class CompletableFutureSupportTest {

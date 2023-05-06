@@ -4,7 +4,6 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import io.bluetape4k.testcontainers.aws.LocalStackServer
-import java.net.URI
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContain
@@ -31,6 +30,7 @@ import software.amazon.awssdk.services.kms.model.EncryptRequest
 import software.amazon.awssdk.services.kms.model.GrantOperation
 import software.amazon.awssdk.services.kms.model.KeySpec
 import software.amazon.awssdk.services.kms.model.KeyUsageType
+import java.net.URI
 
 @Execution(ExecutionMode.SAME_THREAD)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)

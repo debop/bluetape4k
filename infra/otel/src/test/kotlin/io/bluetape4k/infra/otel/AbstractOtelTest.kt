@@ -9,9 +9,9 @@ import io.bluetape4k.infra.otel.trace.simpleSpanProcessorOf
 import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.KLogging
 import io.opentelemetry.api.OpenTelemetry
+import org.junit.jupiter.params.provider.Arguments
 import java.time.Duration
 import java.util.logging.LogManager
-import org.junit.jupiter.params.provider.Arguments
 
 abstract class AbstractOtelTest {
 

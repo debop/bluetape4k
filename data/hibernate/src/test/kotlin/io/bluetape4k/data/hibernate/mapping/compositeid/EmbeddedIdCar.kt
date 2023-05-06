@@ -24,7 +24,7 @@ data class EmbeddableCarId(
 @Access(AccessType.FIELD)
 class EmbeddedIdCar(
     @EmbeddedId
-    val id: EmbeddableCarId
+    val id: EmbeddableCarId,
 ): AbstractPersistenceObject() {
 
     var serialNo: String? = null

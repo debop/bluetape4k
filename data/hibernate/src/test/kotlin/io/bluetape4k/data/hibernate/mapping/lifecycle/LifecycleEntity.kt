@@ -24,8 +24,8 @@ import javax.validation.constraints.NotBlank
 class LifecycleEntity private constructor(
     @Column(nullable = false)
     @NotBlank
-    var name: String
-) : IntJpaEntity() {
+    var name: String,
+): IntJpaEntity() {
 
     companion object {
         @JvmStatic

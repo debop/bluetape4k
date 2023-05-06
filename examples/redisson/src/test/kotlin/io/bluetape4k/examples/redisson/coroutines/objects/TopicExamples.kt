@@ -18,18 +18,19 @@ class TopicExamples: AbstractRedissonCoroutineTest() {
     @Test
     fun `add topic listener`() = runSuspendWithIO {
         val topic = redisson.getTopic(randomName())
-        val receivedCount = atomic(0)
+        val receivedCounter = atomic(0)
+        val receivedCount by receivedCounter
 
         // topic 예 listener를 등록합니다.
         // listener id 를 반환한다.
         val listenerId1 = topic.addListenerAsync(String::class.java) { channel, msg ->
             println("Listener1: channel[$channel] received: $msg")
-            receivedCount.incrementAndGet()
+            receivedCounter.incrementAndGet()
         }.awaitSuspending()
 
         val listenerId2 = topic.addListenerAsync(String::class.java) { channel, msg ->
             println("Listener2: channel[$channel] received: $msg")
-            receivedCount.incrementAndGet()
+            receivedCounter.incrementAndGet()
         }.awaitSuspending()
 
         log.debug { "Listener listener1 Id=$listenerId1, listener2 Id=$listenerId2" }
@@ -39,7 +40,7 @@ class TopicExamples: AbstractRedissonCoroutineTest() {
         topic.publishAsync("message-2").awaitSuspending()
 
         // topic 에 listener가 2개, 메시지 2개 전송 
-        await until { receivedCount.value == 2 * 2 }
+        await until { receivedCount == 2 * 2 }
 
         topic.removeAllListenersAsync().awaitSuspending()
     }

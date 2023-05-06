@@ -9,9 +9,9 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.Test
 
-class JsonStringConverterTest : AbstractHibernateTest() {
+class JsonStringConverterTest: AbstractHibernateTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     private fun newOption(): Purchase.Option {
         return Purchase.Option(faker.name().username(), faker.random().hex(128))

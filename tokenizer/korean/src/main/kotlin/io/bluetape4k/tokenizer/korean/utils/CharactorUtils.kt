@@ -60,7 +60,7 @@ abstract class CharacterUtils: Serializable {
     }
 
     fun toCodePoints(src: CharArray, srcOff: Int, srcLen: Int, dest: IntArray, destOff: Int): Int {
-        require(srcLen >= 0) { "srcLen must be >= 0" }
+        assert(srcLen >= 0) { "srcLen must be >= 0" }
 
         var codePointCount = 0
         var i = 0
@@ -74,7 +74,7 @@ abstract class CharacterUtils: Serializable {
     }
 
     fun toChars(src: IntArray, srcOff: Int, srcLen: Int, dest: CharArray, destOff: Int): Int {
-        require(srcLen >= 0) { "srcLen must be >= 0" }
+        assert(srcLen >= 0) { "srcLen must be >= 0" }
 
         var written = 0
         for (i in 0 until srcLen) {
@@ -146,13 +146,13 @@ abstract class CharacterUtils: Serializable {
         }
 
         override fun codePointAt(chars: CharArray, offset: Int, limit: Int): Int {
-            require(offset < limit) { "offset[$offset] must be less than limit[$limit]" }
+            assert(offset < limit) { "offset[$offset] must be less than limit[$limit]" }
             return chars[offset].code
         }
 
         override fun fill(buffer: KharacterBuffer, reader: Reader, numChars: Int): Boolean {
             assert(buffer.buffer.size >= 1)
-            require(numChars in 1..buffer.buffer.size) {
+            assert(numChars in 1..buffer.buffer.size) {
                 "numChars must be 1 .. the buffer size[${buffer.buffer.size}]"
             }
 

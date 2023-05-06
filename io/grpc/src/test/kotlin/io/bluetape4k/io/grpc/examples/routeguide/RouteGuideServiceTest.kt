@@ -4,7 +4,6 @@ import io.bluetape4k.junit5.output.CaptureOutput
 import io.bluetape4k.junit5.output.OutputCapturer
 import io.bluetape4k.logging.KLogging
 import io.grpc.ManagedChannelBuilder
-import java.util.concurrent.Executors
 import kotlinx.coroutines.asCoroutineDispatcher
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContain
@@ -12,6 +11,7 @@ import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import java.util.concurrent.Executors
 
 @CaptureOutput
 class RouteGuideServiceTest {

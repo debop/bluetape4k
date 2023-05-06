@@ -2,8 +2,6 @@ package io.bluetape4k.junit5.folder
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.nio.file.Files
-import java.nio.file.Paths
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
@@ -13,12 +11,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import java.nio.file.Files
+import java.nio.file.Paths
 
 @TempFolderTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TempFolderExtensionBeforeEachTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     private val tempFilenames = HashSet<String>()
     private val tempDirnames = HashSet<String>()

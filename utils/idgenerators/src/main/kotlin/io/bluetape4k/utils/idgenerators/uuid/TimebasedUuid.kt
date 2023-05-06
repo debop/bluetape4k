@@ -1,6 +1,6 @@
 package io.bluetape4k.utils.idgenerators.uuid
 
-import java.util.UUID
+import java.util.*
 
 /**
  * Timebased UUID 를 제공하는 Utility

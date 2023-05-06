@@ -1,6 +1,6 @@
 package io.bluetape4k.collections
 
-import java.util.Collections
+import java.util.*
 
 
 fun <T> emptyIterator(): Iterator<T> = Collections.emptyIterator()
@@ -16,7 +16,7 @@ fun <T> Iterator<T>.toMutableList(): MutableList<T> =
 
 fun <T> Iterable<T>.size(): Int = when (this) {
     is Collection<T> -> this.size
-    else -> count()
+    else             -> count()
 }
 
 inline fun <T> Iterable<T>.exists(predicate: (T) -> Boolean): Boolean = any { predicate(it) }
@@ -68,7 +68,7 @@ fun Iterable<*>.asDoubleArray(fallback: Double = 0.0): DoubleArray =
 fun Iterable<*>.asStringArray(fallback: String = ""): Array<String> =
     map { runCatching { it.toString() }.getOrElse { fallback } }.toTypedArray()
 
-inline fun <reified T : Any> Iterable<*>.asArray(): Array<T?> =
+inline fun <reified T: Any> Iterable<*>.asArray(): Array<T?> =
     map { it as? T }.toTypedArray()
 
 /**
@@ -86,7 +86,7 @@ inline fun <T, R> Iterable<T>.tryMap(mapper: (T) -> R): List<Result<R>> =
  * @param mapper 변환 작업
  * @return
  */
-inline fun <T, R : Any> Iterable<T>.mapIfSuccess(mapper: (T) -> R): List<R> =
+inline fun <T, R: Any> Iterable<T>.mapIfSuccess(mapper: (T) -> R): List<R> =
     mapNotNull { runCatching { mapper(it) }.getOrNull() }
 
 

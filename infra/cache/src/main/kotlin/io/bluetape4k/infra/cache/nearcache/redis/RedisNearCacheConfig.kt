@@ -2,15 +2,14 @@ package io.bluetape4k.infra.cache.nearcache.redis
 
 import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.infra.cache.nearcache.NearCacheConfig
-import java.util.Objects
-import java.util.UUID
+import org.redisson.jcache.configuration.RedissonConfiguration
+import java.util.*
 import javax.cache.CacheManager
 import javax.cache.configuration.Configuration
 import javax.cache.configuration.Factory
 import javax.cache.configuration.MutableConfiguration
 import javax.cache.expiry.AccessedExpiryPolicy
 import javax.cache.expiry.Duration
-import org.redisson.jcache.configuration.RedissonConfiguration
 
 class RedisNearCacheConfig<K: Any, V: Any>(
     cacheManagerFactory: Factory<CacheManager> = CaffeineCacheManagerFactory,

@@ -1,8 +1,6 @@
 package io.bluetape4k.examples.coroutines.guide
 
 import io.bluetape4k.logging.KLogging
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.ForkJoinPool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -10,6 +8,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.RepeatedTest
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.ForkJoinPool
 
 class CoroutineExamples {
 

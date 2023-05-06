@@ -7,7 +7,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.toBigInt
 import io.bluetape4k.support.toUuid
 import java.math.BigInteger
-import java.util.UUID
+import java.util.*
 
 
 /**
@@ -15,7 +15,7 @@ import java.util.UUID
  *
  * 참고: [opencoinage Base62.java](https://github.com/opencoinage/opencoinage/blob/master/src/java/org/opencoinage/util/Base62.java)
  */
-object Base62 : KLogging() {
+object Base62: KLogging() {
 
     private const val DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     private val BASE = BigInteger.valueOf(62)
@@ -59,7 +59,7 @@ object Base62 : KLogging() {
  * Base62 알고리즘을 이용하여 UUID 값을 문자열로 인코딩합니다.
  * @return Base62로 인코딩된 문자열
  */
-fun <T : Number> T.encodeBase62(): String = Base62.encode(this.toBigInt())
+fun <T: Number> T.encodeBase62(): String = Base62.encode(this.toBigInt())
 
 /**
  * Base62 알고리즘으로 인코딩된 문자열을 디코딩하여 [BigInteger] 값을 반환합니다.

@@ -1,7 +1,6 @@
 package io.bluetape4k.support
 
 import io.bluetape4k.logging.KLogging
-import java.util.Optional
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
@@ -9,10 +8,11 @@ import org.amshove.kluent.shouldContainSame
 import org.eclipse.collections.impl.block.factory.Comparators.nullSafeEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
+import java.util.*
 
 class AnySupportTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `Any 를 Optional로 변환하기`() {

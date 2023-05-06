@@ -1,13 +1,13 @@
 package io.bluetape4k.core
 
 import io.bluetape4k.junit5.random.RandomizedTest
-import java.util.concurrent.CompletableFuture
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CompletableFuture
 
 @RandomizedTest
 class LazyValueTest {

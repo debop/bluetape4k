@@ -21,7 +21,7 @@ operator fun <T: Any> BeanFactory.get(name: String, requiredType: Class<T>): T =
 
 operator fun BeanFactory.get(name: String, vararg args: Any?): Any? = when {
     args.isEmpty() -> get(name) as? Any
-    else -> getBean(name, *args)
+    else           -> getBean(name, *args)
 }
 
 /**

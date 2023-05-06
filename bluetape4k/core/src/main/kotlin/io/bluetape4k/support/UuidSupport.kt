@@ -2,7 +2,7 @@ package io.bluetape4k.support
 
 import io.bluetape4k.utils.BigIntegerPair
 import java.math.BigInteger
-import java.util.UUID
+import java.util.*
 
 fun BigInteger.toUuid(): UUID {
     val unpaired = BigIntegerPair.unpair(this)

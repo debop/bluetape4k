@@ -19,9 +19,9 @@ import org.mybatis.dynamic.sql.util.kotlin.elements.constant
 import org.mybatis.dynamic.sql.util.kotlin.elements.max
 import org.mybatis.dynamic.sql.util.kotlin.model.update
 
-class MysqlSqlClientExtensionsTest : AbstractSqlClientExtensionsTest() {
+class MysqlSqlClientExtensionsTest: AbstractSqlClientExtensionsTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     override fun Vertx.getPool() = getMySQLPool()
 
@@ -47,7 +47,7 @@ class MysqlSqlClientExtensionsTest : AbstractSqlClientExtensionsTest() {
             }.render(VERTX_SQL_CLIENT_RENDERING_STRATEGY)
 
             updateProvider.updateStatement shouldBeEqualTo
-                    "update Person set address_id = #{p1} where id = #{p2}"
+                "update Person set address_id = #{p1} where id = #{p2}"
 
             updateProvider.parameters shouldContainSame mapOf("p1" to 3, "p2" to 5)
 

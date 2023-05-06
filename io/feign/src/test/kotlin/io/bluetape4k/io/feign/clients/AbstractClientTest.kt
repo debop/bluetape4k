@@ -26,9 +26,6 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.support.closeSafe
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
-import javax.ws.rs.PUT
-import javax.ws.rs.Path
-import javax.ws.rs.QueryParam
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okio.Buffer
@@ -45,6 +42,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
+import javax.ws.rs.PUT
+import javax.ws.rs.Path
+import javax.ws.rs.QueryParam
 
 abstract class AbstractClientTest: AbstractFeignTest() {
 

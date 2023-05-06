@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test
 
 class EnumSupportTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     enum class DAYS { MON, TUE, WED, THR, FRI, SAT, SUN }
 

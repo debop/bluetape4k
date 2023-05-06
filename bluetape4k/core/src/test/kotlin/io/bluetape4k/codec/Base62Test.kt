@@ -3,11 +3,11 @@ package io.bluetape4k.codec
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
-import java.math.BigInteger
-import java.util.UUID
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
+import java.math.BigInteger
+import java.util.*
 import kotlin.random.Random
 import kotlin.test.assertFailsWith
 

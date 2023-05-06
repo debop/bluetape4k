@@ -65,7 +65,7 @@ suspend fun <T: Any> ReactiveCassandraOperations.insertSuspending(entity: T): T?
 
 suspend fun <T: Any> ReactiveCassandraOperations.insertSuspending(
     entity: T,
-    options: InsertOptions
+    options: InsertOptions,
 ): EntityWriteResult<T> {
     return insert(entity, options).awaitSingle()
 }
@@ -76,14 +76,14 @@ suspend fun <T: Any> ReactiveCassandraOperations.updateSuspending(entity: T): T?
 
 suspend fun <T: Any> ReactiveCassandraOperations.updateSuspending(
     entity: T,
-    options: UpdateOptions
+    options: UpdateOptions,
 ): EntityWriteResult<T> {
     return update(entity, options).awaitSingle()
 }
 
 suspend inline fun <reified T: Any> ReactiveCassandraOperations.updateSuspending(
     query: Query,
-    update: Update
+    update: Update,
 ): Boolean? {
     return update(query, update, T::class.java).awaitSingleOrNull()
 }
@@ -94,7 +94,7 @@ suspend fun <T: Any> ReactiveCassandraOperations.deleteSuspending(entity: T): T?
 
 suspend fun <T: Any> ReactiveCassandraOperations.deleteSuspending(
     entity: T,
-    options: DeleteOptions
+    options: DeleteOptions,
 ): WriteResult {
     return delete(entity, options).awaitSingle()
 }

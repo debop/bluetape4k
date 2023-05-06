@@ -36,7 +36,7 @@ class EmbeddablePerson private constructor(
 
     @NotBlank
     @Convert(converter = RC4StringConverter::class)
-    var password: String
+    var password: String,
 ): IntJpaEntity() {
 
     companion object {

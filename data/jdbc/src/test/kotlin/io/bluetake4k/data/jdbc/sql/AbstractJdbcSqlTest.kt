@@ -3,10 +3,6 @@ package io.bluetake4k.data.jdbc.sql
 import io.bluetake4k.data.jdbc.model.TestBean
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.Statement
-import javax.sql.DataSource
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
@@ -17,6 +13,10 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.sql.PreparedStatement
+import java.sql.ResultSet
+import java.sql.Statement
+import javax.sql.DataSource
 
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [JdbcConfiguration::class])

@@ -10,7 +10,6 @@ import io.bluetape4k.spring.cassandra.insertSuspending
 import io.bluetape4k.spring.cassandra.query.eq
 import io.bluetape4k.spring.cassandra.selectForFlow
 import io.bluetape4k.spring.cassandra.truncateSuspending
-import java.io.Serializable
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
@@ -32,6 +31,7 @@ import org.springframework.data.cassandra.core.query.Query
 import org.springframework.data.cassandra.core.query.inValues
 import org.springframework.data.cassandra.core.query.query
 import org.springframework.data.cassandra.core.query.where
+import java.io.Serializable
 
 @SpringBootTest
 class ReactiveDeleteOperationsTest(

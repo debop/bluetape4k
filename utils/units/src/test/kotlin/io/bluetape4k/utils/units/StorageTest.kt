@@ -13,7 +13,7 @@ import kotlin.test.assertFailsWith
 @RandomizedTest
 class StorageTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `convert storage unit`() {

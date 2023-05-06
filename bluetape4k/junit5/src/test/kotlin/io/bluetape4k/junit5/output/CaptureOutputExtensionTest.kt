@@ -14,7 +14,7 @@ import org.junit.jupiter.api.TestMethodOrder
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class CaptureOutputExtensionTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @BeforeEach
     fun beforeEach(output: OutputCapturer) {

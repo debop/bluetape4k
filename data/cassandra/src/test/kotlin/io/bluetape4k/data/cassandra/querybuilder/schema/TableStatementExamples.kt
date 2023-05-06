@@ -98,7 +98,7 @@ class TableStatementExamples {
             .withColumn("v", DataTypes.TEXT)
             .withClusteringOrder("c", ClusteringOrder.ASC)
             .asCql() shouldBeEqualTo "CREATE TABLE foo (k int,c text,v text,PRIMARY KEY(k,c)) " +
-                "WITH CLUSTERING ORDER BY (c ASC)"
+            "WITH CLUSTERING ORDER BY (c ASC)"
 
         createTable("foo")
             .withPartitionKey("k", DataTypes.INT)
@@ -109,7 +109,7 @@ class TableStatementExamples {
             .withClusteringOrder("c0", ClusteringOrder.DESC)
             .withClusteringOrder(mapOf("c1" to ClusteringOrder.ASC, "c2" to ClusteringOrder.DESC))
             .asCql() shouldBeEqualTo "CREATE TABLE foo (k int,c0 text,c1 text,c2 text,v text,PRIMARY KEY(k,c0,c1,c2)) " +
-                "WITH CLUSTERING ORDER BY (c0 DESC,c1 ASC,c2 DESC)"
+            "WITH CLUSTERING ORDER BY (c0 DESC,c1 ASC,c2 DESC)"
 
         createTable("foo")
             .withPartitionKey("k", DataTypes.INT)
@@ -117,7 +117,7 @@ class TableStatementExamples {
             .withCompactStorage()
             .withDefaultTimeToLiveSeconds(86400)
             .asCql() shouldBeEqualTo "CREATE TABLE foo (k int PRIMARY KEY,v text) " +
-                "WITH COMPACT STORAGE AND default_time_to_live=86400"
+            "WITH COMPACT STORAGE AND default_time_to_live=86400"
 
         createTable("foo")
             .withPartitionKey("k", DataTypes.INT)
@@ -128,7 +128,7 @@ class TableStatementExamples {
             .withClusteringOrder("c", ClusteringOrder.DESC)
             .withDefaultTimeToLiveSeconds(86400)
             .asCql() shouldBeEqualTo "CREATE TABLE foo (k int,m text,c text,v text,PRIMARY KEY((k,m),c)) " +
-                "WITH COMPACT STORAGE AND CLUSTERING ORDER BY (c DESC) AND default_time_to_live=86400"
+            "WITH COMPACT STORAGE AND CLUSTERING ORDER BY (c DESC) AND default_time_to_live=86400"
 
         createTable("foo")
             .withPartitionKey("k", DataTypes.INT)
@@ -145,24 +145,24 @@ class TableStatementExamples {
             .withReadRepairChance(0.55)
             .withSpeculativeRetry("99percentile")
             .asCql() shouldBeEqualTo "CREATE TABLE foo (k int PRIMARY KEY,v text) " +
-                "WITH bloom_filter_fp_chance=0.42 AND cdc=false AND comment='Hello world' " +
-                "AND dclocal_read_repair_chance=0.54 AND default_time_to_live=86400 AND gc_grace_seconds=864000 " +
-                "AND memtable_flush_period_in_ms=10000 AND min_index_interval=1024 AND max_index_interval=4096 " +
-                "AND read_repair_chance=0.55 AND speculative_retry='99percentile'"
+            "WITH bloom_filter_fp_chance=0.42 AND cdc=false AND comment='Hello world' " +
+            "AND dclocal_read_repair_chance=0.54 AND default_time_to_live=86400 AND gc_grace_seconds=864000 " +
+            "AND memtable_flush_period_in_ms=10000 AND min_index_interval=1024 AND max_index_interval=4096 " +
+            "AND read_repair_chance=0.55 AND speculative_retry='99percentile'"
 
         createTable("foo")
             .withPartitionKey("k", DataTypes.INT)
             .withColumn("v", DataTypes.TEXT)
             .withLZ4Compression(1024, 0.5)
             .asCql() shouldBeEqualTo "CREATE TABLE foo (k int PRIMARY KEY,v text) " +
-                "WITH compression={'class':'LZ4Compressor','chunk_length_kb':1024,'crc_check_chance':0.5}"
+            "WITH compression={'class':'LZ4Compressor','chunk_length_kb':1024,'crc_check_chance':0.5}"
 
         createTable("foo")
             .withPartitionKey("k", DataTypes.INT)
             .withColumn("v", DataTypes.TEXT)
             .withCaching(true, SchemaBuilder.RowsPerPartition.rows(10))
             .asCql() shouldBeEqualTo "CREATE TABLE foo (k int PRIMARY KEY,v text) " +
-                "WITH caching={'keys':'ALL','rows_per_partition':'10'}"
+            "WITH caching={'keys':'ALL','rows_per_partition':'10'}"
     }
 
     @Test
@@ -185,9 +185,9 @@ class TableStatementExamples {
                     .withUncheckedTombstoneCompaction(true)
             )
             .asCql() shouldBeEqualTo "CREATE TABLE foo (k int PRIMARY KEY,v text) WITH compaction={" +
-                "'class':'SizeTieredCompactionStrategy','bucket_high':1.6,'bucket_low':0.6,'cold_reads_to_omit':0.1," +
-                "'max_threshold':33,'min_threshold':5,'min_sstable_size':50000,'only_purge_repaired_tombstones':true," +
-                "'enabled':false,'tombstone_compaction_interval':86400,'tombstone_threshold':0.22,'unchecked_tombstone_compaction':true}"
+            "'class':'SizeTieredCompactionStrategy','bucket_high':1.6,'bucket_low':0.6,'cold_reads_to_omit':0.1," +
+            "'max_threshold':33,'min_threshold':5,'min_sstable_size':50000,'only_purge_repaired_tombstones':true," +
+            "'enabled':false,'tombstone_compaction_interval':86400,'tombstone_threshold':0.22,'unchecked_tombstone_compaction':true}"
 
 
         createTable("foo")
@@ -199,7 +199,7 @@ class TableStatementExamples {
                     .withTombstoneCompactionIntervalInSeconds(3600)
             )
             .asCql() shouldBeEqualTo "CREATE TABLE foo (k int PRIMARY KEY,v text) " +
-                "WITH compaction={'class':'LeveledCompactionStrategy','sstable_size_in_mb':110,'tombstone_compaction_interval':3600}"
+            "WITH compaction={'class':'LeveledCompactionStrategy','sstable_size_in_mb':110,'tombstone_compaction_interval':3600}"
 
         createTable("foo")
             .withPartitionKey("k", DataTypes.INT)
@@ -211,8 +211,8 @@ class TableStatementExamples {
                     .withUnsafeAggressiveSSTableExpiration(false)
             )
             .asCql() shouldBeEqualTo "CREATE TABLE foo (k int PRIMARY KEY,v text) " +
-                "WITH compaction={'class':'TimeWindowCompactionStrategy','compaction_window_size':10," +
-                "'compaction_window_unit':'DAYS','timestamp_resolution':'MICROSECONDS','unsafe_aggressive_sstable_expiration':false}"
+            "WITH compaction={'class':'TimeWindowCompactionStrategy','compaction_window_size':10," +
+            "'compaction_window_unit':'DAYS','timestamp_resolution':'MICROSECONDS','unsafe_aggressive_sstable_expiration':false}"
     }
 
     @Test

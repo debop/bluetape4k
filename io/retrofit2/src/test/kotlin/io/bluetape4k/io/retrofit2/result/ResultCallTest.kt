@@ -18,9 +18,9 @@ import retrofit2.HttpException
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-class ResultCallTest : AbstractRetrofitTest() {
+class ResultCallTest: AbstractRetrofitTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     /**
      * [Json Place Holder](https://jsonplaceholder.typicode.com/) 에서 제공하는 API 로서 Json 데이터 통신에 대한 테스트를 손쉽게 할 수 있습니다.

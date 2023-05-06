@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
 import kotlin.concurrent.withLock
 
-object Runtimex : KLogging() {
+object Runtimex: KLogging() {
 
     private val runtime = Runtime.getRuntime()
 
@@ -79,7 +79,7 @@ object Runtimex : KLogging() {
     }
 
     /** Process 실행 결과를 담은 Value Object */
-    data class ProcessResult(val existCode: Int, val out: String) : Serializable
+    data class ProcessResult(val existCode: Int, val out: String): Serializable
 
     /**
      * Process 실행 시 결과를 [ProcessResult] 정보에 담아 반환합니다.
@@ -108,7 +108,7 @@ object Runtimex : KLogging() {
         private val input: InputStream,
         private val output: OutputStream? = null,
         private val prefix: String? = null,
-    ) : Thread() {
+    ): Thread() {
 
         private val lock = ReentrantLock()
         private val condition = lock.newCondition()

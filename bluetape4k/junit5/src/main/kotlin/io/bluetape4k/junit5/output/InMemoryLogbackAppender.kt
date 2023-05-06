@@ -3,8 +3,8 @@ package io.bluetape4k.junit5.output
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.AppenderBase
 import io.bluetape4k.logging.KLogging
-import java.util.LinkedList
 import org.slf4j.LoggerFactory
+import java.util.*
 import kotlin.reflect.KClass
 
 /**
@@ -13,9 +13,9 @@ import kotlin.reflect.KClass
  * NOTE: 단 parallel 테스트 시에는 제대로 Logger를 casting 할 수 없습니다.
  * HINT : http://www.slf4j.org/codes.html#substituteLogger
  */
-class InMemoryLogbackAppender private constructor(name: String) : AppenderBase<ILoggingEvent>() {
+class InMemoryLogbackAppender private constructor(name: String): AppenderBase<ILoggingEvent>() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         operator fun invoke(name: String = "root"): InMemoryLogbackAppender = InMemoryLogbackAppender(name)
         operator fun invoke(clazz: Class<*>): InMemoryLogbackAppender = invoke(clazz.name)
         operator fun invoke(kclazz: KClass<*>): InMemoryLogbackAppender = invoke(kclazz.qualifiedName!!)

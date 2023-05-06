@@ -5,7 +5,8 @@ import net.datafaker.Faker
 
 abstract class AbstractAvroTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
+        @JvmStatic
         val faker = Faker()
     }
 

@@ -33,7 +33,7 @@ open class DaySeeker(
         if (dayCount < 0) {
             visitDir = when {
                 visitDir.isForward -> SeekDirection.BACKWARD
-                else -> SeekDirection.FORWARD
+                else               -> SeekDirection.FORWARD
             }
         }
 
@@ -54,12 +54,12 @@ open class DaySeeker(
 
     override fun onVisitDay(day: DayRange, context: DaySeekerContext): Boolean {
         return when {
-            context.isFinished -> false
+            context.isFinished                 -> false
             day.isSamePeriod(context.startDay) -> true
-            !isMatchingDay(day, context) -> true
-            !checkLimits(day) -> true
+            !isMatchingDay(day, context)       -> true
+            !checkLimits(day)                  -> true
 
-            else -> {
+            else                               -> {
                 context.processDay(day)
 
                 // context 가 찾기를 완료하면 탐색(Visit)를 중단하도록 합니다.

@@ -9,14 +9,14 @@ import io.bluetape4k.utils.mutiny.uniOf
 import io.bluetape4k.utils.mutiny.voidUni
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.asFlow
-import java.time.Duration
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CountDownLatch
-import java.util.function.Supplier
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CountDownLatch
+import java.util.function.Supplier
 
 
 class GroupsExamples {

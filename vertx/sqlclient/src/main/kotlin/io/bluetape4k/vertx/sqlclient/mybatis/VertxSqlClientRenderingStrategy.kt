@@ -49,9 +49,9 @@ val VERTX_SQL_CLIENT_RENDERING_STRATEGY: RenderingStrategy = VertxSqlClientRende
  * @see [RenderingStrategies.SPRING_NAMED_PARAMETER]
  * @see [RenderingStrategies.MYBATIS3]
  */
-class VertxSqlClientRenderingStrategy : RenderingStrategy() {
+class VertxSqlClientRenderingStrategy: RenderingStrategy() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         @JvmStatic
         val INSTANCE by lazy { VertxSqlClientRenderingStrategy() }
     }
@@ -59,7 +59,7 @@ class VertxSqlClientRenderingStrategy : RenderingStrategy() {
     override fun getFormattedJdbcPlaceholder(
         column: BindableColumn<*>?,
         prefix: String?,
-        parameterName: String?
+        parameterName: String?,
     ): String {
         log.debug { "prefix=$prefix, parameterName=$parameterName" }
 

@@ -11,9 +11,6 @@ import io.bluetape4k.data.hibernate.reactive.mutiny.withTransactionAndAwait
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.smallrye.mutiny.coroutines.awaitSuspending
-import java.time.LocalDate
-import java.time.Month
-import javax.persistence.criteria.CriteriaQuery
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
 import org.amshove.kluent.shouldNotBeNull
@@ -21,6 +18,9 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
+import java.time.LocalDate
+import java.time.Month
+import javax.persistence.criteria.CriteriaQuery
 
 @Execution(ExecutionMode.SAME_THREAD)
 class MutinyStatelessSessionExamples: AbstractMutinyTest() {

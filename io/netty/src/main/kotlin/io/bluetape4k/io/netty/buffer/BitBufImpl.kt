@@ -6,9 +6,9 @@ import io.netty.buffer.ByteBuf
 import io.netty.util.ReferenceCounted
 import kotlin.math.ceil
 
-class BitBufImpl internal constructor(override val byteBuf: ByteBuf) : BitBuf {
+class BitBufImpl internal constructor(override val byteBuf: ByteBuf): BitBuf {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         const val BITS_SIZE: Int = Byte.SIZE_BITS
         const val BITS_SIZE_DOUBLE: Double = BITS_SIZE.toDouble()
     }

@@ -17,11 +17,6 @@ import io.bluetape4k.junit5.folder.TempFolderExtension
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.debug
-import java.io.IOException
-import java.net.SocketTimeoutException
-import java.time.Duration
-import java.util.concurrent.CompletionException
-import java.util.concurrent.CountDownLatch
 import okhttp3.Cache
 import okhttp3.CacheControl
 import okhttp3.Call
@@ -39,6 +34,11 @@ import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.io.IOException
+import java.net.SocketTimeoutException
+import java.time.Duration
+import java.util.concurrent.CompletionException
+import java.util.concurrent.CountDownLatch
 import kotlin.test.assertFailsWith
 
 @RandomizedTest

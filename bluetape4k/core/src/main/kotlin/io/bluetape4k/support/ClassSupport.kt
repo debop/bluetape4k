@@ -15,31 +15,31 @@ val KFunction<*>.qualifiedName: String get() = this.javaMethod?.declaringClass?.
  * 객체를 지정한 수형으로 casting 합니다.
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : Any> Any.cast(kclass: KClass<T>): T =
+fun <T: Any> Any.cast(kclass: KClass<T>): T =
     if (kclass.java.isInstance(this)) this as T
     else throw ClassCastException("${this::class} couldn't be cast to $kclass")
 
 /**
  * 객체를 지정한 수형으로 casting 합니다.
  */
-inline fun <reified T : Any> Any.cast(): T = cast(T::class)
+inline fun <reified T: Any> Any.cast(): T = cast(T::class)
 
 /**
  * 지정한 수형의 인스턴스를 새로 생성합니다. 실패 시에는 null을 반환합니다.
  */
-fun <T : Any> Class<T>.newInstanceOrNull(): T? =
+fun <T: Any> Class<T>.newInstanceOrNull(): T? =
     runCatching { getDeclaredConstructor().newInstance() }.getOrNull()
 
 /**
  * 지정한 수형의 인스턴스를 새로 생성합니다. 실패 시에는 null을 반환합니다.
  */
-fun <T : Any> KClass<T>.newInstanceOrNull(): T? = java.newInstanceOrNull()
+fun <T: Any> KClass<T>.newInstanceOrNull(): T? = java.newInstanceOrNull()
 
 /**
  * 지정한 수형의 인스턴스를 새로 생성합니다. 실패 시에는 null을 반환합니다.
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : Any> newInstanceOrNull(qualifiedName: String, classLoader: ClassLoader? = getContextClassLoader()): T? {
+fun <T: Any> newInstanceOrNull(qualifiedName: String, classLoader: ClassLoader? = getContextClassLoader()): T? {
     qualifiedName.assertNotBlank("qualifiedName")
 
     return runCatching {
@@ -56,7 +56,10 @@ fun <T : Any> newInstanceOrNull(qualifiedName: String, classLoader: ClassLoader?
  * @param classLoader 현재 class loader
  */
 @JvmOverloads
-fun classIsPresent(qualifiedName: String, classLoader: ClassLoader? = Thread.currentThread().contextClassLoader): Boolean {
+fun classIsPresent(
+    qualifiedName: String,
+    classLoader: ClassLoader? = Thread.currentThread().contextClassLoader,
+): Boolean {
     return try {
         (classLoader?.loadClass(qualifiedName) ?: Class.forName(qualifiedName)) != null
     } catch (ignored: Throwable) {

@@ -13,7 +13,7 @@ abstract class AsyncFactorialProvider {
         log.trace { "factorial($x)" }
         return when {
             x <= 1L -> CompletableFuture.completedFuture(1L)
-            else -> cachedCalc(x - 1).thenApplyAsync { x * it }
+            else    -> cachedCalc(x - 1).thenApplyAsync { x * it }
         }
     }
 }

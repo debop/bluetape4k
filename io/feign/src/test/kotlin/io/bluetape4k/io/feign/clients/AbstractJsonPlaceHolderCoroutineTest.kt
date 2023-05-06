@@ -22,9 +22,9 @@ import org.junit.jupiter.api.Test
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
-abstract class AbstractJsonPlaceHolderCoroutineTest : AbstractJsonPlaceHolderTest() {
+abstract class AbstractJsonPlaceHolderCoroutineTest: AbstractJsonPlaceHolderTest() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val ITEM_SIZE = 5
     }
 

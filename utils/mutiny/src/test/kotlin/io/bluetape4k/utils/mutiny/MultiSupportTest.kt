@@ -4,14 +4,14 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.coroutines.asFlow
-import java.time.Duration
-import java.util.stream.IntStream
-import java.util.stream.Stream
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.util.stream.IntStream
+import java.util.stream.Stream
 
 class MultiSupportTest {
 

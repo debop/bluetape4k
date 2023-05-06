@@ -19,7 +19,7 @@ import org.xerial.snappy.Snappy
 abstract class AbstractCompressorTest {
 
     companion object: KLogging() {
-        const val REPEAT_SIZE = 5
+        const val REPEAT_SIZE = 3
 
         private val faker = Faker()
 

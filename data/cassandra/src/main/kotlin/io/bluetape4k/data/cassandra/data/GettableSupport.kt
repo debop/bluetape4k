@@ -15,8 +15,7 @@ import java.sql.Timestamp
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
-import java.util.Date
-import java.util.UUID
+import java.util.*
 import kotlin.reflect.KClass
 
 
@@ -43,28 +42,28 @@ fun GettableByIndex.getObject(index: Int, requireType: KClass<*>): Any? {
         return null
     }
     return when (requireType) {
-        String::class -> getString(index)
-        Boolean::class -> getBoolean(index)
-        Byte::class -> getByte(index)
-        Short::class -> getShort(index)
-        Int::class -> getInt(index)
-        Long::class -> getLong(index)
-        Float::class -> getFloat(index)
-        Double::class -> getDouble(index)
+        String::class     -> getString(index)
+        Boolean::class    -> getBoolean(index)
+        Byte::class       -> getByte(index)
+        Short::class      -> getShort(index)
+        Int::class        -> getInt(index)
+        Long::class       -> getLong(index)
+        Float::class      -> getFloat(index)
+        Double::class     -> getDouble(index)
         BigDecimal::class -> getBigDecimal(index)
         BigInteger::class -> getBigInteger(index)
-        LocalDate::class -> getLocalDate(index)
-        LocalTime::class -> getLocalTime(index)
-        Date::class -> Date.from(getInstant(index))
-        Timestamp::class -> Timestamp(getInstant(index)!!.toEpochMilli())
-        Instant::class -> getInstant(index)
+        LocalDate::class  -> getLocalDate(index)
+        LocalTime::class  -> getLocalTime(index)
+        Date::class       -> Date.from(getInstant(index))
+        Timestamp::class  -> Timestamp(getInstant(index)!!.toEpochMilli())
+        Instant::class    -> getInstant(index)
         ByteBuffer::class -> getByteBuffer(index)
-        ByteArray::class -> getByteBuffer(index)?.getBytes()
-        Token::class -> getToken(index)
+        ByteArray::class  -> getByteBuffer(index)?.getBytes()
+        Token::class      -> getToken(index)
         TupleValue::class -> getTupleValue(index)
-        UdtValue::class -> getUdtValue(index)
-        UUID::class -> getUuid(index)
-        else -> get(index, requireType.java)
+        UdtValue::class   -> getUdtValue(index)
+        UUID::class       -> getUuid(index)
+        else              -> get(index, requireType.java)
     }
 }
 

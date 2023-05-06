@@ -7,10 +7,10 @@ import io.bluetape4k.utils.times.days
 import io.bluetape4k.utils.times.hours
 import io.bluetape4k.utils.times.minus
 import io.bluetape4k.utils.times.plus
-import java.time.Duration
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import kotlin.test.assertFailsWith
 
 class DateGenericProgressionTest {

@@ -27,7 +27,7 @@ fun <T> adjustPeriod(left: T?, right: T?): Pair<T?, T?> where T: Temporal, T: Co
 
 fun adjustPeriod(start: ZonedDateTime, duration: Duration): Pair<ZonedDateTime, Duration> = when {
     duration.isPositive -> Pair(start, duration)
-    else -> Pair(start - duration, duration.negated())
+    else                -> Pair(start - duration, duration.negated())
 }
 
 fun assertValidPeriod(start: ZonedDateTime?, end: ZonedDateTime?) {
@@ -58,10 +58,10 @@ fun ZonedDateTime.toTimeRange(end: ZonedDateTime): ITimeRange = TimeRange(this, 
 
 
 fun yearOf(year: Int, monthOfYear: Int, calendar: ITimeCalendar = TimeCalendar.Default): Int = when {
-    monthOfYear in 1..12 -> year
+    monthOfYear in 1..12             -> year
     monthOfYear < calendar.baseMonth -> year - 1
-    monthOfYear > 12 -> year + 1
-    else -> throw IllegalArgumentException("Invalid monthOfYear[$monthOfYear]")
+    monthOfYear > 12                 -> year + 1
+    else                             -> throw IllegalArgumentException("Invalid monthOfYear[$monthOfYear]")
 }
 
 fun ZonedDateTime.yearOf(): Int = yearOf(year, monthValue)
@@ -145,31 +145,31 @@ infix fun ITimePeriod.hasPureInsideWith(that: ITimePeriod): Boolean =
     hasPureInsideWith(that.start) && hasPureInsideWith(that.end)
 
 infix fun ITimePeriod.relationWith(that: ITimePeriod): PeriodRelation = when {
-    this.start > that.end -> PeriodRelation.After
-    this.end < that.start -> PeriodRelation.Before
-    this.isSamePeriod(that) -> PeriodRelation.ExactMatch
-    this.start == that.end -> PeriodRelation.StartTouching
-    this.end == that.start -> PeriodRelation.EndTouching
+    this.start > that.end    -> PeriodRelation.After
+    this.end < that.start    -> PeriodRelation.Before
+    this.isSamePeriod(that)  -> PeriodRelation.ExactMatch
+    this.start == that.end   -> PeriodRelation.StartTouching
+    this.end == that.start   -> PeriodRelation.EndTouching
 
     this.hasInsideWith(that) -> when {
         this.start == that.start -> PeriodRelation.EnclosingStartTouching
-        this.end == that.end -> PeriodRelation.EnclosingEndTouching
-        else -> PeriodRelation.Enclosing
+        this.end == that.end     -> PeriodRelation.EnclosingEndTouching
+        else                     -> PeriodRelation.Enclosing
     }
 
-    else -> {
+    else                     -> {
         val isInsideStart = that.hasInsideWith(this.start)
         val isInsideEnd = that.hasInsideWith(this.end)
         when {
             isInsideStart && isInsideEnd -> when {
                 this.start == that.start -> PeriodRelation.InsideStartTouching
-                this.end == that.end -> PeriodRelation.InsideEndTouching
-                else -> PeriodRelation.Inside
+                this.end == that.end     -> PeriodRelation.InsideEndTouching
+                else                     -> PeriodRelation.Inside
             }
 
-            isInsideStart -> PeriodRelation.StartInside
-            isInsideEnd -> PeriodRelation.EndInside
-            else -> PeriodRelation.NoRelation
+            isInsideStart                -> PeriodRelation.StartInside
+            isInsideEnd                  -> PeriodRelation.EndInside
+            else                         -> PeriodRelation.NoRelation
         }
     }
 }

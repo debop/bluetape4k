@@ -11,7 +11,7 @@ import kotlin.test.assertFailsWith
 @RandomizedTest
 class WeightTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     @Test
     fun `convert weight unit`() {

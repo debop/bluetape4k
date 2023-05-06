@@ -1,8 +1,8 @@
 package io.bluetape4k.infra.kafka.codec
 
 import io.bluetape4k.logging.KLogging
-import java.nio.charset.Charset
 import org.apache.kafka.common.header.Headers
+import java.nio.charset.Charset
 
 /**
  * Kafka 메시지의 Key 와 Value의 타입이 문자열인 경우에 사용하는 [KafkaCodec] 입니다.
@@ -46,7 +46,7 @@ class StringKafkaCodec: AbstractKafkaCodec<String>() {
 
         return when (encodingValue) {
             is String -> runCatching { Charset.forName(encodingValue) }.getOrDefault(DefaultEncoding)
-            else -> DefaultEncoding
+            else      -> DefaultEncoding
         }
     }
 
@@ -56,7 +56,7 @@ class StringKafkaCodec: AbstractKafkaCodec<String>() {
 
         return when (encodingValue) {
             is String -> runCatching { Charset.forName(encodingValue) }.getOrDefault(DefaultEncoding)
-            else -> DefaultEncoding
+            else      -> DefaultEncoding
         }
     }
 }

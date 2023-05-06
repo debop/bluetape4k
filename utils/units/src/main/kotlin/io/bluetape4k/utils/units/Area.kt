@@ -9,13 +9,13 @@ import kotlin.math.absoluteValue
 
 fun areaOf(value: Number = 0.0, unit: AreaUnit = MILLI_METER_2) = Area(value, unit)
 
-fun <T : Number> T.areaBy(unit: AreaUnit): Area = Area(this, unit)
+fun <T: Number> T.areaBy(unit: AreaUnit): Area = Area(this, unit)
 
-fun <T : Number> T.millimeter2(): Area = areaBy(MILLI_METER_2)
-fun <T : Number> T.centimeter2(): Area = areaBy(CENTI_METER_2)
-fun <T : Number> T.meter2(): Area = areaBy(METER_2)
+fun <T: Number> T.millimeter2(): Area = areaBy(MILLI_METER_2)
+fun <T: Number> T.centimeter2(): Area = areaBy(CENTI_METER_2)
+fun <T: Number> T.meter2(): Area = areaBy(METER_2)
 
-operator fun <T : Number> T.times(area: Area): Area = area * this
+operator fun <T: Number> T.times(area: Area): Area = area * this
 
 /**
  * 면적을 나타내는 단위를 표현합니다
@@ -57,7 +57,7 @@ enum class AreaUnit(val unitName: String, val factor: Double) {
  * @property value millimeter^2 단위의 면적 값
  */
 @JvmInline
-value class Area(val value: Double = 0.0) : Comparable<Area>, Serializable {
+value class Area(val value: Double = 0.0): Comparable<Area>, Serializable {
 
     operator fun plus(other: Area): Area = Area(value + other.value)
     operator fun minus(other: Area): Area = Area(value - other.value)
@@ -87,17 +87,22 @@ value class Area(val value: Double = 0.0) : Comparable<Area>, Serializable {
         return "%.1f %s".format(value / unit.factor, unit.unitName)
     }
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         @JvmStatic
         val Zero by lazy { Area(0.0) }
+
         @JvmStatic
         val MaxValue by lazy { Area(Double.MAX_VALUE) }
+
         @JvmStatic
         val MinValue by lazy { Area(Double.MIN_VALUE) }
+
         @JvmStatic
         val PositiveInf by lazy { Area(Double.POSITIVE_INFINITY) }
+
         @JvmStatic
         val NegateInf by lazy { Area(Double.NEGATIVE_INFINITY) }
+
         @JvmStatic
         val NaN by lazy { Area(Double.NaN) }
 

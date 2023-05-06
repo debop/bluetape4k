@@ -7,14 +7,14 @@ import kotlin.math.sign
 
 fun weightOf(value: Number = 0.0, unit: WeightUnit = WeightUnit.GRAM): Weight = Weight(value, unit)
 
-fun <T : Number> T.weightBy(unit: WeightUnit) = weightOf(this.toDouble(), unit)
+fun <T: Number> T.weightBy(unit: WeightUnit) = weightOf(this.toDouble(), unit)
 
-fun <T : Number> T.milligram(): Weight = weightBy(WeightUnit.MILLIGRAM)
-fun <T : Number> T.gram(): Weight = weightBy(WeightUnit.GRAM)
-fun <T : Number> T.kilogram(): Weight = weightBy(WeightUnit.KILOGRAM)
-fun <T : Number> T.ton(): Weight = weightBy(WeightUnit.TON)
+fun <T: Number> T.milligram(): Weight = weightBy(WeightUnit.MILLIGRAM)
+fun <T: Number> T.gram(): Weight = weightBy(WeightUnit.GRAM)
+fun <T: Number> T.kilogram(): Weight = weightBy(WeightUnit.KILOGRAM)
+fun <T: Number> T.ton(): Weight = weightBy(WeightUnit.TON)
 
-operator fun <T : Number> T.times(weight: Weight): Weight = weight.times(this)
+operator fun <T: Number> T.times(weight: Weight): Weight = weight.times(this)
 
 /**
  * 무게 단위
@@ -47,7 +47,7 @@ enum class WeightUnit(val unitName: String, val factor: Double) {
  * @property value 그램 단위의 값
  */
 @JvmInline
-value class Weight(val value: Double = 0.0) : Comparable<Weight>, Serializable {
+value class Weight(val value: Double = 0.0): Comparable<Weight>, Serializable {
 
     operator fun plus(other: Weight): Weight = Weight(value + other.value)
     operator fun minus(other: Weight): Weight = Weight(value - other.value)
@@ -87,7 +87,7 @@ value class Weight(val value: Double = 0.0) : Comparable<Weight>, Serializable {
 
     override fun compareTo(other: Weight): Int = value.compareTo(other.value)
 
-    companion object : KLogging() {
+    companion object: KLogging() {
 
         val ZERO = Weight(0.0)
         val NaN = Weight(Double.NaN)

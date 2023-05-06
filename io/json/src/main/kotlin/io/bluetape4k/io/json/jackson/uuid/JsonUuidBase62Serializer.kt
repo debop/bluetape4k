@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.std.UUIDSerializer
 import io.bluetape4k.codec.Url62
-import java.util.UUID
+import java.util.*
 
 class JsonUuidBase62Serializer: UUIDSerializer() {
 

@@ -27,7 +27,7 @@ private val log = KotlinLogging.logger { }
  * @return DB 작업 결과
  */
 suspend fun <T> Pool.withTransactionAndAwait(
-    action: suspend (conn: SqlConnection) -> T
+    action: suspend (conn: SqlConnection) -> T,
 ): T {
     val conn = connection.await()
     val tx = conn.begin().await()

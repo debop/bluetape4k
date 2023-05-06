@@ -5,12 +5,12 @@ import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.subscription.BackPressureStrategy
 import io.smallrye.mutiny.subscription.MultiEmitter
 import io.smallrye.mutiny.subscription.MultiSubscriber
-import java.time.Duration
-import java.util.concurrent.Flow
 import kotlinx.atomicfu.atomic
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.util.concurrent.Flow
 import kotlin.concurrent.thread
 
 class BackpressureExamples {

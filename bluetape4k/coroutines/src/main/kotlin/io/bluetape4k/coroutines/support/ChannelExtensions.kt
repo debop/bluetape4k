@@ -2,7 +2,7 @@ package io.bluetape4k.coroutines.support
 
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.debug
-import java.time.Duration
+import io.bluetape4k.logging.trace
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -10,8 +10,8 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import java.time.Duration
 import kotlin.coroutines.CoroutineContext
-
 
 private val log = KotlinLogging.logger { }
 
@@ -31,9 +31,9 @@ suspend fun <E> ReceiveChannel<E>.distinctUntilChanged(
         var prev: E? = null
 
         self.consumeEach { received ->
-            log.debug { "Received: $received" }
+            log.trace { "Received: $received" }
             if (received != prev) {
-                log.debug { "Send: $received" }
+                log.trace { "Send: $received" }
                 producer.send(received)
                 prev = received
             }
@@ -61,7 +61,7 @@ suspend fun <E> ReceiveChannel<E>.distinctUntilChanged(
         producer.send(prev)
 
         self.consumeEach { received ->
-            log.debug { "Received: $received" }
+            log.trace { "Received: $received" }
             if (!equalOperator(received, prev)) {
                 log.debug { "Send: $received" }
                 producer.send(received)

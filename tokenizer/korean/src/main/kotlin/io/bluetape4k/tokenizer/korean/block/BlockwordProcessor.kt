@@ -12,7 +12,7 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos
 import io.bluetape4k.tokenizer.model.BlockwordRequest
 import io.bluetape4k.tokenizer.model.BlockwordResponse
 import io.bluetape4k.tokenizer.model.Severity
-import java.util.Locale
+import java.util.*
 
 
 /**

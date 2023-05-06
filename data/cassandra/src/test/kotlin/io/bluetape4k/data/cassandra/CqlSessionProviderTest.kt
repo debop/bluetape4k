@@ -2,11 +2,11 @@ package io.bluetape4k.data.cassandra
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.closeSafe
-import java.net.InetSocketAddress
-import java.util.UUID
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.Test
+import java.net.InetSocketAddress
+import java.util.*
 
 class CqlSessionProviderTest: AbstractCassandraTest() {
 

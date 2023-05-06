@@ -1,9 +1,9 @@
 package io.bluetape4k.data.hibernate.reactive
 
 import io.bluetape4k.logging.KLogging
+import net.datafaker.Faker
 import javax.persistence.EntityManagerFactory
 import javax.persistence.Persistence
-import net.datafaker.Faker
 
 abstract class AbstractHibernateReactiveTest {
 

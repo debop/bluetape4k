@@ -1,13 +1,13 @@
 package io.bluetape4k.data.hibernate
 
 import io.bluetape4k.logging.KLogging
-import javax.persistence.EntityManager
-import javax.persistence.EntityManagerFactory
 import net.datafaker.Faker
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
+import javax.persistence.EntityManager
+import javax.persistence.EntityManagerFactory
 
 /**
  * `@DataJpaTest`를 사용하려면 SpringBootApplication 이 정의되어 있어야 합니다 (see [SpringDataJpaTestApplication])
@@ -57,7 +57,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 )
 abstract class AbstractHibernateTest {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         // @DataJpaTest 는 H2 를 사용합니다. @SprintBootTest 로 직접적으로 사용하려면 MySQLServer를 생성해야 합니다.
         //        val mysql: MySQLServer by lazy {
         //            MySQLServer(useDefaultPort = true).apply {

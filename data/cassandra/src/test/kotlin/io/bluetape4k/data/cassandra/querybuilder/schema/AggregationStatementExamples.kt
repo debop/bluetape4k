@@ -21,7 +21,7 @@ class AggregationStatementExamples {
             .withFinalFunc("finalfunction")
             .withInitCond(tupleTerm(0, 0))
             .asCql() shouldBeEqualTo
-                "CREATE AGGREGATE ks.agg1 (int) SFUNC sfunction STYPE ascii FINALFUNC finalfunction INITCOND (0,0)"
+            "CREATE AGGREGATE ks.agg1 (int) SFUNC sfunction STYPE ascii FINALFUNC finalfunction INITCOND (0,0)"
 
         createAggregate("ks", "agg1")
             .withParameter(DataTypes.INT)
@@ -32,7 +32,7 @@ class AggregationStatementExamples {
             .withFinalFunc("finalfunction")
             .withInitCond(tupleTerm(0, 0))
             .asCql() shouldBeEqualTo
-                "CREATE AGGREGATE ks.agg1 (int,text,boolean) SFUNC sfunction STYPE ascii FINALFUNC finalfunction INITCOND (0,0)"
+            "CREATE AGGREGATE ks.agg1 (int,text,boolean) SFUNC sfunction STYPE ascii FINALFUNC finalfunction INITCOND (0,0)"
     }
 
     @Test

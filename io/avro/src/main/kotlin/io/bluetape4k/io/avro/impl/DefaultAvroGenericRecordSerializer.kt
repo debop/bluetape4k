@@ -4,7 +4,6 @@ import io.bluetape4k.io.avro.AvroGenericRecordSerializer
 import io.bluetape4k.io.avro.DEFAULT_CODEC_FACTORY
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
-import java.io.ByteArrayOutputStream
 import org.apache.avro.Schema
 import org.apache.avro.file.CodecFactory
 import org.apache.avro.file.DataFileReader
@@ -14,6 +13,7 @@ import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericDatumReader
 import org.apache.avro.generic.GenericDatumWriter
 import org.apache.avro.generic.GenericRecord
+import java.io.ByteArrayOutputStream
 
 class DefaultAvroGenericRecordSerializer(
     private val codecFactory: CodecFactory,

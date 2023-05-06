@@ -6,11 +6,11 @@ import io.bluetape4k.logging.trace
 import io.vertx.core.http.HttpClientRequest
 import io.vertx.core.http.HttpClientResponse
 import io.vertx.core.http.HttpMethod
-import java.io.IOException
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Protocol
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
+import java.io.IOException
 
 private val log = KotlinLogging.logger {}
 

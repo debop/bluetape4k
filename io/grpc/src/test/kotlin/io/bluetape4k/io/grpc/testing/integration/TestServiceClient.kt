@@ -9,12 +9,12 @@ import io.bluetape4k.io.grpc.testing.integration.Messages.StreamingOutputCallRes
 import io.bluetape4k.logging.KLogging
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
-import java.util.concurrent.ForkJoinPool
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.ForkJoinPool
 import kotlin.random.Random
 
 class TestServiceClient private constructor(channel: ManagedChannel): AbstractGrpcClient(channel) {

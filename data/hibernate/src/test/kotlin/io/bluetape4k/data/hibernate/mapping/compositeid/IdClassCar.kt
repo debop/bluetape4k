@@ -14,7 +14,7 @@ import javax.persistence.IdClass
 
 data class CarIdentifier(
     val brand: String = "",
-    val carYear: Int = 0
+    val carYear: Int = 0,
 ): Serializable
 
 @Entity

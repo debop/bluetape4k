@@ -6,7 +6,7 @@ import io.bluetape4k.logging.debug
 /**
  * SQL 구문을 로그로 출력합니다.
  */
-object SqlLogger : KLogging() {
+object SqlLogger: KLogging() {
 
     fun logSql(sql: String, params: Map<String, Any?> = emptyMap()) {
         log.debug { "SQL: $sql" }
@@ -15,12 +15,12 @@ object SqlLogger : KLogging() {
         }
     }
 
-    fun <T : Any> logSQL(sql: String, record: T) {
+    fun <T: Any> logSQL(sql: String, record: T) {
         log.debug { "SQL: $sql" }
         log.debug { "RECORD: $record" }
     }
 
-    fun <T : Any> logSQL(sql: String, records: Collection<T>) {
+    fun <T: Any> logSQL(sql: String, records: Collection<T>) {
         log.debug { "SQL: $sql" }
         if (records.isNotEmpty()) {
             log.debug { "RECORD: ${records.joinToString()}" }

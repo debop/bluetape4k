@@ -2,10 +2,10 @@ package io.bluetape4k.utils.mutiny
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import java.util.concurrent.CompletableFuture
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CompletableFuture
 import kotlin.random.Random
 
 class UniSupportTest {

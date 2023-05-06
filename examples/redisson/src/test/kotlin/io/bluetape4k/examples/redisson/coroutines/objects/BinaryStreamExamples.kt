@@ -3,14 +3,13 @@ package io.bluetape4k.examples.redisson.coroutines.objects
 import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
-import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
-import java.time.Duration
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.RepeatedTest
+import java.time.Duration
 
 /**
  * [RBinaryStream] 예제
@@ -31,7 +30,7 @@ class BinaryStreamExamples: AbstractRedissonCoroutineTest() {
     fun `RBinaryStream 사용 예`() = runSuspendWithIO {
         val stream = redisson.getBinaryStream(randomName())
 
-        val contentStr = Fakers.randomString(256, 2048, true)
+        val contentStr = randomString()
         val contentBytes = contentStr.toUtf8Bytes()
 
         stream.setIfAbsentAsync(contentBytes, Duration.ofSeconds(10)).awaitSuspending().shouldBeTrue()
@@ -42,7 +41,7 @@ class BinaryStreamExamples: AbstractRedissonCoroutineTest() {
         loadedStr shouldBeEqualTo contentStr
 
         // 기존 값을 비교해서 새로운 Bytes 로 대체한다
-        val contentBytes2 = Fakers.randomString(100, 500, true).toUtf8Bytes()
+        val contentBytes2 = randomString().toUtf8Bytes()
         stream.compareAndSetAsync(contentBytes, contentBytes2).awaitSuspending().shouldBeTrue()
 
         stream.deleteAsync().awaitSuspending()

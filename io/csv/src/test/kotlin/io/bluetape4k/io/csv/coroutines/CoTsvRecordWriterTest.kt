@@ -3,10 +3,10 @@ package io.bluetape4k.io.csv.coroutines
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import java.io.StringWriter
 import kotlinx.coroutines.flow.flow
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Test
+import java.io.StringWriter
 
 class CoTsvRecordWriterTest {
 

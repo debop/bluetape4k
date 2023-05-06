@@ -1,8 +1,8 @@
 package io.bluetape4k.junit5.utils
 
+import org.junit.runner.notification.RunListener.ThreadSafe
 import java.io.PrintWriter
 import java.io.StringWriter
-import org.junit.runner.notification.RunListener.ThreadSafe
 
 /**
  * Allows multiple exceptions to be thrown as a single exception -- adapted from Jetty.
@@ -55,8 +55,8 @@ class MultiException: RuntimeException("Multiple exceptions") {
         synchronized(nested) {
             when {
                 nested.size == 1 -> throw nested[0]
-                nested.size > 1 -> throw this
-                else -> { /* do nothing */
+                nested.size > 1  -> throw this
+                else             -> { /* do nothing */
                 }
             }
         }

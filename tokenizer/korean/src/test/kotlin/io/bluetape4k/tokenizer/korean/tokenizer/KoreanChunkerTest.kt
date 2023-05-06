@@ -19,10 +19,10 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Punctuation
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.ScreenName
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Space
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.URL
-import java.util.regex.Matcher
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Test
+import java.util.regex.Matcher
 
 class KoreanChunkerTest: TestBase() {
 

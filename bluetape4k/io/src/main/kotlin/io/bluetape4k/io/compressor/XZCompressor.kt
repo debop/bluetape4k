@@ -2,10 +2,10 @@ package io.bluetape4k.io.compressor
 
 import io.bluetape4k.io.toByteArray
 import io.bluetape4k.logging.KLogging
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 
 /**
@@ -23,9 +23,9 @@ import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
 class XZCompressor private constructor(
     private val preset: Int,
     private val bufferSize: Int,
-) : AbstractCompressor() {
+): AbstractCompressor() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private const val DEFAULT_PRESET: Int = 6
 
         @JvmOverloads
