@@ -7,7 +7,6 @@ import software.amazon.awssdk.enhanced.dynamodb.Expression
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import kotlin.random.Random
 
-
 data class FilterRequestProperties(
     val expressionAttributeValues: Map<String, AttributeValue>,
     val filterExpression: String,
@@ -163,7 +162,6 @@ interface DynamoFunction
 data class Attribute(val attributeName: String): DynamoFunction
 data class AttributeExists(val attributeName: String): DynamoFunction
 
-
 @DynamoDslMarker
 interface FilterQueryBuilder {
     fun build(): FilterQuery
@@ -179,42 +177,42 @@ class ConcreteFilterBuilder: FilterQueryBuilder {
     }
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun ConcreteFilterBuilder.eq(value: Any) {
     comparator = Equals(value)
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun ConcreteFilterBuilder.ne(value: Any) {
     comparator = NotEquals(value)
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun ConcreteFilterBuilder.gt(value: Any) {
     comparator = GreaterThan(value)
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun ConcreteFilterBuilder.ge(value: Any) {
     comparator = GreaterThanOrEquals(value)
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun ConcreteFilterBuilder.lt(value: Any) {
     comparator = LessThan(value)
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun ConcreteFilterBuilder.le(value: Any) {
     comparator = LessThanOrEquals(value)
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun ConcreteFilterBuilder.inList(values: List<Any>) {
     comparator = InList(values)
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun ConcreteFilterBuilder.inList(vararg values: Any) {
     comparator = InList(values.toList())
 }
@@ -249,7 +247,7 @@ class RootFilterBuilder: FilterQueryBuilder {
     }
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun RootFilterBuilder.attribute(
     value: String,
     initializer: ConcreteFilterBuilder.() -> Unit,
@@ -265,7 +263,7 @@ fun RootFilterBuilder.attribute(
     }
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun RootFilterBuilder.attributeExists(value: String): RootFilterBuilder = apply {
     this.currentFilter = ConcreteFilter(AttributeExists(value))
 }

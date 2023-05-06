@@ -11,7 +11,7 @@ import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun <T: DynamoDbEntity> queryEnhancedRequest(initializer: EnhancedQueryBuilderKt<T>.() -> Unit): QueryEnhancedRequest =
     EnhancedQueryBuilderKt<T>().apply(initializer).build()
 
@@ -72,7 +72,7 @@ class EnhancedQueryBuilderKt<T: Any> {
     }
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun <T: DynamoDbEntity> EnhancedQueryBuilderKt<T>.primaryKey(
     keyName: String = "primaryKey",
     initializer: PrimaryKeyBuilder.() -> Unit,
@@ -80,7 +80,7 @@ fun <T: DynamoDbEntity> EnhancedQueryBuilderKt<T>.primaryKey(
     primaryKey = PrimaryKeyBuilder(keyName).apply(initializer).build()
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun <T: DynamoDbEntity> EnhancedQueryBuilderKt<T>.sortKey(
     keyName: String = "sortKey",
     initializer: SortKeyBuilder.() -> Unit,
@@ -88,7 +88,7 @@ fun <T: DynamoDbEntity> EnhancedQueryBuilderKt<T>.sortKey(
     sortKey = SortKeyBuilder(keyName).apply(initializer).build()
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun <T: DynamoDbEntity> EnhancedQueryBuilderKt<T>.filtering(initializer: RootFilterBuilder.() -> Unit) {
     filtering = RootFilterBuilder().apply(initializer).build()
 }

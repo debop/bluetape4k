@@ -4,13 +4,13 @@ import io.bluetape4k.aws.dynamodb.examples.food.model.FoodDocument
 import io.bluetape4k.aws.dynamodb.examples.food.model.FoodState
 import io.bluetape4k.aws.dynamodb.examples.food.model.Schema.IDX_PK_UPDATED_AT
 import io.bluetape4k.aws.dynamodb.model.describe
+import io.bluetape4k.aws.dynamodb.schema.getTableSchema
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.Test
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest
 import java.time.Instant
 
@@ -34,7 +34,8 @@ class DynamoDbEnhancedDslTest {
         log.info { "request=${request.describe()}" }
 
         val expr =
-            request.queryConditional().expression(TableSchema.fromClass(FoodDocument::class.java), IDX_PK_UPDATED_AT)
+            request.queryConditional().expression(getTableSchema<FoodDocument>(), IDX_PK_UPDATED_AT)
+
         log.info { "Expr=${expr.expression()}" }
         log.info { "Expr names=${expr.expressionNames()}" }
         log.info { "Expr values=${expr.expressionValues()}" }

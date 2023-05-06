@@ -4,9 +4,9 @@ import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.core.requireNotNull
 import software.amazon.awssdk.services.dynamodb.model.QueryRequest
 
-@DynamoDslMarker
-fun queryRequest(setup: QueryRequestBuilderDSL.() -> Unit): QueryRequest =
-    QueryRequestBuilderDSL().apply(setup).build()
+// @DynamoDslMarker
+fun queryRequest(initializer: QueryRequestBuilderDSL.() -> Unit): QueryRequest =
+    QueryRequestBuilderDSL().apply(initializer).build()
 
 @DynamoDslMarker
 class QueryRequestBuilderDSL {
@@ -48,17 +48,17 @@ class QueryRequestBuilderDSL {
     }
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun QueryRequestBuilderDSL.primaryKey(keyName: String, initializer: PrimaryKeyBuilder.() -> Unit) {
     primaryKey = PrimaryKeyBuilder(keyName).apply(initializer).build()
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 fun QueryRequestBuilderDSL.sortKey(keyName: String, initializer: SortKeyBuilder.() -> Unit) {
     sortKey = SortKeyBuilder(keyName).apply(initializer).build()
 }
 
-@DynamoDslMarker
+// @DynamoDslMarker
 inline fun QueryRequestBuilderDSL.filtering(initializer: RootFilterBuilder.() -> Unit) {
     filtering = RootFilterBuilder().apply(initializer).build()
 }
