@@ -3,6 +3,8 @@ package io.bluetape4k.data.hibernate.reactive.examples.model
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.support.hashOf
+import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.FetchProfile
 import java.time.LocalDate
 import javax.persistence.Access
 import javax.persistence.AccessType
@@ -14,8 +16,6 @@ import javax.persistence.Id
 import javax.persistence.ManyToOne
 import javax.persistence.Table
 import javax.validation.constraints.Past
-import org.hibernate.annotations.FetchMode
-import org.hibernate.annotations.FetchProfile
 
 
 // NOTE: author 를 lazy 로 얻기 위해서는 @FetchProfile 을 이용해야 합니다.
@@ -40,6 +40,7 @@ class Book private constructor(
 ): AbstractValueObject() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(isbn: String = "", title: String = "", published: LocalDate = LocalDate.EPOCH): Book {
             return Book(isbn, title, published)
         }
@@ -58,6 +59,8 @@ class Book private constructor(
 
     override fun equalProperties(other: Any): Boolean =
         other is Book && isbn == other.isbn && title == other.title && published == other.published
+
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
 
     override fun hashCode(): Int = if (id != 0L) id.hashCode() else hashOf(isbn, title, published)
 

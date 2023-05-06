@@ -24,6 +24,7 @@ class Author private constructor(
 ): AbstractValueObject() {
 
     companion object {
+        @JvmStatic
         operator fun invoke(name: String = "Unknown"): Author {
             name.requireNotBlank("name")
             return Author(name)
@@ -51,6 +52,8 @@ class Author private constructor(
 
     override fun equalProperties(other: Any): Boolean =
         other is Author && name == other.name
+
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
 
     override fun hashCode(): Int = if (id != 0L) id.hashCode() else name.hashCode()
 
