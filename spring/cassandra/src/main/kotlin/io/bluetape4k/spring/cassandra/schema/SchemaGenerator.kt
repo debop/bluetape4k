@@ -78,20 +78,22 @@ object SchemaGenerator: KLogging() {
     }
 
     inline fun <reified T: Any> truncate(operations: CassandraOperations) {
-        return truncate(operations, T::class.java)
+        truncate(operations, T::class.java)
     }
 
     fun <T: Any> truncate(operations: CassandraOperations, entityClass: Class<T>) {
         val persistentEntity = operations.converter.mappingContext.getRequiredPersistentEntity(entityClass)
-        operations.cqlOperations.execute(SessionCallback<Any?> { session ->
-            val table = session.keyspace
-                .flatMap { session.metadata.getKeyspace(it) }
-                .flatMap { it.getTable(persistentEntity.tableName) }
+        operations.cqlOperations.execute(
+            SessionCallback<Any?> { session ->
+                val table = session.keyspace
+                    .flatMap { session.metadata.getKeyspace(it) }
+                    .flatMap { it.getTable(persistentEntity.tableName) }
 
-            if (table.isPresent) {
-                log.info { "Truncate table for entity[${entityClass.name}]" }
-                operations.truncate(entityClass)
+                if (table.isPresent) {
+                    log.info { "Truncate table for entity[${entityClass.name}]" }
+                    operations.truncate(entityClass)
+                }
             }
-        })
+        )
     }
 }

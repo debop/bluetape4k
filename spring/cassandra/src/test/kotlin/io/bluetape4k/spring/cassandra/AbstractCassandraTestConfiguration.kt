@@ -12,7 +12,7 @@ import org.springframework.data.cassandra.config.SessionBuilderConfigurer
 @EntityScan(basePackageClasses = [AllPossibleTypes::class])
 abstract class AbstractCassandraTestConfiguration: AbstractCassandraConfiguration() {
 
-    // NOTE: 테스트 시에는 testcontainers 를 실행하기 위해 ScyllaServer.Launcher 작업을 미리 수행해야 합니다.
+    // NOTE: 테스트 시에는 testcontainers 를 실행하기 위해 Cassandra4Server.Launcher 작업을 미리 수행해야 합니다.
     //
     companion object {
         const val DEFAULT_KEYSPACE = "examples"

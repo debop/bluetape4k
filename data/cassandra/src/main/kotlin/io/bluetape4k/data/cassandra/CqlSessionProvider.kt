@@ -19,7 +19,7 @@ object CqlSessionProvider: KLogging() {
     /**
      * [CqlSessionBuilder] 를 생성합니다.
      *
-     * @param contactPoint    Scylla 서버 주소
+     * @param contactPoint    Cassandra 서버 주소
      * @param localDatacenter LocalDataCenter 이름
      * @return [CqlSessionBuilder] 인스턴스
      */
