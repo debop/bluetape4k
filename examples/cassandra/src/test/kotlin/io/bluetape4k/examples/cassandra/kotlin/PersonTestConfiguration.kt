@@ -10,4 +10,4 @@ import org.springframework.data.cassandra.repository.config.EnableReactiveCassan
  */
 @EntityScan(basePackageClasses = [Person::class])
 @EnableReactiveCassandraRepositories(basePackageClasses = [PersonRepository::class])
-class PersonConfiguration: AbstractReactiveCassandraTestConfiguration() 
+class PersonTestConfiguration: AbstractReactiveCassandraTestConfiguration()

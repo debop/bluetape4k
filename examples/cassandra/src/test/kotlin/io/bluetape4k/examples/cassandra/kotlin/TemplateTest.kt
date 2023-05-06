@@ -22,7 +22,7 @@ import org.springframework.data.cassandra.core.query.where
 import org.springframework.data.cassandra.core.select
 import org.springframework.data.cassandra.core.truncate
 
-@SpringBootTest(classes = [PersonConfiguration::class])
+@SpringBootTest(classes = [PersonTestConfiguration::class])
 class TemplateTest(
     @Autowired private val operations: CassandraOperations,
 ): AbstractCassandraTest() {
@@ -34,7 +34,6 @@ class TemplateTest(
     interface FirstnameOnly {
         val firstname: String
     }
-
 
     private fun newPerson(): Person = Person(faker.name().firstName(), faker.name().lastName())
 
@@ -116,7 +115,7 @@ class TemplateTest(
 
         // Spring의 SelectOperations 를 사용하는 것을 추천합니다.
         val resultSet = operations.cqlOperations
-            .queryForResultSet("SELECT * FROM $PERSON_TABLE WHERE firstname = '${person.firstname}'")
+            .queryForResultSet("SELECT * FROM $PERSON_TABLE WHERE firstname='${person.firstname}'")
         val row = resultSet.one()!!
 
         row.getString("firstname") shouldBeEqualTo person.firstname

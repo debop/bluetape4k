@@ -5,7 +5,6 @@ import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
@@ -15,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.cassandra.core.CassandraOperations
 
-@SpringBootTest(classes = [PersonConfiguration::class])
+@SpringBootTest(classes = [PersonTestConfiguration::class])
 class PersonRepositoryTest(
     @Autowired private val operations: CassandraOperations,
     @Autowired private val repository: PersonRepository,
@@ -26,7 +25,7 @@ class PersonRepositoryTest(
 
     @BeforeEach
     fun beforeEach() {
-        runBlocking {
+        runSuspendWithIO {
             insertPeople()
         }
     }
@@ -64,7 +63,9 @@ class PersonRepositoryTest(
         repository.findOneByFirstname("Not exists").shouldBeNull()
     }
 
-    private fun newPerson(): Person = Person(faker.name().firstName(), faker.name().lastName())
+    private fun newPerson(): Person {
+        return Person(faker.name().firstName(), faker.name().lastName())
+    }
 
     private suspend fun insertPeople() {
         repository.deleteAll()
