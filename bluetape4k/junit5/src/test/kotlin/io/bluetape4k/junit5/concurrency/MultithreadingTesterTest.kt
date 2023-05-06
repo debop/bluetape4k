@@ -134,14 +134,14 @@ class MultithreadingTesterTest {
         }
     }
 
-    private class CountingRunnableAssert: RunnableAssert("CountingRunnableAssert") {
+    private class CountingRunnableAssert: () -> Unit { // RunnableAssert("CountingRunnableAssert") {
 
         companion object: KLogging()
 
         val counter: AtomicInt = atomic(0)
         val count: Int by counter
 
-        override fun run() {
+        override fun invoke() {
             counter.incrementAndGet()
             log.trace { "count: $count" }
         }

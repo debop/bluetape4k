@@ -10,7 +10,6 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.withTimeout
-import java.util.concurrent.CopyOnWriteArraySet
 
 /**
  * suspend 함수를 제한된 스레드 수에서 동시에 실행시키고, 모든 suspend 함수가 종료되기를 기다린다.
@@ -42,8 +41,9 @@ class MultiJobTester {
     private var roundsPerThreads = DEFAULT_ROUNDS_PER_THREADS
     private val suspendBlocks = mutableListOf<suspend () -> Unit>()
 
-    private lateinit var monitorThread: Thread
-    private val idsOfDeadlockThreads = CopyOnWriteArraySet<Long>()
+    // Coroutines 에서는 사용하지 않는다.
+    // private lateinit var monitorThread: Thread
+    // private val idsOfDeadlockThreads = CopyOnWriteArraySet<Long>()
 
     private lateinit var workerDispatcher: ExecutorCoroutineDispatcher // = newFixedThreadPoolContext(numThreads, "MultiJobTester")
     private lateinit var workerJobs: List<Job>

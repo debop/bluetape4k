@@ -5,6 +5,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import java.lang.management.ManagementFactory
 import java.lang.management.ThreadMXBean
+import java.util.*
 import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
@@ -41,22 +42,11 @@ class MultithreadingTester {
     companion object: KLogging() {
         const val DEFAULT_THREAD_SIZE: Int = 100
         const val DEFAULT_ROUNDS_PER_THREADS: Int = 1000
-
-        private fun convertToRunnableAssert(runnable: () -> Unit): RunnableAssert {
-            return when (runnable) {
-                is RunnableAssert -> runnable
-                else              -> object: RunnableAssert(runnable.toString()) {
-                    override fun run() {
-                        runnable.invoke()
-                    }
-                }
-            }
-        }
     }
 
     private var numThreads = DEFAULT_THREAD_SIZE
     private var roundsPerThreads = DEFAULT_ROUNDS_PER_THREADS
-    private val runnableAsserts = mutableListOf<RunnableAssert>()
+    private val runnableAsserts = LinkedList<() -> Unit>()
 
     private lateinit var monitorThread: Thread
     private lateinit var workerThreads: Array<Thread>
@@ -72,24 +62,16 @@ class MultithreadingTester {
         this.roundsPerThreads = roundsPerThreads
     }
 
-    fun add(runnableAssert: RunnableAssert) = apply {
-        this.runnableAsserts.add(runnableAssert)
-    }
-
     fun add(runnable: () -> Unit) = apply {
-        this.runnableAsserts.add(convertToRunnableAssert(runnable))
-    }
-
-    fun addAll(vararg runnableAsserts: RunnableAssert) = apply {
-        this.runnableAsserts.addAll(runnableAsserts)
+        this.runnableAsserts.add(runnable)
     }
 
     fun addAll(vararg runnables: () -> Unit) = apply {
-        this.runnableAsserts.addAll(runnables.map { convertToRunnableAssert(it) })
+        this.runnableAsserts.addAll(runnables)
     }
 
     fun addAll(runnables: Collection<() -> Unit>) = apply {
-        this.runnableAsserts.addAll(runnables.map { convertToRunnableAssert(it) })
+        this.runnableAsserts.addAll(runnables)
     }
 
 
@@ -178,7 +160,7 @@ class MultithreadingTester {
                     latch.countDown()
                     latch.await()
                     repeat(roundsPerThreads) {
-                        runnableAssert.run()
+                        runnableAssert.invoke()
                     }
                 } catch (t: Throwable) {
                     me.add(t)
