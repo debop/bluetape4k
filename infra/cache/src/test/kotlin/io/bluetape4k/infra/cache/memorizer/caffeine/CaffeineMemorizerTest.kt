@@ -11,7 +11,7 @@ class CaffeineMemorizerTest: AbstractMemorizerTest() {
     override val factorial: FactorialProvider = CaffeineFactorialProvider()
     override val fibonacci: FibonacciProvider = CaffeineFibonacciProvider()
 
-    private val caffeine = io.bluetape4k.infra.cache.caffeine.Caffeine {
+    private val caffeine = io.bluetape4k.infra.cache.caffeine.caffeine {
         executor(ForkJoinPool.commonPool())
     }
 
@@ -23,7 +23,7 @@ class CaffeineMemorizerTest: AbstractMemorizerTest() {
     }
 
     private class CaffeineFactorialProvider: FactorialProvider() {
-        val caffeine = io.bluetape4k.infra.cache.caffeine.Caffeine {
+        val caffeine = io.bluetape4k.infra.cache.caffeine.caffeine {
             executor(ForkJoinPool.commonPool())
         }
         val cache = caffeine.cache<Long, Long>()
@@ -34,7 +34,7 @@ class CaffeineMemorizerTest: AbstractMemorizerTest() {
     }
 
     private class CaffeineFibonacciProvider: FibonacciProvider() {
-        val caffeine = io.bluetape4k.infra.cache.caffeine.Caffeine {
+        val caffeine = io.bluetape4k.infra.cache.caffeine.caffeine {
             executor(ForkJoinPool.commonPool())
         }
         val cache = caffeine.cache<Long, Long>()

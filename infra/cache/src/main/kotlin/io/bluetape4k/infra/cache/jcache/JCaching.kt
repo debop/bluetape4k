@@ -17,7 +17,7 @@ object JCaching {
             name: String,
             configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
         ): JCache<K, V> =
-            JcacheManager<CaffeineCachingProvider>().getOrCreate(name, configuration)
+            jcacheManager<CaffeineCachingProvider>().getOrCreate(name, configuration)
     }
 
     object EhCache {
@@ -25,7 +25,7 @@ object JCaching {
             name: String,
             configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
         ): JCache<K, V> =
-            JcacheManager<EhcacheCachingProvider>().getOrCreate(name, configuration)
+            jcacheManager<EhcacheCachingProvider>().getOrCreate(name, configuration)
     }
 
     object Redisson {
@@ -35,7 +35,7 @@ object JCaching {
             configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
         ): JCache<K, V> {
             val redissonConfiguration = RedissonConfiguration.fromInstance(redisson, configuration)
-            return JcacheManager<JCachingProvider>().getOrCreate(name, redissonConfiguration)
+            return jcacheManager<JCachingProvider>().getOrCreate(name, redissonConfiguration)
         }
 
         inline fun <reified K, reified V> getOrCreate(
@@ -44,7 +44,7 @@ object JCaching {
             configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
         ): JCache<K, V> {
             val redissonConfiguration = RedissonConfiguration.fromConfig(redissonConfig, configuration)
-            return JcacheManager<JCachingProvider>().getOrCreate(name, redissonConfiguration)
+            return jcacheManager<JCachingProvider>().getOrCreate(name, redissonConfiguration)
         }
 
         fun <K, V> getOrCreateCache(
@@ -52,7 +52,7 @@ object JCaching {
             redisson: RedissonClient,
             configuration: Configuration<K, V>,
         ): JCache<K, V> {
-            return with(JcacheManager<JCachingProvider>()) {
+            return with(jcacheManager<JCachingProvider>()) {
                 getCache(cacheName)
                     ?: run {
                         val redissonConfiguration = RedissonConfiguration.fromInstance(redisson, configuration)

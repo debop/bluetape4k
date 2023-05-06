@@ -20,7 +20,10 @@ fun Iterable<Short>.toShortArrayList(): ShortArrayList =
         forEach { array.add(it) }
     }
 
-inline fun ShortArrayList(size: Int, initializer: (Int) -> Short): ShortArrayList {
+inline fun shortArrayList(
+    size: Int,
+    @BuilderInference initializer: (Int) -> Short,
+): ShortArrayList {
     size.assertZeroOrPositiveNumber("size")
     val array = ShortArrayList(size)
     repeat(size) {

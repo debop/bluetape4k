@@ -8,7 +8,7 @@ inline fun attributes(initializer: AttributesBuilder.() -> Unit): Attributes {
     return Attributes.builder().apply(initializer).build()
 }
 
-fun attributesOf(key: String, value: String) = Attributes.of(key.toAttributeKey(), value)
+fun attributesOf(key: String, value: String): Attributes = Attributes.of(key.toAttributeKey(), value)
 
 fun <T: Any> attributesOf(
     key: AttributeKey<T>, value: T,

@@ -42,7 +42,7 @@ abstract class AbstractDynamodbTest {
 
         @JvmStatic
         val client: DynamoDbClient by lazy {
-            DynamoDbClient {
+            dynamoDbClient {
                 credentialsProvider(credentialsProvider)
                 endpointOverride(endpoint)
                 region(region)
@@ -51,7 +51,7 @@ abstract class AbstractDynamodbTest {
 
         @JvmStatic
         val asyncClient: DynamoDbAsyncClient by lazy {
-            DynamoDbAsyncClient {
+            dynamoDbAsyncClient {
                 credentialsProvider(credentialsProvider)
                 endpointOverride(endpoint)
                 region(region)

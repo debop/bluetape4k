@@ -1,10 +1,10 @@
 package io.bluetapek4.aws.ses
 
 import io.bluetape4k.logging.KLogging
-import io.bluetapek4.aws.ses.model.SendEmailRequest
 import io.bluetapek4.aws.ses.model.bodyOf
 import io.bluetapek4.aws.ses.model.contentOf
 import io.bluetapek4.aws.ses.model.destinationOf
+import io.bluetapek4.aws.ses.model.sendEmailRequest
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.Test
 
@@ -26,7 +26,7 @@ class SesClientSupportTest: AbstractSesTest() {
         client.verifyEmailAddress { it.emailAddress(senderEmail) }
         client.verifyEmailAddress { it.emailAddress(receiverEamil) }
 
-        val request = SendEmailRequest {
+        val request = sendEmailRequest {
             source(senderEmail)
             destination(destinationOf(receiverEamil))
             message { mb ->

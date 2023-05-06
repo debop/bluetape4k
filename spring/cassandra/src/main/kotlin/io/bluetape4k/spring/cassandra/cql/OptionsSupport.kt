@@ -11,7 +11,6 @@ import org.springframework.data.cassandra.core.UpdateOptions
 import org.springframework.data.cassandra.core.cql.QueryOptions
 import org.springframework.data.cassandra.core.cql.WriteOptions
 
-
 inline fun queryOptions(initializer: QueryOptions.QueryOptionsBuilder.() -> Unit): QueryOptions =
     QueryOptions.builder().apply(initializer).build()
 

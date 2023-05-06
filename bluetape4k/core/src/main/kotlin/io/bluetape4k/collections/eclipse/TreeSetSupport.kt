@@ -8,7 +8,7 @@ import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet
 
 fun <T> emptyTreeSortedSet(): ImmutableSortedSet<T> = SortedSets.immutable.empty()
 
-inline fun <T> TreeSortedSet(size: Int, initializer: (Int) -> T): TreeSortedSet<T> {
+inline fun <T> treeSortedSet(size: Int, initializer: (Int) -> T): TreeSortedSet<T> {
     size.assertZeroOrPositiveNumber("size")
     return TreeSortedSet(List(size, initializer))
 }

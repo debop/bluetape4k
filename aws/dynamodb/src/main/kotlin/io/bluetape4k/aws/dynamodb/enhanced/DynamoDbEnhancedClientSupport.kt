@@ -1,6 +1,6 @@
 package io.bluetape4k.aws.dynamodb.enhanced
 
-import io.bluetape4k.aws.dynamodb.DynamoDbClient
+import io.bluetape4k.aws.dynamodb.dynamoDbClient
 import io.bluetape4k.core.requireNotBlank
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClientExtension
@@ -9,22 +9,22 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema
 import software.amazon.awssdk.enhanced.dynamodb.internal.client.ExtensionResolver
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 
-inline fun DynamoDbEnhancedClient(initializer: DynamoDbEnhancedClient.Builder.() -> Unit): DynamoDbEnhancedClient {
+inline fun dynamoDbEnhancedClient(initializer: DynamoDbEnhancedClient.Builder.() -> Unit): DynamoDbEnhancedClient {
     return DynamoDbEnhancedClient.builder().apply(initializer).build()
 }
 
 fun dynamoDbEnhancedClientOf(
-    client: DynamoDbClient = DynamoDbClient {},
+    client: DynamoDbClient = dynamoDbClient {},
     initializer: DynamoDbEnhancedClient.Builder.() -> Unit = {},
-): DynamoDbEnhancedClient = DynamoDbEnhancedClient {
+): DynamoDbEnhancedClient = dynamoDbEnhancedClient {
     dynamoDbClient(client)
     initializer()
 }
 
 fun dynamoDbEnhancedClientOf(
-    client: DynamoDbClient = DynamoDbClient {},
+    client: DynamoDbClient = dynamoDbClient {},
     vararg extensions: DynamoDbEnhancedClientExtension = ExtensionResolver.defaultExtensions().toTypedArray(),
-): DynamoDbEnhancedClient = DynamoDbEnhancedClient {
+): DynamoDbEnhancedClient = dynamoDbEnhancedClient {
     dynamoDbClient(client)
     extensions(*extensions)
 }

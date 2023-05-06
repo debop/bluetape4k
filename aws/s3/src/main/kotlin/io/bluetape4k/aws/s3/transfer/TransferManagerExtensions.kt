@@ -17,7 +17,7 @@ import java.nio.file.Path
 
 inline fun <T> S3TransferManager.download(
     responseTransformer: AsyncResponseTransformer<GetObjectResponse, T>,
-    initializer: DownloadRequest.UntypedBuilder.() -> Unit,
+    @BuilderInference initializer: DownloadRequest.UntypedBuilder.() -> Unit,
 ): Download<T> {
     return download(downloadRequest(responseTransformer, initializer))
 }

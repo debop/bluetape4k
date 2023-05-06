@@ -3,7 +3,7 @@ package io.bluetape4k.infra.cache.nearcache
 import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.infra.cache.jcache.JCache
 import io.bluetape4k.infra.cache.jcache.JCaching
-import io.bluetape4k.infra.cache.jcache.JcacheConfiguration
+import io.bluetape4k.infra.cache.jcache.jcacheConfiguration
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -40,7 +40,7 @@ class RedisNearCacheTest: AbstractNearCacheTest() {
     override val nearCacheCfg2 = NearCacheConfig<String, Any>(checkExpiryPeriod = 1_000)
 
     override val backCache: JCache<String, Any> by lazy {
-        val jcacheConfiguration: CompleteConfiguration<String, Any> = JcacheConfiguration<String, Any> {
+        val jcacheConfiguration: CompleteConfiguration<String, Any> = jcacheConfiguration<String, Any> {
             // NOTE: CreatedExpiryPolicy, AccessedExpiryPolicy 등이 있다
             // AccessedExpiryPolicy 는 access 한 이후로 TTL이 갱신된다
             setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration(TimeUnit.MILLISECONDS, 3_000)))

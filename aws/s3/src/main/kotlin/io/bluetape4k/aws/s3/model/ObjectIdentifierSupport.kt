@@ -14,8 +14,13 @@ inline fun objectIdentifier(
         .build()
 }
 
-fun objectIdentifierOf(key: String, versionId: String? = null): ObjectIdentifier {
+fun objectIdentifierOf(
+    key: String,
+    versionId: String? = null,
+    initializer: ObjectIdentifier.Builder.() -> Unit = {},
+): ObjectIdentifier {
     return objectIdentifier(key) {
         versionId(versionId)
+        initializer()
     }
 }

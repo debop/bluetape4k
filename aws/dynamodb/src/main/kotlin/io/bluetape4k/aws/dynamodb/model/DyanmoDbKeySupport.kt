@@ -4,16 +4,16 @@ import io.bluetape4k.aws.core.toSdkBytes
 import software.amazon.awssdk.enhanced.dynamodb.Key
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 
-inline fun DynamoDbKey(initializer: Key.Builder.() -> Unit): Key {
+inline fun dynamoDbKey(initializer: Key.Builder.() -> Unit): Key {
     return Key.builder().apply(initializer).build()
 }
 
-fun dynamoDbKeyOf(partitionKey: AttributeValue, sortValue: AttributeValue? = null): Key = DynamoDbKey {
+fun dynamoDbKeyOf(partitionKey: AttributeValue, sortValue: AttributeValue? = null): Key = dynamoDbKey {
     partitionValue(partitionKey)
     sortValue(sortValue)
 }
 
-fun dynamoDbKeyOf(partitionValue: Any, sortValue: Any? = null): Key = DynamoDbKey {
+fun dynamoDbKeyOf(partitionValue: Any, sortValue: Any? = null): Key = dynamoDbKey {
     when (partitionValue) {
         is Number    -> partitionValue(partitionValue)
         is ByteArray -> partitionValue(partitionValue.toSdkBytes())

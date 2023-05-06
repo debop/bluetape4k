@@ -13,12 +13,12 @@ import org.ehcache.config.units.EntryUnit
 import org.ehcache.config.units.MemoryUnit
 
 val DefaultEhCacheCacheManager: CacheManager by lazy {
-    EhcacheManager {
+    ehcacheManager {
         this.withDefaultClassLoader()
     }
 }
 
-inline fun EhcacheManager(initializer: ConfigurationBuilder.() -> Unit): CacheManager {
+inline fun ehcacheManager(initializer: ConfigurationBuilder.() -> Unit): CacheManager {
     val configuration = ConfigurationBuilder.newConfigurationBuilder()
         .withDefaultClassLoader()
         .apply(initializer)

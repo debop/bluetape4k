@@ -18,7 +18,7 @@ class UnifiedSetSupportTest {
 
     @Test
     fun `create unified set`() {
-        val set = UnifiedSet(3) { 'a' + it }
+        val set = unifiedSet(3) { 'a' + it }
         verifyUnifiedSet(set)
 
         verifyUnifiedSet(unifiedSetOf('a', 'b', 'c'))

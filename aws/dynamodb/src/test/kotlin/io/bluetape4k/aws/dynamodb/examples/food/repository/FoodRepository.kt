@@ -3,8 +3,8 @@ package io.bluetape4k.aws.dynamodb.examples.food.repository
 import io.bluetape4k.aws.dynamodb.enhanced.table
 import io.bluetape4k.aws.dynamodb.examples.food.model.FoodDocument
 import io.bluetape4k.aws.dynamodb.examples.food.model.Schema
-import io.bluetape4k.aws.dynamodb.model.QueryEnhancedRequest
 import io.bluetape4k.aws.dynamodb.model.dynamoDbKeyOf
+import io.bluetape4k.aws.dynamodb.model.queryEnhancedRequest
 import io.bluetape4k.aws.dynamodb.repository.DynamoDbCoroutineRepository
 import io.bluetape4k.aws.dynamodb.repository.findFirst
 import io.bluetape4k.logging.KLogging
@@ -41,7 +41,7 @@ class FoodRepository(
         val fromKey = dynamoDbKeyOf(partitionKey, updatedAtFrom.toString())
         val toKey = dynamoDbKeyOf(partitionKey, updatedAtTo.toString())
 
-        val queryRequest = QueryEnhancedRequest {
+        val queryRequest = queryEnhancedRequest {
             queryConditional(QueryConditional.sortBetween(fromKey, toKey))
         }
         log.info { "queryRequest=$queryRequest" }

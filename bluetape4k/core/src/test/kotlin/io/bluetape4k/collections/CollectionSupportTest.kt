@@ -1,7 +1,7 @@
 package io.bluetape4k.collections
 
-import io.bluetape4k.collections.eclipse.FastList
 import io.bluetape4k.collections.eclipse.emptyFastList
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
@@ -14,7 +14,7 @@ class CollectionSupportTest {
     companion object: KLogging()
 
     private val emptyList = emptyFastList<Int>()
-    private val tenList = FastList(10) { it + 1 }
+    private val tenList = fastList(10) { it + 1 }
 
 
     @Test
@@ -36,7 +36,7 @@ class CollectionSupportTest {
 
     @Test
     fun `prepend item to list`() {
-        val list = FastList(10) { it + 1 }
+        val list = fastList(10) { it + 1 }
 
         list.prepend(-1)
 
@@ -46,7 +46,7 @@ class CollectionSupportTest {
 
     @Test
     fun `specific value pad to collection`() {
-        val origin = FastList(10) { it + 1 }
+        val origin = fastList(10) { it + 1 }
 
         origin.padTo(10, 5) shouldBeEqualTo origin
         origin.padTo(0, 5) shouldBeEqualTo origin

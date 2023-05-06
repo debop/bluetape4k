@@ -19,7 +19,7 @@ fun interface SuspendLazy<out T> {
 
 private class SuspendLazyBlockImpl<out T>(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
-    initializer: () -> T,
+    @BuilderInference initializer: () -> T,
 ): SuspendLazy<T> {
 
     private val lazyValue: Lazy<T> = lazy(initializer)
@@ -32,7 +32,7 @@ private class SuspendLazyBlockImpl<out T>(
 private class SuspendLazySuspendingImpl<out T>(
     coroutineScope: CoroutineScope,
     coroutineContext: CoroutineContext,
-    initializer: suspend CoroutineScope.() -> T,
+    @BuilderInference initializer: suspend CoroutineScope.() -> T,
 ): SuspendLazy<T> {
 
     private val deferredValue by lazy {
@@ -56,13 +56,13 @@ private class SuspendLazySuspendingImpl<out T>(
  * ```
  *
  * @param T
- * @param dispatcher
- * @param initializer
+ * @param dispatcher  값을 계산하는 블럭을 수행할 [CoroutineDispatcher]
+ * @param initializer 지연된 계산을 수행하는 함수
  * @return
  */
 fun <T> suspendBlockingLazy(
     dispatcher: CoroutineDispatcher = Dispatchers.Default,
-    initializer: () -> T,
+    @BuilderInference initializer: () -> T,
 ): SuspendLazy<T> =
     SuspendLazyBlockImpl(dispatcher, initializer)
 
@@ -80,10 +80,10 @@ fun <T> suspendBlockingLazy(
  * ```
  *
  * @param T
- * @param initializer
+ * @param initializer 지연된 계산을 수행하는 함수
  * @return
  */
-fun <T> suspendBlockingLazyIO(initializer: () -> T): SuspendLazy<T> =
+fun <T> suspendBlockingLazyIO(@BuilderInference initializer: () -> T): SuspendLazy<T> =
     SuspendLazyBlockImpl(Dispatchers.IO, initializer)
 
 /**
@@ -100,12 +100,12 @@ fun <T> suspendBlockingLazyIO(initializer: () -> T): SuspendLazy<T> =
  * ```
  *
  * @param T
- * @param context
- * @param initializer
+ * @param context     값을 계산하는 블럭을 수행할 [CoroutineDispatcher]
+ * @param initializer 지연된 계산을 수행하는 함수
  * @return
  */
 fun <T> CoroutineScope.suspendLazy(
     context: CoroutineContext = Dispatchers.Default,
-    initializer: suspend CoroutineScope.() -> T,
+    @BuilderInference initializer: suspend CoroutineScope.() -> T,
 ): SuspendLazy<T> =
     SuspendLazySuspendingImpl(this, context, initializer)

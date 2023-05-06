@@ -13,16 +13,16 @@ import software.amazon.awssdk.services.ses.model.SendRawEmailResponse
 import software.amazon.awssdk.services.ses.model.SendTemplatedEmailRequest
 import software.amazon.awssdk.services.ses.model.SendTemplatedEmailResponse
 
-inline fun SesClient(initializer: SesClientBuilder.() -> Unit): SesClient {
+inline fun sesClient(initializer: SesClientBuilder.() -> Unit): SesClient {
     return SesClient.builder().apply(initializer).build()
 }
 
 fun sesClientOf(region: Region): SesClient {
-    return SesClient { region(region) }
+    return sesClient { region(region) }
 }
 
 fun sesClientOf(endpointProvider: SesEndpointProvider): SesClient {
-    return SesClient { endpointProvider(endpointProvider) }
+    return sesClient { endpointProvider(endpointProvider) }
 }
 
 fun SesClient.send(emailRequest: SendEmailRequest): SendEmailResponse {

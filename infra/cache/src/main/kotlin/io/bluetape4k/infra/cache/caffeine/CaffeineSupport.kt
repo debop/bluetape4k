@@ -17,12 +17,12 @@ fun caffeineSpecOf(specification: String): CaffeineSpec =
     CaffeineSpec.parse(specification)
 
 /**
- * [Caffeine]을 빌드합니다.
+ * [caffeine]을 빌드합니다.
  *
  * @param initializer Caffeine builder method
- * @return [Caffeine] instance
+ * @return [caffeine] instance
  */
-inline fun Caffeine(initializer: Caffeine<Any, Any>.() -> Unit): Caffeine<Any, Any> =
+inline fun caffeine(initializer: Caffeine<Any, Any>.() -> Unit): Caffeine<Any, Any> =
     Caffeine.newBuilder().apply(initializer)
 
 /**

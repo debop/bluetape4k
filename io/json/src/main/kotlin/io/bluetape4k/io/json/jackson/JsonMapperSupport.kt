@@ -19,7 +19,6 @@ fun jsonMapper(initializer: JsonMapper.Builder.() -> Unit): JsonMapper {
     return JsonMapper.builder().apply(initializer).build()
 }
 
-
 inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object: TypeReference<T>() {}
 
 inline fun <reified T> JsonMapper.readValueOrNull(content: String): T? =

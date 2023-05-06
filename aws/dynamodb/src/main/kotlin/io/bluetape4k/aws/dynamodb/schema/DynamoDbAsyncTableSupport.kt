@@ -9,7 +9,7 @@ fun <T: Any> DynamoDbAsyncTable<T>.createTable(
     readCapacityUnits: Long? = null,
     writeCapacityUnits: Long? = null,
 ): CompletableFuture<Void> {
-    val request = CreateTableEnhancedRequest {
+    val request = createTableEnhancedRequest {
         provisionedThroughput(provisionedThroughputOf(readCapacityUnits, writeCapacityUnits))
     }
     return createTable(request)

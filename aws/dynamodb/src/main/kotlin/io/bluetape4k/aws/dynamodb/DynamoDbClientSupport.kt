@@ -8,7 +8,7 @@ import software.amazon.awssdk.services.dynamodb.streams.DynamoDbStreamsClient
 import software.amazon.awssdk.services.dynamodb.streams.DynamoDbStreamsClientBuilder
 import java.net.URI
 
-inline fun DynamoDbClient(initializer: DynamoDbClientBuilder.() -> Unit): DynamoDbClient {
+inline fun dynamoDbClient(initializer: DynamoDbClientBuilder.() -> Unit): DynamoDbClient {
     return DynamoDbClient.builder().apply(initializer).build()
 }
 
@@ -17,7 +17,7 @@ fun dynamoDbClientOf(
     region: Region,
     credentialsProvider: AwsCredentialsProvider,
     initializer: DynamoDbClientBuilder.() -> Unit = {},
-): DynamoDbClient = DynamoDbClient {
+): DynamoDbClient = dynamoDbClient {
     endpointOverride(endpoint)
     region(region)
     credentialsProvider(credentialsProvider)
@@ -25,7 +25,7 @@ fun dynamoDbClientOf(
 }
 
 
-inline fun DynamoDbStreamsClient(initializer: DynamoDbStreamsClientBuilder.() -> Unit): DynamoDbStreamsClient {
+inline fun dynamoDbStreamsClient(initializer: DynamoDbStreamsClientBuilder.() -> Unit): DynamoDbStreamsClient {
     return DynamoDbStreamsClient.builder().apply(initializer).build()
 }
 
@@ -34,7 +34,7 @@ fun dynamoDbStreamsClientOf(
     region: Region,
     credentialsProvider: AwsCredentialsProvider,
     initializer: DynamoDbStreamsClientBuilder.() -> Unit = {},
-): DynamoDbStreamsClient = DynamoDbStreamsClient {
+): DynamoDbStreamsClient = dynamoDbStreamsClient {
     endpointOverride(endpoint)
     region(region)
     credentialsProvider(credentialsProvider)

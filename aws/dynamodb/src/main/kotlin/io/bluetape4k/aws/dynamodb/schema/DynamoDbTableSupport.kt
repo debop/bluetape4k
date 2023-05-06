@@ -11,10 +11,9 @@ fun <T: Any> DynamoDbTable<T>.createTable(
     readCapacityUnits: Long? = null,
     writeCapacityUnits: Long? = null,
 ) {
-    val request = CreateTableEnhancedRequest {
+    val request = createTableEnhancedRequest {
         provisionedThroughput(provisionedThroughputOf(readCapacityUnits, writeCapacityUnits))
     }
-
     createTable(request)
 }
 
@@ -26,7 +25,7 @@ fun <T: Any> DynamoDbTable<T>.putItems(items: Collection<T>) {
     items.forEach { putItem(it) }
 }
 
-inline fun CreateTableEnhancedRequest(
+inline fun createTableEnhancedRequest(
     initializer: CreateTableEnhancedRequest.Builder.() -> Unit,
 ): CreateTableEnhancedRequest {
     return CreateTableEnhancedRequest.builder().apply(initializer).build()
@@ -36,7 +35,7 @@ fun createTableEnhancedRequestOf(
     provisionedThroughput: ProvisionedThroughput? = null,
     localSecondaryIndices: Collection<EnhancedLocalSecondaryIndex>? = null,
     globalSecondaryIndices: Collection<EnhancedGlobalSecondaryIndex>? = null,
-): CreateTableEnhancedRequest = CreateTableEnhancedRequest {
+): CreateTableEnhancedRequest = createTableEnhancedRequest {
     provisionedThroughput(provisionedThroughput)
     localSecondaryIndices(localSecondaryIndices)
     globalSecondaryIndices(globalSecondaryIndices)

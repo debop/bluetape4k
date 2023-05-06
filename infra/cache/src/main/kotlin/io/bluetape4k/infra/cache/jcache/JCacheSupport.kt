@@ -29,7 +29,7 @@ val jcacheLock = ReentrantLock()
  * @param initializer Jcache configuration setup block
  * @return [CompleteConfiguration] instance
  */
-inline fun <reified K, reified V> JcacheConfiguration(
+inline fun <reified K, reified V> jcacheConfiguration(
     initializer: MutableConfiguration<K, V>.() -> Unit,
 ): MutableConfiguration<K, V> {
     return MutableConfiguration<K, V>()
@@ -55,7 +55,7 @@ inline fun <reified K, reified V> jcacheConfigurationOf(
     isStatisticsEnabled: Boolean = false,
     isManagementEnabled: Boolean = false,
     noinline expiryPolicyFactory: (() -> Factory<out ExpiryPolicy>)? = { EternalExpiryPolicy.factoryOf() },
-): CompleteConfiguration<K, V> = JcacheConfiguration {
+): CompleteConfiguration<K, V> = jcacheConfiguration {
     setTypes(K::class.java, V::class.java)
     cacheLoaderFactory?.let { this.setCacheLoaderFactory(it) }
     cacheWriterFactory?.let { this.setCacheWriterFactory(it) }
@@ -71,7 +71,7 @@ inline fun <reified K, reified V> jcacheConfigurationOf(
  * JCache에 대한 기본 설정
  */
 inline fun <reified K, reified V> getDefaultJCacheConfiguration(): CompleteConfiguration<K, V> =
-    JcacheConfiguration {
+    jcacheConfiguration {
         setExpiryPolicyFactory(EternalExpiryPolicy.factoryOf())
     }
 
@@ -81,7 +81,7 @@ inline fun <reified K, reified V> getDefaultJCacheConfiguration(): CompleteConfi
  * @param P
  * @return
  */
-inline fun <reified P: CachingProvider> JcachingProvider(): CachingProvider =
+inline fun <reified P: CachingProvider> jcachingProvider(): CachingProvider =
     Caching.getCachingProvider(P::class.qualifiedName)
 
 /**
@@ -90,7 +90,7 @@ inline fun <reified P: CachingProvider> JcachingProvider(): CachingProvider =
  * @param qualifiedName
  * @return
  */
-fun JcachingProvider(qualifiedName: String): CachingProvider {
+fun jcachingProviderOf(qualifiedName: String): CachingProvider {
     qualifiedName.requireNotBlank("qualifiedName")
     return Caching.getCachingProvider(qualifiedName)
 }
@@ -100,11 +100,11 @@ fun JcachingProvider(qualifiedName: String): CachingProvider {
  *
  * @return [CacheManager] instance
  */
-inline fun <reified P: CachingProvider> JcacheManager(): CacheManager =
-    JcachingProvider<P>().cacheManager
+inline fun <reified P: CachingProvider> jcacheManager(): CacheManager =
+    jcachingProvider<P>().cacheManager
 
-fun JcacheManager(qualifiedName: String): CacheManager =
-    JcachingProvider(qualifiedName).cacheManager
+fun jcacheManagerOf(qualifiedName: String): CacheManager =
+    jcachingProviderOf(qualifiedName).cacheManager
 
 /**
  * [cacheName]에 해당하는 cache를 가져옵니다.

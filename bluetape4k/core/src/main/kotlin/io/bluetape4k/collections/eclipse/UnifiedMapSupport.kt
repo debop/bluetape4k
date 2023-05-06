@@ -9,7 +9,10 @@ import org.eclipse.collections.impl.tuple.Tuples
 
 fun <K, V> emptyUnifiedMapOf(): ImmutableMap<K, V> = Maps.immutable.empty()
 
-inline fun <K, V> UnifiedMap(size: Int, initializer: (Int) -> Pair<K, V>): UnifiedMap<K, V> {
+inline fun <K, V> unifiedMap(
+    size: Int,
+    @BuilderInference initializer: (Int) -> Pair<K, V>,
+): UnifiedMap<K, V> {
     size.assertZeroOrPositiveNumber("size")
 
     return UnifiedMap.newMap<K, V>(size).apply {

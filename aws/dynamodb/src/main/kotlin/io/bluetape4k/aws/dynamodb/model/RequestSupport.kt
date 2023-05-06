@@ -55,159 +55,178 @@ import software.amazon.awssdk.services.dynamodb.model.UpdateTimeToLiveRequest
 import software.amazon.awssdk.services.dynamodb.model.WriteRequest
 
 
-inline fun BatchExecuteStatementRequest(setup: BatchExecuteStatementRequest.Builder.() -> Unit): BatchExecuteStatementRequest =
-    BatchExecuteStatementRequest.builder().apply(setup).build()
+inline fun batchExecuteStatementRequest(initializer: BatchExecuteStatementRequest.Builder.() -> Unit): BatchExecuteStatementRequest =
+    BatchExecuteStatementRequest.builder().apply(initializer).build()
 
-inline fun BatchGetItemRequest(block: BatchGetItemRequest.Builder.() -> Unit): BatchGetItemRequest =
-    BatchGetItemRequest.builder().apply(block).build()
+inline fun batchGetItemRequest(initializer: BatchGetItemRequest.Builder.() -> Unit): BatchGetItemRequest =
+    BatchGetItemRequest.builder().apply(initializer).build()
 
-inline fun BatchStatementRequest(setup: BatchStatementRequest.Builder.() -> Unit): BatchStatementRequest =
-    BatchStatementRequest.builder().apply(setup).build()
+inline fun batchStatementRequest(initializer: BatchStatementRequest.Builder.() -> Unit): BatchStatementRequest =
+    BatchStatementRequest.builder().apply(initializer).build()
 
-inline fun BatchWriteItemRequest(block: BatchWriteItemRequest.Builder.() -> Unit): BatchWriteItemRequest =
-    BatchWriteItemRequest.builder().apply(block).build()
+inline fun batchWriteItemRequest(initializer: BatchWriteItemRequest.Builder.() -> Unit): BatchWriteItemRequest =
+    BatchWriteItemRequest.builder().apply(initializer).build()
 
-inline fun Capacity(block: Capacity.Builder.() -> Unit): Capacity =
-    Capacity.builder().apply(block).build()
+inline fun capacity(initializer: Capacity.Builder.() -> Unit): Capacity =
+    Capacity.builder().apply(initializer).build()
 
-inline fun ConditionCheck(block: ConditionCheck.Builder.() -> Unit): ConditionCheck =
-    ConditionCheck.builder().apply(block).build()
+inline fun conditionCheck(initializer: ConditionCheck.Builder.() -> Unit): ConditionCheck =
+    ConditionCheck.builder().apply(initializer).build()
 
-inline fun Condition(block: Condition.Builder.() -> Unit): Condition =
-    Condition.builder().apply(block).build()
+inline fun condition(initializer: Condition.Builder.() -> Unit): Condition =
+    Condition.builder().apply(initializer).build()
 
-inline fun CreateBackupRequest(block: CreateBackupRequest.Builder.() -> Unit): CreateBackupRequest =
-    CreateBackupRequest.builder().apply(block).build()
+inline fun createBackupRequest(initializer: CreateBackupRequest.Builder.() -> Unit): CreateBackupRequest =
+    CreateBackupRequest.builder().apply(initializer).build()
 
-inline fun CreateGlobalTableRequest(block: CreateGlobalTableRequest.Builder.() -> Unit): CreateGlobalTableRequest =
-    CreateGlobalTableRequest.builder().apply(block).build()
+inline fun createGlobalTableRequest(initializer: CreateGlobalTableRequest.Builder.() -> Unit): CreateGlobalTableRequest =
+    CreateGlobalTableRequest.builder().apply(initializer).build()
 
-inline fun CreateTableRequest(block: CreateTableRequest.Builder.() -> Unit): CreateTableRequest =
-    CreateTableRequest.builder().apply(block).build()
+inline fun createTableRequest(initializer: CreateTableRequest.Builder.() -> Unit): CreateTableRequest =
+    CreateTableRequest.builder().apply(initializer).build()
 
-inline fun DeleteBackupRequest(block: DeleteBackupRequest.Builder.() -> Unit): DeleteBackupRequest =
-    DeleteBackupRequest.builder().apply(block).build()
+inline fun deleteBackupRequest(initializer: DeleteBackupRequest.Builder.() -> Unit): DeleteBackupRequest =
+    DeleteBackupRequest.builder().apply(initializer).build()
 
-inline fun Delete(block: Delete.Builder.() -> Unit): Delete =
-    Delete.builder().apply(block).build()
+inline fun delete(initializer: Delete.Builder.() -> Unit): Delete =
+    Delete.builder().apply(initializer).build()
 
-inline fun DeleteRequest(block: DeleteRequest.Builder.() -> Unit): DeleteRequest =
-    DeleteRequest.builder().apply(block).build()
+inline fun deleteRequest(initializer: DeleteRequest.Builder.() -> Unit): DeleteRequest =
+    DeleteRequest.builder().apply(initializer).build()
 
-inline fun DeleteTableRequest(block: DeleteTableRequest.Builder.() -> Unit): DeleteTableRequest =
-    DeleteTableRequest.builder().apply(block).build()
+inline fun deleteTableRequest(initializer: DeleteTableRequest.Builder.() -> Unit): DeleteTableRequest =
+    DeleteTableRequest.builder().apply(initializer).build()
 
-inline fun ExecuteStatementRequest(setup: ExecuteStatementRequest.Builder.() -> Unit): ExecuteStatementRequest =
-    ExecuteStatementRequest.builder().apply(setup).build()
+inline fun executeStatementRequest(initializer: ExecuteStatementRequest.Builder.() -> Unit): ExecuteStatementRequest =
+    ExecuteStatementRequest.builder().apply(initializer).build()
 
-inline fun ExecuteTransactionRequest(setup: ExecuteTransactionRequest.Builder.() -> Unit): ExecuteTransactionRequest =
-    ExecuteTransactionRequest.builder().apply(setup).build()
+inline fun executeTransactionRequest(initializer: ExecuteTransactionRequest.Builder.() -> Unit): ExecuteTransactionRequest =
+    ExecuteTransactionRequest.builder().apply(initializer).build()
 
-inline fun GetItemRequest(setup: GetItemRequest.Builder.() -> Unit): GetItemRequest =
-    GetItemRequest.builder().apply(setup).build()
+inline fun getItemRequest(initializer: GetItemRequest.Builder.() -> Unit): GetItemRequest =
+    GetItemRequest.builder().apply(initializer).build()
 
-inline fun GetRecordsRequest(setup: GetRecordsRequest.Builder.() -> Unit): GetRecordsRequest =
-    GetRecordsRequest.builder().apply(setup).build()
+inline fun getRecordsRequest(initializer: GetRecordsRequest.Builder.() -> Unit): GetRecordsRequest =
+    GetRecordsRequest.builder().apply(initializer).build()
 
-inline fun GetShardIteratorRequest(setup: GetShardIteratorRequest.Builder.() -> Unit): GetShardIteratorRequest =
-    GetShardIteratorRequest.builder().apply(setup).build()
+inline fun getShardIteratorRequest(initializer: GetShardIteratorRequest.Builder.() -> Unit): GetShardIteratorRequest =
+    GetShardIteratorRequest.builder().apply(initializer).build()
 
-inline fun ListGlobalTablesRequest(block: ListGlobalTablesRequest.Builder.() -> Unit): ListGlobalTablesRequest =
-    ListGlobalTablesRequest.builder().apply(block).build()
+inline fun listGlobalTablesRequest(initializer: ListGlobalTablesRequest.Builder.() -> Unit): ListGlobalTablesRequest =
+    ListGlobalTablesRequest.builder().apply(initializer).build()
 
-inline fun ListTablesRequest(block: ListTablesRequest.Builder.() -> Unit): ListTablesRequest =
-    ListTablesRequest.builder().apply(block).build()
+inline fun listTablesRequest(initializer: ListTablesRequest.Builder.() -> Unit): ListTablesRequest =
+    ListTablesRequest.builder().apply(initializer).build()
 
-inline fun ListTagsOfResourceRequest(block: ListTagsOfResourceRequest.Builder.() -> Unit): ListTagsOfResourceRequest =
-    ListTagsOfResourceRequest.builder().apply(block).build()
+inline fun listTagsOfResourceRequest(initializer: ListTagsOfResourceRequest.Builder.() -> Unit): ListTagsOfResourceRequest =
+    ListTagsOfResourceRequest.builder().apply(initializer).build()
 
-inline fun PutItemRequest(block: PutItemRequest.Builder.() -> Unit): PutItemRequest =
-    PutItemRequest.builder().apply(block).build()
+inline fun putItemRequest(initializer: PutItemRequest.Builder.() -> Unit): PutItemRequest =
+    PutItemRequest.builder().apply(initializer).build()
 
-inline fun PutRequest(block: PutRequest.Builder.() -> Unit): PutRequest =
-    PutRequest.builder().apply(block).build()
+inline fun putRequest(initializer: PutRequest.Builder.() -> Unit): PutRequest =
+    PutRequest.builder().apply(initializer).build()
 
-fun putRequestOf(items: Map<String, AttributeValue>): PutRequest = PutRequest {
+fun putRequestOf(items: Map<String, AttributeValue>): PutRequest = putRequest {
     item(items)
 }
 
-inline fun QueryRequest(block: QueryRequest.Builder.() -> Unit): QueryRequest =
-    QueryRequest.builder().apply(block).build()
+inline fun queryRequest(initializer: QueryRequest.Builder.() -> Unit): QueryRequest =
+    QueryRequest.builder().apply(initializer).build()
 
-inline fun Record(block: Record.Builder.() -> Unit): Record =
-    Record.builder().apply(block).build()
+inline fun record(initializer: Record.Builder.() -> Unit): Record =
+    Record.builder().apply(initializer).build()
 
-inline fun ReplicaSettingsUpdate(block: ReplicaSettingsUpdate.Builder.() -> Unit): ReplicaSettingsUpdate =
-    ReplicaSettingsUpdate.builder().apply(block).build()
+inline fun replicaSettingsUpdate(initializer: ReplicaSettingsUpdate.Builder.() -> Unit): ReplicaSettingsUpdate =
+    ReplicaSettingsUpdate.builder().apply(initializer).build()
 
-inline fun ReplicaUpdate(block: ReplicaUpdate.Builder.() -> Unit): ReplicaUpdate =
-    ReplicaUpdate.builder().apply(block).build()
+inline fun replicaUpdate(initializer: ReplicaUpdate.Builder.() -> Unit): ReplicaUpdate =
+    ReplicaUpdate.builder().apply(initializer).build()
 
-inline fun RestoreTableFromBackupRequest(block: RestoreTableFromBackupRequest.Builder.() -> Unit): RestoreTableFromBackupRequest =
-    RestoreTableFromBackupRequest.builder().apply(block).build()
+inline fun restoreTableFromBackupRequest(
+    initializer: RestoreTableFromBackupRequest.Builder.() -> Unit,
+): RestoreTableFromBackupRequest =
+    RestoreTableFromBackupRequest.builder().apply(initializer).build()
 
-inline fun RestoreTableToPointInTimeRequest(block: RestoreTableToPointInTimeRequest.Builder.() -> Unit): RestoreTableToPointInTimeRequest =
-    RestoreTableToPointInTimeRequest.builder().apply(block).build()
+inline fun restoreTableToPointInTimeRequest(
+    initializer: RestoreTableToPointInTimeRequest.Builder.() -> Unit,
+): RestoreTableToPointInTimeRequest =
+    RestoreTableToPointInTimeRequest.builder().apply(initializer).build()
 
-inline fun ScanRequest(block: ScanRequest.Builder.() -> Unit): ScanRequest =
-    ScanRequest.builder().apply(block).build()
+inline fun scanRequest(initializer: ScanRequest.Builder.() -> Unit): ScanRequest =
+    ScanRequest.builder().apply(initializer).build()
 
-inline fun SequenceNumberRange(block: SequenceNumberRange.Builder.() -> Unit): SequenceNumberRange =
-    SequenceNumberRange.builder().apply(block).build()
+inline fun sequenceNumberRange(initializer: SequenceNumberRange.Builder.() -> Unit): SequenceNumberRange =
+    SequenceNumberRange.builder().apply(initializer).build()
 
-inline fun Stream(block: Stream.Builder.() -> Unit): Stream =
-    Stream.builder().apply(block).build()
+inline fun stream(initializer: Stream.Builder.() -> Unit): Stream =
+    Stream.builder().apply(initializer).build()
 
-inline fun StreamRecord(block: StreamRecord.Builder.() -> Unit): StreamRecord =
-    StreamRecord.builder().apply(block).build()
+inline fun streamRecord(initializer: StreamRecord.Builder.() -> Unit): StreamRecord =
+    StreamRecord.builder().apply(initializer).build()
 
-inline fun StreamSpecification(block: StreamSpecification.Builder.() -> Unit): StreamSpecification =
-    StreamSpecification.builder().apply(block).build()
+inline fun streamSpecification(initializer: StreamSpecification.Builder.() -> Unit): StreamSpecification =
+    StreamSpecification.builder().apply(initializer).build()
 
-inline fun TagResourceRequest(block: TagResourceRequest.Builder.() -> Unit): TagResourceRequest =
-    TagResourceRequest.builder().apply(block).build()
+inline fun tagResourceRequest(initializer: TagResourceRequest.Builder.() -> Unit): TagResourceRequest =
+    TagResourceRequest.builder().apply(initializer).build()
 
-inline fun TransactGetItem(block: TransactGetItem.Builder.() -> Unit): TransactGetItem =
-    TransactGetItem.builder().apply(block).build()
+inline fun transactGetItem(initializer: TransactGetItem.Builder.() -> Unit): TransactGetItem =
+    TransactGetItem.builder().apply(initializer).build()
 
-inline fun TransactGetItemsRequest(block: TransactGetItemsRequest.Builder.() -> Unit): TransactGetItemsRequest =
-    TransactGetItemsRequest.builder().apply(block).build()
+inline fun transactGetItemsRequest(
+    initializer: TransactGetItemsRequest.Builder.() -> Unit,
+): TransactGetItemsRequest =
+    TransactGetItemsRequest.builder().apply(initializer).build()
 
-inline fun TransactWriteItem(block: TransactWriteItem.Builder.() -> Unit): TransactWriteItem =
-    TransactWriteItem.builder().apply(block).build()
+inline fun transactWriteItem(
+    initializer: TransactWriteItem.Builder.() -> Unit,
+): TransactWriteItem =
+    TransactWriteItem.builder().apply(initializer).build()
 
-inline fun TransactWriteItemsRequest(block: TransactWriteItemsRequest.Builder.() -> Unit): TransactWriteItemsRequest =
-    TransactWriteItemsRequest.builder().apply(block).build()
+inline fun transactWriteItemsRequest(
+    initializer: TransactWriteItemsRequest.Builder.() -> Unit,
+): TransactWriteItemsRequest =
+    TransactWriteItemsRequest.builder().apply(initializer).build()
 
-inline fun UntagResourceRequest(block: UntagResourceRequest.Builder.() -> Unit): UntagResourceRequest =
-    UntagResourceRequest.builder().apply(block).build()
+inline fun untagResourceRequest(initializer: UntagResourceRequest.Builder.() -> Unit): UntagResourceRequest =
+    UntagResourceRequest.builder().apply(initializer).build()
 
-inline fun UpdateContinuousBackupsRequest(block: UpdateContinuousBackupsRequest.Builder.() -> Unit): UpdateContinuousBackupsRequest =
-    UpdateContinuousBackupsRequest.builder().apply(block).build()
+inline fun updateContinuousBackupsRequest(
+    initializer: UpdateContinuousBackupsRequest.Builder.() -> Unit,
+): UpdateContinuousBackupsRequest =
+    UpdateContinuousBackupsRequest.builder().apply(initializer).build()
 
-inline fun UpdateContributorInsightsRequest(block: UpdateContributorInsightsRequest.Builder.() -> Unit): UpdateContributorInsightsRequest =
-    UpdateContributorInsightsRequest.builder().apply(block).build()
+inline fun updateContributorInsightsRequest(
+    initializer: UpdateContributorInsightsRequest.Builder.() -> Unit,
+): UpdateContributorInsightsRequest =
+    UpdateContributorInsightsRequest.builder().apply(initializer).build()
 
-inline fun Update(block: Update.Builder.() -> Unit): Update =
-    Update.builder().apply(block).build()
+inline fun update(initializer: Update.Builder.() -> Unit): Update =
+    Update.builder().apply(initializer).build()
 
-inline fun UpdateGlobalTableRequest(block: UpdateGlobalTableRequest.Builder.() -> Unit): UpdateGlobalTableRequest =
-    UpdateGlobalTableRequest.builder().apply(block).build()
+inline fun updateGlobalTableRequest(
+    initializer: UpdateGlobalTableRequest.Builder.() -> Unit,
+): UpdateGlobalTableRequest =
+    UpdateGlobalTableRequest.builder().apply(initializer).build()
 
-inline fun UpdateGlobalTableSettingsRequest(block: UpdateGlobalTableSettingsRequest.Builder.() -> Unit): UpdateGlobalTableSettingsRequest =
-    UpdateGlobalTableSettingsRequest.builder().apply(block).build()
+inline fun updateGlobalTableSettingsRequest(
+    initializer: UpdateGlobalTableSettingsRequest.Builder.() -> Unit,
+): UpdateGlobalTableSettingsRequest =
+    UpdateGlobalTableSettingsRequest.builder().apply(initializer).build()
 
-inline fun UpdateItemRequest(block: UpdateItemRequest.Builder.() -> Unit): UpdateItemRequest =
-    UpdateItemRequest.builder().apply(block).build()
+inline fun updateItemRequest(initializer: UpdateItemRequest.Builder.() -> Unit): UpdateItemRequest =
+    UpdateItemRequest.builder().apply(initializer).build()
 
-inline fun UpdateTableRequest(block: UpdateTableRequest.Builder.() -> Unit): UpdateTableRequest =
-    UpdateTableRequest.builder().apply(block).build()
+inline fun updateTableRequest(initializer: UpdateTableRequest.Builder.() -> Unit): UpdateTableRequest =
+    UpdateTableRequest.builder().apply(initializer).build()
 
-inline fun UpdateTimeToLiveRequest(block: UpdateTimeToLiveRequest.Builder.() -> Unit): UpdateTimeToLiveRequest =
-    UpdateTimeToLiveRequest.builder().apply(block).build()
+inline fun updateTimeToLiveRequest(
+    initializer: UpdateTimeToLiveRequest.Builder.() -> Unit,
+): UpdateTimeToLiveRequest =
+    UpdateTimeToLiveRequest.builder().apply(initializer).build()
 
-
-inline fun <reified T: Any> WriteBatch(
+inline fun <reified T: Any> writeBatch(
     table: MappedTableResource<T>,
     @BuilderInference initializer: WriteBatch.Builder<T>.() -> Unit,
 ): WriteBatch {
@@ -220,7 +239,7 @@ inline fun <reified T: Any> WriteBatch(
 inline fun <reified T: Any> writeBatchOf(
     table: MappedTableResource<T>,
     items: Collection<T>,
-): WriteBatch = WriteBatch<T>(table) {
+): WriteBatch = writeBatch<T>(table) {
     items.forEach { addPutItem(it) }
 }
 
@@ -237,13 +256,11 @@ fun <T: Any> writeBatchOf(
         .build()
 }
 
-inline fun WriteRequest(initializer: WriteRequest.Builder.() -> Unit): WriteRequest {
+inline fun writeRequest(initializer: WriteRequest.Builder.() -> Unit): WriteRequest {
     return WriteRequest.builder().apply(initializer).build()
 }
 
-fun writeRequestOf(
-    items: Map<String, AttributeValue>,
-): WriteRequest = WriteRequest {
+fun writeRequestOf(items: Map<String, AttributeValue>): WriteRequest = writeRequest {
     putRequest(putRequestOf(items))
 }
 

@@ -24,7 +24,7 @@ import software.amazon.awssdk.services.sqs.model.SendMessageResponse
 import java.net.URI
 import java.util.concurrent.CompletableFuture
 
-inline fun SqsAsyncClient(initializer: SqsAsyncClientBuilder.() -> Unit): SqsAsyncClient {
+inline fun sqsAsyncClient(initializer: SqsAsyncClientBuilder.() -> Unit): SqsAsyncClient {
     return SqsAsyncClient.builder().apply(initializer).build()
 }
 
@@ -33,7 +33,7 @@ fun sqsAsyncClientOf(
     region: Region,
     credentialsProvider: AwsCredentialsProvider,
     asyncConfiguration: ClientAsyncConfiguration? = null,
-): SqsAsyncClient = SqsAsyncClient {
+): SqsAsyncClient = sqsAsyncClient {
     endpointOverride(endpoint)
     region(region)
     credentialsProvider(credentialsProvider)

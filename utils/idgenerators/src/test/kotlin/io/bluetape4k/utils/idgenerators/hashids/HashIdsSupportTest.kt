@@ -1,6 +1,6 @@
 package io.bluetape4k.utils.idgenerators.hashids
 
-import io.bluetape4k.collections.eclipse.FastList
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.stream.asParallelStream
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -41,7 +41,7 @@ class HashIdsSupportTest {
 
         @Test
         fun `encode time based uuid as parallel`() {
-            val uuids = FastList(ITEM_SIZE) { uuidGenerator.nextUUID() }
+            val uuids = fastList(ITEM_SIZE) { uuidGenerator.nextUUID() }
             uuids.parallelStream()
                 .forEach {
                     verifyUuidEncode(it)
@@ -56,7 +56,7 @@ class HashIdsSupportTest {
 
         @Test
         fun `정렬된 UUID에 대한 hashid는 정렬되지 않습니다`() {
-            val uuids = FastList(100) { uuidGenerator.nextUUID() }
+            val uuids = fastList(100) { uuidGenerator.nextUUID() }
             val encodeds = uuids.map { hashids.encodeUUID(it) }.onEach { log.debug { it } }
             encodeds.sorted() shouldNotBeEqualTo encodeds
         }

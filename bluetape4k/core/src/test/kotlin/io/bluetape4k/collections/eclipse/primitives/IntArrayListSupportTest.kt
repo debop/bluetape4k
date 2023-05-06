@@ -43,7 +43,7 @@ class IntArrayListSupportTest {
 
     @Test
     fun `convert primitive array list`() {
-        val array = IntArrayList(5) { it + 1 }
+        val array = intArrayList(5) { it + 1 }
         array.size() shouldBeEqualTo 5
         array shouldBeEqualTo expectedArrayList
     }

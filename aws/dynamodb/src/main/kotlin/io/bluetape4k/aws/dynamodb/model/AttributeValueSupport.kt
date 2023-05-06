@@ -6,7 +6,7 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import java.io.InputStream
 import java.nio.ByteBuffer
 
-inline fun AttributeValue(initializer: AttributeValue.Builder.() -> Unit): AttributeValue {
+inline fun attributeValue(initializer: AttributeValue.Builder.() -> Unit): AttributeValue {
     return AttributeValue.builder().apply(initializer).build()
 }
 
@@ -15,18 +15,18 @@ fun ByteBuffer.toAttributeValue(): AttributeValue = AttributeValues.binaryValue(
 fun String.toAttributeValue(): AttributeValue = AttributeValues.stringValue(this)
 fun Number.toAttributeValue(): AttributeValue = AttributeValues.numberValue(this)
 
-fun Boolean.toAttributeValue(): AttributeValue = AttributeValue { bool(this@toAttributeValue) }
-fun Boolean.toNullAttributeValue(): AttributeValue = AttributeValue { nul(this@toNullAttributeValue) }
+fun Boolean.toAttributeValue(): AttributeValue = attributeValue { bool(this@toAttributeValue) }
+fun Boolean.toNullAttributeValue(): AttributeValue = attributeValue { nul(this@toNullAttributeValue) }
 
-fun Iterable<*>.toAttributeValue(): AttributeValue = AttributeValue {
+fun Iterable<*>.toAttributeValue(): AttributeValue = attributeValue {
     l(this@toAttributeValue.map { it.toAttributeValue() })
 }
 
-fun Map<*, *>.toAttributeValue(): AttributeValue = AttributeValue {
+fun Map<*, *>.toAttributeValue(): AttributeValue = attributeValue {
     m(this@toAttributeValue.entries.associate { it.key as String to it.value.toAttributeValue() })
 }
 
-fun InputStream.toAttributeValue(): AttributeValue = AttributeValue { b(toSdkBytes()) }
+fun InputStream.toAttributeValue(): AttributeValue = attributeValue { b(toSdkBytes()) }
 
 fun <T> T.toAttributeValue(): AttributeValue = when (this) {
     null           -> AttributeValues.nullAttributeValue()
@@ -38,5 +38,5 @@ fun <T> T.toAttributeValue(): AttributeValue = when (this) {
     is Iterable<*> -> toAttributeValue()
     is Map<*, *>   -> toAttributeValue()
     is InputStream -> toAttributeValue()
-    else           -> AttributeValue { s(this@toAttributeValue.toString()) }
+    else           -> attributeValue { s(this@toAttributeValue.toString()) }
 }

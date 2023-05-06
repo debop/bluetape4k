@@ -27,7 +27,7 @@ class DynamoDbAsyncTableCreator {
      * 이미 테이블이 존재할 경우에는 생성하지 않고, 경고만 로깅합니다.
      *
      * @param asyncTable [DynamoDbAsyncTable] instance
-     * @param request [CreateTableEnhancedRequest] instance
+     * @param request [createTableEnhancedRequest] instance
      */
     suspend fun <E: Any> tryCreateAsyncTable(
         asyncTable: DynamoDbAsyncTable<E>,

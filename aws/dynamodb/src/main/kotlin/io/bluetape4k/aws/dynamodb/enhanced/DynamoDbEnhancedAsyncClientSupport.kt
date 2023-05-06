@@ -1,8 +1,8 @@
 package io.bluetape4k.aws.dynamodb.enhanced
 
 import io.bluetape4k.aws.dynamodb.DynamoDb
-import io.bluetape4k.aws.dynamodb.DynamoDbAsyncClient
-import io.bluetape4k.aws.dynamodb.model.BatchWriteItemEnhancedRequest
+import io.bluetape4k.aws.dynamodb.dynamoDbAsyncClient
+import io.bluetape4k.aws.dynamodb.model.batchWriteItemEnhancedRequest
 import io.bluetape4k.aws.dynamodb.model.writeBatchOf
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.coroutines.support.chunked
@@ -24,24 +24,24 @@ import software.amazon.awssdk.enhanced.dynamodb.internal.client.ExtensionResolve
 import software.amazon.awssdk.enhanced.dynamodb.model.BatchWriteResult
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
 
-inline fun DynamoDbEnhancedAsyncClient(
+inline fun dynamoDbEnhancedAsyncClient(
     initializer: DynamoDbEnhancedAsyncClient.Builder.() -> Unit,
 ): DynamoDbEnhancedAsyncClient {
     return DynamoDbEnhancedAsyncClient.builder().apply(initializer).build()
 }
 
 fun dynamoDbEnhancedAsyncClientOf(
-    client: DynamoDbAsyncClient = DynamoDbAsyncClient {},
+    client: DynamoDbAsyncClient = dynamoDbAsyncClient {},
     initializer: DynamoDbEnhancedAsyncClient.Builder.() -> Unit = {},
-): DynamoDbEnhancedAsyncClient = DynamoDbEnhancedAsyncClient {
+): DynamoDbEnhancedAsyncClient = dynamoDbEnhancedAsyncClient {
     dynamoDbClient(client)
     initializer()
 }
 
 fun dynamoDbEnhancedAsyncClientOf(
-    client: DynamoDbAsyncClient = DynamoDbAsyncClient {},
+    client: DynamoDbAsyncClient = dynamoDbAsyncClient {},
     vararg extensions: DynamoDbEnhancedClientExtension = ExtensionResolver.defaultExtensions().toTypedArray(),
-): DynamoDbEnhancedAsyncClient = DynamoDbEnhancedAsyncClient {
+): DynamoDbEnhancedAsyncClient = dynamoDbEnhancedAsyncClient {
     dynamoDbClient(client)
     extensions(*extensions)
 }
@@ -81,7 +81,7 @@ suspend fun <T: Any> DynamoDbEnhancedAsyncClient.batchWriteItems(
         .chunked(chunk)
         .map { chunkedItems ->
             withContext(Dispatchers.IO) {
-                val request = BatchWriteItemEnhancedRequest {
+                val request = batchWriteItemEnhancedRequest {
                     val writeBatch = writeBatchOf(table, chunkedItems, itemClass)
                     addWriteBatch(writeBatch)
                 }

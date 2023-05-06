@@ -6,45 +6,45 @@ import software.amazon.awssdk.services.ses.model.Message
 import software.amazon.awssdk.services.ses.model.MessageTag
 import java.nio.charset.Charset
 
-inline fun Message(initializer: Message.Builder.() -> Unit): Message {
+inline fun message(initializer: Message.Builder.() -> Unit): Message {
     return Message.builder().apply(initializer).build()
 }
 
 fun messageOf(subject: Content, body: Body): Message {
-    return Message { subject(subject).body(body) }
+    return message { subject(subject).body(body) }
 }
 
-fun Body(initializer: Body.Builder.() -> Unit): Body {
+fun body(initializer: Body.Builder.() -> Unit): Body {
     return Body.builder().apply(initializer).build()
 }
 
-fun bodyOf(text: String, html: String, charset: Charset = Charsets.UTF_8): Body = Body {
+fun bodyOf(text: String, html: String, charset: Charset = Charsets.UTF_8): Body = body {
     text(contentOf(text, charset))
     html(contentOf(html, charset))
 }
 
-fun bodyAsText(text: String, charset: Charset = Charsets.UTF_8): Body = Body {
+fun bodyAsText(text: String, charset: Charset = Charsets.UTF_8): Body = body {
     text(contentOf(text, charset))
 }
 
-fun bodyAsHtml(html: String, charset: Charset = Charsets.UTF_8): Body = Body {
+fun bodyAsHtml(html: String, charset: Charset = Charsets.UTF_8): Body = body {
     html(contentOf(html, charset))
 }
 
-inline fun Content(initializer: Content.Builder.() -> Unit): Content {
+inline fun content(initializer: Content.Builder.() -> Unit): Content {
     return Content.builder().apply(initializer).build()
 }
 
-fun contentOf(data: String? = null, charset: Charset = Charsets.UTF_8) = Content {
+fun contentOf(data: String? = null, charset: Charset = Charsets.UTF_8) = content {
     data(data)
     charset(charset.name())
 }
 
-inline fun MessageTag(initializer: MessageTag.Builder.() -> Unit): MessageTag {
+inline fun messageTag(initializer: MessageTag.Builder.() -> Unit): MessageTag {
     return MessageTag.builder().apply(initializer).build()
 }
 
-fun messageTagOf(name: String, value: String) = MessageTag {
+fun messageTagOf(name: String, value: String) = messageTag {
     name(name)
     value(value)
 }

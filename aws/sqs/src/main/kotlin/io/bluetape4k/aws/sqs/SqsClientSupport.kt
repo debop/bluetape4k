@@ -22,7 +22,7 @@ import software.amazon.awssdk.services.sqs.model.SendMessageBatchResponse
 import software.amazon.awssdk.services.sqs.model.SendMessageResponse
 import java.net.URI
 
-inline fun SqsClient(initializer: SqsClientBuilder.() -> Unit): SqsClient {
+inline fun sqsClient(initializer: SqsClientBuilder.() -> Unit): SqsClient {
     return SqsClient.builder().apply(initializer).build()
 }
 
@@ -30,7 +30,7 @@ fun sqsClientOf(
     endpoint: URI,
     region: Region,
     credentialsProvider: AwsCredentialsProvider,
-): SqsClient = SqsClient {
+): SqsClient = sqsClient {
     endpointOverride(endpoint)
     region(region)
     credentialsProvider(credentialsProvider)

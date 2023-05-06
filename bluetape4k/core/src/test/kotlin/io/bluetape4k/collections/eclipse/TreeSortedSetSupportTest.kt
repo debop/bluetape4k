@@ -18,7 +18,7 @@ class TreeSortedSetSupportTest {
 
     @Test
     fun `create tree sorted set`() {
-        val set = TreeSortedSet(3) { 'c' - it }
+        val set = treeSortedSet(3) { 'c' - it }
         verifyTreeSortedSet(set)
 
         verifyTreeSortedSet(treeSortedSetOf('c', 'b', 'a'))

@@ -34,7 +34,7 @@ abstract class AbstractSqsTest {
 
         @JvmStatic
         val client: SqsClient by lazy {
-            SqsClient {
+            sqsClient {
                 credentialsProvider(credentialsProvider)
                 endpointOverride(endpoint)
                 region(region)
@@ -43,7 +43,7 @@ abstract class AbstractSqsTest {
 
         @JvmStatic
         val asyncClient: SqsAsyncClient by lazy {
-            SqsAsyncClient {
+            sqsAsyncClient {
                 credentialsProvider(credentialsProvider)
                 endpointOverride(endpoint)
                 region(region)

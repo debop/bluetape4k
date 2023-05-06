@@ -1,6 +1,6 @@
 package io.bluetape4k.aws.dynamodb.query
 
-import io.bluetape4k.aws.dynamodb.model.Expression
+import io.bluetape4k.aws.dynamodb.model.expression
 import io.bluetape4k.aws.dynamodb.model.toAttributeValue
 import io.bluetape4k.logging.KLogging
 import software.amazon.awssdk.enhanced.dynamodb.Expression
@@ -13,7 +13,7 @@ data class FilterRequestProperties(
     val expressionAttributeNames: Map<String, String>,
 )
 
-fun FilterRequestProperties.toExpression(): Expression = Expression {
+fun FilterRequestProperties.toExpression(): Expression = expression {
     expression(filterExpression)
     expressionAttributeNames.takeIf { it.isNotEmpty() }?.let { expressionNames(it) }
     expressionAttributeValues.takeIf { it.isNotEmpty() }?.let { expressionValues(it) }

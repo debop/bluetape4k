@@ -2,7 +2,7 @@ package io.bluetape4k.aws.dynamodb.model
 
 import software.amazon.awssdk.services.dynamodb.model.ProvisionedThroughput
 
-inline fun ProvisionedThroughput(
+inline fun provisionedThroughput(
     initializer: ProvisionedThroughput.Builder.() -> Unit,
 ): ProvisionedThroughput {
     return ProvisionedThroughput.builder().apply(initializer).build()
@@ -11,7 +11,7 @@ inline fun ProvisionedThroughput(
 fun provisionedThroughputOf(
     readCapacityUnits: Long? = null,
     writeCapacityUnits: Long? = null,
-): ProvisionedThroughput = ProvisionedThroughput {
+): ProvisionedThroughput = provisionedThroughput {
     readCapacityUnits(readCapacityUnits)
     writeCapacityUnits(writeCapacityUnits)
 }

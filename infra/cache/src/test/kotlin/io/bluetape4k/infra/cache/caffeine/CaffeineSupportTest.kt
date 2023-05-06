@@ -15,7 +15,7 @@ class CaffeineSupportTest {
 
     companion object: KLogging()
 
-    private val caffeine = Caffeine {
+    private val caffeine = caffeine {
         expireAfterWrite(Duration.ofSeconds(60))
         maximumSize(10_000)
     }

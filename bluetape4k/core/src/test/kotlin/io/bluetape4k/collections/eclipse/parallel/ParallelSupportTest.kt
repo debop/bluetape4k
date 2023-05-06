@@ -1,6 +1,6 @@
 package io.bluetape4k.collections.eclipse.parallel
 
-import io.bluetape4k.collections.eclipse.FastList
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -23,7 +23,7 @@ class ParallelSupportTest {
         private const val LIST_COUNT = 1000
     }
 
-    private val xs: FastList<Int> = FastList(COUNT) { it }
+    private val xs: FastList<Int> = fastList(COUNT) { it }
     private val xss = (0..8).chunked(3).toFastList()
 
     @Test
@@ -48,7 +48,7 @@ class ParallelSupportTest {
     @Test
     fun `parallel count`() {
         val count = LIST_COUNT
-        val xs = FastList(count) { it }
+        val xs = fastList(count) { it }
 
         val fastTime = measureTimeMillis {
             xs.parCount(count / 10) {
@@ -174,7 +174,7 @@ class ParallelSupportTest {
     @Test
     fun `benchmark array with java parallelStream`() {
         val suffix = "value"
-        val xs = FastList(COUNT) { "$suffix-$it" }
+        val xs = fastList(COUNT) { "$suffix-$it" }
 
         val mapper: (String) -> Int = { it.drop(suffix.length + 1).toInt() }
 

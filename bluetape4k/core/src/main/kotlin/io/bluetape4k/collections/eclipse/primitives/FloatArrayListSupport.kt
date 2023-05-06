@@ -20,7 +20,10 @@ fun Iterable<Float>.toFloatArrayList(): FloatArrayList =
         forEach { array.add(it) }
     }
 
-inline fun FloatArrayList(size: Int, initializer: (Int) -> Float): FloatArrayList {
+inline fun floatArrayList(
+    size: Int,
+    @BuilderInference initializer: (Int) -> Float,
+): FloatArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = FloatArrayList(size)

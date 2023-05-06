@@ -4,7 +4,7 @@ import software.amazon.awssdk.enhanced.dynamodb.model.EnhancedGlobalSecondaryInd
 import software.amazon.awssdk.enhanced.dynamodb.model.EnhancedLocalSecondaryIndex
 import software.amazon.awssdk.services.dynamodb.model.Projection
 
-inline fun EnhancedGlobalSecondaryIndex(
+inline fun enhancedGlobalSecondaryIndex(
     initializer: EnhancedGlobalSecondaryIndex.Builder.() -> Unit,
 ): EnhancedGlobalSecondaryIndex {
     return EnhancedGlobalSecondaryIndex.builder().apply(initializer).build()
@@ -13,12 +13,12 @@ inline fun EnhancedGlobalSecondaryIndex(
 fun enhancedGlobalSecondaryIndexOf(
     indexName: String,
     projection: Projection,
-): EnhancedGlobalSecondaryIndex = EnhancedGlobalSecondaryIndex {
+): EnhancedGlobalSecondaryIndex = enhancedGlobalSecondaryIndex {
     indexName(indexName)
     projection(projection)
 }
 
-inline fun EnhancedLocalSecondaryIndex(
+inline fun enhancedLocalSecondaryIndex(
     initializer: EnhancedLocalSecondaryIndex.Builder.() -> Unit,
 ): EnhancedLocalSecondaryIndex {
     return EnhancedLocalSecondaryIndex.builder().apply(initializer).build()
@@ -27,7 +27,7 @@ inline fun EnhancedLocalSecondaryIndex(
 fun enhancedLocalSecondaryIndexOf(
     indexName: String,
     projection: Projection,
-): EnhancedLocalSecondaryIndex = EnhancedLocalSecondaryIndex {
+): EnhancedLocalSecondaryIndex = enhancedLocalSecondaryIndex {
     indexName(indexName)
     projection(projection)
 }

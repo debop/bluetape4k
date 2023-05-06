@@ -13,3 +13,10 @@ inline fun listObjectsRequest(
         .apply(initializer)
         .build()
 }
+
+fun listObjectsRequestOf(
+    bucket: String,
+    initializer: ListObjectsRequest.Builder.() -> Unit = {},
+): ListObjectsRequest {
+    return listObjectsRequest(bucket, initializer)
+}

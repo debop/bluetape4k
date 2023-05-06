@@ -1,6 +1,6 @@
 package io.bluetape4k.utils.ahocorasick.interval
 
-import io.bluetape4k.collections.eclipse.FastList
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -13,7 +13,7 @@ class IntervalTreeTest {
 
     @Test
     fun `find overlaps`() {
-        val intervals = FastList(6) { Interval(it, it + 2) }
+        val intervals = fastList(6) { Interval(it, it + 2) }
         val tree = IntervalTree(intervals)
 
         val overlaps = tree.findOverlaps(Interval(1, 3))

@@ -20,7 +20,10 @@ fun Iterable<Double>.toDoubleArrayList(): DoubleArrayList =
         forEach { array.add(it) }
     }
 
-inline fun DoubleArrayList(size: Int, initializer: (Int) -> Double): DoubleArrayList {
+inline fun doubleArrayList(
+    size: Int,
+    @BuilderInference initializer: (Int) -> Double,
+): DoubleArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = DoubleArrayList(size)

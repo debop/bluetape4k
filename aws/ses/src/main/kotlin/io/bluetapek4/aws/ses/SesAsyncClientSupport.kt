@@ -14,16 +14,16 @@ import software.amazon.awssdk.services.ses.model.SendTemplatedEmailRequest
 import software.amazon.awssdk.services.ses.model.SendTemplatedEmailResponse
 import java.util.concurrent.CompletableFuture
 
-inline fun SesAsyncClient(initializer: SesAsyncClientBuilder.() -> Unit): SesAsyncClient {
+inline fun sesAsyncClient(initializer: SesAsyncClientBuilder.() -> Unit): SesAsyncClient {
     return SesAsyncClient.builder().apply(initializer).build()
 }
 
 fun sesAsyncClientOf(region: Region): SesAsyncClient {
-    return SesAsyncClient { region(region) }
+    return sesAsyncClient { region(region) }
 }
 
 fun sesAsyncClientOf(endpointProvider: SesEndpointProvider): SesAsyncClient {
-    return SesAsyncClient { endpointProvider(endpointProvider) }
+    return sesAsyncClient { endpointProvider(endpointProvider) }
 }
 
 fun SesAsyncClient.send(emailRequest: SendEmailRequest): CompletableFuture<SendEmailResponse> {

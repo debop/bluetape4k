@@ -15,7 +15,10 @@ fun Sequence<Boolean>.toBooleanArrayList(): BooleanArrayList =
 fun Iterable<Boolean>.toBooleanArrayList(): BooleanArrayList =
     BooleanArrayList.newListWith(*this.toList().toBooleanArray())
 
-inline fun BooleanArrayList(size: Int, initializer: (Int) -> Boolean): BooleanArrayList {
+inline fun booleanArrayList(
+    size: Int,
+    @BuilderInference initializer: (Int) -> Boolean,
+): BooleanArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = BooleanArrayList(size)

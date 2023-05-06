@@ -20,7 +20,10 @@ fun Iterable<Byte>.toByteArrayList(): ByteArrayList =
         forEach { array.add(it) }
     }
 
-inline fun ByteArrayList(size: Int, initializer: (Int) -> Byte): ByteArrayList {
+inline fun byteArrayList(
+    size: Int,
+    @BuilderInference initializer: (Int) -> Byte,
+): ByteArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = ByteArrayList(size)

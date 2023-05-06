@@ -5,7 +5,7 @@ import software.amazon.awssdk.services.ses.model.MessageTag
 import software.amazon.awssdk.services.ses.model.SendEmailRequest
 import software.amazon.awssdk.services.ses.model.SendTemplatedEmailRequest
 
-inline fun SendEmailRequest(initializer: SendEmailRequest.Builder.() -> Unit): SendEmailRequest {
+inline fun sendEmailRequest(initializer: SendEmailRequest.Builder.() -> Unit): SendEmailRequest {
     return SendEmailRequest.builder().apply(initializer).build()
 }
 
@@ -17,7 +17,7 @@ fun sendEmailRequestOf(
     returnPath: String? = null,
     returnPathArn: String? = null,
     tags: Collection<MessageTag>? = null,
-): SendEmailRequest = SendEmailRequest {
+): SendEmailRequest = sendEmailRequest {
     source(source)
     destination(destination)
     sourceArn?.run { sourceArn(this) }
@@ -27,7 +27,7 @@ fun sendEmailRequestOf(
     tags?.run { tags(this) }
 }
 
-inline fun SendTemplatedEmailRequest(
+inline fun sendTemplatedEmailRequest(
     initializer: SendTemplatedEmailRequest.Builder.() -> Unit,
 ): SendTemplatedEmailRequest {
     return SendTemplatedEmailRequest.builder().apply(initializer).build()
@@ -45,7 +45,7 @@ fun sendTemplatedEmailRequestOf(
     returnPathArn: String? = null,
     tags: Collection<MessageTag>? = null,
     configurationSetName: String? = null,
-): SendTemplatedEmailRequest = SendTemplatedEmailRequest {
+): SendTemplatedEmailRequest = sendTemplatedEmailRequest {
     source(source)
     destination(destination)
     template(template)

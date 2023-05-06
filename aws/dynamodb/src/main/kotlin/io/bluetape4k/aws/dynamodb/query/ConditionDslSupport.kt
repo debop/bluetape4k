@@ -17,13 +17,13 @@ interface SingleValueDynamoComparator: DynamoComparator {
 @DynamoDslMarker
 interface ComparableBuilder
 
-inline fun Condition(initializer: Condition.Builder.() -> Unit): Condition {
+inline fun condition(initializer: Condition.Builder.() -> Unit): Condition {
     return Condition.builder().apply(initializer).build()
 }
 
 @DynamoDslMarker
 class BeginsWith(override val right: Any): SingleValueDynamoComparator {
-    override fun toCondition(): Condition = Condition {
+    override fun toCondition(): Condition = condition {
         comparisonOperator(ComparisonOperator.BEGINS_WITH)
         attributeValueList(right.toAttributeValue())
     }
@@ -31,7 +31,7 @@ class BeginsWith(override val right: Any): SingleValueDynamoComparator {
 
 @DynamoDslMarker
 class Equals(override val right: Any): SingleValueDynamoComparator {
-    override fun toCondition(): Condition = Condition {
+    override fun toCondition(): Condition = condition {
         comparisonOperator(ComparisonOperator.EQ)
         attributeValueList(right.toAttributeValue())
     }
@@ -39,7 +39,7 @@ class Equals(override val right: Any): SingleValueDynamoComparator {
 
 @DynamoDslMarker
 class NotEquals(override val right: Any): SingleValueDynamoComparator {
-    override fun toCondition(): Condition = Condition {
+    override fun toCondition(): Condition = condition {
         comparisonOperator(ComparisonOperator.NE)
         attributeValueList(right.toAttributeValue())
     }
@@ -47,7 +47,7 @@ class NotEquals(override val right: Any): SingleValueDynamoComparator {
 
 @DynamoDslMarker
 class GreaterThan(override val right: Any): SingleValueDynamoComparator {
-    override fun toCondition(): Condition = Condition {
+    override fun toCondition(): Condition = condition {
         comparisonOperator(ComparisonOperator.GT)
         attributeValueList(right.toAttributeValue())
     }
@@ -55,7 +55,7 @@ class GreaterThan(override val right: Any): SingleValueDynamoComparator {
 
 @DynamoDslMarker
 class GreaterThanOrEquals(override val right: Any): SingleValueDynamoComparator {
-    override fun toCondition(): Condition = Condition {
+    override fun toCondition(): Condition = condition {
         comparisonOperator(ComparisonOperator.GE)
         attributeValueList(right.toAttributeValue())
     }
@@ -63,7 +63,7 @@ class GreaterThanOrEquals(override val right: Any): SingleValueDynamoComparator 
 
 @DynamoDslMarker
 class LessThan(override val right: Any): SingleValueDynamoComparator {
-    override fun toCondition(): Condition = Condition {
+    override fun toCondition(): Condition = condition {
         comparisonOperator(ComparisonOperator.LT)
         attributeValueList(right.toAttributeValue())
     }
@@ -71,7 +71,7 @@ class LessThan(override val right: Any): SingleValueDynamoComparator {
 
 @DynamoDslMarker
 class LessThanOrEquals(override val right: Any): SingleValueDynamoComparator {
-    override fun toCondition(): Condition = Condition {
+    override fun toCondition(): Condition = condition {
         comparisonOperator(ComparisonOperator.LE)
         attributeValueList(right.toAttributeValue())
     }
@@ -79,7 +79,7 @@ class LessThanOrEquals(override val right: Any): SingleValueDynamoComparator {
 
 @DynamoDslMarker
 class InList(override val right: List<Any>): SingleValueDynamoComparator {
-    override fun toCondition(): Condition = Condition {
+    override fun toCondition(): Condition = condition {
         comparisonOperator(ComparisonOperator.IN)
         attributeValueList(right.toAttributeValue())
     }
@@ -87,7 +87,7 @@ class InList(override val right: List<Any>): SingleValueDynamoComparator {
 
 @DynamoDslMarker
 class Between(val left: Any, val right: Any): DynamoComparator {
-    override fun toCondition(): Condition = Condition {
+    override fun toCondition(): Condition = condition {
         comparisonOperator(ComparisonOperator.BETWEEN)
         attributeValueList(left.toAttributeValue(), right.toAttributeValue())
     }

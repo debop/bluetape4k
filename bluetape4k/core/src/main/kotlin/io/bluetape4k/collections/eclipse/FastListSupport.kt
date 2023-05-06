@@ -6,18 +6,10 @@ import org.eclipse.collections.impl.list.mutable.FastList
 
 fun <T> emptyFastList(): FastList<T> = FastList.newList()
 
-inline fun <T> FastList(size: Int, initializer: (index: Int) -> T): FastList<T> {
-    size.assertZeroOrPositiveNumber("size")
-
-    val list = FastList.newList<T>(size)
-    repeat(size) {
-        list.add(initializer(it))
-    }
-    return list
-}
-
-@Deprecated("use FastList", ReplaceWith("FastList(size, initializer)"))
-inline fun <T> fastList(size: Int, initializer: (index: Int) -> T): FastList<T> {
+inline fun <T> fastList(
+    size: Int,
+    @BuilderInference initializer: (index: Int) -> T,
+): FastList<T> {
     size.assertZeroOrPositiveNumber("size")
 
     val list = FastList.newList<T>(size)

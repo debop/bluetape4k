@@ -20,7 +20,10 @@ fun Iterable<Char>.toCharArrayList(): CharArrayList =
     }
 
 
-inline fun CharArrayList(size: Int, initializer: (Int) -> Char): CharArrayList {
+inline fun charArrayList(
+    size: Int,
+    @BuilderInference initializer: (Int) -> Char,
+): CharArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val chars = CharArrayList(size)

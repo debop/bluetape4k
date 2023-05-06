@@ -11,7 +11,7 @@ class EhcacheSupportTest {
 
     companion object: KLogging()
 
-    private val ehcacheManager = EhcacheManager {}
+    private val ehcacheManager = ehcacheManager {}
 
     @Test
     fun `default cache`() {

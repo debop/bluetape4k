@@ -20,7 +20,10 @@ fun Iterable<Long>.toLongArrayList(): LongArrayList =
         forEach { array.add(it) }
     }
 
-inline fun LongArrayList(size: Int, initializer: (Int) -> Long): LongArrayList {
+inline fun longArrayList(
+    size: Int,
+    @BuilderInference initializer: (Int) -> Long,
+): LongArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = LongArrayList(size)

@@ -4,19 +4,19 @@ import software.amazon.awssdk.services.sqs.model.DeleteMessageBatchRequest
 import software.amazon.awssdk.services.sqs.model.DeleteMessageBatchRequestEntry
 import software.amazon.awssdk.services.sqs.model.DeleteMessageRequest
 
-inline fun DeleteMessageRequest(initializer: DeleteMessageRequest.Builder.() -> Unit): DeleteMessageRequest {
+inline fun deleteMessageRequest(initializer: DeleteMessageRequest.Builder.() -> Unit): DeleteMessageRequest {
     return DeleteMessageRequest.builder().apply(initializer).build()
 }
 
 fun deleteMessageRequestOf(
     queueUrl: String,
     receiptHandle: String,
-): DeleteMessageRequest = DeleteMessageRequest {
+): DeleteMessageRequest = deleteMessageRequest {
     queueUrl(queueUrl)
     receiptHandle(receiptHandle)
 }
 
-inline fun DeleteMessageBatchRequest(
+inline fun deleteMessageBatchRequest(
     initializer: DeleteMessageBatchRequest.Builder.() -> Unit,
 ): DeleteMessageBatchRequest {
     return DeleteMessageBatchRequest.builder().apply(initializer).build()
@@ -25,12 +25,12 @@ inline fun DeleteMessageBatchRequest(
 fun deleteMessageBatchRequestOf(
     queueUrl: String,
     entries: Collection<DeleteMessageBatchRequestEntry>,
-): DeleteMessageBatchRequest = DeleteMessageBatchRequest {
+): DeleteMessageBatchRequest = deleteMessageBatchRequest {
     queueUrl(queueUrl)
     entries(entries)
 }
 
-inline fun DeleteMessageBatchRequestEntry(
+inline fun deleteMessageBatchRequestEntry(
     initializer: DeleteMessageBatchRequestEntry.Builder.() -> Unit,
 ): DeleteMessageBatchRequestEntry {
     return DeleteMessageBatchRequestEntry.builder().apply(initializer).build()
@@ -39,7 +39,7 @@ inline fun DeleteMessageBatchRequestEntry(
 fun deleteMessageBatchRequestEntryOf(
     id: String,
     receiptHandle: String,
-): DeleteMessageBatchRequestEntry = DeleteMessageBatchRequestEntry {
+): DeleteMessageBatchRequestEntry = deleteMessageBatchRequestEntry {
     id(id)
     receiptHandle(receiptHandle)
 }

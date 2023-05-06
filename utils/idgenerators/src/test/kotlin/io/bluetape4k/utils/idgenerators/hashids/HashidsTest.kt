@@ -1,6 +1,6 @@
 package io.bluetape4k.utils.idgenerators.hashids
 
-import io.bluetape4k.collections.eclipse.primitives.LongArrayList
+import io.bluetape4k.collections.eclipse.primitives.longArrayList
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
@@ -144,7 +144,7 @@ class HashidsTest {
     fun `should encode and decode array of incrementing numbers`() {
         val expected = "pGHrfQT5CrhZInuecOUj"
         // val numberToHash = FastList(10) { it + 1L }.toLongArray()
-        val numberToHash = LongArrayList(10) { it + 1L }.toArray()
+        val numberToHash = longArrayList(10) { it + 1L }.toArray()
 
         val encoded = hashids.encode(*numberToHash)
         encoded shouldBeEqualTo expected

@@ -38,28 +38,30 @@ fun downloadRequestOf(
     bucket: String,
     key: String,
     downloadPath: Path,
+    initializer: DownloadRequest.UntypedBuilder.() -> Unit = {},
 ): DownloadRequest<GetObjectResponse> {
     return downloadRequest(AsyncResponseTransformer.toFile(downloadPath)) {
         getObjectRequest {
             it.bucket(bucket)
             it.key(key)
         }
+        initializer()
     }
 }
 
 
 inline fun uploadRequest(initializer: UploadRequest.Builder.() -> Unit): UploadRequest {
-    return UploadRequest.builder()
-        .apply(initializer)
-        .build()
+    return UploadRequest.builder().apply(initializer).build()
 }
 
 fun uploadRequestOf(
     putObjectRequest: PutObjectRequest,
     requestBody: AsyncRequestBody,
+    initializer: UploadRequest.Builder.() -> Unit = {},
 ): UploadRequest {
     return uploadRequest {
         putObjectRequest(putObjectRequest)
         requestBody(requestBody)
+        initializer()
     }
 }

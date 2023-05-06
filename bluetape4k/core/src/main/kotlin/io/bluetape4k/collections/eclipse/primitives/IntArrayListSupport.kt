@@ -20,7 +20,10 @@ fun Iterable<Int>.toIntArrayList(): IntArrayList =
         forEach { array.add(it) }
     }
 
-inline fun IntArrayList(size: Int, initializer: (Int) -> Int = { it }): IntArrayList {
+inline fun intArrayList(
+    size: Int,
+    @BuilderInference initializer: (Int) -> Int = { it },
+): IntArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = IntArrayList(size)

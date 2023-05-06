@@ -11,7 +11,7 @@ import io.grpc.ServerBuilder
  * @param initializer server builder initializer
  * @return [Server] instance
  */
-inline fun serverBuilder(port: Int, initializer: ServerBuilder<*>.() -> Unit): ServerBuilder<*> {
+inline fun grpcServerBuilder(port: Int, initializer: ServerBuilder<*>.() -> Unit): ServerBuilder<*> {
     return ServerBuilder.forPort(port).apply(initializer)
 }
 
@@ -22,6 +22,6 @@ inline fun serverBuilder(port: Int, initializer: ServerBuilder<*>.() -> Unit): S
  * @param initializer server builder initializer
  * @return [Server] instance
  */
-inline fun server(port: Int, initializer: ServerBuilder<*>.() -> Unit): Server {
-    return serverBuilder(port, initializer).build()
+inline fun grpcServer(port: Int, initializer: ServerBuilder<*>.() -> Unit): Server {
+    return grpcServerBuilder(port, initializer).build()
 }

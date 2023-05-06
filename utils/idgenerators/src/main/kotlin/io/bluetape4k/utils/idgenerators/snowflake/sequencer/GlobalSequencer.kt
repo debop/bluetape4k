@@ -1,6 +1,6 @@
 package io.bluetape4k.utils.idgenerators.snowflake.sequencer
 
-import io.bluetape4k.collections.eclipse.FastList
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_MACHINE_ID
 import io.bluetape4k.utils.idgenerators.snowflake.MAX_SEQUENCE
 import io.bluetape4k.utils.idgenerators.snowflake.SnowflakeId
@@ -51,7 +51,7 @@ class GlobalSequencer: Sequencer {
 
     override fun nextSequences(size: Int): List<SnowflakeId> {
         lock.withLock {
-            return FastList(size) {
+            return fastList(size) {
                 updateState()
                 SnowflakeId(lastTimestamp, machineId, sequence)
             }

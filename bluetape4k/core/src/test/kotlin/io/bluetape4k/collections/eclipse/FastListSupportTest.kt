@@ -9,7 +9,7 @@ class FastListSupportTest {
 
     companion object: KLogging()
 
-    private val expectedList = FastList(10) { it + 1 }
+    private val expectedList = fastList(10) { it + 1 }
 
     @Test
     fun `create emptyFastList`() {
@@ -20,19 +20,19 @@ class FastListSupportTest {
     @Test
     fun `size가 음수일 때는 예외발생`() {
         assertFailsWith<AssertionError> {
-            FastList(-1) { it }
+            fastList(-1) { it }
         }
     }
 
     @Test
     fun `size가 0인 경우 emptry list 반환`() {
-        val emptyList = FastList(0) { it }
+        val emptyList = fastList(0) { it }
         emptyList.size shouldBeEqualTo 0
     }
 
     @Test
     fun `size 와 initializer를 이용하여 FastList 생성하기`() {
-        val list = FastList(10) { it }
+        val list = fastList(10) { it }
         list shouldBeEqualTo List(10) { it }
     }
 

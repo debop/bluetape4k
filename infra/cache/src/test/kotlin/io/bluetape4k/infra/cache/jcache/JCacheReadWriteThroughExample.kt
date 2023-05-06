@@ -45,7 +45,7 @@ class JCacheReadWriteThroughExample {
             }
         }
 
-    private val configuration = JcacheConfiguration<String, Any> {
+    private val configuration = jcacheConfiguration<String, Any> {
         isReadThrough = true
         setCacheLoaderFactory { cacheLoader(remoteCache) }
 

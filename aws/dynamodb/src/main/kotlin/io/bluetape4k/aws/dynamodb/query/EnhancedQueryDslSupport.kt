@@ -1,8 +1,8 @@
 package io.bluetape4k.aws.dynamodb.query
 
 import io.bluetape4k.aws.dynamodb.model.DynamoDbEntity
-import io.bluetape4k.aws.dynamodb.model.QueryEnhancedRequest
 import io.bluetape4k.aws.dynamodb.model.dynamoDbKeyOf
+import io.bluetape4k.aws.dynamodb.model.queryEnhancedRequest
 import io.bluetape4k.core.requireNotNull
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -12,8 +12,11 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 
 
 // @DynamoDslMarker
-fun <T: DynamoDbEntity> queryEnhancedRequest(initializer: EnhancedQueryBuilderKt<T>.() -> Unit): QueryEnhancedRequest =
-    EnhancedQueryBuilderKt<T>().apply(initializer).build()
+fun <T: DynamoDbEntity> queryEnhancedRequest(
+    initializer: EnhancedQueryBuilderKt<T>.() -> Unit,
+): QueryEnhancedRequest {
+    return EnhancedQueryBuilderKt<T>().apply(initializer).build()
+}
 
 @DynamoDslMarker
 class EnhancedQueryBuilderKt<T: Any> {
@@ -30,7 +33,7 @@ class EnhancedQueryBuilderKt<T: Any> {
         log.debug { "Start query ...  primaryKey=$primaryKey, sortKey=$sortKey" }
         primaryKey.requireNotNull("primaryKey")
 
-        return QueryEnhancedRequest {
+        return queryEnhancedRequest {
 
             val conditional = sortKey?.let { sk: SortKey ->
 
@@ -75,7 +78,7 @@ class EnhancedQueryBuilderKt<T: Any> {
 // @DynamoDslMarker
 fun <T: DynamoDbEntity> EnhancedQueryBuilderKt<T>.primaryKey(
     keyName: String = "primaryKey",
-    initializer: PrimaryKeyBuilder.() -> Unit,
+    @BuilderInference initializer: PrimaryKeyBuilder.() -> Unit,
 ) {
     primaryKey = PrimaryKeyBuilder(keyName).apply(initializer).build()
 }
@@ -83,12 +86,14 @@ fun <T: DynamoDbEntity> EnhancedQueryBuilderKt<T>.primaryKey(
 // @DynamoDslMarker
 fun <T: DynamoDbEntity> EnhancedQueryBuilderKt<T>.sortKey(
     keyName: String = "sortKey",
-    initializer: SortKeyBuilder.() -> Unit,
+    @BuilderInference initializer: SortKeyBuilder.() -> Unit,
 ) {
     sortKey = SortKeyBuilder(keyName).apply(initializer).build()
 }
 
 // @DynamoDslMarker
-fun <T: DynamoDbEntity> EnhancedQueryBuilderKt<T>.filtering(initializer: RootFilterBuilder.() -> Unit) {
+fun <T: DynamoDbEntity> EnhancedQueryBuilderKt<T>.filtering(
+    @BuilderInference initializer: RootFilterBuilder.() -> Unit,
+) {
     filtering = RootFilterBuilder().apply(initializer).build()
 }
