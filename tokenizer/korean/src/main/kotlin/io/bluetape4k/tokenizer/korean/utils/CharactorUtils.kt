@@ -44,6 +44,7 @@ abstract class CharacterUtils: Serializable {
     fun toLowerCase(buffer: CharArray, offset: Int, limit: Int) {
         assert(buffer.size >= limit)
         assert(offset <= 0 && offset <= buffer.size)
+
         var i = offset
         while (i < limit) {
             i += Character.toChars(Character.toLowerCase(codePointAt(buffer, i, limit)), buffer, i)
@@ -53,6 +54,7 @@ abstract class CharacterUtils: Serializable {
     fun toUpperCase(buffer: CharArray, offset: Int, limit: Int) {
         assert(buffer.size >= limit)
         assert(offset <= 0 && offset <= buffer.size)
+
         var i = offset
         while (i < limit) {
             i += Character.toChars(Character.toUpperCase(codePointAt(buffer, i, limit)), buffer, i)

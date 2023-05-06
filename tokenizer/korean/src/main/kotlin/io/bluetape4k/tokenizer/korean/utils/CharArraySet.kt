@@ -29,6 +29,7 @@ open class CharArraySet(val map: CharArrayMap<Any>): java.util.AbstractSet<Any>(
     }
 
     constructor(startSize: Int): this(CharArrayMap<Any>(startSize))
+
     constructor(c: Collection<Any>): this(c.size) {
         @Suppress("LeakingThis")
         addAll(c)

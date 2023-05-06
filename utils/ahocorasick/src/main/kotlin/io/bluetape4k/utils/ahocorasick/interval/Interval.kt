@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.ahocorasick.interval
 
 import io.bluetape4k.core.AbstractValueObject
-import java.util.*
+import io.bluetape4k.support.hashOf
 
 open class Interval(
     override val start: Int,
@@ -9,16 +9,19 @@ open class Interval(
 ): AbstractValueObject(), Intervalable {
 
     companion object {
+        @JvmField
         val EMPTY = Interval(1, 0)
     }
 
     val isEmpty: Boolean get() = start > end
 
-    fun overlapsWith(other: Interval): Boolean =
-        start < other.end && end >= other.start
+    fun overlapsWith(other: Interval): Boolean {
+        return start < other.end && end >= other.start
+    }
 
-    fun overlapsWith(point: Int): Boolean =
-        point in start..end
+    fun overlapsWith(point: Int): Boolean {
+        return point in start..end
+    }
 
     override fun compareTo(other: Intervalable): Int {
         var comparison = start - other.start
@@ -36,7 +39,7 @@ open class Interval(
         return other != null && equalProperties(other)
     }
 
-    override fun hashCode(): Int = if (isEmpty) -1 else Objects.hash(start, end)
+    override fun hashCode(): Int = if (isEmpty) -1 else hashOf(start, end)
 
     override fun toString(): String = "$start:$end"
 }

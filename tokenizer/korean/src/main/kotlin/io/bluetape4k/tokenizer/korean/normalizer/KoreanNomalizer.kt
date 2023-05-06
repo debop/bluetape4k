@@ -39,8 +39,11 @@ object KoreanNormalizer: KLogging(), Serializable {
 
     data class Segment(val text: String, val matchData: MatchResult?)
 
-    fun normalize(input: CharSequence): CharSequence =
-        EXTENTED_KOREAN_REGEX.replace(input) { m -> normalizeKoreanChunk(m.groupValues.first()) }
+    fun normalize(input: CharSequence): CharSequence {
+        return EXTENTED_KOREAN_REGEX.replace(input) { m ->
+            normalizeKoreanChunk(m.groupValues.first())
+        }
+    }
 
     private fun normalizeKoreanChunk(input: CharSequence): CharSequence {
 
@@ -88,6 +91,7 @@ object KoreanNormalizer: KLogging(), Serializable {
                     }
                 }
             }
+
         return output
     }
 
@@ -164,14 +168,16 @@ object KoreanNormalizer: KLogging(), Serializable {
                 Hangul.CODA_MAP.containsKey(hc.onset)
 
         if (hc.coda in charArrayOf('ㅋ', 'ㅎ')) {
-            return StringBuilder()
-                .append(init)
-                .append(composeHangul(hc.onset, hc.vowel))
+            return buildString {
+                append(init)
+                append(composeHangul(hc.onset, hc.vowel))
+            }
         } else if (hasSecondToLastDecomposed()) {
             val shc = secondToLastDecomposed!!
-            return StringBuilder()
-                .append(init.subSequence(0, init.length - 1))
-                .append(composeHangul(shc.onset, shc.vowel, hc.onset))
+            return buildString {
+                append(init.subSequence(0, init.length - 1))
+                append(composeHangul(shc.onset, shc.vowel, hc.onset))
+            }
         }
         return s
     }

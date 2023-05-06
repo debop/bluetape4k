@@ -3,7 +3,6 @@ package io.bluetape4k.collections.stream
 import io.bluetape4k.collections.asDoubleArray
 import io.bluetape4k.collections.asIntArray
 import io.bluetape4k.collections.asLongArray
-import io.bluetape4k.collections.eclipse.fastListOf
 import org.eclipse.collections.impl.list.mutable.FastList
 import java.util.*
 import java.util.stream.DoubleStream
@@ -15,7 +14,7 @@ fun <T> Stream<T>.asSequence(): Sequence<T> = Sequence { iterator() }
 fun <T> Stream<T>.asIterable(): Iterable<T> = Iterable { iterator() }
 
 //fun <T> Stream<T>.toList(): List<T> = asIterable().toList()
-fun <T> Stream<T>.toFastList(): FastList<T> = fastListOf(asIterable())
+fun <T> Stream<T>.toFastList(): FastList<T> = FastList.newList(asIterable())
 fun <T> Stream<T>.toSet(): Set<T> = asIterable().toSet()
 
 

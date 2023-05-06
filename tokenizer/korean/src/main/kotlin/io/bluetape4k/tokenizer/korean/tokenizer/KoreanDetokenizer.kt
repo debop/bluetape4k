@@ -1,5 +1,6 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Eomi
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Josa
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Modifier
@@ -9,6 +10,7 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Punctuation
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Suffix
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.VerbPrefix
+import org.eclipse.collections.api.factory.Sets
 import java.io.Serializable
 
 
@@ -17,15 +19,18 @@ import java.io.Serializable
  */
 object KoreanDetokenizer: Serializable {
 
-    val SuffixPos = setOf(Josa, Eomi, PreEomi, Suffix, Punctuation)
-    val PrefixPos = setOf(Modifier, VerbPrefix)
+    val SuffixPos = Sets.immutable.of(Josa, Eomi, PreEomi, Suffix, Punctuation)
+    val PrefixPos = Sets.immutable.of(Modifier, VerbPrefix)
 
     fun detokenize(input: Collection<String>): String {
         // Space guide prevents tokenizing a word that was not tokenized in the input.
         val spaceGuide = getSpaceGuide(input)
 
         // Tokenize a merged text with the space guide.
-        val tokenized = KoreanTokenizer.tokenize(input.joinToString(""), TokenizerProfile(spaceGuide = spaceGuide))
+        val tokenized = KoreanTokenizer.tokenize(
+            input.joinToString(""),
+            TokenizerProfile(spaceGuide = spaceGuide)
+        )
 
         // Attach suffixes and prefixes.
         // Attach Noun + Verb
@@ -36,8 +41,7 @@ object KoreanDetokenizer: Serializable {
     }
 
     private fun collapseTokens(tokenized: List<KoreanToken>): List<String> {
-
-        val output = arrayListOf<String>()
+        val output = fastListOf<String>()
         var isPrefix = false
         var prevToken: KoreanToken? = null
 
@@ -66,7 +70,6 @@ object KoreanDetokenizer: Serializable {
     }
 
     private fun getSpaceGuide(input: Collection<String>): IntArray {
-
         val spaceGuid = IntArray(input.size)
         var len = 0
         input.forEachIndexed { index, word ->

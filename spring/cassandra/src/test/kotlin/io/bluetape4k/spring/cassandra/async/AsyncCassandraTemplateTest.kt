@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder
 import com.datastax.oss.driver.api.core.uuid.Uuids
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder
+import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.data.cassandra.querybuilder.eq
 import io.bluetape4k.data.cassandra.querybuilder.literal
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
@@ -311,7 +312,7 @@ class AsyncCassandraTemplateTest(
         val query = Query.empty()
         var slice = operations.slice<User>(query.pageRequest(CassandraPageRequest.first(sliceSize))).await()
 
-        val loadIds = mutableSetOf<String>()
+        val loadIds = unifiedSetOf<String>() // mutableSetOf<String>()
         var iterations = 0
 
         do {

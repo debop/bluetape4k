@@ -7,7 +7,7 @@ import java.io.Serializable
  */
 object KoreanSentenceSplitter: Serializable {
 
-    private val re =
+    private val re: Regex =
         """
         |(?x)[^.!?…\s]   # First char is non-punct, non-ws
         |[^.!?…]*         # Greedily consume up to punctuation.
@@ -23,8 +23,12 @@ object KoreanSentenceSplitter: Serializable {
             .trimMargin()
             .toRegex()
 
-    fun split(text: CharSequence): Sequence<Sentence> =
-        re.findAll(text)
-            .map { Sentence(it.groupValues[0], it.range.start, it.range.endInclusive + 1) }
+    fun split(text: CharSequence): Sequence<Sentence> {
+        return re
+            .findAll(text)
+            .map { mr ->
+                Sentence(mr.groupValues[0], mr.range.first, mr.range.last + 1)
+            }
+    }
 
 }

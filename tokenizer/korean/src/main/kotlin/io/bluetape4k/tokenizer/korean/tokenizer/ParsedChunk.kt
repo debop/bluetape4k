@@ -1,5 +1,6 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
+import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.collections.sliding
 import io.bluetape4k.tokenizer.korean.utils.Hangul
 import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider
@@ -28,8 +29,8 @@ data class ParsedChunk(
 ): Serializable {
 
     companion object {
-        val suffixes = hashSetOf<KoreanPos>(Suffix, Eomi, Josa, PreEomi)
-        val preferredBeforeHaVerb = hashSetOf<KoreanPos>(Noun, ProperNoun, VerbPrefix)
+        val suffixes = unifiedSetOf(Suffix, Eomi, Josa, PreEomi)
+        val preferredBeforeHaVerb = unifiedSetOf(Noun, ProperNoun, VerbPrefix)
     }
 
     val score: Float by lazy {

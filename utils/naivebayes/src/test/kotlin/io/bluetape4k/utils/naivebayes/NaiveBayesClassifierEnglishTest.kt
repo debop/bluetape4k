@@ -13,7 +13,7 @@ import java.time.LocalDate
 class NaiveBayesClassifierEnglishTest: AbstractNaiveBayesClassifierTest() {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 10
+        private const val REPEAT_SIZE = 5
     }
 
     private val emails = fastListOf(

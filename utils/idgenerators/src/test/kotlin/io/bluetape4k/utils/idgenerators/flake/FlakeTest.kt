@@ -6,6 +6,7 @@ import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import io.bluetape4k.utils.Runtimex
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -88,7 +89,9 @@ class FlakeTest {
         val flake = Flake()
         val idMap = ConcurrentHashMap<String, Int>()
 
-        MultithreadingTester().numThreads(100).roundsPerThread(1000)
+        MultithreadingTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(1000)
             .add {
                 val id = Flake.asBase62String(flake.nextId())
                 idMap.putIfAbsent(id, 1).shouldBeNull()

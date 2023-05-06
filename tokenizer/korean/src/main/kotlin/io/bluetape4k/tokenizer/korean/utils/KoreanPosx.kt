@@ -1,5 +1,7 @@
 package io.bluetape4k.tokenizer.korean.utils
 
+import io.bluetape4k.collections.eclipse.emptyFastList
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adjective
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adverb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Alpha
@@ -76,7 +78,7 @@ object KoreanPosx: Serializable {
         }
 
         if (s.length < 2) {
-            return emptyList()
+            return emptyFastList()
         }
 
         val pos = shortCut[s[0]]
@@ -85,27 +87,24 @@ object KoreanPosx: Serializable {
         val end = if (isFinal(rest)) endingPos else null
 
         return when (rule) {
-            '+'  -> listOf(KoreanPosTrie(pos, listOf(SelfNode) + buildTrie(rest, endingPos), end))
-            '*'  -> listOf(KoreanPosTrie(pos, listOf(SelfNode) + buildTrie(rest, endingPos), end)) + buildTrie(
+            '+'  -> fastListOf(KoreanPosTrie(pos, fastListOf(SelfNode) + buildTrie(rest, endingPos), end))
+            '*'  -> fastListOf(KoreanPosTrie(pos, fastListOf(SelfNode) + buildTrie(rest, endingPos), end)) + buildTrie(
                 rest,
                 endingPos
             )
 
-            '1'  -> listOf(KoreanPosTrie(pos, buildTrie(rest, endingPos), end))
-            '0'  -> listOf(KoreanPosTrie(pos, buildTrie(rest, endingPos), end)) + buildTrie(rest, endingPos)
+            '1'  -> fastListOf(KoreanPosTrie(pos, buildTrie(rest, endingPos), end))
+            '0'  -> fastListOf(KoreanPosTrie(pos, buildTrie(rest, endingPos), end)) + buildTrie(rest, endingPos)
             else -> error("Not supported rule. only support [+, *, 1, 0]")
         }
     }
 
     internal fun getTrie(sequences: Map<String, KoreanPos>): List<KoreanPosTrie> {
-        return sequences.entries.fold(listOf<KoreanPosTrie>()) { results, (key, value) ->
-            buildTrie(key, value) + results
+        val results = fastListOf<KoreanPosTrie>()
+        sequences.forEach { (key, value) ->
+            results.addAll(0, buildTrie(key, value))
         }
-        //    val results = arrayListOf<KoreanPosTrie>()
-        //    sequences.forEach { key, value ->
-        //      results.addAll(0, buildTrie(key, value))
-        //    }
-        //    return results
+        return results
     }
 
     val Predicates = hashSetOf(Verb, Adjective)

@@ -1,5 +1,7 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.support.emptyIntArray
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Josa
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
@@ -20,8 +22,8 @@ data class TokenizerProfile(
     val initialPostPosition: Float = 0.2f,
     val haVerb: Float = 0.3f,
     val preferredPattern: Float = 0.6f,
-    val preferredPatterns: List<List<KoreanPos>> = listOf(listOf(Noun, Josa), listOf(ProperNoun, Josa)),
-    val spaceGuide: IntArray = intArrayOf(),
+    val preferredPatterns: List<List<KoreanPos>> = fastListOf(fastListOf(Noun, Josa), fastListOf(ProperNoun, Josa)),
+    val spaceGuide: IntArray = emptyIntArray,
     val spaceGuidePenalty: Float = 3.0f,
     val josaUnmatchedPenalty: Float = 3.0f,
 ): Serializable {

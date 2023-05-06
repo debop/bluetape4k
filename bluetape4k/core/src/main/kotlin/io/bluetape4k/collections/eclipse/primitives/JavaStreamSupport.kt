@@ -19,7 +19,6 @@ import java.util.stream.Stream
 fun <T> Stream<T>.toFastList() = fastListOf(asIterable())
 fun <T> Stream<T>.toUnifiedSet() = unifiedSetOf(asIterable())
 
-
 fun IntStream.toIntArrayList(): IntArrayList = intArrayListOf(asIterable())
 fun IntIterable.toIntStream(): IntStream = IntStream.builder()
     .also { builder ->

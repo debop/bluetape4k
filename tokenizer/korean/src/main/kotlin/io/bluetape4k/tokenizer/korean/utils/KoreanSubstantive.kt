@@ -1,5 +1,8 @@
 package io.bluetape4k.tokenizer.korean.utils
 
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.toUnifiedSet
+import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.tokenizer.korean.init
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanToken
@@ -15,8 +18,8 @@ import java.io.Serializable
  */
 object KoreanSubstantive: KLogging(), Serializable {
 
-    private val JOSA_HEAD_FOR_CODA = hashSetOf('은', '이', '을', '과', '아')
-    private val JOSA_HEAD_FOR_NO_CODA = hashSetOf('는', '가', '를', '와', '야', '여', '라')
+    private val JOSA_HEAD_FOR_CODA = unifiedSetOf('은', '이', '을', '과', '아')
+    private val JOSA_HEAD_FOR_NO_CODA = unifiedSetOf('는', '가', '를', '와', '야', '여', '라')
 
     fun isJosaAttachable(prevChar: Char, headChar: Char): Boolean =
         (hasCoda(prevChar) && headChar !in JOSA_HEAD_FOR_NO_CODA) ||
@@ -30,18 +33,18 @@ object KoreanSubstantive: KLogging(), Serializable {
         }
 
         return when (chunk.length) {
-            3 -> nameDictionaryContains("family_name", chunk[0].toString()) &&
+            3    -> nameDictionaryContains("family_name", chunk[0].toString()) &&
                 nameDictionaryContains("given_name", chunk.subSequence(1, 3).toString())
 
-            4 -> nameDictionaryContains("family_name", chunk.subSequence(0, 2).toString()) &&
+            4    -> nameDictionaryContains("family_name", chunk.subSequence(0, 2).toString()) &&
                 nameDictionaryContains("given_name", chunk.subSequence(2, 4).toString())
 
             else -> false
         }
     }
 
-    private val NUMBER_CHARS = "일이삼사오육칠팔구천백십해경조억만".map { it.code }.toSet()
-    private val NUMBER_LAST_CHARS = "일이삼사오육칠팔구천백십해경조억만원배분초".map { it.code }.toSet()
+    private val NUMBER_CHARS = "일이삼사오육칠팔구천백십해경조억만".map { it.code }.toUnifiedSet()
+    private val NUMBER_LAST_CHARS = "일이삼사오육칠팔구천백십해경조억만원배분초".map { it.code }.toUnifiedSet()
 
     fun isKoreanNumber(chunk: CharSequence): Boolean =
         (0 until chunk.length).fold(true) { output, i ->
@@ -83,7 +86,7 @@ object KoreanSubstantive: KLogging(), Serializable {
             }
         }.joinToString("")
 
-        return listOf(recovered, recovered.init()).any { isName(it) }
+        return fastListOf(recovered, recovered.init()).any { isName(it) }
     }
 
     /**
@@ -110,7 +113,7 @@ object KoreanSubstantive: KLogging(), Serializable {
         //
         //    return nodes.reversed()
 
-        val nodes = arrayListOf<KoreanToken>()
+        val nodes = fastListOf<KoreanToken>()
         var collapsing = false
 
         posNodes.forEach {
@@ -127,6 +130,6 @@ object KoreanSubstantive: KLogging(), Serializable {
                 collapsing = false
             }
         }
-        return nodes.reversed()
+        return nodes.reverseThis()
     }
 }

@@ -1,5 +1,8 @@
 package io.bluetape4k.tokenizer.korean.utils
 
+import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.collections.eclipse.toUnifiedMap
+import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.tokenizer.korean.utils.KoreanConjugation.conjugatePredicatesToCharArraySet
@@ -37,7 +40,7 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
                 reader.lineSequence()
                     .filter { it.isNotBlank() }
                     .map(String::trim)
-                    .toList()
+                    .toFastList()
             }
     }
 
@@ -45,7 +48,6 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
         log.debug { "Read a file. filename=[$filename]" }
 
         val filepath = "koreantext/$filename"
-
         var stream = Thread.currentThread().contextClassLoader.getResourceAsStream(filepath)
         check(stream != null) { "Can't open file. filename=[$filename]" }
 
@@ -63,7 +65,7 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
                 val data = it.split("\t", limit = 2)
                 data[0] to data[1].slice(freqRange).toFloat()
             }
-            .toMap()
+            .toUnifiedMap()
     }
 
     private fun readWordMap(filename: String): Map<String, String> {
@@ -73,7 +75,7 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
                 val data = it.split(" ", limit = 2)
                 data[0] to data[1]
             }
-            .toMap()
+            .toUnifiedMap()
     }
 
     fun readWordsAsSeq(filename: String): Sequence<String> {
@@ -96,7 +98,9 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
 
     fun newCharArraySet(): CharArraySet = CharArraySet(10_000)
 
-    val koreanEntityFreq: Map<CharSequence, Float> by lazy { readWordFreqs("freq/entity-freq.txt.gz") }
+    val koreanEntityFreq: Map<CharSequence, Float> by lazy {
+        readWordFreqs("freq/entity-freq.txt.gz")
+    }
 
     fun addWordsToDictionary(pos: KoreanPos, words: Collection<String>) {
         koreanDictionary[pos]?.addAll(words)
@@ -109,7 +113,7 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
     }
 
     val koreanDictionary: MutableMap<KoreanPos, CharArraySet> by lazy {
-        hashMapOf<KoreanPos, CharArraySet>().apply {
+        unifiedMapOf<KoreanPos, CharArraySet>().apply {
             put(
                 Noun,
                 readWords(
@@ -166,7 +170,7 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
      * 금칙어를 심각도에 따라 분류한 Dictionary 입니다.
      */
     val blockWords by lazy {
-        mapOf(
+        unifiedMapOf(
             Severity.LOW to readWords("block/block_low.txt", "block/block_middle.txt", "block/block_high.txt"),
             Severity.MIDDLE to readWords("block/block_middle.txt", "block/block_high.txt"),
             Severity.HIGH to readWords("block/block_high.txt"),
@@ -195,7 +199,7 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
     }
 
     val nameDictionary: Map<String, CharArraySet> by lazy {
-        hashMapOf(
+        unifiedMapOf(
             "family_name" to readWords("substantives/family_names.txt"),
             "given_name" to readWords("substantives/given_names.txt"),
             "full_name" to readWords("noun/kpop.txt", "noun/foreign.txt", "noun/names.txt")
@@ -204,10 +208,10 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
 
     val typoDictionaryByLength: Map<Int, Map<String, String>> by lazy {
         val grouped = readWordMap("typos/typos.txt").entries.groupBy { it.key.length }
-        val result = hashMapOf<Int, Map<String, String>>()
+        val result = unifiedMapOf<Int, Map<String, String>>()
 
         grouped.forEach { (index, list) ->
-            result[index] = list.map { (k, v) -> k to v }.toMap()
+            result[index] = list.map { (k, v) -> k to v }.toUnifiedMap()
         }
 
         result
@@ -219,10 +223,10 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
                 .flatMap { word ->
                     KoreanConjugation.conjugatePredicated(hashSetOf(word), isAdjective).map { Pair(it, word + "다") }
                 }
-                .toMap()
+                .toUnifiedMap()
         }
 
-        hashMapOf(
+        unifiedMapOf(
             Verb to getConjugationMap(readWordsAsSet("verb/verb.txt"), false),
             Adjective to getConjugationMap(readWordsAsSet("adjective/adjective.txt"), true)
         )

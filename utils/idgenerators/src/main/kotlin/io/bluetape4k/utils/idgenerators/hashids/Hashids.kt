@@ -104,7 +104,7 @@ class Hashids(
 
     private fun numbersToArrayList(numbers: LongArray): List<Pair<Boolean, LongArray>> {
         val result = fastListOf<Pair<Boolean, LongArray>>()
-        val current = mutableListOf<Long>()
+        val current = fastListOf<Long>()
 
         numbers.forEach {
             if (it.isValidNumber()) {

@@ -9,7 +9,7 @@ class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
 
     var left: IntervalNode? = null
     var right: IntervalNode? = null
-    val intervals: MutableList<Intervalable> = fastListOf()
+    val intervals = fastListOf<Intervalable>()
     val median = determineMedian(inputs)
 
     init {

@@ -1,5 +1,7 @@
 package io.bluetape4k.tokenizer.korean.utils
 
+import io.bluetape4k.collections.eclipse.toUnifiedMap
+import io.bluetape4k.collections.eclipse.unifiedMapOf
 import java.io.Serializable
 
 object Hangul: Serializable {
@@ -32,11 +34,11 @@ object Hangul: Serializable {
         'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
     )
 
-    val ONSET_MAP = ONSET_LIST.mapIndexed { index, c -> c to index }.toMap()
-    val VOWEL_MAP = VOWEL_LIST.mapIndexed { index, c -> c to index }.toMap()
-    val CODA_MAP = CODA_LIST.mapIndexed { index, c -> c to index }.toMap()
+    val ONSET_MAP = ONSET_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
+    val VOWEL_MAP = VOWEL_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
+    val CODA_MAP = CODA_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
 
-    val DOUBLE_CODAS = hashMapOf(
+    val DOUBLE_CODAS = unifiedMapOf(
         'ㄳ' to DoubleCoda('ㄱ', 'ㅅ'),
         'ㄵ' to DoubleCoda('ㄴ', 'ㅈ'),
         'ㄶ' to DoubleCoda('ㄴ', 'ㅎ'),

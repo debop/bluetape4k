@@ -1,5 +1,9 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
+import io.bluetape4k.collections.eclipse.emptyFastList
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.tokenizer.korean.stemmer.KoreanStemmer
@@ -70,10 +74,9 @@ object NounTokenizer: KLogging(), Serializable {
     //      "E+" to Exclamation,
     //      "j1" to Josa)
 
-    private val SequenceDefinition = mapOf(
+    private val SequenceDefinition = unifiedMapOf(
         // Substantive
         "D0m*N1s0" to Noun,
-
         "C1" to Conjunction
     )
 
@@ -89,8 +92,10 @@ object NounTokenizer: KLogging(), Serializable {
         text: CharSequence,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<KoreanToken> {
+        val tokenized = tokenizeTopN(text, 1, profile)
+            .flatMap { it.firstOrNull() ?: emptyFastList() }
+            .toFastList()
 
-        val tokenized: List<KoreanToken> = tokenizeTopN(text, 1, profile).flatMap { it.firstOrNull() ?: emptyList() }
         return KoreanStemmer.stem(tokenized)
     }
 
@@ -107,19 +112,19 @@ object NounTokenizer: KLogging(), Serializable {
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<List<List<KoreanToken>>> {
         try {
-            return KoreanChunker.chunk(text).map {
-                when (it.pos) {
-                    Korean -> {
-                        // Get the best parse of each chunk
-                        val parsed = parseKoreanChunk(it, profile, topN)
+            return KoreanChunker.chunk(text)
+                .map {
+                    when (it.pos) {
+                        Korean -> {
+                            // Get the best parse of each chunk
+                            val parsed = parseKoreanChunk(it, profile, topN)
 
-                        // Collapse sequence of one-char nouns into one unknown noun: (가Noun 회Noun -> 가회Noun*)
-                        parsed.map(KoreanSubstantive::collapseNouns).toList()
+                            // Collapse sequence of one-char nouns into one unknown noun: (가Noun 회Noun -> 가회Noun*)
+                            parsed.map(KoreanSubstantive::collapseNouns).toFastList()
+                        }
+                        else   -> listOf(listOf(it))
                     }
-
-                    else -> listOf(listOf(it))
                 }
-            }
         } catch (e: Exception) {
             log.error(e) { "Error tokenizing a chunk: $text" }
             throw e
@@ -138,21 +143,22 @@ object NounTokenizer: KLogging(), Serializable {
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
         topN: Int = 1,
     ): List<List<KoreanToken>> {
-        return findTopCandidates(chunk, profile).take(topN)
+        return findTopCandidates(chunk, profile).take(topN).toFastList()
     }
 
     private fun findTopCandidates(chunk: KoreanToken, profile: TokenizerProfile): List<List<KoreanToken>> {
         val directMatch: List<List<KoreanToken>> = findDirectMatch(chunk)
 
         // Buffer for solution
-        val solutions = hashMapOf<Int, List<CandidateParse>>().apply {
-            val candidateParse = CandidateParse(
-                parse = ParsedChunk(listOf<KoreanToken>(), 1, profile),
-                curTrie = koreanPosTrie,
-                ending = null
-            )
-            put(0, listOf(candidateParse))
-        }
+        val solutions = unifiedMapOf<Int, List<CandidateParse>>()
+            .apply {
+                val candidateParse = CandidateParse(
+                    parse = ParsedChunk(fastListOf<KoreanToken>(), 1, profile),
+                    curTrie = koreanPosTrie,
+                    ending = null
+                )
+                put(0, fastListOf(candidateParse))
+            }
 
         // Find N best parses per state
         for (end in 1..chunk.length) {
@@ -170,8 +176,8 @@ object NounTokenizer: KLogging(), Serializable {
                     possiblePoses
                         .filter {
                             it.curTrie.curPos == Noun ||
-                                (KoreanDictionaryProvider.koreanDictionary[it.curTrie.curPos]?.contains(word.toCharArray())
-                                    ?: false)
+                                (KoreanDictionaryProvider.koreanDictionary[it.curTrie.curPos]
+                                    ?.contains(word.toCharArray()) ?: false)
                         }
                         .map { t: PossibleTrie ->
 
@@ -187,32 +193,20 @@ object NounTokenizer: KLogging(), Serializable {
                                     val unknown = !isWordName && !isKoreanNumber && !isWordKoreanNameVariation
                                     val pos = Noun
 
-                                    ParsedChunk(
-                                        listOf(
-                                            KoreanToken(
-                                                word,
-                                                pos,
-                                                chunk.offset + start,
-                                                word.length,
-                                                unknown = unknown
-                                            )
-                                        ),
-                                        t.words,
-                                        profile
-                                    )
+                                    val token =
+                                        KoreanToken(word, pos, chunk.offset + start, word.length, unknown = unknown)
+                                    ParsedChunk(fastListOf(token), t.words, profile)
 
                                 } else {
                                     val pos = t.curTrie.curPos ?: Unknown
-                                    ParsedChunk(
-                                        listOf(KoreanToken(word, pos, chunk.offset + start, word.length)),
-                                        t.words,
-                                        profile
-                                    )
+                                    val token = KoreanToken(word, pos, chunk.offset + start, word.length)
+                                    ParsedChunk(listOf(token), t.words, profile)
                                 }
 
                             val nextTrie: List<KoreanPosTrie> =
-                                t.curTrie.nextTrie?.map { if (it == KoreanPosx.SelfNode) t.curTrie else it }
-                                    ?: emptyList()
+                                t.curTrie.nextTrie
+                                    ?.map { if (it == KoreanPosx.SelfNode) t.curTrie else it }
+                                    ?: fastListOf()
 
                             CandidateParse(candateParse.parse + candidateToAdd, nextTrie, t.curTrie.ending)
                         }
@@ -220,19 +214,20 @@ object NounTokenizer: KLogging(), Serializable {
 
                 val currentSolutions = solutions[end] ?: emptyList()
 
-                solutions.put(
-                    end,
-                    (currentSolutions + candidates)
-                        .sortedWith(compareBy({ it.parse.score }, { it.parse.posTieBreaker }))
-                        .take(TOP_N_PER_STATE)
-                )
+                solutions[end] = (currentSolutions + candidates)
+                    .sortedWith(compareBy({ it.parse.score }, { it.parse.posTieBreaker }))
+                    .take(TOP_N_PER_STATE)
+                    .toFastList()
             }
         }
 
         val topCandidates = if (solutions[chunk.length]!!.isEmpty()) {
-            listOf(listOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
+            fastListOf(fastListOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
         } else {
-            solutions[chunk.length]!!.sortedBy { it.parse.score }.map { it.parse.posNodes }
+            solutions[chunk.length]!!
+                .sortedBy { it.parse.score }
+                .map { it.parse.posNodes }
+                .toFastList()
         }
 
         return (directMatch + topCandidates).distinct()
@@ -241,10 +236,9 @@ object NounTokenizer: KLogging(), Serializable {
     private fun findDirectMatch(chunk: KoreanToken): List<List<KoreanToken>> {
         for ((pos, dict) in KoreanDictionaryProvider.koreanDictionary.entries) {
             if (dict.contains(chunk.text)) {
-                return listOf(listOf(chunk.copy(pos = pos)))
+                return fastListOf(fastListOf(chunk.copy(pos = pos)))
             }
         }
-        return emptyList()
+        return emptyFastList()
     }
-
 }

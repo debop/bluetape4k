@@ -1,6 +1,7 @@
 package io.bluetape4k.utils.ahocorasick.interval
 
 import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.core.ValueObject
 import io.bluetape4k.logging.KLogging
@@ -23,13 +24,13 @@ class IntervalTree private constructor(private val rootNode: IntervalNode): Valu
     }
 
     fun findOverlaps(interval: Intervalable): List<Intervalable> {
-        return rootNode.findOverlaps(interval).sortedWith(PositionComparator)
+        return rootNode.findOverlaps(interval).toFastList().sortThis(PositionComparator)
     }
 
     fun <T: Intervalable> removeOverlaps(intervals: Collection<T>): MutableList<T> {
         // size가 큰 것부터
         val results = fastListOf(intervals)
-        results.sortWith(ReverseSizeComparator)
+        results.sortThis(ReverseSizeComparator)
 
         val removed = unifiedSetOf<Intervalable>()
 
@@ -48,7 +49,7 @@ class IntervalTree private constructor(private val rootNode: IntervalNode): Valu
         results.removeAll(removed)
 
         // sort the intervals, now on left-most position only
-        results.sortWith(PositionComparator)
+        results.sortThis(PositionComparator)
         return results
     }
 }

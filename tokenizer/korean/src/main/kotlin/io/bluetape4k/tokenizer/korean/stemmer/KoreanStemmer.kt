@@ -1,5 +1,7 @@
 package io.bluetape4k.tokenizer.korean.stemmer
 
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanToken
 import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider
@@ -16,13 +18,13 @@ import java.io.Serializable
 object KoreanStemmer: KLogging(), Serializable {
 
     @JvmField
-    val Endings = hashSetOf(Eomi, PreEomi)
+    val Endings = unifiedSetOf(Eomi, PreEomi)
 
     @JvmField
-    val Predicates = hashSetOf(Verb, Adjective)
+    val Predicates = unifiedSetOf(Verb, Adjective)
 
     @JvmField
-    val EndingForNouns = hashSetOf("하다", "되다", "없다")
+    val EndingForNouns = unifiedSetOf("하다", "되다", "없다")
 
 
     /**
@@ -32,10 +34,11 @@ object KoreanStemmer: KLogging(), Serializable {
      * @return A sequence of collapsed Korean tokens
      */
     fun stem(tokens: List<KoreanToken>): List<KoreanToken> {
-        if (!tokens.any { Predicates.contains(it.pos) })
+        if (!tokens.any { Predicates.contains(it.pos) }) {
             return tokens
+        }
 
-        val stemmed = arrayListOf<KoreanToken>()
+        val stemmed = fastListOf<KoreanToken>()
 
         tokens.forEach { token ->
             if (stemmed.isNotEmpty() && Endings.contains(token.pos)) {
@@ -56,6 +59,6 @@ object KoreanStemmer: KLogging(), Serializable {
                 stemmed.add(0, token)
             }
         }
-        return stemmed.reversed()
+        return stemmed.reverseThis()
     }
 }

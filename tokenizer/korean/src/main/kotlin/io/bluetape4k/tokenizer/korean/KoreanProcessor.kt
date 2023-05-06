@@ -49,7 +49,7 @@ object KoreanProcessor {
      * @return Normalized Korean text
      */
     fun normalizeAsync(text: CharSequence): Deferred<CharSequence> {
-        return scope.async(Dispatchers.Default) {
+        return scope.async {
             KoreanNormalizer.normalize(text)
         }
     }
@@ -92,7 +92,7 @@ object KoreanProcessor {
         text: CharSequence,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): Deferred<List<KoreanToken>> {
-        return scope.async(Dispatchers.Default) {
+        return scope.async {
             KoreanTokenizer.tokenize(text, profile)
         }
     }
@@ -119,7 +119,7 @@ object KoreanProcessor {
         n: Int = 1,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): Deferred<List<List<List<KoreanToken>>>> {
-        return scope.async(Dispatchers.Default) {
+        return scope.async {
             KoreanTokenizer.tokenizeTopN(text, n, profile)
         }
     }
@@ -249,7 +249,7 @@ object KoreanProcessor {
         filterSpam: Boolean = false,
         enableHashtags: Boolean = true,
     ): Deferred<List<KoreanPhrase>> {
-        return scope.async(Dispatchers.Default) {
+        return scope.async {
             KoreanPhraseExtractor.extractPhrases(tokens, filterSpam, enableHashtags)
         }
     }
@@ -271,7 +271,7 @@ object KoreanProcessor {
      * @return A sequence of extracted phrases
      */
     fun extractPhrasesAsyncProduct(tokens: List<KoreanToken>): Deferred<List<KoreanPhrase>> {
-        return scope.async(Dispatchers.Default) {
+        return scope.async {
             NounPhraseExtractor.extractPhrases(tokens)
         }
     }
@@ -303,7 +303,7 @@ object KoreanProcessor {
      * @return Detokenized string.
      */
     fun detokenizeAsync(tokens: Collection<String>): Deferred<String> {
-        return scope.async(Dispatchers.Default) {
+        return scope.async {
             KoreanDetokenizer.detokenize(tokens)
         }
     }

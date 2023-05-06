@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.naivebayes
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.toUnifiedMap
 import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.collections.eclipse.unifiedMapOf
@@ -34,11 +35,11 @@ class NaiveBayesClassifier<F: Any, C: Any>(
     private var probabilities =
         unifiedMapOf<FeatureProbability.Key<F, C>, FeatureProbability<F, C>>()
 
-    private val _population = mutableListOf<BayesInput<F, C>>()
+    private val _population = fastListOf<BayesInput<F, C>>()
     val population: List<BayesInput<F, C>> get() = _population.toList()
 
     private val modelStaler = atomic(false)
-    private var modelStale: Boolean by modelStaler
+    private var modelStaled: Boolean by modelStaler
 
     /**
      * Adds an observation of features to a category
@@ -48,7 +49,7 @@ class NaiveBayesClassifier<F: Any, C: Any>(
             _population.removeAt(0)
         }
         _population += BayesInput(category, features.toUnifiedSet())
-        modelStale = true
+        modelStaler.value = true
     }
 
     /**
@@ -59,11 +60,11 @@ class NaiveBayesClassifier<F: Any, C: Any>(
     }
 
     private fun rebuildModel() {
-        probabilities = _population.asSequence()
-            .flatMap { it.features.asSequence() }
+        probabilities = _population
+            .flatMap { it.features }
             .distinct()
             .flatMap { f ->
-                _population.asSequence()
+                _population
                     .map { it.category }
                     .distinct()
                     .map { c -> FeatureProbability.Key(f, c) }
@@ -71,7 +72,7 @@ class NaiveBayesClassifier<F: Any, C: Any>(
             .map { it to FeatureProbability(it.feature, it.category, this) }
             .toUnifiedMap()
 
-        modelStale = false
+        modelStaler.value = false
     }
 
     /**
@@ -96,16 +97,18 @@ class NaiveBayesClassifier<F: Any, C: Any>(
      *  but also returns the probability of that category being correct.
      */
     fun predictWithProbability(features: Iterable<F>): CategoryProbability<C>? {
-        if (modelStale) {
+        if (modelStaled) {
             rebuildModel()
         }
 
         val f = features.toSet()
 
         return categories.asSequence()
-            .filter { c -> population.any { it.category == c } && probabilities.values.any { it.feature in f } }
+            .filter { c ->
+                population.any { it.category == c } && probabilities.values.any { it.feature in f }
+            }
             .map { c ->
-                val probIfCategory = probabilities.values.asSequence()
+                val probIfCategory = probabilities.values
                     .filter { it.category == c }
                     .map {
                         if (it.feature in f) {
@@ -117,7 +120,7 @@ class NaiveBayesClassifier<F: Any, C: Any>(
                     .sum()
                     .run { exp(this) }
 
-                val probIfNotCategory = probabilities.values.asSequence()
+                val probIfNotCategory = probabilities.values
                     .filter { it.category == c }
                     .map {
                         if (it.feature in f) {
@@ -129,7 +132,10 @@ class NaiveBayesClassifier<F: Any, C: Any>(
                     .sum()
                     .run { exp(this) }
 
-                CategoryProbability(category = c, probability = probIfCategory / (probIfCategory + probIfNotCategory))
+                CategoryProbability(
+                    category = c,
+                    probability = probIfCategory / (probIfCategory + probIfNotCategory)
+                )
             }
             .filter { it.probability >= 0.1 }
             .sortedByDescending { it.probability }

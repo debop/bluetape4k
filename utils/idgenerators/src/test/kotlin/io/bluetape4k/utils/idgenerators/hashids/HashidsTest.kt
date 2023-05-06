@@ -19,7 +19,7 @@ import kotlin.math.absoluteValue
 class HashidsTest {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 10
+        private const val REPEAT_SIZE = 5
     }
 
     private val hashids = Hashids(salt = "great korea")

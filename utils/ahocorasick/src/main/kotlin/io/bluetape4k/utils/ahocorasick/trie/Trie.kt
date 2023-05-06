@@ -38,7 +38,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
     }
 
     fun tokenize(text: String): MutableList<Token> {
-        val tokens = LinkedList<Token>()
+        val tokens = fastListOf<Token>()
         if (text.isEmpty()) {
             return tokens
         }
@@ -217,7 +217,9 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
 
             currentState.getTransitions().forEach { transition ->
                 val targetState = currentState.nextState(transition)
-                check(targetState != null) { "targetState must not be null. transition=$transition, currentState=$currentState" }
+                check(targetState != null) {
+                    "targetState must not be null. transition=$transition, currentState=$currentState"
+                }
                 queue.add(targetState)
 
                 var traceFailureState = currentState.failure!!

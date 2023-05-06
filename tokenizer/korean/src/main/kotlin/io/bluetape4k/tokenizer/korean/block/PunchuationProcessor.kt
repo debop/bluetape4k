@@ -1,5 +1,6 @@
 package io.bluetape4k.tokenizer.korean.block
 
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.sliding
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
@@ -32,9 +33,9 @@ class PunctuationProcessor {
     }
 
     fun removePunctuation(text: String): String {
-        val tokens = findPunctuation(text)
+        val tokens = findPunctuation(text).toFastList()
         var result = text
-        tokens.reversed()
+        tokens.reverseThis()
             .forEach {
                 val token = it.first
                 log.trace { "remove token. $it" }
@@ -53,8 +54,8 @@ class PunctuationProcessor {
                 log.trace { "sliding tokens=$tokens" }
                 (index + 1) to canRemovePunctuation(tokens)
             }
-            .toList()
             .map { chunks[it.first] to it.second }
+            .toFastList()
     }
 
 
