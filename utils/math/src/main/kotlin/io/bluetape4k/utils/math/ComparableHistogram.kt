@@ -1,8 +1,11 @@
 package io.bluetape4k.utils.math
 
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.ranges.Range
 import io.bluetape4k.ranges.impl.DefaultClosedClosedRange
 import io.bluetape4k.ranges.impl.DefaultClosedOpenRange
+import java.io.Serializable
 
 
 /**
@@ -14,11 +17,16 @@ import io.bluetape4k.ranges.impl.DefaultClosedOpenRange
  * @property value
  * @constructor Create empty Bin
  */
-data class Bin<out T: Any, in C: Comparable<C>>(val range: Range<in C>, val value: T) {
+data class Bin<out T: Any, in C: Comparable<C>>(
+    val range: Range<in C>,
+    val value: T,
+): Serializable {
     operator fun contains(key: C): Boolean = key in range
 }
 
-data class BinModel<out T: Any, in C: Comparable<C>>(val bins: List<Bin<T, C>>): Iterable<Bin<T, C>> by bins {
+data class BinModel<out T: Any, in C: Comparable<C>>(
+    val bins: List<Bin<T, C>>,
+): Iterable<Bin<T, C>> by bins, Serializable {
     operator fun get(key: C): Bin<T, C>? = bins.find { key in it.range }
     operator fun contains(key: C) = bins.any { key in it.range }
 }
@@ -62,7 +70,7 @@ inline fun <T: Any, C: Comparable<C>, G: Any> Iterable<T>.binByComparable(
     val maxC: C = groupByC.keys.maxOrNull()!!
 
     // Histogram의 막대의 컬렉션을 구성합니다.
-    val bins = mutableListOf<Range<C>>().apply {
+    val bins = fastListOf<Range<C>>().apply {
         val rangeFactory = { lowerBound: C, upperBound: C ->
             if (endExclusive) DefaultClosedOpenRange(lowerBound, upperBound)
             else DefaultClosedClosedRange(lowerBound, upperBound)
@@ -87,6 +95,6 @@ inline fun <T: Any, C: Comparable<C>, G: Any> Iterable<T>.binByComparable(
         .map { (range, values) ->
             Bin(range, groupOp(values))
         }
-        .toList()
+        .toFastList()
         .let(::BinModel)
 }

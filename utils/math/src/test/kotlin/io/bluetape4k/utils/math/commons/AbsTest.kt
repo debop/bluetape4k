@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.math.commons
 
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
@@ -21,7 +22,9 @@ class AbsTest {
 
     @Test
     fun `absolute value for doubles`() {
-        val numbers = List(100) { Random.nextDouble(-10.0, 10.0) }
+        val numbers = fastList(100) {
+            Random.nextDouble(-10.0, 10.0)
+        }
 
         numbers.any { it < 0.0 }.shouldBeTrue()
         numbers.abs().all { it >= 0.0 }.shouldBeTrue()
@@ -29,7 +32,9 @@ class AbsTest {
 
     @Test
     fun `absolute value for floats`() {
-        val numbers = List(100) { Random.nextDouble(-10.0, 10.0).toFloat() }
+        val numbers = fastList(100) {
+            Random.nextDouble(-10.0, 10.0).toFloat()
+        }
 
         numbers.any { it < 0.0 }.shouldBeTrue()
         numbers.abs().all { it >= 0.0 }.shouldBeTrue()
@@ -37,7 +42,9 @@ class AbsTest {
 
     @Test
     fun `absolute value for BigDecimal`() {
-        val numbers = List(100) { Random.nextDouble(-10.0, 10.0).toBigDecimal() }
+        val numbers = fastList(100) {
+            Random.nextDouble(-10.0, 10.0).toBigDecimal()
+        }
 
         numbers.any { it < BigDecimal.ZERO }.shouldBeTrue()
         numbers.abs().all { it >= BigDecimal.ZERO }.shouldBeTrue()

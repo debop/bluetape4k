@@ -103,4 +103,7 @@ fun multinomial(n: Int, ni: IntArray): Double {
  * @param ni An array of nonnegative values that sum to `n`
  * @return Multinomial coefficient
  */
-fun IntArray.multinomial(n: Int): Double = multinomial(n, this)
+fun IntArray.multinomial(n: Int): Double {
+    n.assertZeroOrPositiveNumber("n")
+    return multinomial(n, this)
+}

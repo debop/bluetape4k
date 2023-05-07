@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.math
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import io.bluetape4k.ranges.toClosedClosedRange
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ class DoubleHistogramTest {
             .flatMap { it }
             .zip(groups.repeat())
 
-        log.debug { bins }
+        log.trace { bins.joinToString() }
 
         val histogram: BinModel<List<Pair<Double, String>>, Double> = bins.binByDouble(
             binSize = 100.0,
@@ -33,7 +33,7 @@ class DoubleHistogramTest {
             rangeStart = 0.0
         )
         histogram.bins.forEach { bin ->
-            log.debug { bin }
+            log.trace { bin }
         }
         histogram.bins.size shouldBeEqualTo 3
 

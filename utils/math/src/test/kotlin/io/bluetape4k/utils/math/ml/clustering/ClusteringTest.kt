@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.math.ml.clustering
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.utils.math.model.Gender
 import io.bluetape4k.utils.math.model.Patient
@@ -11,7 +12,7 @@ class ClusteringTest {
 
     companion object: KLogging()
 
-    private val patients = listOf(
+    private val patients = fastListOf(
         Patient("John", "Simone", Gender.MALE, LocalDate.of(1989, 1, 7), 4500),
         Patient("Sarah", "Marley", Gender.FEMALE, LocalDate.of(1970, 2, 5), 6700),
         Patient("Jessica", "Arnold", Gender.FEMALE, LocalDate.of(1980, 3, 9), 3400),

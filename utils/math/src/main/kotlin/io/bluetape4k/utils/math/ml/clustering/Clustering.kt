@@ -11,7 +11,10 @@ import java.io.Serializable
  * @property item Item
  * @property location n-dimentional point
  */
-data class ClusterInput<out T: Any>(val item: T, val location: DoubleArray): Clusterable, Serializable {
+data class ClusterInput<out T: Any>(
+    val item: T,
+    val location: DoubleArray,
+): Clusterable, Serializable {
 
     override fun getPoint(): DoubleArray = location
 
@@ -22,7 +25,6 @@ data class ClusterInput<out T: Any>(val item: T, val location: DoubleArray): Clu
 
     override fun hashCode(): Int = item.hashCode()
 }
-
 
 /**
  * Clustering 된 군집의 중심점과 군집 요소를 나타냅니다
@@ -64,7 +66,7 @@ inline fun <T: Any> Iterable<T>.kMeansCluster(
     xSelector: (T) -> Double,
     ySelector: (T) -> Double,
 ): List<Centroid<T>> {
-    val inputs: List<ClusterInput<T>> = map { ClusterInput(it, doubleArrayOf(xSelector(it), ySelector(it))) }
+    val inputs = map { ClusterInput(it, doubleArrayOf(xSelector(it), ySelector(it))) }
 
     return kMeansClusterOf<ClusterInput<T>>(k, maxIterations)
         .cluster(inputs)

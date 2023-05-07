@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.math.commons
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
@@ -10,8 +11,8 @@ class ArithmeticsTest {
 
     companion object: KLogging()
 
-    private val values1 = listOf(1.0, -1.1, 2.2, -4.5)
-    private val values2 = listOf(2.0, 2.0, -3.1, 4.2)
+    private val values1 = fastListOf(1.0, -1.1, 2.2, -4.5)
+    private val values2 = fastListOf(2.0, 2.0, -3.1, 4.2)
 
     @Test
     fun `different size`() {

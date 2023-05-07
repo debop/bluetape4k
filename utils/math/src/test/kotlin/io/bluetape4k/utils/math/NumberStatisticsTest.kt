@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.math
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.math.model.Gender.FEMALE
@@ -92,7 +93,7 @@ class NumberStatisticsTest {
         }
     }
 
-    private val list = listOf(
+    private val list = fastListOf(
         Item("Alpha", 4.0),
         Item("Beta", 6.0),
         Item("Gamma", 7.2),

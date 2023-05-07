@@ -33,8 +33,8 @@ class GroupingSupportTest {
     @Test
     fun `grouping fold operation`() {
         val fold = emails.groupingFold(
-            { it.sender },
-            0
+            keySelector = { it.sender },
+            initialValue = 0
         ) { accumulator: Int, element: Email ->
             accumulator + element.subject.length
         }

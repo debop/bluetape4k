@@ -18,6 +18,6 @@ inline fun <T: Any, G: Any> Iterable<T>.binByDouble(
     crossinline groupOp: (List<T>) -> G,
     rangeStart: Double? = null,
 ): BinModel<G, Double> {
-    // TODO: 수형마다 따로 구현할 필요없이, binByComparable을 호출해도 되지 않을까? 검증 필요
+    assert(count() > 0) { "Collection must not be empty." }
     return binByComparable({ it + binSize }, valueMapper, groupOp, rangeStart)
 }

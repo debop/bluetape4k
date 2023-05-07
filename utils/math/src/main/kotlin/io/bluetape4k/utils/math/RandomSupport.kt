@@ -1,5 +1,7 @@
 package io.bluetape4k.utils.math
 
+import io.bluetape4k.collections.eclipse.emptyFastList
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.ranges.impl.ClosedOpenDoubleRange
 import io.bluetape4k.support.coerce
 import java.util.concurrent.ThreadLocalRandom
@@ -13,17 +15,17 @@ fun <T> List<T>.randomFirstOrNull(): T? {
     return this[random]
 }
 
-fun <T> Sequence<T>.randomFirst() = toList().randomFirst()
-fun <T> Sequence<T>.randomFirstOrNull() = toList().randomFirstOrNull()
-fun <T> Iterable<T>.randomFirst() = toList().randomFirst()
-fun <T> Iterable<T>.randomFirstOrNull() = toList().randomFirstOrNull()
+fun <T> Sequence<T>.randomFirst() = toFastList().randomFirst()
+fun <T> Sequence<T>.randomFirstOrNull() = toFastList().randomFirstOrNull()
+fun <T> Iterable<T>.randomFirst() = toFastList().randomFirst()
+fun <T> Iterable<T>.randomFirstOrNull() = toFastList().randomFirstOrNull()
 
 
 /**
  * `sampleSize` 만큼의 unique 한 random 요소를 반환한다
  */
 fun <T> List<T>.randomDistinct(sampleSize: Int): List<T> {
-    if (size == 0) return emptyList()
+    if (size == 0) return emptyFastList()
     val cappedSampleSize = sampleSize.coerce(1, size)
 
     return (0..Int.MAX_VALUE).asSequence()
@@ -33,17 +35,17 @@ fun <T> List<T>.randomDistinct(sampleSize: Int): List<T> {
         .distinct()
         .take(cappedSampleSize)
         .map { this[it] }
-        .toList()
+        .toFastList()
 }
 
-fun <T> Sequence<T>.randomDistinct(sampleSize: Int): List<T> = toList().randomDistinct(sampleSize)
-fun <T> Iterable<T>.randomDistinct(sampleSize: Int): List<T> = toList().randomDistinct(sampleSize)
+fun <T> Sequence<T>.randomDistinct(sampleSize: Int): List<T> = toFastList().randomDistinct(sampleSize)
+fun <T> Iterable<T>.randomDistinct(sampleSize: Int): List<T> = toFastList().randomDistinct(sampleSize)
 
 /**
  * `sampleSize` 만큼의 random 요소를 반환한다
  */
 fun <T> List<T>.random(sampleSize: Int): List<T> {
-    if (size == 0) return emptyList()
+    if (size == 0) return emptyFastList()
     val cappedSampleSize = sampleSize.coerce(1, size)
 
     return (0..Int.MAX_VALUE).asSequence()
@@ -52,7 +54,7 @@ fun <T> List<T>.random(sampleSize: Int): List<T> {
         }
         .take(cappedSampleSize)
         .map { this[it] }
-        .toList()
+        .toFastList()
 }
 
 /**
@@ -72,7 +74,7 @@ fun <T> Iterable<T>.random(sampleSize: Int): List<T> = toList().random(sampleSiz
 class WeightedCoin(val trueProbability: Double) {
 
     init {
-        require(trueProbability in 0.0..1.0) { "trueProbability[$trueProbability] must be in 0.0 .. 1.0" }
+        assert(trueProbability in 0.0..1.0) { "trueProbability[$trueProbability] must be in 0.0 .. 1.0" }
     }
 
     fun flip(): Boolean = ThreadLocalRandom.current().nextDouble(0.0, 1.0) <= trueProbability
@@ -83,7 +85,7 @@ class WeightedCoin(val trueProbability: Double) {
  * In other words, this is a Probability Density Function (PDF) for discrete TRUE/FALSE values
  */
 fun weightedCoinFlip(trueProbability: Double): Boolean {
-    require(trueProbability in 0.0..1.0) { "trueProbability[$trueProbability] must be in 0.0 .. 1.0" }
+    assert(trueProbability in 0.0..1.0) { "trueProbability[$trueProbability] must be in 0.0 .. 1.0" }
     return ThreadLocalRandom.current().nextDouble(0.0, 1.0) <= trueProbability
 }
 

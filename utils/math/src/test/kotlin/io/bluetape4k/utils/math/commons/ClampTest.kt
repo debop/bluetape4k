@@ -1,12 +1,13 @@
 package io.bluetape4k.utils.math.commons
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Test
 
 class ClampTest {
 
-    private val values = listOf(0.001, 1.0001, 2.0002, 5.0005)
+    private val values = fastListOf(0.001, 1.0001, 2.0002, 5.0005)
 
     @Test
     fun `clamp double values`() {

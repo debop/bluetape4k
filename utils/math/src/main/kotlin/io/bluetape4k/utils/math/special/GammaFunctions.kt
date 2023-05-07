@@ -229,7 +229,7 @@ fun gammaLowerRegularized(a: Double, x: Double): Double {
 /**
  * GammaLn function
  */
-fun DoubleArray.gammaLn() = map { logGamma(it) }
+fun DoubleArray.gammaLn() = DoubleArray(size) { logGamma(this@gammaLn[it]) }
 
 /**
  * GammaLn function
@@ -244,7 +244,7 @@ fun <T> Iterable<T>.gammaLn(selector: (T) -> Double) = map { logGamma(selector(i
 /**
  * Gamma function
  */
-fun DoubleArray.gamma() = map { gamma(it) }
+fun DoubleArray.gamma() = DoubleArray(size) { gamma(this@gamma[it]) } // map { gamma(it) }
 
 /**
  * Gamma function

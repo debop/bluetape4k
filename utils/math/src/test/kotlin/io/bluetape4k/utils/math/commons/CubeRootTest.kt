@@ -2,8 +2,10 @@ package io.bluetape4k.utils.math.commons
 
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import kotlin.math.pow
+import kotlin.random.Random
 
 class CubeRootTest {
 
@@ -22,6 +24,14 @@ class CubeRootTest {
     fun `cube root for negative value`() {
         repeat(REPEAT_SIZE) {
             cubeRoot(it.unaryMinus().toDouble().pow(3.0)) shouldBeEqualTo it.unaryMinus().toDouble()
+        }
+    }
+
+    @Test
+    fun `cube root for random double values`() {
+        repeat(REPEAT_SIZE * 100) {
+            val value = Random.nextDouble(-100.0, 100.0)
+            cubeRoot(value.pow(3.0)).approximateEqual(value, 1e-5).shouldBeTrue()
         }
     }
 }

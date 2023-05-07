@@ -31,7 +31,7 @@ class ComparableHistogramTest {
         log.debug { bins }
 
         val histogram = bins.binByComparable(
-            { it + 100.0 },
+            incrementer = { it + 100.0 },
             valueMapper = { it.first },
             rangeStart = 0.0
         )
@@ -67,8 +67,10 @@ class ComparableHistogramTest {
         )
 
         // Histogram 을 만든다
-        val byQuarter: BinModel<List<Sale>, Month> = sales.binByComparable(incrementer = { it + 1 },
-            valueMapper = { it.date.month })
+        val byQuarter: BinModel<List<Sale>, Month> = sales.binByComparable(
+            incrementer = { it + 1 },
+            valueMapper = { it.date.month }
+        )
         byQuarter.forEach {
             log.debug { it }
         }

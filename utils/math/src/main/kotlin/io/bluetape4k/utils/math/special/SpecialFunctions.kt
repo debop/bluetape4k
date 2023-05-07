@@ -52,13 +52,15 @@ fun regularizedGammaP(
     x: Double,
     epsilon: Double = DEFAULT_EPSILON,
     maxIterations: Int = Int.MAX_VALUE,
-): Double =
-    Gamma.regularizedGammaP(a, x, epsilon, maxIterations)
+): Double {
+    return Gamma.regularizedGammaP(a, x, epsilon, maxIterations)
+}
 
 fun regularizedGammaQ(
     a: Double,
     x: Double,
     epsilon: Double = DEFAULT_EPSILON,
     maxIterations: Int = Int.MAX_VALUE,
-): Double =
-    Gamma.regularizedGammaQ(a, x, epsilon, maxIterations)
+): Double {
+    return Gamma.regularizedGammaQ(a, x, epsilon, maxIterations)
+}

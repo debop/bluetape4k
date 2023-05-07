@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.math
 
+import io.bluetape4k.collections.eclipse.fastList
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeIn
 import org.amshove.kluent.shouldBeTrue
@@ -35,10 +36,10 @@ class RandomSupportTest {
         val allTrue = WeightedCoin(1.0)
         allTrue.flip().shouldBeTrue()
 
-        assertFailsWith<IllegalArgumentException> {
+        assertFailsWith<AssertionError> {
             WeightedCoin(-1.0)
         }
-        assertFailsWith<IllegalArgumentException> {
+        assertFailsWith<AssertionError> {
             WeightedCoin(1.1)
         }
     }
@@ -64,7 +65,7 @@ class RandomSupportTest {
             Dice.FIVE to 0.0,
             Dice.SIX to 1.0,
         )
-        List(10) { onlySix.roll() }.distinct() shouldContainSame listOf(Dice.SIX)
+        fastList(10) { onlySix.roll() }.distinct() shouldContainSame listOf(Dice.SIX)
     }
 
     @Test

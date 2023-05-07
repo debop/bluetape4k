@@ -57,7 +57,9 @@ class CategoricalStatisticsTest {
             Product(11, "WolverinePack", "ABR", 3, 1.2)
         )
 
-        val countByCategoryAndSection = products.countBy { CategoryAndSection(it.category, it.section) }
+        val countByCategoryAndSection = products.countBy {
+            CategoryAndSection(it.category, it.section)
+        }
         log.debug { "Count by Category and Section" }
         countByCategoryAndSection.forEach {
             log.debug { "\t$it" }
