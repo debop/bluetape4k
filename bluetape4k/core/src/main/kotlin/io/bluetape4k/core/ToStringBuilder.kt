@@ -10,11 +10,13 @@ import java.io.Serializable
 class ToStringBuilder private constructor(private val className: String): Serializable {
 
     companion object {
+        @JvmStatic
         operator fun invoke(className: String): ToStringBuilder {
             className.assertNotBlank("className")
             return ToStringBuilder(className)
         }
 
+        @JvmStatic
         operator fun invoke(obj: Any): ToStringBuilder {
             return invoke(obj.javaClass.simpleName)
         }

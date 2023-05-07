@@ -14,7 +14,6 @@ class NamedThreadFactory private constructor(
         const val DEFAULT_PREFIX = "thread"
 
         @JvmStatic
-        @JvmOverloads
         operator fun invoke(prefix: String? = DEFAULT_PREFIX, isDaemon: Boolean = false): ThreadFactory {
             return NamedThreadFactory(prefix ?: DEFAULT_PREFIX, isDaemon)
         }
