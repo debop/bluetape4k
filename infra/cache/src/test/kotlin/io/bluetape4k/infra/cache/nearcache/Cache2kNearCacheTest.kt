@@ -5,11 +5,9 @@ import io.bluetape4k.infra.cache.jcache.JCache
 import io.bluetape4k.infra.cache.jcache.JCaching
 import io.bluetape4k.infra.cache.jcache.jcacheConfiguration
 import io.bluetape4k.logging.KLogging
-import org.junit.jupiter.api.Disabled
 import java.util.*
 import javax.cache.expiry.EternalExpiryPolicy
 
-@Disabled("굳이 할 필요 없다")
 class Cache2kNearCacheTest: AbstractNearCacheTest() {
 
     companion object: KLogging() {
