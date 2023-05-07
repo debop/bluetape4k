@@ -21,6 +21,7 @@ abstract class AbstractCoCacheTest {
         const val CACHE_ENTRY_SIZE = 100
         const val TEST_SIZE = 3
 
+        @JvmStatic
         fun randomString(): String =
             Fakers.randomString(1024, 8192, true)
     }

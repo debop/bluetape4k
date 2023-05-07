@@ -44,6 +44,7 @@ abstract class AbstractNearCacheTest {
     @BeforeEach
     fun setup() {
         nearCache1.clear()
+        nearCache1.clear()
         nearCache2.clear()
         backCache.clear()
     }
@@ -438,7 +439,7 @@ abstract class AbstractNearCacheTest {
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `removeAll - 모든 캐시를 삭제하면 다른 캐시에도 반영된다`() {
+    open fun `removeAll - 모든 캐시를 삭제하면 다른 캐시에도 반영된다`() {
         val key1 = randomKey()
         val value1 = randomValue()
         val key2 = randomKey()

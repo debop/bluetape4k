@@ -45,5 +45,4 @@ class AsyncCaffeineMemorizerTest: AbstractAsyncMemorizerTest() {
             cache.asyncMemorizer { calc(it) }
         }
     }
-
 }

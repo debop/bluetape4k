@@ -12,6 +12,14 @@ typealias JCache<K, V> = javax.cache.Cache<K, V>
 
 object JCaching {
 
+    object Cache2k {
+        inline fun <reified K, reified V> getOrCreate(
+            name: String,
+            configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
+        ): JCache<K, V> =
+            jcacheManager<org.cache2k.jcache.provider.JCacheProvider>().getOrCreate(name, configuration)
+    }
+
     object Caffeine {
         inline fun <reified K, reified V> getOrCreate(
             name: String,
