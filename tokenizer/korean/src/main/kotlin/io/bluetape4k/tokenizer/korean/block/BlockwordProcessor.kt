@@ -76,20 +76,6 @@ object BlockwordProcessor: KLogging() {
         }
     }
 
-    //    private fun maskChunk(text: String, mask: String): String {
-    //        val chunks = KoreanChunker.chunk(text)
-    //
-    //        var result = text
-    //        chunks.forEach { chunk ->
-    //            if (canMask(chunk)) {
-    //                log.trace { "masked chunk=$chunk" }
-    //                result = result.replaceRange(chunk.offset, chunk.offset + chunk.length, mask.repeat(chunk.length))
-    //            }
-    //        }
-    //        log.trace { "mask chunk=$result" }
-    //        return result
-    //    }
-
     /**
      * [token]이 금칙어로서 mask 되어야 할 것인지 판단합니다.
      *

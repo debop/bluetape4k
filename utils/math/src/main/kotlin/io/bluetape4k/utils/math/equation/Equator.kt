@@ -17,7 +17,7 @@ interface Equator {
     fun solve(maxEval: Int = MAXEVAL, min: Double, max: Double, evaluator: (Double) -> Double): Double
 
     fun solve(maxEval: Int = MAXEVAL, xs: DoubleArray, ys: DoubleArray): Double {
-        val (min, max) = xs.asSequence().minMax()
+        val (min, max) = xs.minMax()
         val interpolator = LinearInterpolator()
         val evaluator = interpolator.interpolate(xs, ys)
 
@@ -28,6 +28,7 @@ interface Equator {
         val size = values.size
         val xs = DoubleArray(size)
         val ys = DoubleArray(size)
+
         values.forEachIndexed { i, (x, y) ->
             xs[i] = x
             ys[i] = y

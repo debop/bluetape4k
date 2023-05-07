@@ -1,5 +1,7 @@
 package io.bluetape4k.utils.math.commons
 
+import io.bluetape4k.collections.eclipse.primitives.asSequence
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList
 import java.io.Serializable
 
 /**
@@ -24,10 +26,10 @@ data class Moment(
  *
  * @return [Moment] 인스턴스
  */
-fun DoubleArray.moment(): Moment {
-    require(this.size > 1) { "변량의 수는 2개 이상이어야 합니다." }
+fun Sequence<Double>.moment(): Moment {
+    assert(this.count() > 1) { "변량의 수는 2개 이상이어야 합니다." }
 
-    val n = this.size
+    val n = this.count()
     val sum = this.sum()
     val avg = sum / n
 
@@ -69,4 +71,18 @@ fun DoubleArray.moment(): Moment {
  *
  * @return [Moment] 인스턴스
  */
-fun Iterable<Double>.moment(): Moment = this.toList().toDoubleArray().moment()
+fun Iterable<Double>.moment(): Moment = this.asSequence().moment()
+
+/**
+ * 변량의 다양한 통계 정보를 한번에 계산합니다. ([Moment]의 요소를 계산합니다)
+ *
+ * @return [Moment] 인스턴스
+ */
+fun DoubleArray.moment(): Moment = this.asSequence().moment()
+
+/**
+ * 변량의 다양한 통계 정보를 한번에 계산합니다. ([Moment]의 요소를 계산합니다)
+ *
+ * @return [Moment] 인스턴스
+ */
+fun DoubleArrayList.moment(): Moment = this.asSequence().moment()

@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.math.commons
 
+import io.bluetape4k.collections.eclipse.toUnifiedMap
 import org.apache.commons.math3.stat.ranking.NaNStrategy
 import org.apache.commons.math3.stat.ranking.NaturalRanking
 import org.apache.commons.math3.stat.ranking.TiesStrategy
@@ -20,7 +21,7 @@ fun <T> Sequence<T>.ranking(
         .rank(map { it.toDouble() }.toList().toDoubleArray())
         .map { it.toInt() }
 
-    return mapIndexed { index, item -> item to ranks.size - ranks[index] }.toMap()
+    return mapIndexed { index, item -> item to ranks.size - ranks[index] }.toUnifiedMap()
 }
 
 /**
@@ -34,8 +35,9 @@ fun <T> Sequence<T>.ranking(
 fun <T> Iterable<T>.ranking(
     nanStrategy: NaNStrategy = NaNStrategy.MINIMAL,
     tiesStrategy: TiesStrategy = TiesStrategy.MAXIMUM,
-): Map<T, Int> where T: Number, T: Comparable<T> =
-    asSequence().ranking(nanStrategy, tiesStrategy)
+): Map<T, Int> where T: Number, T: Comparable<T> {
+    return asSequence().ranking(nanStrategy, tiesStrategy)
+}
 
 /**
  * 요소들의 특정 값(V)을 기준으로 순위를 매깁니다.
@@ -52,7 +54,7 @@ inline fun <T, V> Sequence<T>.ranking(
     crossinline valueSelector: (T) -> V,
 ): Map<T, Int> where V: Number, V: Comparable<V> {
     val ranks: Map<V, Int> = this.map { valueSelector(it) }.ranking(nanStrategy, tiesStrategy)
-    return this.map { it to ranks[valueSelector(it)]!! }.toMap()
+    return this.map { it to ranks[valueSelector(it)]!! }.toUnifiedMap()
 }
 
 /**
@@ -68,5 +70,6 @@ inline fun <T, V> Iterable<T>.ranking(
     nanStrategy: NaNStrategy = NaNStrategy.MINIMAL,
     tiesStrategy: TiesStrategy = TiesStrategy.MAXIMUM,
     crossinline valueSelector: (T) -> V,
-): Map<T, Int> where V: Number, V: Comparable<V> =
-    asSequence().ranking(nanStrategy, tiesStrategy, valueSelector)
+): Map<T, Int> where V: Number, V: Comparable<V> {
+    return asSequence().ranking(nanStrategy, tiesStrategy, valueSelector)
+}

@@ -1,6 +1,7 @@
 package io.bluetape4k.utils.math.commons
 
 
+import io.bluetape4k.collections.toDoubleArray
 import io.bluetape4k.utils.math.MathConsts.BLOCK_SIZE
 import java.util.concurrent.ArrayBlockingQueue
 
@@ -71,8 +72,19 @@ fun Sequence<Double>.standardMovingAverage(blockSize: Int = BLOCK_SIZE): Sequenc
  * @param blockSize 이동 평균을 계산하기 위한 항목 수 (최소 2)
  * @return 이동평균
  */
-fun Iterable<Double>.standardMovingAverage(blockSize: Int = BLOCK_SIZE): Sequence<Double> =
-    asSequence().standardMovingAverage(blockSize)
+fun Iterable<Double>.standardMovingAverage(blockSize: Int = BLOCK_SIZE): DoubleArray {
+    return asSequence().standardMovingAverage(blockSize).toDoubleArray()
+}
+
+/**
+ * 표준 이동평균 (Standard Moving Average)
+ *
+ * @param blockSize 이동 평균을 계산하기 위한 항목 수 (최소 2)
+ * @return 이동평균
+ */
+fun DoubleArray.standardMovingAverage(blockSize: Int = BLOCK_SIZE): DoubleArray {
+    return asSequence().standardMovingAverage(blockSize).toDoubleArray()
+}
 
 
 /**
@@ -144,8 +156,13 @@ fun Sequence<Double>.exponentialMovingAverage(blockSize: Int = BLOCK_SIZE): Sequ
     }
 }
 
-fun Iterable<Double>.exponentialMovingAverage(blockSize: Int = BLOCK_SIZE): Sequence<Double> =
-    asSequence().exponentialMovingAverage(blockSize)
+fun Iterable<Double>.exponentialMovingAverage(blockSize: Int = BLOCK_SIZE): Iterable<Double> {
+    return asSequence().exponentialMovingAverage(blockSize).asIterable()
+}
+
+fun DoubleArray.expontentialMovingAverage(blockSize: Int = BLOCK_SIZE): DoubleArray {
+    return asSequence().exponentialMovingAverage(blockSize).toDoubleArray()
+}
 
 /**
  * 누적 이동 평균을 구합니다.
@@ -160,8 +177,13 @@ fun Sequence<Double>.cumulativeMovingAverage(): Sequence<Double> = sequence {
     }
 }
 
-fun Iterable<Double>.cumulativeMovingAverage(): Sequence<Double> =
-    asSequence().cumulativeMovingAverage()
+fun Iterable<Double>.cumulativeMovingAverage(): Iterable<Double> {
+    return asSequence().cumulativeMovingAverage().asIterable()
+}
+
+fun DoubleArray.cumulativeMovingAverage(): DoubleArray {
+    return asSequence().cumulativeMovingAverage().toDoubleArray()
+}
 
 /**
  * 지정한 시퀀스의 항목에 가중치를 준 이동평균을 계산합니다.
@@ -203,5 +225,13 @@ inline fun Sequence<Double>.weightedMovingAverage(
 inline fun Iterable<Double>.weightedMovingAverage(
     blockSize: Int = BLOCK_SIZE,
     crossinline weightingFunc: (Int) -> Double,
-): Sequence<Double> =
-    asSequence().weightedMovingAverage(blockSize, weightingFunc)
+): Iterable<Double> {
+    return asSequence().weightedMovingAverage(blockSize, weightingFunc).asIterable()
+}
+
+inline fun DoubleArray.weightedMovingAverage(
+    blockSize: Int = BLOCK_SIZE,
+    crossinline weightingFunc: (Int) -> Double,
+): DoubleArray {
+    return asSequence().weightedMovingAverage(blockSize, weightingFunc).toDoubleArray()
+}

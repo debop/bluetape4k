@@ -31,11 +31,13 @@ fun Sequence<Double>.normalDensity(avg: Double, stdev: Double): Sequence<Double>
 /**
  * 컬렉션 각 요소와 빈도 수를 반환합니다.
  */
-fun <T> Sequence<T>.frequency(): Map<T, Int> =
-    groupingBy { it }.eachCount()
+fun <T> Sequence<T>.frequency(): Map<T, Int> {
+    return groupingBy { it }.eachCount()
+}
 
-fun <T> Iterable<T>.frequency(): Map<T, Int> =
-    groupingBy { it }.eachCount()
+fun <T> Iterable<T>.frequency(): Map<T, Int> {
+    return groupingBy { it }.eachCount()
+}
 
 /**
  * 컬렉션 요소의 `selector` 기준으로 빈도 수를 계산합니다
@@ -60,8 +62,21 @@ fun <T, V> Sequence<T>.frequency(selector: (T) -> V): Map<T, Int> {
     return result
 }
 
-fun <T, V> Iterable<T>.frequency(selector: (T) -> V): Map<T, Int> =
-    asSequence().frequency(selector)
+fun <T, V> Iterable<T>.frequency(selector: (T) -> V): Map<T, Int> {
+    return asSequence().frequency(selector)
+}
+
+/**
+ * 항목 `item`의 빈도 수 / 전체 항목 수
+ *
+ * @param item 비교 항목
+ * @param comparator 비교 함수
+ * @return 항목 수 / 전체 항목 수
+ */
+fun <T> Sequence<T>.probability(item: T, biPredicate: (T, T) -> Boolean): Double {
+    val matches = count { biPredicate(it, item) }
+    return matches.toDouble() / this.count().toDouble()
+}
 
 /**
  * 항목 `item`의 빈도 수 / 전체 항목 수
@@ -71,6 +86,5 @@ fun <T, V> Iterable<T>.frequency(selector: (T) -> V): Map<T, Int> =
  * @return 항목 수 / 전체 항목 수
  */
 fun <T> Iterable<T>.probability(item: T, biPredicate: (T, T) -> Boolean): Double {
-    val matches = count { biPredicate(it, item) }
-    return matches.toDouble() / this.count().toDouble()
+    return asSequence().probability(item, biPredicate)
 }

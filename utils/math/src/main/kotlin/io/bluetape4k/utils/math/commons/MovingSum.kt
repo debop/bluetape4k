@@ -1,5 +1,7 @@
 package io.bluetape4k.utils.math.commons
 
+import io.bluetape4k.collections.toDoubleArray
+import io.bluetape4k.collections.toLongArray
 import io.bluetape4k.utils.math.MathConsts.BLOCK_SIZE
 
 /**
@@ -71,8 +73,19 @@ fun Sequence<Double>.movingSum(blockSize: Int = BLOCK_SIZE): Sequence<Double> {
  * @param blockSize sum 을 수행할 최대 요소 수 (기본: [BLOCK_SIZE])
  * @return Moving Sum
  */
-fun Iterable<Double>.movingSum(blockSize: Int = BLOCK_SIZE): Sequence<Double> =
-    asSequence().movingSum(blockSize)
+fun Iterable<Double>.movingSum(blockSize: Int = BLOCK_SIZE): Iterable<Double> {
+    return asSequence().movingSum(blockSize).asIterable()
+}
+
+/**
+ * 이동 합을 구합니다.
+ *
+ * @param blockSize sum 을 수행할 최대 요소 수 (기본: [BLOCK_SIZE])
+ * @return Moving Sum
+ */
+fun DoubleArray.movingSum(blockSize: Int = BLOCK_SIZE): DoubleArray {
+    return asSequence().movingSum(blockSize).toDoubleArray()
+}
 
 
 /**
@@ -110,5 +123,16 @@ fun Sequence<Long>.movingSum(blockSize: Int = BLOCK_SIZE): Sequence<Long> {
 }
 
 @JvmName("movingSumOfLong")
-fun Iterable<Long>.movingSum(blockSize: Int = BLOCK_SIZE): Sequence<Long> =
-    asSequence().movingSum(blockSize)
+fun Iterable<Long>.movingSum(blockSize: Int = BLOCK_SIZE): Iterable<Long> {
+    return asSequence().movingSum(blockSize).asIterable()
+}
+
+/**
+ * 이동 합을 구합니다.
+ *
+ * @param blockSize sum 을 수행할 최대 요소 수 (기본: [BLOCK_SIZE])
+ * @return Moving Sum
+ */
+fun LongArray.movingSum(blockSize: Int = BLOCK_SIZE): LongArray {
+    return asSequence().movingSum(blockSize).toLongArray()
+}

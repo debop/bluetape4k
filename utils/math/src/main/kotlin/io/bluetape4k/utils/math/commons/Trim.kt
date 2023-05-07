@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.math.commons
 
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.pow
@@ -98,3 +99,40 @@ fun Sequence<Double>.roundDigits(digits: Int = 0): Sequence<Double> = map { it.r
  * 컬렉션 요소들의 값의 반올림을 합니다.
  */
 fun Iterable<Double>.roundDigits(digits: Int = 0): Iterable<Double> = map { it.roundDigits(digits) }
+
+
+fun DoubleArray.ceilDigitsThis(digits: Int = 0) {
+    forEachIndexed { index, value ->
+        this[index] = value.ceilDigits(digits)
+    }
+}
+
+fun DoubleArrayList.ceilDigitsThis(digits: Int = 0) {
+    forEachWithIndex { value, index ->
+        this[index] = value.ceilDigits(digits)
+    }
+}
+
+fun DoubleArray.floorDigitsThis(digits: Int = 0) {
+    forEachIndexed { index, value ->
+        this[index] = value.floorDigits(digits)
+    }
+}
+
+fun DoubleArrayList.floorDigitsThis(digits: Int = 0) {
+    forEachWithIndex { value, index ->
+        this[index] = value.floorDigits(digits)
+    }
+}
+
+fun DoubleArray.roundDigitsThis(digits: Int = 0) {
+    forEachIndexed { index, value ->
+        this[index] = value.roundDigits(digits)
+    }
+}
+
+fun DoubleArrayList.roundDigitsThis(digits: Int = 0) {
+    forEachWithIndex { value, index ->
+        this[index] = value.roundDigits(digits)
+    }
+}
