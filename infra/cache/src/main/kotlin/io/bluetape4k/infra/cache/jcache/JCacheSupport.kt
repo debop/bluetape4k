@@ -100,11 +100,17 @@ fun jcachingProviderOf(qualifiedName: String): CachingProvider {
  *
  * @return [CacheManager] instance
  */
-inline fun <reified P: CachingProvider> jcacheManager(): CacheManager =
-    jcachingProvider<P>().cacheManager
+inline fun <reified P: CachingProvider> jcacheManager(): CacheManager {
+    return jcacheLock.withLock {
+        jcachingProvider<P>().cacheManager
+    }
+}
 
-fun jcacheManagerOf(qualifiedName: String): CacheManager =
-    jcachingProviderOf(qualifiedName).cacheManager
+fun jcacheManagerOf(qualifiedName: String): CacheManager {
+    return jcacheLock.withLock {
+        jcachingProviderOf(qualifiedName).cacheManager
+    }
+}
 
 /**
  * [cacheName]에 해당하는 cache를 가져옵니다.

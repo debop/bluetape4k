@@ -24,14 +24,16 @@ import javax.cache.configuration.CacheEntryListenerConfiguration
 class CaffeineCoCache<K: Any, V: Any>(private val cache: AsyncCache<K, V>): CoCache<K, V> {
 
     companion object: KLogging() {
+        @JvmStatic
         inline operator fun <reified K: Any, reified V: Any> invoke(
-            setup: Caffeine<Any, Any>.() -> Unit = {},
+            initializer: Caffeine<Any, Any>.() -> Unit = {},
         ): CaffeineCoCache<K, V> {
-            val asyncCache = Caffeine.newBuilder().apply(setup).buildAsync<K, V>()
+            val asyncCache = Caffeine.newBuilder().apply(initializer).buildAsync<K, V>()
             return CaffeineCoCache(asyncCache)
         }
     }
 
+    @Volatile
     private var closed: Boolean = false
 
     override fun entries(): Flow<CoCacheEntry<K, V>> = flow {

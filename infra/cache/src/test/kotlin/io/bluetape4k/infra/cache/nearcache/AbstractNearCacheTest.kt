@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 
-
 @CaptureOutput
 @Execution(ExecutionMode.SAME_THREAD)
 abstract class AbstractNearCacheTest {

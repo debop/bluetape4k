@@ -8,11 +8,16 @@ import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 import java.util.*
 import javax.cache.Cache
 import javax.cache.integration.CacheLoader
 import javax.cache.integration.CacheWriter
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Execution(ExecutionMode.SAME_THREAD)
 class JCacheReadWriteThroughExample {
 
     companion object: KLogging() {

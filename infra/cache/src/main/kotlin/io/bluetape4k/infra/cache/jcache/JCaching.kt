@@ -24,8 +24,9 @@ object JCaching {
         inline fun <reified K, reified V> getOrCreate(
             name: String,
             configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
-        ): JCache<K, V> =
-            jcacheManager<CaffeineCachingProvider>().getOrCreate(name, configuration)
+        ): JCache<K, V> {
+            return jcacheManager<CaffeineCachingProvider>().getOrCreate(name, configuration)
+        }
     }
 
     object EhCache {

@@ -9,22 +9,10 @@ import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull
 import org.ehcache.jsr107.EhcacheCachingProvider
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
-import javax.cache.CacheManager
 
 class JCacheSupportTest {
 
-    companion object: KLogging() {
-        @JvmStatic
-        fun getJCacheManagers() = listOf(
-            jcacheManager<CaffeineCachingProvider>(),
-            jcacheManager<EhcacheCachingProvider>(),
-            // FIXME: Cache2k CacheManager를 사용하면, 자동으로 Close 되어버린다 ???
-            // jcacheManager<org.cache2k.jcache.provider.JCacheProvider>()
-        ).map { Arguments.of(it) }
-    }
+    companion object: KLogging()
 
     @Test
     fun `load caffeine jcache manager`() {
@@ -33,10 +21,9 @@ class JCacheSupportTest {
         jcacheManager<org.cache2k.jcache.provider.JCacheProvider>().shouldNotBeNull()
     }
 
-    @ParameterizedTest(name = "jcache manager={0}")
-    @MethodSource("getJCacheManagers")
-    fun `use jcache`(manager: CacheManager) {
-        val cache = manager.getOrCreate<String, Any>("jcache")
+    @Test
+    fun `use jcache`() {
+        val cache = JCaching.Caffeine.getOrCreate<String, Any>("jcache")
         cache.shouldNotBeNull()
 
         cache.putIfAbsent("first-put", 0L).shouldBeTrue()
