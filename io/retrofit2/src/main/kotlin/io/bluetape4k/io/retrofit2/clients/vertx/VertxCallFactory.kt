@@ -32,6 +32,7 @@ class VertxCallFactory private constructor(
     companion object: KLogging() {
         val callTimeout: Duration = Duration.ofSeconds(30L)
 
+        @JvmStatic
         operator fun invoke(client: HttpClient): VertxCallFactory {
             return VertxCallFactory(client)
         }

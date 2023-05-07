@@ -35,7 +35,9 @@ dependencies {
     testImplementation(Libs.okhttp3_mockwebserver)
 
     // Apache HttpCompoents HttpClient 5
-    api(Libs.httpclient5)
+    compileOnly(Libs.httpclient5)
+    compileOnly(Libs.httpcore5_h2)
+    compileOnly(Libs.httpcore5_reactive)
 
     // Vertx
     compileOnly(project(":bluetape4k-vertx-core"))
@@ -62,7 +64,6 @@ dependencies {
     compileOnly(project(":bluetape4k-infra-resilience4j"))
     compileOnly(Libs.resilience4j_all)
     compileOnly(Libs.resilience4j_kotlin)
-    compileOnly(Libs.resilience4j_feign)
     compileOnly(Libs.resilience4j_cache)
     compileOnly(Libs.resilience4j_retry)
     compileOnly(Libs.resilience4j_circuitbreaker)

@@ -47,7 +47,7 @@ fun retrofitBuilderOf(
     }
 }
 
-fun retrofit(
+inline fun retrofit(
     baseUrl: String = "",
     converterFactory: retrofit2.Converter.Factory = defaultScalarsConverterFactory,
     initialize: Retrofit.Builder.() -> Unit,
