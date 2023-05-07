@@ -18,6 +18,7 @@ dependencies {
     compileOnly(Libs.testcontainers_mysql)
     compileOnly(Libs.testcontainers_mariadb)
     compileOnly(Libs.testcontainers_postgresql)
+    compileOnly(Libs.testcontainers_cockroachdb)
 
     compileOnly(Libs.hikaricp)
 

@@ -1144,6 +1144,7 @@ object Libs {
     val testcontainers get() = testcontainers("testcontainers")
     val testcontainers_junit_jupiter get() = testcontainers("junit-jupiter")
     val testcontainers_cassandra get() = testcontainers("cassandra")
+    val testcontainers_cockroachdb get() = testcontainers("cockroachdb")
     val testcontainers_couchbase get() = testcontainers("couchbase")
     val testcontainers_elasticsearch get() = testcontainers("elasticsearch")
     val testcontainers_influxdb get() = testcontainers("influxdb")
