@@ -2,6 +2,8 @@ package io.bluetape4k.data.hibernate.mapping.associations.manytoone
 
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
 import org.hibernate.annotations.LazyToOne
 import org.hibernate.annotations.LazyToOneOption
 import javax.persistence.Access
@@ -13,9 +15,10 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 
-
 @Entity(name = "manytoone_bear")
 @Access(AccessType.FIELD)
+@DynamicInsert
+@DynamicUpdate
 class Beer(val name: String): IntJpaEntity() {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = [MERGE, PERSIST, REFRESH])
@@ -43,6 +46,8 @@ class Beer(val name: String): IntJpaEntity() {
 
 @Entity(name = "manytoone_brewery")
 @Access(AccessType.FIELD)
+@DynamicInsert
+@DynamicUpdate
 class Brewery(val name: String): IntJpaEntity() {
 
     @OneToMany(mappedBy = "brewery", cascade = [ALL], fetch = FetchType.LAZY, orphanRemoval = true)
@@ -84,6 +89,8 @@ class Brewery(val name: String): IntJpaEntity() {
 
 @Entity(name = "manytoone_jug")
 @Access(AccessType.FIELD)
+@DynamicInsert
+@DynamicUpdate
 class Jug(val name: String): IntJpaEntity() {
 
     override fun equals(other: Any?): Boolean {
@@ -104,6 +111,8 @@ class Jug(val name: String): IntJpaEntity() {
 
 @Entity(name = "manytoone_jugmeter")
 @Access(AccessType.FIELD)
+@DynamicInsert
+@DynamicUpdate
 class JugMeter(val name: String): IntJpaEntity() {
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -128,6 +137,8 @@ class JugMeter(val name: String): IntJpaEntity() {
 
 @Entity(name = "manytoone_salesguy")
 @Access(AccessType.FIELD)
+@DynamicInsert
+@DynamicUpdate
 class SalesGuy(val name: String): IntJpaEntity() {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [MERGE, PERSIST, REFRESH])
@@ -153,6 +164,8 @@ class SalesGuy(val name: String): IntJpaEntity() {
 
 @Entity(name = "manytoone_salesforce")
 @Access(AccessType.FIELD)
+@DynamicInsert
+@DynamicUpdate
 class SalesForce(val name: String): IntJpaEntity() {
 
     @OneToMany(mappedBy = "salesForce", cascade = [ALL], fetch = FetchType.LAZY, orphanRemoval = true)

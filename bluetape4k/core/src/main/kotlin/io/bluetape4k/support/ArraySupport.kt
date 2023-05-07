@@ -122,7 +122,7 @@ inline fun DoubleArray.setAll(setter: (index: Int) -> Double): DoubleArray = app
  * @param initializer 초기화 함수
  * @return [BooleanArray] instance
  */
-@JvmOverloads
+@Deprecated("use BooleanArray(size, initializer)")
 inline fun generateBooleanArray(size: Int, initializer: (Int) -> Boolean = { false }): BooleanArray =
     BooleanArray(size) { initializer(it) }
 
@@ -134,7 +134,7 @@ inline fun generateBooleanArray(size: Int, initializer: (Int) -> Boolean = { fal
  * @param initializer 초기화 함수
  * @return [CharArray] instance
  */
-@JvmOverloads
+@Deprecated("use CharArray(size, initializer)")
 inline fun generateCharArray(size: Int, initializer: (Int) -> Char = { '\u0000' }): CharArray =
     CharArray(size) { initializer(it) }
 
@@ -145,7 +145,7 @@ inline fun generateCharArray(size: Int, initializer: (Int) -> Char = { '\u0000' 
  * @param initializer 초기화 함수
  * @return [ByteArray] instance
  */
-@JvmOverloads
+@Deprecated("use ByteArray(size, initializer)")
 inline fun generateByteArray(size: Int, initializer: (Int) -> Byte = { 0 }): ByteArray =
     ByteArray(size) { initializer(it) }
 
@@ -156,7 +156,7 @@ inline fun generateByteArray(size: Int, initializer: (Int) -> Byte = { 0 }): Byt
  * @param initializer 초기화 함수
  * @return [ShortArray] instance
  */
-@JvmOverloads
+@Deprecated("use ShortArray(size, initializer)")
 inline fun generateShortArray(size: Int, initializer: (Int) -> Short = { 0 }): ShortArray =
     ShortArray(size) { initializer(it) }
 
@@ -167,7 +167,7 @@ inline fun generateShortArray(size: Int, initializer: (Int) -> Short = { 0 }): S
  * @param initializer 초기화 함수
  * @return [IntArray] instance
  */
-@JvmOverloads
+@Deprecated("use IntArray(size, initializer)")
 inline fun generateIntArray(size: Int, initializer: (Int) -> Int = { 0 }): IntArray =
     IntArray(size) { initializer(it) }
 
@@ -178,7 +178,7 @@ inline fun generateIntArray(size: Int, initializer: (Int) -> Int = { 0 }): IntAr
  * @param initializer 초기화 함수
  * @return [LongArray] instance
  */
-@JvmOverloads
+@Deprecated("use LongArray(size, initializer)")
 inline fun generateLongArray(size: Int, initializer: (Int) -> Long = { 0L }): LongArray =
     LongArray(size) { initializer(it) }
 
@@ -189,7 +189,7 @@ inline fun generateLongArray(size: Int, initializer: (Int) -> Long = { 0L }): Lo
  * @param initializer 초기화 함수
  * @return [FloatArray] instance
  */
-@JvmOverloads
+@Deprecated("use FloatArray(size, initializer)")
 inline fun generateFloatArray(size: Int, initializer: (Int) -> Float = { 0.0F }): FloatArray =
     FloatArray(size) { initializer(it) }
 
@@ -200,7 +200,7 @@ inline fun generateFloatArray(size: Int, initializer: (Int) -> Float = { 0.0F })
  * @param initializer 초기화 함수
  * @return [DoubleArray] instance
  */
-@JvmOverloads
+@Deprecated("use DoubleArray(size, initializer)")
 inline fun generateDoubleArray(size: Int, initializer: (Int) -> Double = { 0.0 }): DoubleArray =
     DoubleArray(size) { initializer(it) }
 
