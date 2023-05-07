@@ -4,13 +4,14 @@ import io.bluetape4k.logging.KLogging
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Metrics
 
-class MicrometerRetrofitMetricsFactory private constructor(meterRegistry: MeterRegistry):
-    RetrofitMetricsFactory(MicrometerMetricsRecorder(meterRegistry)) {
+class MicrometerRetrofitMetricsFactory private constructor(
+    meterRegistry: MeterRegistry,
+): RetrofitMetricsFactory(MicrometerRetrofitMetricsRecorder(meterRegistry)) {
 
     companion object: KLogging() {
-
-        @JvmOverloads
-        fun create(meterRegistry: MeterRegistry = Metrics.globalRegistry): MicrometerRetrofitMetricsFactory =
-            MicrometerRetrofitMetricsFactory(meterRegistry)
+        @JvmStatic
+        operator fun invoke(meterRegistry: MeterRegistry = Metrics.globalRegistry): MicrometerRetrofitMetricsFactory {
+            return MicrometerRetrofitMetricsFactory(meterRegistry)
+        }
     }
 }

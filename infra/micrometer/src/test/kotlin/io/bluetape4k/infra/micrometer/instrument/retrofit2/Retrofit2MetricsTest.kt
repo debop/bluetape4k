@@ -80,7 +80,7 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
     @Test
     fun `measure metrics for sync method`() {
         val registry = SimpleMeterRegistry()
-        val factory = MicrometerRetrofitMetricsFactory.create(registry)
+        val factory = MicrometerRetrofitMetricsFactory(registry)
         val httpbinApi = createRetrofit(factory).service<TestService.HttpbinApi>()
 
         val call = httpbinApi.getLocalIpAddress()
@@ -96,13 +96,13 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
         registry.meters.forEach { meter ->
             log.debug { "id=${meter.id}, tags=${meter.measure().joinToString()}" }
         }
-        registry[MicrometerMetricsRecorder.METRICS_KEY].timer().shouldNotBeNull()
+        registry[MicrometerRetrofitMetricsRecorder.METRICS_KEY].timer().shouldNotBeNull()
     }
 
     @Test
     fun `measure metrics for async method`() = runSuspendWithIO {
         val registry = SimpleMeterRegistry()
-        val factory = MicrometerRetrofitMetricsFactory.create(registry)
+        val factory = MicrometerRetrofitMetricsFactory(registry)
         val httpbinApi = createRetrofit(factory).service<TestService.HttpbinApi>()
 
         val call = httpbinApi.getLocalIpAddress()
@@ -118,13 +118,13 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
         registry.meters.forEach { meter ->
             log.debug { "id=${meter.id}, tags=${meter.measure().joinToString()}" }
         }
-        registry[MicrometerMetricsRecorder.METRICS_KEY].timer().shouldNotBeNull()
+        registry[MicrometerRetrofitMetricsRecorder.METRICS_KEY].timer().shouldNotBeNull()
     }
 
     @Test
     fun `measure metrics for coroutine method`() = runSuspendWithIO {
         val registry = SimpleMeterRegistry()
-        val factory = MicrometerRetrofitMetricsFactory.create(registry)
+        val factory = MicrometerRetrofitMetricsFactory(registry)
         val httpbinApi = createRetrofit(factory).service<TestService.CoroutineHttpbinApi>()
 
         val ipAddress = httpbinApi.getLocalIpAddress()
@@ -139,14 +139,14 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
         registry.meters.forEach { meter ->
             log.debug { "id=${meter.id}, tags=${meter.measure().joinToString()}" }
         }
-        registry[MicrometerMetricsRecorder.METRICS_KEY].timer().shouldNotBeNull()
+        registry[MicrometerRetrofitMetricsRecorder.METRICS_KEY].timer().shouldNotBeNull()
     }
 
     @Disabled("Reactive CallAdapter 와 같이 사용할 수 없습니다")
     @Test
     fun `measure metrics for reactive method`() = runBlocking<Unit> {
         val registry = SimpleMeterRegistry()
-        val factory = MicrometerRetrofitMetricsFactory.create(registry)
+        val factory = MicrometerRetrofitMetricsFactory(registry)
         val httpbinApi = createRetrofit(factory).service<TestService.ReactorHttpbinApi>()
 
         val ipAddress = httpbinApi.getLocalIpAddress().awaitSingle()
@@ -155,7 +155,7 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
         registry.meters.forEach { meter ->
             log.debug { "id=${meter.id}, tags=${meter.measure().joinToString()}" }
         }
-        registry[MicrometerMetricsRecorder.METRICS_KEY].timer().shouldNotBeNull()
+        registry[MicrometerRetrofitMetricsRecorder.METRICS_KEY].timer().shouldNotBeNull()
     }
 
 }

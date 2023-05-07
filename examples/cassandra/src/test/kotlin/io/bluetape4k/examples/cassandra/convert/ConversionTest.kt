@@ -26,6 +26,9 @@ class ConversionTest(
 
     companion object: KLogging()
 
+    private fun newContact(): Contact =
+        Contact(faker.name().firstName(), faker.name().lastName())
+
     @BeforeEach
     fun setup() = runSuspendTest {
         operations.truncateSuspending<Addressbook>()
@@ -41,7 +44,7 @@ class ConversionTest(
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),
-            friends = mutableListOf(Contact("William", "Shin"), Contact("Glenn", "Han"))
+            friends = mutableListOf(newContact(), newContact())
         )
         operations.insertSuspending(addressbook)
 
@@ -57,7 +60,7 @@ class ConversionTest(
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),
-            friends = mutableListOf(Contact("William", "Shin"), Contact("Glenn", "Han"))
+            friends = mutableListOf(newContact(), newContact())
         )
         operations.insertSuspending(addressbook)
 
@@ -72,7 +75,7 @@ class ConversionTest(
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),
-            friends = mutableListOf(Contact("William", "Shin"), Contact("Glenn", "Han")),
+            friends = mutableListOf(newContact(), newContact()),
             address = Address("165 Misa", "Hanam", "12914"),
             preferredCurrencies = mutableMapOf(
                 1 to Currency.getInstance("USD"),

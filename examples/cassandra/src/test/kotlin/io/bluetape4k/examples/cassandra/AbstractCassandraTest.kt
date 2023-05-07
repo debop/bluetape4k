@@ -13,6 +13,7 @@ abstract class AbstractCassandraTest {
     companion object: KLogging() {
         const val DEFAULT_KEYSPACE = "examples"
 
+        @JvmStatic
         val faker = Faker()
     }
 

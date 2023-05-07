@@ -7,10 +7,10 @@ import io.micrometer.core.instrument.Tag
 import io.micrometer.core.instrument.Timer
 import java.time.Duration
 
-class MicrometerMetricsRecorder(private val meterRegistry: MeterRegistry): MetricsRecorder {
+class MicrometerRetrofitMetricsRecorder(private val meterRegistry: MeterRegistry): MetricsRecorder {
 
     companion object: KLogging() {
-        const val METRICS_KEY = "retrofit.requests"
+        const val METRICS_KEY = "retrofit2.requests"
         private val PERCENTILES = doubleArrayOf(0.5, 0.7, 0.9, 0.95, 0.97, 0.99)
         private fun asTags(tags: Map<String, String>): List<Tag> = tags.map { Tag.of(it.key, it.value) }
     }

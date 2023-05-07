@@ -84,7 +84,7 @@ class OptimisticLockTest @Autowired constructor(
 
         success.wasApplied().shouldBeTrue()
 
-        // person 으로 Update 하려는데, id=42L 이고 name="William Shin" 인 row 는 없다
+        // person 으로 Update 하려는데, id=42L 이고 name="homer" 인 row 는 없다
         val failed = operations.update(
             person,
             updateOptions {
@@ -110,7 +110,7 @@ class OptimisticLockTest @Autowired constructor(
 
         success.wasApplied().shouldBeTrue()
 
-        // person 으로 Update 하려는데, id=42L 이고 name="William Shin" 인 row 는 없다
+        // person 으로 Update 하려는데, id=42L 이고 name="homer" 인 row 는 없다
         val failed = reactiveOps.updateSuspending(
             person,
             updateOptions {

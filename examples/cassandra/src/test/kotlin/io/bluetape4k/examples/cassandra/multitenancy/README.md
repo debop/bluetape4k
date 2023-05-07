@@ -33,21 +33,21 @@ Coroutines 환경에서는 `ThreadLocal` 을 하나의 `CoroutineContext` 로 �
 ThreadLocal 을 Coroutine ContextElement로 사용
 
 ```kotlin
-TenantIdProvider.tenantId.set("hyperconnect")
+TenantIdProvider.tenantId.set("fox")
 val job1 = launch(Dispatchers.IO + TenantIdProvider.tenantId.asContextElement()) {
     repeat(10) {
-        val loaded = repository.findAllByName("William").toList()
+        val loaded = repository.findAllByName("homer").toList()
 
         loaded.size shouldBeEqualTo 1
-        loaded.first() shouldBeEqualTo Employee("hyperconnect", "William")
+        loaded.first() shouldBeEqualTo Employee("fox", "homer")
     }
 }
 
 // 다른 정보를 지정하더라도, 위의 thread local 값과는 다른 것을 사용한다
-TenantIdProvider.tenantId.set("tinder")
+TenantIdProvider.tenantId.set("apple")
 val job2 = launch(Dispatchers.IO + TenantIdProvider.tenantId.asContextElement()) {
     repeat(10) {
-        val loaded = repository.findAllByName("William").toList()
+        val loaded = repository.findAllByName("Steve").toList()
         loaded.shouldBeEmpty()
     }
 }
