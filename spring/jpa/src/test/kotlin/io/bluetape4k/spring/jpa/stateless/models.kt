@@ -29,6 +29,10 @@ class StatelessEntity(val name: String): IntJpaEntity() {
     override fun equalProperties(other: Any): Boolean =
         other is StatelessEntity && name == other.name
 
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
+
+    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
+
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()
             .add("name", name)
@@ -46,6 +50,10 @@ class StatelessMaster(val name: String): IntJpaEntity() {
 
     override fun equalProperties(other: Any): Boolean =
         other is StatelessMaster && name == other.name
+
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
+
+    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
 
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()
@@ -66,6 +74,10 @@ class StatelessDetail(val name: String): IntJpaEntity() {
 
     override fun equalProperties(other: Any): Boolean =
         other is StatelessDetail && name == other.name
+
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
+
+    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
 
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()
