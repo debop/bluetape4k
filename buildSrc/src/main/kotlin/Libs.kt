@@ -9,12 +9,12 @@ object Plugins {
         const val jooq = "3.0.3"
         const val protobuf = "0.8.19"
         const val avro = "1.7.0"
+        const val jacoco = "0.8.8"
         const val jarTest = "1.0.1"
         const val testLogger = "3.2.0"
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.7"
         const val spring_boot = "2.7.11"
-        const val jacoco = "0.8.8"
         const val quarkus = "2.16.6.Final"
     }
 
@@ -36,6 +36,8 @@ object Plugins {
     // https://mvnrepository.com/artifact/com.adarshr/gradle-test-logger-plugin
     const val testLogger = "com.adarshr.test-logger"
     const val shadow = "com.github.johnrengelman.shadow"
+
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-benchmark-plugin
     const val kotlinx_benchmark = "org.jetbrains.kotlinx.benchmark"
 
     // Quarkus
@@ -47,7 +49,10 @@ object Versions {
     const val kotlin = "1.8.21"
     const val kotlinx_coroutines = "1.6.4"
     const val kotlinx_serialization = "1.5.0"
+
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/atomicfu
     const val kotlinx_atomicfu = "0.20.2"
+
     const val kotlinx_benchmark = Plugins.Versions.kotlinx_benchmark
 
     const val spring_boot = Plugins.Versions.spring_boot

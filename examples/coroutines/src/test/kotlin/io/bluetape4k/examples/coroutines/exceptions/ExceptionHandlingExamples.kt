@@ -5,6 +5,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.info
 import io.bluetape4k.logging.warn
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -14,6 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.amshove.kluent.fail
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
@@ -100,7 +102,7 @@ class ExceptionHandlingExamples {
     fun `SupervisorJob을 활용하여 예외처리하기`() = runTest {
         val job = SupervisorJob()
         val scope = CoroutineScope(job)
-        var run2: Boolean = false
+        var run2 = atomic(false)
 
         scope.launch {
             delay(100L)
@@ -109,13 +111,14 @@ class ExceptionHandlingExamples {
 
         scope.launch {
             delay(200L)
-            run2 = true
+            run2.value = true
             log.info { "이 코드는 실행되어야 합니다" }
         }
+        yield()
 
-        job.complete()
+        job.complete().shouldBeTrue()
         job.join()
-        run2.shouldBeTrue()
+        run2.value.shouldBeTrue()
     }
 
     /**
@@ -123,7 +126,7 @@ class ExceptionHandlingExamples {
      */
     @Test
     fun `SupervisorJob을 잘 못 사용하는 예`() = runSuspendTest {
-        var secondJob = false
+        var secondJob = atomic(false)
         // 이렇게 주입해버리면, parent job 으로서 complete(), join() 을 못하므로 문제가 발생합니다.
         val job = launch(SupervisorJob()) {
             // 예외를 전파시켜 버립니다.
@@ -134,13 +137,13 @@ class ExceptionHandlingExamples {
             launch {
                 // 위의 Job
                 delay(200)
-                secondJob = true
+                secondJob.value = true
                 log.error { "출력되지 않습니다." }
             }
         }
         job.join()
         // secondJob 이 실행되지 않습니다. - SupervisorJob 잘 못 적용한 사례
-        secondJob.shouldBeFalse()
+        secondJob.value.shouldBeFalse()
     }
 
     @Test

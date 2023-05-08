@@ -5,7 +5,6 @@ import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -76,16 +75,16 @@ class DispatcherExamples {
      */
     @Test
     fun `io dispatcher 사용 예`() = runTest {
-        coroutineScope {
-            repeat(REPEAT_SIZE) {
-                launch(Dispatchers.IO) {
-                    delay(200)
+        val jobs = List(REPEAT_SIZE) {
+            launch(Dispatchers.IO) {
+                delay(200)
 
-                    val threadName = Thread.currentThread().name
-                    log.trace { "Running on thread $threadName" }
-                }
+                val threadName = Thread.currentThread().name
+                log.trace { "Running on thread $threadName" }
             }
         }
+        jobs.joinAll()
+
     }
 
     @Test
@@ -102,7 +101,6 @@ class DispatcherExamples {
             }
         }
     }
-
 
     /**
      * Single thread에서 수행되므로 concurrency 가 보장됩니다.
