@@ -8,7 +8,7 @@ import io.vertx.sqlclient.SqlConnection
 import io.vertx.sqlclient.TransactionRollbackException
 import java.sql.SQLException
 
-private val log = KotlinLogging.logger { }
+val log = KotlinLogging.logger { }
 
 /**
  * Transaction 환경 하에서 Database 작업을 수행합니다.
@@ -26,15 +26,16 @@ private val log = KotlinLogging.logger { }
  * @receiver [Pool] 인스턴스
  * @return DB 작업 결과
  */
-suspend fun <T> Pool.withTransactionAndAwait(
-    action: suspend (conn: SqlConnection) -> T,
+suspend inline fun <T> Pool.withTransactionSuspending(
+    crossinline action: suspend (conn: SqlConnection) -> T,
 ): T {
     val conn = connection.await()
     val tx = conn.begin().await()
-    try {
+
+    return try {
         val result = action(conn)
         tx.commit().await()
-        return result
+        result
     } catch (e: TransactionRollbackException) {
         throw (e)
     } catch (e: Throwable) {
@@ -53,14 +54,16 @@ suspend fun <T> Pool.withTransactionAndAwait(
  * @receiver
  * @return
  */
-suspend fun <T> Pool.withRollbackAndAwait(action: suspend (conn: SqlConnection) -> T): T {
+suspend inline fun <T> Pool.withRollbackSuspending(
+    crossinline action: suspend (conn: SqlConnection) -> T,
+): T {
     val conn = connection.await()
     log.debug { "Open Connection=$conn" }
     val tx = conn.begin().await()
-    try {
+    return try {
         val result = action(conn)
         tx.rollback().await()
-        return result
+        result
     } catch (e: TransactionRollbackException) {
         throw (e)
     } catch (e: Throwable) {

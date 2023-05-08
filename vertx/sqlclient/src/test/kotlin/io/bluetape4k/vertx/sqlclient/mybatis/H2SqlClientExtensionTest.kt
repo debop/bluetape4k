@@ -4,7 +4,7 @@ import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.vertx.sqlclient.schema.PersonMapper
 import io.bluetape4k.vertx.sqlclient.schema.PersonSchema.person
-import io.bluetape4k.vertx.sqlclient.tests.testWithRollback
+import io.bluetape4k.vertx.sqlclient.tests.testWithRollbackSuspending
 import io.vertx.core.Vertx
 import io.vertx.junit5.VertxTestContext
 import io.vertx.sqlclient.SqlConnection
@@ -25,7 +25,7 @@ class H2SqlClientExtensionTest: AbstractSqlClientExtensionsTest() {
 
     @Test
     fun `update set to subquery`(vertx: Vertx, testContext: VertxTestContext) = runSuspendWithIO {
-        vertx.testWithRollback(testContext, pool) { conn: SqlConnection ->
+        vertx.testWithRollbackSuspending(testContext, pool) { conn: SqlConnection ->
             val updateProvider = update(person) {
                 set(person.addressId) equalToQueryResult {
                     select(add(max(person.addressId), constant<Int>("1"))) { from(person) }

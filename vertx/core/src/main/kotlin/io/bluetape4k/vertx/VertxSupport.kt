@@ -11,7 +11,7 @@ import kotlin.coroutines.CoroutineContext
  */
 fun currentVertx(): Vertx = Vertx.currentContext()?.owner() ?: Vertx.vertx()
 
-suspend fun <T> Vertx.withVertxDispatcher(block: suspend CoroutineScope.() -> T): T {
+suspend inline fun <T> Vertx.withVertxDispatcher(crossinline block: suspend CoroutineScope.() -> T): T {
     return withContext(this.dispatcher() as CoroutineContext) {
         block(this)
     }

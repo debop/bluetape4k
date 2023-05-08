@@ -6,11 +6,11 @@ import java.util.concurrent.CompletableFuture
 fun <T> Future<T>.toCompletableFuture(): CompletableFuture<T> {
     val promise = CompletableFuture<T>()
 
-    onComplete {
-        if (it.succeeded()) {
-            promise.complete(it.result())
+    onComplete { ar ->
+        if (ar.succeeded()) {
+            promise.complete(ar.result())
         } else {
-            promise.completeExceptionally(it.cause())
+            promise.completeExceptionally(ar.cause())
         }
     }
 

@@ -1,21 +1,22 @@
 package io.bluetape4k.vertx.sqlclient.tests
 
-import io.bluetape4k.vertx.sqlclient.withRollbackAndAwait
-import io.bluetape4k.vertx.sqlclient.withTransactionAndAwait
-import io.bluetape4k.vertx.withVertxDispatcher
+import io.bluetape4k.vertx.sqlclient.withRollbackSuspending
+import io.bluetape4k.vertx.sqlclient.withTransactionSuspending
 import io.vertx.core.Vertx
 import io.vertx.junit5.VertxTestContext
+import io.vertx.kotlin.coroutines.dispatcher
 import io.vertx.sqlclient.Pool
 import io.vertx.sqlclient.SqlConnection
+import kotlinx.coroutines.runBlocking
 
-suspend fun Vertx.testWithTransaction(
+inline fun Vertx.testWithTransactionSuspending(
     testContext: VertxTestContext,
     pool: Pool,
-    block: suspend (conn: SqlConnection) -> Unit,
+    crossinline block: suspend (conn: SqlConnection) -> Unit,
 ) {
-    return withVertxDispatcher {
+    runBlocking(dispatcher()) {
         try {
-            pool.withTransactionAndAwait(block)
+            pool.withTransactionSuspending(block)
             testContext.completeNow()
         } catch (e: Throwable) {
             testContext.failNow(e)
@@ -23,14 +24,14 @@ suspend fun Vertx.testWithTransaction(
     }
 }
 
-suspend fun Vertx.testWithRollback(
+inline fun Vertx.testWithRollbackSuspending(
     testContext: VertxTestContext,
     pool: Pool,
-    block: suspend (conn: SqlConnection) -> Unit,
+    crossinline block: suspend (conn: SqlConnection) -> Unit,
 ) {
-    return withVertxDispatcher {
+    runBlocking(dispatcher()) {
         try {
-            pool.withRollbackAndAwait(block)
+            pool.withRollbackSuspending(block)
             testContext.completeNow()
         } catch (e: Throwable) {
             testContext.failNow(e)

@@ -5,7 +5,6 @@ import io.vertx.junit5.VertxTestContext
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
-import kotlin.coroutines.CoroutineContext
 
 /**
  * Vertx Framework 테스트 시 [VertxTestContext]를 사용하여 테스트를 수행합니다.
@@ -33,7 +32,7 @@ inline fun Vertx.withTestContextSuspending(
     testContext: VertxTestContext,
     crossinline block: suspend CoroutineScope.() -> Unit,
 ) {
-    runBlocking(dispatcher() as CoroutineContext) {
+    runBlocking(dispatcher()) {
         try {
             block()
             testContext.completeNow()

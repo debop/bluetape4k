@@ -1,3 +1,7 @@
+plugins {
+    kotlin("kapt")
+}
+
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }
@@ -27,6 +31,11 @@ dependencies {
     // Vertx Jdbc (MySQL, Postgres 를 제외한 H2 같은 것은 기존 JDBC 를 Wrapping한 것을 사용합니다)
     implementation(Libs.vertx_jdbc_client)
     implementation(Libs.agroal_pool)
+
+    // vertx-sql-cleint-templates 에서 @DataObject, @RowMapped 를 위해 사용
+    compileOnly(Libs.vertx_codegen)
+    kapt(Libs.vertx_codegen)
+    kaptTest(Libs.vertx_codegen)
 
     // MyBatis
     implementation(Libs.mybatis_dynamic_sql)

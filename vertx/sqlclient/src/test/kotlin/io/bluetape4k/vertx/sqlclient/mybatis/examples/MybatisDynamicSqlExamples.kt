@@ -7,7 +7,7 @@ import io.bluetape4k.vertx.sqlclient.AbstractVertxSqlClientTest
 import io.bluetape4k.vertx.sqlclient.mybatis.renderForVertx
 import io.bluetape4k.vertx.sqlclient.schema.PersonMapper
 import io.bluetape4k.vertx.sqlclient.schema.PersonSchema.person
-import io.bluetape4k.vertx.sqlclient.tests.testWithTransaction
+import io.bluetape4k.vertx.sqlclient.tests.testWithTransactionSuspending
 import io.vertx.core.Vertx
 import io.vertx.junit5.VertxTestContext
 import io.vertx.kotlin.coroutines.await
@@ -30,7 +30,7 @@ class MybatisDynamicSqlExamples: AbstractVertxSqlClientTest() {
     ) = runSuspendWithIO {
         log.debug { "Use MyBatis Dynamic SQL..." }
 
-        vertx.testWithTransaction(testContext, pool) { conn ->
+        vertx.testWithTransactionSuspending(testContext, pool) { conn ->
             // MyBatis Dynamic SQL 로 SQL Statement 생성
             val select = select(person.allColumns()) {
                 from(person)
