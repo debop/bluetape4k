@@ -49,6 +49,7 @@ class MySQL8Server private constructor(
     }
 
     override fun getDriverClassName(): String = DRIVER_CLASS_NAME
+    override val port: Int get() = getMappedPort(PORT)
     override val url: String get() = jdbcUrl
 
     init {

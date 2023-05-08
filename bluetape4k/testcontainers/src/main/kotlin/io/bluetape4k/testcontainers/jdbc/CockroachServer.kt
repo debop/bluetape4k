@@ -4,23 +4,24 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
-import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.containers.wait.strategy.Wait
+import org.testcontainers.containers.CockroachContainer
 import org.testcontainers.utility.DockerImageName
 
-class PostgreSQLServer private constructor(
+class CockroachServer private constructor(
     imageName: DockerImageName,
     username: String,
     password: String,
     useDefaultPort: Boolean,
     reuse: Boolean,
-): PostgreSQLContainer<PostgreSQLServer>(imageName), JdbcServer {
+): CockroachContainer(imageName), JdbcServer {
 
     companion object: KLogging() {
-        const val IMAGE = "postgres"
-        const val TAG: String = "14"
-        const val NAME = "postgresql"
-        const val PORT = 5432
+        const val IMAGE = "cockroachdb/cockroach"
+        const val TAG: String = "v22.2.8"
+        const val NAME = "cockroach"
+        const val DB_PORT = 26257
+        const val REST_API_PORT = 8080
+        const val DATABASE_NAME = "defaultdb"
 
         @JvmStatic
         operator fun invoke(
@@ -29,9 +30,9 @@ class PostgreSQLServer private constructor(
             password: String = "test",
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
-        ): PostgreSQLServer {
+        ): CockroachServer {
             val imageName = DockerImageName.parse(IMAGE).withTag(tag)
-            return PostgreSQLServer(imageName, username, password, useDefaultPort, reuse)
+            return CockroachServer(imageName, username, password, useDefaultPort, reuse)
         }
 
         @JvmStatic
@@ -41,25 +42,26 @@ class PostgreSQLServer private constructor(
             password: String = "test",
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
-        ): PostgreSQLServer {
-            return PostgreSQLServer(imageName, username, password, useDefaultPort, reuse)
+        ): CockroachServer {
+            return CockroachServer(imageName, username, password, useDefaultPort, reuse)
         }
     }
 
-    override val port: Int get() = getMappedPort(PORT)
+    override val port: Int get() = getMappedPort(DB_PORT)
     override val url: String get() = jdbcUrl
 
     init {
-        addExposedPorts(PORT)
+        // CockroachContainer에서 이미 수행한다
+        // addExposedPorts(REST_API_PORT, DB_PORT)
 
         withUsername(username)
         withPassword(password)
+        withDatabaseName(DATABASE_NAME)
 
         withReuse(reuse)
-        setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {
-            exposeCustomPorts(PORT)
+            exposeCustomPorts(REST_API_PORT, DB_PORT)
         }
     }
 
@@ -69,8 +71,8 @@ class PostgreSQLServer private constructor(
     }
 
     object Launcher {
-        val postgres: PostgreSQLServer by lazy {
-            PostgreSQLServer().apply {
+        val cockroach: CockroachServer by lazy {
+            CockroachServer(useDefaultPort = true).apply {
                 start()
                 ShutdownQueue.register(this)
             }
