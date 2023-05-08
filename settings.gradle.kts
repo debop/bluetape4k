@@ -22,21 +22,25 @@ includeModules("tokenizer")
 includeModules("utils")
 includeModules("vertx")
 
-// for example
+// Examples (library style examples)
 includeModules("examples", false)
+// Workshop (application style examples)
+includeModules("workshop/spring-boot", false, false)
 
-fun includeModules(baseDir: String, withProjectName: Boolean = true) {
+fun includeModules(baseDir: String, withProjectName: Boolean = true, withBaseDir: Boolean = true) {
     files("$rootDir/$baseDir").files
         .filter { it.isDirectory }
         .forEach { moduleDir ->
             moduleDir.listFiles()
                 ?.filter { it.isDirectory }
                 ?.forEach { dir ->
+                    val basePath = baseDir.replace("/", "-")
                     val projectName = when {
-                        withProjectName -> PROJECT_NAME + "-" + baseDir + "-" + dir.name
-                        else            -> baseDir + "-" + dir.name
+                        !withProjectName && !withBaseDir -> dir.name
+                        withProjectName                  -> PROJECT_NAME + "-" + basePath + "-" + dir.name
+                        else                             -> basePath + "-" + dir.name
                     }
-                    // println("include modules: $projectName")
+                    println("include modules: $projectName")
 
                     include(projectName)
                     project(":$projectName").projectDir = dir
