@@ -42,7 +42,7 @@ class HttpbinApiTest {
 
     @Test
     fun `measure retrofit2 call`() = runSuspendWithIO {
-        val runCount = 5
+        val runCount = 3
         val tasks = List(runCount) {
             async(Dispatchers.IO) {
                 httpbinApi.getLocalIpAddress()

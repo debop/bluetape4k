@@ -109,7 +109,9 @@ class ReactiveSessionCoroutinesExamples(
         val statement = selectFrom(ACTOR_TABLE_NAME)
             .all()
             .whereColumn("id").eq(bindMarker())
+            .limit(10)
             .build()
+
         val ps = reactiveSession.prepareSuspending(statement)
         val bs = ps.bind().setLong("id", 1212L)
 
