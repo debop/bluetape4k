@@ -2,7 +2,7 @@ package io.bluetape4k.vertx.examples
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.vertx.tests.withTestContextAwait
+import io.bluetape4k.vertx.tests.withTestContextSuspending
 import io.vertx.core.Vertx
 import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.codec.BodyCodec
@@ -69,7 +69,7 @@ class SampleVerticleTest {
 
     @Test
     fun `use SampleVerticle in coroutines`(vertx: Vertx, testContext: VertxTestContext) {
-        withTestContextAwait(vertx, testContext) {
+        vertx.withTestContextSuspending(testContext) {
             val webClient = WebClient.create(vertx)
             val deploymentCheckpoint = testContext.checkpoint()
             val requestCheckpoint = testContext.checkpoint(REPEAT_SIZE)

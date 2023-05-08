@@ -29,12 +29,11 @@ inline fun withTestContext(testContext: VertxTestContext, block: () -> Unit) {
  * @param testContext [VertxTestContext] 인스턴스
  * @param block 실행할 Coroutines 테스트 코드 블럭
  */
-inline fun withTestContextAwait(
-    vertx: Vertx,
+inline fun Vertx.withTestContextSuspending(
     testContext: VertxTestContext,
     crossinline block: suspend CoroutineScope.() -> Unit,
 ) {
-    runBlocking(vertx.dispatcher() as CoroutineContext) {
+    runBlocking(dispatcher() as CoroutineContext) {
         try {
             block()
             testContext.completeNow()

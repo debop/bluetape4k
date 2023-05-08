@@ -1,9 +1,8 @@
 package io.bluetape4k.vertx.web
 
-import io.bluetape4k.vertx.currentVertxDispatcher
+import io.bluetape4k.vertx.currentVertxCoroutineScope
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.RoutingContext
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 /**
@@ -12,11 +11,12 @@ import kotlinx.coroutines.launch
  * @param requestHandler request handler
  * @return a reference to this, so the API can be used fluently
  */
-suspend fun Route.coHandler(
-    requestHandler: suspend (RoutingContext) -> Unit,
-): Route = coroutineScope {
-    handler { ctx ->
-        launch(currentVertxDispatcher()) {
+suspend inline fun Route.coHandler(
+    crossinline requestHandler: suspend (RoutingContext) -> Unit,
+): Route {
+    return handler { ctx ->
+        val scope = currentVertxCoroutineScope()
+        scope.launch {
             try {
                 requestHandler(ctx)
             } catch (e: Throwable) {
@@ -32,11 +32,12 @@ suspend fun Route.coHandler(
  * @param requestHandler   the request handler
  * @return a reference to this, so the API can be used fluently
  */
-suspend fun Route.coFailureHandler(
-    requestHandler: suspend (RoutingContext) -> Unit,
-): Route = coroutineScope {
-    failureHandler { ctx ->
-        launch(currentVertxDispatcher()) {
+suspend inline fun Route.coFailureHandler(
+    crossinline requestHandler: suspend (RoutingContext) -> Unit,
+): Route {
+    return failureHandler { ctx ->
+        val scope = currentVertxCoroutineScope()
+        scope.launch {
             try {
                 requestHandler(ctx)
             } catch (e: Throwable) {

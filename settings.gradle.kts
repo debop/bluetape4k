@@ -26,6 +26,7 @@ includeModules("vertx")
 includeModules("examples", false)
 // Workshop (application style examples)
 includeModules("workshop/spring-boot", false, false)
+includeModules("workshop/vertx", false, false)
 
 fun includeModules(baseDir: String, withProjectName: Boolean = true, withBaseDir: Boolean = true) {
     files("$rootDir/$baseDir").files

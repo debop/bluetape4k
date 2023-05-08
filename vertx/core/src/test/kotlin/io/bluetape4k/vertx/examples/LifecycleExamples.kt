@@ -1,6 +1,6 @@
 package io.bluetape4k.vertx.examples
 
-import io.bluetape4k.vertx.tests.withTestContextAwait
+import io.bluetape4k.vertx.tests.withTestContextSuspending
 import io.vertx.core.Vertx
 import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.codec.BodyCodec
@@ -63,7 +63,7 @@ class LifecycleExample {
 
     @Test
     fun `request to server by coroutines`(testContext: VertxTestContext) {
-        withTestContextAwait(vertx, testContext) {
+        vertx.withTestContextSuspending(testContext) {
             val webClient = WebClient.create(vertx)
 
             vertx.deployVerticle(SampleVerticle()).await()
