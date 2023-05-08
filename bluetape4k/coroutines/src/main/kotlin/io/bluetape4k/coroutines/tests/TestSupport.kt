@@ -25,7 +25,7 @@ import java.util.concurrent.Executors
  * ```
  */
 @Deprecated("use withSingleThread", replaceWith = ReplaceWith("withSingleThread {}"))
-suspend fun withSingle(block: suspend (executor: CoroutineDispatcher) -> Unit) {
+suspend inline fun withSingle(crossinline block: suspend (executor: CoroutineDispatcher) -> Unit) {
     val executor = Executors.newSingleThreadExecutor()
     try {
         block(executor.asCoroutineDispatcher())
@@ -62,7 +62,7 @@ suspend fun withSingle(block: suspend (executor: CoroutineDispatcher) -> Unit) {
  * @see kotlinx.coroutines.newSingleThreadContext
  * @see kotlinx.coroutines.newFixedThreadPoolContext
  */
-suspend fun withSingleThread(block: suspend (executor: CoroutineDispatcher) -> Unit) {
+suspend inline fun withSingleThread(crossinline block: suspend (executor: CoroutineDispatcher) -> Unit) {
     val executor = Executors.newSingleThreadExecutor()
     try {
         block(executor.asCoroutineDispatcher())
@@ -87,9 +87,9 @@ suspend fun withSingleThread(block: suspend (executor: CoroutineDispatcher) -> U
  * @param parallelism 병렬 수행 갯수
  * @param block 수행할 코드 블럭
  */
-suspend fun withParallels(
+suspend inline fun withParallels(
     parallelism: Int = Runtime.getRuntime().availableProcessors(),
-    block: suspend (executors: List<CoroutineDispatcher>) -> Unit,
+    crossinline block: suspend (executors: List<CoroutineDispatcher>) -> Unit,
 ) {
     parallelism.requirePositiveNumber("parallelism")
     val executors = Array(parallelism) { Executors.newSingleThreadExecutor() }
