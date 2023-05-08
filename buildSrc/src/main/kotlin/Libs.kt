@@ -184,7 +184,7 @@ object Versions {
     const val archunit = "0.21.0"
 
     const val datafaker = "1.9.0"
-    const val snakeyaml = "2.0"
+    const val snakeyaml = "1.33"
     const val random_beans = "3.9.0"
 
     // https://mvnrepository.com/artifact/com.github.maricn/logback-slack-appender

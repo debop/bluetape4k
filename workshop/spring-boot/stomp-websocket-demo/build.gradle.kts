@@ -14,20 +14,25 @@ dependencies {
     implementation(project(":bluetape4k-io-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 
+    api(Libs.javax_annotation_api)
+
     // Spring Boot
     implementation(Libs.springBoot("autoconfigure"))
     kapt(Libs.springBoot("autoconfigure-processor"))
     kapt(Libs.springBoot("configuration-processor"))
 
-    implementation(Libs.springBootStarter("webflux"))
-    implementation(Libs.springBootStarter("mustache"))
-    implementation(Libs.springBootStarter("actuator"))
-    implementation(Libs.springBootStarter("validation"))
-
+    implementation(Libs.springBootStarter("websocket"))
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
+
+    // Websocket
+    implementation(Libs.webjar("webjars-locator-core", "0.52"))
+    implementation(Libs.webjar("sockjs-client", "1.5.1"))
+    implementation(Libs.webjar("stomp-websocket", "2.3.4"))
+    implementation(Libs.webjar("bootstrap", "5.2.3"))
+    implementation(Libs.webjar("jquery", "3.6.4"))
 
     // Coroutines
     implementation(Libs.kotlinx_coroutines_core)
@@ -40,4 +45,6 @@ dependencies {
     implementation(Libs.reactor_netty)
     implementation(Libs.reactor_kotlin_extensions)
     testImplementation(Libs.reactor_test)
+
+    implementation(Libs.logback)
 }

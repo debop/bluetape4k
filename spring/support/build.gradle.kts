@@ -12,7 +12,7 @@ dependencies {
     testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.spring("context-support"))
-    compileOnly(Libs.javax_annotation_api)
+    api(Libs.javax_annotation_api)
     compileOnly(Libs.findbugs)
 
     compileOnly(Libs.kotlinx_coroutines_core)
