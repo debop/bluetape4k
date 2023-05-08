@@ -13,9 +13,9 @@ import kotlin.coroutines.EmptyCoroutineContext
  * @param context [CoroutineContext] 인스턴스 (기본: [Dispatchers.Default])
  * @param testBody  테스트 할 코드
  */
-fun runSuspendTest(
+inline fun runSuspendTest(
     context: CoroutineContext = EmptyCoroutineContext,
-    testBody: suspend CoroutineScope.() -> Unit,
+    crossinline testBody: suspend CoroutineScope.() -> Unit,
 ) {
     runBlocking(context) {
         testBody()
@@ -28,7 +28,7 @@ fun runSuspendTest(
  *
  * @param testBody  테스트 할 코드
  */
-fun runSuspendWithIO(testBody: suspend CoroutineScope.() -> Unit) {
+inline fun runSuspendWithIO(crossinline testBody: suspend CoroutineScope.() -> Unit) {
     runBlocking(Dispatchers.IO) {
         testBody()
     }
