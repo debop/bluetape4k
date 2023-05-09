@@ -11,6 +11,9 @@ dependencies {
     api(Libs.aws2_aws_core)
     api(Libs.aws2_s3)
     api(Libs.aws2_s3_transfer_manager)
+    // https://mvnrepository.com/artifact/software.amazon.awssdk.crt/aws-crt
+    // https://docs.aws.amazon.com/ko_kr/sdk-for-java/latest/developer-guide/http-configuration-crt.html
+    api(Libs.aws2_aws_crt)
     testImplementation(Libs.aws2_test_utils)
 
     // Coroutines

@@ -630,6 +630,11 @@ object Libs {
     val aws2_utils get() = awsSdkV2("utils")
     val aws2_test_utils get() = awsSdkV2("test-utils")
 
+    // https://docs.aws.amazon.com/ko_kr/sdk-for-java/latest/developer-guide/http-configuration-crt.html
+    // https://mvnrepository.com/artifact/software.amazon.awssdk.crt/aws-crt
+    val aws2_aws_crt get() = "software.amazon.awssdk.crt:aws-crt:0.21.14"
+
+
     // AsyncHttpClient
     val async_http_client get() = "org.asynchttpclient:async-http-client:${Versions.asynchttpclient}"
     val async_http_client_extras_retrofit2 get() = "org.asynchttpclient:async-http-client-extras-retrofit2:${Versions.asynchttpclient}"
