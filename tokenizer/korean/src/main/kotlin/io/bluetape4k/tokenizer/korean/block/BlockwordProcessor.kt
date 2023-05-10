@@ -83,9 +83,10 @@ object BlockwordProcessor: KLogging() {
      */
     private fun canMask(token: KoreanToken, severity: Severity = Severity.DEFAULT): Boolean {
         return token.pos in blockedPos &&
-            (
-                KoreanDictionaryProvider.blockWords[severity]?.contains(token.text) ?: false ||
-                    KoreanDictionaryProvider.blockWords[severity]?.contains(token.stem) ?: false
-                )
+            (containsBlockWord(token.text, severity) || containsBlockWord(token.stem, severity))
+    }
+
+    private fun containsBlockWord(text: String?, severity: Severity = Severity.DEFAULT): Boolean {
+        return text?.run { KoreanDictionaryProvider.blockWords[severity]?.contains(this) } ?: false
     }
 }
