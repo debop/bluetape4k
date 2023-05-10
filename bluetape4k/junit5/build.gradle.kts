@@ -14,8 +14,7 @@ dependencies {
     compileOnly(Libs.junit_platform_runner)
 
     api(Libs.kluent)
-    compileOnly(Libs.mockk)
-
+    api(Libs.mockk)
     api(Libs.awaitility_kotlin)
 
     api(Libs.datafaker)
@@ -25,5 +24,7 @@ dependencies {
     compileOnly(Libs.logback)
 
     compileOnly(Libs.kotlinx_coroutines_core)
+    compileOnly(Libs.kotlinx_coroutines_jdk8)
+    compileOnly(Libs.kotlinx_coroutines_debug)
     compileOnly(Libs.kotlinx_coroutines_test)
 }

@@ -47,7 +47,7 @@ object Plugins {
 object Versions {
 
     const val kotlin = "1.8.21"
-    const val kotlinx_coroutines = "1.6.4"
+    const val kotlinx_coroutines = "1.7.0"
     const val kotlinx_serialization = "1.5.0"
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/atomicfu
@@ -82,13 +82,14 @@ object Versions {
 
     const val bucket4j = "7.6.0"
     const val resilience4j = "2.0.2"
-    const val netty = "4.1.91.Final"
+    const val netty = "4.1.92.Final"
 
     // https://mvnrepository.com/artifact/com.amazonaws
     const val aws = "1.12.459"
 
     // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
     const val aws2 = "2.20.56"
+    const val aws2_crt = "0.21.14"
 
     const val grpc = "1.54.1"
     const val grpc_kotlin = "1.3.0"
@@ -632,7 +633,7 @@ object Libs {
 
     // https://docs.aws.amazon.com/ko_kr/sdk-for-java/latest/developer-guide/http-configuration-crt.html
     // https://mvnrepository.com/artifact/software.amazon.awssdk.crt/aws-crt
-    val aws2_aws_crt get() = "software.amazon.awssdk.crt:aws-crt:0.21.14"
+    val aws2_aws_crt get() = "software.amazon.awssdk.crt:aws-crt:${Versions.aws2_crt}"
 
 
     // AsyncHttpClient

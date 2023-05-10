@@ -286,6 +286,22 @@ subprojects {
         dependencies {
             dependency(Libs.jetbrains_annotations)
 
+            // Kotlinx Coroutines (mavenBom 이 적용이 안되어서 추가로 명시했습니다)
+            dependency(Libs.kotlinx_coroutines_bom)
+            dependency(Libs.kotlinx_coroutines_core)
+            dependency(Libs.kotlinx_coroutines_core_jvm)
+            dependency(Libs.kotlinx_coroutines_jdk8)
+            dependency(Libs.kotlinx_coroutines_jdk9)
+            dependency(Libs.kotlinx_coroutines_jdk8)
+            dependency(Libs.kotlinx_coroutines_reactive)
+            dependency(Libs.kotlinx_coroutines_reactor)
+            dependency(Libs.kotlinx_coroutines_rx2)
+            dependency(Libs.kotlinx_coroutines_rx3)
+            dependency(Libs.kotlinx_coroutines_slf4j)
+            dependency(Libs.kotlinx_coroutines_debug)
+            dependency(Libs.kotlinx_coroutines_test)
+            dependency(Libs.kotlinx_coroutines_test_jvm)
+
             // Apache Commons
             dependency(Libs.commons_beanutils)
             dependency(Libs.commons_collections4)
@@ -351,6 +367,7 @@ subprojects {
             dependency(Libs.marshalling_river)
 
             // Jackson (이상하게 mavenBom 에 적용이 안되어서 강제로 추가하였다)
+            dependency(Libs.jackson_bom)
             dependency(Libs.jackson_annotations)
             dependency(Libs.jackson_core)
             dependency(Libs.jackson_databind)
@@ -380,6 +397,8 @@ subprojects {
 
             dependency(Libs.httpclient5)
             dependency(Libs.httpcore5)
+            dependency(Libs.httpcore5_h2)
+            dependency(Libs.httpcore5_reactive)
 
             dependency(Libs.grpc_kotlin_stub)
 
@@ -441,11 +460,6 @@ subprojects {
             dependency(Libs.prometheus_simpleclient_tracer_otel)
             dependency(Libs.prometheus_simpleclient_tracer_otel_agent)
 
-            // Apache HttpClient5
-            dependency(Libs.httpclient5)
-            dependency(Libs.httpcore5)
-            dependency(Libs.httpcore5_h2)
-
             // OW2 ASM
             dependency(Libs.ow2_asm)
             dependency(Libs.ow2_asm_commons)
@@ -476,6 +490,8 @@ subprojects {
         testImplementation(Libs.kotlin_test)
         testImplementation(Libs.kotlin_test_junit5)
 
+        compileOnly(Libs.kotlinx_coroutines_core)
+
         // 개발 시에는 logback 이 검증하기에 더 좋고, Production에서 비동기 로깅은 log4j2 가 성능이 좋다고 합니다.
         api(Libs.slf4j_api)
         testImplementation(Libs.logback)
@@ -486,18 +502,6 @@ subprojects {
         testImplementation(Libs.junit_jupiter)
         testImplementation(Libs.junit_jupiter_migrationsupport)
         testRuntimeOnly(Libs.junit_platform_engine)
-
-        testImplementation(Libs.kluent)
-        testImplementation(Libs.mockk)
-        testImplementation(Libs.awaitility_kotlin)
-
-        // testImplementation(Libs.testcontainers)
-        // Apple Silicon에서 testcontainers 를 사용하기 위해 참조해야 합니다.
-        // testImplementation(Libs.jna)
-
-        // Property baesd test
-        testImplementation(Libs.datafaker)
-        testImplementation(Libs.random_beans)
     }
 
     tasks.withType<Jar> {

@@ -12,6 +12,10 @@ dependencies {
     testImplementation(Libs.aws2_s3)
     testImplementation(Libs.aws2_test_utils)
 
+    // https://mvnrepository.com/artifact/software.amazon.awssdk.crt/aws-crt
+    // https://docs.aws.amazon.com/ko_kr/sdk-for-java/latest/developer-guide/http-configuration-crt.html
+    api(Libs.aws2_aws_crt)
+
     // Coroutines
     compileOnly(Libs.kotlinx_coroutines_core)
     compileOnly(Libs.kotlinx_coroutines_jdk8)

@@ -36,34 +36,11 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
         private const val REPEAT_SIZE = 5
     }
 
-    object TestService {
-
-        const val TEST_COUNT = 30
-        const val BintrayApiBaseUrl = "https://httpbin.org"
-
-        data class IpAddress(val origin: String): Serializable
-
-        interface HttpbinApi {
-            @GET("/ip")
-            fun getLocalIpAddress(): Call<IpAddress>
-        }
-
-        interface CoroutineHttpbinApi {
-            @GET("/ip")
-            suspend fun getLocalIpAddress(): IpAddress
-        }
-
-        interface ReactorHttpbinApi {
-            @GET("/ip")
-            fun getLocalIpAddress(): Mono<IpAddress>
-        }
-    }
-
     private fun isPresentRetrofitAdapterRxJava2(): Boolean =
         classIsPresent("retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory")
 
     private fun createRetrofit(factory: CallAdapter.Factory): Retrofit {
-        return retrofit(TestService.BintrayApiBaseUrl) {
+        return retrofit(TestService.JsonPlaceHolderUrl) {
             callFactory(vertxCallFactoryOf())
             addConverterFactory(defaultJsonConverterFactory)
             addCallAdapterFactory(factory)
@@ -81,16 +58,16 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
     fun `measure metrics for sync method`() {
         val registry = SimpleMeterRegistry()
         val factory = MicrometerRetrofitMetricsFactory(registry)
-        val httpbinApi = createRetrofit(factory).service<TestService.HttpbinApi>()
+        val httpbinApi = createRetrofit(factory).service<TestService.JsonPlaceholderApi>()
 
-        val call = httpbinApi.getLocalIpAddress()
+        val call = httpbinApi.getPosts()
         call.shouldNotBeNull()
-        val ipAddress = call.execute().body()
-        ipAddress.shouldNotBeNull()
-        log.debug { "ip address=$ipAddress" }
+        val posts = call.execute().body()
+        posts.shouldNotBeNull()
+        log.debug { "posts=$posts" }
 
         repeat(REPEAT_SIZE) {
-            httpbinApi.getLocalIpAddress().execute()
+            httpbinApi.getPosts().execute()
         }
 
         registry.meters.forEach { meter ->
@@ -103,16 +80,16 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
     fun `measure metrics for async method`() = runSuspendWithIO {
         val registry = SimpleMeterRegistry()
         val factory = MicrometerRetrofitMetricsFactory(registry)
-        val httpbinApi = createRetrofit(factory).service<TestService.HttpbinApi>()
+        val api = createRetrofit(factory).service<TestService.JsonPlaceholderApi>()
 
-        val call = httpbinApi.getLocalIpAddress()
+        val call = api.getPosts()
         call.shouldNotBeNull()
-        val ipAddress = call.executeAsync().await().body()
-        ipAddress.shouldNotBeNull()
-        log.debug { "ip address=$ipAddress" }
+        val posts = call.executeAsync().await().body()
+        posts.shouldNotBeNull()
+        log.debug { "posts=$posts" }
 
         List(REPEAT_SIZE) {
-            httpbinApi.getLocalIpAddress().executeAsync()
+            api.getPosts().executeAsync()
         }.map { it.await() }
 
         registry.meters.forEach { meter ->
@@ -125,14 +102,14 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
     fun `measure metrics for coroutine method`() = runSuspendWithIO {
         val registry = SimpleMeterRegistry()
         val factory = MicrometerRetrofitMetricsFactory(registry)
-        val httpbinApi = createRetrofit(factory).service<TestService.CoroutineHttpbinApi>()
+        val api = createRetrofit(factory).service<TestService.CoroutineJsonPlaceholderApi>()
 
-        val ipAddress = httpbinApi.getLocalIpAddress()
-        log.debug { "ip addresss=$ipAddress" }
+        val posts = api.getPosts()
+        log.debug { "posts=$posts" }
 
         List(REPEAT_SIZE) {
             launch(Dispatchers.IO) {
-                httpbinApi.getLocalIpAddress()
+                api.getPosts()
             }
         }.joinAll()
 
@@ -147,15 +124,43 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
     fun `measure metrics for reactive method`() = runBlocking<Unit> {
         val registry = SimpleMeterRegistry()
         val factory = MicrometerRetrofitMetricsFactory(registry)
-        val httpbinApi = createRetrofit(factory).service<TestService.ReactorHttpbinApi>()
+        val api = createRetrofit(factory).service<TestService.ReactorJsonPlaceholderApi>()
 
-        val ipAddress = httpbinApi.getLocalIpAddress().awaitSingle()
-        log.debug { "ip address=$ipAddress" }
+        val posts = api.getPosts().awaitSingle()
+        log.debug { "posts=$posts" }
 
         registry.meters.forEach { meter ->
             log.debug { "id=${meter.id}, tags=${meter.measure().joinToString()}" }
         }
         registry[MicrometerRetrofitMetricsRecorder.METRICS_KEY].timer().shouldNotBeNull()
     }
+}
 
+
+object TestService {
+
+    const val TEST_COUNT = 30
+    const val JsonPlaceHolderUrl = "https://jsonplaceholder.typicode.com"
+
+    interface JsonPlaceholderApi {
+        @GET("/posts")
+        fun getPosts(): Call<List<Post>>
+    }
+
+    interface CoroutineJsonPlaceholderApi {
+        @GET("/posts")
+        suspend fun getPosts(): List<Post>
+    }
+
+    interface ReactorJsonPlaceholderApi {
+        @GET("/posts")
+        fun getPosts(): Mono<List<Post>>
+    }
+
+    data class Post(
+        val userId: Int,
+        val id: Int,
+        var title: String?,
+        var body: String?,
+    ): Serializable
 }
