@@ -11,6 +11,7 @@ open class DaySeekerContext private constructor(
 ): ICalendarVisitorContext {
 
     companion object: KLogging() {
+        @JvmStatic
         operator fun invoke(startDay: DayRange, dayCount: Int = 0): DaySeekerContext {
             return DaySeekerContext(startDay, dayCount.absoluteValue)
         }

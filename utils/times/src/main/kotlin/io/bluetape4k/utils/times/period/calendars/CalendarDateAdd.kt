@@ -35,8 +35,9 @@ open class CalendarDateAdd private constructor(): DateAdd() {
     val workingHours: MutableList<HourRangeInDay> = fastListOf()
     val workingDayOfWeekHours: MutableList<DayOfWeekHourRange> = fastListOf()
 
-    override val includePeriods: TimePeriodCollection
-        get() = throw UnsupportedOperationException("Does not support IncludePeriods")
+//    override var includePeriods: TimePeriodCollection = TimePeriodCollection.EMPTY
+//        get() = throw UnsupportedOperationException("Does not support IncludePeriods")
+//        protected set
 
     fun addWorkingWeekdays() = addWeekdays(*Weekdays)
 
@@ -49,7 +50,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
     override fun add(start: ZonedDateTime, offset: Duration, seekBoundary: SeekBoundaryMode): ZonedDateTime? {
         log.trace { "add... start=$start, offset=$offset, seekBoundary=$seekBoundary" }
 
-        val allEmpty = weekDays.isEmpty() && _excludePeriods.isEmpty() && workingHours.isEmpty()
+        val allEmpty = weekDays.isEmpty() && excludePeriods.isEmpty() && workingHours.isEmpty()
         if (allEmpty) {
             return start + offset
         }
@@ -66,7 +67,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
     override fun subtract(start: ZonedDateTime, offset: Duration, seekBoundary: SeekBoundaryMode): ZonedDateTime? {
         log.trace { "subtract... start=$start, offset=$offset, seekBoundary=$seekBoundary" }
 
-        val allEmpty = weekDays.isEmpty() && _excludePeriods.isEmpty() && workingHours.isEmpty()
+        val allEmpty = weekDays.isEmpty() && excludePeriods.isEmpty() && workingHours.isEmpty()
         if (allEmpty) {
             return start - offset
         }
@@ -100,10 +101,10 @@ open class CalendarDateAdd private constructor(): DateAdd() {
         var week: WeekRange? = WeekRange(moment, calendar)
 
         while (week != null) {
-            _includePeriods.clear()
-            _includePeriods.addAll(getAvailableWeekPeriods(week))
+            includePeriods.clear()
+            includePeriods.addAll(getAvailableWeekPeriods(week))
 
-            log.trace { "가능한 기간=$_includePeriods" }
+            log.trace { "가능한 기간=$includePeriods" }
 
             val result = super.calculateEnd(moment, remaining!!, seekDir, seekBoundary)
             end = result.first
@@ -122,7 +123,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
                     week?.let { moment = it.start }
                 }
 
-                else -> {
+                else                  -> {
                     week = findPrevWeek(week)
                     week?.let { moment = it.end }
                 }
@@ -137,14 +138,12 @@ open class CalendarDateAdd private constructor(): DateAdd() {
         log.trace { "current week=$current 의 이후 week 기간을 구합니다..." }
 
         val nextWeek = when {
-            _excludePeriods.isEmpty() -> {
-                current.nextWeek()
-            }
+            excludePeriods.isEmpty() -> current.nextWeek()
 
-            else -> {
+            else                     -> {
                 val limits = TimeRange(start = current.end + 1.nanos(), end = MaxPeriodTime)
                 val gapCalculator = TimeGapCalculator<TimeRange>(calendar)
-                val remainingPeriods = gapCalculator.gaps(_excludePeriods, limits)
+                val remainingPeriods = gapCalculator.gaps(excludePeriods, limits)
 
                 if (remainingPeriods.isNotEmpty()) {
                     WeekRange(remainingPeriods.first().start, calendar)
@@ -161,14 +160,12 @@ open class CalendarDateAdd private constructor(): DateAdd() {
         log.trace { "current week=$current 의 이전 week 기간을 구합니다..." }
 
         val prevWeek = when {
-            _excludePeriods.isEmpty() -> {
-                current.prevWeek()
-            }
+            excludePeriods.isEmpty() -> current.prevWeek()
 
-            else -> {
+            else                     -> {
                 val limits = TimeRange(start = MinPeriodTime, end = current.start - 1.nanos())
                 val gapCalculator = TimeGapCalculator<TimeRange>(calendar)
-                val remainingPeriods = gapCalculator.gaps(_excludePeriods, limits)
+                val remainingPeriods = gapCalculator.gaps(excludePeriods, limits)
 
                 if (remainingPeriods.isNotEmpty()) {
                     WeekRange(remainingPeriods.last().end, calendar)
@@ -199,7 +196,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
         val weekCollector = CalendarPeriodCollector(filter, limits, SeekDirection.FORWARD, calendar)
         weekCollector.collectHours()
 
-        log.trace { "available week periods=${weekCollector.periods}" }
+        log.trace { "Available week periods=${weekCollector.periods}" }
         return weekCollector.periods
     }
 }

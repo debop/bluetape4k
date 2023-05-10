@@ -21,7 +21,7 @@ class TemporalInterval<T> private constructor(
 ): AbstractTemporalInterval<T>() where T: Temporal, T: Comparable<T> {
 
     companion object: KLogging() {
-
+        @JvmStatic
         operator fun <T> invoke(
             start: T,
             end: T,
@@ -31,6 +31,7 @@ class TemporalInterval<T> private constructor(
             return TemporalInterval(start, end, zoneId)
         }
 
+        @JvmStatic
         operator fun <T> invoke(
             start: T,
             duration: TemporalAmount,
@@ -39,6 +40,7 @@ class TemporalInterval<T> private constructor(
             return invoke(start, (start + duration) as T, zoneId)
         }
 
+        @JvmStatic
         operator fun <T> invoke(
             duration: TemporalAmount,
             end: T,

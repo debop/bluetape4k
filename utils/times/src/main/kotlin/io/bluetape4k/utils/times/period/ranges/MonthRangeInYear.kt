@@ -42,6 +42,8 @@ open class MonthRangeInYear(
     override fun compareTo(other: MonthRangeInYear): Int =
         startMonth.compareTo(other.startMonth)
 
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
+
     override fun hashCode(): Int = startMonth.value + endMonth.value * 100
 
     override fun equalProperties(other: Any): Boolean {

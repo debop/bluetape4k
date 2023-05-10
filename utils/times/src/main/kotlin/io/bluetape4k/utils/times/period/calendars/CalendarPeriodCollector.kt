@@ -19,18 +19,17 @@ import io.bluetape4k.utils.times.period.ranges.YearRange
 import io.bluetape4k.utils.times.period.ranges.YearRangeCollection
 import io.bluetape4k.utils.times.zonedDateTimeOf
 
-class CalendarPeriodCollector(
+class CalendarPeriodCollector private constructor(
     filter: CalendarPeriodCollectorFilter,
     limits: ITimePeriod,
-    seekDir: SeekDirection = SeekDirection.FORWARD,
-    calendar: ITimeCalendar = TimeCalendar.Default,
+    seekDir: SeekDirection,
+    calendar: ITimeCalendar,
 ): CalendarVisitor<CalendarPeriodCollectorFilter,
     CalendarPeriodCollectorContext>(filter, limits, seekDir, calendar) {
 
     companion object: KLogging() {
         @JvmStatic
-        @JvmOverloads
-        fun of(
+        operator fun invoke(
             filter: CalendarPeriodCollectorFilter,
             limits: ITimePeriod,
             seekDir: SeekDirection = SeekDirection.FORWARD,
@@ -55,7 +54,6 @@ class CalendarPeriodCollector(
 
     override fun enterYears(years: YearRangeCollection, context: CalendarPeriodCollectorContext): Boolean =
         context.scope.value > CollectKind.Year.value
-
 
     override fun enterMonths(year: YearRange, context: CalendarPeriodCollectorContext): Boolean =
         context.scope.value > CollectKind.Month.value
@@ -168,10 +166,6 @@ class CalendarPeriodCollector(
 
     override fun onVisitDay(day: DayRange, context: CalendarPeriodCollectorContext): Boolean {
         log.trace { "visit day... day=$day, context=$context" }
-
-        //        if(context.scope != CollectKind.Hour) {
-        //            return true
-        //        }
 
         if (filter.collectingHours.isEmpty()) {
             day.hourSequence()

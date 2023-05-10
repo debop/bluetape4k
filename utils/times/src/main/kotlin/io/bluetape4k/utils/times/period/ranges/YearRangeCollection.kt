@@ -5,15 +5,31 @@ import io.bluetape4k.utils.times.period.ITimeCalendar
 import io.bluetape4k.utils.times.period.TimeCalendar
 import java.time.ZonedDateTime
 
-open class YearRangeCollection(
+open class YearRangeCollection protected constructor(
     year: Int,
     yearCount: Int,
     calendar: ITimeCalendar = TimeCalendar.Default,
 ): YearTimeRange(year, yearCount, calendar) {
 
-    @JvmOverloads
-    constructor(time: ZonedDateTime, yearCount: Int, calendar: ITimeCalendar = TimeCalendar.Default)
-        : this(time.year, yearCount, calendar)
+    companion object {
+        @JvmStatic
+        operator fun invoke(
+            year: Int,
+            yearCount: Int,
+            calendar: ITimeCalendar = TimeCalendar.Default,
+        ): YearRangeCollection {
+            return YearRangeCollection(year, yearCount, calendar)
+        }
+
+        @JvmStatic
+        operator fun invoke(
+            time: ZonedDateTime,
+            yearCount: Int,
+            calendar: ITimeCalendar = TimeCalendar.Default,
+        ): YearRangeCollection {
+            return invoke(time.year, yearCount, calendar)
+        }
+    }
 
     fun yearSequence(): Sequence<YearRange> = yearRanges(year, yearCount, calendar)
 

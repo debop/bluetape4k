@@ -34,6 +34,8 @@ open class DayRangeInMonth(
     override fun compareTo(other: DayRangeInMonth): Int =
         startDayOfMonth.compareTo(other.startDayOfMonth)
 
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
+
     override fun hashCode(): Int {
         return startDayOfMonth + endDayOfMonth * 100 // super<AbstractValueObject>.hashCode()
     }

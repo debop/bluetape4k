@@ -64,7 +64,6 @@ fun <T> ReadableTemporalInterval<T>.chunkMillis(size: Int): Sequence<List<T>> wh
 //
 
 @Suppress("UNCHECKED_CAST")
-@JvmOverloads
 fun <T> ReadableTemporalInterval<T>.windowed(
     size: Int,
     step: Int = 1,
@@ -86,56 +85,48 @@ fun <T> ReadableTemporalInterval<T>.windowed(
     }
 }
 
-@JvmOverloads
 fun <T> ReadableTemporalInterval<T>.windowedYears(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
     windowed(size, step, ChronoUnit.YEARS)
 
-@JvmOverloads
 fun <T> ReadableTemporalInterval<T>.windowedMonths(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
     windowed(size, step, ChronoUnit.MONTHS)
 
-@JvmOverloads
 fun <T> ReadableTemporalInterval<T>.windowedWeeks(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
     windowed(size, step, ChronoUnit.WEEKS)
 
-@JvmOverloads
 fun <T> ReadableTemporalInterval<T>.windowedDays(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
     windowed(size, step, ChronoUnit.DAYS)
 
-@JvmOverloads
 fun <T> ReadableTemporalInterval<T>.windowedHours(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
     windowed(size, step, ChronoUnit.HOURS)
 
-@JvmOverloads
 fun <T> ReadableTemporalInterval<T>.windowedMinutes(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
     windowed(size, step, ChronoUnit.MINUTES)
 
-@JvmOverloads
 fun <T> ReadableTemporalInterval<T>.windowedSeconds(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
     windowed(size, step, ChronoUnit.SECONDS)
 
-@JvmOverloads
 fun <T> ReadableTemporalInterval<T>.windowedMillis(
     size: Int,
     step: Int = 1,

@@ -23,6 +23,8 @@ open class DayOfWeekHourRange(
 
     override fun hashCode(): Int = hashOf(super.hashCode(), dayOfWeek)
 
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
+
     override fun buildStringHelper(): ToStringBuilder =
         super.buildStringHelper()
             .add("dayOfWeek", dayOfWeek)

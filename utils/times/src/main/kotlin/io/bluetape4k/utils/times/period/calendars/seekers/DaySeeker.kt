@@ -13,13 +13,22 @@ import io.bluetape4k.utils.times.period.ranges.MonthRange
 import io.bluetape4k.utils.times.period.ranges.YearRange
 import io.bluetape4k.utils.times.period.ranges.YearRangeCollection
 
-open class DaySeeker(
-    filter: CalendarVisitorFilter = CalendarVisitorFilter(),
-    seekDir: SeekDirection = SeekDirection.FORWARD,
-    calendar: ITimeCalendar = TimeCalendar.Default,
+open class DaySeeker private constructor(
+    filter: CalendarVisitorFilter,
+    seekDir: SeekDirection,
+    calendar: ITimeCalendar,
 ): CalendarVisitor<CalendarVisitorFilter, DaySeekerContext>(filter, TimeRange.AnyTime, seekDir, calendar) {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        @JvmStatic
+        operator fun invoke(
+            filter: CalendarVisitorFilter = CalendarVisitorFilter(),
+            seekDir: SeekDirection = SeekDirection.FORWARD,
+            calendar: ITimeCalendar = TimeCalendar.Default,
+        ): DaySeeker {
+            return DaySeeker(filter, seekDir, calendar)
+        }
+    }
 
     open fun findDay(startDay: DayRange, dayCount: Int): DayRange? {
         log.trace { "find day... startDay=$startDay, dayCount=$dayCount" }

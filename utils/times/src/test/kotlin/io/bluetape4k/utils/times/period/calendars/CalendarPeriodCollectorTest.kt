@@ -34,7 +34,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
             zonedDateTimeOf(2001, 1, 1),
             zonedDateTimeOf(2019, 12, 31)
         )
-        val collector = CalendarPeriodCollector.of(filter, limits)
+        val collector = CalendarPeriodCollector(filter, limits)
 
         collector.collectYears()
 
@@ -56,7 +56,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
             zonedDateTimeOf(2011, 12, 31)
         )
 
-        val collector = CalendarPeriodCollector.of(filter, limits)
+        val collector = CalendarPeriodCollector(filter, limits)
         collector.collectMonths()
 
         log.trace { "Collect months... periods=${collector.periods}" }
@@ -78,7 +78,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
             zonedDateTimeOf(2010, 1, 1),
             zonedDateTimeOf(2011, 12, 31)
         )
-        val collector = CalendarPeriodCollector.of(filter, limits)
+        val collector = CalendarPeriodCollector(filter, limits)
 
         collector.collectDays()
         log.trace { "collect days=${collector.periods}" }
@@ -110,7 +110,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
             zonedDateTimeOf(2010, 1, 1),
             zonedDateTimeOf(2011, 12, 31)
         )
-        val collector = CalendarPeriodCollector.of(filter, limits)
+        val collector = CalendarPeriodCollector(filter, limits)
 
         collector.collectHours()
 
@@ -145,7 +145,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
             zonedDateTimeOf(2010, 1, 1),
             zonedDateTimeOf(2011, 12, 31)
         )
-        val collector = CalendarPeriodCollector.of(filter, limits)
+        val collector = CalendarPeriodCollector(filter, limits)
 
         collector.collectHours()
         collector.periods.forEach {
@@ -202,7 +202,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
 
         val filter1 = CalendarPeriodCollectorFilter().apply { addWorkingWeekdays() }
 
-        val collector1 = CalendarPeriodCollector.of(filter1, year2011)
+        val collector1 = CalendarPeriodCollector(filter1, year2011)
         collector1.collectDays()
 
         collector1.periods shouldHaveSize workingDays2011
@@ -213,7 +213,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
             excludePeriods.add(MonthRange(2011, 3))
         }
 
-        val collector2 = CalendarPeriodCollector.of(filter2, year2011)
+        val collector2 = CalendarPeriodCollector(filter2, year2011)
         collector2.collectDays()
         collector2.periods shouldHaveSize workingDays2011 - workingDaysMarch2011
 
@@ -224,7 +224,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
             excludePeriods.add(WeekRangeCollection(2011, 26, 2))
         }
 
-        val collector3 = CalendarPeriodCollector.of(filter3, year2011)
+        val collector3 = CalendarPeriodCollector(filter3, year2011)
         collector3.collectDays()
 
         collector3.periods shouldHaveSize workingDays2011 - workingDaysMarch2011 - 2 * Weekdays.size

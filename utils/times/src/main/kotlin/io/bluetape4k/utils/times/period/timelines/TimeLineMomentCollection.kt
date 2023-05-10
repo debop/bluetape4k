@@ -1,15 +1,23 @@
 package io.bluetape4k.utils.times.period.timelines
 
 import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.logging.KLogging
 import io.bluetape4k.utils.times.period.ITimePeriod
 import java.time.ZonedDateTime
 
 /**
  * [ITimeLineMomentCollection] 의 기본 구현체
  */
-open class TimeLineMomentCollection @JvmOverloads constructor(
-    private val moments: MutableList<ITimeLineMoment> = fastListOf(),
+open class TimeLineMomentCollection protected constructor(
+    private val moments: MutableList<ITimeLineMoment>,
 ): ITimeLineMomentCollection, MutableList<ITimeLineMoment> by moments {
+
+    companion object: KLogging() {
+        @JvmStatic
+        operator fun invoke(moments: MutableList<ITimeLineMoment> = fastListOf()): TimeLineMomentCollection {
+            return TimeLineMomentCollection(moments)
+        }
+    }
 
     override fun minOrNull(): ITimeLineMoment? = moments.minOrNull()
 

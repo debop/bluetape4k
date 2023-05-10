@@ -25,6 +25,8 @@ open class HourRangeInDay(
 
     override fun hashCode(): Int = hashOf(start, end)
 
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
+
     override fun equalProperties(other: Any): Boolean =
         other is HourRangeInDay &&
             start == other.start &&

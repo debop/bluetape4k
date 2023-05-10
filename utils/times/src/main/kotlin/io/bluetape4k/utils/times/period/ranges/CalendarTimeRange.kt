@@ -18,12 +18,13 @@ import java.time.DayOfWeek
 import java.time.Duration
 import java.time.ZonedDateTime
 
-open class CalendarTimeRange(
-    val period: ITimePeriod = TimeRange.AnyTime,
-    val calendar: ITimeCalendar = TimeCalendar.Default,
+open class CalendarTimeRange protected constructor(
+    val period: ITimePeriod,
+    val calendar: ITimeCalendar,
 ): TimeRange(calendar.mapStart(period.start), calendar.mapEnd(period.end), true) {
 
     companion object: KLogging() {
+        @JvmStatic
         operator fun invoke(
             period: ITimePeriod = TimeRange.AnyTime,
             calendar: ITimeCalendar = TimeCalendar.Default,
@@ -90,6 +91,8 @@ open class CalendarTimeRange(
             other is CalendarTimeRange &&
             calendar == other.calendar
     }
+
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
 
     override fun hashCode(): Int = hashOf(super.hashCode(), calendar)
 

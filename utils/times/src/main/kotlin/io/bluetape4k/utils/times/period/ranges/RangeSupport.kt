@@ -1,7 +1,6 @@
 package io.bluetape4k.utils.times.period.ranges
 
 import io.bluetape4k.core.assertPositiveNumber
-import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.utils.times.days
 import io.bluetape4k.utils.times.hours
 import io.bluetape4k.utils.times.minutes
@@ -11,10 +10,6 @@ import io.bluetape4k.utils.times.period.TimeCalendar
 import io.bluetape4k.utils.times.weeks
 import java.time.ZonedDateTime
 
-
-private val log = KotlinLogging.logger {}
-
-@JvmOverloads
 fun yearRanges(year: Int, yearCount: Int = 1, calendar: ITimeCalendar = TimeCalendar.Default): Sequence<YearRange> {
     yearCount.assertPositiveNumber("yearCount")
 
@@ -29,7 +24,6 @@ fun yearRanges(year: Int, yearCount: Int = 1, calendar: ITimeCalendar = TimeCale
     }
 }
 
-@JvmOverloads
 fun quarterRanges(
     startTime: ZonedDateTime,
     quarterCount: Int = 1,
@@ -48,7 +42,6 @@ fun quarterRanges(
     }
 }
 
-@JvmOverloads
 fun monthRanges(
     startTime: ZonedDateTime,
     monthCount: Int = 1,
@@ -70,7 +63,6 @@ fun monthRanges(
     }
 }
 
-@JvmOverloads
 fun weekRanges(
     start: ZonedDateTime,
     weekCount: Int = 1,
@@ -93,7 +85,6 @@ fun weekRanges(
     }
 }
 
-@JvmOverloads
 fun dayRanges(
     start: ZonedDateTime,
     dayCount: Int = 1,
@@ -103,7 +94,6 @@ fun dayRanges(
     return dayRanges(start, start + dayCount.days(), calendar)
 }
 
-@JvmOverloads
 fun dayRanges(
     start: ZonedDateTime,
     end: ZonedDateTime,
@@ -117,7 +107,6 @@ fun dayRanges(
     }
 }
 
-@JvmOverloads
 fun hourRanges(
     start: ZonedDateTime,
     hourCount: Int = 1,
@@ -140,7 +129,6 @@ fun hourRanges(
     }
 }
 
-@JvmOverloads
 fun minuteRanges(
     start: ZonedDateTime,
     minuteCount: Int = 1,

@@ -27,11 +27,17 @@ open class DateAdd protected constructor() {
         operator fun invoke(): DateAdd = DateAdd()
     }
 
-    protected val _includePeriods = TimePeriodCollection()
-    protected val _excludePeriods = TimePeriodCollection()
+//    protected val _includePeriods = TimePeriodCollection()
+//    protected val _excludePeriods = TimePeriodCollection()
+//
+//    open val includePeriods: TimePeriodCollection get() = _includePeriods
+//    open val excludePeriods: TimePeriodCollection get() = _excludePeriods
 
-    open val includePeriods: TimePeriodCollection get() = _includePeriods
-    open val excludePeriods: TimePeriodCollection get() = _excludePeriods
+    open var includePeriods: TimePeriodCollection = TimePeriodCollection()
+        protected set
+
+    open var excludePeriods: TimePeriodCollection = TimePeriodCollection()
+        protected set
 
     /**
      * 시작 일자로부터 offset 기간이 지난 일자를 계산합니다. (기간에 포함될 기간과 제외할 기간을 명시적으로 지정해 놓을 수 있습니다.)
@@ -50,7 +56,7 @@ open class DateAdd protected constructor() {
         log.trace { "Add start=$start, offset=$offset, seekBoundary=$seekBoundary" }
 
         // 예외 조건이 없으면 단순 계산으로 처리
-        if (_includePeriods.isEmpty() && _excludePeriods.isEmpty()) {
+        if (includePeriods.isEmpty() && excludePeriods.isEmpty()) {
             return start + offset
         }
 
@@ -80,7 +86,7 @@ open class DateAdd protected constructor() {
         log.trace { "Substract start=$start, offset=$offset, seekBoundary=$seekBoundary" }
 
         // 예외 조건이 없으면 단순 계산으로 처리
-        if (_includePeriods.isEmpty() && _excludePeriods.isEmpty()) {
+        if (includePeriods.isEmpty() && excludePeriods.isEmpty()) {
             return start - offset
         }
 
@@ -103,7 +109,7 @@ open class DateAdd protected constructor() {
         check(offset?.isNotNegative ?: false) { "offset 값은 0 이상이어야 합니다." }
         log.trace { "calculateEnd start=$start, offset=$offset, seekDir=$seekDir, seekBoundary=$seekBoundary" }
 
-        val searchPeriods = TimePeriodCollection.ofAll(_includePeriods.periods)
+        val searchPeriods = TimePeriodCollection.ofAll(includePeriods.periods)
         if (searchPeriods.isEmpty()) {
             searchPeriods += TimeRange.AnyTime
         }

@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.times.interval
 
+import io.bluetape4k.logging.KLogging
 import io.bluetape4k.utils.times.UtcZoneId
 import java.time.ZoneId
 import java.time.temporal.Temporal
@@ -7,13 +8,29 @@ import java.time.temporal.Temporal
 /**
  * Mutable [TemporalInterval]
  */
-class MutableTemporalInterval<T>(
+class MutableTemporalInterval<T> private constructor(
     start: T,
     end: T,
-    override val zoneId: ZoneId = UtcZoneId,
+    override val zoneId: ZoneId,
 ): AbstractTemporalInterval<T>() where T: Temporal, T: Comparable<T> {
 
-    constructor(other: ReadableTemporalInterval<T>): this(other.startInclusive, other.endExclusive, other.zoneId)
+    companion object: KLogging() {
+        @JvmStatic
+        operator fun <T> invoke(
+            start: T,
+            end: T,
+            zoneId: ZoneId = UtcZoneId,
+        ): MutableTemporalInterval<T> where T: Temporal, T: Comparable<T> {
+            return MutableTemporalInterval(start, end, zoneId)
+        }
+
+        @JvmStatic
+        operator fun <T> invoke(
+            other: ReadableTemporalInterval<T>,
+        ): MutableTemporalInterval<T> where T: Temporal, T: Comparable<T> {
+            return invoke(other.startInclusive, other.endExclusive, other.zoneId)
+        }
+    }
 
     override var startInclusive: T = start
         set(value) {

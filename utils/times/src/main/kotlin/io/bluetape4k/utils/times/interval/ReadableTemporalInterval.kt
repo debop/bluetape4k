@@ -43,19 +43,5 @@ interface ReadableTemporalInterval<T>:
     fun isAfter(moment: T): Boolean
 
     fun withStart(newStart: T): ReadableTemporalInterval<T>
-    //    fun withStartEpochMillis(newStartEpochMillis: Long): ReadableTemporalInterval<T>
-
     fun withEnd(newEnd: T): ReadableTemporalInterval<T>
-    //    fun withEndEpochMillis(newEndEpochMillis: Long): ReadableTemporalInterval<T>
-
-    // Move to extension methods
-    //    @Suppress("UNCHECKED_CAST")
-    //    @JvmDefault
-    //    fun sequence(step: TemporalAmount): Sequence<T> = sequence {
-    //        var current = start
-    //        while (current < end) {
-    //            yield(current)
-    //            current = current.plus(step) as T
-    //        }
-    //    }
 }

@@ -25,9 +25,9 @@ open class TimeLineMoment(override val moment: ZonedDateTime): AbstractValueObje
         return other is ITimeLineMoment && moment == other.moment
     }
 
-    override fun hashCode(): Int {
-        return moment.hashCode()
-    }
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
+
+    override fun hashCode(): Int = moment.hashCode()
 
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()
