@@ -13,22 +13,21 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import kotlin.test.assertFailsWith
 
-class RetryFlowTest {
+class FlowRetryTest {
 
     @Test
     fun `성공하는 함수를 실행합니다`() = runSuspendTest {
         val retry = Retry.ofDefaults("testName")
         val metrics = retry.metrics
         val helloWorldService = CoHelloWorldService()
-        val results = mutableListOf<String>()
 
-        flow {
+        val results = flow {
             repeat(3) {
                 emit(helloWorldService.returnHelloWorld() + it)
             }
         }
             .retry(retry)
-            .toList(results)
+            .toList()
 
         repeat(3) {
             results[it] shouldBeEqualTo "Hello world$it"
@@ -52,9 +51,9 @@ class RetryFlowTest {
         }
         val metrics = retry.metrics
         val helloWorldService = CoHelloWorldService()
-        val results = mutableListOf<String>()
+        // val results = mutableListOf<String>()
 
-        flow {
+        val results = flow {
             repeat(3) {
                 when (helloWorldService.invocationCount) {
                     0    -> helloWorldService.throwException()
@@ -63,7 +62,7 @@ class RetryFlowTest {
             }
         }
             .retry(retry)
-            .toList(results)
+            .toList()
 
         repeat(3) {
             results[it] shouldBeEqualTo "Hello world$it"
@@ -88,11 +87,11 @@ class RetryFlowTest {
                 .build()
         }
         val metrics = retry.metrics
-        val results = mutableListOf<String>()
+        // val results = mutableListOf<String>()
 
-        flow { emit(helloWorldService.returnHelloWorld()) }
+        val results = flow { emit(helloWorldService.returnHelloWorld()) }
             .retry(retry)
-            .toList(results)
+            .toList()
 
         results.size shouldBeEqualTo 1
         results[0] shouldBeEqualTo "Hello world"

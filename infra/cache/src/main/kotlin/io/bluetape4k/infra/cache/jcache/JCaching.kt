@@ -6,6 +6,7 @@ import org.redisson.api.RedissonClient
 import org.redisson.jcache.JCachingProvider
 import org.redisson.jcache.configuration.RedissonConfiguration
 import javax.cache.configuration.Configuration
+import javax.cache.configuration.MutableConfiguration
 
 
 typealias JCache<K, V> = javax.cache.Cache<K, V>
@@ -59,7 +60,7 @@ object JCaching {
         fun <K, V> getOrCreateCache(
             cacheName: String,
             redisson: RedissonClient,
-            configuration: Configuration<K, V>,
+            configuration: Configuration<K, V> = MutableConfiguration(),
         ): JCache<K, V> {
             return with(jcacheManager<JCachingProvider>()) {
                 getCache(cacheName)

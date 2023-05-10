@@ -8,7 +8,6 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
 import java.util.concurrent.TimeUnit
 
-
 inline fun CircuitBreaker.runnable(crossinline runnable: () -> Unit): () -> Unit = {
     CircuitBreaker.decorateRunnable(this) { runnable() }.run()
 }
@@ -16,31 +15,46 @@ inline fun CircuitBreaker.runnable(crossinline runnable: () -> Unit): () -> Unit
 inline fun CircuitBreaker.checkedRunnable(crossinline runnable: () -> Unit): CheckedRunnable =
     CircuitBreaker.decorateCheckedRunnable(this) { runnable() }
 
-fun <T> CircuitBreaker.callable(callable: () -> T): () -> T = {
+inline fun <T> CircuitBreaker.callable(
+    crossinline callable: () -> T,
+): () -> T = {
     CircuitBreaker.decorateCallable(this) { callable() }.call()
 }
 
-fun <T> CircuitBreaker.supplier(supplier: () -> T): () -> T = {
+inline fun <T> CircuitBreaker.supplier(
+    crossinline supplier: () -> T,
+): () -> T = {
     CircuitBreaker.decorateSupplier(this) { supplier() }.get()
 }
 
-fun <T> CircuitBreaker.checkedSupplier(supplier: () -> T): () -> T = {
+inline fun <T> CircuitBreaker.checkedSupplier(
+    crossinline supplier: () -> T,
+): () -> T = {
     CircuitBreaker.decorateCheckedSupplier(this) { supplier() }.get()
 }
 
-fun <T> CircuitBreaker.consumer(consumer: (T) -> Unit): (T) -> Unit = { input: T ->
+inline fun <T> CircuitBreaker.consumer(
+    crossinline consumer: (T) -> Unit,
+): (T) -> Unit = { input: T ->
     CircuitBreaker.decorateConsumer<T>(this) { consumer(it) }.accept(input)
 }
 
-fun <T> CircuitBreaker.checkedConsumer(consumer: (T) -> Unit): CheckedConsumer<T> =
-    CircuitBreaker.decorateCheckedConsumer(this) { consumer(it) }
+inline fun <T> CircuitBreaker.checkedConsumer(
+    crossinline consumer: (T) -> Unit,
+): CheckedConsumer<T> {
+    return CircuitBreaker.decorateCheckedConsumer(this) { consumer(it) }
+}
 
 
-fun <T, R> CircuitBreaker.function(func: (T) -> R): (T) -> R = { input ->
+inline fun <T, R> CircuitBreaker.function(
+    crossinline func: (T) -> R,
+): (T) -> R = { input ->
     CircuitBreaker.decorateFunction<T, R>(this) { func(it) }.apply(input)
 }
 
-fun <T, R> CircuitBreaker.checkedFunction(func: (T) -> R): (T) -> R = { input ->
+inline fun <T, R> CircuitBreaker.checkedFunction(
+    crossinline func: (T) -> R,
+): (T) -> R = { input ->
     CircuitBreaker.decorateCheckedFunction<T, R>(this) { func(it) }.apply(input)
 }
 
@@ -48,15 +62,20 @@ fun <T, R> CircuitBreaker.checkedFunction(func: (T) -> R): (T) -> R = { input ->
 // 비동기 방식
 //
 
-fun <T> CircuitBreaker.completionStatge(supplier: () -> CompletionStage<T>): () -> CompletionStage<T> = {
+inline fun <T> CircuitBreaker.completionStatge(
+    crossinline supplier: () -> CompletionStage<T>,
+): () -> CompletionStage<T> = {
     CircuitBreaker.decorateCompletionStage(this) { supplier() }.get()
 }
 
-fun <T, R> CircuitBreaker.completableFuture(func: (T) -> CompletableFuture<R>): (T) -> CompletableFuture<R> =
-    decorateCompletableFuture(func)
+inline fun <T, R> CircuitBreaker.completableFuture(
+    crossinline func: (T) -> CompletableFuture<R>,
+): (T) -> CompletableFuture<R> {
+    return decorateCompletableFuture(func)
+}
 
-fun <T, R> CircuitBreaker.decorateCompletableFuture(
-    func: (T) -> CompletableFuture<R>,
+inline fun <T, R> CircuitBreaker.decorateCompletableFuture(
+    crossinline func: (T) -> CompletableFuture<R>,
 ): (T) -> CompletableFuture<R> = { input: T ->
 
     val promise = CompletableFuture<R>()
@@ -79,7 +98,7 @@ fun <T, R> CircuitBreaker.decorateCompletableFuture(
                         promise.complete(result)
                     }
                 }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             val durationInNanos = System.nanoTime() - start
             onError(durationInNanos, TimeUnit.NANOSECONDS, e)
             promise.completeExceptionally(e)

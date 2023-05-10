@@ -8,18 +8,23 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-suspend fun <K: Any, V> withCache(cache: Cache<K, V>, key: K, block: suspend (K) -> V): V =
-    cache.executeSuspendedFunction(key, block)
+suspend inline fun <K, V> withCache(
+    cache: Cache<K, V>,
+    key: K,
+    crossinline block: suspend (K) -> V,
+): V {
+    return cache.executeSuspendedFunction(key, block)
+}
 
-fun <K: Any, V> Cache<K, V>.decorateSuspendedFunction(
-    block: suspend (K) -> V,
+inline fun <K, V> Cache<K, V>.decorateSuspendedFunction(
+    crossinline block: suspend (K) -> V,
 ): suspend (K) -> V = { key: K ->
     executeSuspendedFunction(key, block)
 }
 
-suspend fun <K: Any, V> Cache<K, V>.executeSuspendedFunction(
+suspend inline fun <K, V> Cache<K, V>.executeSuspendedFunction(
     key: K,
-    block: suspend (K) -> V,
+    crossinline block: suspend (K) -> V,
 ): V = suspendCoroutine { cont ->
 
     val cachedValue = runCatching { computeIfAbsent(key) { null } }.getOrNull()

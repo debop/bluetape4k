@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test
 import java.util.concurrent.Phaser
 import kotlin.test.assertFailsWith
 
-class CircuitBreakerFlowTest {
+class FlowCircuitBreakerTest {
 
     @Test
     fun `should collect successfully`() = runSuspendTest {

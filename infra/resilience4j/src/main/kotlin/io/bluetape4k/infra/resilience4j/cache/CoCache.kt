@@ -7,19 +7,28 @@ import io.github.resilience4j.core.EventConsumer
 /**
  * Coroutines 환경 하에서 jCache를 관리할 수 있도록 합니다.
  */
-interface CoCache<K: Any, V> {
+interface CoCache<K, V> {
 
     companion object {
 
-        fun <K: Any, V> of(jcache: javax.cache.Cache<K, V>): CoCache<K, V> {
+        @JvmStatic
+        fun <K, V> of(jcache: javax.cache.Cache<K, V>): CoCache<K, V> {
             return CoroutinesCacheImpl(jcache)
         }
 
-        fun <K: Any, V> decorateSuspendedSupplier(cache: CoCache<K, V>, loader: suspend () -> V): suspend (K) -> V {
+        @JvmStatic
+        fun <K, V> decorateSuspendedSupplier(
+            cache: CoCache<K, V>,
+            loader: suspend () -> V,
+        ): suspend (K) -> V {
             return cache.decorateSuspendedSupplier(loader)
         }
 
-        fun <K: Any, V> decorateSuspendedFunction(cache: CoCache<K, V>, loader: suspend (K) -> V): suspend (K) -> V {
+        @JvmStatic
+        fun <K, V> decorateSuspendedFunction(
+            cache: CoCache<K, V>,
+            loader: suspend (K) -> V,
+        ): suspend (K) -> V {
             return cache.decorateSuspendedFunction(loader)
         }
     }

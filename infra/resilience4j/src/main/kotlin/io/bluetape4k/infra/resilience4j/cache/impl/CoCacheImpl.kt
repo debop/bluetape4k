@@ -11,12 +11,11 @@ import io.github.resilience4j.core.EventConsumer
 import io.github.resilience4j.core.EventProcessor
 import kotlinx.atomicfu.atomic
 
-
 /**
  * [CoCache]의 기본 구현체입니다.
  * jCache의 저장소를 사용합니다.
  */
-class CoroutinesCacheImpl<K: Any, V>(override val jcache: javax.cache.Cache<K, V>): CoCache<K, V> {
+class CoroutinesCacheImpl<K, V>(override val jcache: javax.cache.Cache<K, V>): CoCache<K, V> {
 
     companion object: KLogging()
 
@@ -73,7 +72,7 @@ class CoroutinesCacheImpl<K: Any, V>(override val jcache: javax.cache.Cache<K, V
                 onCacheMiss(cacheKey)
                 null
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             log.warn(e) { "Fail to get a value from Cache[$name], cacheKey=$cacheKey" }
             onError(e)
             null
@@ -85,7 +84,7 @@ class CoroutinesCacheImpl<K: Any, V>(override val jcache: javax.cache.Cache<K, V
             if (value != null) {
                 jcache.put(cacheKey, value)
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             log.warn(e) { "Fail to put a value into cache [$name], cacheKey=$cacheKey" }
             onError(e)
         }
@@ -112,7 +111,7 @@ class CoroutinesCacheImpl<K: Any, V>(override val jcache: javax.cache.Cache<K, V
     }
 
     private class CoCacheEventProcessor: EventProcessor<CacheEvent>(), EventConsumer<CacheEvent>,
-        CoCache.EventPublisher {
+                                         CoCache.EventPublisher {
         override fun onCacheHit(eventConsumer: EventConsumer<CacheEvent>): CoCache.EventPublisher = apply {
             registerConsumer(CacheOnHitEvent::class.simpleName!!, eventConsumer)
         }

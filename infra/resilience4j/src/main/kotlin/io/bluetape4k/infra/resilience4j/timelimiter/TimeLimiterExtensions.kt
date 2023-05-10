@@ -23,12 +23,12 @@ fun <T, F: CompletionStage<T>> TimeLimiter.completionStage(
 }
 
 
-@Suppress("UNCHECKED_CAST")
 fun <T, R: CompletableFuture<T>> TimeLimiter.completableFuture(
     schedulre: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     func: (T) -> R,
-): (T) -> R =
-    decorateCompletableFuture(schedulre, func)
+): (T) -> R {
+    return decorateCompletableFuture(schedulre, func)
+}
 
 @Suppress("UNCHECKED_CAST")
 fun <T, R: CompletableFuture<T>> TimeLimiter.decorateCompletableFuture(

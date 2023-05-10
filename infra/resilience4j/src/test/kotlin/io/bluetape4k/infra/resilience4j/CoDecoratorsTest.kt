@@ -18,6 +18,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -40,7 +41,10 @@ class CoDecoratorsTest {
     val circuitBreaker = CircuitBreaker.ofDefaults("coDecorator")
     val rateLimiter = RateLimiter.ofDefaults("coDecorator")
 
-    init {
+    private val service = mockk<CoDecoratorsTest.Service>(relaxUnitFun = true)
+
+    @BeforeAll
+    fun beforeAll() {
         retry.eventPublisher
             .onSuccess {
                 log.info { "Success to execute. retry count=${it.numberOfRetryAttempts}" }
@@ -62,8 +66,6 @@ class CoDecoratorsTest {
                 log.error(it.throwable) { "Fail to execute in circuitBreaker context" }
             }
     }
-
-    private val service = mockk<io.bluetape4k.infra.resilience4j.CoDecoratorsTest.Service>(relaxUnitFun = true)
 
     @BeforeEach
     fun setup() {
@@ -186,6 +188,24 @@ class CoDecoratorsTest {
 
             result.isSuccess.shouldBeTrue()
             result.getOrNull() shouldBeEqualTo expected
+            coVerify(exactly = 1) { service.supply() }
+            confirmVerified(service)
+        }
+
+        @Test
+        fun `성공하는 supplier 대해 fallback decoration 하기`() = runSuspendTest {
+            coEvery { service.supply() } coAnswers { expected }
+
+            val decorated = CoDecorators
+                .ofSupplier { service.supply() }
+                .withFallback({ it == expected }, { "fallback" })
+                .withCircuitBreaker(circuitBreaker)
+                .decoreate()
+
+            val result = runCatching { decorated() }
+
+            result.isSuccess.shouldBeTrue()
+            result.getOrNull() shouldBeEqualTo "fallback"
             coVerify(exactly = 1) { service.supply() }
             confirmVerified(service)
         }

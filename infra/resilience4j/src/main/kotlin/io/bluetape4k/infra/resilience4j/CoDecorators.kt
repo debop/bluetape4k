@@ -23,6 +23,7 @@ import io.github.resilience4j.kotlin.timelimiter.decorateSuspendFunction
 import io.github.resilience4j.ratelimiter.RateLimiter
 import io.github.resilience4j.retry.Retry
 import io.github.resilience4j.timelimiter.TimeLimiter
+import kotlin.reflect.KClass
 
 /**
  * A resilience4j decorator builder for suspend functions (Kotlin coroutines)
@@ -36,8 +37,9 @@ object CoDecorators {
      *
      * @param runnable 수행할 suspend 함수
      */
-    fun ofRunnable(runnable: suspend () -> Unit): io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction<Unit> =
-        io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction(runnable)
+    fun ofRunnable(runnable: suspend () -> Unit): CoDecoratorForSupplier<Unit> {
+        return CoDecoratorForSupplier(runnable)
+    }
 
     /**
      * `suspend () -> T` 에 대해 resilience4j components를 decorate 합니다.
@@ -45,8 +47,9 @@ object CoDecorators {
      * @param T return type
      * @param supplier Suspendable supplier
      */
-    fun <T: Any> ofSupplier(supplier: suspend () -> T): io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction<T> =
-        io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction(supplier)
+    fun <T> ofSupplier(supplier: suspend () -> T): CoDecoratorForSupplier<T> {
+        return CoDecoratorForSupplier(supplier)
+    }
 
     /**
      * `suspend (T) -> Unit` 에 대해 resilience4j components를 decorate 합니다
@@ -54,15 +57,17 @@ object CoDecorators {
      * @param T input type
      * @param consumer Suspendable consumer
      */
-    fun <T: Any> ofConsumer(consumer: suspend (T) -> Unit): (T) -> io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction<Unit> =
-        { input: T ->
-            io.bluetape4k.infra.resilience4j.CoDecorators.ofRunnable { consumer(input) }
-        }
+    inline fun <T> ofConsumer(
+        crossinline consumer: suspend (T) -> Unit,
+    ): (T) -> CoDecoratorForSupplier<Unit> = { input: T ->
+        ofRunnable { consumer(input) }
+    }
 
-    fun <T: Any, R: Any> ofFunction(function: suspend (T) -> R): (T) -> io.bluetape4k.infra.resilience4j.CoDecorators.CoDecoratorForFunction<R> =
-        { input: T ->
-            io.bluetape4k.infra.resilience4j.CoDecorators.ofSupplier { function(input) }
-        }
+    inline fun <T, R> ofFunction(
+        crossinline function: suspend (T) -> R,
+    ): (T) -> CoDecoratorForSupplier<R> = { input: T ->
+        ofSupplier { function(input) }
+    }
 
     /**
      * `suspend (T) -> R` 에 대해 resilience4j components를 decorate 합니다.
@@ -71,8 +76,11 @@ object CoDecorators {
      * @param R return type
      * @param function Suspendable function
      */
-    fun <T: Any, R: Any> ofFunction1(function: suspend (T) -> R) =
-        CoDecoratorForFunction1(function)
+    fun <T, R> ofFunction1(
+        function: suspend (T) -> R,
+    ): CoDecoratorForFunction1<T, R> {
+        return CoDecoratorForFunction1(function)
+    }
 
     /**
      * `suspend (T, U) -> R` 에 대해 resilience4j components를 decorate 합니다.
@@ -82,8 +90,11 @@ object CoDecorators {
      * @param R return type
      * @param function Suspendable function
      */
-    fun <T: Any, U: Any, R: Any> ofFunction2(function: suspend (T, U) -> R) =
-        CoDecoratorForFunction2(function)
+    fun <T, U, R> ofFunction2(
+        function: suspend (T, U) -> R,
+    ): CoDecoratorForFunction2<T, U, R> {
+        return CoDecoratorForFunction2(function)
+    }
 
     /**
      * `suspend (T, U) -> Unit` 에 대해 resilience4j components를 decorate 합니다.
@@ -92,11 +103,12 @@ object CoDecorators {
      * @param U second input type
      * @param consumer Suspendable bi consumer
      */
-    fun <T: Any, U: Any> ofBiConsumer(consumer: suspend (T, U) -> Unit) =
-        CoDecoratorForFunction2(consumer)
+    fun <T, U> ofBiConsumer(consumer: suspend (T, U) -> Unit): CoDecoratorForFunction2<T, U, Unit> {
+        return CoDecoratorForFunction2(consumer)
+    }
 
 
-    class CoDecoratorForFunction<T>(private var supplier: suspend () -> T) {
+    class CoDecoratorForSupplier<T>(private var supplier: suspend () -> T) {
 
         fun withCircuitBreaker(circuitBreaker: CircuitBreaker) = apply {
             supplier = circuitBreaker.decorateSuspendFunction(supplier)
@@ -118,6 +130,44 @@ object CoDecorators {
             supplier = timeLimiter.decorateSuspendFunction(supplier)
         }
 
+        fun <K> withCache(cache: Cache<K, T>): CoDecoratorForFunction1<K, T> {
+            return CoDecorators.ofFunction1(cache.decorateSuspendedFunction { supplier() })
+        }
+
+        fun <K> withCoroutineCache(cache: Cache<K, T>): CoDecoratorForFunction1<K, T> {
+            return CoDecorators.ofFunction1(cache.decorateSuspendedFunction { supplier() })
+        }
+
+        fun withFallback(handler: suspend (T?, Throwable?) -> T) = apply {
+            supplier = supplier.andThen(handler)
+        }
+
+        fun withFallback(
+            resultPredicate: suspend (T) -> Boolean,
+            resultHandler: suspend (T) -> T,
+        ) = apply {
+            supplier = supplier.recover(resultPredicate, resultHandler)
+        }
+
+        fun withFallback(exceptionHandler: suspend (Throwable?) -> T) = apply {
+            supplier = supplier.recover(exceptionHandler)
+        }
+
+        fun withFallback(
+            exceptionType: KClass<Throwable>,
+            exceptionHandler: suspend (Throwable?) -> T,
+        ) = apply {
+            supplier = supplier.recover(exceptionType, exceptionHandler)
+        }
+
+
+        fun withFallback(
+            exceptionTypes: Iterable<Class<Throwable>>,
+            exceptionHandler: suspend (Throwable?) -> T,
+        ) = apply {
+            supplier = supplier.recover(exceptionTypes, exceptionHandler)
+        }
+
         fun decoreate(): suspend () -> T = supplier
 
         suspend fun get(): T = supplier()
@@ -125,7 +175,7 @@ object CoDecorators {
         suspend fun invoke(): T = supplier()
     }
 
-    class CoDecoratorForFunction1<T: Any, R: Any>(private var func: suspend (T) -> R) {
+    class CoDecoratorForFunction1<T, R>(private var func: suspend (T) -> R) {
 
         fun withCircuitBreaker(circuitBreaker: CircuitBreaker) = apply {
             func = circuitBreaker.decorateSuspendFunction1(func)
@@ -163,7 +213,7 @@ object CoDecorators {
         suspend fun invoke(input: T): R = func(input)
     }
 
-    class CoDecoratorForFunction2<T: Any, U: Any, R: Any>(private var func: suspend (T, U) -> R) {
+    class CoDecoratorForFunction2<T, U, R>(private var func: suspend (T, U) -> R) {
 
         fun withCircuitBreaker(circuitBreaker: CircuitBreaker) = apply {
             func = circuitBreaker.decorateSuspendBiFunction(func)

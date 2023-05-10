@@ -63,22 +63,22 @@ fun <T, R> decorateCompletableFutureFunction(
  */
 class DecorateCompletableFutureFunction<T, R>(private var func: (T) -> CompletableFuture<R>) {
 
-    fun withBulkhead(bulkhead: Bulkhead) = apply {
+    fun withBulkhead(bulkhead: Bulkhead): DecorateCompletableFutureFunction<T, R> = apply {
         func = bulkhead.completableFuture(func)
     }
 
-    fun withCircuitBreaker(circuitBreaker: CircuitBreaker) = apply {
+    fun withCircuitBreaker(circuitBreaker: CircuitBreaker): DecorateCompletableFutureFunction<T, R> = apply {
         func = circuitBreaker.completableFuture(func)
     }
 
-    fun withRateLimiter(rateLimiter: RateLimiter) = apply {
+    fun withRateLimiter(rateLimiter: RateLimiter): DecorateCompletableFutureFunction<T, R> = apply {
         func = rateLimiter.completableFuture(func)
     }
 
     fun withRetry(
         retry: Retry,
         scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
-    ) = apply {
+    ): DecorateCompletableFutureFunction<T, R> = apply {
         func = retry.completableFuture(scheduler, func)
     }
 

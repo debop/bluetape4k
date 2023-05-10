@@ -1,40 +1,62 @@
 package io.bluetape4k.infra.resilience4j.timelimiter
 
+import io.github.resilience4j.kotlin.timelimiter.decorateSuspendFunction
 import io.github.resilience4j.kotlin.timelimiter.executeSuspendFunction
 import io.github.resilience4j.timelimiter.TimeLimiter
-import kotlinx.coroutines.withTimeout
 
-suspend fun <R> withTimeLimiter(timeLimiter: TimeLimiter, block: suspend () -> R): R =
-    timeLimiter.executeSuspendFunction(block)
+suspend fun <R> withTimeLimiter(
+    timeLimiter: TimeLimiter,
+    block: suspend () -> R,
+): R {
+    return timeLimiter.executeSuspendFunction(block)
+}
 
-suspend fun <T, R> withTimeLimiter(timeLimiter: TimeLimiter, param: T, func: suspend (T) -> R): R =
-    timeLimiter.decorateSuspendFunction1(func).invoke(param)
+suspend inline fun <T, R> withTimeLimiter(
+    timeLimiter: TimeLimiter,
+    param: T,
+    crossinline func: suspend (T) -> R,
+): R {
+    return timeLimiter.decorateSuspendFunction1(func).invoke(param)
+}
 
-suspend fun <T, U, R> withTimeLimiter(
+suspend inline fun <T, U, R> withTimeLimiter(
     timeLimiter: TimeLimiter,
     param1: T,
     param2: U,
-    bifunc: suspend (T, U) -> R,
+    crossinline bifunc: suspend (T, U) -> R,
 ): R {
     return timeLimiter.decorateSuspendBiFunction(bifunc).invoke(param1, param2)
 }
 
-fun <T, R> TimeLimiter.decorateSuspendFunction1(func: suspend (T) -> R): suspend (T) -> R = { input: T ->
-    executeSuspendFunction1(input, func)
+inline fun <T, R> TimeLimiter.decorateSuspendFunction1(
+    crossinline func: suspend (T) -> R,
+): suspend (T) -> R = { input: T ->
+    decorateSuspendFunction { func(input) }.invoke()
 }
 
-fun <T, U, R> TimeLimiter.decorateSuspendBiFunction(bifunc: suspend (T, U) -> R): suspend (T, U) -> R = { t: T, u: U ->
-    executeSuspendBiFunction(t, u, bifunc)
+inline fun <T, U, R> TimeLimiter.decorateSuspendBiFunction(
+    crossinline bifunc: suspend (T, U) -> R,
+): suspend (T, U) -> R = { t: T, u: U ->
+    decorateSuspendFunction { bifunc(t, u) }.invoke()
 }
 
-suspend fun <T, R> TimeLimiter.executeSuspendFunction1(input: T, func: suspend (T) -> R): R {
-    return withTimeout(timeLimiterConfig.timeoutDuration.toMillis()) {
-        func(input)
-    }
-}
-
-suspend fun <T, U, R> TimeLimiter.executeSuspendBiFunction(t: T, u: U, bifunc: suspend (T, U) -> R): R {
-    return withTimeout(timeLimiterConfig.timeoutDuration.toMillis()) {
-        bifunc(t, u)
-    }
-}
+//suspend inline fun <T, R> TimeLimiter.executeSuspendFunction1(
+//    input: T,
+//    crossinline func: suspend (T) -> R,
+//): R {
+//    val timeoutMillis = timeLimiterConfig.timeoutDuration.toMillis()
+//    return withTimeout(timeoutMillis) {
+//        func(input)
+//    }
+//}
+//
+//suspend inline fun <T, U, R> TimeLimiter.executeSuspendBiFunction(
+//    t: T,
+//    u: U,
+//    crossinline bifunc: suspend (T, U) -> R,
+//): R {
+//    val timeoutMillis = timeLimiterConfig.timeoutDuration.toMillis()
+//    return withTimeout(timeoutMillis) {
+//        bifunc(t, u)
+//    }
+//}

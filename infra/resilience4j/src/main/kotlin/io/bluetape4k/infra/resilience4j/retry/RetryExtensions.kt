@@ -8,29 +8,45 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
 
-inline fun Retry.runnable(crossinline runnable: () -> Unit): Runnable =
-    Retry.decorateRunnable(this) { runnable() }
+inline fun Retry.runnable(
+    crossinline runnable: () -> Unit,
+): Runnable {
+    return Retry.decorateRunnable(this) { runnable() }
+}
 
-inline fun Retry.checkedRunnable(crossinline runnable: () -> Unit): CheckedRunnable =
-    Retry.decorateCheckedRunnable(this) { runnable() }
+inline fun Retry.checkedRunnable(
+    crossinline runnable: () -> Unit,
+): CheckedRunnable {
+    return Retry.decorateCheckedRunnable(this) { runnable() }
+}
 
-fun <T> Retry.callable(callable: () -> T): () -> T = {
+inline fun <T> Retry.callable(
+    crossinline callable: () -> T,
+): () -> T = {
     Retry.decorateCallable(this) { callable() }.call()
 }
 
-fun <T> Retry.supplier(supplier: () -> T): () -> T = {
+inline fun <T> Retry.supplier(
+    crossinline supplier: () -> T,
+): () -> T = {
     Retry.decorateSupplier(this) { supplier() }.get()
 }
 
-fun <T> Retry.checkedSupplier(supplier: () -> T): () -> T = {
+inline fun <T> Retry.checkedSupplier(
+    crossinline supplier: () -> T,
+): () -> T = {
     Retry.decorateCheckedSupplier(this) { supplier() }.get()
 }
 
-fun <T, R> Retry.function(func: (T) -> R): (T) -> R = { input ->
+inline fun <T, R> Retry.function(
+    crossinline func: (T) -> R,
+): (T) -> R = { input ->
     Retry.decorateFunction<T, R>(this) { func(it) }.apply(input)
 }
 
-fun <T, R> Retry.checkedFunction(func: (T) -> R): (T) -> R = { input ->
+inline fun <T, R> Retry.checkedFunction(
+    crossinline func: (T) -> R,
+): (T) -> R = { input ->
     Retry.decorateCheckedFunction<T, R>(this) { func(it) }.apply(input)
 }
 
@@ -46,31 +62,31 @@ fun <T, R> Retry.checkedFunction(func: (T) -> R): (T) -> R = { input ->
  * @param <T>       type of completion stage result
  * @return decorated supplier
  */
-fun <T> Retry.completionStage(
+inline fun <T> Retry.completionStage(
     scheduler: ScheduledExecutorService,
-    supplier: () -> CompletionStage<T>,
+    crossinline supplier: () -> CompletionStage<T>,
 ): () -> CompletionStage<T> = {
     Retry.decorateCompletionStage(this, scheduler) { supplier() }.get()
 }
 
-fun <T, R> withRetry(
+inline fun <T, R> withRetry(
     retry: Retry,
     scheduler: ScheduledExecutorService,
-    supplier: (T) -> CompletableFuture<R>,
-): (T) -> CompletableFuture<R> = { it ->
-    Retry.decorateCompletionStage(retry, scheduler) { supplier.invoke(it) }.get().toCompletableFuture()
+    crossinline supplier: (T) -> CompletableFuture<R>,
+): (T) -> CompletableFuture<R> = { input: T ->
+    Retry.decorateCompletionStage(retry, scheduler) { supplier.invoke(input) }.get().toCompletableFuture()
 }
 
-fun <T, R> Retry.completableFutureFunction(
+inline fun <T, R> Retry.completableFutureFunction(
     scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
-    func: (T) -> CompletableFuture<R>,
+    crossinline func: (T) -> CompletableFuture<R>,
 ): (T) -> CompletableFuture<R> {
     return completableFuture(scheduler, func)
 }
 
-fun <T, R> Retry.completableFuture(
+inline fun <T, R> Retry.completableFuture(
     scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
-    func: (T) -> CompletableFuture<R>,
+    crossinline func: (T) -> CompletableFuture<R>,
 ): (T) -> CompletableFuture<R> = { input: T ->
     this.executeCompletionStage<R>(scheduler) { func.invoke(input) }.toCompletableFuture()
 }

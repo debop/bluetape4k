@@ -1,5 +1,6 @@
 package io.bluetape4k.infra.resilience4j.cache
 
+import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.concurrent.futureOf
 import io.bluetape4k.concurrent.onSuccess
 import io.bluetape4k.junit5.coroutines.runSuspendTest
@@ -10,23 +11,25 @@ import io.bluetape4k.logging.trace
 import io.github.resilience4j.cache.Cache
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 abstract class AbstractJCacheCoroutinesTest {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        fun randomKey(prefix: String): String = "$prefix-${UUID.randomUUID().encodeBase62()}"
+    }
 
     abstract val jcache: javax.cache.Cache<String, String>
-    val cache: Cache<String, String> by lazy { Cache.of(jcache) }
+    private lateinit var cache: Cache<String, String>
 
     @BeforeEach
-    fun setup() {
+    open fun setup() {
         jcache.clear()
+        cache = Cache.of(jcache)
     }
 
     private suspend fun greeting(name: String): String {
@@ -38,45 +41,48 @@ abstract class AbstractJCacheCoroutinesTest {
 
     @Test
     fun `decorate suspend function1 for Cache`() = runSuspendTest {
-        var hits = 0
-        var missed = 0
         cache.eventPublisher
-            .onCacheHit { hits++ }
-            .onCacheMiss { missed++ }
             .onError { evt -> log.error(evt.throwable) { "Fail to get cache. $evt" } }
 
-        var called = 0
+        val callCounter = atomic(0)
+        val called by callCounter
         val function: suspend (String) -> String = { name: String ->
-            called++
+            callCounter.incrementAndGet()
+            log.debug { "Cache function invoked. name=$name, called=$called" }
             greeting(name)
         }
 
         val cachedFunc = cache.decorateSuspendedFunction(function)
 
-        cachedFunc("debop") shouldBeEqualTo "Hi debop!"
+        val key1 = randomKey("key")
+        val key2 = randomKey("key")
+
+        cachedFunc(key1) shouldBeEqualTo "Hi $key1!"
         called shouldBeEqualTo 1
-
-        cachedFunc("Sunghyouk") shouldBeEqualTo "Hi Sunghyouk!"
+        cachedFunc(key2) shouldBeEqualTo "Hi $key2!"
         called shouldBeEqualTo 2
 
-        cachedFunc("debop") shouldBeEqualTo "Hi debop!"
+        cache.metrics.numberOfCacheHits shouldBeEqualTo 0
+        cache.metrics.numberOfCacheMisses shouldBeEqualTo 4
+
+        cachedFunc(key1) shouldBeEqualTo "Hi $key1!"
+        called shouldBeEqualTo 2
+        cachedFunc(key2) shouldBeEqualTo "Hi $key2!"
         called shouldBeEqualTo 2
 
-        cachedFunc("Sunghyouk") shouldBeEqualTo "Hi Sunghyouk!"
-        called shouldBeEqualTo 2
-
-        hits shouldBeEqualTo 2
-        missed shouldBeEqualTo 4
+        cache.metrics.numberOfCacheHits shouldBeEqualTo 2
+        cache.metrics.numberOfCacheMisses shouldBeEqualTo 4
     }
 
     @Test
     fun `decorate completableFuture function for Cache`() {
-        val callCount = atomic(0L)
+        val callCounter = atomic(0L)
+        val called by callCounter
         val function: (String) -> CompletableFuture<String> = { name ->
             futureOf {
-                log.trace { "Run function ... call count=${callCount.value + 1}" }
+                log.trace { "Run function ... call count=${called + 1}" }
                 Thread.sleep(100L)
-                callCount.incrementAndGet()
+                callCounter.incrementAndGet()
                 "Hi $name!"
             }
         }
@@ -84,64 +90,64 @@ abstract class AbstractJCacheCoroutinesTest {
         val cachedFunc = cache.decorateCompletableFutureFunction(function)
 
         cachedFunc("debop").onSuccess {
-            callCount.value shouldBeEqualTo 1L
+            called shouldBeEqualTo 1L
             it shouldBeEqualTo "Hi debop!"
         }.join()
 
         cachedFunc("debop").onSuccess {
-            callCount.value shouldBeEqualTo 1L
+            called shouldBeEqualTo 1L
             it shouldBeEqualTo "Hi debop!"
         }.join()
 
         cachedFunc("Sunghyouk").onSuccess {
-            callCount.value shouldBeEqualTo 2L
+            called shouldBeEqualTo 2L
             it shouldBeEqualTo "Hi Sunghyouk!"
         }.join()
 
         cachedFunc("Sunghyouk").onSuccess {
-            callCount.value shouldBeEqualTo 2L
+            called shouldBeEqualTo 2L
             it shouldBeEqualTo "Hi Sunghyouk!"
         }.join()
     }
 
     @Test
-    fun `using coroutinesCache`() {
+    fun `using coroutinesCache`() = runSuspendTest {
         val coCache = CoCache.of(jcache)
 
-        var hits = 0
-        var missed = 0
         coCache.eventPublisher
-            .onCacheHit { hits++ }
-            .onCacheMiss { missed++ }
             .onError { evt -> log.error { "Fail to get cache. $evt" } }
 
-        var called = 0
-        val loader: suspend () -> String = {
-            called++
-            delay(10)
-            "Cached"
+        val callCounter = atomic(0)
+        val called by callCounter
+
+        val loader: suspend (String) -> String = { name: String ->
+            callCounter.incrementAndGet()
+            log.debug { "Cached item... called=$called" }
+            delay(1)
+            greeting(name)
         }
 
-        coCache.containsKey("a").shouldBeFalse()
-        coCache.containsKey("b").shouldBeFalse()
+        val cachedLoader: suspend (String) -> String = coCache.decorateSuspendedFunction(loader)
 
-        runBlocking {
-            coCache.computeIfAbsent("a", loader) shouldBeEqualTo "Cached"
-        }
+        val key1 = randomKey("coKey")
+        val key2 = randomKey("coKey")
 
-        runBlocking {
-            coCache.computeIfAbsent("b", loader) shouldBeEqualTo "Cached"
-        }
+        cachedLoader(key1) shouldBeEqualTo "Hi $key1!"
+        called shouldBeEqualTo 1
 
+        cachedLoader(key2) shouldBeEqualTo "Hi $key2!"
+        called shouldBeEqualTo 2
+
+        // 캐시에 새로 등록하므로 CacheHits 는 0 이다.
         coCache.metrics.getNumberOfCacheHits() shouldBeEqualTo 0
         coCache.metrics.getNumberOfCacheMisses() shouldBeEqualTo 2
 
+        cachedLoader(key1) shouldBeEqualTo "Hi $key1!"
+        called shouldBeEqualTo 2
+        cachedLoader(key2) shouldBeEqualTo "Hi $key2!"
+        called shouldBeEqualTo 2
 
-        runBlocking {
-            coCache.computeIfAbsent("a", loader) shouldBeEqualTo "Cached"
-            coCache.computeIfAbsent("b", loader) shouldBeEqualTo "Cached"
-        }
-
+        // 캐시에 두 key가 등록되었으므로 CacheHits 는 2가 된다
         coCache.metrics.getNumberOfCacheHits() shouldBeEqualTo 2
         coCache.metrics.getNumberOfCacheMisses() shouldBeEqualTo 2
     }

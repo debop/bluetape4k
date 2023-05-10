@@ -8,37 +8,56 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
 import java.util.function.Consumer
 
-fun Bulkhead.runnable(runnable: () -> Unit): () -> Unit = {
+inline fun Bulkhead.runnable(
+    crossinline runnable: () -> Unit,
+): () -> Unit = {
     Bulkhead.decorateRunnable(this) { runnable() }.run()
 }
 
-fun Bulkhead.checkedRunnable(runnable: () -> Unit): CheckedRunnable =
-    Bulkhead.decorateCheckedRunnable(this) { runnable() }
+inline fun Bulkhead.checkedRunnable(
+    crossinline runnable: () -> Unit,
+): CheckedRunnable {
+    return Bulkhead.decorateCheckedRunnable(this) { runnable() }
+}
 
-fun <T> Bulkhead.callable(callable: () -> T): () -> T = {
+inline fun <T> Bulkhead.callable(
+    crossinline callable: () -> T,
+): () -> T = {
     Bulkhead.decorateCallable(this) { callable() }.call()
 }
 
-fun <T> Bulkhead.supplier(supplier: () -> T): () -> T = {
+inline fun <T> Bulkhead.supplier(
+    crossinline supplier: () -> T,
+): () -> T = {
     Bulkhead.decorateSupplier(this) { supplier() }.get()
 }
 
-fun <T> Bulkhead.checkedSupplier(supplier: () -> T): () -> T = {
+inline fun <T> Bulkhead.checkedSupplier(
+    crossinline supplier: () -> T,
+): () -> T = {
     Bulkhead.decorateCheckedSupplier(this) { supplier() }.get()
 }
 
-fun <T> Bulkhead.consumer(consumer: (T) -> Unit): (T) -> Unit = { input: T ->
+inline fun <T> Bulkhead.consumer(
+    crossinline consumer: (T) -> Unit,
+): (T) -> Unit = { input: T ->
     Bulkhead.decorateConsumer(this, Consumer<T> { consumer(it) }).accept(input)
 }
 
-fun <T> Bulkhead.checkedConsumer(consumer: (T) -> Unit): CheckedConsumer<T> =
+inline fun <T> Bulkhead.checkedConsumer(
+    crossinline consumer: (T) -> Unit,
+): CheckedConsumer<T> =
     Bulkhead.decorateCheckedConsumer(this) { consumer(it) }
 
-fun <T, R> Bulkhead.function(func: (T) -> R): (T) -> R = { input ->
+inline fun <T, R> Bulkhead.function(
+    crossinline func: (T) -> R,
+): (T) -> R = { input ->
     Bulkhead.decorateFunction<T, R>(this) { func(it) }.apply(input)
 }
 
-fun <T, R> Bulkhead.checkedFunction(func: (T) -> R): (T) -> R = { input ->
+inline fun <T, R> Bulkhead.checkedFunction(
+    crossinline func: (T) -> R,
+): (T) -> R = { input ->
     Bulkhead.decorateCheckedFunction<T, R>(this) { func(it) }.apply(input)
 }
 
@@ -46,19 +65,21 @@ fun <T, R> Bulkhead.checkedFunction(func: (T) -> R): (T) -> R = { input ->
 // 비동기 방식 함수
 //
 
-fun <T> Bulkhead.completionStage(supplier: () -> CompletionStage<T>): () -> CompletionStage<T> = {
+inline fun <T> Bulkhead.completionStage(
+    crossinline supplier: () -> CompletionStage<T>,
+): () -> CompletionStage<T> = {
     Bulkhead.decorateCompletionStage(this) { supplier() }.get()
 }
 
-fun <T, R> Bulkhead.completableFuture(
-    func: (T) -> CompletableFuture<R>,
+inline fun <T, R> Bulkhead.completableFuture(
+    crossinline func: (T) -> CompletableFuture<R>,
 ): (T) -> CompletableFuture<R> {
     return decorateCompletableFuture(func)
 }
 
 
-fun <T, R> Bulkhead.decorateCompletableFuture(
-    func: (T) -> CompletableFuture<R>,
+inline fun <T, R> Bulkhead.decorateCompletableFuture(
+    crossinline func: (T) -> CompletableFuture<R>,
 ): (T) -> CompletableFuture<R> = { input: T ->
 
     val promise = CompletableFuture<R>()
