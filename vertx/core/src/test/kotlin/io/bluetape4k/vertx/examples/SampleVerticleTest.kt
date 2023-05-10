@@ -1,5 +1,6 @@
 package io.bluetape4k.vertx.examples
 
+import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.vertx.tests.withTestContextSuspending
@@ -68,7 +69,7 @@ class SampleVerticleTest {
     }
 
     @Test
-    fun `use SampleVerticle in coroutines`(vertx: Vertx, testContext: VertxTestContext) {
+    fun `use SampleVerticle in coroutines`(vertx: Vertx, testContext: VertxTestContext) = runSuspendTest {
         vertx.withTestContextSuspending(testContext) {
             val webClient = WebClient.create(vertx)
             val deploymentCheckpoint = testContext.checkpoint()
