@@ -26,11 +26,4 @@ dependencies {
     testImplementation(Libs.caffeine_jcache)
     testImplementation(Libs.cache2k_jcache)
     testImplementation(Libs.redisson)
-
-    // Vertx
-    compileOnly(project(":bluetape4k-vertx-core"))
-    compileOnly(Libs.vertx_core)
-    compileOnly(Libs.vertx_lang_kotlin)
-    compileOnly(Libs.vertx_lang_kotlin_coroutines)
-    testImplementation(Libs.vertx_junit5)
 }

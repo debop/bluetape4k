@@ -2,7 +2,6 @@ package io.bluetape4k.infra.resilience4j
 
 import kotlin.reflect.KClass
 
-
 inline fun <T, R> (suspend () -> T).andThen(
     crossinline resultHandler: suspend (T) -> R,
 ): suspend () -> R = {
