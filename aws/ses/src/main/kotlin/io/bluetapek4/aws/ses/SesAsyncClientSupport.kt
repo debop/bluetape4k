@@ -14,7 +14,9 @@ import software.amazon.awssdk.services.ses.model.SendTemplatedEmailRequest
 import software.amazon.awssdk.services.ses.model.SendTemplatedEmailResponse
 import java.util.concurrent.CompletableFuture
 
-inline fun sesAsyncClient(initializer: SesAsyncClientBuilder.() -> Unit): SesAsyncClient {
+inline fun sesAsyncClient(
+    initializer: SesAsyncClientBuilder.() -> Unit,
+): SesAsyncClient {
     return SesAsyncClient.builder().apply(initializer).build()
 }
 
