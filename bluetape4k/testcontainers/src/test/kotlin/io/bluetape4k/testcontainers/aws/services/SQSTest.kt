@@ -30,11 +30,12 @@ class SQSTest {
         LocalStackServer.Launcher.locakStack.withServices(LocalStackContainer.Service.SQS)
     }
     private val endpoint: URI get() = sqsServer.getEndpointOverride(LocalStackContainer.Service.SQS)
+    private val region get() = Region.of(sqsServer.region)
 
     private val sqsClient: SqsClient by lazy {
         SqsClient.builder()
             .endpointOverride(endpoint)
-            .region(Region.AP_NORTHEAST_2)
+            .region(region)
             .credentialsProvider(sqsServer.getCredentialProvider())
             .build()
     }
