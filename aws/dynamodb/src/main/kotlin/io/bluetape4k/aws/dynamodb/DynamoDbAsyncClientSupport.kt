@@ -8,7 +8,9 @@ import software.amazon.awssdk.services.dynamodb.streams.DynamoDbStreamsAsyncClie
 import software.amazon.awssdk.services.dynamodb.streams.DynamoDbStreamsAsyncClientBuilder
 import java.net.URI
 
-inline fun dynamoDbAsyncClient(initializer: DynamoDbAsyncClientBuilder.() -> Unit): DynamoDbAsyncClient {
+inline fun dynamoDbAsyncClient(
+    initializer: DynamoDbAsyncClientBuilder.() -> Unit,
+): DynamoDbAsyncClient {
     return DynamoDbAsyncClient.builder().apply(initializer).build()
 }
 

@@ -1,7 +1,6 @@
 package io.bluetape4k.aws.dynamodb.enhanced
 
 import io.bluetape4k.aws.dynamodb.DynamoDb
-import io.bluetape4k.aws.dynamodb.dynamoDbAsyncClient
 import io.bluetape4k.aws.dynamodb.model.batchWriteItemEnhancedRequest
 import io.bluetape4k.aws.dynamodb.model.writeBatchOf
 import io.bluetape4k.core.requireNotBlank
@@ -31,20 +30,21 @@ inline fun dynamoDbEnhancedAsyncClient(
 }
 
 fun dynamoDbEnhancedAsyncClientOf(
-    client: DynamoDbAsyncClient = dynamoDbAsyncClient {},
-    initializer: DynamoDbEnhancedAsyncClient.Builder.() -> Unit = {},
+    client: DynamoDbAsyncClient,
+    initializer: DynamoDbEnhancedAsyncClient.Builder.() -> Unit = { extensions(ExtensionResolver.defaultExtensions()) },
 ): DynamoDbEnhancedAsyncClient = dynamoDbEnhancedAsyncClient {
     dynamoDbClient(client)
     initializer()
 }
 
 fun dynamoDbEnhancedAsyncClientOf(
-    client: DynamoDbAsyncClient = dynamoDbAsyncClient {},
+    client: DynamoDbAsyncClient,
     vararg extensions: DynamoDbEnhancedClientExtension = ExtensionResolver.defaultExtensions().toTypedArray(),
 ): DynamoDbEnhancedAsyncClient = dynamoDbEnhancedAsyncClient {
     dynamoDbClient(client)
     extensions(*extensions)
 }
+
 
 /**
  * Create DynamoDb Table with specific name ([tableName])

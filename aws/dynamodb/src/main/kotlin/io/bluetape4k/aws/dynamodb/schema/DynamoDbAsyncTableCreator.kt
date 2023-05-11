@@ -19,7 +19,7 @@ class DynamoDbAsyncTableCreator {
     }
 
     @JvmField
-    val DefaultProvisionedThroughput: ProvisionedThroughput =
+    val defaultProvisionedThroughput: ProvisionedThroughput =
         provisionedThroughputOf(DEFAULT_READ_CAPACITY_UNITS, DEFAULT_WRITE_CAPACITY_UNITS)
 
     /**

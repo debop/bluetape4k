@@ -1,5 +1,7 @@
 package io.bluetape4k.aws.dynamodb
 
+import io.bluetape4k.aws.dynamodb.model.batchWriteItemRequest
+import io.bluetape4k.aws.dynamodb.model.writeRequest
 import io.bluetape4k.aws.dynamodb.model.writeRequestOf
 import io.bluetape4k.logging.KLogging
 import io.github.resilience4j.kotlin.retry.executeSuspendFunction
@@ -14,8 +16,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
-import software.amazon.awssdk.services.dynamodb.model.BatchWriteItemRequest
-import software.amazon.awssdk.services.dynamodb.model.DeleteRequest
 import software.amazon.awssdk.services.dynamodb.model.WriteRequest
 import kotlin.coroutines.CoroutineContext
 
@@ -55,9 +55,10 @@ class DynamoDbBatchExecutor<T: Any>(
      */
     suspend fun delete(tableName: String, items: List<T>, primaryKeySelector: (T) -> Map<String, AttributeValue>) {
         val writeRequests = items
-            .map {
-                WriteRequest.builder().deleteRequest(DeleteRequest.builder().key(primaryKeySelector(it)).build())
-                    .build()
+            .map { item ->
+                writeRequest {
+                    io.bluetape4k.aws.dynamodb.model.deleteRequest { key(primaryKeySelector(item)) }
+                }
             }
             .map { TableItemTuple(tableName, it) }
 
@@ -95,7 +96,7 @@ class DynamoDbBatchExecutor<T: Any>(
 
     private suspend fun batchPersist(writeList: List<TableItemTuple>) {
         val requestItems = writeList.groupBy({ it.tableName }, { it.writeRequest })
-        val batchRequest = BatchWriteItemRequest.builder().requestItems(requestItems).build()
+        val batchRequest = batchWriteItemRequest { requestItems(requestItems) }
 
         // Non-Blocking 으로 저장 작업을 수행하기 위해서
         val result = withContext(coroutineContext) {

@@ -1,6 +1,5 @@
 package io.bluetape4k.aws.dynamodb.enhanced
 
-import io.bluetape4k.aws.dynamodb.dynamoDbClient
 import io.bluetape4k.core.requireNotBlank
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClientExtension
@@ -14,15 +13,15 @@ inline fun dynamoDbEnhancedClient(initializer: DynamoDbEnhancedClient.Builder.()
 }
 
 fun dynamoDbEnhancedClientOf(
-    client: DynamoDbClient = dynamoDbClient {},
-    initializer: DynamoDbEnhancedClient.Builder.() -> Unit = {},
+    client: DynamoDbClient,
+    initializer: DynamoDbEnhancedClient.Builder.() -> Unit = { extensions(ExtensionResolver.defaultExtensions()) },
 ): DynamoDbEnhancedClient = dynamoDbEnhancedClient {
     dynamoDbClient(client)
     initializer()
 }
 
 fun dynamoDbEnhancedClientOf(
-    client: DynamoDbClient = dynamoDbClient {},
+    client: DynamoDbClient,
     vararg extensions: DynamoDbEnhancedClientExtension = ExtensionResolver.defaultExtensions().toTypedArray(),
 ): DynamoDbEnhancedClient = dynamoDbEnhancedClient {
     dynamoDbClient(client)
