@@ -1,6 +1,8 @@
 package io.bluetape4k.aws.s3
 
 import io.bluetape4k.aws.auth.LocalAwsCredentialsProvider
+import io.bluetape4k.aws.http.SdkHttpClientProvider
+import io.bluetape4k.utils.ShutdownQueue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
@@ -33,6 +35,9 @@ object S3Factory {
          */
         inline fun create(initializer: S3ClientBuilder.() -> Unit): S3Client {
             return S3Client.builder().apply(initializer).build()
+                .apply {
+                    ShutdownQueue.register(this)
+                }
         }
 
         /**
@@ -55,6 +60,8 @@ object S3Factory {
                 region(region)
                 credentialsProvider(credentialsProvider)
                 accelerate(true) // Enables this client to use S3 Transfer Acceleration endpoints.
+                httpClient(SdkHttpClientProvider.Apache.apacheHttpClient)
+
                 additionalInitializer()
             }
         }
@@ -75,6 +82,9 @@ object S3Factory {
             return S3AsyncClient.builder()
                 .apply(initializer)
                 .build()
+                .apply {
+                    ShutdownQueue.register(this)
+                }
         }
 
         /**
@@ -104,6 +114,8 @@ object S3Factory {
 
     /**
      * S3를 비동기방식으로 사용하는 [S3AsyncClient] 를 생성하는 메소드를 제공합니다.
+     *
+     * 참고: [AWSCRT 기반 HTTP 클라이언트 설정](https://docs.aws.amazon.com/ko_kr/sdk-for-java/latest/developer-guide/http-configuration-crt.html)
      */
     object CrtAsync {
 
@@ -117,6 +129,9 @@ object S3Factory {
             return S3AsyncClient.crtBuilder()
                 .apply(initializer)
                 .build()
+                .apply {
+                    ShutdownQueue.register(this)
+                }
         }
 
         /**
@@ -158,6 +173,9 @@ object S3Factory {
          */
         inline fun create(initializer: S3TransferManager.Builder.() -> Unit): S3TransferManager {
             return S3TransferManager.builder().apply(initializer).build()
+                .apply {
+                    ShutdownQueue.register(this)
+                }
         }
 
         /**

@@ -9,6 +9,7 @@ dependencies {
     // AWS SDK V2
     api(Libs.aws2_aws_core)
     api(Libs.aws2_ses)
+    api(Libs.aws2_netty_nio_client)
     testImplementation(Libs.aws2_test_utils)
 
     // Coroutines

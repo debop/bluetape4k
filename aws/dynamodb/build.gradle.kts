@@ -8,7 +8,6 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-aws-core"))
-    api(project(":bluetape4k-coroutines"))
     api(project(":bluetape4k-io-json"))
     api(project(":bluetape4k-infra-resilience4j"))
     api(project(":bluetape4k-utils-idgenerators"))
@@ -16,12 +15,13 @@ dependencies {
 
     // AWS SDK V2
     api(Libs.aws2_dynamodb_enhanced)
+    api(Libs.aws2_netty_nio_client)
     testImplementation(Libs.aws2_test_utils)
 
     // Coroutines
-    compileOnly(Libs.kotlinx_coroutines_core)
-    compileOnly(Libs.kotlinx_coroutines_jdk8)
-    compileOnly(Libs.kotlinx_coroutines_reactor)
+    api(project(":bluetape4k-coroutines"))
+    api(Libs.kotlinx_coroutines_core)
+    api(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // Localstack

@@ -1,7 +1,9 @@
 package io.bluetape4k.aws.sqs
 
+import io.bluetape4k.aws.http.SdkHttpClientProvider
 import io.bluetape4k.aws.sqs.model.sendMessageRequestOf
 import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.utils.ShutdownQueue
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sqs.SqsClient
@@ -24,16 +26,23 @@ import java.net.URI
 
 inline fun sqsClient(initializer: SqsClientBuilder.() -> Unit): SqsClient {
     return SqsClient.builder().apply(initializer).build()
+        .apply {
+            ShutdownQueue.register(this)
+        }
 }
 
 fun sqsClientOf(
     endpoint: URI,
     region: Region,
     credentialsProvider: AwsCredentialsProvider,
+    initializer: SqsClientBuilder.() -> Unit = {},
 ): SqsClient = sqsClient {
     endpointOverride(endpoint)
     region(region)
     credentialsProvider(credentialsProvider)
+
+    httpClient(SdkHttpClientProvider.Apache.apacheHttpClient)
+    initializer()
 }
 
 fun SqsClient.createQueue(queueName: String): String {

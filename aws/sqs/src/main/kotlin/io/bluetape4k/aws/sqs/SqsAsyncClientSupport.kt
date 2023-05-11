@@ -1,9 +1,10 @@
 package io.bluetape4k.aws.sqs
 
+import io.bluetape4k.aws.http.SdkAsyncHttpClientProvider
 import io.bluetape4k.aws.sqs.model.sendMessageRequestOf
 import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.utils.ShutdownQueue
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
-import software.amazon.awssdk.core.client.config.ClientAsyncConfiguration
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import software.amazon.awssdk.services.sqs.SqsAsyncClientBuilder
@@ -26,18 +27,24 @@ import java.util.concurrent.CompletableFuture
 
 inline fun sqsAsyncClient(initializer: SqsAsyncClientBuilder.() -> Unit): SqsAsyncClient {
     return SqsAsyncClient.builder().apply(initializer).build()
+        .apply {
+            ShutdownQueue.register(this)
+        }
 }
 
 fun sqsAsyncClientOf(
     endpoint: URI,
     region: Region,
     credentialsProvider: AwsCredentialsProvider,
-    asyncConfiguration: ClientAsyncConfiguration? = null,
+    initializer: SqsAsyncClientBuilder.() -> Unit = {},
 ): SqsAsyncClient = sqsAsyncClient {
     endpointOverride(endpoint)
     region(region)
     credentialsProvider(credentialsProvider)
-    asyncConfiguration?.run { asyncConfiguration(this) }
+
+    httpClient(SdkAsyncHttpClientProvider.Netty.nettyNioAsyncHttpClient)
+
+    initializer()
 }
 
 fun SqsAsyncClient.createQueue(queueName: String): CompletableFuture<String> {

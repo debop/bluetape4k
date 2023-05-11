@@ -1,5 +1,8 @@
 package io.bluetapek4.aws.ses
 
+import io.bluetape4k.aws.http.SdkAsyncHttpClientProvider
+import io.bluetape4k.aws.http.nettyNioAsyncHttpClientOf
+import io.bluetape4k.utils.ShutdownQueue
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.ses.SesAsyncClient
 import software.amazon.awssdk.services.ses.SesAsyncClientBuilder
@@ -18,14 +21,29 @@ inline fun sesAsyncClient(
     initializer: SesAsyncClientBuilder.() -> Unit,
 ): SesAsyncClient {
     return SesAsyncClient.builder().apply(initializer).build()
+        .apply {
+            ShutdownQueue.register(this)
+        }
 }
 
-fun sesAsyncClientOf(region: Region): SesAsyncClient {
-    return sesAsyncClient { region(region) }
+fun sesAsyncClientOf(
+    region: Region,
+    initializer: SesAsyncClientBuilder.() -> Unit = {},
+): SesAsyncClient = sesAsyncClient {
+    region(region)
+    httpClient(SdkAsyncHttpClientProvider.Netty.nettyNioAsyncHttpClient)
+
+    initializer()
 }
 
-fun sesAsyncClientOf(endpointProvider: SesEndpointProvider): SesAsyncClient {
-    return sesAsyncClient { endpointProvider(endpointProvider) }
+fun sesAsyncClientOf(
+    endpointProvider: SesEndpointProvider,
+    initializer: SesAsyncClientBuilder.() -> Unit = {},
+): SesAsyncClient = sesAsyncClient {
+    endpointProvider(endpointProvider)
+    httpClient(nettyNioAsyncHttpClientOf())
+
+    initializer()
 }
 
 fun SesAsyncClient.send(emailRequest: SendEmailRequest): CompletableFuture<SendEmailResponse> {

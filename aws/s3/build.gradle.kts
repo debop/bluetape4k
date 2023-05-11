@@ -11,9 +11,7 @@ dependencies {
     api(Libs.aws2_aws_core)
     api(Libs.aws2_s3)
     api(Libs.aws2_s3_transfer_manager)
-    // https://mvnrepository.com/artifact/software.amazon.awssdk.crt/aws-crt
-    // https://docs.aws.amazon.com/ko_kr/sdk-for-java/latest/developer-guide/http-configuration-crt.html
-    api(Libs.aws2_aws_crt)
+    api(Libs.aws2_aws_crt)  // AWS CRT 기반 HTTP 클라이언트를 사용하기 위해 필요합니다.
     testImplementation(Libs.aws2_test_utils)
 
     // Coroutines

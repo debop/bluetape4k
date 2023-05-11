@@ -1,5 +1,7 @@
 package io.bluetape4k.aws.dynamodb
 
+import io.bluetape4k.aws.http.SdkHttpClientProvider
+import io.bluetape4k.utils.ShutdownQueue
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
@@ -12,6 +14,9 @@ inline fun dynamoDbClient(
     initializer: DynamoDbClientBuilder.() -> Unit,
 ): DynamoDbClient {
     return DynamoDbClient.builder().apply(initializer).build()
+        .apply {
+            ShutdownQueue.register(this)
+        }
 }
 
 fun dynamoDbClientOf(
@@ -23,6 +28,8 @@ fun dynamoDbClientOf(
     endpointOverride(endpoint)
     region(region)
     credentialsProvider(credentialsProvider)
+    httpClient(SdkHttpClientProvider.Apache.apacheHttpClient)
+
     initializer()
 }
 
@@ -42,5 +49,7 @@ fun dynamoDbStreamsClientOf(
     endpointOverride(endpoint)
     region(region)
     credentialsProvider(credentialsProvider)
+    httpClient(SdkHttpClientProvider.Apache.apacheHttpClient)
+
     initializer()
 }
