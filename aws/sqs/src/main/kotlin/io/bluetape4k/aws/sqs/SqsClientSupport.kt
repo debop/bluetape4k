@@ -94,12 +94,12 @@ fun SqsClient.sendBatch(
 fun SqsClient.receiveMessages(
     queueUrl: String,
     maxResults: Int? = null,
-    requestBuilder: ReceiveMessageRequest.Builder.() -> Unit = {},
+    requestInitializer: ReceiveMessageRequest.Builder.() -> Unit = {},
 ): ReceiveMessageResponse {
     return receiveMessage {
         it.queueUrl(queueUrl)
         it.maxNumberOfMessages(maxResults)
-        requestBuilder(it)
+        it.requestInitializer()
     }
 }
 

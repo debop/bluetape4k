@@ -107,12 +107,12 @@ fun SqsAsyncClient.sendBatch(
 fun SqsAsyncClient.receiveMessages(
     queueUrl: String,
     maxResults: Int? = null,
-    requestBuilder: ReceiveMessageRequest.Builder.() -> Unit = {},
+    requestInitializer: ReceiveMessageRequest.Builder.() -> Unit = {},
 ): CompletableFuture<ReceiveMessageResponse> {
     return receiveMessage {
         it.queueUrl(queueUrl)
         it.maxNumberOfMessages(maxResults)
-        requestBuilder(it)
+        it.requestInitializer()
     }
 }
 
