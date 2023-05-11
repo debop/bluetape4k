@@ -27,7 +27,7 @@ suspend inline fun <K, V> Cache<K, V>.executeSuspendedFunction(
     crossinline block: suspend (K) -> V,
 ): V = suspendCoroutine { cont ->
 
-    val cachedValue = runCatching { computeIfAbsent(key) { null } }.getOrNull()
+    val cachedValue = runCatching { computeIfAbsent(key!!) { null } }.getOrNull()
     if (cachedValue != null) {
         cont.resume(cachedValue)
     } else {
@@ -35,7 +35,7 @@ suspend inline fun <K, V> Cache<K, V>.executeSuspendedFunction(
         val result = runCatching { runBlocking { withContext(Dispatchers.IO) { block(key) } } }
         if (result.isSuccess) {
             if (result.getOrNull() != null) {
-                this.computeIfAbsent(key) { result.getOrNull() }
+                this.computeIfAbsent(key!!) { result.getOrNull() }
             }
             cont.resumeWith(result)
         } else {

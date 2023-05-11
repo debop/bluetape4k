@@ -173,7 +173,7 @@ suspend fun <E> ReceiveChannel<E>.debounce(
                 delay(minOf(nextTime - currentTime, waitMillis))
                 var mostRecent = received
                 // channel에 요소가 있다면 가장 최신의 요소를 얻기 위해 계속 수신합니다. (중간 요소들은 모두 무시됩니다)
-                while (!self.isEmpty && !self.isClosedForReceive) {
+                while (!self.isEmpty && !self.receiveCatching().isClosed) {
                     mostRecent = self.receive()
                 }
                 nextTime += waitMillis
