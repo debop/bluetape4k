@@ -159,7 +159,7 @@ class TrieTest {
             .addKeywords(PRONOUNS)
             .build()
 
-        val emits = mutableListOf<Emit>()
+        val emits = fastListOf<Emit>()
         val emitHandler = object: EmitHandler {
             override fun emit(emit: Emit): Boolean = emits.add(emit)
         }

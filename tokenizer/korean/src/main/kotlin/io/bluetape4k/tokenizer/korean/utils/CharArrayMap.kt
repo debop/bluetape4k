@@ -1,6 +1,7 @@
 package io.bluetape4k.tokenizer.korean.utils
 
 import io.bluetape4k.logging.KLogging
+import org.eclipse.collections.impl.map.mutable.UnifiedMap
 import java.io.Serializable
 import java.util.*
 
@@ -9,7 +10,8 @@ import java.util.*
  * Lucene 에 있는 CharArrayMap 을 porting 한 클래스로, 사전 정보를 관리합니다.
  */
 @Suppress("UNCHECKED_CAST")
-open class CharArrayMap<V>(startSize: Int): java.util.AbstractMap<Any, V>(), Serializable {
+open class CharArrayMap<V>(startSize: Int): UnifiedMap<Any, V>(), Serializable {
+    // java.util.AbstractMap<Any, V>(), Serializable {
 
     companion object: KLogging() {
 

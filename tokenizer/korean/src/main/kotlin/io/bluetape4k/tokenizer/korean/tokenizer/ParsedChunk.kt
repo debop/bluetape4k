@@ -113,7 +113,6 @@ data class ParsedChunk(
                 if (tokens.first().pos == Noun && tokens.last().pos == Josa) {
                     if (Hangul.hasCoda(tokens.first().text.last())) {
                         val nounEnding = Hangul.decomposeHangul(tokens.first().text.last())
-
                         (nounEnding.coda != 'ㄹ' && tokens.last().text.first() == '로') ||
                             tokens.last().text in josaMatchedSet
                     } else {

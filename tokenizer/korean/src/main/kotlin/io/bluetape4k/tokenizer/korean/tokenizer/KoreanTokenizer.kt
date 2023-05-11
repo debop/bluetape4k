@@ -7,7 +7,7 @@ import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.tokenizer.korean.stemmer.KoreanStemmer
-import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider
+import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider.koreanDictionary
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adjective
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adverb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Conjunction
@@ -150,14 +150,15 @@ object KoreanTokenizer: KLogging(), Serializable {
         val directMatch: List<List<KoreanToken>> = findDirectMatch(chunk)
 
         // Buffer for solution
-        val solutions = unifiedMapOf<Int, List<CandidateParse>>().apply {
-            val candidateParse = CandidateParse(
-                parse = ParsedChunk(fastListOf<KoreanToken>(), 1, profile),
-                curTrie = koreanPosTrie,
-                ending = null
-            )
-            put(0, listOf(candidateParse))
-        }
+        val solutions = unifiedMapOf<Int, List<CandidateParse>>()
+            .apply {
+                val candidateParse = CandidateParse(
+                    parse = ParsedChunk(fastListOf<KoreanToken>(), 1, profile),
+                    curTrie = koreanPosTrie,
+                    ending = null
+                )
+                put(0, listOf(candidateParse))
+            }
 
         // Find N best parses per state
         for (end in 1..chunk.length) {
@@ -170,22 +171,21 @@ object KoreanTokenizer: KLogging(), Serializable {
 
                     val possiblePoses: List<PossibleTrie> = candateParse.ending
                         ?.let {
-                            candateParse.curTrie
-                                .map { PossibleTrie(it, 0) } + koreanPosTrie.map { PossibleTrie(it, 1) }
+                            candateParse.curTrie.map { PossibleTrie(it, 0) } +
+                                koreanPosTrie.map { PossibleTrie(it, 1) }
                         }
                         ?: candateParse.curTrie.map { PossibleTrie(it, 0) }
 
                     possiblePoses
                         .filter {
                             it.curTrie.curPos == Noun ||
-                                (KoreanDictionaryProvider
-                                    .koreanDictionary[it.curTrie.curPos]?.contains(word.toCharArray()) ?: false)
+                                (koreanDictionary[it.curTrie.curPos]?.contains(word.toCharArray()) ?: false)
                         }
                         .map { t: PossibleTrie ->
 
                             val candidateToAdd =
                                 if (t.curTrie.curPos == Noun &&
-                                    !KoreanDictionaryProvider.koreanDictionary[Noun]!!.contains(word.toCharArray())
+                                    !koreanDictionary[Noun]!!.contains(word.toCharArray())
                                 ) {
                                     val isWordName: Boolean = KoreanSubstantive.isName(word)
                                     val isKoreanNumber = KoreanSubstantive.isKoreanNumber(word)
@@ -236,21 +236,22 @@ object KoreanTokenizer: KLogging(), Serializable {
             }
         }
 
-        val topCandidates = if (solutions[chunk.length]!!.isEmpty()) {
-            fastListOf(fastListOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
-        } else {
-            solutions[chunk.length]!!.sortedBy { it.parse.score }.map { it.parse.posNodes }
-        }
+        val topCandidates =
+            if (solutions[chunk.length]!!.isEmpty()) {
+                fastListOf(fastListOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
+            } else {
+                solutions[chunk.length]!!.sortedBy { it.parse.score }.map { it.parse.posNodes }.toFastList()
+            }
 
         return (directMatch + topCandidates).distinct()
     }
 
     private fun findDirectMatch(chunk: KoreanToken): List<List<KoreanToken>> {
-        for ((pos, dict) in KoreanDictionaryProvider.koreanDictionary.entries) {
+        for ((pos, dict) in koreanDictionary.entries) {
             if (dict.contains(chunk.text)) {
                 return fastListOf(fastListOf(chunk.copy(pos = pos)))
             }
         }
-        return emptyList()
+        return emptyFastList()
     }
 }

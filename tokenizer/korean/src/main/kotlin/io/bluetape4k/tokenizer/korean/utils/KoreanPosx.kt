@@ -2,6 +2,7 @@ package io.bluetape4k.tokenizer.korean.utils
 
 import io.bluetape4k.collections.eclipse.emptyFastList
 import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adjective
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adverb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Alpha
@@ -73,7 +74,10 @@ object KoreanPosx: Serializable {
     fun buildTrie(s: String, endingPos: KoreanPos): List<KoreanPosTrie> {
 
         fun isFinal(rest: String): Boolean {
-            fun isNextOptional(): Boolean = rest.fold(true) { output, c -> if (c == '+' || c == '1') false else output }
+            fun isNextOptional(): Boolean = rest.fold(true) { output, c ->
+                if (c == '+' || c == '1') false
+                else output
+            }
             return rest.isEmpty() || isNextOptional()
         }
 
@@ -88,10 +92,10 @@ object KoreanPosx: Serializable {
 
         return when (rule) {
             '+'  -> fastListOf(KoreanPosTrie(pos, fastListOf(SelfNode) + buildTrie(rest, endingPos), end))
-            '*'  -> fastListOf(KoreanPosTrie(pos, fastListOf(SelfNode) + buildTrie(rest, endingPos), end)) + buildTrie(
-                rest,
-                endingPos
-            )
+            '*'  -> fastListOf(
+                KoreanPosTrie(pos, fastListOf(SelfNode) + buildTrie(rest, endingPos), end)
+            ) +
+                buildTrie(rest, endingPos)
 
             '1'  -> fastListOf(KoreanPosTrie(pos, buildTrie(rest, endingPos), end))
             '0'  -> fastListOf(KoreanPosTrie(pos, buildTrie(rest, endingPos), end)) + buildTrie(rest, endingPos)
@@ -107,6 +111,5 @@ object KoreanPosx: Serializable {
         return results
     }
 
-    val Predicates = hashSetOf(Verb, Adjective)
-
+    val Predicates = unifiedSetOf(Verb, Adjective)
 }

@@ -4,6 +4,7 @@ import io.bluetape4k.collections.eclipse.emptyFastList
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet
+import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.tokenizer.korean.utils.Hangul.composeHangul
 import io.bluetape4k.tokenizer.korean.utils.Hangul.decomposeHangul
@@ -57,8 +58,8 @@ object KoreanConjugation: KLogging(), Serializable {
     private val PRE_EOMI_하다 by lazy { PRE_EOMI_COMMON + PRE_EOMI_2 + PRE_EOMI_6 + PRE_EOMI_RESPECT }
     private val PRE_EOMI_VOWEL_하다 by lazy { PRE_EOMI_VOWEL + PRE_EOMI_1_5 + PRE_EOMI_6 }
 
-    private val adjective_하다_Set = hashSetOf("합", "해", "히", "하")
-    private val adjective_하다_Set2 = hashSetOf("합", "해")
+    private val adjective_하다_Set = unifiedSetOf("합", "해", "히", "하")
+    private val adjective_하다_Set2 = unifiedSetOf("합", "해")
 
     /**
      * Cases without codas

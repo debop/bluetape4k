@@ -19,25 +19,23 @@ import java.io.Serializable
 import java.util.regex.MatchResult
 import java.util.regex.Matcher
 
-
 /**
  * Normalize Korean colloquial text (한글 구어체를 Normailze 합니다)
  */
 object KoreanNormalizer: KLogging(), Serializable {
 
-    val EXTENTED_KOREAN_REGEX = """([ㄱ-ㅣ가-힣]+)""".toRegex()
-    val KOREAN_TO_NORMALIZE_REGEX = """([가-힣]+)(ㅋ+|ㅎ+|[ㅠㅜ]+)""".toRegex()
-    val REPEATING_CHAR_REGEX = """(.)\1{3,}|[ㅠㅜ]{3,}""".toRegex()
-    val REPEATING_2CHAR_REGEX = """(..)\1{2,}""".toRegex()
-    val REPEATING_3CHAR_REGEX = """(...)\1{2,}""".toRegex()
+    private val EXTENTED_KOREAN_REGEX: Regex = """([ㄱ-ㅣ가-힣]+)""".toRegex()
+    private val KOREAN_TO_NORMALIZE_REGEX: Regex = """([가-힣]+)(ㅋ+|ㅎ+|[ㅠㅜ]+)""".toRegex()
+    private val REPEATING_CHAR_REGEX: Regex = """(.)\1{3,}|[ㅠㅜ]{3,}""".toRegex()
+    private val REPEATING_2CHAR_REGEX: Regex = """(..)\1{2,}""".toRegex()
+    private val REPEATING_3CHAR_REGEX: Regex = """(...)\1{2,}""".toRegex()
 
-    val WHITESPACE_REGEX = """\s+""".toRegex()
+    private val WHITESPACE_REGEX: Regex = """\s+""".toRegex()
 
-    val CODA_N_EXCPETION = "은는운인텐근른픈닌든던".toCharArray()
+    private val CODA_N_EXCPETION: CharArray = "은는운인텐근른픈닌든던".toCharArray()
+    private val CODA_N_LAST_CHAR: CharArray = charArrayOf('데', '가', '지')
 
-    val CODA_N_LAST_CHAR = charArrayOf('데', '가', '지')
-
-    data class Segment(val text: String, val matchData: MatchResult?)
+    private data class Segment(val text: String, val matchData: MatchResult?)
 
     fun normalize(input: CharSequence): CharSequence {
         return EXTENTED_KOREAN_REGEX.replace(input) { m ->
@@ -143,6 +141,7 @@ object KoreanNormalizer: KLogging(), Serializable {
         val isNormalized = koreanContains(Noun, chunk) ||
             koreanContains(Eomi, chunk.takeLast(1)) ||
             koreanContains(Eomi, chunk.takeLast(2))
+
         val normalizedChunk = if (isNormalized) chunk else normalizeEmotionAttachedChunk(chunk, toNormalize)
 
         return normalizedChunk.toString() + toNormalize

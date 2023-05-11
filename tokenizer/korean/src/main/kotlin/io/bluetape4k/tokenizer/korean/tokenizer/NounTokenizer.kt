@@ -7,7 +7,7 @@ import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.tokenizer.korean.stemmer.KoreanStemmer
-import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider
+import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider.koreanDictionary
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Conjunction
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Korean
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
@@ -122,7 +122,8 @@ object NounTokenizer: KLogging(), Serializable {
                             // Collapse sequence of one-char nouns into one unknown noun: (가Noun 회Noun -> 가회Noun*)
                             parsed.map(KoreanSubstantive::collapseNouns).toFastList()
                         }
-                        else   -> listOf(listOf(it))
+
+                        else   -> fastListOf(fastListOf(it))
                     }
                 }
         } catch (e: Exception) {
@@ -162,8 +163,7 @@ object NounTokenizer: KLogging(), Serializable {
 
         // Find N best parses per state
         for (end in 1..chunk.length) {
-            for (start in end - 1 downTo Math.max(end - MAX_TRACE_BACK, 0)) {
-
+            for (start in end - 1 downTo (end - MAX_TRACE_BACK).coerceAtLeast(0)) {
                 val word = chunk.text.slice(start until end)
                 val curSolutions = solutions[start]!!
 
@@ -176,14 +176,13 @@ object NounTokenizer: KLogging(), Serializable {
                     possiblePoses
                         .filter {
                             it.curTrie.curPos == Noun ||
-                                (KoreanDictionaryProvider.koreanDictionary[it.curTrie.curPos]
-                                    ?.contains(word.toCharArray()) ?: false)
+                                (koreanDictionary[it.curTrie.curPos]?.contains(word.toCharArray()) ?: false)
                         }
                         .map { t: PossibleTrie ->
 
                             val candidateToAdd =
                                 if (t.curTrie.curPos == Noun &&
-                                    !KoreanDictionaryProvider.koreanDictionary[Noun]!!.contains(word.toCharArray())
+                                    !koreanDictionary[Noun]!!.contains(word.toCharArray())
                                 ) {
                                     val isWordName: Boolean = KoreanSubstantive.isName(word)
                                     val isKoreanNumber = KoreanSubstantive.isKoreanNumber(word)
@@ -193,8 +192,13 @@ object NounTokenizer: KLogging(), Serializable {
                                     val unknown = !isWordName && !isKoreanNumber && !isWordKoreanNameVariation
                                     val pos = Noun
 
-                                    val token =
-                                        KoreanToken(word, pos, chunk.offset + start, word.length, unknown = unknown)
+                                    val token = KoreanToken(
+                                        word,
+                                        pos,
+                                        chunk.offset + start,
+                                        word.length,
+                                        unknown = unknown
+                                    )
                                     ParsedChunk(fastListOf(token), t.words, profile)
 
                                 } else {
@@ -234,7 +238,7 @@ object NounTokenizer: KLogging(), Serializable {
     }
 
     private fun findDirectMatch(chunk: KoreanToken): List<List<KoreanToken>> {
-        for ((pos, dict) in KoreanDictionaryProvider.koreanDictionary.entries) {
+        for ((pos, dict) in koreanDictionary.entries) {
             if (dict.contains(chunk.text)) {
                 return fastListOf(fastListOf(chunk.copy(pos = pos)))
             }

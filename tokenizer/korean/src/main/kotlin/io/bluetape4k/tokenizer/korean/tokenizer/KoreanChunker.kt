@@ -18,15 +18,18 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Punctuation
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.ScreenName
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Space
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.URL
+import org.eclipse.collections.impl.list.mutable.FastList
+import org.eclipse.collections.impl.map.mutable.UnifiedMap
 import java.io.Serializable
 import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 /**
  * Split input text into Korean Chunks (어절)
  */
 object KoreanChunker: KLogging(), Serializable {
 
-    val POS_PATTERNS = unifiedMapOf(
+    val POS_PATTERNS: UnifiedMap<KoreanPos, Pattern> = unifiedMapOf(
         Korean to """([가-힣]+)""".toRegex().toPattern(),
         Alpha to """(\p{Alpha}+)""".toRegex().toPattern(),
         Number to ("""(\$?\p{Digit}+""" +
@@ -42,7 +45,7 @@ object KoreanChunker: KLogging(), Serializable {
         Space to """\s+""".toRegex().toPattern()
     )
 
-    val CHUNKING_ORDER = fastListOf(
+    private val CHUNKING_ORDER: FastList<KoreanPos> = fastListOf(
         URL,
         Email,
         ScreenName,
@@ -65,7 +68,6 @@ object KoreanChunker: KLogging(), Serializable {
                 (that.start >= this.end && that.end > this.end)
         }
     }
-
 
     private fun splitBySpaceKeepingSpace(s: CharSequence): List<String> {
         val space = POS_PATTERNS[Space]!!
@@ -165,7 +167,8 @@ object KoreanChunker: KLogging(), Serializable {
                     cm.end
                 }
 
-                else                -> error("Non-disjoint chunk matches found. cm=$cm")
+                else                ->
+                    error("Non-disjoint chunk matches found. cm=$cm")
             }
         }
 

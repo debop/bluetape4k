@@ -1,6 +1,7 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
 import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.tokenizer.korean.utils.KoreanPos
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Eomi
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Josa
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Modifier
@@ -11,6 +12,7 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Suffix
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.VerbPrefix
 import org.eclipse.collections.api.factory.Sets
+import org.eclipse.collections.api.set.ImmutableSet
 import java.io.Serializable
 
 
@@ -19,8 +21,11 @@ import java.io.Serializable
  */
 object KoreanDetokenizer: Serializable {
 
-    val SuffixPos = Sets.immutable.of(Josa, Eomi, PreEomi, Suffix, Punctuation)
-    val PrefixPos = Sets.immutable.of(Modifier, VerbPrefix)
+    @JvmField
+    val SuffixPos: ImmutableSet<KoreanPos> = Sets.immutable.of(Josa, Eomi, PreEomi, Suffix, Punctuation)
+
+    @JvmField
+    val PrefixPos: ImmutableSet<KoreanPos> = Sets.immutable.of(Modifier, VerbPrefix)
 
     fun detokenize(input: Collection<String>): String {
         // Space guide prevents tokenizing a word that was not tokenized in the input.

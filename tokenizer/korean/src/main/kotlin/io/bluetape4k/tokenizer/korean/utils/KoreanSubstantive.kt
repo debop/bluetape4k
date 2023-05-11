@@ -86,7 +86,8 @@ object KoreanSubstantive: KLogging(), Serializable {
             }
         }.joinToString("")
 
-        return fastListOf(recovered, recovered.init()).any { isName(it) }
+        return fastListOf(recovered, recovered.init()).anySatisfy(::isName)
+        // return fastListOf(recovered, recovered.init()).any { isName(it) }
     }
 
     /**
@@ -96,23 +97,6 @@ object KoreanSubstantive: KLogging(), Serializable {
      * @return sequence of collapsed KoreanTokens
      */
     fun collapseNouns(posNodes: Iterable<KoreanToken>): List<KoreanToken> {
-        //    val (nodes, _) = posNodes.fold(Pair(listOf<KoreanToken>(), false)) { output, p ->
-        //      val p1 = output.component1()
-        //      val collapsing = output.component2()
-        //
-        //      if (p.pos == Noun && p.text.length == 1 && collapsing) {
-        //        val text = p1.head()!!.text + p.text
-        //        val offset = p1.head()!!.offset
-        //        Pair(KoreanToken(text, Noun, offset, text.length, unknown = true).prependTo(p1.tail()), true)
-        //      } else if (p.pos == Noun && p.text.length == 1 && !collapsing) {
-        //        Pair(p.prependTo(p1), true)
-        //      } else {
-        //        Pair(p.prependTo(p1), false)
-        //      }
-        //    }
-        //
-        //    return nodes.reversed()
-
         val nodes = fastListOf<KoreanToken>()
         var collapsing = false
 

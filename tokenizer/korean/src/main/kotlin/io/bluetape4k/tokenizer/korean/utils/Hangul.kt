@@ -2,6 +2,7 @@ package io.bluetape4k.tokenizer.korean.utils
 
 import io.bluetape4k.collections.eclipse.toUnifiedMap
 import io.bluetape4k.collections.eclipse.unifiedMapOf
+import org.eclipse.collections.impl.map.mutable.UnifiedMap
 import java.io.Serializable
 
 object Hangul: Serializable {
@@ -17,28 +18,28 @@ object Hangul: Serializable {
     private const val ONSET_BASE: Int = 21 * 28
     private const val VOWEL_BASE: Int = 28
 
-    private val ONSET_LIST = charArrayOf(
+    private val ONSET_LIST: CharArray = charArrayOf(
         'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ',
         'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
     )
-    private val VOWEL_LIST = charArrayOf(
+    private val VOWEL_LIST: CharArray = charArrayOf(
         'ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ',
         'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ',
         'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ',
         'ㅡ', 'ㅢ', 'ㅣ'
     )
-    private val CODA_LIST = charArrayOf(
+    private val CODA_LIST: CharArray = charArrayOf(
         ' ', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ',
         'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ',
         'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ',
         'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
     )
 
-    val ONSET_MAP = ONSET_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
-    val VOWEL_MAP = VOWEL_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
-    val CODA_MAP = CODA_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
+    private val ONSET_MAP: UnifiedMap<Char, Int> = ONSET_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
+    private val VOWEL_MAP: UnifiedMap<Char, Int> = VOWEL_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
+    val CODA_MAP: UnifiedMap<Char, Int> = CODA_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
 
-    val DOUBLE_CODAS = unifiedMapOf(
+    val DOUBLE_CODAS: UnifiedMap<Char, DoubleCoda> = unifiedMapOf(
         'ㄳ' to DoubleCoda('ㄱ', 'ㅅ'),
         'ㄵ' to DoubleCoda('ㄴ', 'ㅈ'),
         'ㄶ' to DoubleCoda('ㄴ', 'ㅎ'),
