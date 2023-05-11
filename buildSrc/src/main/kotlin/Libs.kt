@@ -1102,15 +1102,15 @@ object Libs {
     // junit 5.4+ 부터는 junit-jupiter 만 있으면 됩니다.
     val junit_bom get() = "org.junit:junit-bom:${Versions.junit_jupiter}"
     fun junitJupiter(module: String = "") =
-        "org.junit.jupiter:junit-jupiter" + (if (module.isBlank()) "" else "-") + module
+        "org.junit.jupiter:junit-jupiter-$module:${Versions.junit_jupiter}"
 
-    val junit_jupiter get() = junitJupiter()
+    val junit_jupiter get() = "org.junit.jupiter:junit-jupiter:${Versions.junit_jupiter}"
     val junit_jupiter_api get() = junitJupiter("api")
     val junit_jupiter_engine get() = junitJupiter("engine")
     val junit_jupiter_migrationsupport get() = junitJupiter("migrationsupport")
     val junit_jupiter_params get() = junitJupiter("params")
 
-    fun junitPlatform(module: String) = "org.junit.platform:junit-platform-$module"
+    fun junitPlatform(module: String) = "org.junit.platform:junit-platform-$module:${Versions.junit_platform}"
 
     val junit_platform_commons get() = junitPlatform("commons")
     val junit_platform_engine get() = junitPlatform("engine")

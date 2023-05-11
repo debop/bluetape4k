@@ -433,6 +433,17 @@ subprojects {
 
             dependency(Libs.reflectasm)
 
+            dependency(Libs.junit_bom)
+            dependency(Libs.junit_jupiter)
+            dependency(Libs.junit_jupiter_api)
+            dependency(Libs.junit_jupiter_engine)
+            dependency(Libs.junit_jupiter_migrationsupport)
+            dependency(Libs.junit_jupiter_params)
+            dependency(Libs.junit_platform_commons)
+            dependency(Libs.junit_platform_engine)
+            dependency(Libs.junit_platform_launcher)
+            dependency(Libs.junit_platform_runner)
+
             dependency(Libs.kluent)
             dependency(Libs.assertj_core)
 
