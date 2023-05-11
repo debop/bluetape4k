@@ -62,10 +62,10 @@ class KLoggingChannelTest {
 
     @Test
     fun `log message with suspend function`() = runBlocking {
-        debug { "delay=${runAndAwait(100)}" }
+        debug { "delay=${runSuspending(100)}" }
     }
 
-    private suspend fun runAndAwait(delayMillis: Long = 100): Long {
+    private suspend fun runSuspending(delayMillis: Long = 100): Long {
         delay(delayMillis)
         return delayMillis
     }

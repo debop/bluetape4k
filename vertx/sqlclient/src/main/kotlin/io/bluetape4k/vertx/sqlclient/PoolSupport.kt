@@ -15,7 +15,7 @@ val log = KotlinLogging.logger { }
  *
  * ```
  * val pool = JDBCPool.create(vertx)    // MySQLClient.create(vertx)
- * val rows = pool.withTransactionAndAwait {
+ * val rows = pool.withTransactionSuspending {
  *     SqlTemplate.forQuery("select * from Person where id=#{id}")
  *      .execute(mapOf("id" to 1))
  *      .await()

@@ -10,14 +10,14 @@ import org.redisson.api.TransactionOptions
 import org.redisson.transaction.TransactionException
 import java.time.LocalDate
 
-suspend inline fun RedissonClient.withBatchAwait(
+suspend inline fun RedissonClient.withBatchSuspending(
     options: BatchOptions = BatchOptions.defaults(),
     action: RBatch.() -> Unit,
 ): BatchResult<*> {
     return createBatch(options).apply(action).executeAsync().awaitSuspending()
 }
 
-suspend inline fun RedissonClient.withTransactionAwait(
+suspend inline fun RedissonClient.withTransactionSuspending(
     options: TransactionOptions = TransactionOptions.defaults(),
     action: RTransaction.() -> Unit,
 ) {

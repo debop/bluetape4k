@@ -7,7 +7,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.future.await
 import org.hibernate.reactive.stage.Stage
 
-suspend fun <T> Stage.SessionFactory.withSessionAndAwait(
+suspend fun <T> Stage.SessionFactory.withSessionSuspending(
     work: suspend (session: Stage.Session) -> T,
 ): T = coroutineScope {
     withSession { session: Stage.Session ->
@@ -17,7 +17,7 @@ suspend fun <T> Stage.SessionFactory.withSessionAndAwait(
     }.await()
 }
 
-suspend fun <T> Stage.SessionFactory.withSessionAndAwait(
+suspend fun <T> Stage.SessionFactory.withSessionSuspending(
     tenantId: String,
     work: suspend (session: Stage.Session) -> T,
 ): T = coroutineScope {
@@ -28,7 +28,7 @@ suspend fun <T> Stage.SessionFactory.withSessionAndAwait(
     }.await()
 }
 
-suspend fun <T> Stage.SessionFactory.withStatelessSessionAndAwait(
+suspend fun <T> Stage.SessionFactory.withStatelessSessionSuspending(
     work: suspend (session: Stage.StatelessSession) -> T,
 ): T = coroutineScope {
     withStatelessSession { stateless: Stage.StatelessSession ->
@@ -38,7 +38,7 @@ suspend fun <T> Stage.SessionFactory.withStatelessSessionAndAwait(
     }.await()
 }
 
-suspend fun <T> Stage.SessionFactory.withStatelessSessionAndAwait(
+suspend fun <T> Stage.SessionFactory.withStatelessSessionSuspending(
     tenantId: String,
     work: suspend (stateless: Stage.StatelessSession) -> T,
 ): T = coroutineScope {
@@ -49,7 +49,7 @@ suspend fun <T> Stage.SessionFactory.withStatelessSessionAndAwait(
     }.await()
 }
 
-suspend fun <T> Stage.SessionFactory.withTransactionAndAwait(
+suspend fun <T> Stage.SessionFactory.withTransactionSuspending(
     work: suspend (session: Stage.Session) -> T,
 ): T = coroutineScope {
     withTransaction { session: Stage.Session ->
@@ -59,7 +59,7 @@ suspend fun <T> Stage.SessionFactory.withTransactionAndAwait(
     }.await()
 }
 
-suspend fun <T> Stage.SessionFactory.withTransactionAndAwait(
+suspend fun <T> Stage.SessionFactory.withTransactionSuspending(
     tenantId: String,
     work: suspend (session: Stage.Session, trasaction: Stage.Transaction) -> T,
 ): T = coroutineScope {
@@ -70,7 +70,7 @@ suspend fun <T> Stage.SessionFactory.withTransactionAndAwait(
     }.await()
 }
 
-suspend fun <T> Stage.SessionFactory.withStatelessTransactionAndAwait(
+suspend fun <T> Stage.SessionFactory.withStatelessTransactionSuspending(
     work: suspend (session: Stage.StatelessSession) -> T,
 ): T = coroutineScope {
     withStatelessTransaction { stateless: Stage.StatelessSession ->
@@ -80,7 +80,7 @@ suspend fun <T> Stage.SessionFactory.withStatelessTransactionAndAwait(
     }.await()
 }
 
-suspend fun <T> Stage.SessionFactory.withStatelessTransactionAndAwait(
+suspend fun <T> Stage.SessionFactory.withStatelessTransactionSuspending(
     work: suspend (session: Stage.StatelessSession, trasaction: Stage.Transaction) -> T,
 ): T = coroutineScope {
     withStatelessTransaction { stateless: Stage.StatelessSession, transaction: Stage.Transaction ->
@@ -90,7 +90,7 @@ suspend fun <T> Stage.SessionFactory.withStatelessTransactionAndAwait(
     }.await()
 }
 
-suspend fun <T> Stage.SessionFactory.withStatelessTransactionAndAwait(
+suspend fun <T> Stage.SessionFactory.withStatelessTransactionSuspending(
     tenantId: String,
     work: suspend (session: Stage.StatelessSession, trasaction: Stage.Transaction) -> T,
 ): T = coroutineScope {

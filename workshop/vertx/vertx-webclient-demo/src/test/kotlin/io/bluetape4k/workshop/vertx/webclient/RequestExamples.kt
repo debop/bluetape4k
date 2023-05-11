@@ -1,5 +1,6 @@
 package io.bluetape4k.workshop.vertx.webclient
 
+import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.vertx.tests.withTestContextSuspending
@@ -47,7 +48,7 @@ class RequestExamples {
     }
 
     @Test
-    fun `put simple string as request body`(vertx: Vertx, testContext: VertxTestContext) {
+    fun `put simple string as request body`(vertx: Vertx, testContext: VertxTestContext) = runSuspendTest {
         vertx.withTestContextSuspending(testContext) {
             vertx.deployVerticle(PostStringServer()).await()
 

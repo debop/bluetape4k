@@ -5,9 +5,9 @@ import io.bluetape4k.data.hibernate.reactive.examples.model.Author_
 import io.bluetape4k.data.hibernate.reactive.examples.model.Book
 import io.bluetape4k.data.hibernate.reactive.examples.model.Book_
 import io.bluetape4k.data.hibernate.reactive.mutiny.findAs
-import io.bluetape4k.data.hibernate.reactive.mutiny.withSessionAndAwait
-import io.bluetape4k.data.hibernate.reactive.mutiny.withStatelessSessionAndAwait
-import io.bluetape4k.data.hibernate.reactive.mutiny.withTransactionAndAwait
+import io.bluetape4k.data.hibernate.reactive.mutiny.withSessionSuspending
+import io.bluetape4k.data.hibernate.reactive.mutiny.withStatelessSessionSuspending
+import io.bluetape4k.data.hibernate.reactive.mutiny.withTransactionSuspending
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.smallrye.mutiny.coroutines.awaitSuspending
@@ -51,7 +51,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
         author2.addBook(book2)
         author2.addBook(book3)
 
-        sf.withTransactionAndAwait { session ->
+        sf.withTransactionSuspending { session ->
             session.persistAll(author1, author2).awaitSuspending()
         }
     }
@@ -59,14 +59,14 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
     @Test
     fun `mutiny session example`() = runSuspendWithIO {
         // enableFetchProfile 은 statelessSession 에서는 지원하지 않습니다.
-        val book = sf.withSessionAndAwait { session ->
+        val book = sf.withSessionSuspending { session ->
             // NOTE: many-to-one 을 lazy로 fetch 하기 위해서 EntityGraph나 @FetchProfile 을 사용해야 합니다.
             session.enableFetchProfile("withAuthor").findAs<Book>(book2.id).awaitSuspending()
         }
         book.shouldNotBeNull()
         book.author.shouldNotBeNull()
 
-        val authors = sf.withSessionAndAwait { session ->
+        val authors = sf.withSessionSuspending { session ->
             session.findAs<Author>(author1.id, author2.id).awaitSuspending()
         }
         authors shouldBeEqualTo listOf(author1, author2)
@@ -75,7 +75,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
     @Test
     fun `find all book with fetch join`() = runSuspendWithIO {
         val sql = "SELECT b FROM Book b LEFT JOIN FETCH b.author a"
-        val books = sf.withStatelessSessionAndAwait { session ->
+        val books = sf.withStatelessSessionSuspending { session ->
             session.createQuery<Book>(sql).resultList.awaitSuspending()
         }
         books.forEach {
@@ -91,7 +91,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
         val root = criteria.from(Book::class.java)
         criteria.select(root)
 
-        val books = sf.withStatelessSessionAndAwait { session ->
+        val books = sf.withStatelessSessionSuspending { session ->
             val graph = session.createEntityGraph(Book::class.java)
             graph.addAttributeNodes(Book::author.name)
 
@@ -115,7 +115,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
 
         criteria.where(cb.equal(author.get(Author_.name), author1.name))
 
-        val books = sf.withStatelessSessionAndAwait { session ->
+        val books = sf.withStatelessSessionSuspending { session ->
             val graph = session.createEntityGraph(Book::class.java)
             graph.addAttributeNodes(Book_.author)
 
@@ -136,7 +136,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
         criteria.select(author)
             .where(cb.equal(book.get(Book_.isbn), book1.isbn))
 
-        val authors = sf.withStatelessSessionAndAwait { session ->
+        val authors = sf.withStatelessSessionSuspending { session ->
             session.createQuery(criteria).resultList.awaitSuspending()
         }
         // NOTE: author 만 로딩했으므로, books 에 접근하면 lazy initialization 예외가 발생합니다.
@@ -159,7 +159,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
         criteria.select(author)
             .where(cb.equal(book.get(Book_.isbn), book2.isbn))
 
-        val authors = sf.withStatelessSessionAndAwait { session ->
+        val authors = sf.withStatelessSessionSuspending { session ->
             // inner join fetch
             val graph = session.createEntityGraph(Author::class.java)
             // graph.addSubgraph(Author_.books)

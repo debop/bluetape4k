@@ -27,7 +27,7 @@ suspend fun ReactiveCqlOperations.executeSuspending(psc: ReactivePreparedStateme
 fun ReactiveCqlOperations.executeSuspending(cql: String, args: () -> Flow<Array<Any?>>): Flow<Boolean?> =
     execute(cql, args().asPublisher()).asFlow()
 
-suspend fun <T: Any> ReactiveCqlOperations.queryForObjectAndAwait(
+suspend fun <T: Any> ReactiveCqlOperations.queryForObjectSuspending(
     cql: String,
     vararg args: Any?,
     rowMapper: (Row, Int) -> T?,
@@ -35,11 +35,11 @@ suspend fun <T: Any> ReactiveCqlOperations.queryForObjectAndAwait(
     return queryForObject(cql, rowMapper, *args).awaitSingleOrNull()
 }
 
-suspend inline fun <reified T: Any> ReactiveCqlOperations.queryForObjectAndAwait(cql: String, vararg args: Any): T? {
+suspend inline fun <reified T: Any> ReactiveCqlOperations.queryForObjectSuspending(cql: String, vararg args: Any): T? {
     return queryForObject(cql, T::class.java, *args).awaitSingleOrNull()
 }
 
-suspend inline fun <reified T: Any> ReactiveCqlOperations.queryForObjectAndAwait(statement: Statement<*>): T? {
+suspend inline fun <reified T: Any> ReactiveCqlOperations.queryForObjectSuspending(statement: Statement<*>): T? {
     return queryForObject(statement, T::class.java).awaitSingleOrNull()
 }
 

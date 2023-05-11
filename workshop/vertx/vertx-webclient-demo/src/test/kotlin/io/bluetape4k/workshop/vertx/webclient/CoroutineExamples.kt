@@ -1,5 +1,6 @@
 package io.bluetape4k.workshop.vertx.webclient
 
+import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.vertx.tests.withTestContextSuspending
@@ -33,7 +34,7 @@ class CoroutineExamples {
     }
 
     @Test
-    fun `use webclient to simple server`(vertx: Vertx, testContext: VertxTestContext) {
+    fun `use webclient to simple server`(vertx: Vertx, testContext: VertxTestContext) = runSuspendTest {
         vertx.withTestContextSuspending(testContext) {
             vertx.deployVerticle(CoroutineServer()).await()
 

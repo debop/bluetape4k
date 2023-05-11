@@ -1,7 +1,7 @@
 package io.bluetape4k.infra.otel.examples.logging
 
 import io.bluetape4k.infra.otel.AbstractOtelTest
-import io.bluetape4k.infra.otel.coroutines.useSpanAwait
+import io.bluetape4k.infra.otel.coroutines.useSpanSuspending
 import io.bluetape4k.infra.otel.trace.useSpan
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
@@ -65,7 +65,7 @@ class LoggingExporterExample: AbstractOtelTest() {
 
     private suspend fun myWonderfulUseCaseAsync() {
         // 새로운 span 에서 작업을 수행합니다.
-        tracer.spanBuilder("start my wonderful use case async").useSpanAwait { span ->
+        tracer.spanBuilder("start my wonderful use case async").useSpanSuspending { span ->
             span.addEvent("Event Async 0")
             log.debug { "Call doWorkAsync() ..." }
             doWorkAsync()
@@ -75,7 +75,7 @@ class LoggingExporterExample: AbstractOtelTest() {
 
     private suspend fun doWorkAsync() {
         // 새로운 span 에서 작업을 수행합니다.
-        tracer.spanBuilder("doWorkAsync").useSpanAwait { span ->
+        tracer.spanBuilder("doWorkAsync").useSpanSuspending { span ->
             log.debug { "Start doWorkAsync... $span" }
             delay(1000)
             log.debug { "Finish doWorkAsync. and increase work count." }

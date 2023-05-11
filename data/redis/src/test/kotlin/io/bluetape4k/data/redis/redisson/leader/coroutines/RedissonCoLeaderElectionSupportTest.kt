@@ -19,14 +19,14 @@ class RedissonCoLeaderElectionSupportTest: AbstractRedissonTest() {
 
         coroutineScope {
             launch {
-                redissonClient.runIfLeaderAwait(jobName) {
+                redissonClient.runIfLeaderSuspending(jobName) {
                     log.debug { "작업 1 을 시작합니다." }
                     delay(100)
                     log.debug { "작업 1 을 종료합니다." }
                 }
             }
             launch {
-                redissonClient.runIfLeaderAwait(jobName) {
+                redissonClient.runIfLeaderSuspending(jobName) {
                     log.debug { "작업 2 을 시작합니다." }
                     delay(100)
                     log.debug { "작업 2 을 종료합니다." }

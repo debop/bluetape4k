@@ -3,7 +3,7 @@ package io.bluetape4k.infra.otel.examples.metrics
 import io.bluetape4k.infra.otel.AbstractOtelTest
 import io.bluetape4k.infra.otel.common.attributesOf
 import io.bluetape4k.infra.otel.common.toAttributeKey
-import io.bluetape4k.infra.otel.coroutines.useSpanAwait
+import io.bluetape4k.infra.otel.coroutines.useSpanSuspending
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -40,7 +40,7 @@ class DoubleCounterExamples: AbstractOtelTest() {
 
         tracer.spanBuilder("calculate space")
             .setSpanKind(SpanKind.INTERNAL)
-            .useSpanAwait { span ->
+            .useSpanSuspending { span ->
                 try {
                     val extensionsToFind = listOf("jar", "kt", "java", "class", "xml", "properties", "txt")
                     calculateSpaceUsedByFilesWithExtensionsAsync(extensionsToFind, homeDir, diskSpaceCounter)

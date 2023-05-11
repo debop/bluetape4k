@@ -18,7 +18,7 @@ class RedissonClientCoroutineTest: AbstractRedissonCoroutineTest() {
 
         try {
 
-            val result = redisson.withBatchAwait {
+            val result = redisson.withBatchSuspending {
                 val batchMap = getMap<String, String>(mapName)
                 batchMap.fastPutAsync("1", "2")
                 batchMap.putAsync("2", "5")
@@ -38,7 +38,7 @@ class RedissonClientCoroutineTest: AbstractRedissonCoroutineTest() {
         val map = redisson.getMap<String, String>(randomName())
 
         try {
-            redisson.withTransactionAwait {
+            redisson.withTransactionSuspending {
                 map.putAsync("1", "2").awaitSuspending()
                 val value = map.getAsync("3").awaitSuspending()
 

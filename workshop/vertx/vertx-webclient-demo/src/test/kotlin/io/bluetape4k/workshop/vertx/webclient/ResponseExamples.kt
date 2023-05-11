@@ -1,6 +1,7 @@
 package io.bluetape4k.workshop.vertx.webclient
 
 import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.vertx.tests.withTestContextSuspending
@@ -57,7 +58,7 @@ class ResponseExamples {
     }
 
     @Test
-    fun `response as json object`(vertx: Vertx, testContext: VertxTestContext) {
+    fun `response as json object`(vertx: Vertx, testContext: VertxTestContext) = runSuspendTest {
         vertx.withTestContextSuspending(testContext) {
             vertx.deployVerticle(JsonServer()).await()
 
@@ -74,7 +75,7 @@ class ResponseExamples {
     }
 
     @Test
-    fun `response as custom class`(vertx: Vertx, testContext: VertxTestContext) {
+    fun `response as custom class`(vertx: Vertx, testContext: VertxTestContext) = runSuspendTest {
         vertx.withTestContextSuspending(testContext) {
             vertx.deployVerticle(JsonServer()).await()
 

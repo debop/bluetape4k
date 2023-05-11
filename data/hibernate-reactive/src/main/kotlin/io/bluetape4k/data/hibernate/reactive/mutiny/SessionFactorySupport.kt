@@ -7,7 +7,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.hibernate.reactive.mutiny.Mutiny
 
-suspend fun <T> Mutiny.SessionFactory.withSessionAndAwait(
+suspend fun <T> Mutiny.SessionFactory.withSessionSuspending(
     work: suspend (session: Mutiny.Session) -> T,
 ): T = coroutineScope {
     withSession { session: Mutiny.Session ->
@@ -17,7 +17,7 @@ suspend fun <T> Mutiny.SessionFactory.withSessionAndAwait(
     }.awaitSuspending()
 }
 
-suspend fun <T> Mutiny.SessionFactory.withSessionAndAwait(
+suspend fun <T> Mutiny.SessionFactory.withSessionSuspending(
     tenantId: String,
     work: suspend (session: Mutiny.Session) -> T,
 ): T = coroutineScope {
@@ -28,7 +28,7 @@ suspend fun <T> Mutiny.SessionFactory.withSessionAndAwait(
     }.awaitSuspending()
 }
 
-suspend fun <T> Mutiny.SessionFactory.withStatelessSessionAndAwait(
+suspend fun <T> Mutiny.SessionFactory.withStatelessSessionSuspending(
     work: suspend (session: Mutiny.StatelessSession) -> T,
 ): T = coroutineScope {
     withStatelessSession { stateless: Mutiny.StatelessSession ->
@@ -38,7 +38,7 @@ suspend fun <T> Mutiny.SessionFactory.withStatelessSessionAndAwait(
     }.awaitSuspending()
 }
 
-suspend fun <T> Mutiny.SessionFactory.withStatelessSessionAndAwait(
+suspend fun <T> Mutiny.SessionFactory.withStatelessSessionSuspending(
     tenantId: String,
     work: suspend (stateless: Mutiny.StatelessSession) -> T,
 ): T = coroutineScope {
@@ -49,7 +49,7 @@ suspend fun <T> Mutiny.SessionFactory.withStatelessSessionAndAwait(
     }.awaitSuspending()
 }
 
-suspend fun <T> Mutiny.SessionFactory.withTransactionAndAwait(
+suspend fun <T> Mutiny.SessionFactory.withTransactionSuspending(
     work: suspend (session: Mutiny.Session) -> T,
 ): T = coroutineScope {
     withTransaction { session: Mutiny.Session ->
@@ -59,7 +59,7 @@ suspend fun <T> Mutiny.SessionFactory.withTransactionAndAwait(
     }.awaitSuspending()
 }
 
-suspend fun <T> Mutiny.SessionFactory.withTransactionAndAwait(
+suspend fun <T> Mutiny.SessionFactory.withTransactionSuspending(
     work: suspend (session: Mutiny.Session, trasaction: Mutiny.Transaction) -> T,
 ): T = coroutineScope {
     withTransaction { session: Mutiny.Session, transaction: Mutiny.Transaction ->
@@ -69,7 +69,7 @@ suspend fun <T> Mutiny.SessionFactory.withTransactionAndAwait(
     }.awaitSuspending()
 }
 
-suspend fun <T> Mutiny.SessionFactory.withTransactionAndAwait(
+suspend fun <T> Mutiny.SessionFactory.withTransactionSuspending(
     tenantId: String,
     work: suspend (session: Mutiny.Session, trasaction: Mutiny.Transaction) -> T,
 ): T = coroutineScope {
@@ -80,7 +80,7 @@ suspend fun <T> Mutiny.SessionFactory.withTransactionAndAwait(
     }.awaitSuspending()
 }
 
-suspend fun <T> Mutiny.SessionFactory.withStatelessTransactionAndAwait(
+suspend fun <T> Mutiny.SessionFactory.withStatelessTransactionSuspending(
     work: suspend (session: Mutiny.StatelessSession) -> T,
 ): T = coroutineScope {
     withStatelessTransaction { stateless: Mutiny.StatelessSession ->
@@ -90,7 +90,7 @@ suspend fun <T> Mutiny.SessionFactory.withStatelessTransactionAndAwait(
     }.awaitSuspending()
 }
 
-suspend fun <T> Mutiny.SessionFactory.withStatelessTransactionAndAwait(
+suspend fun <T> Mutiny.SessionFactory.withStatelessTransactionSuspending(
     work: suspend (session: Mutiny.StatelessSession, trasaction: Mutiny.Transaction) -> T,
 ): T = coroutineScope {
     withStatelessTransaction { stateless: Mutiny.StatelessSession, transaction: Mutiny.Transaction ->
@@ -100,7 +100,7 @@ suspend fun <T> Mutiny.SessionFactory.withStatelessTransactionAndAwait(
     }.awaitSuspending()
 }
 
-suspend fun <T> Mutiny.SessionFactory.withStatelessTransactionAndAwait(
+suspend fun <T> Mutiny.SessionFactory.withStatelessTransactionSuspending(
     tenantId: String,
     work: suspend (session: Mutiny.StatelessSession, trasaction: Mutiny.Transaction) -> T,
 ): T = coroutineScope {

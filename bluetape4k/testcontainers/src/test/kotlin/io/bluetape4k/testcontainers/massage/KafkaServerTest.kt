@@ -94,7 +94,7 @@ class KafkaServerTest {
                 "coroutine-key",
                 "message in coroutines"
             )
-            val metadata = producer.sendAndAwait(record)
+            val metadata = producer.sendSuspending(record)
 
             metadata.topic() shouldBeEqualTo TOPIC_NAME_CORUTINE
             metadata.partition() shouldBeGreaterOrEqualTo 0
@@ -127,7 +127,7 @@ class KafkaServerTest {
         closeConsumer(consumer)
     }
 
-    private suspend fun <K, V> Producer<K, V>.sendAndAwait(
+    private suspend fun <K, V> Producer<K, V>.sendSuspending(
         record: ProducerRecord<K, V>,
     ): RecordMetadata = suspendCoroutine { cont ->
         send(record) { metadata, exception ->

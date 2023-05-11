@@ -3,7 +3,7 @@ package io.bluetape4k.infra.otel.examples.metrics
 import io.bluetape4k.infra.otel.AbstractOtelTest
 import io.bluetape4k.infra.otel.common.attributesOf
 import io.bluetape4k.infra.otel.common.toAttributeKey
-import io.bluetape4k.infra.otel.coroutines.useSpanAwait
+import io.bluetape4k.infra.otel.coroutines.useSpanSuspending
 import io.bluetape4k.infra.otel.trace.useSpan
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
@@ -95,7 +95,7 @@ class LongCounterExamples: AbstractOtelTest() {
         // Coroutines 환경에서 Span 을 생성하고 사용하는 방법
         tracer.spanBuilder("coroutine-workflow")
             .setSpanKind(SpanKind.INTERNAL)
-            .useSpanAwait { span ->
+            .useSpanSuspending { span ->
                 try {
                     directoryCounter.add(1, homeDirectoryAttributes)
                     findFileSuspending("file_to_find.txt", homeDir, directoryCounter)

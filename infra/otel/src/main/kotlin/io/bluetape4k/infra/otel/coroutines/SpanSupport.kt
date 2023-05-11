@@ -19,7 +19,7 @@ import kotlin.coroutines.EmptyCoroutineContext
  * @param block CoroutineScope 하에서 실행할 코드 블록입니다.
  * @return [block]의 실행 결과입니다.
  */
-suspend inline fun <T> SpanBuilder.useSpanAwait(
+suspend inline fun <T> SpanBuilder.useSpanSuspending(
     coroutineContext: CoroutineContext = EmptyCoroutineContext,
     crossinline block: suspend (Span) -> T,
 ): T {
@@ -39,7 +39,7 @@ suspend inline fun <T> SpanBuilder.useSpanAwait(
  * @param block CoroutineScope 하에서 실행할 코드 블록입니다.
  * @return [block]의 실행 결과입니다.
  */
-suspend inline fun <T> SpanBuilder.useSpanAwait(
+suspend inline fun <T> SpanBuilder.useSpanSuspending(
     waitTimeout: Long? = null,
     coroutineContext: CoroutineContext = EmptyCoroutineContext,
     crossinline block: suspend (Span) -> T,
@@ -60,12 +60,12 @@ suspend inline fun <T> SpanBuilder.useSpanAwait(
  * @param block CoroutineScope 하에서 실행할 코드 블록입니다.
  * @return [block]의 실행 결과입니다.
  */
-suspend inline fun <T> SpanBuilder.useSpanAwait(
+suspend inline fun <T> SpanBuilder.useSpanSuspending(
     waitDuration: Duration,
     coroutineContext: CoroutineContext = EmptyCoroutineContext,
     crossinline block: suspend (Span) -> T,
 ): T {
-    return useSpanAwait(waitDuration.toMillis().coerceAtLeast(0L), coroutineContext, block)
+    return useSpanSuspending(waitDuration.toMillis().coerceAtLeast(0L), coroutineContext, block)
 }
 
 /**

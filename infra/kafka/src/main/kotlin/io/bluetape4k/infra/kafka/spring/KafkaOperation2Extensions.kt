@@ -16,7 +16,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 
-suspend fun <K, V> KafkaOperations2<K, V>.sendAwait(
+suspend inline fun <K, V> KafkaOperations2<K, V>.sendSuspending(
     record: ProducerRecord<K, V>,
 ): SendResult<K, V> {
     return suspendCancellableCoroutine { cont ->
@@ -39,12 +39,12 @@ suspend fun <K, V> KafkaOperations2<K, V>.sendAwait(
  * @param records producing 할 record의 flow
  * @return 마지막 record에 대한 producing 한 결과
  */
-suspend fun <K, V> KafkaOperations2<K, V>.sendFlowAsParallel(
+suspend inline fun <K, V> KafkaOperations2<K, V>.sendFlowAsParallel(
     records: Flow<ProducerRecord<K, V>>,
 ): SendResult<K, V> = coroutineScope {
     records
         .flatMapMerge {
-            flowOf(sendAwait(it))
+            flowOf(sendSuspending(it))
         }
         .onCompletion { flush() }
         .last()
@@ -55,13 +55,13 @@ suspend fun <K, V> KafkaOperations2<K, V>.sendFlowAsParallel(
  *
  * @param records producing 할 record의 flow
  */
-suspend fun <K, V> KafkaOperations2<K, V>.sendAndForget(
+suspend inline fun <K, V> KafkaOperations2<K, V>.sendAndForget(
     records: Flow<ProducerRecord<K, V>>,
     needFlush: Boolean = false,
 ) {
     records
         .flatMapMerge {
-            flowOf(sendAwait(it))
+            flowOf(sendSuspending(it))
         }
         .onCompletion {
             if (needFlush) flush()

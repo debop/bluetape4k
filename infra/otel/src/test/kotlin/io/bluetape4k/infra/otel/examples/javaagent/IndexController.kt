@@ -2,7 +2,7 @@ package io.bluetape4k.infra.otel.examples.javaagent
 
 import io.bluetape4k.infra.otel.common.attributesOf
 import io.bluetape4k.infra.otel.common.toAttributeKey
-import io.bluetape4k.infra.otel.coroutines.useSpanAwait
+import io.bluetape4k.infra.otel.coroutines.useSpanSuspending
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.opentelemetry.api.OpenTelemetry
@@ -36,7 +36,7 @@ class IndexController(@Autowired private val openTelemetry: OpenTelemetry) {
 
     private suspend fun doWork(sleepTime: Int) {
         log.debug { "Start doWork() in doWork span ..." }
-        tracer.spanBuilder("doWork").useSpanAwait { span ->
+        tracer.spanBuilder("doWork").useSpanSuspending { span ->
             delay(sleepTime.toLong())
             log.debug { "A sample log message! span=$span" }
         }
