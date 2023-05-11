@@ -57,4 +57,22 @@ fun IntIterable.asUnifiedSet(): UnifiedSet<Int> = asIterable().toUnifiedSet()
 fun IntIterable.maxOrNull(): Int? = if (isEmpty) null else max()
 fun IntIterable.minOrNull(): Int? = if (isEmpty) null else min()
 
+val IntIterable.lastIndex: Int get() = size() - 1
+
+fun IntIterable.lastOrNull(): Int? = when (this) {
+    is IntArrayList -> if (isEmpty) null else this.last
+    else            -> {
+        val iterator = intIterator()
+        if (!iterator.hasNext()) {
+            null
+        } else {
+            var last = iterator.next()
+            while (iterator.hasNext()) {
+                last = iterator.next()
+            }
+            last
+        }
+    }
+}
+
 fun IntIterable.product(): Double = asIterable().fold(1.0) { acc, i -> acc * i }

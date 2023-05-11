@@ -1,5 +1,9 @@
 package io.bluetape4k.coroutines
 
+import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.collections.eclipse.primitives.intArrayList
+import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
+import io.bluetape4k.collections.eclipse.primitives.lastOrNull
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -22,9 +26,9 @@ class AsyncFlowTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `asyncFlow with custom dispatcher`() = runTest {
-        val results = mutableListOf<Int>()
+        val results = intArrayListOf()
 
-        List(100) { it + 1 }.asFlow()
+        fastList(100) { it + 1 }.asFlow()
             .asAsyncFlow(dispatcher) {
                 delay(Random.nextLong(10))
                 log.trace { "Started $it" }
@@ -40,6 +44,6 @@ class AsyncFlowTest {
                 results.add(it)
             }
 
-        results shouldBeEqualTo List(100) { it + 1 }
+        results shouldBeEqualTo intArrayList(100) { it + 1 }
     }
 }

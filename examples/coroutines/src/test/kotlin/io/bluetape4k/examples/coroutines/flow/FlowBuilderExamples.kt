@@ -1,6 +1,8 @@
 package io.bluetape4k.examples.coroutines.flow
 
 import app.cash.turbine.test
+import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
+import io.bluetape4k.coroutines.flow.asFlow
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.coroutineScope
@@ -42,7 +44,7 @@ class FlowBuilderExamples {
     @Test
     fun `convert list to flow - asFlow`() = runTest {
         var count = 0
-        listOf(1, 2, 3, 4, 5)
+        intArrayListOf(1, 2, 3, 4, 5)
             .asFlow()
             .collect {
                 count++

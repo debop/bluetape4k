@@ -1,7 +1,8 @@
 package io.bluetape4k.examples.coroutines.builders
 
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.info
+import io.bluetape4k.logging.debug
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
@@ -21,20 +22,20 @@ class CoroutineBuilderExamples {
 
         @Test
         fun `launch coroutines`() = runTest {
-            log.info { "Start" }
+            log.debug { "Start" }
 
             launch {
                 delay(1000)
-                log.info { "World 1" }
+                log.debug { "World 1" }
             }
             launch {
                 delay(1000)
-                log.info { "World 2" }
+                log.debug { "World 2" }
             }
-            log.info { "Hello, " }
+            log.debug { "Hello, " }
             delay(1000)
             advanceUntilIdle()
-            log.info { "Finish." }
+            log.debug { "Finish." }
         }
     }
 
@@ -45,28 +46,28 @@ class CoroutineBuilderExamples {
         fun `async builder example`() = runTest {
             val resultDeferred = async {
                 delay(1000L)
-                log.info { "Return result." }
+                log.debug { "Return result." }
                 42
             }
-            log.info { "Build async and await ..." }
+            log.debug { "Build async and await ..." }
             val result = resultDeferred.await()
-            log.info { "result=$result" }
-            log.info { "result=${resultDeferred.await()}" }
-            log.info { "Finish" }
+            log.debug { "result=$result" }
+            log.debug { "result=${resultDeferred.await()}" }
+            log.debug { "Finish" }
         }
 
         @Test
         fun `await returns`() = runTest {
-            val results = List(10) {
+            val results = fastList(10) {
                 async {
                     delay(Random.nextLong(500, 1000))
-                    log.info { "Return $it" }
+                    log.debug { "Return $it" }
                     "Result $it"
                 }
             }
             advanceUntilIdle()
             val res = results.awaitAll()
-            log.info { "Result=${res.joinToString()}" }
+            log.debug { "Result=${res.joinToString()}" }
         }
     }
 }

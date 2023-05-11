@@ -1,4 +1,4 @@
-package io.bluetape4k.coroutines.support
+package io.bluetape4k.coroutines.flow
 
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.toFastList

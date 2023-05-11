@@ -21,7 +21,7 @@ class TestSupportTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `run coroutine with single thread`() = runTest {
-        log.debug { "Start" }
+        log.trace { "Start" }
 
         withSingleThread { executor ->
             var job1ThreadName = ""
@@ -46,7 +46,7 @@ class TestSupportTest {
 
             job2ThreadName shouldBeEqualTo job1ThreadName
         }
-        log.debug { "Done" }
+        log.trace { "Done" }
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -71,6 +71,6 @@ class TestSupportTest {
             jobs1.joinAll()
             jobs2.joinAll()
         }
-        log.debug { "Done" }
+        log.trace { "Done" }
     }
 }

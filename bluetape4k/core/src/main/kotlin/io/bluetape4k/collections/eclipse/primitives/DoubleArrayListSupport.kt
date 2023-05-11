@@ -54,6 +54,24 @@ fun DoubleIterable.asMutableSet(): MutableSet<Double> = asIterable().toMutableSe
 fun DoubleIterable.asFastList(): FastList<Double> = asIterable().toFastList()
 fun DoubleIterable.asUnifiedSet(): UnifiedSet<Double> = asIterable().toUnifiedSet()
 
+val DoubleIterable.lastIndex: Int get() = size() - 1
+
+fun DoubleIterable.lastOrNull(): Double? = when (this) {
+    is DoubleArrayList -> if (isEmpty) null else this.last
+    else               -> {
+        val iterator = doubleIterator()
+        if (!iterator.hasNext()) {
+            null
+        } else {
+            var last = iterator.next()
+            while (iterator.hasNext()) {
+                last = iterator.next()
+            }
+            last
+        }
+    }
+}
+
 fun DoubleIterable.maxOrNull(): Double? = if (isEmpty) null else max()
 fun DoubleIterable.minOrNull(): Double? = if (isEmpty) null else min()
 

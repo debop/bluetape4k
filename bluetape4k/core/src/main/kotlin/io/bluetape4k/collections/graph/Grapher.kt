@@ -1,11 +1,11 @@
 package io.bluetape4k.collections.graph
 
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.toFastList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.toList
-import java.util.*
-import kotlin.collections.ArrayDeque
 
 /**
  * Graph Algorithms 중 기본적인 알고리즘을 제공합니다.
@@ -27,7 +27,7 @@ object Graph {
          * @return 탐색 경로에 있는 노드들의 리스트
          */
         fun <T: Comparable<T>> search(source: T, adjacents: (T) -> Iterable<T>): List<T> {
-            return searchAsSequence(source) { adjacents(it).asSequence() }.toList()
+            return searchAsSequence(source) { adjacents(it).asSequence() }.toFastList()
         }
 
         /**
@@ -43,7 +43,7 @@ object Graph {
             crossinline adjacents: (T) -> Sequence<T>,
         ): Sequence<T> = sequence {
             val toScan = ArrayDeque<T>().apply { addFirst(source) }
-            val visited = LinkedList<T>()
+            val visited = fastListOf<T>()
 
             while (toScan.isNotEmpty()) {
                 val current = toScan.removeFirst()
@@ -69,7 +69,7 @@ object Graph {
             crossinline adjacents: (T) -> Flow<T>,
         ): Flow<T> = channelFlow {
             val toScan = ArrayDeque<T>().apply { addFirst(source) }
-            val visited = LinkedList<T>()
+            val visited = fastListOf<T>()
 
             while (toScan.isNotEmpty()) {
                 val current = toScan.removeFirst()
@@ -97,7 +97,7 @@ object Graph {
          * @return 탐색 경로에 있는 노드들의 리스트
          */
         fun <T: Comparable<T>> search(source: T, adjacents: (T) -> Iterable<T>): List<T> {
-            return searchAsSequece(source) { adjacents(it).asSequence() }.toList()
+            return searchAsSequece(source) { adjacents(it).asSequence() }.toFastList()
         }
 
         /**
@@ -112,7 +112,7 @@ object Graph {
             crossinline adjacents: (T) -> Sequence<T>,
         ): Sequence<T> = sequence {
             val toScan = ArrayDeque<T>().apply { addLast(source) }
-            val visited = LinkedList<T>()
+            val visited = fastListOf<T>()
 
             while (toScan.isNotEmpty()) {
                 val current = toScan.removeFirst()
@@ -138,7 +138,7 @@ object Graph {
             crossinline adjacents: (T) -> Flow<T>,
         ): Flow<T> = channelFlow {
             val toScan = ArrayDeque<T>().apply { addLast(source) }
-            val visited = LinkedList<T>()
+            val visited = fastListOf<T>()
 
             while (toScan.isNotEmpty()) {
                 val current = toScan.removeFirst()

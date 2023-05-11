@@ -30,14 +30,14 @@ class RetrofitClientFactoryBean: FactoryBean<Any?>, ApplicationContextAware, Ini
     var ctx: ApplicationContext = uninitialized()
 
     override fun getObject(): Any? {
-        log.info { "Get Retrofit2Client Service ..." }
+        log.debug { "Get Retrofit2Client Service ..." }
 
         val retrofitClientContext = this.ctx.getBean(RetrofitClientContext::class.java)
         val retrofitBuilder = Retrofit.Builder().baseUrl(this.baseUrl)
 
         val client = retrofitClientContext.getInstance(this.name, OkHttpClient::class.java)
         if (client != null) {
-            log.info { "Add Client with OkHttpClient" }
+            log.info { "Add Call.Factory with OkHttpClient" }
             retrofitBuilder.client(client)
         } else {
             val callFactory = retrofitClientContext.getInstance(this.name, Call.Factory::class.java)

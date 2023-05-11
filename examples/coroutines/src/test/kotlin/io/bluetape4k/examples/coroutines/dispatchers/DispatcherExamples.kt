@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.coroutines.dispatchers
 
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
@@ -32,7 +33,7 @@ class DispatcherExamples {
 
     @Test
     fun `default dispatcher 예제`() = runTest {
-        repeat(REPEAT_SIZE) {
+        fastList(REPEAT_SIZE) {
             // Default dispatcher를 적용
             launch(Dispatchers.Default) {
                 List(REPEAT_SIZE) { Random.nextLong() }.maxOrNull()
@@ -42,7 +43,7 @@ class DispatcherExamples {
                 val threadName = Thread.currentThread().name
                 log.trace { "Running on thread $threadName" }
             }
-        }
+        }.joinAll()
     }
 
     @Test
@@ -142,7 +143,7 @@ class DispatcherExamples {
                 log.trace { Thread.currentThread().name }   // Name 1
                 Thread.currentThread().name shouldContain "Name1"
 
-                suspendCoroutine<Unit> { cont ->
+                suspendCoroutine { cont ->
                     continuation = cont
                 }
 

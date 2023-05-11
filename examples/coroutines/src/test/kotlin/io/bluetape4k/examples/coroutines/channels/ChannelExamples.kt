@@ -12,6 +12,7 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.produce
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
@@ -26,63 +27,69 @@ class ChannelExamples {
 
     @Test
     fun `basic channel example`() = runTest {
-        val channel = Channel<Int>()
+        coroutineScope {
+            val channel = Channel<Int>()
 
-        launch {
-            repeat(5) { index ->
-                delay(1000)
-                log.debug { "Producing next one. $index" }
-                channel.send(index * 2)
+            launch {
+                repeat(5) { index ->
+                    delay(1000)
+                    log.debug { "Producing next one. $index" }
+                    channel.send(index * 2)
+                }
             }
-        }
 
-        launch {
-            repeat(5) {
-                val received = channel.receive()
-                log.debug { "Receive $received" }
+            launch {
+                repeat(5) {
+                    val received = channel.receive()
+                    log.debug { "Receive $received" }
+                }
             }
         }
     }
 
     @Test
     fun `foreach 구문으로 수신하기`() = runTest {
-        val channel = Channel<Int>()
+        coroutineScope {
+            val channel = Channel<Int>()
 
-        launch {
-            repeat(5) { index ->
-                delay(1000)
-                log.debug { "Producing next one. $index" }
-                channel.send(index * 2)
+            launch {
+                repeat(5) { index ->
+                    delay(1000)
+                    log.debug { "Producing next one. $index" }
+                    channel.send(index * 2)
+                }
+                // channel#close() 를 호출해야 for each 구문을 끝낼 수 있습니다.
+                channel.close()
             }
-            // channel#close() 를 호출해야 for each 구문을 끝낼 수 있습니다.
-            channel.close()
-        }
 
-        launch {
-            for (element in channel) {
-                log.debug { "Receive $element" }
+            launch {
+                for (element in channel) {
+                    log.debug { "Receive $element" }
+                }
             }
         }
     }
 
     @Test
     fun `consumeEach 구문으로 수신하기`() = runTest {
-        val channel = Channel<Int>()
+        coroutineScope {
+            val channel = Channel<Int>()
 
-        launch {
-            repeat(5) { index ->
-                delay(1000)
-                log.debug { "Producing next one. $index" }
-                channel.send(index * 2)
+            launch {
+                repeat(5) { index ->
+                    delay(1000)
+                    log.debug { "Producing next one. $index" }
+                    channel.send(index * 2)
+                }
+                // channel#close() 를 호출해야 consumeEach 구문을 끝낼 수 있습니다.
+                // 예외 시에 문제가 될 수도 있죠 --> produce 함수를 사용하는 걸 추천합니다.
+                channel.close()
             }
-            // channel#close() 를 호출해야 consumeEach 구문을 끝낼 수 있습니다.
-            // 예외 시에 문제가 될 수도 있죠 --> produce 함수를 사용하는 걸 추천합니다.
-            channel.close()
-        }
 
-        launch {
-            channel.consumeEach { element ->
-                log.debug { "Receive $element" }
+            launch {
+                channel.consumeEach { element ->
+                    log.debug { "Receive $element" }
+                }
             }
         }
     }

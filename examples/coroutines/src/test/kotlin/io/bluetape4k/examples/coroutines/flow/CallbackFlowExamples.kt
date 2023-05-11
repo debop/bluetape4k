@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.coroutines.flow
 
+import io.bluetape4k.coroutines.flow.toFastList
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toList
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
@@ -67,6 +67,6 @@ class CallbackFlowExamples {
             .onEach { log.info { "Callback result: $it" } }
             .collect()
 
-        results.toList().map { it.id } shouldBeEqualTo listOf(1, 2, 3)
+        results.toFastList().map { it.id } shouldBeEqualTo listOf(1, 2, 3)
     }
 }

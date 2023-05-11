@@ -1,8 +1,8 @@
 package io.bluetape4k.examples.coroutines.flow
 
+import io.bluetape4k.coroutines.flow.toFastList
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
-import io.bluetape4k.logging.info
+import io.bluetape4k.logging.trace
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -43,10 +43,10 @@ class ChannelFlowExamples {
     private fun allUsersByFlow(api: UserApi): Flow<User> = flow {
         var page = 0
         do {
-            log.info { "Fetching page $page" }
+            log.trace { "Fetching page $page" }
             val users = api.takePage(page++)
             emitAll(users)
-        } while (users.toList().isNotEmpty())
+        } while (users.toFastList().isNotEmpty())
     }
 
     /**
@@ -59,7 +59,7 @@ class ChannelFlowExamples {
 
         val user = users
             .firstOrNull {
-                log.debug { "Checking $it" }
+                log.trace { "Checking $it" }
                 delay(1000)
                 it.name == "User3"
             }
@@ -72,7 +72,7 @@ class ChannelFlowExamples {
     private fun allUsersByCannelFlow(api: UserApi): Flow<User> = channelFlow {
         var page = 0
         do {
-            log.info { "Fetching page $page" }
+            log.trace { "Fetching page $page" }
             val users = api.takePage(page++)
             users.collect { send(it) }
         } while (users.toList().isNotEmpty())
@@ -88,7 +88,7 @@ class ChannelFlowExamples {
 
         val user = users
             .firstOrNull {
-                log.debug { "Checking $it" }
+                log.trace { "Checking $it" }
                 delay(1000)
                 it.name == "User3"
             }

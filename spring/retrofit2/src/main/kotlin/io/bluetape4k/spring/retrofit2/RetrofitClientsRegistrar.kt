@@ -24,7 +24,7 @@ class RetrofitClientsRegistrar: ImportBeanDefinitionRegistrar {
         registry: BeanDefinitionRegistry,
     ) {
 
-        log.info { "Scanning Retrofit2Client ..." }
+        log.debug { "Scanning Retrofit2Client ..." }
 
         val scanner = object: ClassPathScanningCandidateComponentProvider(false) {
             override fun isCandidateComponent(beanDefinition: AnnotatedBeanDefinition): Boolean {

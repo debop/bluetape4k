@@ -57,4 +57,24 @@ fun LongIterable.asUnifiedSet(): UnifiedSet<Long> = asIterable().toUnifiedSet()
 fun LongIterable.maxOrNull(): Long? = if (isEmpty) null else max()
 fun LongIterable.minOrNull(): Long? = if (isEmpty) null else min()
 
+
+val LongIterable.lastIndex: Int get() = size() - 1
+
+fun LongIterable.lastOrNull(): Long? = when (this) {
+    is LongArrayList -> if (isEmpty) null else this.last
+    else             -> {
+        val iterator = longIterator()
+        if (!iterator.hasNext()) {
+            null
+        } else {
+            var last = iterator.next()
+            while (iterator.hasNext()) {
+                last = iterator.next()
+            }
+            last
+        }
+    }
+}
+
+
 fun LongIterable.product(): Double = asIterable().fold(1.0) { acc, i -> acc * i }

@@ -57,4 +57,22 @@ fun FloatIterable.asUnifiedSet(): UnifiedSet<Float> = asIterable().toUnifiedSet(
 fun FloatIterable.maxOrNull(): Float? = if (isEmpty) null else max()
 fun FloatIterable.minOrNull(): Float? = if (isEmpty) null else min()
 
+val FloatIterable.lastIndex: Int get() = size() - 1
+
+fun FloatIterable.lastOrNull(): Float? = when (this) {
+    is FloatArrayList -> if (isEmpty) null else this.last
+    else              -> {
+        val iterator = floatIterator()
+        if (!iterator.hasNext()) {
+            null
+        } else {
+            var last = iterator.next()
+            while (iterator.hasNext()) {
+                last = iterator.next()
+            }
+            last
+        }
+    }
+}
+
 fun FloatIterable.product(): Double = asIterable().fold(1.0) { acc, i -> acc * i }

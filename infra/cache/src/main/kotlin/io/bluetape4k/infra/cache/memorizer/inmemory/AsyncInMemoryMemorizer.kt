@@ -1,5 +1,6 @@
 package io.bluetape4k.infra.cache.memorizer.inmemory
 
+import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.infra.cache.memorizer.AsyncMemorizer
 import java.util.concurrent.CompletableFuture
 
@@ -12,7 +13,8 @@ class AsyncInMemoryMemorizer<in T, R>(
     private val evaluator: (T) -> CompletableFuture<R>,
 ): AsyncMemorizer<T, R> {
 
-    private val resultCache: MutableMap<T, R> = mutableMapOf()
+    private val resultCache: MutableMap<T, R> = unifiedMapOf()
+    private val synchronizedObject = Any()
 
     override fun invoke(key: T): CompletableFuture<R> {
         val promise = CompletableFuture<R>()
@@ -35,7 +37,7 @@ class AsyncInMemoryMemorizer<in T, R>(
     }
 
     override fun clear() {
-        synchronized(this) {
+        synchronized(synchronizedObject) {
             resultCache.clear()
         }
     }

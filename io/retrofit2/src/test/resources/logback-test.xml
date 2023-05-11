@@ -12,8 +12,8 @@
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.io.retrofit2" level="DEBUG"/>
-    <logger name="retrofit2" level="DEBUG"/>
+    <logger name="io.bluetape4k.io.retrofit2" level="INFO"/>
+    <logger name="retrofit2" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="Console"/>

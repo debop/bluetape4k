@@ -2,7 +2,7 @@ package io.bluetape4k.coroutines
 
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
@@ -22,7 +22,7 @@ class DeferredValueTest {
     @Test
     fun `값 계산은 async로 시작합니다`() = runTest {
         val x = deferredValueOf {
-            log.debug { "Calc deferred value ... " }
+            log.trace { "Calc deferred value ... " }
             delay(100)
             System.currentTimeMillis()
         }
@@ -42,12 +42,12 @@ class DeferredValueTest {
     @Test
     fun `map deferred value`() = runTest {
         val x1 = deferredValueOf {
-            log.debug { "Calc deferred value ... " }
+            log.trace { "Calc deferred value ... " }
             delay(100)
             42
         }
         val x2 = x1.map {
-            log.debug { "Map deferred value ... " }
+            log.trace { "Map deferred value ... " }
             it * 2
         }
 
@@ -63,14 +63,14 @@ class DeferredValueTest {
     @Test
     fun `flatmap deferred value`() = runTest {
         val x1 = deferredValueOf {
-            log.debug { "Calc deferred value ... " }
+            log.trace { "Calc deferred value ... " }
             delay(100)
 
             deferredValueOf { 42 }
         }
         val x2 = x1.flatMap { r ->
             r.map {
-                log.debug { "Map deferred value ... " }
+                log.trace { "Map deferred value ... " }
                 it * 2
             }
         }

@@ -12,7 +12,7 @@
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.data.hibernate.reactive" level="TRACE"/>
+    <logger name="io.bluetape4k.data.hibernate.reactive" level="DEBUG"/>
 
     <!-- Hibernate Reactive -->
     <logger name="org.hibernate.reactive" level="DEBUG"/>

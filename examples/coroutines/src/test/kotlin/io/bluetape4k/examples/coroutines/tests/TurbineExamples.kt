@@ -1,4 +1,4 @@
-package io.bluetape4k.coroutines.tests
+package io.bluetape4k.examples.coroutines.tests
 
 import app.cash.turbine.test
 import io.bluetape4k.logging.KLogging
@@ -14,6 +14,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
+import kotlin.time.Duration.Companion.milliseconds
 
 class TurbineExamples {
 
@@ -65,7 +66,7 @@ class TurbineExamples {
     }
 
     @Test
-    fun `turbine의 최대 대기시간은 1초이다`() = runTest(dispatchTimeoutMs = 500) {
+    fun `turbine의 최대 대기시간은 1초이다`() = runTest(timeout = 500.milliseconds) {
         channelFlow {
             withContext(Dispatchers.IO) {
                 Thread.sleep(10)

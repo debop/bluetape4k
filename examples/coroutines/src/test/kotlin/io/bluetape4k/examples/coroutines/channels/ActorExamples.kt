@@ -21,7 +21,7 @@ class ActorExamples {
     object IntCounter: CounterMsg()
     class GetCounter(val response: CompletableDeferred<Int>): CounterMsg()
 
-    fun CoroutineScope.counterActor(): Channel<CounterMsg> {
+    private fun CoroutineScope.counterActor(): Channel<CounterMsg> {
         val channel = Channel<CounterMsg>()
         launch {
             var counter = 0

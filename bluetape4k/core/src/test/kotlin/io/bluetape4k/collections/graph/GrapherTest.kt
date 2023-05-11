@@ -1,5 +1,7 @@
 package io.bluetape4k.collections.graph
 
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +21,7 @@ class GrapherTest {
     companion object: KLogging()
 
     data class Node(val name: String): Comparable<Node> {
-        val children = mutableListOf<Node>()
+        val children = fastListOf<Node>()
 
         fun addChild(child: Node): Node = apply {
             children.add(child)
@@ -48,9 +50,9 @@ class GrapherTest {
     }
 
     private val expectedDFS =
-        listOf("root", "child1", "grandChild11", "grandChild12", "child2", "grandChild21", "grandChild22")
+        fastListOf("root", "child1", "grandChild11", "grandChild12", "child2", "grandChild21", "grandChild22")
     private val expectedBFS =
-        listOf("root", "child1", "child2", "grandChild11", "grandChild12", "grandChild21", "grandChild22")
+        fastListOf("root", "child1", "child2", "grandChild11", "grandChild12", "grandChild21", "grandChild22")
 
     private lateinit var root: Node
 
@@ -66,7 +68,7 @@ class GrapherTest {
         val names = dfl
             .onEach { log.trace { "DFS visit node: $it" } }
             .map { it.name }
-            .toList()
+            .toFastList()
 
         names shouldBeEqualTo expectedDFS
     }
@@ -79,7 +81,7 @@ class GrapherTest {
             }
             .onEach { log.trace { "DFS visit node: $it" } }
             .map { it.name }
-            .toList()
+            .toFastList()
 
         names shouldBeEqualTo expectedDFS
     }
@@ -106,7 +108,7 @@ class GrapherTest {
         val names = bfl
             .onEach { log.trace { "DFS visit node: $it" } }
             .map { it.name }
-            .toList()
+            .toFastList()
 
         names shouldBeEqualTo expectedBFS
     }
@@ -119,7 +121,7 @@ class GrapherTest {
             }
             .onEach { log.trace { "BFS visit node: $it" } }
             .map { it.name }
-            .toList()
+            .toFastList()
 
         names shouldBeEqualTo expectedBFS
     }

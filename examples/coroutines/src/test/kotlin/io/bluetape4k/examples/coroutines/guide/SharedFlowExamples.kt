@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.coroutines.guide
 
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
@@ -74,7 +75,7 @@ class SharedFlowExamples {
         val jobs = mutableListOf<Job>()
 
         // 5개의 Producer 가 [Created, Deleted] 를 번갈아가며 발송합니다.
-        jobs += List(5) { producerId ->
+        jobs += fastList(5) { producerId ->
             launch(producerDispatcher) {
                 while (isActive) {
                     log.trace { "Producer[$producerId] emit event ... ${Event.Created}" }
@@ -92,7 +93,7 @@ class SharedFlowExamples {
         yield()
 
         // 3개의 Consumer가 event를 수신합니다.
-        jobs += List(3) { consumerId ->
+        jobs += fastList(3) { consumerId ->
             launch(consumerDispatcher) {
                 eventBus.events.collect { event ->
                     log.trace { "Consumer[$consumerId] received event ... $event" }

@@ -17,17 +17,18 @@ class FlowBasicExamples {
 
     companion object: KLogging()
 
-    private val sequence = atomic(0L)
+    private val sequencer = atomic(0L)
+    private val sequence by sequencer
 
     private suspend fun computeNextValue(): Long {
         delay(10)
-        sequence.incrementAndGet()
-        return sequence.value
+        sequencer.incrementAndGet()
+        return sequence
     }
 
     @BeforeEach
     fun setup() {
-        sequence.value = 0
+        sequencer.value = 0
     }
 
     /**

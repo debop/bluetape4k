@@ -1,5 +1,7 @@
-package io.bluetape4k.coroutines.support
+package io.bluetape4k.coroutines.flow
 
+import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
@@ -42,10 +44,10 @@ class FlowSupportTest {
             42
         }
             .flowOn(dispatcher)
-            .toList()
+            .toFastList()
 
         repeated.size shouldBeEqualTo 4
-        repeated.toSet() shouldBeEqualTo setOf(42)
+        repeated.toUnifiedSet() shouldBeEqualTo setOf(42)
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -60,7 +62,7 @@ class FlowSupportTest {
             .map {
                 log.trace { "Map Completed $it" }
                 it
-            }.toList()
+            }.toFastList()
 
         results shouldContainSame ranges
     }
@@ -270,8 +272,8 @@ class FlowSupportTest {
 
         private fun getOrderRows(orderCount: Int = 4, itemCount: Int = 5): Flow<OrderRow> {
             log.debug { "order=$orderCount, item=$itemCount" }
-            return List(orderCount) { oid ->
-                List(itemCount) { itemId ->
+            return fastList(orderCount) { oid ->
+                fastList(itemCount) { itemId ->
                     OrderRow(
                         oid + 1,
                         (oid + 1) * 10 + itemId + 1,
