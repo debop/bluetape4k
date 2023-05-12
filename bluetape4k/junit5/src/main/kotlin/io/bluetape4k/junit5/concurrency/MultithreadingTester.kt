@@ -46,7 +46,7 @@ class MultithreadingTester {
 
     private var numThreads = DEFAULT_THREAD_SIZE
     private var roundsPerThreads = DEFAULT_ROUNDS_PER_THREADS
-    private val runnableAsserts = LinkedList<() -> Unit>()
+    private val runnables = LinkedList<() -> Unit>()
 
     private lateinit var monitorThread: Thread
     private lateinit var workerThreads: Array<Thread>
@@ -63,15 +63,15 @@ class MultithreadingTester {
     }
 
     fun add(runnable: () -> Unit) = apply {
-        this.runnableAsserts.add(runnable)
+        this.runnables.add(runnable)
     }
 
     fun addAll(vararg runnables: () -> Unit) = apply {
-        this.runnableAsserts.addAll(runnables)
+        this.runnables.addAll(runnables)
     }
 
     fun addAll(runnables: Collection<() -> Unit>) = apply {
-        this.runnableAsserts.addAll(runnables)
+        this.runnables.addAll(runnables)
     }
 
 
@@ -83,11 +83,11 @@ class MultithreadingTester {
      * @see [numRoundsPerThread]
      */
     fun run() {
-        check(runnableAsserts.isNotEmpty()) {
+        check(runnables.isNotEmpty()) {
             "No RunnableAsserts added. Please add at least one RunnableAssert."
         }
-        check(numThreads >= runnableAsserts.size) {
-            "numThreads($numThreads) < runnableAsserts.size(${runnableAsserts.size})"
+        check(numThreads >= runnables.size) {
+            "numThreads($numThreads) < runnableAsserts.size(${runnables.size})"
         }
 
         val me = MultiException()
@@ -146,13 +146,13 @@ class MultithreadingTester {
     private fun startWorkerThreads(me: MultiException) {
         log.debug { "Start worker threads ... numThreads=$numThreads" }
 
-        var iter = runnableAsserts.iterator()
+        var iter = runnables.iterator()
         val latch = CountDownLatch(numThreads)
 
         workerThreads = Array(numThreads) {
             // thread 수만큼 runnableAssert를 반복해서 사용한다
             if (!iter.hasNext()) {
-                iter = runnableAsserts.iterator()
+                iter = runnables.iterator()
             }
             val runnableAssert = iter.next()
             thread(start = true, name = "MultithreadingTester-worker-$it") {

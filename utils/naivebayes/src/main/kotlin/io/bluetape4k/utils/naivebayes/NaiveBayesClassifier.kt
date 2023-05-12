@@ -6,6 +6,9 @@ import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
+import org.eclipse.collections.api.list.ImmutableList
+import org.eclipse.collections.impl.list.mutable.FastList
+import org.eclipse.collections.impl.map.mutable.UnifiedMap
 import kotlin.math.exp
 import kotlin.math.ln
 
@@ -32,11 +35,11 @@ class NaiveBayesClassifier<F: Any, C: Any>(
     }
 
     @Volatile
-    private var probabilities =
+    private var probabilities: UnifiedMap<FeatureProbability.Key<F, C>, FeatureProbability<F, C>> =
         unifiedMapOf<FeatureProbability.Key<F, C>, FeatureProbability<F, C>>()
 
-    private val _population = fastListOf<BayesInput<F, C>>()
-    val population: List<BayesInput<F, C>> get() = _population.toList()
+    private val _population: FastList<BayesInput<F, C>> = fastListOf<BayesInput<F, C>>()
+    val population: ImmutableList<BayesInput<F, C>> get() = _population.toImmutable()
 
     private val modelStaler = atomic(false)
     private var modelStaled: Boolean by modelStaler

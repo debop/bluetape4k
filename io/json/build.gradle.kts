@@ -7,7 +7,7 @@ dependencies {
     compileOnly(project(":bluetape4k-io-cryptography"))
     testImplementation(project(":bluetape4k-junit5"))
 
-    api(Libs.jakarta_json_api)
+    api(Libs.javax_json_api)
 
     api(Libs.jackson_core)
     api(Libs.jackson_databind)

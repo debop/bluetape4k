@@ -3,7 +3,7 @@ package io.bluetape4k.utils.idgenerators.hashids
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.stream.asParallelStream
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.idgenerators.snowflake.DefaultSnowflake
 import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuidGenerator
 import org.amshove.kluent.shouldBeEqualTo
@@ -57,7 +57,10 @@ class HashIdsSupportTest {
         @Test
         fun `정렬된 UUID에 대한 hashid는 정렬되지 않습니다`() {
             val uuids = fastList(100) { uuidGenerator.nextUUID() }
-            val encodeds = uuids.map { hashids.encodeUUID(it) }.onEach { log.debug { it } }
+            val encodeds = uuids
+                .map { hashids.encodeUUID(it) }
+                .onEach { log.trace { it } }
+
             encodeds.sorted() shouldNotBeEqualTo encodeds
         }
     }

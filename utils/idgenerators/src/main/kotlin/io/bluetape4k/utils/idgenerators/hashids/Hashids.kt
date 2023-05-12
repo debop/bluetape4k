@@ -1,6 +1,7 @@
 package io.bluetape4k.utils.idgenerators.hashids
 
 import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.primitives.longArrayListOf
 import io.bluetape4k.logging.KLogging
 import java.io.Serializable
 import kotlin.math.ceil
@@ -104,21 +105,21 @@ class Hashids(
 
     private fun numbersToArrayList(numbers: LongArray): List<Pair<Boolean, LongArray>> {
         val result = fastListOf<Pair<Boolean, LongArray>>()
-        val current = fastListOf<Long>()
+        val current = longArrayListOf()
 
         numbers.forEach {
             if (it.isValidNumber()) {
                 current.add(it)
             } else {
-                if (current.isNotEmpty()) {
-                    result.add(true to current.toLongArray())
+                if (current.notEmpty()) {
+                    result.add(true to current.toArray())
                     current.clear()
                 }
                 result.add(false to longArrayOf(it))
             }
         }
-        if (current.isNotEmpty()) {
-            result.add(true to current.toLongArray())
+        if (current.notEmpty()) {
+            result.add(true to current.toArray())
         }
         return result
     }

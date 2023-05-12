@@ -73,6 +73,7 @@ abstract class AbstractJwtProviderTest: AbstractJwtTest() {
             claim("author", "debop")
             issuer = LibraryName
             issuedAt = now
+            claim("custom-data", randomString(1024))
             compressionCodec = compressCodec
         }
 
@@ -84,27 +85,28 @@ abstract class AbstractJwtProviderTest: AbstractJwtTest() {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `compose jwt in concurrency`() {
-
+        val customData = randomString(1024)
         val jwts = ArrayDeque<String>()
+
         MultithreadingTester()
-            .numThreads(4)
-            .roundsPerThread(4)
+            .numThreads(16)
+            .roundsPerThread(32)
             .add {
                 val jwt = provider.compose {
                     claim("author", "debop")
                     claim("service", LibraryName)
                     issuer = LibraryName
+                    claim("custom-data", customData)
                     compressionCodec = compressCodec
                 }
 
                 jwts.add(jwt)
-                // Thread.sleep(10L)
             }
             .run()
 
         Thread.sleep(10L)
 
-        jwts.size shouldBeEqualTo 4 * 4
+        jwts.size shouldBeEqualTo 16 * 32
         val uniqueJwts = jwts.distinct()
         uniqueJwts.forEach { jwt ->
             log.debug { "jwt=$jwt" }
