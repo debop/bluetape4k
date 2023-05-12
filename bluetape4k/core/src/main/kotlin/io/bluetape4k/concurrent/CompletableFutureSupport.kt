@@ -10,7 +10,6 @@ import java.util.concurrent.*
  * @param block 비동기로 수행할 코드 블럭
  * @return CompletableFuture<V>
  */
-@JvmOverloads
 inline fun <V> futureOf(executor: Executor = ForkJoinExecutor, crossinline block: () -> V): CompletableFuture<V> =
     CompletableFuture.supplyAsync({ block() }, executor)
 
@@ -32,7 +31,7 @@ fun <V> failedCompletableFutureOf(cause: Throwable): CompletableFuture<V> = Comp
  *
  * ```
  * val future:CompletableFuture<Unit> = futureWithTimeout(Duration.ofSeconds(1)) {
- *   // 1초 이내에 종료되지 않으면 실패로 간주한다
+ *   // 1초 이내에 종료되지 않으면 실패로 간주하고, 작업을 중단합니다.
  *   // async task()
  * }
  * ```
@@ -51,7 +50,7 @@ inline fun <V> futureWithTimeout(timeout: Duration, crossinline block: () -> V):
  *
  * ```
  * val future:CompletableFuture<Unit> = futureWithTimeout(1000L) {
- *   // 1초 이내에 종료되지 않으면 실패로 간주한다
+ *   // 1초 이내에 종료되지 않으면 실패로 간주하고, 작업을 중단합니다.
  *   // async task()
  * }
  * ```
@@ -70,7 +69,7 @@ inline fun <V> futureWithTimeout(
         .supplyAsync({ block() }, executor)
         .orTimeout(timeoutMillis.coerceAtLeast(10L), TimeUnit.MILLISECONDS)
         .whenCompleteAsync { _, _ ->
-            // action을 즉시 강제 종료 시킨다
+            // Timeout이 걸렸건, 완료되었건 executor를 정리한다 (계속 진행 중인 작업이 있다면 취소한다)
             executor.shutdownNow()
         }
 }

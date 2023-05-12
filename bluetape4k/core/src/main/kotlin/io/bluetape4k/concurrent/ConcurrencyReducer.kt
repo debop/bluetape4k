@@ -6,6 +6,7 @@ import io.bluetape4k.logging.debug
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CompletableFuture.failedFuture
 import java.util.concurrent.CompletionStage
 import java.util.concurrent.Semaphore
 
@@ -21,7 +22,7 @@ class ConcurrencyReducer<T> private constructor(
     private val maxQueueSize: Int,
 ) {
     companion object: KLogging() {
-
+        @JvmStatic
         operator fun <T> invoke(maxConcurrency: Int, maxQueueSize: Int): ConcurrencyReducer<T> {
             maxConcurrency.requirePositiveNumber("maxConcurrency")
             maxQueueSize.requirePositiveNumber("maxQueueSize")
@@ -50,7 +51,7 @@ class ConcurrencyReducer<T> private constructor(
         val job = Job(task, promise)
 
         if (!queue.offer(job)) {
-            return failedCompletableFutureOf(CapacityReachedException("Queue size has reached capacity: $maxQueueSize"))
+            return failedFuture(CapacityReachedException("Queue size has reached capacity: $maxQueueSize"))
         }
         pump()
         return promise
@@ -71,48 +72,43 @@ class ConcurrencyReducer<T> private constructor(
     private fun pump() {
         var job = grabJob()
         while (job != null) {
-            val promise = job.promise
-            if (promise.isCancelled) {
+            if (job.promise.isCancelled) {
                 limit.release()
             } else {
-                invoke(promise, job.task)
+                invoke(job)
             }
             job = grabJob()
         }
     }
 
-    private fun invoke(
-        promise: CompletableFuture<T>,
-        task: () -> CompletionStage<T>?,
-    ) {
+    private fun invoke(job: Job<T>) {
         val future: CompletionStage<T>?
         try {
-            future = task.invoke()
+            future = job.task.invoke()
             if (future == null) {
                 log.debug { "task result is null." }
                 limit.release()
-                promise.completeExceptionally(NullPointerException())
+                job.promise.completeExceptionally(NullPointerException())
                 return
             }
         } catch (e: Throwable) {
             limit.release()
-            promise.completeExceptionally(e)
+            job.promise.completeExceptionally(e)
             return
         }
 
         future.whenComplete { result, error ->
             limit.release()
-            if (result != null) {
-                promise.complete(result)
+            if (error == null) {
+                job.promise.complete(result)
             } else {
-                promise.completeExceptionally(error)
+                job.promise.completeExceptionally(error)
             }
             pump()
         }
     }
 
-
-    private class Job<T>(
+    private data class Job<T>(
         val task: () -> CompletionStage<T>?,
         val promise: CompletableFuture<T>,
     )

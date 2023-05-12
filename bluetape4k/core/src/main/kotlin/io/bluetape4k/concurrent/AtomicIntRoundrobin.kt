@@ -8,8 +8,10 @@ import kotlinx.atomicfu.atomic
 class AtomicIntRoundrobin private constructor(val maximum: Int) {
 
     companion object: KLogging() {
+        private const val DEFAULT_MAXIMUM = 16
+
         @JvmStatic
-        operator fun invoke(maximum: Int = 16): AtomicIntRoundrobin {
+        operator fun invoke(maximum: Int = DEFAULT_MAXIMUM): AtomicIntRoundrobin {
             maximum.requirePositiveNumber("maximum")
             return AtomicIntRoundrobin(maximum)
         }
@@ -18,6 +20,8 @@ class AtomicIntRoundrobin private constructor(val maximum: Int) {
     private val valueSequencer = atomic(0)
     private var currentValue: Int by valueSequencer
 
+    private val synchronizedObject = Any()
+
     fun get(): Int = currentValue
 
     fun set(value: Int) {
@@ -25,7 +29,7 @@ class AtomicIntRoundrobin private constructor(val maximum: Int) {
         currentValue = value
     }
 
-    fun next(): Int = synchronized(this) {
+    fun next(): Int = synchronized(synchronizedObject) {
         valueSequencer.incrementAndGet()
         if (currentValue >= maximum) {
             valueSequencer.value = 0

@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.concurrent.ForkJoinPool
 
-private val logger = KotlinLogging.logger {}
+private val log = KotlinLogging.logger {}
 
 /**
  * [task] 을 WorkStealingPool 을 이용하여 병렬로 수행합니다.
@@ -23,7 +23,6 @@ private val logger = KotlinLogging.logger {}
  * @param parallelism Int 병렬 처리할 수
  * @param task WorkStealingPool 에서 실행할 [Callable] instance
  */
-@JvmOverloads
 fun <T> withWorkStealingPool(
     parallelism: Int = Runtime.getRuntime().availableProcessors(),
     task: () -> T,
@@ -36,7 +35,7 @@ fun <T> withWorkStealingPool(
         .first()
         .asCompletableFuture()
         .whenComplete { result, error ->
-            logger.debug { "WorkStealingPool is shutdown ... result=$result, error=$error" }
+            log.debug { "WorkStealingPool is shutdown ... result=$result, error=$error" }
             executor.shutdown()
         }
 }
@@ -46,10 +45,8 @@ fun <T> withWorkStealingPool(
  *
  * ```
  * val tasks = List(10) {
- *      {
- *          Thread.sleep(100)
- *          it
- *      }
+ *      Thread.sleep(100)
+ *      it
  * }
  * val future: CompletableFuture<List<Int>> = withWorkStealingPool<Long>(4, tasks)
  * ```
@@ -68,7 +65,7 @@ fun <T> withWorkStealingPool(
         .map { it.asCompletableFuture() }
         .sequence()
         .whenComplete { result, error ->
-            logger.debug { "WorkStealingPool is shutdown ... result=$result, error=$error" }
+            log.debug { "WorkStealingPool is shutdown ... result=$result, error=$error" }
             executor.shutdown()
         }
 }
