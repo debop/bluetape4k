@@ -19,11 +19,9 @@ import org.amshove.kluent.shouldNotBeNull
 import org.amshove.kluent.shouldNotContainAny
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import java.time.Instant
 import kotlin.random.Random
 
-@SpringBootTest
 class FoodRepositoryTest: AbstractFoodApplicationTest() {
 
     companion object: KLogging()

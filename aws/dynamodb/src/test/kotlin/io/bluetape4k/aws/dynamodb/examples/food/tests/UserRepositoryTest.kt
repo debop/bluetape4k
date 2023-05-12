@@ -14,11 +14,8 @@ import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import kotlin.random.Random
 
-
-@SpringBootTest
 class UserRepositoryTest: AbstractFoodApplicationTest() {
 
     @Autowired

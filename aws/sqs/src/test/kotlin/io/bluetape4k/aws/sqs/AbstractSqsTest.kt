@@ -4,6 +4,7 @@ import io.bluetape4k.aws.auth.staticCredentialsProviderOf
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.aws.LocalStackServer
+import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.localstack.LocalStackContainer
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
@@ -38,6 +39,8 @@ abstract class AbstractSqsTest {
                 credentialsProvider(credentialsProvider)
                 endpointOverride(endpoint)
                 region(region)
+            }.apply {
+                ShutdownQueue.register(this)
             }
         }
 
@@ -47,6 +50,8 @@ abstract class AbstractSqsTest {
                 credentialsProvider(credentialsProvider)
                 endpointOverride(endpoint)
                 region(region)
+            }.apply {
+                ShutdownQueue.register(this)
             }
         }
 

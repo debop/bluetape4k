@@ -12,11 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import java.time.Instant
 import kotlin.random.Random
 
-@SpringBootTest
 class CustomerRepositoryTest: AbstractFoodApplicationTest() {
 
     companion object: KLogging()
