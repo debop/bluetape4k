@@ -18,11 +18,12 @@ import java.io.ByteArrayOutputStream
  * 데이터 전송 시, DefaultSpecificRecordSerializer 가 avro instance 를
  * byte array 나 문자열로 변환하고, 수신하는 쪽에서 byte array 나 문자열를 Avro Instance 로 빌드할 수 있습니다
  */
-class DefaultAvroSpecificRecordSerializer(
+class DefaultAvroSpecificRecordSerializer private constructor(
     private val codecFactory: CodecFactory,
 ): AvroSpecificRecordSerializer {
 
     companion object: KLogging() {
+        @JvmStatic
         operator fun invoke(
             codecFactory: CodecFactory = DEFAULT_CODEC_FACTORY,
         ): DefaultAvroSpecificRecordSerializer {

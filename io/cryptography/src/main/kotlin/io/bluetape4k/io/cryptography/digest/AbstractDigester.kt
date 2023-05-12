@@ -16,7 +16,7 @@ abstract class AbstractDigester protected constructor(
     private val digester: PooledByteDigester =
         PooledByteDigester().apply {
             registBouncCastleProvider()
-            setPoolSize(4)
+            setPoolSize(8)
             setAlgorithm(algorithm)
             setSaltGenerator(saltGenerator)
         }
@@ -28,6 +28,6 @@ abstract class AbstractDigester protected constructor(
         digester.matches(message, digest)
 
     override fun toString(): String {
-        return "Digester(algorithm=$algorithm)"
+        return "${javaClass.simpleName}(algorithm=$algorithm)"
     }
 }

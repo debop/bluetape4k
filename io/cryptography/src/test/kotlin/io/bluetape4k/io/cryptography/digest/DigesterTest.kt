@@ -3,7 +3,6 @@ package io.bluetape4k.io.cryptography.digest
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.params.provider.FieldSource
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
 import io.bluetape4k.support.toUtf8Bytes
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.params.ParameterizedTest
@@ -29,7 +28,7 @@ class DigesterTest {
         Digesters.SHA512
     ).map { Arguments.of(it) }
 
-    @ParameterizedTest(name = "digest byte array. digester={0}")
+    @ParameterizedTest(name = "digest byte array by {0}")
     @FieldSource("digesters")
     fun `digest message as byte array`(digester: Digester) {
         repeat(REPEAT_SIZE) {
@@ -39,7 +38,7 @@ class DigesterTest {
         }
     }
 
-    @ParameterizedTest(name = "digest string. digester={0}")
+    @ParameterizedTest(name = "digest string by {0}")
     @FieldSource("digesters")
     fun `digest message as string`(digester: Digester) {
         repeat(REPEAT_SIZE) {
@@ -49,11 +48,9 @@ class DigesterTest {
         }
     }
 
-    @ParameterizedTest(name = "digest char array. digester={0}")
+    @ParameterizedTest(name = "digest char array by {0}")
     @FieldSource("digesters")
     fun `digest message with char array`(digester: Digester) {
-        log.debug { "Digest CharArray with ${digester.javaClass.simpleName}" }
-
         repeat(REPEAT_SIZE) {
             val message = getRandomString().toCharArray()
             val digested = digester.digest(message)

@@ -27,7 +27,7 @@ abstract class AbstractEncryptor protected constructor(
     private val encryptor: PooledPBEByteEncryptor by lazy {
         PooledPBEByteEncryptor().apply {
             registBouncCastleProvider()
-            setPoolSize(4)
+            setPoolSize(16)
             setAlgorithm(algorithm)
             setIvGenerator(ivGenerator)  // AES 알고리즘에서는 꼭 지정해줘야 한다.
             setSaltGenerator(saltGenerator)
@@ -54,6 +54,6 @@ abstract class AbstractEncryptor protected constructor(
     }
 
     override fun toString(): String {
-        return "Encryptor(algorithm=$algorithm)"
+        return "${javaClass.simpleName}(algorithm=$algorithm)"
     }
 }

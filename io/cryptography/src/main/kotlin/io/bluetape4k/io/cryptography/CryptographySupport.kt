@@ -1,7 +1,5 @@
 package io.bluetape4k.io.cryptography
 
-import io.bluetape4k.logging.KotlinLogging
-import io.bluetape4k.logging.info
 import io.bluetape4k.support.emptyByteArray
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.jasypt.salt.ZeroSaltGenerator
@@ -9,7 +7,7 @@ import java.security.SecureRandom
 import java.security.Security
 import java.util.*
 
-private val log = KotlinLogging.logger {}
+// private val log = KotlinLogging.logger {}
 
 /**
  * 난수 발생 기본 알고리즘
@@ -42,7 +40,7 @@ fun randomBytes(size: Int): ByteArray {
 @Synchronized
 internal fun registBouncCastleProvider() {
     if (Security.getProvider("BC") == null) {
-        log.info { "Add BouncyCastle Provider" }
+//        log.info { "Add BouncyCastle Provider" }
         runCatching { Security.addProvider(BouncyCastleProvider()) }
     }
 }

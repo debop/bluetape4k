@@ -29,7 +29,7 @@ class EncryptorTest {
             Arguments.of(it)
         }
 
-    @ParameterizedTest(name = "encrypt byte array. encryptor={0}")
+    @ParameterizedTest(name = "encrypt byte array by {0}")
     @FieldSource("encryptors")
     fun `encrypt and decrypt byte array`(encryptor: Encryptor) {
         repeat(REPEAT_SIZE) {
@@ -42,7 +42,7 @@ class EncryptorTest {
         }
     }
 
-    @ParameterizedTest(name = "encrypt string. encryptor={0}")
+    @ParameterizedTest(name = "encrypt string by {0}")
     @FieldSource("encryptors")
     fun `encrypt and decrypt string`(encryptor: Encryptor) {
         repeat(REPEAT_SIZE) {
@@ -55,7 +55,7 @@ class EncryptorTest {
         }
     }
 
-    @ParameterizedTest(name = "encrypt char array. encryptor={0}")
+    @ParameterizedTest(name = "encrypt char array by {0}")
     @FieldSource("encryptors")
     fun `encrypt and decrypt char array`(encryptor: Encryptor) {
         repeat(REPEAT_SIZE) {

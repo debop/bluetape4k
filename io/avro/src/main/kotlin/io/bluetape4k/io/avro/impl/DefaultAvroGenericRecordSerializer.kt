@@ -15,11 +15,12 @@ import org.apache.avro.generic.GenericDatumWriter
 import org.apache.avro.generic.GenericRecord
 import java.io.ByteArrayOutputStream
 
-class DefaultAvroGenericRecordSerializer(
+class DefaultAvroGenericRecordSerializer private constructor(
     private val codecFactory: CodecFactory,
 ): AvroGenericRecordSerializer {
 
     companion object: KLogging() {
+        @JvmStatic
         operator fun invoke(
             codecFactory: CodecFactory = DEFAULT_CODEC_FACTORY,
         ): DefaultAvroGenericRecordSerializer {
