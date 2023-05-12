@@ -49,9 +49,6 @@ abstract class AbstractSequencerTest {
 
         ids shouldHaveSize TEST_SIZE
         ids.distinct() shouldBeEqualTo ids
-//        ids.forEach {
-//            log.trace { it }
-//        }
     }
 
     @RepeatedTest(10)
@@ -60,10 +57,6 @@ abstract class AbstractSequencerTest {
             .parallel()
             .mapToObj { sequencer.nextSequence() }
             .toList()
-
-//        ids.forEach {
-//            log.trace { it }
-//        }
 
         //ids.count { it.machineId > 0 } shouldBeGreaterThan 0
         ids.distinct().size shouldBeEqualTo ids.size
