@@ -20,7 +20,7 @@ data class ClusterInput<out T: Any>(
 
     override fun equals(other: Any?): Boolean = when (other) {
         is ClusterInput<*> -> hashCode() == other.hashCode()
-        else               -> false
+        else -> false
     }
 
     override fun hashCode(): Int = item.hashCode()
@@ -32,10 +32,11 @@ data class ClusterInput<out T: Any>(
  * @property center Cluster 의 중심 위치
  * @property points 해당 군집에 해당하는 요소 컬렉션
  */
-data class Centroid<T: Any>(val center: DoublePoint, val points: List<T>): Serializable {
-    /**
-     * 지정한 요소가 해당 군집에 속했는지 판단합니다.
-     */
+data class Centroid<T: Any>(
+    val center: DoublePoint,
+    val points: List<T>,
+): Serializable {
+
     operator fun contains(elem: T): Boolean = points.contains(elem)
 }
 
@@ -45,8 +46,9 @@ data class Centroid<T: Any>(val center: DoublePoint, val points: List<T>): Seria
 fun Iterable<Pair<Double, Double>>.kMeansCluster(
     k: Int,
     maxIterations: Int = 100,
-): List<Centroid<Pair<Double, Double>>> =
-    kMeansCluster(k, maxIterations, { it.first }, { it.second })
+): List<Centroid<Pair<Double, Double>>> {
+    return kMeansCluster(k, maxIterations, { it.first }, { it.second })
+}
 
 /**
  * 지정한 정보로부터 2차원 정보를 추출하여 kMeans Clustering 을 수행합니다.

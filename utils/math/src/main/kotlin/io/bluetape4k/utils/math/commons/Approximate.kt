@@ -2,6 +2,8 @@ package io.bluetape4k.utils.math.commons
 
 import io.bluetape4k.utils.math.MathConsts.EPSILON
 import io.bluetape4k.utils.math.MathConsts.FLOAT_EPSILON
+import org.eclipse.collections.api.DoubleIterable
+import org.eclipse.collections.api.FloatIterable
 import java.math.BigDecimal
 import kotlin.math.abs
 import kotlin.math.absoluteValue
@@ -55,4 +57,18 @@ fun Sequence<BigDecimal>.filterApproximate(
     epsilon: BigDecimal = EPSILON.toBigDecimal(),
 ): Sequence<BigDecimal> {
     return filter { it.approximateEqual(that, epsilon) }
+}
+
+fun DoubleIterable.filterApproximate(
+    that: Double,
+    epsilon: Double = EPSILON,
+): DoubleIterable {
+    return select { it.approximateEqual(that, epsilon) }
+}
+
+fun FloatIterable.filterApproximate(
+    that: Float,
+    epsilon: Float = FLOAT_EPSILON,
+): FloatIterable {
+    return select { it.approximateEqual(that, epsilon) }
 }

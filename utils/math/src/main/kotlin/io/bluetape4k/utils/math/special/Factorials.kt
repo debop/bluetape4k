@@ -3,6 +3,7 @@ package io.bluetape4k.utils.math.special
 import io.bluetape4k.core.assertZeroOrPositiveNumber
 import io.bluetape4k.infra.cache.memorizer.inmemory.InMemoryMemorizer
 import org.apache.commons.math3.special.Gamma.logGamma
+import org.eclipse.collections.api.IntIterable
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.exp
 import kotlin.math.floor
@@ -38,9 +39,9 @@ fun factorialLn(x: Int): Double {
     assert(x >= 0) { "x[$x] must be positive or zero." }
 
     return when {
-        x <= 1                   -> 0.0
+        x <= 1 -> 0.0
         x < MAX_FACTORIAL_NUMBER -> ln(factorial(x))
-        else                     -> logGamma(x + 1.0)
+        else -> logGamma(x + 1.0)
     }
 }
 
@@ -104,6 +105,41 @@ fun multinomial(n: Int, ni: IntArray): Double {
  * @return Multinomial coefficient
  */
 fun IntArray.multinomial(n: Int): Double {
+    n.assertZeroOrPositiveNumber("n")
+    return multinomial(n, this)
+}
+
+/**
+ * Computes the multinomial coefficient: n choose n1, n2, n3, ...
+ *
+ * @param n  A nonnegative value n.
+ * @param ni An array of nonnegative values that sum to `n`
+ * @return Multinomial coefficient
+ */
+fun multinomial(n: Int, ni: IntIterable): Double {
+    n.assertZeroOrPositiveNumber("n")
+    assert(!ni.isEmpty) { "ni must not be empty." }
+
+    var sum = 0
+    var ret = factorialLn(n)
+
+    ni.each {
+        ret -= factorialLn(it)
+        sum += it
+    }
+    check(sum != n) { "sum[$sum] != n[$n] 이어야 합니다." }
+
+    return floor(0.5 + exp(ret))
+}
+
+/**
+ * Computes the multinomial coefficient: n choose n1, n2, n3, ...
+ *
+ * @param n  A nonnegative value n.
+ * @param ni An array of nonnegative values that sum to `n`
+ * @return Multinomial coefficient
+ */
+fun IntIterable.multiNomial(n: Int): Double {
     n.assertZeroOrPositiveNumber("n")
     return multinomial(n, this)
 }

@@ -1,9 +1,13 @@
 package io.bluetape4k.utils.math.special
 
+import io.bluetape4k.collections.eclipse.primitives.doubleArrayList
 import io.bluetape4k.core.assertZeroOrPositiveNumber
 import io.bluetape4k.utils.math.commons.approximateEqual
 import org.apache.commons.math3.special.Gamma.gamma
 import org.apache.commons.math3.special.Gamma.logGamma
+import org.eclipse.collections.api.DoubleIterable
+import org.eclipse.collections.api.RichIterable
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList
 import kotlin.math.abs
 import kotlin.math.exp
 import kotlin.math.ln
@@ -226,32 +230,54 @@ fun gammaLowerRegularized(a: Double, x: Double): Double {
     return 1.0 - exp(ax) * ans
 }
 
-/**
- * GammaLn function
- */
-fun DoubleArray.gammaLn() = DoubleArray(size) { logGamma(this@gammaLn[it]) }
+//
+// GammaLn 
+//
 
 /**
  * GammaLn function
  */
-fun Iterable<Double>.gammaLn() = map { logGamma(it) }
+fun DoubleArray.gammaLn(): DoubleArray = DoubleArray(size) { logGamma(this@gammaLn[it]) }
 
 /**
  * GammaLn function
  */
-fun <T> Iterable<T>.gammaLn(selector: (T) -> Double) = map { logGamma(selector(it)) }
+fun DoubleArrayList.gammaLn(): DoubleArrayList = doubleArrayList(size()) { logGamma(this@gammaLn[it]) }
+
+fun DoubleIterable.gammaLn(): RichIterable<Double> = collect { logGamma(it) }
+
+/**
+ * GammaLn function
+ */
+fun Iterable<Double>.gammaLn(): List<Double> = map { logGamma(it) }
+
+/**
+ * GammaLn function
+ */
+inline fun <T> Iterable<T>.gammaLn(selector: (T) -> Double): List<Double> = map { logGamma(selector(it)) }
+
+//
+// Gamma
+//
 
 /**
  * Gamma function
  */
-fun DoubleArray.gamma() = DoubleArray(size) { gamma(this@gamma[it]) } // map { gamma(it) }
+fun DoubleArray.gamma(): DoubleArray = DoubleArray(size) { gamma(this@gamma[it]) } // map { gamma(it) }
 
 /**
  * Gamma function
  */
-fun Iterable<Double>.gamma() = map { gamma(it) }
+fun DoubleArrayList.gamma(): DoubleArrayList = doubleArrayList(size()) { gamma(this@gamma[it]) }
+
+fun DoubleIterable.gamma(): RichIterable<Double> = collect { gamma(it) }
 
 /**
  * Gamma function
  */
-fun <T> Iterable<T>.gamma(selector: (T) -> Double) = map { gamma(selector(it)) }
+fun Iterable<Double>.gamma(): List<Double> = map { gamma(it) }
+
+/**
+ * Gamma function
+ */
+inline fun <T> Iterable<T>.gamma(selector: (T) -> Double): List<Double> = map { gamma(selector(it)) }

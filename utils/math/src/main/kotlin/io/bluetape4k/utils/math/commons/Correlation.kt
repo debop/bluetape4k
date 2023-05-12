@@ -1,5 +1,7 @@
 package io.bluetape4k.utils.math.commons
 
+import io.bluetape4k.collections.eclipse.primitives.asSequence
+import org.eclipse.collections.api.DoubleIterable
 import kotlin.math.sqrt
 
 /**
@@ -53,5 +55,16 @@ fun Iterable<Double>.correlationCoefficient(that: Iterable<Double>): Double {
  * @return 두 변량 컬렉션의 상관관계 계수
  */
 fun DoubleArray.correlationCoefficient(that: DoubleArray): Double {
+    return asSequence().correlationCoefficient(that.asSequence())
+}
+
+
+/**
+ * 두 차원의 변량들의 상관관계 계수를 계산합니다.
+ *
+ * @param that 두번째 변량 컬렉션
+ * @return 두 변량 컬렉션의 상관관계 계수
+ */
+fun DoubleIterable.correlationCoefficient(that: DoubleIterable): Double {
     return asSequence().correlationCoefficient(that.asSequence())
 }

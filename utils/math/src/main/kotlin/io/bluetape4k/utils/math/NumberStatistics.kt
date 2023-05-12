@@ -242,5 +242,8 @@ inline fun <T, K> Iterable<T>.geometricMeanBy(
 ): Map<K, Double> =
     asSequence().geometricMeanBy(keySelector, valueMapper)
 
-fun <K, N: Number> Sequence<Pair<K, N>>.geometricMeanBy(): Map<K, Double> = geometricMeanBy({ it.first }, { it.second })
-fun <K, N: Number> Iterable<Pair<K, N>>.geometricMeanBy(): Map<K, Double> = asSequence().geometricMeanBy()
+fun <K, N: Number> Sequence<Pair<K, N>>.geometricMeanBy(): Map<K, Double> =
+    geometricMeanBy({ it.first }, { it.second })
+
+fun <K, N: Number> Iterable<Pair<K, N>>.geometricMeanBy(): Map<K, Double> =
+    asSequence().geometricMeanBy()

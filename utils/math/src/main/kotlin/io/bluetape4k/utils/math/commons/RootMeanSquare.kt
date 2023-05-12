@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.math.commons
 
 import io.bluetape4k.collections.eclipse.primitives.asSequence
-import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList
+import org.eclipse.collections.api.DoubleIterable
 import kotlin.math.sqrt
 
 
@@ -28,7 +28,7 @@ fun <N: Number> Iterable<N>.rms(): Double = asSequence().map { it.toDouble() }.r
 
 fun DoubleArray.rms(): Double = asSequence().rms()
 
-fun DoubleArrayList.rms(): Double = asSequence().rms()
+fun DoubleIterable.rms(): Double = asSequence().rms()
 
 /**
  * 제곱 평균(root-mean-square) error (RMSE) : 예측치와 실제값과의 오차를 제곱 평균으로 계산합니다.
@@ -59,7 +59,7 @@ fun <N: Number> Iterable<N>.rmse(actual: Iterable<N>): Double =
 
 fun DoubleArray.rmse(actual: DoubleArray): Double = asSequence().rmse(actual.asSequence())
 
-fun DoubleArrayList.rmse(actual: DoubleArrayList): Double = asSequence().rmse(actual.asSequence())
+fun DoubleIterable.rmse(actual: DoubleIterable): Double = asSequence().rmse(actual.asSequence())
 
 /**
  * 정규화된 제곱 평균 - Normalized root-mean-square error (RMSE) : 예측치와 실제값과의 오차를 제곱평균으로 계산하고, 정규화합니다.
@@ -69,7 +69,7 @@ fun <N: Number> Sequence<N>.normalizedRmse(actual: Sequence<N>): Double {
     val rmse = rmse(actual)
 
     return when (rmse) {
-        0.0  -> 0.0
+        0.0 -> 0.0
         else -> {
             val (min, max) = actual.map { it.toDouble() }.minMax()
             rmse / (max - min)
@@ -87,5 +87,5 @@ fun <N: Number> Iterable<N>.normalizedRmse(actual: Iterable<N>): Double =
 fun DoubleArray.normalizedRmse(actual: DoubleArray): Double =
     asSequence().normalizedRmse(actual.asSequence())
 
-fun DoubleArrayList.normalizedRmse(actual: DoubleArrayList): Double =
+fun DoubleIterable.normalizedRmse(actual: DoubleIterable): Double =
     asSequence().normalizedRmse(actual.asSequence())

@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.math.special
 
+import io.bluetape4k.collections.eclipse.primitives.doubleArrayList
 import io.bluetape4k.collections.eclipse.primitives.doubleArrayListOf
 import io.bluetape4k.collections.eclipse.primitives.toDoubleArrayList
 import io.bluetape4k.core.assertPositiveNumber
@@ -40,6 +41,13 @@ fun betaLn(xs: DoubleArray, ys: DoubleArray): DoubleArray {
     }
 }
 
+fun betaLn(xs: DoubleArrayList, ys: DoubleArrayList): DoubleArrayList {
+    val minSize = minOf(xs.size(), ys.size())
+    return doubleArrayList(minSize) {
+        betaLn(xs[it], ys[it])
+    }
+}
+
 fun beta(x: Double, y: Double): Double = exp(betaLn(x, y))
 
 fun beta(xs: Sequence<Double>, ys: Sequence<Double>): Sequence<Double> {
@@ -53,6 +61,13 @@ fun beta(xs: Iterable<Double>, ys: Iterable<Double>): DoubleArrayList {
 fun beta(xs: DoubleArray, ys: DoubleArray): DoubleArray {
     val minSize = minOf(xs.size, ys.size)
     return DoubleArray(minSize) {
+        beta(xs[it], ys[it])
+    }
+}
+
+fun beta(xs: DoubleArrayList, ys: DoubleArrayList): DoubleArrayList {
+    val minSize = minOf(xs.size(), ys.size())
+    return doubleArrayList(minSize) {
         beta(xs[it], ys[it])
     }
 }

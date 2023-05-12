@@ -2,9 +2,11 @@ package io.bluetape4k.utils.math
 
 import io.bluetape4k.collections.eclipse.emptyFastList
 import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.collections.eclipse.toUnifiedMap
 import io.bluetape4k.ranges.impl.ClosedOpenDoubleRange
 import io.bluetape4k.support.coerce
 import java.util.concurrent.ThreadLocalRandom
+import kotlin.random.Random
 
 fun <T> List<T>.randomFirst(): T =
     randomFirstOrNull() ?: throw NoSuchElementException("No elements found!")
@@ -15,10 +17,10 @@ fun <T> List<T>.randomFirstOrNull(): T? {
     return this[random]
 }
 
-fun <T> Sequence<T>.randomFirst() = toFastList().randomFirst()
-fun <T> Sequence<T>.randomFirstOrNull() = toFastList().randomFirstOrNull()
-fun <T> Iterable<T>.randomFirst() = toFastList().randomFirst()
-fun <T> Iterable<T>.randomFirstOrNull() = toFastList().randomFirstOrNull()
+fun <T> Sequence<T>.randomFirst(): T = toFastList().randomFirst()
+fun <T> Sequence<T>.randomFirstOrNull(): T? = toFastList().randomFirstOrNull()
+fun <T> Iterable<T>.randomFirst(): T = toFastList().randomFirst()
+fun <T> Iterable<T>.randomFirstOrNull(): T? = toFastList().randomFirstOrNull()
 
 
 /**
@@ -74,10 +76,12 @@ fun <T> Iterable<T>.random(sampleSize: Int): List<T> = toList().random(sampleSiz
 class WeightedCoin(val trueProbability: Double) {
 
     init {
-        assert(trueProbability in 0.0..1.0) { "trueProbability[$trueProbability] must be in 0.0 .. 1.0" }
+        assert(trueProbability in 0.0..1.0) {
+            "trueProbability[$trueProbability] must be in 0.0 .. 1.0"
+        }
     }
 
-    fun flip(): Boolean = ThreadLocalRandom.current().nextDouble(0.0, 1.0) <= trueProbability
+    fun flip(): Boolean = Random.nextDouble(0.0, 1.0) <= trueProbability
 }
 
 /**
@@ -109,17 +113,22 @@ class WeightedDice<T> private constructor(val probabilities: Map<T, Double>) {
 
     private val sum: Double = probabilities.values.sum()
 
-    val rangedDistribution: Map<T, ClosedOpenDoubleRange> = probabilities.let { map ->
+    private val rangedDistribution: Map<T, ClosedOpenDoubleRange> = probabilities.let { map ->
         var binStart = 0.0
 
         map.asSequence()
             .sortedBy { it.value }
             .map { it.key to ClosedOpenDoubleRange(binStart, it.value + binStart) }
             .onEach { binStart = it.second.endExclusive }
-            .toMap()
+            .toUnifiedMap()
     }
 
-    fun roll(): T = ThreadLocalRandom.current().nextDouble(0.0, sum).let {
-        rangedDistribution.asIterable().first { rng -> it in rng.value }.key
+    fun roll(): T = Random.nextDouble(0.0, sum).let { rnd ->
+        rangedDistribution
+            .asIterable()
+            .first { rng ->
+                rnd in rng.value
+            }
+            .key
     }
 }

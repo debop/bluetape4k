@@ -6,13 +6,15 @@ inline fun <T: Any> Sequence<T>.binByBigDecimal(
     binSize: BigDecimal,
     valueMapper: (T) -> BigDecimal,
     rangeStart: BigDecimal? = null,
-): BinModel<List<T>, BigDecimal> = asIterable().binByBigDecimal(binSize, valueMapper, { it }, rangeStart)
+): BinModel<List<T>, BigDecimal> =
+    asIterable().binByBigDecimal(binSize, valueMapper, { it }, rangeStart)
 
 inline fun <T: Any> Iterable<T>.binByBigDecimal(
     binSize: BigDecimal,
     valueMapper: (T) -> BigDecimal,
     rangeStart: BigDecimal? = null,
-): BinModel<List<T>, BigDecimal> = binByBigDecimal(binSize, valueMapper, { it }, rangeStart)
+): BinModel<List<T>, BigDecimal> =
+    binByBigDecimal(binSize, valueMapper, { it }, rangeStart)
 
 
 inline fun <T: Any, G: Any> Iterable<T>.binByBigDecimal(

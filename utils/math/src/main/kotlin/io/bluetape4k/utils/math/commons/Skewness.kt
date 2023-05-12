@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.math.commons
 
 import io.bluetape4k.utils.math.skewness
-import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList
+import org.eclipse.collections.api.DoubleIterable
 
 /**
  * 변량의 분포의 대칭성을 나타냅니다. 0 을 기준으로 좌우로 기울어져 분포하는 것을 표현합니다.
@@ -19,4 +19,4 @@ fun <N: Number> Iterable<N>.skewness(): Double =
 fun <N: Number> Sequence<N>.skewness(): Double =
     map { it.toDouble() }.toList().toDoubleArray().skewness
 
-fun DoubleArrayList.skewness(): Double = toArray().skewness
+fun DoubleIterable.skewness(): Double = toArray().skewness

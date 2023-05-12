@@ -1,8 +1,12 @@
 package io.bluetape4k.utils.math.commons
 
 
+import io.bluetape4k.collections.eclipse.primitives.asSequence
+import io.bluetape4k.collections.eclipse.primitives.toDoubleArrayList
 import io.bluetape4k.collections.toDoubleArray
 import io.bluetape4k.utils.math.MathConsts.BLOCK_SIZE
+import org.eclipse.collections.api.DoubleIterable
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList
 import java.util.concurrent.ArrayBlockingQueue
 
 /**
@@ -86,6 +90,16 @@ fun DoubleArray.standardMovingAverage(blockSize: Int = BLOCK_SIZE): DoubleArray 
     return asSequence().standardMovingAverage(blockSize).toDoubleArray()
 }
 
+/**
+ * 표준 이동평균 (Standard Moving Average)
+ *
+ * @param blockSize 이동 평균을 계산하기 위한 항목 수 (최소 2)
+ * @return 이동평균
+ */
+fun DoubleIterable.standardMovingAverage(blockSize: Int = BLOCK_SIZE): DoubleArrayList {
+    return asSequence().standardMovingAverage(blockSize).toDoubleArrayList()
+}
+
 
 /**
  * 지수 방식으로 이동평균을 구합니다. (표준방식보다 부드러운 곡선을 만듭니다)
@@ -165,7 +179,20 @@ fun DoubleArray.expontentialMovingAverage(blockSize: Int = BLOCK_SIZE): DoubleAr
 }
 
 /**
- * 누적 이동 평균을 구합니다.
+ * 지수 이동평균 (Exponential Moving Average)
+ *
+ * @param blockSize 이동 평균을 계산하기 위한 항목 수 (최소 2)
+ * @return 이동평균
+ */
+fun DoubleIterable.exponentialMovingAverage(blockSize: Int = BLOCK_SIZE): DoubleArrayList {
+    return asSequence().exponentialMovingAverage(blockSize).toDoubleArrayList()
+}
+
+
+/**
+ * 누적 이동평균 (Cumulative Moving Average)
+ *
+ * @return 누적 이동평균
  */
 fun Sequence<Double>.cumulativeMovingAverage(): Sequence<Double> = sequence {
     var sum = 0.0
@@ -177,12 +204,31 @@ fun Sequence<Double>.cumulativeMovingAverage(): Sequence<Double> = sequence {
     }
 }
 
+/**
+ * 누적 이동평균 (Cumulative Moving Average)
+ *
+ * @return 누적 이동평균
+ */
 fun Iterable<Double>.cumulativeMovingAverage(): Iterable<Double> {
     return asSequence().cumulativeMovingAverage().asIterable()
 }
 
+/**
+ * 누적 이동평균 (Cumulative Moving Average)
+ *
+ * @return 누적 이동평균
+ */
 fun DoubleArray.cumulativeMovingAverage(): DoubleArray {
     return asSequence().cumulativeMovingAverage().toDoubleArray()
+}
+
+/**
+ * 누적 이동평균 (Cumulative Moving Average)
+ *
+ * @return 누적 이동평균
+ */
+fun DoubleIterable.cumulativeMovingAverage(): DoubleArrayList {
+    return asSequence().cumulativeMovingAverage().toDoubleArrayList()
 }
 
 /**
@@ -234,4 +280,11 @@ inline fun DoubleArray.weightedMovingAverage(
     crossinline weightingFunc: (Int) -> Double,
 ): DoubleArray {
     return asSequence().weightedMovingAverage(blockSize, weightingFunc).toDoubleArray()
+}
+
+inline fun DoubleIterable.weightedMovingAverage(
+    blockSize: Int = BLOCK_SIZE,
+    crossinline weightingFunc: (Int) -> Double,
+): DoubleArrayList {
+    return asSequence().weightedMovingAverage(blockSize, weightingFunc).toDoubleArrayList()
 }

@@ -11,12 +11,11 @@ private const val DEFAULT_EPSILON: Double = 1.0e-14
  * Returns the first Bessel function, \(J_{order}(x)\).
  *
  * @param order Order of the Bessel function
- * @param x argument
  * @return Value of Bessel function of the first kind.
  */
-fun besselj(order: Double, x: Double): Double = BesselJ.value(order, x)
+fun Double.besselj(order: Double) = BesselJ.value(order, this)
 
-fun logBeta(p: Double, q: Double): Double = Beta.logBeta(p, q)
+fun Double.logBeta(q: Double) = Beta.logBeta(this, q)
 
 fun regularizedBeta(
     x: Double,
@@ -27,25 +26,18 @@ fun regularizedBeta(
 ): Double =
     Beta.regularizedBeta(x, a, b, epsilon, maxIterations)
 
-fun erf(x: Double): Double = Erf.erf(x)
+fun Double.erf(): Double = Erf.erf(this)
+fun Double.erf(x2: Double): Double = Erf.erf(this, x2)
 
-fun erf(x1: Double, x2: Double): Double = Erf.erf(x1, x2)
+fun Double.erfInv(): Double = Erf.erfInv(this)
+fun Double.erfc() = Erf.erfc(this)
+fun Double.erfcInv() = Erf.erfcInv(this)
 
-fun erfInv(x: Double): Double = Erf.erfInv(x)
-
-fun erfc(x: Double): Double = Erf.erfc(x)
-
-fun erfcInv(x: Double): Double = Erf.erfcInv(x)
-
-fun gamma(x: Double): Double = Gamma.gamma(x)
-
-fun digamma(x: Double): Double = Gamma.digamma(x)
-
-fun trigamma(x: Double): Double = Gamma.trigamma(x)
-
-fun logGamma(x: Double): Double = Gamma.logGamma(x)
-
-fun logGamma1p(x: Double): Double = Gamma.logGamma1p(x)
+fun Double.gamma() = Gamma.gamma(this)
+fun Double.digamma() = Gamma.digamma(this)
+fun Double.trigamma() = Gamma.trigamma(this)
+fun Double.logGamma() = Gamma.logGamma(this)
+fun Double.logGamma1p() = Gamma.logGamma1p(this)
 
 fun regularizedGammaP(
     a: Double,

@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.math
 
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.times.days
@@ -7,6 +8,7 @@ import io.bluetape4k.utils.times.toEpochDay
 import io.bluetape4k.utils.times.toEpochMillis
 import io.bluetape4k.utils.times.todayInstant
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.Instant
@@ -56,7 +58,7 @@ class AggregationTest {
         // 글자가 5인 놈들의 모든 글자 수 = 5 + 5 + 5
         // 글자가 4인 놈들의 모든 글자 수 = 4
         // 글자가 7인 놈들의 모든 글자 수 = 7
-        grouping shouldBeEqualTo mapOf(5 to 15, 4 to 4, 7 to 7)
+        grouping shouldContainSame mapOf(5 to 15, 4 to 4, 7 to 7)
     }
 
     data class Event(val timestamp: Long, val duration: Duration)
@@ -83,6 +85,6 @@ class AggregationTest {
         )
 
         log.debug { "grouping=$grouping" }
-        grouping.values.toList() shouldBeEqualTo listOf(120, 180, 90)
+        grouping.values.toFastList() shouldContainSame listOf(90, 120, 180)
     }
 }

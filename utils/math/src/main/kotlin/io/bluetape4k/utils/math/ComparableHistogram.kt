@@ -84,16 +84,15 @@ inline fun <T: Any, C: Comparable<C>, G: Any> Iterable<T>.binByComparable(
             currentRangeStart = currentRangeEnd
         }
     }
+
     return bins.asSequence()
-        .map { it to mutableListOf<T>() }
-        .map { binWithList ->
+        .map {
+            val binWithList = it to fastListOf<T>()
             groupByC.entries.asSequence()
                 .filter { it.key in binWithList.first }
                 .forEach { binWithList.second.addAll(it.value) }
-            binWithList
-        }
-        .map { (range, values) ->
-            Bin(range, groupOp(values))
+
+            Bin(binWithList.first, groupOp(binWithList.second))
         }
         .toFastList()
         .let(::BinModel)

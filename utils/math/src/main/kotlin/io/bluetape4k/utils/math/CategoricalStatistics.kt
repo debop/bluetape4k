@@ -1,5 +1,11 @@
 package io.bluetape4k.utils.math
 
+import io.bluetape4k.collections.eclipse.primitives.asSequence
+import org.eclipse.collections.impl.list.mutable.primitive.DoubleArrayList
+import org.eclipse.collections.impl.list.mutable.primitive.FloatArrayList
+import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList
+import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList
+
 
 /**
  * 각 요소의 `keySelector`로 추출한 Key 값의 빈도 수를 계산합니다.
@@ -61,28 +67,52 @@ fun <T> Iterable<T>.mode() = asSequence().mode()
  * 가장 많은 빈도를 나타내는 요소를 추출합니다.
  * @return 컬렉션 요소 중 빈도수가 가장 높은 요소들을 추출합니다.
  */
-fun <T> Array<out T>.mode() = asIterable().mode()
+fun <T> Array<out T>.mode() = asSequence().mode()
 
 /**
  * 가장 많은 빈도를 나타내는 요소를 추출합니다.
  * @return 컬렉션 요소 중 빈도수가 가장 높은 요소들을 추출합니다.
  */
-fun IntArray.mode() = asIterable().mode()
+fun IntArray.mode() = asSequence().mode()
 
 /**
  * 가장 많은 빈도를 나타내는 요소를 추출합니다.
  * @return 컬렉션 요소 중 빈도수가 가장 높은 요소들을 추출합니다.
  */
-fun LongArray.mode() = asIterable().mode()
+fun LongArray.mode() = asSequence().mode()
 
 /**
  * 가장 많은 빈도를 나타내는 요소를 추출합니다.
  * @return 컬렉션 요소 중 빈도수가 가장 높은 요소들을 추출합니다.
  */
-fun FloatArray.mode() = asIterable().mode()
+fun FloatArray.mode() = asSequence().mode()
 
 /**
  * 가장 많은 빈도를 나타내는 요소를 추출합니다.
  * @return 컬렉션 요소 중 빈도수가 가장 높은 요소들을 추출합니다.
  */
-fun DoubleArray.mode() = asIterable().mode()
+fun DoubleArray.mode() = asSequence().mode()
+
+/**
+ * 가장 많은 빈도를 나타내는 요소를 추출합니다.
+ * @return 컬렉션 요소 중 빈도수가 가장 높은 요소들을 추출합니다.
+ */
+fun IntArrayList.mode() = asSequence().mode()
+
+/**
+ * 가장 많은 빈도를 나타내는 요소를 추출합니다.
+ * @return 컬렉션 요소 중 빈도수가 가장 높은 요소들을 추출합니다.
+ */
+fun LongArrayList.mode() = asSequence().mode()
+
+/**
+ * 가장 많은 빈도를 나타내는 요소를 추출합니다.
+ * @return 컬렉션 요소 중 빈도수가 가장 높은 요소들을 추출합니다.
+ */
+fun FloatArrayList.mode() = asSequence().mode()
+
+/**
+ * 가장 많은 빈도를 나타내는 요소를 추출합니다.
+ * @return 컬렉션 요소 중 빈도수가 가장 높은 요소들을 추출합니다.
+ */
+fun DoubleArrayList.mode() = asSequence().mode()

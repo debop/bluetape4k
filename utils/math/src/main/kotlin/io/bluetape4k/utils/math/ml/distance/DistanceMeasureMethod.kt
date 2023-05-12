@@ -28,8 +28,9 @@ enum class DistanceMeasureMethod(val measurer: DistanceMeasure) {
      * @param b 끝 점
      * @return 두 점의 거리
      */
-    fun compute(a: DoubleArray, b: DoubleArray): Double =
-        measurer.compute(a, b)
+    fun compute(a: DoubleArray, b: DoubleArray): Double {
+        return measurer.compute(a, b)
+    }
 
     /**
      * 2차원 두 좌표의 거리를 계산합니다.
@@ -47,5 +48,4 @@ enum class DistanceMeasureMethod(val measurer: DistanceMeasure) {
         fun parse(measureMethod: String): DistanceMeasureMethod? =
             VALS.find { it.name.equals(measureMethod, true) }
     }
-
 }
