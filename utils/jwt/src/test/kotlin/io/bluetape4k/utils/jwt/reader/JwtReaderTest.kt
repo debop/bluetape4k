@@ -1,15 +1,15 @@
 package io.bluetape4k.utils.jwt.reader
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.jwt.AbstractJwtTest
 import io.bluetape4k.utils.jwt.provider.JwtProviderFactory
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.jupiter.api.RepeatedTest
-import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.util.*
 
@@ -17,7 +17,7 @@ import java.util.*
 class JwtReaderTest: AbstractJwtTest() {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 3
+        private const val REPEAT_SIZE = 5
     }
 
     private val jwtProvider = JwtProviderFactory.default()
@@ -34,14 +34,14 @@ class JwtReaderTest: AbstractJwtTest() {
             .claim("claim1", claim1)
             .claim("claim2", claim2)
             .claim("claim3", claim3)
-            .issuer("kommons")
+            .issuer(LibraryName)
             .issuedAt(now)
             .notBefore(now)
             .expirationAfterMinutes(60L)
             .compose()
 
-        log.debug { "jwt length=${jwt.length}" }
-        log.debug { "jwt=$jwt" }
+        log.trace { "jwt length=${jwt.length}" }
+        log.trace { "jwt=$jwt" }
 
         val reader = jwtProvider.parse(jwt)
         reader.header<String>("x-author") shouldBeEqualTo "debop"
@@ -49,7 +49,7 @@ class JwtReaderTest: AbstractJwtTest() {
         reader.claim<String>("claim2") shouldBeEqualTo claim2
         reader.claim<Long>("claim3") shouldBeEqualTo claim3
 
-        reader.issuer shouldBeEqualTo "kommons"
+        reader.issuer shouldBeEqualTo LibraryName
         reader.issuedAt.time shouldBeEqualTo nowSeconds
         reader.notBefore.time shouldBeEqualTo nowSeconds
         reader.expiration.time shouldBeGreaterThan now.time
@@ -59,7 +59,7 @@ class JwtReaderTest: AbstractJwtTest() {
      * java time은 기본적으로 제공하지 않으니, Epoch 을 사용하세요.
      *
      */
-    @Test
+    @RepeatedTest(REPEAT_SIZE)
     fun `claim value with java time`() {
         val createdAt = Instant.now().toEpochMilli()
         val jwt = jwtProvider.compose {

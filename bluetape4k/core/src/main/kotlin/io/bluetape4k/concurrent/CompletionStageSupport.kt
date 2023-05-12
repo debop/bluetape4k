@@ -1,5 +1,7 @@
 package io.bluetape4k.concurrent
 
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.toFastList
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionException
 import java.util.concurrent.CompletionStage
@@ -31,12 +33,12 @@ fun <T> CompletionStage<T>.getException(): Throwable? {
  * @return CompletableFuture<List<*>>
  */
 fun Iterable<CompletionStage<out Any>>.sequence(executor: Executor = ForkJoinExecutor): CompletableFuture<List<*>> {
-    val initial = completableFutureOf(mutableListOf<Any>())
+    val initial = completableFutureOf(fastListOf<Any>())
     return fold(initial) { futureAcc, future ->
         futureAcc.zip(future, executor) { acc, result ->
             acc.apply { add(result) }
         }
-    }.map(executor) { it.toList() }
+    }.map(executor) { it.toFastList() }
 }
 
 /**
@@ -56,12 +58,12 @@ fun Iterable<CompletionStage<out Any>>.allAsList(executor: Executor = ForkJoinEx
  * @return `CompletableFuture<List<T>>`
  */
 fun <T> Collection<CompletionStage<out T>>.sequence(executor: Executor = ForkJoinExecutor): CompletableFuture<List<T>> {
-    val initial = completableFutureOf(mutableListOf<T>())
+    val initial = completableFutureOf(fastListOf<T>())
     return fold(initial) { futureAcc, future ->
         futureAcc.zip(future, executor) { acc, result ->
             acc.apply { add(result) }
         }
-    }.map(executor) { it.toList() }
+    }.map(executor) { it.toFastList() }
 }
 
 /**
@@ -133,7 +135,7 @@ fun <R, A, B, C> combineOf(
     executor: Executor = ForkJoinExecutor,
     combiner: (A, B, C) -> R,
 ): CompletionStage<R> {
-    return listOf(a, b, c)
+    return fastListOf(a, b, c)
         .sequence(executor)
         .map { list ->
             combiner(list[0] as A, list[1] as B, list[2] as C)
@@ -149,7 +151,7 @@ fun <R, A, B, C, D> combineOf(
     executor: Executor = ForkJoinExecutor,
     combiner: (A, B, C, D) -> R,
 ): CompletionStage<R> {
-    return listOf(a, b, c, d)
+    return fastListOf(a, b, c, d)
         .sequence(executor)
         .map { list ->
             combiner(list[0] as A, list[1] as B, list[2] as C, list[3] as D)
@@ -166,7 +168,7 @@ fun <R, A, B, C, D, E> combineOf(
     executor: Executor = ForkJoinExecutor,
     combiner: (A, B, C, D, E) -> R,
 ): CompletionStage<R> {
-    return listOf(a, b, c, d, e)
+    return fastListOf(a, b, c, d, e)
         .sequence(executor)
         .map { list ->
             combiner(list[0] as A, list[1] as B, list[2] as C, list[3] as D, list[4] as E)
@@ -184,7 +186,7 @@ fun <R, A, B, C, D, E, F> combineOf(
     executor: Executor = ForkJoinExecutor,
     combiner: (A, B, C, D, E, F) -> R,
 ): CompletionStage<R> {
-    return listOf(a, b, c, d, e, f)
+    return fastListOf(a, b, c, d, e, f)
         .sequence(executor)
         .map { list ->
             combiner(list[0] as A, list[1] as B, list[2] as C, list[3] as D, list[4] as E, list[5] as F)
@@ -199,7 +201,7 @@ fun <R, A, B> combineFutureOf(
     executor: Executor = ForkJoinExecutor,
     combiner: (A, B) -> CompletionStage<R>,
 ): CompletionStage<R> {
-    return listOf(a, b)
+    return fastListOf(a, b)
         .sequence(executor)
         .flatMap { list ->
             combiner(list[0] as A, list[1] as B)
@@ -214,7 +216,7 @@ fun <R, A, B, C> combineFutureOf(
     executor: Executor = ForkJoinExecutor,
     combiner: (A, B, C) -> CompletionStage<R>,
 ): CompletionStage<R> {
-    return listOf(a, b, c)
+    return fastListOf(a, b, c)
         .sequence(executor)
         .flatMap { list ->
             combiner(list[0] as A, list[1] as B, list[2] as C)
@@ -230,7 +232,7 @@ fun <R, A, B, C, D> combineFutureOf(
     executor: Executor = ForkJoinExecutor,
     combiner: (A, B, C, D) -> CompletionStage<R>,
 ): CompletionStage<R> {
-    return listOf(a, b, c, d)
+    return fastListOf(a, b, c, d)
         .sequence(executor)
         .flatMap { list ->
             combiner(list[0] as A, list[1] as B, list[2] as C, list[3] as D)
@@ -247,7 +249,7 @@ fun <R, A, B, C, D, E> combineFutureOf(
     executor: Executor = ForkJoinExecutor,
     combiner: (A, B, C, D, E) -> CompletionStage<R>,
 ): CompletionStage<R> {
-    return listOf(a, b, c, d, e)
+    return fastListOf(a, b, c, d, e)
         .sequence(executor)
         .flatMap { list ->
             combiner(list[0] as A, list[1] as B, list[2] as C, list[3] as D, list[4] as E)
@@ -265,7 +267,7 @@ fun <R, A, B, C, D, E, F> combineFutureOf(
     executor: Executor = ForkJoinExecutor,
     combiner: (A, B, C, D, E, F) -> CompletionStage<R>,
 ): CompletionStage<R> {
-    return listOf(a, b, c, d, e, f)
+    return fastListOf(a, b, c, d, e, f)
         .sequence(executor)
         .flatMap { list ->
             combiner(list[0] as A, list[1] as B, list[2] as C, list[3] as D, list[4] as E, list[5] as F)

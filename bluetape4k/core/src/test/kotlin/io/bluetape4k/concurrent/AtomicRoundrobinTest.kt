@@ -1,5 +1,6 @@
 package io.bluetape4k.concurrent
 
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
@@ -14,7 +15,7 @@ class AtomicRoundrobinTest {
         val size = 10000
         val atomic = AtomicIntRoundrobin(size)
 
-        val ids = List(size) { it }.parallelStream().map { atomic.next() }.toList()
+        val ids = fastList(size) { it }.parallelStream().map { atomic.next() }.toList()
         ids.size shouldBeEqualTo size
         ids.toSet().size shouldBeEqualTo size
     }

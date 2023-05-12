@@ -1,6 +1,8 @@
 package io.bluetape4k.spring.cassandra.domain.model
 
 import com.datastax.oss.driver.api.core.data.TupleValue
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.unifiedSetOf
 import org.springframework.data.cassandra.core.mapping.CassandraType
 import org.springframework.data.cassandra.core.mapping.PrimaryKey
 import org.springframework.data.cassandra.core.mapping.Table
@@ -59,12 +61,12 @@ data class AllPossibleTypes(
     // NOTE: ByteArray는 지원하지 않습니다. -> ByteBuffer를 사용하세요
     // var bytes: ByteArray = ByteArray(0),
 
-    var setOfString: MutableSet<String> = mutableSetOf(),
-    var listOfString: MutableList<String> = mutableListOf(),
+    var setOfString: MutableSet<String> = unifiedSetOf(),
+    var listOfString: MutableList<String> = fastListOf(),
 
     var onEnum: Condition? = null,
-    var setOfEnum: MutableSet<Condition> = mutableSetOf(),
-    var listOfEnum: MutableList<Condition?> = mutableListOf(),
+    var setOfEnum: MutableSet<Condition> = unifiedSetOf(),
+    var listOfEnum: MutableList<Condition?> = fastListOf(),
 
     @field:CassandraType(
         type = CassandraType.Name.TUPLE,

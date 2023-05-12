@@ -1,5 +1,6 @@
 package io.bluetape4k.infra.resilience4j.timelimiter
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.infra.resilience4j.CoHelloWorldService
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.github.resilience4j.kotlin.timelimiter.timeLimiter
@@ -20,7 +21,7 @@ class TimeLimiterFlowTest {
     fun `실행이 성공하는 메소드를 flow로 수행한다`() = runSuspendTest {
         val timelimiter = TimeLimiter.ofDefaults()
         val helloWorldService = CoHelloWorldService()
-        val results = mutableListOf<String>()
+        val results = fastListOf<String>()
 
         flow {
             repeat(3) {
@@ -42,7 +43,7 @@ class TimeLimiterFlowTest {
     fun `예외를 일으키는 메소드도 flow로 실행됩니다`() = runSuspendTest {
         val timelimiter = TimeLimiter.ofDefaults()
         val helloWorldService = CoHelloWorldService()
-        val results = mutableListOf<String>()
+        val results = fastListOf<String>()
 
         assertFailsWith<IllegalStateException> {
             flow<String> {
@@ -62,11 +63,11 @@ class TimeLimiterFlowTest {
             .build()
         val timelimiter = TimeLimiter.of(config)
         val helloWorldService = CoHelloWorldService()
-        val results = mutableListOf<String>()
+        val results = fastListOf<String>()
 
         assertFailsWith<TimeoutException> {
             flow<String> {
-                helloWorldService.wait()
+                helloWorldService.await()
             }
                 .timeLimiter(timelimiter)
                 .toList()

@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.mutiny
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.mutiny.deferUni
@@ -92,7 +93,7 @@ class MultiBasicExamples {
         val counter = AtomicInteger()
         val latch = CountDownLatch(1)
 
-        val captures = mutableListOf<String>()
+        val captures = fastListOf<String>()
 
         Multi.createFrom()
             .emitter { emitter ->

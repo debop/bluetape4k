@@ -1,5 +1,6 @@
 package io.bluetape4k.infra.resilience4j.retry
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.infra.resilience4j.CoHelloWorldService
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.github.resilience4j.kotlin.retry.retry
@@ -113,7 +114,7 @@ class FlowRetryTest {
                 .build()
         }
         val metrics = retry.metrics
-        val results = mutableListOf<String>()
+        val results = fastListOf<String>()
 
         assertFailsWith<IllegalStateException> {
             flow<String> { helloWorldService.throwException() }.retry(retry).toList(results)

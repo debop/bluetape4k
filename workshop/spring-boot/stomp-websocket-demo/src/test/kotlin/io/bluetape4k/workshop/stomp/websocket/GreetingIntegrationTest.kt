@@ -1,5 +1,6 @@
 package io.bluetape4k.workshop.stomp.websocket
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -44,7 +45,7 @@ class GreetingIntegrationTest(
 
     @BeforeEach
     fun beforeEach() {
-        val transports = mutableListOf<Transport>(WebSocketTransport(StandardWebSocketClient()))
+        val transports = fastListOf<Transport>(WebSocketTransport(StandardWebSocketClient()))
         val socketJsClient = SockJsClient(transports)
         this.stompClient = WebSocketStompClient(socketJsClient).apply {
             messageConverter = MappingJackson2MessageConverter().apply {

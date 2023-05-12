@@ -1,5 +1,7 @@
 package io.bluetape4k.examples.cassandra.convert
 
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.unifiedMapOf
 import org.springframework.data.annotation.Id
 import org.springframework.data.cassandra.core.mapping.Element
 import org.springframework.data.cassandra.core.mapping.Table
@@ -23,10 +25,10 @@ data class Addressbook(
     @field:Id val id: String,
 
     var me: Contact,
-    val friends: MutableList<Contact> = mutableListOf(),
+    val friends: MutableList<Contact> = fastListOf(),
 
     var address: Address = Address.EMPTY,
-    val preferredCurrencies: MutableMap<Int, Currency> = mutableMapOf(),
+    val preferredCurrencies: MutableMap<Int, Currency> = unifiedMapOf(),
 )
 
 // ContactWriteConverter, ContactReadConverter 를 통해 JSON 으로 저장

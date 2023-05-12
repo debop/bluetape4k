@@ -1,5 +1,6 @@
 package io.bluetape4k.utils
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.core.requirePositiveNumber
 import kotlinx.atomicfu.atomic
 import java.util.*
@@ -96,14 +97,14 @@ class BoundedStack<E: Any> private constructor(val maxSize: Int): Stack<E>() {
     @Synchronized
     fun insert(index: Int, elem: E): E {
         when {
-            index == 0     -> return push(elem)
-            index > count  -> throw java.lang.IndexOutOfBoundsException(index.toString())
+            index == 0 -> return push(elem)
+            index > count -> throw java.lang.IndexOutOfBoundsException(index.toString())
             index == count -> {
                 array[(top + index) % maxSize] = elem
                 counter.incrementAndGet()
             }
 
-            else           -> {
+            else -> {
                 val swapped = array[index]!!
                 array[index] = elem
                 insert(index - 1, swapped)
@@ -121,7 +122,11 @@ class BoundedStack<E: Any> private constructor(val maxSize: Int): Stack<E>() {
 
     @Synchronized
     fun toList(): List<E> {
-        return mutableListOf<E>().also { list -> forEach { list.add(it) } }
+        val results = fastListOf<E>()
+        forEach {
+            results.add(it)
+        }
+        return results
     }
 
     @Synchronized

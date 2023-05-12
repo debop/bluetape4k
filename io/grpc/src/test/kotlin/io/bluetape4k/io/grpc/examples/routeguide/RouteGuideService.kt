@@ -3,6 +3,7 @@ package io.bluetape4k.io.grpc.examples.routeguide
 import com.google.common.base.Stopwatch
 import com.google.common.base.Ticker
 import com.google.protobuf.util.Durations
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -61,7 +62,7 @@ class RouteGuideService @JvmOverloads constructor(
     override fun routeChat(requests: Flow<RouteNote>): Flow<RouteNote> {
         return flow {
             requests.collect { note ->
-                val notes = routeNotes.getIfAbsentPutAll(note.location, mutableListOf<RouteNote>())
+                val notes = routeNotes.getIfAbsentPutAll(note.location, fastListOf<RouteNote>())
 
                 // thread-safe snapshot
                 notes.forEach { prevNote ->

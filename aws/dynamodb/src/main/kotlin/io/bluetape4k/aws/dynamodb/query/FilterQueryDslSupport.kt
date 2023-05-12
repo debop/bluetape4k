@@ -2,6 +2,7 @@ package io.bluetape4k.aws.dynamodb.query
 
 import io.bluetape4k.aws.dynamodb.model.expression
 import io.bluetape4k.aws.dynamodb.model.toAttributeValue
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import software.amazon.awssdk.enhanced.dynamodb.Expression
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
@@ -221,7 +222,7 @@ fun ConcreteFilterBuilder.inList(vararg values: Any) {
 class RootFilterBuilder: FilterQueryBuilder {
 
     var currentFilter: FilterQuery? = null
-    var filterQueries: MutableList<FilterConnection> = mutableListOf()
+    var filterQueries: MutableList<FilterConnection> = fastListOf()
 
     override fun build(): RootFilter = RootFilter(filterQueries)
 

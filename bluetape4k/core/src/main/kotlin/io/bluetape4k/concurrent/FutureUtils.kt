@@ -1,5 +1,7 @@
 package io.bluetape4k.concurrent
 
+import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.toFastList
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 
@@ -33,13 +35,13 @@ object FutureUtils {
         executor: Executor = ForkJoinExecutor,
     ): CompletableFuture<List<V>> {
         return futures
-            .fold(completableFutureOf(mutableListOf<V>())) { futureAcc, future ->
+            .fold(completableFutureOf(fastListOf<V>())) { futureAcc, future ->
                 futureAcc.zip(future, executor) { acc, result ->
                     acc.add(result)
                     acc
                 }
             }
-            .map(executor) { it.toList() }
+            .map(executor) { it.toFastList() }
     }
 
     /**
@@ -53,7 +55,7 @@ object FutureUtils {
         executor: Executor = ForkJoinExecutor,
     ): CompletableFuture<List<V>> {
         return futures
-            .fold(completableFutureOf(mutableListOf<V>())) { futureAcc, future ->
+            .fold(completableFutureOf(fastListOf<V>())) { futureAcc, future ->
                 futureAcc.flatMap(executor) { acc ->
                     future.map(executor) {
                         it?.run { acc.add(this) }
@@ -61,7 +63,7 @@ object FutureUtils {
                     }
                 }
             }
-            .map(executor) { it.toList() }
+            .map(executor) { it.toFastList() }
     }
 
 
@@ -106,12 +108,12 @@ object FutureUtils {
         executor: Executor = ForkJoinExecutor,
         action: (V) -> R,
     ): CompletableFuture<List<R>> {
-        return futures.fold(completableFutureOf(mutableListOf<R>())) { futureAcc, future ->
+        return futures.fold(completableFutureOf(fastListOf<R>())) { futureAcc, future ->
             futureAcc.zip(future, executor) { acc, result ->
                 acc.add(action(result))
                 acc
             }
-        }.map(executor) { it.toList() }
+        }.map(executor) { it.toFastList() }
     }
 
     /**
@@ -128,13 +130,13 @@ object FutureUtils {
         combiner: (List<Any?>) -> R,
     ): CompletableFuture<R> {
         return futures
-            .fold(completableFutureOf(mutableListOf<Any?>())) { futureAcc, future ->
+            .fold(completableFutureOf(fastListOf<Any?>())) { futureAcc, future ->
                 futureAcc.zip(future, executor) { acc, result ->
                     acc.add(result)
                     acc
                 }
             }
-            .map(executor) { it.toList() }
+            .map(executor) { it.toFastList() }
             .thenApplyAsync({ result -> combiner(result) }, executor)
     }
 }

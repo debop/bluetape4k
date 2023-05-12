@@ -1,5 +1,6 @@
 package io.bluetape4k.infra.resilience4j.circuitbreaker
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
@@ -28,7 +29,7 @@ class FlowCircuitBreakerTest {
         val metrics = circuitBreaker.metrics
         metrics.numberOfBufferedCalls shouldBeEqualTo 0
 
-        val results = mutableListOf<Int>()
+        val results = fastListOf<Int>()
 
         // When
         flow {
@@ -55,7 +56,7 @@ class FlowCircuitBreakerTest {
         val metrics = circuitBreaker.metrics
         metrics.numberOfBufferedCalls shouldBeEqualTo 0
 
-        val results = mutableListOf<Int>()
+        val results = fastListOf<Int>()
 
         assertFailsWith<CallNotPermittedException> {
             flow {
@@ -83,7 +84,7 @@ class FlowCircuitBreakerTest {
         val metrics = circuitBreaker.metrics
         metrics.numberOfBufferedCalls shouldBeEqualTo 0
 
-        val results = mutableListOf<Int>()
+        val results = fastListOf<Int>()
 
         assertFailsWith<CallNotPermittedException> {
             flow {
@@ -111,7 +112,7 @@ class FlowCircuitBreakerTest {
         val metrics = circuitBreaker.metrics
         metrics.numberOfBufferedCalls shouldBeEqualTo 0
 
-        val results = mutableListOf<Int>()
+        val results = fastListOf<Int>()
 
         assertFailsWith<IllegalStateException> {
             flow {

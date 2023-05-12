@@ -1,5 +1,6 @@
 package io.bluetape4k.collections.eclipse.parallel
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure
 import org.eclipse.collections.api.map.primitive.ObjectDoubleMap
 import org.eclipse.collections.api.map.primitive.ObjectLongMap
@@ -21,7 +22,7 @@ inline fun <T> Iterable<T>.parFilter(
     return ParallelIterate.select(
         this,
         { predicate(it) },
-        mutableListOf(),
+        fastListOf(),
         batchSize,
         executor,
         reorder
@@ -37,7 +38,7 @@ inline fun <T> Iterable<T>.parReject(
     return ParallelIterate.reject(
         this,
         { predicate(it) },
-        mutableListOf(),
+        fastListOf(),
         batchSize,
         executor,
         reorder
@@ -92,7 +93,7 @@ inline fun <R> IntArray.parMap(
     return ParallelIterate.collect(
         this.asIterable(),
         { mapper(it) },
-        ArrayList(),
+        fastListOf(),
         batchSize,
         executor,
         reorder
@@ -108,7 +109,7 @@ inline fun <R> LongArray.parMap(
     return ParallelIterate.collect(
         this.asIterable(),
         { mapper(it) },
-        ArrayList(),
+        fastListOf(),
         batchSize,
         executor,
         reorder
@@ -175,7 +176,7 @@ inline fun <T, R> Iterable<T>.parFlatMap(
     return ParallelIterate.flatCollect(
         this,
         { flatMapper(it) },
-        mutableListOf(),
+        fastListOf(),
         batchSize,
         executor,
         reorder
@@ -193,7 +194,7 @@ inline fun <T, R> Iterable<T>.parFilterMap(
         this,
         { predicate(it) },
         { mapper(it) },
-        mutableListOf(),
+        fastListOf(),
         batchSize,
         executor,
         reorder

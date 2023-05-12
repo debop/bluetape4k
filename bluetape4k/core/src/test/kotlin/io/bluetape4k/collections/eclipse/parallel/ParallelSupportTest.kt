@@ -2,6 +2,7 @@ package io.bluetape4k.collections.eclipse.parallel
 
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.collections.stream.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
@@ -177,22 +178,21 @@ class ParallelSupportTest {
         val xs = fastList(COUNT) { "$suffix-$it" }
 
         val mapper: (String) -> Int = { it.drop(suffix.length + 1).toInt() }
-
         val batchSize = COUNT / Runtime.getRuntime().availableProcessors()
 
-        repeat(10) {
+        repeat(2) {
             xs.parallelStream().map(mapper)
             xs.parMap { mapper.invoke(it) }
         }
 
         val parallel = measureTimeMillis {
-            repeat(100) {
-                xs.parallelStream().map(mapper).toList()
+            repeat(10) {
+                xs.parallelStream().map(mapper).toFastList()
             }
         }
 
         val parMap = measureTimeMillis {
-            repeat(100) {
+            repeat(10) {
                 xs.parMap(batchSize = batchSize) { mapper(it) }
             }
         }

@@ -5,18 +5,17 @@ import io.bluetape4k.logging.debug
 import io.jsonwebtoken.security.Keys
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEqualTo
-import org.junit.jupiter.api.RepeatedTest
+import org.junit.jupiter.api.Test
 
 class KeyChainTest: AbstractJwtTest() {
 
-    companion object: KLogging() {
-        private const val REPEAT_SIZE = 3
-    }
+    companion object: KLogging()
 
-    @RepeatedTest(REPEAT_SIZE)
+    @Test
     fun `RSA Algorithm이 같아도 매번 다른 KeyPair를 가진다`() {
         rsaAlgorithm.forEach { algorithm ->
             log.debug { "algorithm=$algorithm" }
+
             val keyPair1 = Keys.keyPairFor(algorithm)
             val keyPair2 = Keys.keyPairFor(algorithm)
 
@@ -25,7 +24,7 @@ class KeyChainTest: AbstractJwtTest() {
         }
     }
 
-    @RepeatedTest(REPEAT_SIZE)
+    @Test
     fun `convert KeyChain to DTO`() {
         rsaAlgorithm.forEach { algorithm ->
             log.debug { "algorithm=$algorithm" }

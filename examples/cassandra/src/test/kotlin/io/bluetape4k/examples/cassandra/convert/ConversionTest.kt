@@ -2,6 +2,7 @@ package io.bluetape4k.examples.cassandra.convert
 
 import com.datastax.oss.driver.api.core.cql.Row
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder.selectFrom
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.data.cassandra.data.getList
 import io.bluetape4k.examples.cassandra.AbstractCassandraCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendTest
@@ -44,7 +45,7 @@ class ConversionTest(
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),
-            friends = mutableListOf(newContact(), newContact())
+            friends = fastListOf(newContact(), newContact())
         )
         operations.insertSuspending(addressbook)
 
@@ -60,7 +61,7 @@ class ConversionTest(
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),
-            friends = mutableListOf(newContact(), newContact())
+            friends = fastListOf(newContact(), newContact())
         )
         operations.insertSuspending(addressbook)
 
@@ -75,7 +76,7 @@ class ConversionTest(
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),
-            friends = mutableListOf(newContact(), newContact()),
+            friends = fastListOf(newContact(), newContact()),
             address = Address("165 Misa", "Hanam", "12914"),
             preferredCurrencies = mutableMapOf(
                 1 to Currency.getInstance("USD"),

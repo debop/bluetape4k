@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.math.commons
 
+import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.utils.math.MathConsts.Pi
 import org.eclipse.collections.api.multimap.list.MutableListMultimap
 import org.eclipse.collections.impl.factory.Multimaps
@@ -53,7 +54,7 @@ fun <T, V> Sequence<T>.frequency(selector: (T) -> V): Map<T, Int> {
             inverse.put(v, t)
         }
 
-    val result: MutableMap<T, Int> = mutableMapOf()
+    val result: MutableMap<T, Int> = unifiedMapOf()
     frequency.forEach { (v: V, count: Int) ->
         inverse[v].forEach { t: T ->
             result.compute(t) { _, cnt -> (cnt ?: 0) + count }

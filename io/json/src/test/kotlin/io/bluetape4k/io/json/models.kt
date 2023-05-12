@@ -2,6 +2,7 @@ package io.bluetape4k.io.json
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.support.hashOf
@@ -21,7 +22,7 @@ enum class Generation {
 data class Address @JsonCreator constructor(
     var street: String? = null,
     var phone: String? = null,
-    val props: MutableList<String> = mutableListOf(),
+    val props: MutableList<String> = fastListOf(),
 )
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
@@ -77,7 +78,7 @@ open class User: AbstractValueObject(), Comparable<User> {
 
     var homeAddr = Address()
     var officeAddr = Address()
-    var favoriteMovies: MutableList<String> = mutableListOf()
+    var favoriteMovies: MutableList<String> = fastListOf()
 
     override fun compareTo(other: User): Int {
         return firstname.compareTo(other.firstname)

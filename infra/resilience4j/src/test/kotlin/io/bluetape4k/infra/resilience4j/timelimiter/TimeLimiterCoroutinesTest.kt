@@ -53,7 +53,7 @@ class TimeLimiterCoroutinesTest {
 
         assertFailsWith<TimeoutException> {
             timelimiter.executeSuspendFunction {
-                helloWorldService.wait()
+                helloWorldService.await()
             }
         }
 

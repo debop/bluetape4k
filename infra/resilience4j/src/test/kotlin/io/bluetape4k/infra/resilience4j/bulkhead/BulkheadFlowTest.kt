@@ -1,5 +1,6 @@
 package io.bluetape4k.infra.resilience4j.bulkhead
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.infra.resilience4j.CoHelloWorldService
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.github.resilience4j.bulkhead.Bulkhead
@@ -50,7 +51,7 @@ class BulkheadFlowTest {
     @Test
     fun `성공할 함수를 실행압니다`() = runSuspendTest {
         val bulkhead = Bulkhead.ofDefaults("testName").registerEventListener()
-        val results = mutableListOf<Int>()
+        val results = fastListOf<Int>()
 
         flow {
             repeat(3) {
@@ -75,7 +76,7 @@ class BulkheadFlowTest {
                 .maxWaitDuration(Duration.ZERO)
                 .build()
         }.registerEventListener()
-        val results = mutableListOf<Int>()
+        val results = fastListOf<Int>()
 
         val sync = Channel<Int>(Channel.RENDEZVOUS)
         val testFlow = flow {
@@ -121,7 +122,7 @@ class BulkheadFlowTest {
     @Test
     fun `예외가 발생해도 bulkhead는 됩니다`() = runSuspendTest {
         val bulkhead = Bulkhead.ofDefaults("testName").registerEventListener()
-        val results = mutableListOf<Int>()
+        val results = fastListOf<Int>()
 
         assertFailsWith<IllegalStateException> {
             flow {
@@ -181,6 +182,7 @@ class BulkheadFlowTest {
         val phaser = Phaser(1)
         val parentJob = Job()
         var flowCompleted = false
+
         val bulkhead = Bulkhead.of("testName") {
             BulkheadConfig.custom()
                 .maxConcurrentCalls(1)

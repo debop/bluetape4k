@@ -1,12 +1,12 @@
 package io.bluetape4k.support
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.core.assertNotBlank
 import io.bluetape4k.logging.KotlinLogging
-import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import java.util.*
 
-private val logger = KotlinLogging.logger {}
+private val log = KotlinLogging.logger {}
 
 fun Locale.isDefault(): Boolean = Locale.getDefault() == this
 
@@ -27,7 +27,7 @@ val Locale.parent: Locale?
  */
 val Locale.parents: List<Locale>
     get() {
-        val result = mutableListOf<Locale>()
+        val result = fastListOf<Locale>()
         var current: Locale? = this
         while (current != null) {
             result.add(current)
@@ -50,15 +50,15 @@ val Locale.parents: List<Locale>
 fun Locale.calculateFilenames(basename: String): List<String> {
 
     basename.assertNotBlank("basename")
-    logger.trace { "Locale에 해당하는 파일명을 조합합니다. basename=$basename, locale=$this" }
+    log.trace { "Locale에 해당하는 파일명을 조합합니다. basename=$basename, locale=$this" }
 
-    val results = mutableListOf<String>()
+    val results = fastListOf<String>()
 
     val language = this.language
     val country = this.country
     val variant = this.variant
 
-    logger.trace { "language=$language, country=$country, variant=$variant" }
+    log.trace { "language=$language, country=$country, variant=$variant" }
 
     val temp = StringBuilder(basename)
     temp.append("_")
@@ -81,7 +81,7 @@ fun Locale.calculateFilenames(basename: String): List<String> {
     }
     results.add(basename)
 
-    logger.debug { "Locale에 해당하는 파일명을 조합했습니다. basename=$basename, locale=$this, results=$results" }
+    log.trace { "Locale에 해당하는 파일명을 조합했습니다. basename=$basename, locale=$this, results=$results" }
 
     return results
 }

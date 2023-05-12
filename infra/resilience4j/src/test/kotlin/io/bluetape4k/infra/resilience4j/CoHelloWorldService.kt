@@ -39,13 +39,13 @@ class CoHelloWorldService {
     /**
      * Suspend until a matching [proceed] call.
      */
-    suspend fun wait() {
+    suspend fun await() {
         invocationCounter.incrementAndGet()
         sync.receive()
     }
 
     /**
-     * Allow a call into [wait] to proceed.
+     * Allow a call into [await] to proceed.
      */
     fun proceed(): Boolean = sync.trySend(Unit).isSuccess
 }

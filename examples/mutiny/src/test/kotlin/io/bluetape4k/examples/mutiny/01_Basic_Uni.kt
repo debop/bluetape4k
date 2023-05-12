@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.mutiny
 
+import io.bluetape4k.collections.eclipse.primitives.longArrayListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.mutiny.asUni
@@ -92,13 +93,13 @@ class UniBasicExamples {
         val ids = AtomicLong(0L)
         val deferred = Uni.createFrom().deferred { Uni.createFrom().item(ids::incrementAndGet) }
 
-        val results = mutableListOf<Long>()
+        val results = longArrayListOf()
 
         // Uni 지만 하나의 값만 제공하는 게 아니라 deferred 를 이용하면, subscription 요청 때마다 item을 제공한다
         repeat(5) {
             deferred.subscribe().with { results.add(it) }
         }
-        results shouldBeEqualTo listOf(1, 2, 3, 4, 5)
+        results shouldBeEqualTo longArrayListOf(1, 2, 3, 4, 5)
     }
 
     @Test
@@ -130,11 +131,11 @@ class UniBasicExamples {
             emitter.complete(state.addAndGet(10))
         }
 
-        val results = mutableListOf<Long>()
+        val results = longArrayListOf()
         repeat(5) {
             uni.subscribe().with { results.add(it) }
         }
-        results shouldBeEqualTo listOf(10, 20, 30, 40, 50)
+        results shouldBeEqualTo longArrayListOf(10, 20, 30, 40, 50)
     }
 
     // NOTE: 예외가 발생해도, onFailureCallback 이 없다면 예외를 rethrow 하지는 않는다

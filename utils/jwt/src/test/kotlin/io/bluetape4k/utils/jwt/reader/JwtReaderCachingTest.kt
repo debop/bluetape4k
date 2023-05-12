@@ -10,10 +10,11 @@ import io.bluetape4k.utils.jwt.AbstractJwtTest
 import io.bluetape4k.utils.jwt.codec.Lz4Codec
 import io.bluetape4k.utils.jwt.provider.JwtProviderFactory
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldNotBeEqualTo
 import org.awaitility.kotlin.atMost
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.RepeatedTest
 import java.time.Duration
 import java.util.*
 import javax.cache.Cache
@@ -21,6 +22,9 @@ import javax.cache.Cache
 class JwtReaderCachingTest: AbstractJwtTest() {
 
     companion object: KLogging() {
+
+        private const val REPEAT_SIZE = 3
+
         private val frontCache1: Cache<String, JwtReaderDto> by lazy {
             JCaching.Caffeine.getOrCreate("caffeine-reader-1")
         }
@@ -44,7 +48,7 @@ class JwtReaderCachingTest: AbstractJwtTest() {
     private val jwtProvider = JwtProviderFactory.default()
     private val createdAt = System.currentTimeMillis()
 
-    private val jwt = jwtProvider.compose {
+    private val jwt: String = jwtProvider.compose {
         header("x-publisher", LibraryName)
         issuedAt = Date(createdAt)
         issuer = LibraryName
@@ -53,17 +57,44 @@ class JwtReaderCachingTest: AbstractJwtTest() {
         compressionCodec = Lz4Codec()
     }
 
-    private val reader = jwtProvider.parse(jwt)
+    private val jwt2: String = jwtProvider.compose {
+        header("x-publisher", LibraryName)
+        issuedAt = Date(createdAt)
+        issuer = LibraryName
+        claim("service", LibraryName + "-2")
 
-    @Test
-    fun `caching reader with near cache`() {
+        compressionCodec = Lz4Codec()
+    }
+
+    private val reader = jwtProvider.parse(jwt)
+    private val reader2 = jwtProvider.parse(jwt2)
+
+    @RepeatedTest(REPEAT_SIZE)
+    fun `caching reader at near cache`() {
         frontCache1.put(jwt, reader.toDto())
         val actual = frontCache1.get(jwt)!!.toJwtReader()
 
         assertSameReader(reader, actual)
     }
 
-    @Test
+    @RepeatedTest(REPEAT_SIZE)
+    fun `caching reader with hash key at near cache`() {
+        val hashKey1 = jwt.hashCode().toString()
+        val hashKey2 = jwt2.hashCode().toString()
+
+        hashKey1 shouldNotBeEqualTo hashKey2
+
+        frontCache1.put(hashKey1, reader.toDto())
+        frontCache1.put(hashKey2, reader2.toDto())
+
+        val actual = frontCache1.get(hashKey1)!!.toJwtReader()
+        val actual2 = frontCache1.get(hashKey2)!!.toJwtReader()
+
+        assertSameReader(reader, actual)
+        assertSameReader(reader2, actual2)
+    }
+
+    @RepeatedTest(REPEAT_SIZE)
     fun `caching reader with remote cache`() {
         backCache.put(jwt, reader.toDto())
         val actual = backCache.get(jwt)!!.toJwtReader()
@@ -74,10 +105,24 @@ class JwtReaderCachingTest: AbstractJwtTest() {
         assertSameReader(actual, actual2)
     }
 
-    // NOTE: Redisson 3.19.1 사용 시, NearCache 에서 kotlin.collections.LinkedHashMap 에 대해 역직렬화에 실패하는 버그가 있습니다.
-    // NOTE: java.util.HashMap 을 사용하면, 성공합니다.
-    // 참고: https://github.com/redisson/redisson/issues/4809
-    @Test
+    @RepeatedTest(REPEAT_SIZE)
+    fun `caching reader with hash key at remote cache`() {
+        val hashKey1 = jwt.hashCode().toString()
+        val hashKey2 = jwt2.hashCode().toString()
+
+        hashKey1 shouldNotBeEqualTo hashKey2
+
+        backCache.put(hashKey1, reader.toDto())
+        backCache.put(hashKey2, reader2.toDto())
+
+        val actual = backCache.get(hashKey1)!!.toJwtReader()
+        val actual2 = backCache.get(hashKey2)!!.toJwtReader()
+
+        assertSameReader(reader, actual)
+        assertSameReader(reader2, actual2)
+    }
+
+    @RepeatedTest(REPEAT_SIZE)
     fun `caching reader with two near cache`() {
         val nearCacheConfig1 = NearCacheConfig<String, JwtReaderDto>(isSynchronous = true)
         val nearCacheConfig2 = NearCacheConfig<String, JwtReaderDto>(isSynchronous = true)

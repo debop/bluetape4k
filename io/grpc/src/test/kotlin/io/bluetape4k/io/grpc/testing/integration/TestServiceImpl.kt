@@ -1,6 +1,7 @@
 package io.bluetape4k.io.grpc.testing.integration
 
 import com.google.protobuf.ByteString
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.io.grpc.interceptor.echoRequestHeadersInterceptor
 import io.bluetape4k.io.grpc.interceptor.echoRequestMetadataInHeaders
 import io.bluetape4k.io.grpc.interceptor.echoRequestMetadataInTrailers
@@ -49,7 +50,7 @@ class TestServiceImpl @JvmOverloads constructor(
         suspend fun Flow<Int>.sum() = fold(0) { acc, value -> acc + value }
 
         private fun generatePayload(dataBuffer: ByteString, offset: Int, size: Int): Messages.Payload {
-            val payloadChunks = mutableListOf<ByteString>()
+            val payloadChunks = fastListOf<ByteString>()
 
             var begin = offset
             var end: Int

@@ -1,6 +1,7 @@
 package io.bluetape4k.examples.coroutines.guide
 
 import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
@@ -72,7 +73,7 @@ class SharedFlowExamples {
         val totalConsumed = atomic(0L)
 
         val eventBus = BroadcastEventBus()
-        val jobs = mutableListOf<Job>()
+        val jobs = fastListOf<Job>()
 
         // 5개의 Producer 가 [Created, Deleted] 를 번갈아가며 발송합니다.
         jobs += fastList(5) { producerId ->

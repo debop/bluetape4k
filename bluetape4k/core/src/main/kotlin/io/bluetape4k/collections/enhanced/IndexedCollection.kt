@@ -1,6 +1,7 @@
 package io.bluetape4k.collections.enhanced
 
 import io.bluetape4k.collections.AbstractCollectionDecorator
+import io.bluetape4k.collections.eclipse.emptyFastList
 import io.bluetape4k.logging.KLogging
 import org.eclipse.collections.impl.factory.Multimaps
 import java.util.function.Predicate
@@ -76,7 +77,7 @@ class IndexedCollection<K, E> private constructor(
     }
 
     fun values(key: K): MutableCollection<E> {
-        return index.get(key) ?: mutableListOf()
+        return index.get(key) ?: emptyFastList()
     }
 
     override fun remove(element: E): Boolean {
@@ -89,7 +90,7 @@ class IndexedCollection<K, E> private constructor(
 
     override fun removeIf(filter: Predicate<in E>): Boolean {
         var changed = false
-        var iter = iterator()
+        val iter = iterator()
         while (iter.hasNext()) {
             if (filter.test(iter.next())) {
                 iter.remove()

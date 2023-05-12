@@ -68,7 +68,7 @@ class IndexedCollectionTest {
 
     @Test
     fun `when collection is modified, update index`() {
-        val original = mutableListOf<String>()
+        val original = fastListOf<String>()
         val indexed = decorateUniqueCollection(original)
 
         original.add("1")

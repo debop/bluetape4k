@@ -1,5 +1,7 @@
 package io.bluetape4k.support
 
+import io.bluetape4k.collections.eclipse.fastListOf
+
 private val CHO_SUNG: IntArray =
     intArrayOf(
         0x3131, 0x3132, 0x3134, 0x3137, 0x3138, 0x3139,
@@ -80,7 +82,7 @@ fun String.getChosung(): CharArray {
     if (this.isBlank())
         return charArrayOf()
 
-    val chosungs = mutableListOf<Char>()
+    val chosungs = fastListOf<Char>()
 
     repeat(length) { i ->
         val char = this[i].code

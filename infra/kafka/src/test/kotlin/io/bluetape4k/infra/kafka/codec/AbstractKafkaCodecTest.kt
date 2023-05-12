@@ -1,5 +1,6 @@
 package io.bluetape4k.infra.kafka.codec
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.infra.kafka.AbstractKafkaTest
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
@@ -69,7 +70,7 @@ abstract class AbstractKafkaCodecTest: AbstractKafkaTest() {
         val name: String,
         val createdAt: Instant? = Instant.now(),
         val amount: BigDecimal?,
-        val details: MutableList<DetailData> = mutableListOf(),
+        val details: MutableList<DetailData> = fastListOf(),
     ): Serializable
 
     data class DetailData(
