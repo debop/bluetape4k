@@ -27,6 +27,7 @@ class VaultServer private constructor(
         const val NAME = "vault"
         const val PORT = 8200
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,
@@ -35,6 +36,7 @@ class VaultServer private constructor(
             return VaultServer(imageName, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,
@@ -45,8 +47,8 @@ class VaultServer private constructor(
         }
     }
 
-    override val url: String get() = "http://$host:$port"
     override val port: Int get() = getMappedPort(PORT)
+    override val url: String get() = "http://$host:$port"
 
     init {
         addExposedPorts(PORT)

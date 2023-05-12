@@ -26,7 +26,6 @@ class PrometheusServerTest {
             server.start()
             server.isRunning.shouldBeTrue()
 
-
             server.port shouldBeEqualTo PrometheusServer.PORT
             server.serverPort shouldBeEqualTo PrometheusServer.PORT
             server.pushgatewayPort shouldBeEqualTo PrometheusServer.PUSHGATEWAY_PORT

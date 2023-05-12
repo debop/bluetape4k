@@ -27,6 +27,7 @@ class JaegerServer private constructor(
 
         val EXPOSED_PORT = intArrayOf(ZIPKIN_PORT, FRONTEND_PORT, CONFIG_PORT, THRIFT_PORT)
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,
@@ -35,6 +36,7 @@ class JaegerServer private constructor(
             return JaegerServer(imageName, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,
@@ -45,8 +47,9 @@ class JaegerServer private constructor(
         }
     }
 
-    override val url: String get() = "http://$host:$port"
     override val port: Int get() = getMappedPort(FRONTEND_PORT)
+    override val url: String get() = "http://$host:$port"
+
     val frontendPort: Int get() = getMappedPort(FRONTEND_PORT)
     val zipkinPort: Int get() = getMappedPort(ZIPKIN_PORT)
     val configPort: Int get() = getMappedPort(CONFIG_PORT)

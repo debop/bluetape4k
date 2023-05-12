@@ -39,6 +39,7 @@ class PrometheusServer private constructor(
 
         val EXPOSED_PORTS = intArrayOf(PORT, PUSHGATEWAY_PORT, GRAPHITE_EXPORTER_PORT)
 
+        @JvmStatic
         operator fun invoke(
             image: String = IMAGE,
             tag: String = TAG,
@@ -50,8 +51,8 @@ class PrometheusServer private constructor(
         }
     }
 
+    override val port: Int get() = getMappedPort(PORT)
     override val url: String get() = "http://$host:$port"
-    override val port get() = getMappedPort(PORT)
 
     val serverPort: Int get() = getMappedPort(PORT)
     val pushgatewayPort: Int get() = getMappedPort(PUSHGATEWAY_PORT)

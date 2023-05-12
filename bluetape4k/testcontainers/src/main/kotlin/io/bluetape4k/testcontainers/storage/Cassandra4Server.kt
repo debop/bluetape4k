@@ -49,6 +49,7 @@ class Cassandra4Server private constructor(
         const val LOCAL_DATACENTER1 = "datacenter1"
         const val CQL_PORT = 9042
 
+        @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,
@@ -58,6 +59,7 @@ class Cassandra4Server private constructor(
             return Cassandra4Server(imageName, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,

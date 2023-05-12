@@ -22,6 +22,7 @@ class HazelcastServer private constructor(
         const val NAME = "hazelcast"
         const val PORT = 5701
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,
@@ -30,6 +31,7 @@ class HazelcastServer private constructor(
             return HazelcastServer(imageName, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,
@@ -43,6 +45,8 @@ class HazelcastServer private constructor(
     private val enabledFeatures = HashSet<HazelcastProperty>()
     private val customProperties = HashSet<String>()
     private lateinit var config: RestApiConfig
+
+    override val port: Int get() = getMappedPort(PORT)
 
     init {
         addExposedPorts(PORT)

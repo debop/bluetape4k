@@ -31,6 +31,7 @@ class ConsulServer private constructor(
 
         val EXPORT_PORTS = intArrayOf(DNS_PORT, HTTP_PORT, RPC_PORT)
 
+        @JvmStatic
         operator fun invoke(
             image: String = IMAGE,
             tag: String = TAG,
@@ -42,8 +43,8 @@ class ConsulServer private constructor(
         }
     }
 
-    override val url: String get() = "http://$host:$port"
     override val port: Int get() = getMappedPort(HTTP_PORT)
+    override val url: String get() = "http://$host:$port"
 
     val dnsPort: Int get() = getMappedPort(DNS_PORT)
     val httpPort: Int get() = getMappedPort(HTTP_PORT)

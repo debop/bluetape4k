@@ -51,6 +51,7 @@ class NatsServer private constructor(
         }
     }
 
+    override val port: Int get() = getMappedPort(4222)
     override val url: String get() = "$NAME://$host:$port"
 
     init {

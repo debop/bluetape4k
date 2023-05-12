@@ -33,6 +33,7 @@ class ElasticsearchServer private constructor(
         const val PORT = 9200
         const val TCP_PORT = 9300
 
+        @JvmStatic
         operator fun invoke(
             image: String = OSS_IMAGE,
             tag: String = OSS_TAG,

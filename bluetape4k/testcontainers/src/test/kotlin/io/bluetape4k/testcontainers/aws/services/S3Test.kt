@@ -5,10 +5,10 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
 import io.bluetape4k.testcontainers.aws.LocalStackServer
+import io.bluetape4k.utils.ShutdownQueue
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeEmpty
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
@@ -37,12 +37,15 @@ class S3Test {
     }
     private val endpoint: URI get() = s3Server.getEndpointOverride(LocalStackContainer.Service.S3)
 
-    private val s3 by lazy {
+    private val s3Client by lazy {
         S3Client.builder()
             .endpointOverride(endpoint)
-            .region(Region.AP_NORTHEAST_2)
+            .region(Region.of(s3Server.region))
             .credentialsProvider(s3Server.getCredentialProvider())
             .build()
+            .apply {
+                ShutdownQueue.register(this)
+            }
     }
 
     private val bucketName = "foo"
@@ -54,11 +57,6 @@ class S3Test {
         s3Server.start()
     }
 
-    @AfterAll
-    fun cleanup() {
-        s3Server.close()
-    }
-
     @Test
     @Order(1)
     fun `run s3 server by LocalStackServer`() {
@@ -68,10 +66,10 @@ class S3Test {
     @Test
     @Order(2)
     fun `create bucket`() {
-        val waiter = s3.waiter()
+        val waiter = s3Client.waiter()
 
         val createBucketRequest = CreateBucketRequest.builder().bucket(bucketName).build()
-        s3.createBucket(createBucketRequest)
+        s3Client.createBucket(createBucketRequest)
 
         val bucketRequestWait = HeadBucketRequest.builder().bucket(bucketName).build()
         val waiterResponse = waiter.waitUntilBucketExists(bucketRequestWait)
@@ -91,7 +89,7 @@ class S3Test {
             .metadata(metadata)
             .build()
 
-        val response = s3.putObject(request, RequestBody.fromBytes(content.toUtf8Bytes()))
+        val response = s3Client.putObject(request, RequestBody.fromBytes(content.toUtf8Bytes()))
 
         log.debug { "eTag=${response.eTag()}" }
         response.eTag().shouldNotBeEmpty()
@@ -105,7 +103,7 @@ class S3Test {
             .key(keyName)
             .build()
 
-        val response = s3.getObjectAsBytes(request)!!
+        val response = s3Client.getObjectAsBytes(request)!!
         val bytes = response.asByteArray()!!
         bytes.toUtf8String() shouldBeEqualTo content
     }

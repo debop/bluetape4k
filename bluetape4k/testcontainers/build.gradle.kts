@@ -80,6 +80,7 @@ dependencies {
 
     // Amazon SDK V2
     compileOnly(Libs.aws2_auth)
+    testImplementation(Libs.aws2_apache_client)
     testImplementation(Libs.aws2_cloudwatch)
     testImplementation(Libs.aws2_cloudwatchevents)
     testImplementation(Libs.aws2_cloudwatchlogs)
@@ -90,8 +91,6 @@ dependencies {
     testImplementation(Libs.aws2_sqs)
 
     testImplementation(Libs.metrics_jmx)
-    testImplementation(Libs.netty_transport_native_epoll + ":linux-x86_64")
-    testImplementation(Libs.netty_transport_native_kqueue + ":osx-x86_64")
 
     // K3s
     compileOnly(Libs.testcontainers_k3s)

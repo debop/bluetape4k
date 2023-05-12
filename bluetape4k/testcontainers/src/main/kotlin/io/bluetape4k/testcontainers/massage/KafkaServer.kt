@@ -62,6 +62,8 @@ class KafkaServer private constructor(
         }
     }
 
+    override val port: Int get() = getMappedPort(KAFKA_PORT)
+
     init {
         addExposedPorts(KAFKA_PORT)
         withEmbeddedZookeeper()

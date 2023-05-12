@@ -39,7 +39,7 @@ class LocalStackServer private constructor(
     companion object: KLogging() {
         val IMAGE = "localstack/localstack"
         val NAME = "localstack"
-        val TAG = "2.0.2"
+        val TAG = "2.0"
         val PORT = 4566
 
         operator fun invoke(
@@ -60,6 +60,7 @@ class LocalStackServer private constructor(
         }
     }
 
+    override val port: Int get() = getMappedPort(PORT)
     override val url: String get() = "http://$host:$port"
 
     init {

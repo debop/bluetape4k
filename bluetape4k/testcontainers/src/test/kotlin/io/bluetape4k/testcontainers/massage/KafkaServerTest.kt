@@ -16,6 +16,7 @@ import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.awaitility.kotlin.await
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
@@ -31,6 +32,11 @@ class KafkaServerTest {
     companion object: KLogging() {
         private const val TOPIC_NAME = "bluetape4k-test-topic-1"
         private const val TOPIC_NAME_CORUTINE = "bluetape4k-test-topic-coroutines-1"
+    }
+
+    @AfterAll
+    fun afterAll() {
+        KafkaServer.Launcher.kafka.close()
     }
 
     @Test

@@ -38,10 +38,11 @@ class RedisServer private constructor(
 
     companion object: KLogging() {
         const val IMAGE = "redis"
-        const val TAG = "6.2"
+        const val TAG = "7"
         const val NAME = "redis"
         const val PORT = 6379
 
+        @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,
@@ -52,6 +53,7 @@ class RedisServer private constructor(
             return RedisServer(imageName, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,
@@ -61,6 +63,7 @@ class RedisServer private constructor(
         }
     }
 
+    override val port: Int get() = getMappedPort(PORT)
     override val url: String get() = "$NAME://$host:$port"
 
     init {

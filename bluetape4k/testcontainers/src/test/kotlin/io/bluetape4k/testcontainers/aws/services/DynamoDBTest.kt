@@ -1,11 +1,12 @@
 package io.bluetape4k.testcontainers.aws.services
 
+import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.testcontainers.aws.LocalStackServer
+import io.bluetape4k.utils.ShutdownQueue
 import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.amshove.kluent.shouldNotBeNull
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
@@ -46,17 +47,23 @@ class DynamoDBTest {
     private val client by lazy {
         DynamoDbClient.builder()
             .endpointOverride(endpoint)
-            .region(Region.AP_NORTHEAST_2)
+            .region(Region.of(dynamodb.region))
             .credentialsProvider(dynamodb.getCredentialProvider())
             .build()
+            .apply {
+                ShutdownQueue.register(this)
+            }
     }
 
     private val asyncClient by lazy {
         DynamoDbAsyncClient.builder()
             .endpointOverride(endpoint)
-            .region(Region.AP_NORTHEAST_2)
+            .region(Region.of(dynamodb.region))
             .credentialsProvider(dynamodb.getCredentialProvider())
             .build()
+            .apply {
+                ShutdownQueue.register(this)
+            }
     }
 
     private val enhancedAsyncClient by lazy {
@@ -83,15 +90,10 @@ class DynamoDBTest {
         log.debug { "Table: ${createTableResponse.tableDescription()}" }
     }
 
-    @AfterAll
-    fun cleanup() {
-        dynamodb.close()
-    }
-
     @Test
     @Order(1)
     fun `insert data`() {
-        val item = hashMapOf(
+        val item = unifiedMapOf(
             "id" to AttributeValue.builder().s("1").build(),
             "name" to AttributeValue.builder().s("debop").build(),
             "age" to AttributeValue.builder().n("51").build()

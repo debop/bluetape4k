@@ -9,6 +9,7 @@ import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
@@ -24,6 +25,11 @@ class RabbitMQServerTest {
     }
 
     private val rabbitMQ = RabbitMQServer.Launcher.rabbitMQ
+
+    @AfterAll
+    fun afterAll() {
+        rabbitMQ.close()
+    }
 
     @Test
     fun `run rabbitmq server`() {

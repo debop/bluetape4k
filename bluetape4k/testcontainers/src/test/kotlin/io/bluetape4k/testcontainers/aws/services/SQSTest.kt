@@ -3,8 +3,8 @@ package io.bluetape4k.testcontainers.aws.services
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.testcontainers.aws.LocalStackServer
+import io.bluetape4k.utils.ShutdownQueue
 import org.amshove.kluent.shouldHaveSize
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
@@ -38,6 +38,9 @@ class SQSTest {
             .region(region)
             .credentialsProvider(sqsServer.getCredentialProvider())
             .build()
+            .apply {
+                ShutdownQueue.register(this)
+            }
     }
 
     private lateinit var queueUrl: String
@@ -45,12 +48,6 @@ class SQSTest {
     @BeforeAll
     fun setup() {
         sqsServer.start()
-    }
-
-    @AfterAll
-    fun cleanup() {
-        runCatching { sqsClient.close() }
-        runCatching { sqsServer.close() }
     }
 
     @Test

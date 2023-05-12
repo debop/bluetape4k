@@ -39,6 +39,7 @@ class MySQL5Server private constructor(
         const val PORT: Int = 3306
         const val DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver"
 
+        @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = true,
@@ -51,6 +52,7 @@ class MySQL5Server private constructor(
             return invoke(imageName, useDefaultPort, configuration, username, password, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = true,

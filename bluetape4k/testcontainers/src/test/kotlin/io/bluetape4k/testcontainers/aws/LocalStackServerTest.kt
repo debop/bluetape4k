@@ -1,8 +1,10 @@
 package io.bluetape4k.testcontainers.aws
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.utils.ShutdownQueue
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
@@ -28,42 +30,46 @@ class LocalStackServerTest {
             // AWS SDK V2 사용
             val credentialProvider = server.getCredentialProvider()
 
-            val s3 = S3Client.builder()
+            val s3Client = S3Client.builder()
                 .endpointOverride(server.getEndpointOverride(LocalStackContainer.Service.S3))
-                .region(Region.AP_NORTHEAST_2)
+                .region(Region.of(server.region))
                 .credentialsProvider(credentialProvider)
                 .build()
+                .apply {
+                    ShutdownQueue.register(this)
+                }
 
-            s3.createBucket(CreateBucketRequest.builder().bucket("foo").build())
+            s3Client.createBucket(CreateBucketRequest.builder().bucket("foo").build())
             Thread.sleep(100)
 
             val putRequest = PutObjectRequest.builder()
                 .bucket("foo")
                 .key("bar")
                 .build()
-            s3.putObject(putRequest, RequestBody.fromString("baz"))
+            s3Client.putObject(putRequest, RequestBody.fromString("baz"))
             Thread.sleep(100)
 
             val getRequest = GetObjectRequest.builder()
                 .bucket("foo")
                 .key("bar")
                 .build()
-            val content = s3.getObjectAsBytes(getRequest).asUtf8String()
+            val content = s3Client.getObjectAsBytes(getRequest).asUtf8String()
             content shouldBeEqualTo "baz"
         }
     }
 
+    @Disabled("custom network 을 쓰게 되면 다른 테스트에서 예외가 발생한다")
     @Test
     fun `run multiple services with custom network`() {
-        val network = Network.newNetwork()
-
-        LocalStackServer()
-            .withNetwork(network)
-            .withNetworkAliases("notthis", "localstack")
-            .withServices(LocalStackContainer.Service.S3, LocalStackContainer.Service.CLOUDWATCHLOGS)
-            .use { server ->
-                server.start()
-                server.isRunning.shouldBeTrue()
-            }
+        Network.newNetwork().use { network ->
+            LocalStackServer()
+                .withNetwork(network)
+                .withNetworkAliases("notthis", "localstack")
+                .withServices(LocalStackContainer.Service.CLOUDWATCH, LocalStackContainer.Service.CLOUDWATCHLOGS)
+                .use { server ->
+                    server.start()
+                    server.isRunning.shouldBeTrue()
+                }
+        }
     }
 }

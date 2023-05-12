@@ -16,6 +16,7 @@ class ElasticsearchServerTest {
     fun `launch elasticsearch oss version`() {
         val es = ElasticsearchServer.Launcher.elasticsearchOss
         es.isRunning.shouldBeTrue()
+        es.close()
     }
 
     @Test

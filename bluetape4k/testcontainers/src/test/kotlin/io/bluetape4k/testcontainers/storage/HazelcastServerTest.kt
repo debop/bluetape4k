@@ -14,9 +14,12 @@ class HazelcastServerTest {
 
     @Test
     fun `create hazelcast server`() {
-        val hazelcast = HazelcastServer.Launcher.hazelcast
-
-        assertHazelcast(hazelcast)
+        HazelcastServer()
+            .withRESTClient()
+            .withHttpHealthCheck().use {
+                it.start()
+                assertHazelcast(it)
+            }
     }
 
     @Test

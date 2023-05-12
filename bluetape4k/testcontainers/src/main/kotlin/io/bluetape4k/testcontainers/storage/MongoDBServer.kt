@@ -18,10 +18,11 @@ class MongoDBServer private constructor(
 
     companion object: KLogging() {
         const val IMAGE = "mongo"
-        const val TAG = "4.4"
+        const val TAG = "6"
         const val NAME = "mongo"
         const val PORT = 27017
 
+        @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,
@@ -31,6 +32,7 @@ class MongoDBServer private constructor(
             return MongoDBServer(imageName, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,
@@ -40,6 +42,7 @@ class MongoDBServer private constructor(
         }
     }
 
+    override val port: Int get() = getMappedPort(PORT)
     override val url: String get() = this.replicaSetUrl
 
     init {

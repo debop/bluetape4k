@@ -29,11 +29,14 @@ class RedisServerTest {
             redis.isRunning.shouldBeTrue()
             redis.port shouldBeEqualTo RedisServer.PORT
 
+            Thread.sleep(100)
+
             verifyRedisServer(redis)
         }
     }
 
     private fun verifyRedisServer(redisServer: RedisServer) {
+        Thread.sleep(100)
         val redisson = redissonClient(redisServer.url)
 
         val map = redisson.getMap<String, String>("map")

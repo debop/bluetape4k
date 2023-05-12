@@ -21,6 +21,7 @@ class ZipkinServer private constructor(
         const val TAG = "2"
         const val PORT = 9411
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,
@@ -29,6 +30,7 @@ class ZipkinServer private constructor(
             return ZipkinServer(imageName, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,
@@ -39,8 +41,8 @@ class ZipkinServer private constructor(
         }
     }
 
-    override val url: String get() = "http://$host:$port"
     override val port: Int get() = getMappedPort(PORT)
+    override val url: String get() = "http://$host:$port"
 
     init {
         addExposedPorts(PORT)

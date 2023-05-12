@@ -4,12 +4,12 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import io.bluetape4k.testcontainers.aws.LocalStackServer
+import io.bluetape4k.utils.ShutdownQueue
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
@@ -46,18 +46,23 @@ class KMSTest {
     private val kmsClient: KmsClient by lazy {
         KmsClient.builder()
             .endpointOverride(endpoint)
-            .region(Region.US_EAST_1)
+            .region(Region.of(kmsServer.region))
             .credentialsProvider(kmsServer.getCredentialProvider())
             .build()
+            .apply {
+                ShutdownQueue.register(this)
+            }
     }
     private val kmsAsyncClient: KmsAsyncClient by lazy {
         KmsAsyncClient.builder()
             .endpointOverride(endpoint)
-            .region(Region.US_EAST_1)
+            .region(Region.of(kmsServer.region))
             .credentialsProvider(kmsServer.getCredentialProvider())
             .build()
+            .apply {
+                ShutdownQueue.register(this)
+            }
     }
-
 
     private val keyDesc = "Create by the AWS KMS API"
     private lateinit var keyId: String
@@ -75,13 +80,6 @@ class KMSTest {
     @BeforeAll
     fun setup() {
         kmsServer.start()
-    }
-
-    @AfterAll
-    fun cleanup() {
-        kmsClient.close()
-        kmsAsyncClient.close()
-        kmsServer.close()
     }
 
     @Test

@@ -54,8 +54,9 @@ class RabbitMQServer private constructor(
         }
     }
 
-    override val url: String get() = "amqp://$host:$port"
     override val port: Int get() = getMappedPort(AMQP_PORT)
+    override val url: String get() = "amqp://$host:$port"
+
     val amqpPort: Int get() = getMappedPort(AMQP_PORT)
     val amqpsPort: Int get() = getMappedPort(AMQPS_PORT)
     val rabbitmqHttpPort: Int get() = getMappedPort(RABBITMQ_HTTP_PORT)
