@@ -24,15 +24,15 @@ interface JwtProvider {
 
     fun findKeyChain(kid: String): KeyChain?
 
-    fun composer(keyChain: KeyChain? = null): JwtComposer {
-        return JwtComposer(keyChain ?: currentKeyChain())
+    fun composer(keyChain: KeyChain? = null): JwtComposer = synchronized(this) {
+        JwtComposer(keyChain ?: currentKeyChain())
     }
 
     fun compose(
         keyChain: KeyChain? = null,
         initializer: JwtComposerDsl.() -> Unit,
-    ): String {
-        return composeJwt(keyChain ?: currentKeyChain(), initializer)
+    ): String = synchronized(this) {
+        composeJwt(keyChain ?: currentKeyChain(), initializer)
     }
 
     fun parse(jwtString: String): JwtReader {

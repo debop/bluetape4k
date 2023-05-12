@@ -26,10 +26,10 @@ object JwtProviderFactory {
      */
     fun default(
         signatureAlgorithm: SignatureAlgorithm = DefaultSignatureAlgorithm,
-        keyChainPersister: KeyChainRepository = DefaultKeyChainRepository,
+        keyChainRepository: KeyChainRepository = DefaultKeyChainRepository,
         keyRotationMinutes: Int = DEFAULT_KEY_ROTATION_MINUTES,
     ): JwtProvider {
-        return DefaultJwtProvider(signatureAlgorithm, keyChainPersister, keyRotationMinutes)
+        return DefaultJwtProvider(signatureAlgorithm, keyChainRepository, keyRotationMinutes)
     }
 
     /**
@@ -42,9 +42,9 @@ object JwtProviderFactory {
      * @return [FixedJwtProvider] instance
      */
     fun fixed(
+        kid: String,
         signatureAlgorithm: SignatureAlgorithm = DefaultSignatureAlgorithm,
         keyPair: KeyPair = Keys.keyPairFor(signatureAlgorithm),
-        kid: String,
     ): JwtProvider {
         return FixedJwtProvider(signatureAlgorithm, keyPair, kid)
     }
@@ -56,7 +56,10 @@ object JwtProviderFactory {
      * @param cache [JwtReaderDto]를 저장하는 JCache
      * @param delegate [JwtProvider] 인스턴스
      */
-    fun jcached(cache: Cache<String, JwtReaderDto>, delegate: JwtProvider): JwtProvider {
+    fun jcached(
+        cache: Cache<String, JwtReaderDto>,
+        delegate: JwtProvider,
+    ): JwtProvider {
         return JCacheJwtProvider(cache, delegate)
     }
 

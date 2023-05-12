@@ -63,7 +63,7 @@ class JwtComposerDsl(private val keyChain: KeyChain) {
         if (check) {
             when (name) {
                 Claims.EXPIRATION -> throw IllegalArgumentException("use expiration() instead of claim()")
-                Claims.ISSUED_AT  -> throw IllegalArgumentException("use setIssuedAt() instead of claim()")
+                Claims.ISSUED_AT -> throw IllegalArgumentException("use setIssuedAt() instead of claim()")
                 Claims.NOT_BEFORE -> throw IllegalArgumentException("use notBefore() instead of claim()")
             }
         }

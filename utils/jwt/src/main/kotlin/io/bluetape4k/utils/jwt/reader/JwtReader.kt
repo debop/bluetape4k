@@ -14,6 +14,9 @@ class JwtReader(
     internal val jws: Jws<Claims>,
 ): Claims by jws.body, Serializable {
 
+    val kid: String?
+        get() = header<String>("kid")
+
     @JvmName("getHeader")
     fun header(key: String): Any? {
         key.assertNotBlank("key")

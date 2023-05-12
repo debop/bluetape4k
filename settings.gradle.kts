@@ -41,7 +41,7 @@ fun includeModules(baseDir: String, withProjectName: Boolean = true, withBaseDir
                         withProjectName                  -> PROJECT_NAME + "-" + basePath + "-" + dir.name
                         else                             -> basePath + "-" + dir.name
                     }
-                    println("include modules: $projectName")
+                    // println("include modules: $projectName")
 
                     include(projectName)
                     project(":$projectName").projectDir = dir

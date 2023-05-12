@@ -1,6 +1,8 @@
 package io.bluetape4k.utils.jwt.reader
 
 import io.bluetape4k.utils.jwt.utils.epochSeconds
+import io.bluetape4k.utils.jwt.utils.epochSecondsOrMaxValue
+import io.bluetape4k.utils.jwt.utils.epochSecondsOrNull
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.impl.DefaultClaims
 import io.jsonwebtoken.impl.DefaultJws
@@ -29,7 +31,7 @@ fun JwtReaderDto.toJwtReader(): JwtReader {
  * JWT 정보가 만료되었는지 확인한다
  */
 val JwtReader.isExpired
-    get() = expiration.epochSeconds < Date().epochSeconds
+    get() = expiration.epochSecondsOrMaxValue < Date().epochSeconds
 
 /**
  * JWT 정보가 만료되었는지 확인한다. 만료되었다면 [ExpiredJwtException]을 발생시킨다.
@@ -38,7 +40,7 @@ fun JwtReader.checkExpired() {
     if (isExpired) {
         val now = Date()
         val message = "JWT expired at $expiration. current time: $now " +
-            "Elapsed time: ${now.epochSeconds - expiration.epochSeconds} seconds"
+            "Elapsed time: ${now.epochSeconds - (expiration.epochSecondsOrNull ?: 0)} seconds"
 
         throw ExpiredJwtException(jws.header, jws.body, message)
     }

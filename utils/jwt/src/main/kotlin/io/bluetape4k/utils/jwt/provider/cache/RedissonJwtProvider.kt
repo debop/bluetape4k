@@ -26,6 +26,7 @@ class RedissonJwtProvider(
 ): JwtProvider by delegate {
 
     companion object: KLogging() {
+        // 3일 
         const val DEFAULT_TTL: Long = 3 * 24 * 60_000L
     }
 
@@ -41,7 +42,10 @@ class RedissonJwtProvider(
                 if (!isExpired) {
                     // JWT 토큰의 유효기간 또는 기본 TTL 값 중 작은 값을 TTL 로 삼는다
                     // 기본 TTL은 3일이지만 JWT 토큰의 유효기간이 1일인 경우 TTL은 1일로 설정된다
-                    val readerTtl = this.expiration.time - System.currentTimeMillis()
+                    val readerTtl =
+                        if (expiration != null) expiration.time - System.currentTimeMillis()
+                        else Long.MAX_VALUE
+
                     cache.fastPut(jwtString, this.toDto(), minOf(ttl, readerTtl), TimeUnit.MILLISECONDS)
                 }
             }
