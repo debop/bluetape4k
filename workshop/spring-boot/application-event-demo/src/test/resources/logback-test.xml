@@ -11,7 +11,6 @@
     </appender>
 
     <logger name="io.bluetape4k.workshop" level="DEBUG"/>
-    <logger name="org.springframework" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="Console"/>
