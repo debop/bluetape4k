@@ -1,7 +1,6 @@
 package io.bluetape4k.examples.coroutines.flow
 
 import io.bluetape4k.coroutines.flow.toFastList
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
@@ -52,7 +52,7 @@ class CallbackFlowExamples {
     }
 
     @Test
-    fun `get messages by callback flow`() = runSuspendTest {
+    fun `get messages by callback flow`() = runTest {
         val api = FakeProductApi()
 
         val messages = flowOf(

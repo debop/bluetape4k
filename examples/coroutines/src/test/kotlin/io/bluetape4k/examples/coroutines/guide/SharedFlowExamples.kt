@@ -2,7 +2,6 @@ package io.bluetape4k.examples.coroutines.guide
 
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeGreaterThan
 import org.awaitility.kotlin.atMost
@@ -68,7 +68,7 @@ class SharedFlowExamples {
     }
 
     @Test
-    fun `복수개의 Producer로 event 발송과 복수개의 Consumer로 수신 예제`() = runSuspendWithIO {
+    fun `복수개의 Producer로 event 발송과 복수개의 Consumer로 수신 예제`() = runTest {
         val totalProduced = atomic(0L)
         val totalConsumed = atomic(0L)
 

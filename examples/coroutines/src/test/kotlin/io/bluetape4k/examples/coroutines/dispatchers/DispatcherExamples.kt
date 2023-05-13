@@ -36,7 +36,7 @@ class DispatcherExamples {
         fastList(REPEAT_SIZE) {
             // Default dispatcher를 적용
             launch(Dispatchers.Default) {
-                List(REPEAT_SIZE) { Random.nextLong() }.maxOrNull()
+                fastList(REPEAT_SIZE) { Random.nextLong() }.maxOrNull()
 
                 // thread 는 cpu core 수 만큼 사용한다 
                 // thread name 에 @coroutine#number 가 붙는다 
@@ -76,7 +76,7 @@ class DispatcherExamples {
      */
     @Test
     fun `io dispatcher 사용 예`() = runTest {
-        val jobs = List(REPEAT_SIZE) {
+        val jobs = fastList(REPEAT_SIZE) {
             launch(Dispatchers.IO) {
                 delay(200)
 
@@ -92,14 +92,14 @@ class DispatcherExamples {
     fun `custom dispatcher 사용 예`() = runTest {
         newFixedThreadPoolContext(4, "custom").use { dispatcher ->
             val parallel = dispatcher.limitedParallelism(2)
-            repeat(REPEAT_SIZE) {
+            fastList(REPEAT_SIZE) {
                 launch(parallel) {
                     delay(200)
 
                     val threadName = Thread.currentThread().name
                     log.trace { "Running on thread $threadName" }
                 }
-            }
+            }.joinAll()
         }
     }
 
@@ -112,7 +112,7 @@ class DispatcherExamples {
             val counter = atomic(0)
             val count by counter
 
-            val jobs = List(REPEAT_SIZE) {
+            val jobs = fastList(REPEAT_SIZE) {
                 launch(dispatcher) {
                     counter.incrementAndGet()
                     log.trace { "count=$count" }
@@ -133,7 +133,7 @@ class DispatcherExamples {
             var continuation: Continuation<Unit>? = null
 
             val job2 = launch(newSingleThreadContext("Name2")) {
-                delay(1000)
+                delay(100)
                 continuation?.resume(Unit)
             }
             yield()
@@ -151,7 +151,7 @@ class DispatcherExamples {
                 Thread.currentThread().name shouldContain "Name2"
 
                 // Name2 job 종료
-                delay(1000)
+                delay(100)
                 job2.join()
 
                 log.trace { Thread.currentThread().name }   // DefaultExecutor

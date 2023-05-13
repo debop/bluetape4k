@@ -36,7 +36,6 @@ class FlowLifecycleExamples {
 
         sum shouldBeEqualTo 10
 
-
         flowOf(1, 2)
             .onEach {
                 delay(1000)

@@ -1,6 +1,5 @@
 package io.bluetape4k.examples.coroutines.scope
 
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
@@ -10,6 +9,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Test
@@ -47,7 +47,7 @@ class CoroutineScopeExamples {
     }
 
     @Test
-    fun `coroutine scope를 사용하여 복수의 작업 실행하기`() = runSuspendTest {
+    fun `coroutine scope를 사용하여 복수의 작업 실행하기`() = runTest {
         val details: Details? = try {
             getUserDetails()
         } catch (e: RuntimeException) {
@@ -85,8 +85,8 @@ class CoroutineScopeExamples {
     }
 
     @Test
-    fun `coroutineScope를 사용하여 비동기 작업하기`() = runSuspendTest {
-        val taskStatus = mutableMapOf<String, Boolean>("Task 1" to false, "Task 2" to false)
+    fun `coroutineScope를 사용하여 비동기 작업하기`() = runTest {
+        val taskStatus = mutableMapOf("Task 1" to false, "Task 2" to false)
 
         val job = launch(CoroutineName("Parent")) {
             longTask(taskStatus)

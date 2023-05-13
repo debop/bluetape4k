@@ -2,7 +2,7 @@ package io.bluetape4k.data.hibernate.mapping.simple
 
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.core.requireNotBlank
-import io.bluetape4k.data.hibernate.model.IntJpaEntity
+import io.bluetape4k.data.hibernate.model.LongJpaEntity
 import javax.persistence.Access
 import javax.persistence.AccessType
 import javax.persistence.Column
@@ -22,7 +22,7 @@ class SimpleEntity private constructor(
     @Column(nullable = false)
     @NotBlank
     var name: String,
-): IntJpaEntity() {
+): LongJpaEntity() {
 
     companion object {
         operator fun invoke(name: String): SimpleEntity {
