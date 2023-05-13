@@ -1,15 +1,14 @@
 package io.bluetape4k.utils.jwt.provider
 
-import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
-import io.bluetape4k.utils.jwt.KeyChain
 import io.bluetape4k.utils.jwt.composer.JwtComposer
 import io.bluetape4k.utils.jwt.composer.JwtComposerDsl
 import io.bluetape4k.utils.jwt.composer.composeJwt
+import io.bluetape4k.utils.jwt.keychain.KeyChain
 import io.bluetape4k.utils.jwt.reader.JwtReader
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
+import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.SignatureAlgorithm
 
 interface JwtProvider {
@@ -18,9 +17,13 @@ interface JwtProvider {
 
     val signatureAlgorithm: SignatureAlgorithm
 
+    fun createKeyChain(): KeyChain = KeyChain(signatureAlgorithm)
+
     fun currentKeyChain(): KeyChain
 
-    fun rotate()
+    fun rotate(): Boolean
+
+    fun forcedRotate(): Boolean
 
     fun findKeyChain(kid: String): KeyChain?
 
@@ -36,10 +39,13 @@ interface JwtProvider {
     }
 
     fun parse(jwtString: String): JwtReader {
-        jwtString.requireNotBlank("jwtString")
-        log.trace { "Parse jwt string ... $jwtString" }
+        return tryParse(jwtString) ?: throw JwtException("Invalid jwt string: $jwtString")
+    }
 
-        val jws: Jws<Claims> = this.currentJwtParser().parseClaimsJws(jwtString)
-        return JwtReader(jws)
+    fun tryParse(jwtString: String): JwtReader? {
+        return runCatching {
+            val jws: Jws<Claims> = this.currentJwtParser().parseClaimsJws(jwtString)
+            JwtReader(jws)
+        }.getOrNull()
     }
 }

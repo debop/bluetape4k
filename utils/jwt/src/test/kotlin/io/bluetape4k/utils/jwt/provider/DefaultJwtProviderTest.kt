@@ -9,5 +9,4 @@ class DefaultJwtProviderTest: AbstractJwtProviderTest() {
     override val provider: JwtProvider =
         JwtProviderFactory.default(keyChainRepository = repository)
 
-
 }

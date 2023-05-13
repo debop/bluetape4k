@@ -1,4 +1,4 @@
-# Module bluetape4k-jwt
+# Module bluetape4k-utils-jwt
 
 Json Web Token 을 생성하고, Parsing 하는 라이브러리입니다.
 
@@ -66,7 +66,7 @@ jwt token 을 만들 때, 주기적으로 `rotate` 를 통해 다른 key를 생�
 없도록 해줘야 합니다. 이를 위해 `JwtKeyManager` 에서는 주기적으로 자동으로 rotate 하는 기능과 오래된 jwt token 을 파싱할 수 있도록, `KeyChain` 의 버퍼를 가지고 있습니다.
 
 ```kotlin
-fun JwtProvider.Companion.default(
+fun JwtProviderFactory.default(
     signatureAlgorithm: SignatureAlgorithm = DefaultSignatureAlgorithm,
     keyRotationQueueSize: Int = DefaultJwtKeyManager.DEFAULT_ROTATION_QUEUE_SIZE,
     keyRotationMinutes: Int = DefaultJwtKeyManager.DEFAULT_KEY_ROTATION_MINUTES,
@@ -77,7 +77,7 @@ fun JwtProvider.Companion.default(
 다음은 생성된 jwt 를 parsing 하는 작업 중, 오래된 jwt token 에서는 예외가 발생하게 됩니다 (유효하지 않은 jwt 입니다)
 
 ```kotlin
-val jwtProvider = JwtProvider.default()
+val jwtProvider = JwtProviderFactory.default()
 val jwtString = jwtProvider.composer()
     .claim("author", "debop")
     .compose()
@@ -108,11 +108,11 @@ assertFailsWith<SecurityException> {
 서버들에게도 `KeyChain` 정보가 전파되어야 하는데, 이를 위해 1분단위로 Refresh 하도록 합니다.
 또한 현재 서버에서 사용하는 KeyPair 가 아닌 경우에도 `KeyChain.id` (jwt header에 kid로 저장됨) 를 이용하여 저장소에 저장되 `KeyChain` 을 로드하여 사용합니다.
 
-다음 예제는 `RedisKeyChainPersister` 를 지정한 `JwtProvider` 를 사용합니다.
+다음 예제는 `RedisKeyChainRepository` 를 지정한 `JwtProvider` 를 사용합니다.
 
 ```kotlin
-val persister: KeyChainPersister = RedisKeyChainPersister(redissonClient)
-val provider = JwtProvider.default(persister)
+val persister: KeyChainRepository = RedisKeyChainRepository(redissonClient)
+val provider = JwtProviderFactory.default(persister)
 
 // 새로운 KeyChain 을 하나 만들고, Redis 에 추가합니다.
 // 다른 서버에서는 1분마다 조회하여 새로운 KeyChain이 있다면 current 를 변경합니다.

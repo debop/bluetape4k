@@ -2,13 +2,13 @@ package io.bluetape4k.utils.jwt.provider
 
 import io.bluetape4k.utils.jwt.JwtConsts.HEADER_ALGORITHM
 import io.bluetape4k.utils.jwt.JwtConsts.HEADER_KEY_ID
-import io.bluetape4k.utils.jwt.KeyChain
 import io.bluetape4k.utils.jwt.codec.DeflateCodec
 import io.bluetape4k.utils.jwt.codec.GzipCodec
 import io.bluetape4k.utils.jwt.codec.JwtCodecs
 import io.bluetape4k.utils.jwt.codec.Lz4Codec
 import io.bluetape4k.utils.jwt.codec.SnappyCodec
 import io.bluetape4k.utils.jwt.codec.ZstdCodec
+import io.bluetape4k.utils.jwt.keychain.KeyChain
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.CompressionCodecResolver
 import io.jsonwebtoken.JwsHeader

@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.jwt.composer
 
 import io.bluetape4k.core.requireNotBlank
-import io.bluetape4k.utils.jwt.KeyChain
+import io.bluetape4k.utils.jwt.keychain.KeyChain
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.CompressionCodec
 import java.util.*
@@ -14,7 +14,7 @@ inline fun composeJwt(keyChain: KeyChain, initializer: JwtComposerDsl.() -> Unit
 }
 
 @JwtComposerDslMarker
-class JwtComposerDsl(private val keyChain: KeyChain) {
+class JwtComposerDsl(keyChain: KeyChain) {
 
     private val composer = JwtComposer(keyChain)
 
@@ -84,7 +84,7 @@ class JwtComposerDsl(private val keyChain: KeyChain) {
         expirationAfterSeconds?.run { composer.expirationAfterSeconds(this) }
         expirationAfterMinutes?.run { composer.expirationAfterMinutes(this) }
 
-        issuedAt?.run { composer.issuedAt(this) }
+        issuedAt?.run { composer.issuedAt(this) } ?: composer.issuedAtNow()
 
         // Compression
         compressionCodec?.run { composer.setCompressionCodec(this) }

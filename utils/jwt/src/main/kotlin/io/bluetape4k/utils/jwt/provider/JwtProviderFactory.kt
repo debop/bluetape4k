@@ -1,13 +1,12 @@
 package io.bluetape4k.utils.jwt.provider
 
-import io.bluetape4k.utils.jwt.JwtConsts.DEFAULT_KEY_ROTATION_MINUTES
 import io.bluetape4k.utils.jwt.JwtConsts.DefaultKeyChainRepository
 import io.bluetape4k.utils.jwt.JwtConsts.DefaultSignatureAlgorithm
+import io.bluetape4k.utils.jwt.keychain.repository.KeyChainRepository
 import io.bluetape4k.utils.jwt.provider.cache.JCacheJwtProvider
 import io.bluetape4k.utils.jwt.provider.cache.RedissonJwtProvider
 import io.bluetape4k.utils.jwt.provider.cache.RedissonJwtProvider.Companion.DEFAULT_TTL
 import io.bluetape4k.utils.jwt.reader.JwtReaderDto
-import io.bluetape4k.utils.jwt.repository.KeyChainRepository
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import org.redisson.api.RMapCache
@@ -27,9 +26,8 @@ object JwtProviderFactory {
     fun default(
         signatureAlgorithm: SignatureAlgorithm = DefaultSignatureAlgorithm,
         keyChainRepository: KeyChainRepository = DefaultKeyChainRepository,
-        keyRotationMinutes: Int = DEFAULT_KEY_ROTATION_MINUTES,
     ): JwtProvider {
-        return DefaultJwtProvider(signatureAlgorithm, keyChainRepository, keyRotationMinutes)
+        return DefaultJwtProvider(signatureAlgorithm, keyChainRepository)
     }
 
     /**
@@ -57,17 +55,17 @@ object JwtProviderFactory {
      * @param delegate [JwtProvider] 인스턴스
      */
     fun jcached(
-        cache: Cache<String, JwtReaderDto>,
         delegate: JwtProvider,
+        cache: Cache<String, JwtReaderDto>,
     ): JwtProvider {
-        return JCacheJwtProvider(cache, delegate)
+        return JCacheJwtProvider(delegate, cache)
     }
 
     fun redissonCached(
-        cache: RMapCache<String, JwtReaderDto>,
         delegate: JwtProvider,
+        cache: RMapCache<String, JwtReaderDto>,
         ttl: Long = DEFAULT_TTL,
     ): JwtProvider {
-        return RedissonJwtProvider(cache, delegate, ttl)
+        return RedissonJwtProvider(delegate, cache, ttl)
     }
 }

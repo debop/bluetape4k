@@ -1,15 +1,17 @@
-package io.bluetape4k.utils.jwt
+package io.bluetape4k.utils.jwt.keychain
 
 import io.bluetape4k.io.serializer.BinarySerializers
-import io.bluetape4k.utils.jwt.KeyChainDto.Companion.serializer
+import io.bluetape4k.utils.jwt.keychain.KeyChainDto.Companion.serializer
 import io.jsonwebtoken.SignatureAlgorithm
 import java.io.Serializable
 import java.security.KeyPair
+import java.time.Duration
 
 data class KeyChainDto(
     val id: String,
     val algorithmName: String,
     val createdAt: Long,
+    val expiredTtl: Long,
 ): Serializable {
     companion object {
         internal val serializer by lazy { BinarySerializers.LZ4Jdk }
@@ -24,6 +26,7 @@ fun KeyChain.toDto(): KeyChainDto =
         id = id,
         algorithmName = algorithm.name,
         createdAt = createdAt,
+        expiredTtl = expiredTtl,
     ).apply {
         publicKey = serializer.serialize(keyPair.public)
         privateKey = serializer.serialize(keyPair.private)
@@ -38,4 +41,5 @@ fun KeyChainDto.toKeyChain(): KeyChain =
         ),
         id = id,
         createdAt = createdAt,
+        expiredTtl = Duration.ofMillis(expiredTtl)
     )

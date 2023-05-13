@@ -1,7 +1,8 @@
-package io.bluetape4k.utils.jwt
+package io.bluetape4k.utils.jwt.keychain
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.utils.jwt.AbstractJwtTest
 import io.jsonwebtoken.security.Keys
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEqualTo

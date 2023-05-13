@@ -8,7 +8,7 @@ import io.bluetape4k.utils.jwt.JwtConsts.HEADER_ALGORITHM
 import io.bluetape4k.utils.jwt.JwtConsts.HEADER_KEY_ID
 import io.bluetape4k.utils.jwt.JwtConsts.HEADER_TYPE_KEY
 import io.bluetape4k.utils.jwt.JwtConsts.HEADER_TYPE_VALUE
-import io.bluetape4k.utils.jwt.KeyChain
+import io.bluetape4k.utils.jwt.keychain.KeyChain
 import io.bluetape4k.utils.jwt.utils.epochSeconds
 import io.bluetape4k.utils.jwt.utils.millisToSeconds
 import io.jsonwebtoken.Claims
@@ -64,7 +64,7 @@ class JwtComposer(
         if (check) {
             when (name) {
                 Claims.EXPIRATION -> throw IllegalArgumentException("use expiration() instead of claim()")
-                Claims.ISSUED_AT  -> throw IllegalArgumentException("use setIssuedAt() instead of claim()")
+                Claims.ISSUED_AT -> throw IllegalArgumentException("use setIssuedAt() instead of claim()")
                 Claims.NOT_BEFORE -> throw IllegalArgumentException("use notBefore() instead of claim()")
             }
         }
@@ -90,6 +90,9 @@ class JwtComposer(
 
     fun expirationAfterMinutes(minutes: Long) =
         expirationAfterSeconds(minutes * 60)
+
+    fun expirationAfterDays(days: Long) =
+        expirationAfterSeconds(days * 24 * 60 * 60)
 
     fun issuedAt(iat: Date) = claim(Claims.ISSUED_AT, iat.epochSeconds, false)
     fun issuedAtNow() = issuedAt(Date())
@@ -119,6 +122,7 @@ class JwtComposer(
                     log.trace { "set claim. name=$name, value=$value" }
                     claim(name, value)
                 }
+                if (claims[Claims.ISSUED_AT] == null) issuedAtNow()
             }
 
         // CompressionCodec 적용

@@ -17,6 +17,18 @@ class JwtReader(
     val kid: String?
         get() = header<String>("kid")
 
+    /**
+     * Expiration TTL (Time To Live) (Milliseconds)
+     */
+    val expiredTtl: Long
+        get() = expiration?.time ?: Long.MAX_VALUE
+
+    /**
+     * JWT 정보 만료 여부 (see: [getExpiration] )
+     */
+    val isExpired: Boolean
+        get() = expiredTtl <= System.currentTimeMillis()
+
     @JvmName("getHeader")
     fun header(key: String): Any? {
         key.assertNotBlank("key")

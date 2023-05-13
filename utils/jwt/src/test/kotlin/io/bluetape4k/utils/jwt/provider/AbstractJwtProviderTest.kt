@@ -4,15 +4,17 @@ import io.bluetape4k.core.LibraryName
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.jwt.AbstractJwtTest
 import io.bluetape4k.utils.jwt.codec.Lz4Codec
-import io.bluetape4k.utils.jwt.reader.isExpired
-import io.bluetape4k.utils.jwt.repository.KeyChainRepository
-import io.bluetape4k.utils.jwt.repository.inmemory.InMemoryKeyChainRepository
+import io.bluetape4k.utils.jwt.keychain.repository.KeyChainRepository
+import io.bluetape4k.utils.jwt.keychain.repository.inmemory.InMemoryKeyChainRepository
 import io.bluetape4k.utils.jwt.utils.dateOfEpochSeconds
 import io.bluetape4k.utils.jwt.utils.epochSeconds
+import io.jsonwebtoken.JwtException
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.BeforeEach
@@ -38,7 +40,7 @@ abstract class AbstractJwtProviderTest: AbstractJwtTest() {
 
     @BeforeEach
     fun beforeEach() {
-        repository.clear()
+        repository.deleteAll()
         provider.rotate()
     }
 
@@ -54,11 +56,24 @@ abstract class AbstractJwtProviderTest: AbstractJwtTest() {
     }
 
     @Test
-    fun `rotate 를 하면 Current KeyChain이 변경되어야 한다`() {
+    fun `유효기간이 지나지 않은 rotate 를 하면 Current KeyChain이 변경되지 않는다`() {
         val keyChain1 = provider.currentKeyChain()
 
         // rotate 하면 key chain 이 변경됩니다.
-        provider.rotate()
+        provider.rotate().shouldBeFalse()
+
+        val keyChain2 = provider.currentKeyChain()
+
+        keyChain2 shouldBeEqualTo keyChain1
+        provider.currentKeyChain() shouldBeEqualTo keyChain1
+    }
+
+    @Test
+    fun `forced rotate 를 하면 Current KeyChain이 변경되어야 한다`() {
+        val keyChain1 = provider.currentKeyChain()
+
+        // rotate 하면 key chain 이 변경됩니다.
+        provider.forcedRotate().shouldBeTrue()
 
         val keyChain2 = provider.currentKeyChain()
 
@@ -86,6 +101,7 @@ abstract class AbstractJwtProviderTest: AbstractJwtTest() {
     @RepeatedTest(REPEAT_SIZE)
     fun `compose jwt in concurrency`() {
         val customData = randomString(1024)
+        val now = Date()
         val jwts = ArrayDeque<String>()
 
         MultithreadingTester()
@@ -96,6 +112,7 @@ abstract class AbstractJwtProviderTest: AbstractJwtTest() {
                     claim("author", "debop")
                     claim("service", LibraryName)
                     issuer = LibraryName
+                    issuedAt = now
                     claim("custom-data", customData)
                     compressionCodec = compressCodec
                 }
@@ -109,7 +126,7 @@ abstract class AbstractJwtProviderTest: AbstractJwtTest() {
         jwts.size shouldBeEqualTo 16 * 32
         val uniqueJwts = jwts.distinct()
         uniqueJwts.forEach { jwt ->
-            log.debug { "jwt=$jwt" }
+            log.trace { "jwt=$jwt" }
         }
         uniqueJwts.size shouldBeEqualTo 1
     }
@@ -127,18 +144,18 @@ abstract class AbstractJwtProviderTest: AbstractJwtTest() {
         reader.isExpired.shouldBeFalse()
 
         // KeyChain 이 변경되었으므로,
-        provider.rotate()
+        provider.forcedRotate().shouldBeTrue()
 
         val reader2 = provider.parse(jwt)
         log.debug { "kid=${reader2.kid}" }
 
         // 오래된 key chanin을 삭제하도록 충분히 rotate 한다
         repeat(repository.capacity * 2) {
-            provider.rotate()
+            provider.forcedRotate()
         }
 
         // jwt 발급에 쓰인 KeyChain을 provider의 repository에 없으므로, parsing 이 되지 않는다.
-        assertFailsWith<SecurityException> {
+        assertFailsWith<JwtException> {
             provider.parse(jwt)
         }
     }

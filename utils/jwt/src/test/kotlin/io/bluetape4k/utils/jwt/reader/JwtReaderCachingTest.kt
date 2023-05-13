@@ -15,6 +15,7 @@ import org.awaitility.kotlin.atMost
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.junit.jupiter.api.RepeatedTest
+import org.redisson.codec.LZ4Codec
 import java.time.Duration
 import java.util.*
 import javax.cache.Cache
@@ -35,8 +36,8 @@ class JwtReaderCachingTest: AbstractJwtTest() {
 
         private val redissonConfig by lazy {
             RedisServer.Launcher.RedissonLib.getRedissonConfig().apply {
-                // 압축을 하면 데이터 사이즈가 감소하지만, 굳이 할 필요는 없다
-                // codec = LZ4Codec()
+                // 압축을 하면 데이터 사이즈가 감소한다
+                codec = LZ4Codec()
             }
         }
 

@@ -6,8 +6,8 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.replicate
 import io.bluetape4k.utils.jwt.AbstractJwtTest
-import io.bluetape4k.utils.jwt.KeyChain
 import io.bluetape4k.utils.jwt.codec.JwtCodecs
+import io.bluetape4k.utils.jwt.keychain.KeyChain
 import io.bluetape4k.utils.jwt.provider.JwtProviderFactory
 import io.jsonwebtoken.CompressionCodec
 import org.amshove.kluent.shouldBeEqualTo

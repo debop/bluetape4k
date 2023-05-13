@@ -20,6 +20,7 @@ class RedissonJwtProviderTest: AbstractJwtProviderTest() {
         redissonClient.getMapCache<String, JwtReaderDto>("bluetapepe4k:jwt:reaer", LZ4Codec())
     }
 
-    override val provider: JwtProvider =
-        JwtProviderFactory.redissonCached(readerCache, JwtProviderFactory.default(keyChainRepository = repository))
+    private val delegate = JwtProviderFactory.default(keyChainRepository = repository)
+
+    override val provider: JwtProvider = JwtProviderFactory.redissonCached(delegate, readerCache)
 }

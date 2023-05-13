@@ -16,7 +16,8 @@ class JCacheJwtProviderTest: AbstractJwtProviderTest() {
     private val jcache =
         jcacheManager<CaffeineCachingProvider>().getOrCreate<String, JwtReaderDto>("jwt")
 
-    override val provider: JwtProvider =
-        JwtProviderFactory.jcached(jcache, JwtProviderFactory.default(keyChainRepository = repository))
+    private val delegate = JwtProviderFactory.default(keyChainRepository = repository)
+
+    override val provider: JwtProvider = JwtProviderFactory.jcached(delegate, jcache)
 
 }

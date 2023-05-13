@@ -1,7 +1,8 @@
 package io.bluetape4k.utils.jwt
 
-import io.bluetape4k.utils.jwt.repository.inmemory.InMemoryKeyChainRepository
+import io.bluetape4k.utils.jwt.keychain.repository.inmemory.InMemoryKeyChainRepository
 import io.jsonwebtoken.SignatureAlgorithm
+import java.time.Duration
 
 object JwtConsts {
 
@@ -10,7 +11,7 @@ object JwtConsts {
     const val HEADER_KEY_ID = "kid"
     const val HEADER_ALGORITHM = "alg"
 
-    const val DEFAULT_KEY_ROTATION_MINUTES = 0
+    val DEFAULT_KEY_ROTATION_TTL_MILLIS = Duration.ofDays(365).toMinutes()
 
     val DefaultKeyChainRepository by lazy { InMemoryKeyChainRepository() }
     val DefaultSignatureAlgorithm = SignatureAlgorithm.RS256
