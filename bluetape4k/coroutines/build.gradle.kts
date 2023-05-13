@@ -7,7 +7,7 @@ dependencies {
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-utils-idgenerators"))
 
-    compileOnly(Libs.kotlinx_atomicfu)
+    api(Libs.kotlinx_atomicfu)
 
     // Coroutines
     api(Libs.kotlinx_coroutines_core)

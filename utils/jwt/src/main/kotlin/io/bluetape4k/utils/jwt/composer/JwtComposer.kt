@@ -2,7 +2,6 @@ package io.bluetape4k.utils.jwt.composer
 
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.jwt.JwtConsts.HEADER_ALGORITHM
 import io.bluetape4k.utils.jwt.JwtConsts.HEADER_KEY_ID
@@ -13,6 +12,7 @@ import io.bluetape4k.utils.jwt.utils.epochSeconds
 import io.bluetape4k.utils.jwt.utils.millisToSeconds
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.CompressionCodec
+import io.jsonwebtoken.JwtBuilder
 import io.jsonwebtoken.Jwts
 import java.util.*
 
@@ -105,29 +105,30 @@ class JwtComposer(
      * @return A compact URL-safe JWT string.
      */
     fun compose(): String {
-        log.debug { "Compose JWT. keyChain id=${keyChain.id}, algorithm=${keyChain.algorithm.name}" }
+        log.trace { "Compose JWT. keyChain id=${keyChain.id}, algorithm=${keyChain.algorithm.name}" }
 
-        val builder = Jwts.builder()
-            .setHeaderParam(HEADER_KEY_ID, keyChain.id)
-            .setHeaderParam(HEADER_TYPE_KEY, HEADER_TYPE_VALUE)
-            .signWith(keyChain.keyPair.private, keyChain.algorithm)
-            .apply {
-                headers.forEach { (key, value) ->
-                    if (key !in RESERVED_HEADER_NAMES) {
-                        log.trace { "set jwt header. key=$key, value=$value" }
-                        setHeaderParam(key, value)
-                    }
+        return jwt {
+            setHeaderParam(HEADER_KEY_ID, keyChain.id)
+            setHeaderParam(HEADER_TYPE_KEY, HEADER_TYPE_VALUE)
+            signWith(keyChain.keyPair.private, keyChain.algorithm)
+
+            headers.forEach { (key, value) ->
+                if (key !in RESERVED_HEADER_NAMES) {
+                    log.trace { "set jwt header. key=$key, value=$value" }
+                    setHeaderParam(key, value)
                 }
-                claims.forEach { (name, value) ->
-                    log.trace { "set claim. name=$name, value=$value" }
-                    claim(name, value)
-                }
-                if (claims[Claims.ISSUED_AT] == null) issuedAtNow()
             }
+            claims.forEach { (name, value) ->
+                log.trace { "set claim. name=$name, value=$value" }
+                claim(name, value)
+            }
+            if (claims[Claims.ISSUED_AT] == null) issuedAtNow()
 
-        // CompressionCodec 적용
-        compressionCodec?.let { builder.compressWith(it) }
+            compressionCodec?.let { compressWith(it) }
+        }
+    }
 
-        return builder.compact()
+    private inline fun jwt(setup: JwtBuilder.() -> Unit): String {
+        return Jwts.builder().apply(setup).compact()
     }
 }

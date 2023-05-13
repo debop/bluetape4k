@@ -1,5 +1,6 @@
 package io.bluetape4k.collections.eclipse.ranges
 
+import io.bluetape4k.collections.size
 import io.bluetape4k.core.assertPositiveNumber
 import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList
@@ -13,9 +14,7 @@ fun charProgressionOf(start: Char, endInclusive: Char, step: Int = 1): CharProgr
 
 fun CharProgression.toCharArrayList(): CharArrayList {
     val array = CharArrayList(this.count())
-    this.forEachIndexed { index, value ->
-        array[index] = value
-    }
+    this.forEach { array.add(it) }
     return array
 }
 
@@ -23,10 +22,8 @@ fun intProgressionOf(start: Int, endInclusive: Int, step: Int = 1): IntProgressi
     IntProgression.fromClosedRange(start, endInclusive, step)
 
 fun IntProgression.toIntArrayList(): IntArrayList {
-    val array = IntArrayList(this.count())
-    this.forEachIndexed { index, value ->
-        array[index] = value
-    }
+    val array = IntArrayList(this.size())
+    this.forEach { array.add(it) }
     return array
 }
 
@@ -62,7 +59,7 @@ fun IntProgression.partitioning(partitionCount: Int = 1): Sequence<IntProgressio
         }
         endInclusive = when {
             step > 0 -> minOf(endInclusive, this@partitioning.last - 1 * stepSign)
-            else     -> maxOf(endInclusive, this@partitioning.last - 1 * stepSign)
+            else -> maxOf(endInclusive, this@partitioning.last - 1 * stepSign)
         }
         endInclusive += stepSign
 
@@ -76,10 +73,8 @@ fun longProgressionOf(start: Long, endInclusive: Long, step: Long = 1L): LongPro
     LongProgression.fromClosedRange(start, endInclusive, step)
 
 fun LongProgression.toLongArrayList(): LongArrayList {
-    val array = LongArrayList(this.count())
-    this.forEachIndexed { index, value ->
-        array[index] = value
-    }
+    val array = LongArrayList(this.size())
+    this.forEach { array.add(it) }
     return array
 }
 
@@ -115,7 +110,7 @@ fun LongProgression.partitioning(partitionCount: Int = 1): Sequence<LongProgress
         }
         endInclusive = when {
             step > 0 -> minOf(endInclusive, this@partitioning.last - 1 * stepSign)
-            else     -> maxOf(endInclusive, this@partitioning.last - 1 * stepSign)
+            else -> maxOf(endInclusive, this@partitioning.last - 1 * stepSign)
         }
         endInclusive += stepSign
 

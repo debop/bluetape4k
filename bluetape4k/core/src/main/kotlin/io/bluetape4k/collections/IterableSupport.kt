@@ -89,6 +89,17 @@ inline fun <T, R> Iterable<T>.tryMap(mapper: (T) -> R): List<Result<R>> =
 inline fun <T, R: Any> Iterable<T>.mapIfSuccess(mapper: (T) -> R): List<R> =
     mapNotNull { runCatching { mapper(it) }.getOrNull() }
 
+inline fun <T> Iterable<T>.tryForEach(action: (T) -> Unit) {
+    forEach { runCatching { action(it) } }
+}
+
+inline fun <T, R> Iterable<T>.mapCatching(mapper: (T) -> R): List<Result<R>> =
+    map { runCatching { mapper(it) } }
+
+inline fun <T> Iterable<T>.forEachCatching(action: (T) -> Unit): List<Result<Unit>> {
+    return map { runCatching { action(it) } }
+}
+
 
 /**
  * 컬렉션의 요소를 [size]만큼의 켤렉션으로 묶어서 반환합니다. 마지막 켤렉션의 크기는 [size]보다 작을 수 있습니다.

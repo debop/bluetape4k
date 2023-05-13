@@ -67,7 +67,7 @@ suspend inline fun withSingleThread(crossinline block: suspend (executor: Corout
     try {
         block(executor.asCoroutineDispatcher())
     } finally {
-        runCatching { executor.shutdownNow() }
+        runCatching { executor.shutdown() }
     }
 }
 
@@ -97,6 +97,6 @@ suspend inline fun withParallels(
     try {
         block(executors.map { it.asCoroutineDispatcher() })
     } finally {
-        executors.forEachCatching { it.shutdownNow() }
+        executors.forEachCatching { it.shutdown() }
     }
 }

@@ -84,6 +84,35 @@ fun Sequence<Double>.toDoubleArray(): DoubleArray =
         }
     }
 
+/**
+ * [mapper] 실행의 [Result] 를 반환합니다.
+ *
+ * @param mapper 변환 작업
+ * @return
+ */
+inline fun <T, R> Sequence<T>.tryMap(crossinline mapper: (T) -> R): Sequence<Result<R>> =
+    map { runCatching { mapper(it) } }
+
+/**
+ * [mapper] 실행이 성공한 결과만 추출합니다.
+ *
+ * @param mapper 변환 작업
+ * @return
+ */
+inline fun <T, R: Any> Sequence<T>.mapIfSuccess(crossinline mapper: (T) -> R): Sequence<R> =
+    mapNotNull { runCatching { mapper(it) }.getOrNull() }
+
+inline fun <T> Sequence<T>.tryForEach(action: (T) -> Unit) {
+    forEach { runCatching { action(it) } }
+}
+
+inline fun <T, R> Sequence<T>.mapCatching(crossinline mapper: (T) -> R): Sequence<Result<R>> =
+    map { runCatching { mapper(it) } }
+
+inline fun <T> Sequence<T>.forEachCatching(crossinline action: (T) -> Unit): Sequence<Result<Unit>> {
+    return map { runCatching { action(it) } }
+}
+
 
 /**
  * 컬렉션의 요소를 [size]만큼의 켤렉션으로 묶어서 반환합니다. 마지막 켤렉션의 크기는 [size]보다 작을 수 있습니다.

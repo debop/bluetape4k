@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import java.util.*
-import kotlin.collections.ArrayDeque
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.test.assertFailsWith
 
 @Execution(ExecutionMode.SAME_THREAD)
@@ -102,7 +102,7 @@ abstract class AbstractJwtProviderTest: AbstractJwtTest() {
     fun `compose jwt in concurrency`() {
         val customData = randomString(1024)
         val now = Date()
-        val jwts = ArrayDeque<String>()
+        val jwts = CopyOnWriteArrayList<String>()
 
         MultithreadingTester()
             .numThreads(16)

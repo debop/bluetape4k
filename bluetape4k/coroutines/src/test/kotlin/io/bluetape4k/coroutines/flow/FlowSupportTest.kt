@@ -3,7 +3,6 @@ package io.bluetape4k.coroutines.flow
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import io.bluetape4k.support.randomString
 import kotlinx.atomicfu.atomic
@@ -39,7 +38,7 @@ class FlowSupportTest {
     @RepeatedTest(REPEAT_SIZE)
     fun `repeatFlow operator`() = runTest {
         val repeated = repeatFlow(4) {
-            log.debug { "Processing $it" }
+            log.trace { "Processing $it" }
             delay(Random.nextLong(100))
             42
         }
@@ -271,7 +270,7 @@ class FlowSupportTest {
         }
 
         private fun getOrderRows(orderCount: Int = 4, itemCount: Int = 5): Flow<OrderRow> {
-            log.debug { "order=$orderCount, item=$itemCount" }
+            log.trace { "order=$orderCount, item=$itemCount" }
             return fastList(orderCount) { oid ->
                 fastList(itemCount) { itemId ->
                     OrderRow(
