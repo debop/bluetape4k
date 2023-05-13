@@ -21,26 +21,23 @@ class BufferedResumableCollector<T> private constructor(capacity: Int): Resumabl
 
     private val queue: SpscArrayQueue<T> = SpscArrayQueue(capacity)
 
-    private val doneRef = atomic(false)
-    private val done by doneRef
+    private var done by atomic(false)
+    private var cancelled by atomic(false)
 
     private var error: Throwable? = null
 
-    private val availableCounter = atomic(0L)
-    private val available by availableCounter
+    private var _available = atomic(0L)
+    private val available by _available
 
     private val valueReady = Resumable()
 
     private val output: Array<Any?> = Array(1) { null }
     private val limit: Int = capacity - (capacity shr 2)
 
-    private val cancelledRef = atomic(false)
-    private val cancelled by cancelledRef
-
     suspend fun next(value: T) {
         while (!cancelled) {
             if (queue.offer(value)) {
-                if (availableCounter.getAndIncrement() == 0L) {
+                if (_available.getAndIncrement() == 0L) {
                     valueReady.resume()
                 }
                 break
@@ -54,12 +51,12 @@ class BufferedResumableCollector<T> private constructor(capacity: Int): Resumabl
 
     fun error(ex: Throwable?) {
         error = ex
-        doneRef.value = true
+        done = true
         valueReady.resume()
     }
 
     fun complete() {
-        doneRef.value = true
+        done = true
         valueReady.resume()
     }
 
@@ -85,14 +82,14 @@ class BufferedResumableCollector<T> private constructor(capacity: Int): Resumabl
                     collector.emit(output[0] as T)
                 } catch (ex: Throwable) {
                     onCrash?.invoke(this)
-                    cancelledRef.value = true
+                    cancelled = true
                     resume()
 
                     throw ex
                 }
 
                 if (consumed++ == limit) {
-                    availableCounter.addAndGet(-consumed)
+                    _available.addAndGet(-consumed)
                     consumed = 0L
                     resume()
                 }
@@ -100,7 +97,7 @@ class BufferedResumableCollector<T> private constructor(capacity: Int): Resumabl
                 continue
             }
 
-            if (availableCounter.addAndGet(-consumed) == 0L) {
+            if (_available.addAndGet(-consumed) == 0L) {
                 resume()
                 valueReady.await()
             }

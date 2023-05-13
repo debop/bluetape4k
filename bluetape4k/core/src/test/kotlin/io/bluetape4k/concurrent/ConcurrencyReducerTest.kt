@@ -144,8 +144,8 @@ class ConcurrencyReducerTest {
 
     @Test
     fun `when task long running`() {
-        val activeCount = atomic(0)
-        val maxCount = atomic(0)
+        val activeCounter = atomic(0)
+        val maxCounter = atomic(0)
         val queueSize = 11
         val maxConcurrency = 10
         val limiter = ConcurrencyReducer<String>(maxConcurrency, queueSize)
@@ -154,7 +154,7 @@ class ConcurrencyReducerTest {
         val promises = arrayListOf<CompletableFuture<String>>()
 
         repeat(queueSize) {
-            val job = CountingJob(limiter::activeCount, maxCount)
+            val job = CountingJob(limiter::activeCount, maxCounter)
             jobs.add(job)
             promises += limiter.add(job)
         }
@@ -168,12 +168,12 @@ class ConcurrencyReducerTest {
         }
 
         promises.all { it.isDone }.shouldBeTrue()
-        activeCount.value shouldBeEqualTo 0
+        activeCounter.value shouldBeEqualTo 0
         limiter.activeCount shouldBeEqualTo 0
         limiter.queuedCount shouldBeEqualTo 0
         limiter.remainingActiveCapacity shouldBeEqualTo maxConcurrency
         limiter.remainingQueueCapacity shouldBeEqualTo queueSize
-        maxCount.value shouldBeEqualTo maxConcurrency
+        maxCounter.value shouldBeEqualTo maxConcurrency
     }
 
     @Test

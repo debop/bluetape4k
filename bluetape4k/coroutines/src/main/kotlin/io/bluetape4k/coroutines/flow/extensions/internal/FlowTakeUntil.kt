@@ -30,8 +30,7 @@ internal class FlowTakeUntil<T, U>(
     class StopException: CancellationException()
 
     override suspend fun collectSafely(collector: FlowCollector<T>) = coroutineScope {
-        val gateRef = atomic(false)
-        var gate by gateRef
+        var gate by atomic(false)
 
         val job = launch {
             try {

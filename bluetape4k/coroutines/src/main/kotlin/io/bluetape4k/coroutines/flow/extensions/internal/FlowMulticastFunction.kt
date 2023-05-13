@@ -23,7 +23,7 @@ internal class FlowMulticastFunction<T, R>(
 
     override suspend fun collectSafely(collector: FlowCollector<R>) {
         coroutineScope {
-            val cancelled = atomic(false)
+            var cancelled by atomic(false)
             val subject = subjectSupplier()
             val result = transform(subject)
 
@@ -32,7 +32,7 @@ internal class FlowMulticastFunction<T, R>(
             // publish
             launch {
                 try {
-                    result.onCompletion { cancelled.value = true }
+                    result.onCompletion { cancelled = true }
                         .collect {
                             inner.next(it)
                         }
@@ -46,11 +46,11 @@ internal class FlowMulticastFunction<T, R>(
             launch {
                 try {
                     source.collect {
-                        if (cancelled.value) {
+                        if (cancelled) {
                             throw CancellationException()
                         }
                         subject.emit(it)
-                        if (cancelled.value) {
+                        if (cancelled) {
                             throw CancellationException()
                         }
                     }

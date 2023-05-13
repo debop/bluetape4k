@@ -22,7 +22,7 @@ internal class FlowGroupBy<T, K, V>(
 
     override suspend fun collectSafely(collector: FlowCollector<GroupedFlow<K, V>>) {
         val map = ConcurrentHashMap<K, FlowGroup<K, V>>()
-        val mainStopped = atomic(false)
+        var mainStopped by atomic(false)
 
         try {
             source.collect {
@@ -31,14 +31,14 @@ internal class FlowGroupBy<T, K, V>(
                 if (group != null) {
                     group.next(valueSelector(it))
                 } else {
-                    if (!mainStopped.value) {
+                    if (!mainStopped) {
                         group = FlowGroup(k, map)
                         map[k] = group
 
                         try {
                             collector.emit(group)
                         } catch (e: CancellationException) {
-                            mainStopped.value = true
+                            mainStopped = true
                             if (map.size == 0) {
                                 throw CancellationException()
                             }
@@ -64,17 +64,18 @@ internal class FlowGroupBy<T, K, V>(
         private val map: ConcurrentMap<K, FlowGroup<K, V>>,
     ): AbstractFlow<V>(), GroupedFlow<K, V> {
 
+        @Volatile
         private var value: V = uninitialized()
         private var error: Throwable? = null
 
-        private val hasValue = atomic(false)
-        private val done = atomic(false)
-        private val cancelled = atomic(false)
+        private var hasValue by atomic(false)
+        private var done by atomic(false)
+        private var cancelled by atomic(false)
 
         private val consumerReady = Resumable()
         private val valueReady = Resumable()
 
-        private val once = atomic(false)
+        private var once = atomic(false)
 
         override suspend fun collectSafely(collector: FlowCollector<V>) {
             if (!once.compareAndSet(false, true)) {
@@ -84,8 +85,8 @@ internal class FlowGroupBy<T, K, V>(
             consumerReady.resume()
 
             while (true) {
-                val d = done.value
-                val has = hasValue.value
+                val d = done
+                val has = hasValue
 
                 if (d && !has) {
                     error?.let { throw it }
@@ -95,13 +96,13 @@ internal class FlowGroupBy<T, K, V>(
                 if (has) {
                     val v = value
                     value = uninitialized()
-                    hasValue.value = false
+                    hasValue = false
 
                     try {
                         collector.emit(v)
                     } catch (e: Throwable) {
                         map.remove(this.key)
-                        cancelled.value = true
+                        cancelled = true
                         consumerReady.resume()
                         throw e
                     }
@@ -115,22 +116,22 @@ internal class FlowGroupBy<T, K, V>(
         }
 
         suspend fun next(value: V) {
-            if (cancelled.value) return
+            if (cancelled) return
 
             consumerReady.await()
             this.value = value
-            this.hasValue.value = true
+            this.hasValue = true
             valueReady.resume()
         }
 
         fun error(ex: Throwable) {
             error = ex
-            done.value = true
+            done = true
             valueReady.resume()
         }
 
         fun complete() {
-            done.value = true
+            done = true
             valueReady.resume()
         }
     }

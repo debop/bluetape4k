@@ -83,20 +83,19 @@ class NearCoCache<K: Any, V: Any> private constructor(
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         val job = scope.launch {
             val entrySizer = atomic(0)
-            var entrySize by entrySizer
 
             while (!isClosed()) {
                 runCatching {
                     delay(checkExpiryPeriod)
                     log.trace { "backCache의 cache entry가 expire 되었는지 검사합니다... check expiration period=$checkExpiryPeriod" }
-                    entrySize = 0
+                    entrySizer.value = 0
                     val elapsed = measureTimeMillis {
                         entries().chunked(100)
                             .onEach { entries ->
                                 runCatching {
                                     if (!isClosed()) {
                                         val frontKeys = entries.map { it.key }.toSet()
-                                        entrySize += frontKeys.size
+                                        entrySizer.addAndGet(frontKeys.size)
 
                                         val backKeys = backCache.getAll(frontKeys).map { it.key }.toSet()
                                         val keysToRemove = frontKeys - backKeys
@@ -111,7 +110,7 @@ class NearCoCache<K: Any, V: Any> private constructor(
                             }
                             .collect()
                     }
-                    log.trace { "bachCache cache entry expire 검사 완료. entrySize=$entrySize, elapsed=$elapsed msec" }
+                    log.trace { "bachCache cache entry expire 검사 완료. entrySize=${entrySizer.value}, elapsed=$elapsed msec" }
                 }
             }
         }

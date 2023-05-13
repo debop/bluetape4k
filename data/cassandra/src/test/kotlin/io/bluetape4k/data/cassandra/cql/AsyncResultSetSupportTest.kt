@@ -1,5 +1,6 @@
 package io.bluetape4k.data.cassandra.cql
 
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.concurrent.sequence
 import io.bluetape4k.data.cassandra.AbstractCassandraTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
@@ -30,7 +31,7 @@ class AsyncResultSetSupportTest: AbstractCassandraTest() {
             session.executeSuspending("TRUNCATE bulks")
 
             val ps = session.prepareSuspending("INSERT INTO bulks(id, name) VALUES(?, ?)")
-            val futures = List(SIZE) {
+            val futures = fastList(SIZE) {
                 val id = it.toString()
                 val name = faker.name().username()
 
@@ -44,7 +45,6 @@ class AsyncResultSetSupportTest: AbstractCassandraTest() {
     fun `load as flow`() = runSuspendWithIO {
         log.debug { "Load all bulks" }
         val counter = atomic(0)
-        val count by counter
 
         val flow = session.executeSuspending("SELECT * FROM bulks").asFlow()
         flow
@@ -59,8 +59,8 @@ class AsyncResultSetSupportTest: AbstractCassandraTest() {
             }
             .collect()
 
-        log.debug { "Loaded record count=$count" }
-        count shouldBeEqualTo SIZE
+        log.debug { "Loaded record count=${counter.value}" }
+        counter.value shouldBeEqualTo SIZE
     }
 
     data class Bulk(val id: String, val name: String): Serializable
@@ -69,7 +69,7 @@ class AsyncResultSetSupportTest: AbstractCassandraTest() {
     fun `load as flow with row mapper`() = runSuspendWithIO {
         log.debug { "Load all bulks" }
         val counter = atomic(0)
-        val count by counter
+
         val flow = session
             .executeSuspending("SELECT * FROM bulks")
             .asFlow { row -> Bulk(row.getStringOrEmpty(0), row.getStringOrEmpty(1)) }
@@ -82,7 +82,7 @@ class AsyncResultSetSupportTest: AbstractCassandraTest() {
             }
             .collect()
 
-        log.debug { "Loaded record count=$count" }
-        count shouldBeEqualTo SIZE
+        log.debug { "Loaded record count=${counter.value}" }
+        counter.value shouldBeEqualTo SIZE
     }
 }

@@ -273,8 +273,8 @@ object Libs {
 
     // Coroutines Flow를 Reactor처럼 테스트 할 수 있도록 해줍니다.
     // 참고: https://github.com/cashapp/turbine/
-    val turbine get() = "app.cash.turbine:turbine:0.12.1"
-    val turbine_jvm get() = "app.cash.turbine:turbine-jvm:0.12.1"
+    val turbine get() = "app.cash.turbine:turbine:0.13.0"
+    val turbine_jvm get() = "app.cash.turbine:turbine-jvm:0.13.0"
 
     fun kotlinxSerialization(module: String, version: String = Versions.kotlinx_serialization) =
         "org.jetbrains.kotlinx:kotlinx-serialization-$module:$version"

@@ -22,8 +22,8 @@ class PublishSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
         private val TERMINATED = arrayOf<ResumableCollector<Any>>()
     }
 
-    private val atomicCollectors = atomic(EMPTY as Array<ResumableCollector<T>>)
-    private val collectors by atomicCollectors
+    private val _collectors = atomic(EMPTY as Array<ResumableCollector<T>>)
+    private val collectors by _collectors
 
     private var error: Throwable? = null
 
@@ -67,7 +67,7 @@ class PublishSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
     override suspend fun emitError(ex: Throwable?) {
         if (this.error == null) {
             this.error = ex
-            val colls = atomicCollectors.getAndSet(TERMINATED as Array<ResumableCollector<T>>)
+            val colls = _collectors.getAndSet(TERMINATED as Array<ResumableCollector<T>>)
             colls.forEach { collector ->
                 runCatching { collector.error(ex) }
             }
@@ -78,7 +78,7 @@ class PublishSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
      * Indicate no further items will be emitted
      */
     override suspend fun complete() {
-        val colls = atomicCollectors.getAndSet(TERMINATED as Array<ResumableCollector<T>>)
+        val colls = _collectors.getAndSet(TERMINATED as Array<ResumableCollector<T>>)
         colls.forEach { collector ->
             runCatching { collector.complete() }
         }
@@ -94,7 +94,7 @@ class PublishSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
             val n = a.size
             val b = a.copyOf(n + 1)
             b[n] = inner
-            if (atomicCollectors.compareAndSet(a, b as Array<ResumableCollector<T>>)) {
+            if (_collectors.compareAndSet(a, b as Array<ResumableCollector<T>>)) {
                 return true
             }
         }
@@ -119,7 +119,7 @@ class PublishSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
                 a.copyInto(b, 0, 0, j)
                 a.copyInto(b, j, j + 1)
             }
-            if (atomicCollectors.compareAndSet(a, b as Array<ResumableCollector<T>>)) {
+            if (_collectors.compareAndSet(a, b as Array<ResumableCollector<T>>)) {
                 return
             }
         }

@@ -18,9 +18,9 @@ class JavaStreamSupportTest {
 
     @Test
     fun `Sequence as ParallelStream`() {
-        val count = atomic(0)
-        (1..1000).asParallelStream().forEach { count.incrementAndGet() }
-        count.value shouldBeEqualTo 1000
+        val counter = atomic(0)
+        (1..1000).asParallelStream().forEach { counter.incrementAndGet() }
+        counter.value shouldBeEqualTo 1000
     }
 
     @Test

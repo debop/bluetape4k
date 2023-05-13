@@ -32,11 +32,11 @@ class CacheExamples {
         cache.eventPublisher.onEvent { log.debug { "onEvent=$it" } }
         cache.eventPublisher.onError { log.warn(it.throwable) { "OnError. Event=${it}" } }
 
-        val callCounter = atomic(0)
-        val called by callCounter
+        val _called = atomic(0)
+        val called by _called
 
         val function: () -> String = {
-            callCounter.incrementAndGet()
+            _called.incrementAndGet()
             "Do something"
         }
 

@@ -1,5 +1,6 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
+import io.bluetape4k.coroutines.flow.exception.FlowException
 import io.bluetape4k.coroutines.flow.extensions.Resumable
 import io.bluetape4k.coroutines.flow.extensions.ResumableCollector
 import io.bluetape4k.logging.KLogging
@@ -24,8 +25,7 @@ class MulticastSubject<T> private constructor(
     companion object: KLogging() {
         private val EMPTY = arrayOf<ResumableCollector<Any>>()
         private val TERMINATED = arrayOf<ResumableCollector<Any>>()
-
-        private val DONE = Throwable("Subject completed")
+        private val DONE = FlowException("Subject completed")
 
         operator fun <T> invoke(expectedCollectors: Int): MulticastSubject<T> {
             return MulticastSubject(expectedCollectors.coerceAtLeast(1))
@@ -37,12 +37,11 @@ class MulticastSubject<T> private constructor(
     private val collectors by collectorsRef
 
     private val producer = Resumable()
-    private val remainingCollectorsRef = atomic(expectedCollectors)
-    private val remainingCollectors by remainingCollectorsRef
 
-    private val terminatedRef = atomic<Throwable?>(null)
-    private val terminated by terminatedRef
+    private val _remainingCollectors = atomic(expectedCollectors)
+    private val remainingCollectors by _remainingCollectors
 
+    private var terminated: Throwable? = null
 
     override val hasCollectors: Boolean
         get() = collectors.isNotEmpty()
@@ -63,7 +62,7 @@ class MulticastSubject<T> private constructor(
 
     @Suppress("UNCHECKED_CAST")
     override suspend fun emitError(ex: Throwable?) {
-        terminatedRef.value = ex
+        terminated = ex
         collectorsRef.getAndSet(TERMINATED as Array<ResumableCollector<T>>).forEach { collector ->
             try {
                 collector.error(ex)
@@ -75,7 +74,7 @@ class MulticastSubject<T> private constructor(
 
     @Suppress("UNCHECKED_CAST")
     override suspend fun complete() {
-        terminatedRef.value = DONE
+        terminated = DONE
         collectorsRef.getAndSet(TERMINATED as Array<ResumableCollector<T>>).forEach { collector ->
             try {
                 collector.complete()
@@ -93,7 +92,7 @@ class MulticastSubject<T> private constructor(
                 if (a == 0) {
                     break
                 }
-                if (remainingCollectorsRef.compareAndSet(a, a - 1)) {
+                if (_remainingCollectors.compareAndSet(a, a - 1)) {
                     if (a == 1) {
                         producer.resume()
                     }

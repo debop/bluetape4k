@@ -23,26 +23,26 @@ class FlowFlatMapDrop<T, R>(
     override suspend fun collectSafely(collector: FlowCollector<R>) {
         coroutineScope {
             val resume = Resumable()
-            val consumerReady = atomic(true)
-            val value = atomic<T?>(null)
-            val hasValue = atomic(false)
-            val done = atomic(false)
-            val error = atomic<Throwable?>(null)
+            var consumerReady by atomic(true)
+            var value by atomic<T?>(null)
+            var hasValue by atomic(false)
+            var done by atomic(false)
+            var error by atomic<Throwable?>(null)
 
             val job = launch {
                 try {
                     source.collect { item ->
                         log.trace { "source collecting ... $item" }
-                        if (consumerReady.value) {
-                            consumerReady.value = false
-                            value.lazySet(item)
-                            hasValue.value = true
+                        if (consumerReady) {
+                            consumerReady = false
+                            value = item
+                            hasValue = true
                             resume.resume()
                         }
                     }
-                    done.value = true
+                    done = true
                 } catch (ex: Throwable) {
-                    error.value = ex
+                    error = ex
                 }
                 resume.resume()
             }
@@ -50,16 +50,16 @@ class FlowFlatMapDrop<T, R>(
             while (coroutineContext.isActive) {
                 resume.await()
 
-                error.value?.let { if (!hasValue.value) throw it }
+                error?.let { if (!hasValue) throw it }
 
-                if (done.value && !hasValue.value) {
+                if (done && !hasValue) {
                     break
                 }
 
-                if (hasValue.value) {
-                    val v = value.value!!
-                    value.lazySet(null)
-                    hasValue.value = false
+                if (hasValue) {
+                    val v = value!!
+                    value = null
+                    hasValue = false
 
                     try {
                         mapper(v)
@@ -71,7 +71,7 @@ class FlowFlatMapDrop<T, R>(
                     }
                 }
 
-                consumerReady.value = true
+                consumerReady = true
             }
         }
     }

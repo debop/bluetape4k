@@ -112,6 +112,15 @@ fun <T> Flow<T>.concatWithEx(other: Flow<T>): Flow<T> {
 fun <T, U> Flow<T>.takeUntil(other: Flow<U>): Flow<T> =
     FlowTakeUntil(this, other)
 
+fun <T> Flow<T>.takeUntil(delay: Duration): Flow<T> =
+    FlowTakeUntil(this, delayedFlow(delay))
+
+internal fun delayedFlow(delay: Duration): Flow<Long> =
+    flow {
+        delay(delay.toMillis())
+        emit(0L)
+    }
+
 
 fun flowOfRange(start: Int, count: Int): Flow<Int> =
     (start until start + count).asFlow()
@@ -121,15 +130,6 @@ fun IntRange.asFlow(): Flow<Int> = flow {
         emit(it)
     }
 }
-
-/**
- * Signal 0L after the given time passed
- */
-fun timer(timeout: Long, unit: TimeUnit): Flow<Long> =
-    flow {
-        delay(unit.toMillis(timeout))
-        emit(0L)
-    }
 
 /**
  * Signal 0L after the given time passed

@@ -43,7 +43,6 @@ class BehaviorSubject<T> private constructor(
     override val hasCollectors: Boolean get() = collectors.value.isNotEmpty()
     override val collectorCount: Int get() = collectors.value.size
 
-
     override suspend fun emit(value: T) {
         if (current == DONE)
             return

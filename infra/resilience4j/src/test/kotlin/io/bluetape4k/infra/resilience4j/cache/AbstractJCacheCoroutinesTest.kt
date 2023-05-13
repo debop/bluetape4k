@@ -44,10 +44,10 @@ abstract class AbstractJCacheCoroutinesTest {
         cache.eventPublisher
             .onError { evt -> log.error(evt.throwable) { "Fail to get cache. $evt" } }
 
-        val callCounter = atomic(0)
-        val called by callCounter
+        val _called = atomic(0)
+        val called by _called
         val function: suspend (String) -> String = { name: String ->
-            callCounter.incrementAndGet()
+            _called.incrementAndGet()
             log.debug { "Cache function invoked. name=$name, called=$called" }
             greeting(name)
         }
@@ -76,13 +76,13 @@ abstract class AbstractJCacheCoroutinesTest {
 
     @Test
     fun `decorate completableFuture function for Cache`() {
-        val callCounter = atomic(0L)
-        val called by callCounter
+        val _called = atomic(0L)
+        val called by _called
         val function: (String) -> CompletableFuture<String> = { name ->
             futureOf {
                 log.trace { "Run function ... call count=${called + 1}" }
                 Thread.sleep(100L)
-                callCounter.incrementAndGet()
+                _called.incrementAndGet()
                 "Hi $name!"
             }
         }
@@ -117,11 +117,11 @@ abstract class AbstractJCacheCoroutinesTest {
         coCache.eventPublisher
             .onError { evt -> log.error { "Fail to get cache. $evt" } }
 
-        val callCounter = atomic(0)
-        val called by callCounter
+        val _called = atomic(0)
+        val called by _called
 
         val loader: suspend (String) -> String = { name: String ->
-            callCounter.incrementAndGet()
+            _called.incrementAndGet()
             log.debug { "Cached item... called=$called" }
             delay(1)
             greeting(name)

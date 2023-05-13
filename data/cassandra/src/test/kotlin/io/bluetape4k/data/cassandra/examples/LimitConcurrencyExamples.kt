@@ -39,8 +39,8 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
     private val semaphore = Semaphore(IN_FLIGHT_REQUESTS)
     private val requestLatch = CountDownLatch(TOTAL_NUMBER_OF_INSERTS)
 
-    private val insertAsyncCounter = atomic(0)
-    private var insertAsyncCount by insertAsyncCounter
+    private val _insertAsyncCount = atomic(0)
+    private val insertAsyncCount by _insertAsyncCount
 
     @BeforeAll
     fun setup() {
@@ -73,7 +73,6 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
         val pst = prepareStatemet(session)
 
         val insertsCounter = atomic(0)
-        var insertsCount by insertsCounter
         val executor = Executors.newFixedThreadPool(CONCURRENCY_LEVEL)
 
         repeat(TOTAL_NUMBER_OF_INSERTS) {
@@ -95,7 +94,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
 
         requestLatch.await(10, TimeUnit.SECONDS)
 
-        println("Finish executing $insertsCount queries with a concurrency level of $CONCURRENCY_LEVEL")
+        println("Finish executing ${insertsCounter.value} queries with a concurrency level of $CONCURRENCY_LEVEL")
         executor.shutdown()
         executor.awaitTermination(10, TimeUnit.SECONDS)
     }
@@ -144,7 +143,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
 
         return session.executeAsync(stmt)
             .whenComplete { _, err ->
-                if (err == null) insertAsyncCounter.incrementAndGet()
+                if (err == null) _insertAsyncCount.incrementAndGet()
                 else err.printStackTrace()
             }
     }

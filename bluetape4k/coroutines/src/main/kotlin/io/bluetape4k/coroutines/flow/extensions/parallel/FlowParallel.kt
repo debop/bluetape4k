@@ -1,13 +1,12 @@
 package io.bluetape4k.coroutines.flow.extensions.parallel
 
 import io.bluetape4k.coroutines.flow.extensions.Resumable
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.launch
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Dispatches source values to a given number of parallel collectors in a round-robin fashion.
@@ -34,11 +33,11 @@ internal class FlowParallel<T>(
                 }
             }
 
-            val index = AtomicInteger()
+            val index = atomic(0)
 
             try {
                 source.collect {
-                    var idx = index.get()
+                    var idx = index.value
 
                     outer@
                     while (true) {
@@ -73,7 +72,7 @@ internal class FlowParallel<T>(
 
     class RailCollector<T>(private val resumeGenerator: Resumable): Resumable() {
 
-        private val consumerReady = AtomicBoolean()
+        private var consumerReady by atomic(false)
 
         @Suppress("UNCHECKED_CAST")
         private var value: T = null as T
@@ -86,8 +85,8 @@ internal class FlowParallel<T>(
         private var done: Boolean = false
 
         fun next(value: T): Boolean {
-            if (consumerReady.get()) {
-                consumerReady.set(false)
+            if (consumerReady) {
+                consumerReady = false
                 this.value = value
                 this.hasValue = true
                 resume()
@@ -109,7 +108,7 @@ internal class FlowParallel<T>(
 
         suspend fun drain(collector: FlowCollector<T>) {
             while (true) {
-                consumerReady.set(true)
+                consumerReady = true
                 resumeGenerator.resume()
 
                 await()

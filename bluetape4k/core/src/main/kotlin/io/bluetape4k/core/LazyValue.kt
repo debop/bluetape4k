@@ -1,15 +1,13 @@
 package io.bluetape4k.core
 
-import kotlinx.atomicfu.AtomicBoolean
 import kotlinx.atomicfu.atomic
 
 class LazyValue<T: Any>(private val factory: () -> T): AbstractValueObject() {
 
-    private val initialized: AtomicBoolean = atomic(false)
+    var isInitialized: Boolean by atomic(false)
+        private set
 
-    val isInitialized: Boolean by initialized
-
-    val value: T by lazy { factory.invoke().apply { initialized.value = true } }
+    val value: T by lazy { factory.invoke().apply { isInitialized = true } }
 
     fun <S: Any> map(mapper: (T) -> S): LazyValue<S> = LazyValue { mapper(value) }
 
@@ -19,7 +17,7 @@ class LazyValue<T: Any>(private val factory: () -> T): AbstractValueObject() {
     override fun hashCode(): Int = value.hashCode()
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        return other != null && super.equals(other)
     }
 
     override fun equalProperties(other: Any): Boolean {

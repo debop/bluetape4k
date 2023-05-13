@@ -3,9 +3,7 @@ package io.bluetape4k.examples.coroutines.guide
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeoutOrNull
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
@@ -60,7 +58,7 @@ class SuspendExamples {
     }
 
     @Test
-    fun `execute suspend function`() = runTest {
+    fun `execute suspend function`() = runSuspendTest {
         val result = service.executeWithDelay(Random.nextLong(10))
         result shouldBeEqualTo 42
     }
@@ -68,11 +66,9 @@ class SuspendExamples {
     @Test
     fun `execute suspend function with timeout`() = runSuspendTest {
         // 지정된 시간 안에 결과가 없다면 null을 반환합니다.
-        coroutineScope {
-            val result = withTimeoutOrNull(10) {
-                service.executeWithDelay(100)
-            }
-            result.shouldBeNull()
+        val result = withTimeoutOrNull(10) {
+            service.executeWithDelay(1000)
         }
+        result.shouldBeNull()
     }
 }

@@ -32,7 +32,6 @@ class AtomicRoundrobinTest {
 
     @Test
     fun `set new value`() {
-
         val atomic = AtomicIntRoundrobin(16)
 
         atomic.next() shouldBeEqualTo 1

@@ -12,7 +12,7 @@ plugins {
     kotlin("plugin.noarg") version Versions.kotlin apply false
     kotlin("plugin.jpa") version Versions.kotlin apply false
     kotlin("plugin.serialization") version Versions.kotlin apply false
-    kotlin("plugin.atomicfu") version Versions.kotlin apply false
+    kotlin("plugin.atomicfu") version Versions.kotlin
     kotlin("kapt") version Versions.kotlin apply false
 
     id(Plugins.dependency_management) version Plugins.Versions.dependency_management
@@ -43,17 +43,6 @@ subprojects {
     if (name == "bluetape4k-bom") {
         return@subprojects
     }
-
-//    configurations.all {
-//        if (name.contains("kapt", true) || name.contains("proto", true)) {
-//            attributes.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage::class.java, Usage.JAVA_RUNTIME))
-//        }
-//    }
-//    configurations.forEach {
-//        if (it.name.contains("productionRuntimeClasspath", true)) {
-//            it.attributes.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage::class.java, Usage.JAVA_RUNTIME))
-//        }
-//    }
 
     apply {
         plugin<JavaLibraryPlugin>()

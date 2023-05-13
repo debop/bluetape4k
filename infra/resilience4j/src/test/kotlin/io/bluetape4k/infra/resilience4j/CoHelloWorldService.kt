@@ -7,32 +7,32 @@ import kotlinx.coroutines.delay
 
 class CoHelloWorldService {
 
-    private val invocationCounter = atomic(0)
-    val invocationCount: Int by invocationCounter
+    private val _invocationCount = atomic(0)
+    val invocationCount by _invocationCount
 
     private val sync = Channel<Unit>(Channel.UNLIMITED)
 
     suspend fun returnHelloWorld(): String {
         delay(1) // so tests are fast, but compiler agrees suspend modifier is required
-        invocationCounter.incrementAndGet()
+        _invocationCount.incrementAndGet()
         return "Hello world"
     }
 
     suspend fun returnMessage(message: String): String {
         delay(1) // so tests are fast, but compiler agrees suspend modifier is required
-        invocationCounter.incrementAndGet()
+        _invocationCount.incrementAndGet()
         return message
     }
 
     suspend fun throwException() {
         delay(1) // so tests are fast, but compiler agrees suspend modifier is required
-        invocationCounter.incrementAndGet()
+        _invocationCount.incrementAndGet()
         error("test exception")
     }
 
     suspend fun throwExceptionWithMessage(message: String): String {
         delay(1)
-        invocationCounter.incrementAndGet()
+        _invocationCount.incrementAndGet()
         error(message)
     }
 
@@ -40,7 +40,7 @@ class CoHelloWorldService {
      * Suspend until a matching [proceed] call.
      */
     suspend fun await() {
-        invocationCounter.incrementAndGet()
+        _invocationCount.incrementAndGet()
         sync.receive()
     }
 

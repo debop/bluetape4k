@@ -32,8 +32,7 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
     private val collectorsRef = atomic(EMPTY as Array<InnerCollector<T>>)
     private val collectors by collectorsRef
 
-    @Volatile
-    private var done: Boolean = false
+    private var done: Boolean by atomic(false)
 
     constructor() {
         buffer = UnboundedReplayBuffer()
@@ -163,11 +162,8 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
 
         private val list = ArrayDeque<T>()
 
-        private val doneRef = atomic(false)
-        private val done by doneRef
-
-        private val errorRef = atomic<Throwable?>(null)
-        private val error by errorRef
+        private var done by atomic(false)
+        private var error by atomic<Throwable?>(null)
 
         override fun emit(value: T) {
             list.add(value)
@@ -175,12 +171,12 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
         }
 
         override fun error(e: Throwable?) {
-            errorRef.value = e
-            doneRef.value = true
+            error = e
+            done = true
         }
 
         override fun complete() {
-            doneRef.value = true
+            done = true
         }
 
         override suspend fun replay(consumer: InnerCollector<T>) {
@@ -216,14 +212,13 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
 
         private var size: Int = 0
 
-        private val doneRef = atomic(false)
-        private val done by doneRef
-
-        private val errorRef = atomic<Throwable?>(null)
-        private val error by errorRef
+        private var done by atomic(false)
+        private var error by atomic<Throwable?>(null)
 
         @Volatile
         private var head: Node<T>
+
+        @Volatile
         private var tail: Node<T>
 
         init {
@@ -245,12 +240,12 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
         }
 
         override fun error(e: Throwable?) {
-            errorRef.value = e
-            doneRef.value = true
+            error = e
+            done = true
         }
 
         override fun complete() {
-            doneRef.value = true
+            done = true
         }
 
         @Suppress("UNCHECKED_CAST")
@@ -298,8 +293,7 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
     ): Buffer<T> {
         private var size: Int = 0
 
-        @Volatile
-        private var done: Boolean = false
+        private var done: Boolean by atomic(false)
 
         @Volatile
         private var error: Throwable? = null

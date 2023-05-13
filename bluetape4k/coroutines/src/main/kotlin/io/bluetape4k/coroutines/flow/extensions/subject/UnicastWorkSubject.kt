@@ -18,16 +18,12 @@ class UnicastWorkSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
         val terminated = FlowNoElementException("No more elements")
     }
 
+    val resumable = Resumable()
     private val queue = ConcurrentLinkedQueue<T>()
 
-    private val terminalRef = atomic<Throwable?>(null)
-    val terminal by terminalRef
-
-    val resumable = Resumable()
-
+    private var terminal by atomic<Throwable?>(null)
     private val currentRef = atomic<FlowCollector<T>?>(null)
-    val current by currentRef
-
+    private val current by currentRef
 
     override val hasCollectors: Boolean
         get() = current != null
@@ -78,12 +74,12 @@ class UnicastWorkSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
 
 
     override suspend fun emitError(ex: Throwable?) {
-        terminalRef.value = ex
+        terminal = ex
         resumable.resume()
     }
 
     override suspend fun complete() {
-        terminalRef.value = terminated
+        terminal = terminated
         resumable.resume()
     }
 }

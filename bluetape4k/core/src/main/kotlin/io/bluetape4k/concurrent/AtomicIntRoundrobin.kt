@@ -17,8 +17,8 @@ class AtomicIntRoundrobin private constructor(val maximum: Int) {
         }
     }
 
-    private val valueSequencer = atomic(0)
-    private var currentValue: Int by valueSequencer
+    private val _currentValue = atomic(0)
+    private val currentValue: Int by _currentValue
 
     private val synchronizedObject = Any()
 
@@ -26,13 +26,13 @@ class AtomicIntRoundrobin private constructor(val maximum: Int) {
 
     fun set(value: Int) {
         value.requireInRange(0, maximum - 1, "value")
-        currentValue = value
+        _currentValue.value = value
     }
 
     fun next(): Int = synchronized(synchronizedObject) {
-        valueSequencer.incrementAndGet()
+        _currentValue.incrementAndGet()
         if (currentValue >= maximum) {
-            valueSequencer.value = 0
+            _currentValue.value = 0
         }
         currentValue
     }

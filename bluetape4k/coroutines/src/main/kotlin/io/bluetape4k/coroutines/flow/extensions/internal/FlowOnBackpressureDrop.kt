@@ -17,35 +17,35 @@ internal class FlowOnBackpressureDrop<T>(private val source: Flow<T>): AbstractF
 
     override suspend fun collectSafely(collector: FlowCollector<T>) {
         coroutineScope {
-            val consumerReady = atomic(false)
             val producerReady = Resumable()
+            var consumerReady by atomic(false)
             val value = atomic<T>(uninitialized())
-            val done = atomic(false)
-            val error = atomic<Throwable?>(null)
+            var done by atomic(false)
+            var error by atomic<Throwable?>(null)
 
             launch {
                 try {
                     source.collect { item ->
-                        if (consumerReady.value) {
-                            value.value = item
-                            consumerReady.value = false
+                        if (consumerReady) {
+                            value.lazySet(item)
+                            consumerReady = false
                             producerReady.resume()
                         }
                     }
-                    done.value = true
+                    done = true
                 } catch (e: Throwable) {
-                    error.value = e
+                    error = e
                 }
                 producerReady.resume()
             }
 
             while (true) {
-                consumerReady.value = true
+                consumerReady = true
                 producerReady.await()
 
-                error.value?.let { throw it }
+                error?.let { throw it }
 
-                if (done.value) {
+                if (done) {
                     break
                 }
 

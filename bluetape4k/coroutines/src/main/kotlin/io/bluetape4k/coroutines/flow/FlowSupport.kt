@@ -97,21 +97,20 @@ fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> {
     return flow {
         var elements = fastListOf<T>()
         val counter = atomic(0)
-        var count by counter
 
         this@windowed.onEach { element ->
             elements.add(element)
             if (counter.incrementAndGet() == size) {
                 emit(elements)
                 elements = elements.drop(step).toFastList()
-                count -= step
+                counter.addAndGet(-step)
             }
         }.collect()
 
         while (counter.value > 0) {
             emit(elements.take(counter.value))
             elements = elements.drop(step).toFastList()
-            count -= step
+            counter.addAndGet(-step)
         }
     }
 }
@@ -136,21 +135,20 @@ fun <T> Flow<T>.windowed2(size: Int, step: Int): Flow<Flow<T>> {
     return channelFlow {
         var elements = fastListOf<T>()
         val counter = atomic(0)
-        var count by counter
 
         this@windowed2.collect { element ->
             elements.add(element)
             if (counter.incrementAndGet() == size) {
                 send(elements.asFlow())
                 elements = elements.drop(step).toFastList()
-                count -= step
+                counter.addAndGet(-step)
             }
         }
 
         while (counter.value > 0) {
             send(elements.take(counter.value).asFlow())
             elements = elements.drop(step).toFastList()
-            count -= step
+            counter.addAndGet(-step)
         }
     }
 }

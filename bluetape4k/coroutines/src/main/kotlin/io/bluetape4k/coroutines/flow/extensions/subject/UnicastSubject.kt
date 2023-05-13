@@ -17,21 +17,19 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class UnicastSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
 
     companion object: KLogging() {
-        val terminatedCollector = FlowCollector<Any?> {
+        private val terminatedCollector = FlowCollector<Any?> {
             log.trace { "TerminatedCollector was called." }
         }
-        val terminated = FlowNoElementException("No more elements")
+        private val terminated = FlowNoElementException("No more elements")
     }
-
-    private val queue = ConcurrentLinkedQueue<T>()
-
-    private val terminalRef = atomic<Throwable?>(null)
-    val terminal by terminalRef
 
     val resumable = Resumable()
 
-    private val currentRef = atomic<FlowCollector<T>?>(null)
-    val current by currentRef
+    private val queue = ConcurrentLinkedQueue<T>()
+    private var terminal by atomic<Throwable?>(null)
+
+    private val _current = atomic<FlowCollector<T>?>(null)
+    private val current by _current
 
     val collectorCancelled: Boolean
         get() = current == terminatedCollector
@@ -48,7 +46,7 @@ class UnicastSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
             if (curr != null) {
                 error("Only one collector allowed.")
             }
-            if (currentRef.compareAndSet(curr, collector)) {
+            if (_current.compareAndSet(curr, collector)) {
                 break
             }
         }
@@ -59,7 +57,7 @@ class UnicastSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
 
             // 종료되었거나 요소가 없을 때
             if (t != null && v == null) {
-                currentRef.getAndSet(terminatedCollector as FlowCollector<T>)
+                _current.getAndSet(terminatedCollector as FlowCollector<T>)
                 if (t != terminated) {
                     throw t
                 }
@@ -69,7 +67,7 @@ class UnicastSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
                 try {
                     collector.emit(v)
                 } catch (e: Throwable) {
-                    currentRef.getAndSet(terminatedCollector as FlowCollector<T>)
+                    _current.getAndSet(terminatedCollector as FlowCollector<T>)
                     queue.clear()
                     throw e
                 }
@@ -89,12 +87,12 @@ class UnicastSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
     }
 
     override suspend fun emitError(ex: Throwable?) {
-        terminalRef.value = ex
+        terminal = ex
         resumable.resume()
     }
 
     override suspend fun complete() {
-        terminalRef.value = terminated
+        terminal = terminated
         resumable.resume()
     }
 }

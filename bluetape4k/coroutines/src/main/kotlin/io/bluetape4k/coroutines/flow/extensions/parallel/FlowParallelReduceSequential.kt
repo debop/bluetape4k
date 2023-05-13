@@ -1,6 +1,7 @@
 package io.bluetape4k.coroutines.flow.extensions.parallel
 
 import io.bluetape4k.support.uninitialized
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.AbstractFlow
 import kotlinx.coroutines.flow.FlowCollector
 
@@ -37,8 +38,8 @@ internal class FlowParallelReduceSequential<T>(
     class ReducerCollector<T>(private val combine: suspend (T, T) -> T): FlowCollector<T> {
         var accumulator: T = uninitialized()
 
-        @Volatile
-        var hasValue: Boolean = false
+        var hasValue: Boolean by atomic(false)
+            private set
 
         override suspend fun emit(value: T) {
             if (hasValue) {

@@ -1,5 +1,6 @@
 package io.bluetape4k.coroutines.support
 
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -10,7 +11,6 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.stream.consumeAsFlow
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.DoubleStream
 import java.util.stream.IntStream
 import java.util.stream.LongStream
@@ -78,7 +78,7 @@ fun <R> IntStream.coMap(
 }
 
 private class IntStreamFlow(private val stream: IntStream): Flow<Int> {
-    private val consumed = AtomicBoolean(false)
+    private val consumed = atomic(false)
 
     override suspend fun collect(collector: FlowCollector<Int>) {
         if (!consumed.compareAndSet(false, true))
@@ -119,7 +119,7 @@ fun <R> LongStream.coMap(
 }
 
 private class LongStreamFlow(private val stream: LongStream): Flow<Long> {
-    private val consumed = AtomicBoolean(false)
+    private val consumed = atomic(false)
 
     override suspend fun collect(collector: FlowCollector<Long>) {
         if (!consumed.compareAndSet(false, true))
@@ -160,7 +160,7 @@ fun <R> DoubleStream.coMap(
 }
 
 private class DoubleStreamFlow(private val stream: DoubleStream): Flow<Double> {
-    private val consumed = AtomicBoolean(false)
+    private val consumed = atomic(false)
 
     override suspend fun collect(collector: FlowCollector<Double>) {
         if (!consumed.compareAndSet(false, true))
