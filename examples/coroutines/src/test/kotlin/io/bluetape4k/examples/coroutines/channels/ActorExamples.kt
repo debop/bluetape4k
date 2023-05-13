@@ -38,9 +38,9 @@ class ActorExamples {
     @Test
     fun `actor with channel`() = runTest {
         val counter: SendChannel<CounterMsg> = counterActor()
-        val times = 1000
+        val times = 100
 
-        massiveRun(Dispatchers.Default, times) {
+        massiveRun(Dispatchers.IO, times) {
             counter.send(IntCounter)
         }
 

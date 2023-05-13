@@ -142,7 +142,7 @@ class ExceptionHandlingExamples {
      */
     @Test
     fun `SupervisorJob을 잘 못 사용하는 예`() = runSuspendTest {
-        var secondJob = atomic(false)
+        val secondJob = atomic(false)
         // 이렇게 주입해버리면, parent job 으로서 complete(), join() 을 못하므로 문제가 발생합니다.
         val job = launch(SupervisorJob() + exceptionHandler) {
             // 예외를 전파시켜 버립니다.

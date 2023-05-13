@@ -4,13 +4,11 @@ import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.asFlow
 import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.RepeatedTest
 
-@OptIn(DelicateCoroutinesApi::class)
 class FlowEclipseCollectionTest {
 
     companion object: KLogging() {
