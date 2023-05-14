@@ -1,5 +1,6 @@
 package io.bluetape4k.junit5.faker
 
+import io.bluetape4k.logging.KLogging
 import net.datafaker.Faker
 import net.datafaker.service.RandomService
 
@@ -9,7 +10,7 @@ import net.datafaker.service.RandomService
  *
  * @constructor Create empty Fakers
  */
-object Fakers {
+object Fakers: KLogging() {
     /**
      * Faker
      */
@@ -23,17 +24,20 @@ object Fakers {
     /**
      * 임의의 길이의 fake 문자열을 생성합니다.
      *
-     * @param minimumLength    최소크기
-     * @param maximumLength    최대크기
+     * @param minLength    최소크기
+     * @param maxLength    최대크기
      * @param includeUppercase 대문자 포함 여부
      * @return 임의의 길이의 fake 문자열
      */
     fun randomString(
-        minimumLength: Int = 2,
-        maximumLength: Int = 255,
+        minLength: Int = 2,
+        maxLength: Int = 255,
         includeUppercase: Boolean = true,
-    ): String =
-        faker.lorem().characters(minimumLength, maximumLength, includeUppercase)
+        includeSpecial: Boolean = true,
+        includeDigit: Boolean = true,
+    ): String {
+        return faker.text().text(minLength, maxLength, includeUppercase, includeSpecial, includeDigit)
+    }
 
     /**
      * [length] 크기의 fake 문자열을 반환합니다.
@@ -41,7 +45,7 @@ object Fakers {
      * @param length 문자열 길이
      * @return [lengh] 길이의 fake 문자열
      */
-    fun fixedString(length: Int): String = faker.lorem().characters(length)
+    fun fixedString(length: Int): String = faker.text().text(length)
 
     /**
      * [format]에 `#`을 임의의 숫자(0~9)로 치환하는 문자열을 빌드합니다.

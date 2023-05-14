@@ -1,5 +1,6 @@
 package io.bluetape4k.junit5.random
 
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.github.benas.randombeans.api.EnhancedRandom
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -32,6 +33,9 @@ class RandomExtension: TestInstancePostProcessor, ParameterResolver {
 
             targetType.isAssignableFrom(Iterable::class.java)                                                    ->
                 randomizer.objects(annotation.type.java, annotation.size, *annotation.excludes).toList()
+
+            targetType.isAssignableFrom(String::class.java)                                                      ->
+                Fakers.randomString(2, 256)
 
             else                                                                                                 ->
                 randomizer.nextObject(targetType, *annotation.excludes)
