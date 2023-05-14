@@ -14,11 +14,11 @@ abstract class AbstractCassandraTest {
         const val DEFAULT_KEYSPACE = "examples"
 
         @JvmStatic
-        val faker = Fakers.faker
+        protected val faker = Fakers.faker
 
         @JvmStatic
-        fun randomString() =
-            Fakers.randomString(1024, 2048, true)
+        protected fun randomString() =
+            Fakers.randomString(1024, 2048)
     }
 
     @Autowired

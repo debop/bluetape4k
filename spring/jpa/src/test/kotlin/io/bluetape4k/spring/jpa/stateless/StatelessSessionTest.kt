@@ -1,12 +1,12 @@
 package io.bluetape4k.spring.jpa.stateless
 
 import io.bluetape4k.data.hibernate.stateless.withStateless
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.spring.jpa.AbstractJpaTest
 import io.bluetape4k.support.asInt
 import io.bluetape4k.support.asString
-import net.datafaker.Faker
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Nested
@@ -26,7 +26,7 @@ class StatelessSessionTest: AbstractJpaTest() {
         private const val COUNT = 100
         private const val REPEAT_COUNT = 3
 
-        private val faker = Faker()
+        private val faker = Fakers.faker
 
         fun getStatelessEntity(index: Int): StatelessEntity {
             return StatelessEntity(faker.name().name() + index).apply {

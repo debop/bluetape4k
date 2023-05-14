@@ -1,5 +1,6 @@
 package io.bluetape4k.workshop.sqlclient
 
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.jdbc.MySQL8Server
 import io.vertx.core.Vertx
@@ -12,7 +13,6 @@ import io.vertx.kotlin.sqlclient.poolOptionsOf
 import io.vertx.mysqlclient.MySQLConnectOptions
 import io.vertx.mysqlclient.MySQLPool
 import io.vertx.sqlclient.PoolOptions
-import net.datafaker.Faker
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(VertxExtension::class)
@@ -20,7 +20,7 @@ abstract class AbstractSqlClientTest {
 
     companion object: KLogging() {
 
-        val faker = Faker()
+        val faker = Fakers.faker
 
         private val mysql by lazy { MySQL8Server.Launcher.mysql }
 

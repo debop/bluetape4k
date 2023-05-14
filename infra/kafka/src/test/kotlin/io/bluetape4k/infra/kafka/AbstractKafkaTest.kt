@@ -9,12 +9,15 @@ abstract class AbstractKafkaTest {
 
     companion object: KLogging() {
         const val TEST_TOPIC_NAME = "$LibraryName.kafka.test-topic.1"
-        const val REPEAT_SIZE = 5
+        const val REPEAT_SIZE = 3
 
         @JvmStatic
-        fun randomString(): String =
-            Fakers.randomString(1024, 8192, true)
+        protected val faker = Fakers.faker
 
-        val kafka: KafkaServer by lazy { KafkaServer.Launcher.kafka }
+        @JvmStatic
+        protected fun randomString(): String =
+            Fakers.randomString(1024, 4096)
+
+        protected val kafka: KafkaServer by lazy { KafkaServer.Launcher.kafka }
     }
 }

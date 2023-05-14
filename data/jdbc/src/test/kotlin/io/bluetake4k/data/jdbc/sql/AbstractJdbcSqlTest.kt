@@ -1,5 +1,6 @@
 package io.bluetake4k.data.jdbc.sql
 
+import io.bluetake4k.data.jdbc.AbstractJdbcTest
 import io.bluetake4k.data.jdbc.model.TestBean
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -20,7 +21,7 @@ import javax.sql.DataSource
 
 @ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [JdbcConfiguration::class])
-abstract class AbstractJdbcSqlTest {
+abstract class AbstractJdbcSqlTest: AbstractJdbcTest() {
 
     companion object: KLogging() {
 

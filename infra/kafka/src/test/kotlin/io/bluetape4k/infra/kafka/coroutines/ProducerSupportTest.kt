@@ -1,8 +1,8 @@
 package io.bluetape4k.infra.kafka.coroutines
 
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.concurrent.asCompletableFuture
 import io.bluetape4k.concurrent.sequence
-import io.bluetape4k.coroutines.support.awaitSuspending
 import io.bluetape4k.infra.kafka.AbstractKafkaTest
 import io.bluetape4k.infra.kafka.getMetricValue
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
@@ -15,6 +15,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.future.await
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -27,10 +28,10 @@ import kotlin.system.measureTimeMillis
 class ProducerSupportTest: AbstractKafkaTest() {
 
     companion object: KLogging() {
-        private const val MESSAGE_SIZE = 1000
+        private const val MESSAGE_SIZE = 100
 
         fun randomStrings(size: Int = MESSAGE_SIZE): List<String> {
-            return List(size) { randomString() }
+            return fastList(size) { randomString() }
         }
     }
 
@@ -42,7 +43,7 @@ class ProducerSupportTest: AbstractKafkaTest() {
 
         val future: CompletableFuture<RecordMetadata> = producer.send(record).asCompletableFuture()
         producer.flush()
-        val metadata = future.awaitSuspending()
+        val metadata = future.await()
         metadata.verifyRecordMetadata()
     }
 

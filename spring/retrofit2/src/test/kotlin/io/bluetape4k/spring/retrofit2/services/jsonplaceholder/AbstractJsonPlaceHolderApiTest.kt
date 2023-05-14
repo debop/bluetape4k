@@ -1,8 +1,8 @@
 package io.bluetape4k.spring.retrofit2.services.jsonplaceholder
 
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import net.datafaker.Faker
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNullOrBlank
@@ -11,7 +11,7 @@ abstract class AbstractJsonPlaceHolderApiTest {
 
     companion object: KLogging() {
         @JvmStatic
-        val faker = Faker()
+        val faker = Fakers.faker
 
         const val REPEAT_SIZE = 3
 
@@ -48,6 +48,6 @@ abstract class AbstractJsonPlaceHolderApiTest {
         userId = faker.random().nextInt(1, 1000),
         id = faker.random().nextInt(1, 1000),
         title = faker.book().title(),
-        body = faker.lorem().paragraph()
+        body = Fakers.randomString(256, 2048)
     )
 }

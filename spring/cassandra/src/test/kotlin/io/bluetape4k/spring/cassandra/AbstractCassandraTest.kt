@@ -2,10 +2,10 @@ package io.bluetape4k.spring.cassandra
 
 import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.core.Version
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.storage.Cassandra4Server
 import io.bluetape4k.testcontainers.storage.getCassandraReleaseVersion
-import net.datafaker.Faker
 import org.springframework.beans.factory.annotation.Autowired
 
 abstract class AbstractCassandraTest {
@@ -13,7 +13,7 @@ abstract class AbstractCassandraTest {
     companion object: KLogging() {
         const val DEFAULT_KEYSPACE = "examples"
 
-        val faker = Faker()
+        val faker = Fakers.faker
     }
 
     @Autowired

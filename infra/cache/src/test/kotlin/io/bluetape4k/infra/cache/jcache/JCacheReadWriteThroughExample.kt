@@ -1,6 +1,7 @@
 package io.bluetape4k.infra.cache.jcache
 
 import io.bluetape4k.codec.encodeBase62
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
@@ -21,9 +22,13 @@ import javax.cache.integration.CacheWriter
 class JCacheReadWriteThroughExample {
 
     companion object: KLogging() {
+
         @JvmStatic
-        fun randomString() =
-            Fakers.randomString(1024, 8192, true)
+        private fun randomKey(): String = Fakers.randomUuid().encodeBase62()
+
+        @JvmStatic
+        private fun randomString() =
+            Fakers.randomString(1024, 2048)
     }
 
     private val remoteCache = JCaching.EhCache.getOrCreate<String, Any>("remote")
@@ -75,7 +80,7 @@ class JCacheReadWriteThroughExample {
 
     @Test
     fun `get cache entry with read through write through`() {
-        val key = UUID.randomUUID().encodeBase62()
+        val key = randomKey()
         val value = randomString()
 
         nearCache.put(key, value)
@@ -87,8 +92,8 @@ class JCacheReadWriteThroughExample {
 
     @Test
     fun `read write through with bulk cache entries`() {
-        val entries = List(100) {
-            val key = UUID.randomUUID().encodeBase62()
+        val entries = fastList(100) {
+            val key = randomKey()
             val value = randomString()
             key to value
         }.toMap()
@@ -101,7 +106,7 @@ class JCacheReadWriteThroughExample {
 
     @Test
     fun `clear not applied write through`() {
-        val key = UUID.randomUUID().encodeBase62()
+        val key = randomKey()
         val value = randomString()
 
         nearCache.put(key, value)
@@ -114,7 +119,7 @@ class JCacheReadWriteThroughExample {
 
     @Test
     fun `removeAll with write through`() {
-        val key = UUID.randomUUID().encodeBase62()
+        val key = randomKey()
         val value = randomString()
 
         nearCache.put(key, value)
@@ -126,7 +131,7 @@ class JCacheReadWriteThroughExample {
 
     @Test
     fun `remote 에만 존재하는 key를 near 에서 containsKey는 false`() {
-        val key = UUID.randomUUID().encodeBase62()
+        val key = randomKey()
         val value = randomString()
 
         nearCache.containsKey(key).shouldBeFalse()

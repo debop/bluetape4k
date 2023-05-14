@@ -1,12 +1,12 @@
 package io.bluetape4k.infra.micrometer
 
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
-import net.datafaker.Faker
 
 abstract class AbstractMicrometerTest {
 
     companion object: KLogging() {
         @JvmStatic
-        protected val faker = Faker()
+        protected val faker = Fakers.faker
     }
 }

@@ -1,10 +1,12 @@
 package io.bluetape4k.examples.redisson.coroutines.objects
 
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
+import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import org.amshove.kluent.shouldBeEqualTo
@@ -21,12 +23,11 @@ class AtomicLongExamples: AbstractRedissonCoroutineTest() {
     @Test
     fun `AtomicLog in coroutines`() = runSuspendWithIO {
         val counter = redisson.getAtomicLong(randomName())
-        val jobs = List(TEST_COUNT) {
+        val jobs = fastList(TEST_COUNT) {
             scope.launch {
                 counter.incrementAndGetAsync().awaitSuspending()
             }
         }
-        delay(10)
         jobs.joinAll()
 
         counter.getAsync().awaitSuspending() shouldBeEqualTo TEST_COUNT.toLong()
@@ -53,5 +54,35 @@ class AtomicLongExamples: AbstractRedissonCoroutineTest() {
         counter.getAndIncrementAsync().awaitSuspending() shouldBeEqualTo 44L
 
         counter.deleteAsync().awaitSuspending()
+    }
+
+    @Test
+    fun `AtomicLong in MultiJob`() = runSuspendWithIO {
+        val counter = redisson.getAtomicLong(randomName())
+
+        MultiJobTester().numJob(32).roundsPerThread(10)
+            .add {
+                counter.incrementAndGetAsync().awaitSuspending()
+            }
+            .run()
+
+        counter.async.awaitSuspending() shouldBeEqualTo 32 * 10L
+        counter.deleteAsync().awaitSuspending()
+    }
+
+    @Test
+    fun `AtomicLong in Multi threading`() {
+        val counter = redisson.getAtomicLong(randomName())
+
+        MultithreadingTester()
+            .numThreads(32)
+            .roundsPerThread(10)
+            .add {
+                counter.incrementAndGet()
+            }
+            .run()
+
+        counter.get() shouldBeEqualTo 32 * 10L
+        counter.deleteAsync().get()
     }
 }

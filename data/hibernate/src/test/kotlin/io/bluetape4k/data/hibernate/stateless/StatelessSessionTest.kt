@@ -1,11 +1,11 @@
 package io.bluetape4k.data.hibernate.stateless
 
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.support.asInt
 import io.bluetape4k.support.asString
-import net.datafaker.Faker
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Nested
@@ -22,8 +22,10 @@ class StatelessSessionTest: AbstractHibernateTest() {
         private const val REPEAT_SIZE = 2
         private const val ENTITY_COUNT = 100
 
-        val faker = Faker()
+        @JvmStatic
+        val faker = Fakers.faker
 
+        @JvmStatic
         fun getStatelessEntity(index: Int): StatelessEntity {
             return StatelessEntity(faker.name().name() + index).apply {
                 firstname = faker.name().firstName()

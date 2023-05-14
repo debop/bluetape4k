@@ -20,7 +20,7 @@ abstract class AbstractRedisTest {
 
         @JvmStatic
         protected fun randomString(): String =
-            Fakers.randomString(1024, 4096, true)
+            Fakers.randomString(2048, 4096)
 
     }
 }

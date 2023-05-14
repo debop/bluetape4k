@@ -1,5 +1,6 @@
 package io.bluetape4k.data.hibernate
 
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import net.datafaker.Faker
 import org.springframework.beans.factory.annotation.Autowired
@@ -66,7 +67,7 @@ abstract class AbstractHibernateTest {
         //            }
         //        }
         @JvmStatic
-        val faker: Faker = Faker()
+        val faker: Faker = Fakers.faker
     }
 
     @Autowired

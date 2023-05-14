@@ -1,7 +1,7 @@
 package io.bluetape4k.support
 
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
-import net.datafaker.Faker
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
@@ -10,7 +10,8 @@ import kotlin.test.assertFailsWith
 class DelegateSupportTest {
 
     companion object: KLogging() {
-        private val faker = Faker()
+        @JvmStatic
+        private val faker = Fakers.faker
     }
 
     private val map = mapOf<String, Any>(

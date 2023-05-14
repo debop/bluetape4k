@@ -1,8 +1,11 @@
 package io.bluetape4k.junit5.faker
 
+import com.fasterxml.uuid.Generators
+import com.fasterxml.uuid.NoArgGenerator
 import io.bluetape4k.logging.KLogging
 import net.datafaker.Faker
 import net.datafaker.service.RandomService
+import java.util.*
 
 
 /**
@@ -87,4 +90,10 @@ object Fakers: KLogging() {
     fun alphaNumericString(format: String, isUpper: Boolean = false): String =
         faker.bothify(format, isUpper)
 
+
+    private val uuidGenerator: NoArgGenerator by lazy {
+        Generators.timeBasedReorderedGenerator()
+    }
+
+    fun randomUuid(): UUID = uuidGenerator.generate()
 }

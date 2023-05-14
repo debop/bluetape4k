@@ -3,7 +3,13 @@ package io.bluetape4k.junit5.coroutines
 import io.bluetape4k.junit5.utils.MultiException
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExecutorCoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newFixedThreadPoolContext
+import kotlinx.coroutines.withTimeout
 
 /**
  * suspend 함수를 제한된 스레드 수에서 동시에 실행시키고, 모든 suspend 함수가 종료되기를 기다린다.
@@ -26,12 +32,12 @@ import kotlinx.coroutines.*
 @Suppress("OPT_IN_USAGE")
 class MultiJobTester {
 
-    companion object : KLogging() {
-        const val DEFAULT_THREAD_SIZE: Int = 64
+    companion object: KLogging() {
+        const val DEFAULT_NUM_JOBS: Int = 64
         const val DEFAULT_ROUNDS_PER_THREADS: Int = 10
     }
 
-    private var numThreads = DEFAULT_THREAD_SIZE
+    private var numJobs = DEFAULT_NUM_JOBS
     private var roundsPerThreads = DEFAULT_ROUNDS_PER_THREADS
     private val suspendBlocks = mutableListOf<suspend () -> Unit>()
 
@@ -42,13 +48,15 @@ class MultiJobTester {
     private lateinit var workerDispatcher: ExecutorCoroutineDispatcher
     private lateinit var workerJobs: List<Job>
 
-    fun numThreads(numThreads: Int): MultiJobTester = apply {
-        check(numThreads in 2..2000) { "Invalid numThreads: $numThreads -- must be range in 2..2000" }
-        this.numThreads = numThreads
+    fun numJob(numJobs: Int): MultiJobTester = apply {
+        check(numJobs in 2..2000) { "Invalid numThreads: $numJobs -- must be range in 2..2000" }
+        this.numJobs = numJobs
     }
 
     fun roundsPerThread(roundsPerThreads: Int) = apply {
-        check(roundsPerThreads in 1..Int.MAX_VALUE) { "Invalid roundsPerThreads: $roundsPerThreads -- must be range in 1..${Int.MAX_VALUE}" }
+        check(roundsPerThreads in 1..Int.MAX_VALUE) {
+            "Invalid roundsPerThreads: $roundsPerThreads -- must be range in 1..${Int.MAX_VALUE}"
+        }
         this.roundsPerThreads = roundsPerThreads
     }
 
@@ -66,8 +74,8 @@ class MultiJobTester {
 
     suspend fun run() {
         check(suspendBlocks.isNotEmpty()) { "No suspend blocks to run" }
-        check(numThreads >= suspendBlocks.size) {
-            "numThreads($numThreads) must be greater than suspendBlocks.size(${suspendBlocks.size})"
+        check(numJobs >= suspendBlocks.size) {
+            "numThreads($numJobs) must be greater than suspendBlocks.size(${suspendBlocks.size})"
         }
 
         val me = MultiException()
@@ -83,19 +91,19 @@ class MultiJobTester {
 
         var iter = suspendBlocks.iterator()
 
-        workerDispatcher = newFixedThreadPoolContext(numThreads, "coroutine-tester")
-        workerJobs = List(numThreads) {
+        workerDispatcher = newFixedThreadPoolContext(numJobs, "coroutine-tester")
+        workerJobs = List(numJobs) {
             if (!iter.hasNext()) {
                 iter = suspendBlocks.iterator()
             }
             val block = iter.next()
             launch(workerDispatcher) {
-                try {
-                    repeat(roundsPerThreads) {
+                repeat(roundsPerThreads) {
+                    runCatching {
                         block()
+                    }.onFailure {
+                        me.add(it)
                     }
-                } catch (e: Throwable) {
-                    me.add(e)
                 }
             }
         }

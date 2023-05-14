@@ -20,7 +20,12 @@ class InputStreamExtensionsTest {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 3
-        private fun randomString() = Fakers.randomString(1024, 8192)
+
+        @JvmStatic
+        private val faker = Fakers.faker
+
+        @JvmStatic
+        private fun randomString() = Fakers.randomString(2048, 4096)
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -29,7 +34,7 @@ class InputStreamExtensionsTest {
 
         StringWriter(DEFAULT_BUFFER_SIZE).use { writer ->
             expected.toInputStream().use { bis ->
-                bis.copyTo(writer, bufferSize = 128)
+                bis.copyTo(writer, bufferSize = 1024)
 
                 writer.flush()
                 writer.toString() shouldBeEqualTo expected
@@ -41,7 +46,7 @@ class InputStreamExtensionsTest {
     fun `input stream copy to output stream with byte array`(@RandomValue expected: ByteArray) {
         ByteArrayOutputStream().use { bos ->
             expected.toInputStream().use { bis ->
-                bis.copyTo(bos, 128)
+                bis.copyTo(bos, 1024)
 
                 bos.flush()
                 bos.toByteArray() shouldBeEqualTo expected
@@ -55,7 +60,7 @@ class InputStreamExtensionsTest {
 
         ByteArrayOutputStream().use { bos ->
             expected.toInputStream().use { bis ->
-                bis.copyTo(bos, 128)
+                bis.copyTo(bos, 1024)
 
                 bos.flush()
                 bos.toByteArray().toUtf8String() shouldBeEqualTo expected
@@ -70,7 +75,7 @@ class InputStreamExtensionsTest {
         Channels.newChannel(expected.toUtf8Bytes().toInputStream()).use { readable ->
             ByteArrayOutputStream().use { bos ->
                 Channels.newChannel(bos).use { writable ->
-                    readable.copyTo(writable, 128)
+                    readable.copyTo(writable, DEFAULT_BUFFER_SIZE)
                 }
                 bos.toByteArray().toUtf8String() shouldBeEqualTo expected
             }
@@ -83,7 +88,7 @@ class InputStreamExtensionsTest {
 
         StringReader(expected).use { reader ->
             StringWriter().use { writer ->
-                reader.copyTo(writer, 128)
+                reader.copyTo(writer)
 
                 writer.toString() shouldBeEqualTo expected
             }
@@ -96,7 +101,7 @@ class InputStreamExtensionsTest {
 
         StringReader(expected).use { reader ->
             ByteArrayOutputStream().use { bos ->
-                reader.copyTo(bos, 128)
+                reader.copyTo(bos)
                 bos.toByteArray().toUtf8String() shouldBeEqualTo expected
             }
         }
@@ -108,7 +113,7 @@ class InputStreamExtensionsTest {
 
         expected.toInputStream().use { bis ->
             ByteArrayOutputStream().use { bos ->
-                bis.copyTo(bos, 128)
+                bis.copyTo(bos)
 
                 bos.toByteArray() shouldBeEqualTo expected
             }
@@ -121,7 +126,7 @@ class InputStreamExtensionsTest {
 
         expected.toInputStream().use { bis ->
             ByteArrayOutputStream().use { bos ->
-                bis.copyTo(bos, 128)
+                bis.copyTo(bos)
 
                 bos.toByteArray().toUtf8String() shouldBeEqualTo expected
             }
@@ -132,7 +137,7 @@ class InputStreamExtensionsTest {
     fun `input stream to output stream`() {
         val expected = randomString()
 
-        expected.toInputStream().toOutputStream(128).use { bos ->
+        expected.toInputStream().toOutputStream().use { bos ->
             bos.toByteArray().toUtf8String() shouldBeEqualTo expected
         }
     }
@@ -141,7 +146,7 @@ class InputStreamExtensionsTest {
     fun `string to output stream`() {
         val expected = randomString()
 
-        expected.toOutputStream(blockSize = 128).use { bos ->
+        expected.toOutputStream().use { bos ->
             bos.toByteArray().toUtf8String() shouldBeEqualTo expected
         }
     }
@@ -159,7 +164,7 @@ class InputStreamExtensionsTest {
         val expected = randomString().toUtf8Bytes()
 
         ByteArrayInputStream(expected).use { bis ->
-            bis.toByteArray(128) shouldBeEqualTo expected
+            bis.toByteArray() shouldBeEqualTo expected
         }
     }
 
@@ -168,7 +173,7 @@ class InputStreamExtensionsTest {
         val expected = randomString().toUtf8Bytes()
 
         ByteArrayInputStream(expected).use { bis ->
-            bis.toByteBuffer(128).getAllBytes() shouldBeEqualTo expected
+            bis.toByteBuffer().getAllBytes() shouldBeEqualTo expected
         }
     }
 
@@ -177,7 +182,7 @@ class InputStreamExtensionsTest {
         val expected = randomString()
 
         expected.toInputStream().use { bis ->
-            bis.toUtf8String(128) shouldBeEqualTo expected
+            bis.toUtf8String() shouldBeEqualTo expected
         }
     }
 
@@ -186,7 +191,7 @@ class InputStreamExtensionsTest {
         val expected = randomString()
 
         expected.toInputStream().use { bis ->
-            bis.toUtf8StringList(128) shouldBeEqualTo expected.lines()
+            bis.toUtf8StringList() shouldBeEqualTo expected.lines()
         }
     }
 
@@ -195,7 +200,7 @@ class InputStreamExtensionsTest {
         val expected = randomString()
 
         expected.toInputStream().use { bis ->
-            bis.toUtf8LineSequence(128).toList() shouldBeEqualTo expected.lineSequence().toList()
+            bis.toUtf8LineSequence().toList() shouldBeEqualTo expected.lineSequence().toList()
         }
     }
 

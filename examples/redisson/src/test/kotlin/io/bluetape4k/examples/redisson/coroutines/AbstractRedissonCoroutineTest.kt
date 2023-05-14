@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.redisson.coroutines
 
+import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.data.redis.redisson.redissonClientOf
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
@@ -9,7 +10,6 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import net.datafaker.Faker
 import org.redisson.api.RedissonClient
 
 abstract class AbstractRedissonCoroutineTest {
@@ -25,15 +25,15 @@ abstract class AbstractRedissonCoroutineTest {
         }
 
         @JvmStatic
-        val faker = Faker()
+        protected val faker = Fakers.faker
 
         @JvmStatic
         protected fun randomString(): String =
-            Fakers.randomString(1024, 4096, true)
+            Fakers.randomString(1024, 2048)
 
         @JvmStatic
         protected fun randomName(): String =
-            "bluetape4k:${faker.name().username()}:${faker.random().nextLong(1000, 99999)}"
+            "bluetape4k:${Fakers.randomUuid().encodeBase62()}"
 
     }
 

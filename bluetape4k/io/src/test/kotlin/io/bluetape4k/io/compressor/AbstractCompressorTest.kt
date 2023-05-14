@@ -8,7 +8,6 @@ import io.bluetape4k.support.emptyByteArray
 import io.bluetape4k.support.replicate
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
-import net.datafaker.Faker
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
@@ -21,10 +20,10 @@ abstract class AbstractCompressorTest {
     companion object: KLogging() {
         const val REPEAT_SIZE = 3
 
-        private val faker = Faker()
+        @JvmStatic
+        protected val faker = Fakers.faker
 
         init {
-
             // Snappy 는 이렇게 한 번 초기화 해주어야 제대로 성능을 알 수 있다.
             Snappy.cleanUp()
             val compressed = Snappy.compress("bluetape4k")
@@ -33,7 +32,7 @@ abstract class AbstractCompressorTest {
 
         fun getRandomString(): String {
             return Fakers
-                .randomString(4096, 8192 * 8, true)
+                .randomString(4096, 8192)
                 .replicate(4)
         }
     }

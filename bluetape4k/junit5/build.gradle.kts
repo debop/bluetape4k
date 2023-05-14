@@ -18,6 +18,7 @@ dependencies {
     api(Libs.awaitility_kotlin)
 
     api(Libs.datafaker)
+    api(Libs.java_uuid_generator)
     api(Libs.random_beans)
 
     api(Libs.commons_lang3)

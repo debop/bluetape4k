@@ -1,17 +1,21 @@
 package io.bluetape4k.infra.cache.jcache.coroutines
 
+import io.bluetape4k.codec.encodeBase62
+import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.collections.eclipse.toUnifiedMap
+import io.bluetape4k.coroutines.flow.toFastList
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
+import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
+import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -22,22 +26,25 @@ abstract class AbstractCoCacheTest {
         const val TEST_SIZE = 3
 
         @JvmStatic
-        fun randomString(): String =
-            Fakers.randomString(1024, 8192, true)
+        protected val faker = Fakers.faker
+
+        @JvmStatic
+        protected fun randomString(): String =
+            Fakers.randomString(1024, 8192)
     }
 
     protected abstract val coCache: CoCache<String, Any>
 
-    open fun getKey() = TimebasedUuid.nextBase62String()
+    open fun getKey() = Fakers.randomUuid().encodeBase62()
     open fun getValue() = randomString()
 
     @BeforeEach
     fun setup() {
-        runBlocking { coCache.clear() }
+        runSuspendWithIO { coCache.clear() }
     }
 
     @Test
-    fun `entries - get all cache entries by flow`() = runTest {
+    fun `entries - get all cache entries by flow`() = runSuspendWithIO {
         coCache.clear()
         coCache.entries().map { it.key }.toList().size shouldBeEqualTo 0
 
@@ -50,7 +57,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `clear - clear all cache entries`() = runTest {
+    fun `clear - clear all cache entries`() = runSuspendWithIO {
         coCache.put(getKey(), getValue())
         coCache.entries().map { it.key }.toList().size shouldBeEqualTo 1
 
@@ -59,7 +66,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `put - cache entry 추가`() = runTest {
+    fun `put - cache entry 추가`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
 
@@ -68,7 +75,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `containsKey - 저장된 key가 존재하는지 검사`() = runTest {
+    fun `containsKey - 저장된 key가 존재하는지 검사`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
 
@@ -79,7 +86,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `get - 저장된 값 가져오기`() = runTest {
+    fun `get - 저장된 값 가져오기`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
 
@@ -89,17 +96,17 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `getAll - 요청한 모든 cache entry 가져오기`() = runTest {
+    fun `getAll - 요청한 모든 cache entry 가져오기`() = runSuspendWithIO {
         repeat(CACHE_ENTRY_SIZE) {
             coCache.put(getKey(), getValue())
         }
-        val entries = coCache.getAll().toList()
+        val entries = coCache.getAll().toFastList()
         entries.size shouldBeEqualTo CACHE_ENTRY_SIZE
     }
 
     @Test
-    fun `getAll - with keys`() = runTest {
-        val entries = List(CACHE_ENTRY_SIZE) {
+    fun `getAll - with keys`() = runSuspendWithIO {
+        val entries = fastList(CACHE_ENTRY_SIZE) {
             CoCacheEntry(getKey(), getValue()).apply {
                 coCache.put(key, value)
             }
@@ -110,7 +117,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `getAndPut - 기존 값을 가져오고 새로운 값으로 저장한다`() = runTest {
+    fun `getAndPut - 기존 값을 가져오고 새로운 값으로 저장한다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -120,7 +127,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `getAndRemove - 기존 값을 가져오고 삭제한다`() = runTest {
+    fun `getAndRemove - 기존 값을 가져오고 삭제한다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
 
@@ -131,7 +138,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `getAndReplace - 기존 값을 가져오고, 새로운 값으로 대체한다`() = runTest {
+    fun `getAndReplace - 기존 값을 가져오고, 새로운 값으로 대체한다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -147,7 +154,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `put - cache entry를 추가한다`() = runTest {
+    fun `put - cache entry를 추가한다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
 
@@ -157,16 +164,16 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `putAll - 모든 entry를 추가합니다`() = runTest {
-        val entries = List(CACHE_ENTRY_SIZE) { getKey() to getValue() }.toMap()
+    fun `putAll - 모든 entry를 추가합니다`() = runSuspendWithIO {
+        val entries = fastList(CACHE_ENTRY_SIZE) { getKey() to getValue() }.toUnifiedMap()
 
-        coCache.entries().toList().size shouldBeEqualTo 0
+        coCache.entries().toFastList().size shouldBeEqualTo 0
         coCache.putAll(entries)
-        coCache.entries().toList().size shouldBeEqualTo CACHE_ENTRY_SIZE
+        coCache.entries().toFastList().size shouldBeEqualTo CACHE_ENTRY_SIZE
     }
 
     @Test
-    fun `putAllFlow - flow 를 cache entry로 모두 추가한다`() = runTest {
+    fun `putAllFlow - flow 를 cache entry로 모두 추가한다`() = runSuspendWithIO {
         val entries = flow {
             repeat(CACHE_ENTRY_SIZE) {
                 emit(getKey() to getValue())
@@ -179,7 +186,7 @@ abstract class AbstractCoCacheTest {
 
 
     @Test
-    fun `putIfAbsent - 기존에 값이 없을 때에만 새로 추가한다`() = runTest {
+    fun `putIfAbsent - 기존에 값이 없을 때에만 새로 추가한다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -190,7 +197,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `remove - 해당 Cache entry를 제거한다`() = runTest {
+    fun `remove - 해당 Cache entry를 제거한다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
 
@@ -202,7 +209,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `remove with oldValue - 지정한 값을 가진 경우에만 제거한다`() = runTest {
+    fun `remove with oldValue - 지정한 값을 가진 경우에만 제거한다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -219,21 +226,21 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `removeAll - 모든 cache entry를 삭제한다`() = runTest {
+    fun `removeAll - 모든 cache entry를 삭제한다`() = runSuspendWithIO {
         repeat(CACHE_ENTRY_SIZE) {
             CoCacheEntry(getKey(), getValue()).apply {
                 coCache.put(key, value)
             }
         }
-        coCache.entries().toList().size shouldBeEqualTo CACHE_ENTRY_SIZE
+        coCache.entries().toFastList() shouldHaveSize CACHE_ENTRY_SIZE
 
         coCache.removeAll()
 
-        coCache.entries().toList().size shouldBeEqualTo 0
+        coCache.entries().toFastList().shouldBeEmpty()
     }
 
     @Test
-    fun `removeAll with keys - 지정한 key 값들에 해당하는 cache entry를 삭제한다`() = runTest {
+    fun `removeAll with keys - 지정한 key 값들에 해당하는 cache entry를 삭제한다`() = runSuspendWithIO {
         val entries = List(CACHE_ENTRY_SIZE) {
             CoCacheEntry(getKey(), getValue()).apply {
                 coCache.put(key, value)
@@ -248,7 +255,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `removeAll with vararg keys`() = runTest {
+    fun `removeAll with vararg keys`() = runSuspendWithIO {
         val entries = List(CACHE_ENTRY_SIZE) {
             CoCacheEntry(getKey(), getValue()).apply {
                 coCache.put(key, value)
@@ -263,7 +270,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `replace - 기존 cache key의 값을 변경합니다`() = runTest {
+    fun `replace - 기존 cache key의 값을 변경합니다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -279,7 +286,7 @@ abstract class AbstractCoCacheTest {
     }
 
     @Test
-    fun `replace - 기존 cache entry의 값을 변경합니다`() = runTest {
+    fun `replace - 기존 cache entry의 값을 변경합니다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()

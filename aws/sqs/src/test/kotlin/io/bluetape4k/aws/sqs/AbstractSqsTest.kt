@@ -56,8 +56,11 @@ abstract class AbstractSqsTest {
         }
 
         @JvmStatic
-        fun randomString(): String {
-            return Fakers.randomString(256, 2048, true)
+        protected val faker = Fakers.faker
+
+        @JvmStatic
+        protected fun randomString(): String {
+            return Fakers.randomString(256, 2048)
         }
     }
 }

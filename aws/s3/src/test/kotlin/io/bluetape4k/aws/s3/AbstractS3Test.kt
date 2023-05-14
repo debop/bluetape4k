@@ -44,8 +44,11 @@ abstract class AbstractS3Test {
             get() = Region.of(AwsS3.region)
 
         @JvmStatic
-        fun randomString(): String =
-            Fakers.randomString(256, 2048, true)
+        protected val faker = Fakers.faker
+
+        @JvmStatic
+        protected fun randomString(): String =
+            Fakers.randomString(256, 2048)
     }
 
     val s3Client: S3Client by lazy {

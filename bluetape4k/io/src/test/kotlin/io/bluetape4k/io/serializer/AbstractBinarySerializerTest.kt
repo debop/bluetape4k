@@ -3,11 +3,11 @@ package io.bluetape4k.io.serializer
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.io.compressor.Compressor
 import io.bluetape4k.io.compressor.Compressors
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import net.datafaker.Faker
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldNotBeEmpty
@@ -27,7 +27,7 @@ abstract class AbstractBinarySerializerTest {
         const val REPEAT_SIZE = 3
 
         @JvmStatic
-        val faker = Faker()
+        val faker = Fakers.faker
     }
 
     abstract val serializer: BinarySerializer

@@ -10,6 +10,6 @@ abstract class AbstractGraphqlTest {
         val faker = Fakers.faker
 
         @JvmStatic
-        fun randomString() = Fakers.randomString(16, 256, true)
+        fun randomString() = Fakers.randomString(16, 256)
     }
 }

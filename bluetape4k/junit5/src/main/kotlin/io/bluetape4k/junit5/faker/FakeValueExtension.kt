@@ -18,7 +18,7 @@ class FakeValueExtension: TestInstancePostProcessor, ParameterResolver {
 
     companion object: KLogging() {
 
-        private val faker = Faker()
+        private val faker = Fakers.faker
 
         private fun resolve(targetType: Class<*>, annotation: FakeValue): Any {
             log.trace { "targetType=$targetType, annotation=$annotation" }

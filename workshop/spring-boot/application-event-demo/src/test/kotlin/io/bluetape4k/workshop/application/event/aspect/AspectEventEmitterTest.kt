@@ -1,12 +1,12 @@
 package io.bluetape4k.workshop.application.event.aspect
 
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.output.CaptureOutput
 import io.bluetape4k.junit5.output.OutputCapturer
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.workshop.application.event.EventApplication
 import kotlinx.coroutines.delay
-import net.datafaker.Faker
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +19,7 @@ class AspectEventEmitterTest(
 ) {
 
     companion object: KLogging() {
-        val faker = Faker()
+        val faker = Fakers.faker
     }
 
     @Test

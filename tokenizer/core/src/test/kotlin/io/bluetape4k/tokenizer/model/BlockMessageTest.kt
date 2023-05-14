@@ -4,14 +4,13 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
-import net.datafaker.Faker
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
 class BlockMessageTest {
 
     companion object: KLogging() {
-        val faker = Faker()
+        val faker = Fakers.faker
     }
 
     private val mapper = Jackson.defaultJsonMapper

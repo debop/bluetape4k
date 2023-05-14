@@ -2,9 +2,9 @@ package io.bluetape4k.data.cassandra
 
 import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.core.CqlSessionBuilder
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.storage.Cassandra4Server
-import net.datafaker.Faker
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.parallel.Execution
@@ -16,8 +16,10 @@ abstract class AbstractCassandraTest {
     companion object: KLogging() {
         const val DEFAULT_KEYSPACE = "examples"
 
-        val faker = Faker()
+        @JvmStatic
+        val faker = Fakers.faker
 
+        @JvmStatic
         val cassandra4 by lazy {
             Cassandra4Server.Launcher.cassandra4
         }
