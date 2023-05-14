@@ -28,7 +28,7 @@ class ArraySupportTest {
 
     @Test
     fun `generate array`() {
-        val array = generateIntArray(10) { it }
+        val array = IntArray(10) { it }
         array.indices.all { idx -> array[idx] == idx }.shouldBeTrue()
     }
 

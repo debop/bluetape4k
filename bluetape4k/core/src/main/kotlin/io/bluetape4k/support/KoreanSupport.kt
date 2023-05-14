@@ -1,6 +1,6 @@
 package io.bluetape4k.support
 
-import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.primitives.charArrayListOf
 
 private val CHO_SUNG: IntArray =
     intArrayOf(
@@ -82,7 +82,7 @@ fun String.getChosung(): CharArray {
     if (this.isBlank())
         return charArrayOf()
 
-    val chosungs = fastListOf<Char>()
+    val chosungs = charArrayListOf()
 
     repeat(length) { i ->
         val char = this[i].code
@@ -91,7 +91,7 @@ fun String.getChosung(): CharArray {
             chosungs.add(CHO_SUNG[choIndex].toChar())
         }
     }
-    return chosungs.toCharArray()
+    return chosungs.toArray()
 }
 
 private fun Int.getIndexes(): Triple<Int, Int, Int> {

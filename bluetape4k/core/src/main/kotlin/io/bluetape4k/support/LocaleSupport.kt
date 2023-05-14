@@ -67,7 +67,6 @@ fun Locale.calculateFilenames(basename: String): List<String> {
         temp.append(language)
         results.add(0, temp.toString())
     }
-
     temp.append("_")
 
     if (country.isNotEmpty()) {
