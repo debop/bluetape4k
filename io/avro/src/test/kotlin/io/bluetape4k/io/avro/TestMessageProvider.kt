@@ -1,39 +1,40 @@
 package io.bluetape4k.io.avro
 
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.io.avro.message.examples.Employee
 import io.bluetape4k.io.avro.message.examples.EmployeeList
 import io.bluetape4k.io.avro.message.examples.EventType
 import io.bluetape4k.io.avro.message.examples.ProductProperty
 import io.bluetape4k.io.avro.message.examples.ProductRoot
 import io.bluetape4k.io.avro.message.examples.Suit
-import net.datafaker.Faker
+import io.bluetape4k.junit5.faker.Fakers
 
 object TestMessageProvider {
 
     private const val COUNT = 1000
 
-    private val faker = Faker()
+    private val faker = Fakers.faker
 
     fun createEmployee(): Employee {
         return Employee.newBuilder()
-            .setId(AbstractAvroTest.faker.random().nextInt())
-            .setName(AbstractAvroTest.faker.name().fullName())
-            .setAddress(AbstractAvroTest.faker.address().fullAddress())
-            .setAge(AbstractAvroTest.faker.random().nextInt(100))
-            .setSalary(AbstractAvroTest.faker.random().nextLong())
+            .setId(faker.random().nextInt())
+            .setName(faker.name().fullName())
+            .setAddress(faker.address().fullAddress())
+            .setAge(faker.random().nextInt(100))
+            .setSalary(faker.random().nextLong())
             .setEventType(EventType.CREATED)
-            .setHireAt(AbstractAvroTest.faker.date().birthday().time)
-            .setLastUpdatedAt(AbstractAvroTest.faker.date().birthday().time)
+            .setHireAt(faker.date().birthday().time)
+            .setLastUpdatedAt(faker.date().birthday().time)
             .build()
     }
 
     fun createEmployeeList(count: Int = COUNT): EmployeeList =
         EmployeeList.newBuilder()
-            .setEmps(List(count) { createEmployee() })
+            .setEmps(fastList(count) { createEmployee() })
             .build()
 
 
-    private val values = mapOf(
+    private fun getValues() = mapOf(
         "name" to faker.name().fullName(),
         "nick" to faker.name().username(),
     )
@@ -45,7 +46,7 @@ object TestMessageProvider {
             .setCreatedAt(faker.date().birthday().time)
             .setUpdatedAt(faker.date().birthday().time)
             .setValid(valid)
-            .setValues(values)
+            .setValues(getValues())
             .build()
 
     fun createProductRoot(): ProductRoot =

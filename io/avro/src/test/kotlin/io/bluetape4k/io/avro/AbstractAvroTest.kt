@@ -1,13 +1,13 @@
 package io.bluetape4k.io.avro
 
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
-import net.datafaker.Faker
 
 abstract class AbstractAvroTest {
 
     companion object: KLogging() {
         @JvmStatic
-        val faker = Faker()
+        val faker = Fakers.faker
     }
 
 }

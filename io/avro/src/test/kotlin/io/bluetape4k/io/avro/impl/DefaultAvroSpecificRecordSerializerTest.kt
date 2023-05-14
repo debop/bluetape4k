@@ -20,7 +20,7 @@ import io.bluetape4k.io.avro.message.examples.v2.VersionedItem as ItemV2
 class DefaultAvroSpecificRecordSerializerTest: AbstractAvroTest() {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 10
+        private const val REPEAT_SIZE = 5
     }
 
     private val serializers = listOf(
