@@ -2,11 +2,12 @@ package io.bluetape4k.io.grpc.testing.integration
 
 import com.google.protobuf.ByteString
 import io.bluetape4k.junit5.coroutines.runSuspendTest
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.output.CaptureOutput
 import io.bluetape4k.junit5.output.OutputCapturer
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.support.randomString
+import io.bluetape4k.logging.trace
 import io.bluetape4k.support.toUtf8Bytes
 import io.grpc.ServerBuilder
 import io.grpc.StatusException
@@ -29,6 +30,10 @@ class TestServiceTest {
 
     companion object: KLogging() {
         private const val TEST_SERVICE_PORT = 50055
+
+        fun randomString(maxLength: Int): String {
+            return Fakers.fixedString(maxLength)
+        }
     }
 
     private lateinit var server: TestServiceServer
@@ -162,7 +167,7 @@ class TestServiceTest {
                 .build()
 
             emit(request)
-            log.debug { "Sent request. ${request.payload.body.size()}" }
+            log.trace { "Sent request. ${request.payload.body.size()}" }
             delay(delayMs)
         }
     }
@@ -175,12 +180,12 @@ class TestServiceTest {
                 .addResponseParameters(Messages.ResponseParameters.newBuilder().setIntervalUs(3000).setSize(128))
                 .addResponseParameters(Messages.ResponseParameters.newBuilder().setIntervalUs(3000).setSize(128))
                 .setPayload(
-                    Messages.Payload.newBuilder().setBody(ByteString.copyFrom(randomString(1024 / 4).toUtf8Bytes()))
+                    Messages.Payload.newBuilder().setBody(ByteString.copyFrom(randomString(256).toUtf8Bytes()))
                 )
                 .build()
 
             emit(request)
-            log.debug { "Sent request. ${request.payload.body.size()}" }
+            log.trace { "Sent request. ${request.payload.body.size()}" }
             delay(delayMs)
         }
     }

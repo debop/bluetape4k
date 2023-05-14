@@ -1,5 +1,6 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
+import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
 import io.bluetape4k.coroutines.tests.withSingleThread
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -16,8 +17,6 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicReference
 import kotlin.coroutines.cancellation.CancellationException
 
 class BehaviorSubjectTest {
@@ -68,7 +67,7 @@ class BehaviorSubjectTest {
     fun `일반적인 Subject 작동 예`() = runTest {
         withSingleThread { executor ->
             val subject = BehaviorSubject<Int>()
-            val result = mutableListOf<Int>()
+            val result = intArrayListOf()
 
             val job = launch(executor) {
                 subject.collect {
@@ -85,19 +84,19 @@ class BehaviorSubjectTest {
             subject.complete()
             job.join()
 
-            result shouldBeEqualTo listOf(1, 2, 3, 4, 5)
+            result shouldBeEqualTo intArrayListOf(1, 2, 3, 4, 5)
         }
     }
 
     @Test
     fun `많은 수의 Item을 제공`() = runTest {
         val subject = BehaviorSubject<Int>()
-        val counter = AtomicInteger()
+        val counter = atomic(0)
         val n = 100_000
 
         val job = launch {
             subject.collect {
-                counter.lazySet(counter.get() + 1)
+                counter.incrementAndGet()
             }
         }
 
@@ -110,14 +109,14 @@ class BehaviorSubjectTest {
         subject.complete()
         job.join()
 
-        counter.get() shouldBeEqualTo n
+        counter.value shouldBeEqualTo n
     }
 
     @Test
     fun `예외를 emit 하면 예외가 전달된다`() = runTest {
         val subject = BehaviorSubject<Int>()
-        val counter = AtomicInteger()
-        val error = AtomicReference<Throwable>()
+        val counter = atomic(0)
+        val error = atomic<Throwable?>(null)
 
         withSingleThread { executor ->
             val job = launch(executor) {
@@ -126,7 +125,7 @@ class BehaviorSubjectTest {
                         counter.incrementAndGet()
                     }
                 } catch (e: Throwable) {
-                    error.set(e)
+                    error.value = e
                 }
             }
 
@@ -140,8 +139,8 @@ class BehaviorSubjectTest {
 
             job.join()
         }
-        counter.get() shouldBeEqualTo 2
-        error.get() shouldBeInstanceOf RuntimeException::class
+        counter.value shouldBeEqualTo 2
+        error.value shouldBeInstanceOf RuntimeException::class
     }
 
     @Test
@@ -149,8 +148,8 @@ class BehaviorSubjectTest {
         val subject = BehaviorSubject<Int>()
 
         val n = 1000
-        val counter1 = AtomicInteger()
-        val counter2 = AtomicInteger()
+        val counter1 = atomic(0)
+        val counter2 = atomic(0)
 
         val job1 = launch {
             subject.collect {
@@ -173,8 +172,8 @@ class BehaviorSubjectTest {
         job1.join()
         job2.join()
 
-        counter1.get() shouldBeEqualTo n
-        counter2.get() shouldBeEqualTo n
+        counter1.value shouldBeEqualTo n
+        counter2.value shouldBeEqualTo n
     }
 
     @Test
@@ -182,8 +181,8 @@ class BehaviorSubjectTest {
         val subject = BehaviorSubject<Int>()
 
         val n = 1000
-        val counter1 = AtomicInteger()
-        val counter2 = AtomicInteger()
+        val counter1 = atomic(0)
+        val counter2 = atomic(0)
 
         val job1 = launch {
             subject
@@ -210,8 +209,8 @@ class BehaviorSubjectTest {
         job1.join()
         job2.join()
 
-        counter1.get() shouldBeEqualTo n / 2
-        counter2.get() shouldBeEqualTo n / 5
+        counter1.value shouldBeEqualTo n / 2
+        counter2.value shouldBeEqualTo n / 5
     }
 
     @Test

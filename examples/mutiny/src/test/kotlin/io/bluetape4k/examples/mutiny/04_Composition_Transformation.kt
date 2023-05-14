@@ -33,7 +33,6 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicLong
 import java.util.stream.Collectors
 import kotlin.random.Random
 
@@ -272,7 +271,7 @@ class CompositionTransformationExamples {
     }
 
     class Generator(start: Long) {
-        private val counter = AtomicLong(start)
+        private val counter = atomic(start)
 
         fun next(): Uni<Long> = Uni.createFrom().completionStage(
             CompletableFuture.supplyAsync(

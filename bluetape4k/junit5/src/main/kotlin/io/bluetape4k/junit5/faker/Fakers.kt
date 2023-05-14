@@ -48,7 +48,7 @@ object Fakers: KLogging() {
      * @param length 문자열 길이
      * @return [lengh] 길이의 fake 문자열
      */
-    fun fixedString(length: Int): String = faker.text().text(length)
+    fun fixedString(length: Int): String = randomString(length, length)
 
     /**
      * [format]에 `#`을 임의의 숫자(0~9)로 치환하는 문자열을 빌드합니다.

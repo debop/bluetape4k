@@ -1,6 +1,8 @@
 package io.bluetape4k.junit5.awaitility
 
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.yield
 import org.awaitility.core.ConditionFactory
 
 /**
@@ -8,7 +10,8 @@ import org.awaitility.core.ConditionFactory
  *
  * @param condition 판단을 위한 코드 블럭
  */
-infix fun ConditionFactory.await(block: suspend () -> Unit) {
+suspend inline infix fun ConditionFactory.await(crossinline block: suspend () -> Unit) = coroutineScope {
+    yield()
     until { runBlocking { block() }; true }
 }
 
@@ -17,7 +20,10 @@ infix fun ConditionFactory.await(block: suspend () -> Unit) {
  *
  * @param condition 판단을 위한 코드 블럭
  */
-infix fun ConditionFactory.untilSuspending(block: suspend () -> Boolean) {
+suspend inline infix fun ConditionFactory.untilSuspending(
+    crossinline block: suspend () -> Boolean,
+) = coroutineScope {
+    yield()
     until { runBlocking { block() } }
 }
 
@@ -27,6 +33,10 @@ infix fun ConditionFactory.untilSuspending(block: suspend () -> Boolean) {
  * @param supplier [predicate]가 판단할 수 있는 값을 제공합니다
  * @param predicate 대기 판단을 수행합니다
  */
-fun <T> ConditionFactory.untilSuspending(block: suspend () -> T, predicate: (T) -> Boolean): T {
-    return until({ runBlocking { block() } }, { predicate(it) })
+suspend inline fun <T> ConditionFactory.untilSuspending(
+    crossinline block: suspend () -> T,
+    crossinline predicate: (T) -> Boolean,
+): T = coroutineScope {
+    yield()
+    until({ runBlocking { yield(); block() } }, { predicate(it) })
 }

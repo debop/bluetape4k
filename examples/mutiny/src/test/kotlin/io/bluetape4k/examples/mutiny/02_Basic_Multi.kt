@@ -1,6 +1,7 @@
 package io.bluetape4k.examples.mutiny
 
 import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.mutiny.deferUni
@@ -10,6 +11,7 @@ import io.bluetape4k.utils.mutiny.onEach
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.subscription.MultiSubscriber
+import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Test
@@ -21,8 +23,6 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Flow
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicReference
 import kotlin.random.Random
 
 class MultiBasicExamples {
@@ -38,9 +38,9 @@ class MultiBasicExamples {
                     println("Subscription: $subscription")
                     subscription.request(10)
                 }, // onSubscriptoin
-                { item -> println("Item:$item") },  // onItem
-                { failure -> println("Failure: ${failure.message}") },  // onFailure
-                { println("Completed") } // onComplete
+                { item -> log.debug { "Item:$item" } },  // onItem
+                { failure -> log.debug { "Failure: ${failure.message}" } },  // onFailure
+                { log.debug { "Completed" } } // onComplete
             )
 
         // Range (10 <= x < 15)
@@ -51,7 +51,7 @@ class MultiBasicExamples {
         list shouldBeEqualTo listOf(10, 11, 12, 13, 14)
 
         // from Iterable
-        val randomNumbers = generateSequence { Random.nextInt() }.take(5).toList()
+        val randomNumbers = generateSequence { Random.nextInt() }.take(5).toFastList()
         val randoms = Multi.createFrom().iterable(randomNumbers)
             .onItem().invoke { item -> log.debug { "range: $item" } }
             .collect().asList().await().indefinitely()
@@ -89,8 +89,8 @@ class MultiBasicExamples {
     @Test
     fun `03 Multi from emitter`() {
         val service = Executors.newScheduledThreadPool(1)
-        val ref = AtomicReference<ScheduledFuture<*>>()
-        val counter = AtomicInteger()
+        val ref = atomic<ScheduledFuture<*>?>(null)
+        val counter = atomic(0)
         val latch = CountDownLatch(1)
 
         val captures = fastListOf<String>()
@@ -102,7 +102,7 @@ class MultiBasicExamples {
                         emitter.emit("tick")
                         log.debug { "Emit: tick" }
                         if (counter.incrementAndGet() == 5) {
-                            ref.get().cancel(true)
+                            ref.value?.cancel(true)
                             emitter.complete()
                             latch.countDown()
                         }
@@ -111,7 +111,7 @@ class MultiBasicExamples {
                     500,
                     TimeUnit.MILLISECONDS
                 )
-                ref.set(scheduledFuture)
+                ref.value = scheduledFuture
             }
             .subscribe()
             .with(

@@ -2,6 +2,7 @@ package io.bluetape4k.coroutines.flow.extensions.subject
 
 import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
 import io.bluetape4k.coroutines.tests.withSingleThread
+import io.bluetape4k.junit5.awaitility.untilSuspending
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
@@ -13,8 +14,8 @@ import kotlinx.coroutines.launch
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeTrue
+import org.awaitility.kotlin.await
 import org.junit.jupiter.api.Test
-import java.util.concurrent.atomic.AtomicReference
 
 class ReplaySubjectSizeBoundTest {
 
@@ -70,7 +71,7 @@ class ReplaySubjectSizeBoundTest {
             val replay = ReplaySubject<Int>(10)
 
             val result = intArrayListOf()
-            val exc = AtomicReference<Throwable>()
+            val exc = atomic<Throwable?>(null)
 
             val job = launch {
                 try {
@@ -79,7 +80,7 @@ class ReplaySubjectSizeBoundTest {
                         result.add(it)
                     }
                 } catch (e: Throwable) {
-                    exc.set(e)
+                    exc.value = e
                 }
             }
             replay.awaitCollector()
@@ -92,7 +93,7 @@ class ReplaySubjectSizeBoundTest {
             job.join()
 
             result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
-            exc.get() shouldBeInstanceOf RuntimeException::class
+            exc.value shouldBeInstanceOf RuntimeException::class
         }
     }
 
@@ -101,7 +102,7 @@ class ReplaySubjectSizeBoundTest {
         val replay = ReplaySubject<Int>(10)
 
         val result = intArrayListOf()
-        val exc = AtomicReference<Throwable>()
+        val exc = atomic<Throwable?>(null)
 
         repeat(5) {
             replay.emit(it)
@@ -113,11 +114,11 @@ class ReplaySubjectSizeBoundTest {
                 result.add(it)
             }
         } catch (e: Throwable) {
-            exc.set(e)
+            exc.value = e
         }
 
         result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
-        exc.get() shouldBeInstanceOf RuntimeException::class
+        exc.value shouldBeInstanceOf RuntimeException::class
     }
 
     @Test
@@ -138,7 +139,6 @@ class ReplaySubjectSizeBoundTest {
                 replay.emit(it)
             }
             replay.complete()
-
             job.join()
 
             result shouldBeEqualTo intArrayListOf(0, 1, 2)
@@ -310,12 +310,7 @@ class ReplaySubjectSizeBoundTest {
                 replay.emit(it)
             }
 
-            repeat(1000) {
-                if (job1.isCancelled && replay.collectorCount == 0) {
-                    return@repeat
-                }
-                delay(10)
-            }
+            await untilSuspending { job1.isCancelled && replay.collectorCount == 0 }
 
             job1.isCancelled.shouldBeTrue()
             counter1.value shouldBeEqualTo expected

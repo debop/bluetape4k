@@ -11,6 +11,7 @@ import io.smallrye.mutiny.coroutines.asFlow
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.smallrye.mutiny.subscription.MultiEmitter
 import io.smallrye.mutiny.subscription.UniEmitter
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -19,7 +20,6 @@ import org.amshove.kluent.shouldContainAll
 import org.junit.jupiter.api.Test
 import java.io.IOException
 import java.time.Duration
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.random.Random
 import kotlin.test.assertFailsWith
 
@@ -108,13 +108,13 @@ class FailuresExample {
 
     @Test
     fun `07 Multi Failure recover with completion`() = runTest {
-        val isFailed = AtomicBoolean(false)
+        val isFailed = atomic(false)
 
         val items: List<Int> = Multi.createFrom()
             .emitter { emitter -> generateMulti(emitter) }
             // .onItem().call { _ -> nullUni<Int>().onItem().delayIt().by(Duration.ofMillis(100)) }
             .onItem().invoke { it -> log.debug { it } }
-            .onFailure().invoke { _ -> log.debug("💥"); isFailed.set(true) }
+            .onFailure().invoke { _ -> log.debug("💥"); isFailed.value = true }
             .onFailure().recoverWithCompletion()  // 예외가 발생하면 종료한다
             .onCompletion().invoke { log.debug("✅") }
             .select().first(10)
@@ -122,7 +122,7 @@ class FailuresExample {
 
         log.debug { "items=$items" }
 
-        if (!isFailed.get()) {
+        if (!isFailed.value) {
             items.size shouldBeEqualTo 10
         }
     }
@@ -172,7 +172,7 @@ class FailuresExample {
         log.debug { "👀 Multi faiure retry" }
 
         Multi.createFrom()
-            .emitter<Int> { emitter -> generateMulti(emitter) }
+            .emitter { emitter -> generateMulti(emitter) }
             .onFailure().invoke { _ -> log.debug { "💥" } }
             .onFailure().retry().atMost(3)
             .onFailure().recoverWithCompletion()

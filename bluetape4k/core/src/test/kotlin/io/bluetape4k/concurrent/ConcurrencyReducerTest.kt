@@ -1,7 +1,8 @@
 package io.bluetape4k.concurrent
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
@@ -11,7 +12,6 @@ import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.test.assertFailsWith
 
 class ConcurrencyReducerTest {
@@ -71,9 +71,9 @@ class ConcurrencyReducerTest {
         val promise1 = limiter.add(job(request1))
         val promise2 = limiter.add(job(request2))
 
-        val wasInvoked = AtomicBoolean()
+        val wasInvoked = atomic(false)
         val promise3 = limiter.add {
-            wasInvoked.set(true)
+            wasInvoked.value = true
             null
         }
 
@@ -102,7 +102,7 @@ class ConcurrencyReducerTest {
         limiter.activeCount shouldBeEqualTo 0
         limiter.queuedCount shouldBeEqualTo 0
 
-        wasInvoked.get().shouldBeFalse()
+        wasInvoked.value.shouldBeFalse()
     }
 
     @Test
@@ -150,8 +150,8 @@ class ConcurrencyReducerTest {
         val maxConcurrency = 10
         val limiter = ConcurrencyReducer<String>(maxConcurrency, queueSize)
 
-        val jobs = arrayListOf<CountingJob>()
-        val promises = arrayListOf<CompletableFuture<String>>()
+        val jobs = fastListOf<CountingJob>()
+        val promises = fastListOf<CompletableFuture<String>>()
 
         repeat(queueSize) {
             val job = CountingJob(limiter::activeCount, maxCounter)
@@ -222,7 +222,7 @@ class ConcurrencyReducerTest {
 
         override fun invoke(): CompletionStage<String>? {
             val count = activeCount()
-            log.debug { "Active count=$count, maxCount=${maxCount.value}" }
+            log.trace { "Active count=$count, maxCount=${maxCount.value}" }
             if (count > maxCount.value) {
                 maxCount.value = count
             }

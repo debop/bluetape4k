@@ -1,5 +1,7 @@
 package io.bluetape4k.examples.mutiny
 
+import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.primitives.longArrayListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -12,6 +14,7 @@ import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.smallrye.mutiny.subscription.UniSubscriber
 import io.smallrye.mutiny.subscription.UniSubscription
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
@@ -26,8 +29,6 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicLong
 import kotlin.random.Random
 
 class UniBasicExamples {
@@ -79,18 +80,18 @@ class UniBasicExamples {
 
     @Test
     fun `04 Supplier와 상태를 이용하여 Uni 인스턴스 생성하기 - fold와 유사`() = runTest {
-        val uni = Uni.createFrom().item(::AtomicInteger) {
+        val uni = Uni.createFrom().item({ atomic(0) }) {
             it.addAndGet(10)
         }
 
-        val items = List(5) { uni.awaitSuspending() }
-        items shouldBeEqualTo listOf(10, 20, 30, 40, 50)
+        val items = fastList(5) { uni.awaitSuspending() }
+        items shouldBeEqualTo fastListOf(10, 20, 30, 40, 50)
     }
 
     @Test
     fun `05 deferred - Supplier와 상태를 이용하여, 구독 시마다 값을 계산해서 제공한다`() {
         // 구독 시점에 값을 계산해서 제공해준다
-        val ids = AtomicLong(0L)
+        val ids = atomic(0L)
         val deferred = Uni.createFrom().deferred { Uni.createFrom().item(ids::incrementAndGet) }
 
         val results = longArrayListOf()
@@ -127,7 +128,7 @@ class UniBasicExamples {
 
     @Test
     fun `07 Uni from emitter and state`() {
-        val uni: Uni<Long> = Uni.createFrom().emitter(::AtomicLong) { state, emitter ->
+        val uni: Uni<Long> = Uni.createFrom().emitter({ atomic(0L) }) { state, emitter ->
             emitter.complete(state.addAndGet(10))
         }
 
@@ -142,6 +143,7 @@ class UniBasicExamples {
     @Test
     fun `08 uni from failure`() {
         var errormsg: String? = null
+
         uniFailureOf<Any> { IOException("Boom") }
             .subscribe()
             .with(::println) { e ->
@@ -233,7 +235,7 @@ class UniBasicExamples {
 
     @Test
     fun `12 Uni disjoint - convert to Multi`() {
-        val list = uniOf(listOf(1, 2, 3, 4, 5))
+        val list = uniOf(fastListOf(1, 2, 3, 4, 5))
             .onItem().disjoint<Int>() // disjoint 는 item을 분해해서 Multi 로 변환시킨다
             .collect().asList()
             .await().indefinitely()

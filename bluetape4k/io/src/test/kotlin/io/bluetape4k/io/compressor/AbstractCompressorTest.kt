@@ -7,7 +7,6 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.support.emptyByteArray
 import io.bluetape4k.support.replicate
 import io.bluetape4k.support.toUtf8Bytes
-import io.bluetape4k.support.toUtf8String
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
@@ -18,7 +17,7 @@ import org.xerial.snappy.Snappy
 abstract class AbstractCompressorTest {
 
     companion object: KLogging() {
-        const val REPEAT_SIZE = 3
+        const val REPEAT_SIZE = 5
 
         @JvmStatic
         protected val faker = Fakers.faker
@@ -58,17 +57,7 @@ abstract class AbstractCompressorTest {
         val compressed = compressor.compress(expected)
         val actual = compressor.decompress(compressed)
 
-        actual shouldBeEqualTo expected
-    }
-
-    @RepeatedTest(REPEAT_SIZE)
-    fun `compress plain string`() {
-        val expected = getRandomString()
-
-        val compressed = compressor.compress(expected.toUtf8Bytes())
-        val actual = compressor.decompress(compressed).toUtf8String()
-
-        log.debug { "Ratio=${compressed.size * 100.0 / expected.length}" }
+        log.debug { "${compressor.javaClass.simpleName} ratio=${compressed.length * 100.0 / expected.length}" }
         actual shouldBeEqualTo expected
     }
 
@@ -79,7 +68,7 @@ abstract class AbstractCompressorTest {
         val compressed = compressor.compress(expected)
         val actual = compressor.decompress(compressed)
 
-        log.debug { "Ratio=${compressed.size * 100.0 / expected.size}" }
+        log.debug { "${compressor.javaClass.simpleName} ratio=${compressed.size * 100.0 / expected.size}" }
         actual shouldBeEqualTo expected
     }
 }

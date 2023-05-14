@@ -7,9 +7,10 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.spring.coroutines.await
 import io.bluetape4k.workshop.stomp.websocket.model.Greeting
 import io.bluetape4k.workshop.stomp.websocket.model.HelloMessage
+import kotlinx.atomicfu.AtomicRef
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
-import org.awaitility.kotlin.atMost
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.junit.jupiter.api.BeforeEach
@@ -29,8 +30,6 @@ import org.springframework.web.socket.sockjs.client.SockJsClient
 import org.springframework.web.socket.sockjs.client.Transport
 import org.springframework.web.socket.sockjs.client.WebSocketTransport
 import java.lang.reflect.Type
-import java.time.Duration
-import java.util.concurrent.atomic.AtomicReference
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class GreetingIntegrationTest(
@@ -57,8 +56,8 @@ class GreetingIntegrationTest(
 
     @Test
     fun `get greeting`() {
-        val received = AtomicReference<Greeting>()
-        val failure = AtomicReference<Throwable>()
+        val received = atomic<Greeting?>(null)
+        val failure = atomic<Throwable?>(null)
         val handler: StompSessionHandler = getStopmSessionHandler(received, failure)
 
         val session = stompClient.connect(wsUrl, headers, handler, port).get()
@@ -67,22 +66,22 @@ class GreetingIntegrationTest(
         try {
             session.send("/app/hello", HelloMessage("Spring"))
         } catch (e: Throwable) {
-            failure.set(e)
+            failure.value = e
         }
 
-        await atMost Duration.ofSeconds(5) until { received.get() != null || failure.get() != null }
+        await until { received.value != null || failure.value != null }
 
-        if (failure.get() == null) {
-            received.get().content shouldBeEqualTo "Hello, Spring!"
+        if (failure.value == null) {
+            received.value!!.content shouldBeEqualTo "Hello, Spring!"
         } else {
-            fail(failure.get())
+            fail(failure.value)
         }
     }
 
     @Test
     fun `get greeting with coroutines`() = runBlocking<Unit> {
-        val received = AtomicReference<Greeting>()
-        val failure = AtomicReference<Throwable>()
+        val received = atomic<Greeting?>(null)
+        val failure = atomic<Throwable?>(null)
         val handler: StompSessionHandler = getStopmSessionHandler(received, failure)
 
         val session = stompClient.connect(wsUrl, headers, handler, port).await()
@@ -91,21 +90,21 @@ class GreetingIntegrationTest(
         try {
             session.send("/app/hello", HelloMessage("Spring"))
         } catch (e: Throwable) {
-            failure.set(e)
+            failure.value = e
         }
 
-        await atMost Duration.ofSeconds(5) until { received.get() != null || failure.get() != null }
+        await until { received.value != null || failure.value != null }
 
-        if (failure.get() == null) {
-            received.get().content shouldBeEqualTo "Hello, Spring!"
+        if (failure.value == null) {
+            received.value!!.content shouldBeEqualTo "Hello, Spring!"
         } else {
-            fail(failure.get())
+            fail(failure.value)
         }
     }
 
     private fun getStopmSessionHandler(
-        received: AtomicReference<Greeting>,
-        failure: AtomicReference<Throwable>,
+        received: AtomicRef<Greeting?>,
+        failure: AtomicRef<Throwable?>,
     ): StompSessionHandler = object: TestSessionHandler(failure) {
         override fun afterConnected(session: StompSession, connectedHeaders: StompHeaders) {
             log.debug { "Stomp session connected. subscribe /topic/greetings" }
@@ -118,10 +117,10 @@ class GreetingIntegrationTest(
                         log.debug { "Payload: $payload" }
                         try {
                             val greeting = payload as Greeting
-                            received.set(greeting)
+                            received.value = greeting
                             log.debug { "Receive: $greeting" }
                         } catch (e: Throwable) {
-                            failure.set(e)
+                            failure.value = e
                         } finally {
                             session.disconnect()
                         }
