@@ -1,11 +1,9 @@
 package io.bluetape4k.infra.cache.nearcache
 
-import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.infra.cache.jcache.JCache
 import io.bluetape4k.infra.cache.jcache.JCaching
 import io.bluetape4k.infra.cache.jcache.jcacheConfiguration
 import io.bluetape4k.logging.KLogging
-import java.util.*
 import javax.cache.expiry.EternalExpiryPolicy
 
 class Cache2kNearCacheTest: AbstractNearCacheTest() {
@@ -15,7 +13,7 @@ class Cache2kNearCacheTest: AbstractNearCacheTest() {
     }
 
     override val backCache: JCache<String, Any> = JCaching.Cache2k.getOrCreate(
-        name = "back-cache-" + UUID.randomUUID().encodeBase62(),
+        name = "back-cache-" + randomKey(),
         configuration = jcacheConfiguration {
             // setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration(MILLISECONDS, 50)))
             setExpiryPolicyFactory(EternalExpiryPolicy.factoryOf())

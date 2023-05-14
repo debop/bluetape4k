@@ -8,6 +8,7 @@ import io.bluetape4k.infra.cache.nearcache.NearCache
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.testcontainers.storage.RedisServer
+import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeInstanceOf
@@ -27,8 +28,6 @@ import javax.cache.expiry.Duration
 class RedisNearCachingProviderTest {
 
     companion object: KLogging() {
-        private val redis by lazy { RedisServer.Launcher.redis }
-
         private val redisson by lazy {
             RedisServer.Launcher.RedissonLib.getRedisson()
         }
@@ -54,7 +53,7 @@ class RedisNearCachingProviderTest {
                 vType = Any::class.java
             )
         // val cache = manager.createCache(UUID.randomUUID().toString(), redisNearCacheCfg)
-        val cache = manager.getOrCreate(UUID.randomUUID().toString(), redisNearCacheCfg)
+        val cache = manager.getOrCreate(TimebasedUuid.nextBase62String(), redisNearCacheCfg)
         cache.shouldNotBeNull()
         cache shouldBeInstanceOf NearCache::class
 
@@ -83,7 +82,7 @@ class RedisNearCachingProviderTest {
                 kType = Any::class.java,
                 vType = Any::class.java
             )
-        val cache = manager.createCache(UUID.randomUUID().toString(), redisNearCacheCfg)
+        val cache = manager.createCache(TimebasedUuid.nextBase62String(), redisNearCacheCfg)
         // val cache = manager.getOrCreate<Any, Any>(UUID.randomUUID().toString(), redissonCfg)
         cache.shouldNotBeNull()
         cache shouldBeInstanceOf NearCache::class

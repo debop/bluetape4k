@@ -64,5 +64,4 @@ class RowMultitenantTest(
         job1.join()
         job2.join()
     }
-
 }

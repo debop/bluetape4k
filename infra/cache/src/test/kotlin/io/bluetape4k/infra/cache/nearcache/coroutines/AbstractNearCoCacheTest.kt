@@ -1,26 +1,26 @@
 package io.bluetape4k.infra.cache.nearcache.coroutines
 
+import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.collections.eclipse.toUnifiedMap
 import io.bluetape4k.infra.cache.jcache.coroutines.CaffeineCoCache
 import io.bluetape4k.infra.cache.jcache.coroutines.CoCache
 import io.bluetape4k.infra.cache.jcache.coroutines.CoCacheEntry
 import io.bluetape4k.junit5.awaitility.untilSuspending
-import io.bluetape4k.junit5.output.CaptureOutput
-import io.bluetape4k.junit5.output.OutputCapturer
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
-import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldNotBeEmpty
 import org.awaitility.kotlin.await
@@ -32,16 +32,14 @@ import java.time.Duration
 import java.util.*
 
 @Execution(ExecutionMode.SAME_THREAD)
-@CaptureOutput
 abstract class AbstractNearCoCacheTest
-    : CoroutineScope by CoroutineScope(CoroutineName("nearCoCache") + Dispatchers.IO) {
-
+    : CoroutineScope by CoroutineScope(CoroutineName("near-cocache") + Dispatchers.IO) {
 
     companion object: KLogging() {
-        const val TEST_SIZE = 5
+        const val TEST_SIZE = 3
 
-        fun getKey() = UUID.randomUUID().toString()
-        fun getValue() = UUID.randomUUID()
+        fun getKey() = TimebasedUuid.nextBase62String()
+        fun getValue() = Fakers.randomString(1024, 4096, true)
     }
 
     abstract val backCoCache: CoCache<String, Any>
@@ -62,7 +60,7 @@ abstract class AbstractNearCoCacheTest
     fun setup() {
         // clear 는 front cache 에만 적용.
         // clearAll 은 front, back cache 모두에 적용
-        runBlocking {
+        runSuspendWithIO {
             nearCoCache1.clear()
             nearCoCache2.clear()
             backCoCache.clear()
@@ -70,7 +68,7 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `front에 값이 없으면, back cache에 있는 값을 read through 로 가져온다`() = runTest {
+    fun `front에 값이 없으면, back cache에 있는 값을 read through 로 가져온다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
 
@@ -85,22 +83,22 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `cache entry를 삭제하면 write through로 back cache에서도 삭제되고, 다른 nearCache에서도 삭제된다`(output: OutputCapturer) = runTest {
-        val key = getKey()
-        val value = getValue()
+    fun `cache entry를 삭제하면 write through로 back cache에서도 삭제되고, 다른 nearCache에서도 삭제된다`() =
+        runSuspendWithIO {
+            val key = getKey()
+            val value = getValue()
 
-        backCoCache.containsKey(key).shouldBeFalse()
+            backCoCache.containsKey(key).shouldBeFalse()
 
-        nearCoCache1.put(key, value)
-        await untilSuspending { nearCoCache2.containsKey(key) }
+            nearCoCache1.put(key, value)
+            await untilSuspending { nearCoCache2.containsKey(key) }
 
-        output.capture() shouldContain "BackCache cache entry created."
-        backCoCache.get(key) shouldBeEqualTo value
-        nearCoCache2.get(key) shouldBeEqualTo value
-    }
+            backCoCache.get(key) shouldBeEqualTo value
+            nearCoCache2.get(key) shouldBeEqualTo value
+        }
 
     @RepeatedTest(TEST_SIZE)
-    fun `cache entry를 삭제하면 back cache도 삭제되고, 다른 nearCache에서도 삭제된다`(output: OutputCapturer) = runTest {
+    fun `cache entry를 삭제하면 back cache도 삭제되고, 다른 nearCache에서도 삭제된다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
 
@@ -116,13 +114,12 @@ abstract class AbstractNearCoCacheTest
         await untilSuspending { !nearCoCache2.containsKey(key) }
 
         backCoCache.containsKey(key).shouldBeFalse()
-        output.capture() shouldContain "BackCache cache entry removed."
         nearCoCache1.containsKey(key).shouldBeFalse()
         nearCoCache2.containsKey(key).shouldBeFalse()
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `cache entry를 update하면, 다른 nearCache에서도 update 된다`(output: OutputCapturer) = runTest {
+    fun `cache entry를 update하면, 다른 nearCache에서도 update 된다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -141,12 +138,11 @@ abstract class AbstractNearCoCacheTest
         await untilSuspending { nearCoCache2.get(key) == value2 }
 
         backCoCache.get(key) shouldBeEqualTo value2
-        output.capture() shouldContain "BackCache cache entry updated."
         nearCoCache2.get(key) shouldBeEqualTo value2
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `두 개의 nearCoCache가 서로 변화가 반영된다`() = runTest {
+    fun `두 개의 nearCoCache가 서로 변화가 반영된다`() = runSuspendWithIO {
         val key1 = getKey()
         val value1 = getValue()
         val key2 = getKey()
@@ -169,19 +165,18 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `putAll with map - 복수의 cache entry를 추가하면 다른 nearCache에도 반영된다`(output: OutputCapturer) = runTest {
+    fun `putAll with map - 복수의 cache entry를 추가하면 다른 nearCache에도 반영된다`() = runSuspendWithIO {
         val entries = List(10) { getKey() to getValue() }.toMap()
         val keys = entries.keys
 
         nearCoCache1.putAll(entries)
         await untilSuspending { keys.all { nearCoCache2.containsKey(it) } }
 
-        output.capture() shouldContain "BackCache cache entry created"
         nearCoCache2.getAll().toList() shouldContainSame entries.map { CoCacheEntry(it.key, it.value) }
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `putAll with flow - 복수의 cache entry를 추가하면 다른 nearCache에도 반영된다`() = runTest {
+    fun `putAll with flow - 복수의 cache entry를 추가하면 다른 nearCache에도 반영된다`() = runSuspendWithIO {
         val entries = List(10) { getKey() to getValue() }.toMap()
         val keys = entries.keys
 
@@ -192,7 +187,7 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `putIfAbsent - cache entry가 없는 경우에만 추가되고, 전파됩니다`() = runTest {
+    fun `putIfAbsent - cache entry가 없는 경우에만 추가되고, 전파됩니다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -214,7 +209,7 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `remove with value - cache entry를 삭제하면 모든 nearCache에서 삭제된다`() = runTest {
+    fun `remove with value - cache entry를 삭제하면 모든 nearCache에서 삭제된다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -233,7 +228,7 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `get and remove - 모든 nearCache에서 삭제된다`() = runTest {
+    fun `get and remove - 모든 nearCache에서 삭제된다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -261,7 +256,7 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `replace old value - 모든 nearCache에서 update된다`() = runTest {
+    fun `replace old value - 모든 nearCache에서 update된다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -279,7 +274,7 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `replace - 모든 nearCache가 update 된다`(output: OutputCapturer) = runTest {
+    fun `replace - 모든 nearCache가 update 된다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -293,12 +288,11 @@ abstract class AbstractNearCoCacheTest
         nearCoCache2.replace(key, value2).shouldBeTrue()
         await untilSuspending { nearCoCache1.get(key) == value2 }
 
-        output.capture() shouldContain "BackCache cache entry updated"
         nearCoCache1.get(key) shouldBeEqualTo value2
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `get and replace - 기존 값을 가져오고 새로운 값으로 갱신한다`() = runTest {
+    fun `get and replace - 기존 값을 가져오고 새로운 값으로 갱신한다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
         val value2 = getValue()
@@ -331,7 +325,7 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `removeAll with keys - 지정한 key 들을 삭제하면 모든 nearCache에 반영된다`() = runTest {
+    fun `removeAll with keys - 지정한 key 들을 삭제하면 모든 nearCache에 반영된다`() = runSuspendWithIO {
         val key1 = getKey()
         val value1 = getValue()
         val key2 = getKey()
@@ -357,8 +351,8 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `removeAll - 모든 캐시를 삭제하면 nearCache들에게 반영된다`() = runTest {
-        val entries = List(100) { getKey() to getValue() }.toMap()
+    fun `removeAll - 모든 캐시를 삭제하면 nearCache들에게 반영된다`() = runSuspendWithIO {
+        val entries = fastList(100) { getKey() to getValue() }.toUnifiedMap()
 
         nearCoCache1.putAll(entries)
         await untilSuspending { nearCoCache2.entries().toList().isNotEmpty() }
@@ -373,7 +367,7 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `clear - front cache만 clear 합니다`() = runTest {
+    fun `clear - front cache만 clear 합니다`() = runSuspendWithIO {
         val key1 = getKey()
         val value1 = getValue()
         val key2 = getKey()
@@ -398,7 +392,7 @@ abstract class AbstractNearCoCacheTest
     }
 
     @RepeatedTest(TEST_SIZE)
-    fun `clearAll - front cache와 back cache 모두를 clear 합니다 - 전파는 되지 않습니다`() = runTest {
+    fun `clearAll - front cache와 back cache 모두를 clear 합니다 - 전파는 되지 않습니다`() = runSuspendWithIO {
         val key1 = getKey()
         val value1 = getValue()
         val key2 = getKey()

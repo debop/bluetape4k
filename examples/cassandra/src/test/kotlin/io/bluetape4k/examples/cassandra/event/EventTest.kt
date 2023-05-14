@@ -1,10 +1,12 @@
 package io.bluetape4k.examples.cassandra.event
 
+import io.bluetape4k.coroutines.flow.toFastList
 import io.bluetape4k.examples.cassandra.AbstractCassandraCoroutineTest
-import io.bluetape4k.junit5.coroutines.runSuspendTest
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.spring.cassandra.selectForFlow
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -48,10 +50,12 @@ class EventTest(
     }
 
     @Test
-    fun `Flow 로 데이터 로딩하기`() = runSuspendTest {
-        insertEntities()
+    fun `Flow 로 데이터 로딩하기`() = runSuspendWithIO {
+        withContext(Dispatchers.IO) {
+            insertEntities()
+        }
 
-        val userFlow = reactiveOperations.selectForFlow<User>(Query.empty()).toList()
+        val userFlow = reactiveOperations.selectForFlow<User>(Query.empty()).toFastList()
         userFlow.size shouldBeEqualTo 3
     }
 

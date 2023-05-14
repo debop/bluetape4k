@@ -23,8 +23,6 @@ import javax.cache.expiry.Duration
 class RedisNearCacheManagerTest {
 
     companion object: KLogging() {
-        private val redis by lazy { RedisServer.Launcher.redis }
-
         private val redisson by lazy {
             RedisServer.Launcher.RedissonLib.getRedisson()
         }

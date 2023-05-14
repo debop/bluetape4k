@@ -47,21 +47,21 @@ class ExceptionHandlingExamples {
         coroutineScope {
             launch {
                 launch {
-                    delay(1000L)
+                    delay(100L)
                     throw RuntimeException("Boom!")
                 }
                 launch {
-                    delay(2000L)
+                    delay(200L)
                     fail("이 코드까지 실행되면 안됩니다.")
                 }
                 launch {
-                    delay(500)
+                    delay(50L)
                     log.info { "이 코드는 실행되어야 합니다." }
                 }
             }
 
             launch {
-                delay(2000)
+                delay(200L)
                 fail("이 코드까지 실행되면 안됩니다.")
             }
         }
@@ -72,7 +72,7 @@ class ExceptionHandlingExamples {
     fun `외부에 try catch를 적용해도 예외를 잡지 못합니다`() = runSuspendTest {
         try {
             launch {
-                delay(1000L)
+                delay(100L)
                 throw RuntimeException("Boom!")
             }
         } catch (e: Throwable) {
@@ -80,7 +80,7 @@ class ExceptionHandlingExamples {
         }
 
         launch {
-            delay(2000L)
+            delay(200L)
             fail("이 코드는 실행되면 안됩니다")
         }
     }
@@ -90,10 +90,9 @@ class ExceptionHandlingExamples {
         var capturedException: Throwable? = null
 
         coroutineScope {
-
             launch(exceptionHandler) {
                 try {
-                    delay(1000L)
+                    delay(100L)
                     throw RuntimeException("Boom!")
                 } catch (e: Throwable) {
                     capturedException = e
@@ -101,7 +100,7 @@ class ExceptionHandlingExamples {
             }
 
             launch(exceptionHandler) {
-                delay(2000L)
+                delay(200L)
             }
         }
 

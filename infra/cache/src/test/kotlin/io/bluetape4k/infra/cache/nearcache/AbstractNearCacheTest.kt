@@ -28,8 +28,12 @@ abstract class AbstractNearCacheTest {
     companion object: KLogging() {
         const val TEST_SIZE = 5
 
-        private fun randomKey(): String = TimebasedUuid.nextBase62String()
-        private fun randomValue(): String = Fakers.randomString(1024, 8192, true)
+        @JvmStatic
+        fun randomKey(): String = TimebasedUuid.nextBase62String()
+
+        @JvmStatic
+        protected fun randomValue(): String =
+            Fakers.randomString(1024, 8192, true)
     }
 
     abstract val backCache: JCache<String, Any>

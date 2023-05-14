@@ -33,7 +33,7 @@ class BackCacheEntryEventListener<K, V>(
             runCatching {
                 targetCache.putAll(events.associate { it.key to it.value })
             }.onFailure { e ->
-                log.error(e) { "Redisson 3.19.1은 버그가 있습니다. 3.18.1을 사용하세요." }
+                log.error(e) { "Fail to put all created cache entries." }
             }
         }
     }
@@ -46,7 +46,7 @@ class BackCacheEntryEventListener<K, V>(
             runCatching {
                 targetCache.putAll(events.associate { it.key to it.value })
             }.onFailure { e ->
-                log.error(e) { "Redisson 3.19.1은 버그가 있습니다. 3.18.1을 사용하세요." }
+                log.error(e) { "Fail to put all updated cache entries." }
             }
         }
     }
@@ -59,7 +59,7 @@ class BackCacheEntryEventListener<K, V>(
             runCatching {
                 targetCache.removeAll(events.map { it.key }.toSet())
             }.onFailure { e ->
-                log.error(e) { "Redisson 3.19.1은 버그가 있습니다. 3.18.1을 사용하세요." }
+                log.error(e) { "Fail to remove all removed cache entries." }
             }
         }
     }
@@ -72,7 +72,7 @@ class BackCacheEntryEventListener<K, V>(
             runCatching {
                 targetCache.removeAll(events.map { it.key }.toSet())
             }.onFailure { e ->
-                log.error(e) { "Redisson 3.19.1은 버그가 있습니다. 3.18.1을 사용하세요." }
+                log.error(e) { "Fail to remove all expired cache entries." }
             }
         }
     }

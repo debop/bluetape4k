@@ -10,7 +10,6 @@ import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
 import io.bluetape4k.spring.cassandra.insertSuspending
-import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.BeforeEach
@@ -64,21 +63,21 @@ class CassandraOperationsTest(
 
     @Test
     fun `insert and update`() {
-        val user = BasicUser(42L, "heisenberg", "Walter", "White")
+        val user = BasicUser(42L, faker.name().username(), faker.name().firstName(), faker.name().lastName())
 
         operations.insert(user)
 
-        user.firstname = ""
-        operations.update(user)
+        val updated = user.copy(firstname = faker.name().firstName())
+        operations.update(updated)
 
-        val loaded = operations.selectOneById<BasicUser>(42L)!!
-        loaded.username shouldBeEqualTo "heisenberg"
-        loaded.firstname.shouldBeEmpty()
+        val loaded = operations.selectOneById<BasicUser>(user.id)!!
+        loaded shouldBeEqualTo updated
+        loaded.firstname shouldBeEqualTo updated.firstname
     }
 
     @Test
     fun `insert asynchronously`() = runSuspendWithIO {
-        val user = BasicUser(42L, "heisenberg", "Walter", "White")
+        val user = BasicUser(42L, faker.name().username(), faker.name().firstName(), faker.name().lastName())
 
         val asyncTemplate = AsyncCassandraTemplate(session)
 
@@ -90,7 +89,7 @@ class CassandraOperationsTest(
 
     @Test
     fun `select projections`() {
-        val user = BasicUser(42L, "heisenberg", "Walter", "White")
+        val user = BasicUser(42L, faker.name().username(), faker.name().firstName(), faker.name().lastName())
         operations.insert(user)
 
         val id = operations.selectOne<Long>(selectFrom(USER_TABLE).column("user_id").asCql())

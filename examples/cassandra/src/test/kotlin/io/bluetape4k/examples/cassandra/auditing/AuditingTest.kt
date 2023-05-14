@@ -29,7 +29,7 @@ class AuditingTest(
 
     @Test
     fun `insert audited person should set createdAt`() = runSuspendWithIO {
-        val person = AuditedPerson(faker.random().nextLong(1, 99999))
+        val person = AuditedPerson(faker.random().nextLong(1, Long.MAX_VALUE))
         val saved = repository.save(person)
 
         saved.createdBy shouldBeEqualTo ACTOR
@@ -44,7 +44,7 @@ class AuditingTest(
 
     @Test
     fun `update audited person should set lastModifiedAt`() = runSuspendWithIO {
-        val person = AuditedPerson(faker.random().nextLong(1, 99999))
+        val person = AuditedPerson(faker.random().nextLong(1, Long.MAX_VALUE))
         val saved = repository.save(person)
 
         val modified = repository.save(saved)

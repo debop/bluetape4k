@@ -6,6 +6,7 @@ import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.data.cassandra.data.getList
 import io.bluetape4k.examples.cassandra.AbstractCassandraCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendTest
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.spring.cassandra.insertSuspending
 import io.bluetape4k.spring.cassandra.selectOneSuspending
@@ -30,6 +31,13 @@ class ConversionTest(
     private fun newContact(): Contact =
         Contact(faker.name().firstName(), faker.name().lastName())
 
+    private fun newAddressbook(): Addressbook =
+        Addressbook(
+            id = "private",
+            me = Contact(faker.name().firstName(), faker.name().lastName()),
+            friends = fastListOf(newContact(), newContact())
+        )
+
     @BeforeEach
     fun setup() = runSuspendTest {
         operations.truncateSuspending<Addressbook>()
@@ -41,7 +49,7 @@ class ConversionTest(
     }
 
     @Test
-    fun `write Addressbook`() = runSuspendTest {
+    fun `write Addressbook`() = runSuspendWithIO {
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),
@@ -57,7 +65,7 @@ class ConversionTest(
     }
 
     @Test
-    fun `read Addressbook`() = runSuspendTest {
+    fun `read Addressbook`() = runSuspendWithIO {
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),
@@ -72,7 +80,7 @@ class ConversionTest(
     }
 
     @Test
-    fun `write converted maps and user defined type`() = runSuspendTest {
+    fun `write converted maps and user defined type`() = runSuspendWithIO {
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),

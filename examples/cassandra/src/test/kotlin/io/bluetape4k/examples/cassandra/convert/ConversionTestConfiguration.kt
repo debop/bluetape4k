@@ -53,7 +53,7 @@ class ConversionTestConfiguration: AbstractReactiveCassandraTestConfiguration() 
     }
 
     class CustomAddressbookReadConverter: Converter<Row, CustomAddressbook> {
-        override fun convert(source: Row): CustomAddressbook? {
+        override fun convert(source: Row): CustomAddressbook {
             return CustomAddressbook(source.getString("id"), source.getString("me"))
         }
     }

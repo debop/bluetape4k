@@ -2,6 +2,7 @@ package io.bluetape4k.examples.cassandra.kotlin
 
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto
 import io.bluetape4k.data.cassandra.querybuilder.literal
+import io.bluetape4k.data.cassandra.quote
 import io.bluetape4k.data.cassandra.toCqlIdentifier
 import io.bluetape4k.examples.cassandra.AbstractCassandraTest
 import io.bluetape4k.logging.KLogging
@@ -35,7 +36,10 @@ class TemplateTest(
         val firstname: String
     }
 
-    private fun newPerson(): Person = Person(faker.name().firstName(), faker.name().lastName())
+    private fun newPerson(): Person = Person(
+        faker.name().firstName(),
+        faker.name().lastName()
+    )
 
 
     @BeforeEach
@@ -115,7 +119,7 @@ class TemplateTest(
 
         // Spring의 SelectOperations 를 사용하는 것을 추천합니다.
         val resultSet = operations.cqlOperations
-            .queryForResultSet("SELECT * FROM $PERSON_TABLE WHERE firstname='${person.firstname}'")
+            .queryForResultSet("SELECT * FROM $PERSON_TABLE WHERE firstname=${person.firstname.quote()}")
         val row = resultSet.one()!!
 
         row.getString("firstname") shouldBeEqualTo person.firstname

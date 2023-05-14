@@ -2,7 +2,9 @@ package io.bluetape4k.infra.cache.nearcache.coroutines
 
 import io.bluetape4k.infra.cache.jcache.coroutines.CoCache
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.error
+import io.bluetape4k.logging.trace
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import javax.cache.event.CacheEntryCreatedListener
 import javax.cache.event.CacheEntryEvent
@@ -26,10 +28,14 @@ class BackCoCacheEntryEventListener<K: Any, V: Any>(
      * @throws CacheEntryListenerException if there is problem executing the listener
      */
     override fun onCreated(events: MutableIterable<CacheEntryEvent<out K, out V>>) {
-        log.debug { "BackCache cache entry created. events=${events.joinToString { it.asText() }}" }
+        log.trace { "BackCache cache entry created. events=${events.joinToString { it.asText() }}" }
         if (!targetCache.isClosed()) {
-            runBlocking {
-                targetCache.putAll(events.associate { it.key to it.value })
+            runBlocking(Dispatchers.IO) {
+                runCatching {
+                    targetCache.putAll(events.associate { it.key to it.value })
+                }.onFailure { e ->
+                    log.error(e) { "Fail to put all created cache entries." }
+                }
             }
         }
     }
@@ -41,10 +47,14 @@ class BackCoCacheEntryEventListener<K: Any, V: Any>(
      * @throws CacheEntryListenerException if there is problem executing the listener
      */
     override fun onUpdated(events: MutableIterable<CacheEntryEvent<out K, out V>>) {
-        log.debug { "BackCache cache entry updated. events=${events.joinToString { it.asText() }}" }
+        log.trace { "BackCache cache entry updated. events=${events.joinToString { it.asText() }}" }
         if (!targetCache.isClosed()) {
-            runBlocking {
-                targetCache.putAll(events.associate { it.key to it.value })
+            runBlocking(Dispatchers.IO) {
+                runCatching {
+                    targetCache.putAll(events.associate { it.key to it.value })
+                }.onFailure { e ->
+                    log.error(e) { "Fail to put all updated cache entries." }
+                }
             }
         }
     }
@@ -57,10 +67,14 @@ class BackCoCacheEntryEventListener<K: Any, V: Any>(
      * @throws CacheEntryListenerException if there is problem executing the listener
      */
     override fun onRemoved(events: MutableIterable<CacheEntryEvent<out K, out V>>) {
-        log.debug { "BackCache cache entry removed. events=${events.joinToString { it.asText() }}" }
+        log.trace { "BackCache cache entry removed. events=${events.joinToString { it.asText() }}" }
         if (!targetCache.isClosed()) {
-            runBlocking {
-                targetCache.removeAll(events.map { it.key }.toSet())
+            runBlocking(Dispatchers.IO) {
+                runCatching {
+                    targetCache.removeAll(events.map { it.key }.toSet())
+                }.onFailure { e ->
+                    log.error(e) { "Fail to remove all removed cache entries." }
+                }
             }
         }
     }
@@ -73,10 +87,14 @@ class BackCoCacheEntryEventListener<K: Any, V: Any>(
      * @throws CacheEntryListenerException if there is problem executing the listener
      */
     override fun onExpired(events: MutableIterable<CacheEntryEvent<out K, out V>>) {
-        log.debug { "BackCache cache entry expired. events=${events.joinToString { it.asText() }}" }
+        log.trace { "BackCache cache entry expired. events=${events.joinToString { it.asText() }}" }
         if (!targetCache.isClosed()) {
-            runBlocking {
-                targetCache.removeAll(events.map { it.key }.toSet())
+            runBlocking(Dispatchers.IO) {
+                runCatching {
+                    targetCache.removeAll(events.map { it.key }.toSet())
+                }.onFailure { e ->
+                    log.error(e) { "Fail to remove all expired cache entries." }
+                }
             }
         }
     }

@@ -1,9 +1,9 @@
 package io.bluetape4k.examples.cassandra.reactive.auditing
 
 import io.bluetape4k.examples.cassandra.AbstractCassandraCoroutineTest
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import kotlinx.coroutines.delay
 import org.amshove.kluent.`should be in range`
@@ -40,7 +40,7 @@ class AuditingTest(
         val instantRange = Instant.now().minusSeconds(60)..Instant.now().plusSeconds(60)
 
         val actual = repository.save(order)
-        log.info { "Actual createdAt=${actual.createdAt}, lastModifiedAt=${actual.lastModifiedAt}" }
+        log.debug { "Actual createdAt=${actual.createdAt}, lastModifiedAt=${actual.lastModifiedAt}" }
 
         actual.createdBy shouldBeEqualTo "the-current-user"
         actual.createdAt.shouldNotBeNull().`should be in range`(instantRange)
@@ -51,11 +51,11 @@ class AuditingTest(
         delay(100)
 
         val loaded = repository.findById("4711")!!
-        log.info { "loaded createdAt=${loaded.createdAt}, lastModifiedAt=${loaded.lastModifiedAt}" }
+        log.debug { "loaded createdAt=${loaded.createdAt}, lastModifiedAt=${loaded.lastModifiedAt}" }
         loaded.isNew.shouldBeFalse()
 
         val ssaved = repository.save(loaded)
-        log.info { "Actual createdAt=${actual.createdAt}, lastModifiedAt=${actual.lastModifiedAt}" }
+        log.debug { "Actual createdAt=${actual.createdAt}, lastModifiedAt=${actual.lastModifiedAt}" }
 
         ssaved.createdBy shouldBeEqualTo "the-current-user"
         ssaved.createdAt.shouldNotBeNull() shouldBeEqualTo loaded.createdAt
@@ -65,14 +65,14 @@ class AuditingTest(
     }
 
     @Test
-    fun `should update auditor for custom auditable order`() = runSuspendTest {
+    fun `should update auditor for custom auditable order`() = runSuspendWithIO {
         val order = CustomAuditableOrder("4242")
         order.createdAt.shouldBeNull()
         order.isNew.shouldBeTrue()
 
         val instantRange = Instant.now().minusSeconds(60)..Instant.now().plusSeconds(60)
         customRepo.save(order).let { actual ->
-            log.info { "Actual createdAt=${actual.createdAt}, lastModifiedAt=${actual.modifiedAt}" }
+            log.debug { "Actual createdAt=${actual.createdAt}, lastModifiedAt=${actual.modifiedAt}" }
 
             actual.createdBy shouldBeEqualTo "the-current-user"
             actual.createdAt.shouldNotBeNull().`should be in range`(instantRange)
@@ -88,7 +88,7 @@ class AuditingTest(
         loaded.isNew.shouldBeFalse()
 
         customRepo.save(loaded).let { actual ->
-            log.info { "Actual createdAt=${actual.createdAt}, lastModifiedAt=${actual.modifiedAt}" }
+            log.debug { "Actual createdAt=${actual.createdAt}, lastModifiedAt=${actual.modifiedAt}" }
 
             actual.createdBy shouldBeEqualTo "the-current-user"
             actual.createdAt.shouldNotBeNull() shouldBeEqualTo loaded.createdAt

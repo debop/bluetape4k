@@ -15,16 +15,19 @@ class StreamNullableTest(
     @Autowired private val repository: PersonRepository,
 ): AbstractCassandraTest() {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        fun newPerson(id: String = "1"): Person =
+            Person(id, faker.name().firstName(), faker.name().lastName())
+    }
 
     @BeforeEach
-    fun setup() {
+    fun beforeEach() {
         runCatching { repository.deleteAll() }
     }
 
     @Test
     fun `provide find one with nullable`() {
-        val homer = repository.save(Person("1", "Homer", "Simpson"))
+        val homer = repository.save(newPerson("1"))
 
         repository.findById("1").shouldNotBeNull()
         repository.findById(homer.id + 1).shouldBeNull()
@@ -32,7 +35,7 @@ class StreamNullableTest(
 
     @Test
     fun `invoke default function`() {
-        val homer = repository.save(Person("1", "Homer", "Simpson"))
+        val homer = repository.save(newPerson("2"))
         val loaded = repository.findByPerson(homer)
 
         loaded shouldBeEqualTo homer
@@ -40,8 +43,8 @@ class StreamNullableTest(
 
     @Test
     fun `use Java8 Stream with custom query`() {
-        val homer = repository.save(Person("1", "Homer", "Simpson"))
-        val bart = repository.save(Person("2", "Bart", "Simpson"))
+        val homer = repository.save(newPerson("3"))
+        val bart = repository.save(newPerson("4"))
 
         val stream = repository.findAll()
         stream.toList().sorted() shouldBeEqualTo listOf(homer, bart)

@@ -73,7 +73,7 @@ class NearCoCache<K: Any, V: Any> private constructor(
 
     init {
         if (checkExpiryPeriod in 1000..Int.MAX_VALUE) {
-            runBlocking {
+            runBlocking(Dispatchers.IO) {
                 checkBackCacheExpiration()
             }
         }

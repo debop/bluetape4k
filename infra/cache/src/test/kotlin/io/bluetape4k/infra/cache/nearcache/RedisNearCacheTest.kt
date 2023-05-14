@@ -1,6 +1,6 @@
 package io.bluetape4k.infra.cache.nearcache
 
-import io.bluetape4k.codec.encodeBase62
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.infra.cache.jcache.JCache
 import io.bluetape4k.infra.cache.jcache.JCaching
 import io.bluetape4k.infra.cache.jcache.jcacheConfiguration
@@ -13,7 +13,6 @@ import org.awaitility.kotlin.await
 import org.junit.jupiter.api.Test
 import org.redisson.api.RedissonClient
 import java.io.Serializable
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.cache.configuration.CompleteConfiguration
 import javax.cache.expiry.CreatedExpiryPolicy
@@ -30,8 +29,8 @@ class RedisNearCacheTest: AbstractNearCacheTest() {
 
         fun randomHashMap(): HashMap<String, Any?> {
             return HashMap<String, Any?>().apply {
-                put("key", Fakers.randomString(16))
-                put("key2", Fakers.randomString(16))
+                put("key", randomKey())
+                put("key2", randomKey())
             }
         }
     }
@@ -47,7 +46,7 @@ class RedisNearCacheTest: AbstractNearCacheTest() {
         }
 
         JCaching.Redisson.getOrCreate<String, Any>(
-            "back-cache-" + UUID.randomUUID().encodeBase62(),
+            "back-cache-" + randomKey(),
             redisson,
             jcacheConfiguration
         )
@@ -57,8 +56,8 @@ class RedisNearCacheTest: AbstractNearCacheTest() {
     // NOTE: java.util.HashMap 을 사용하면, 성공합니다.
     // 참고: https://github.com/redisson/redisson/issues/4809
     data class CacheItem(
-        val key: String = Fakers.randomString(16),
-        val value: String = Fakers.randomString(256, 1024, true),
+        val key: String = randomKey(),
+        val value: String = randomValue(),
         val header: Map<String, Any?> = randomHashMap(),
         val claims: Map<String, Any?> = randomHashMap(),
         val signature: String? = Fakers.randomString(16),
@@ -66,8 +65,8 @@ class RedisNearCacheTest: AbstractNearCacheTest() {
 
     @Test
     fun `Redisson Cache Expire 동작 여부`() {
-        val key1 = Fakers.randomString(16)
-        val key2 = Fakers.randomString(16)
+        val key1 = randomKey()
+        val key2 = randomKey()
         val value1 = CacheItem()
         val value2 = CacheItem()
 
@@ -95,9 +94,9 @@ class RedisNearCacheTest: AbstractNearCacheTest() {
 
     @Test
     fun `remote cache entry가 expire 되면 near cache도 expire 되어야 한다`() {
-        val keys = List(1_000) { it }
+        val keys = fastList(1_000) { it }
             .chunked(100) {
-                val entries = it.associate { UUID.randomUUID().encodeBase62() to CacheItem() }
+                val entries = it.associate { randomKey() to CacheItem() }
                 nearCache1.putAll(entries)
                 entries.keys
             }

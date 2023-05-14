@@ -22,7 +22,6 @@ class PersonRepositoryTest(
 
     companion object: KLogging()
 
-
     @BeforeEach
     fun beforeEach() {
         runSuspendWithIO {
@@ -63,10 +62,6 @@ class PersonRepositoryTest(
         repository.findOneByFirstname("Not exists").shouldBeNull()
     }
 
-    private fun newPerson(): Person {
-        return Person(faker.name().firstName(), faker.name().lastName())
-    }
-
     private suspend fun insertPeople() {
         repository.deleteAll()
 
@@ -78,6 +73,11 @@ class PersonRepositoryTest(
             newPerson(),
             newPerson(),
         )
+
         repository.saveAll(users).collect()
+    }
+
+    private fun newPerson(): Person {
+        return Person(faker.name().firstName(), faker.name().lastName())
     }
 }

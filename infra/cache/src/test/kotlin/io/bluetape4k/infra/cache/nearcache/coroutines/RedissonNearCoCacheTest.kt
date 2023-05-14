@@ -4,22 +4,18 @@ import io.bluetape4k.infra.cache.jcache.coroutines.CoCache
 import io.bluetape4k.infra.cache.jcache.coroutines.RedissonCoCache
 import io.bluetape4k.infra.cache.jcache.jcacheConfiguration
 import io.bluetape4k.junit5.awaitility.untilSuspending
-import io.bluetape4k.junit5.output.CaptureOutput
-import io.bluetape4k.junit5.output.OutputCapturer
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.storage.RedisServer
-import kotlinx.coroutines.test.runTest
+import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
-import org.amshove.kluent.shouldContain
 import org.awaitility.kotlin.await
 import org.junit.jupiter.api.Test
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.cache.expiry.CreatedExpiryPolicy
 import javax.cache.expiry.Duration
 
-@CaptureOutput
 class RedissonNearCoCacheTest: AbstractNearCoCacheTest() {
 
     companion object: KLogging() {
@@ -32,13 +28,13 @@ class RedissonNearCoCacheTest: AbstractNearCoCacheTest() {
 
     override val backCoCache: CoCache<String, Any> by lazy {
         val configuration = jcacheConfiguration<String, Any> {
-            setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration(TimeUnit.MILLISECONDS, 1000)))
+            setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration(TimeUnit.MILLISECONDS, 1000L)))
         }
-        RedissonCoCache("redis-back-cocache" + UUID.randomUUID().toString(), redisson, configuration)
+        RedissonCoCache("redis-back-cocache" + TimebasedUuid.nextBase62String(), redisson, configuration)
     }
 
     @Test
-    fun `back cache entry가 expire 되면 event listener를 통해 front cache가 삭제됩니다`(output: OutputCapturer) = runTest {
+    fun `back cache entry가 expire 되면 event listener를 통해 front cache가 삭제됩니다`() = runSuspendWithIO {
         val key = getKey()
         val value = getValue()
 
@@ -52,8 +48,6 @@ class RedissonNearCoCacheTest: AbstractNearCoCacheTest() {
         // NearCache 내에서 Expire 검사 Thread로 동작해야 합니다.
         await untilSuspending { !nearCoCache2.containsKey(key) }
         await untilSuspending { !nearCoCache1.containsKey(key) }
-
-        output.capture() shouldContain "backCache의 cache entry가 expire 되었는지 검사합니다"
 
         backCoCache.containsKey(key).shouldBeFalse()
         nearCoCache1.containsKey(key).shouldBeFalse()

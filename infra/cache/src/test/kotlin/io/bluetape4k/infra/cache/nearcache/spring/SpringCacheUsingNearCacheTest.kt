@@ -1,11 +1,11 @@
 package io.bluetape4k.infra.cache.nearcache.spring
 
-import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.infra.cache.jcache.jcachingProvider
 import io.bluetape4k.infra.cache.nearcache.redis.RedisNearCachingProvider
 import io.bluetape4k.infra.cache.nearcache.redis.redisNearCacheConfigurationOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.storage.RedisServer
+import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -123,7 +123,7 @@ class SpringCacheUsingNearCacheTest {
 
     @Test
     fun `cacheable value should be calculated only once`() {
-        val arg = UUID.randomUUID().encodeBase62()
+        val arg = TimebasedUuid.nextBase62String()
         // Cacheable 메소드 최초 호출 전에는 cache 에 값 없음
         cache.get(arg) shouldBeEqualTo null
         val first = someCacheable.someCacheableFunc(arg)
