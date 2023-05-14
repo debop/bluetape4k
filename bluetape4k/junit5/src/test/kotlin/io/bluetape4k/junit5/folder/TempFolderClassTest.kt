@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class TempFolderClassTest {
+
     @Test
     fun `임시 폴더 생성 후 close 시에 임시폴더는 삭제된다`() {
         val tempFolder = TempFolder()

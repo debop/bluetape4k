@@ -26,9 +26,9 @@ class TempFolder: ExtensionContext.Store.CloseableResource, Closeable {
         try {
             rootPath = Files.createTempDirectory(PREFIX)
             rootFolder = rootPath.toFile()
-            log.debug { "Create temporary folder. [$rootPath]" }
+            log.debug { "Create temporary root directory. [$rootPath]" }
         } catch (e: IOException) {
-            throw TempFolderException("Fail to create temporary root folder for testing", e)
+            throw TempFolderException("Fail to create temporary root directory for testing", e)
         }
     }
 
@@ -57,10 +57,10 @@ class TempFolder: ExtensionContext.Store.CloseableResource, Closeable {
     fun createDirectory(dir: String): File {
         return try {
             val path = Paths.get(root.path, dir)
-            log.debug { "Create temporary directory. [$path]" }
+            log.debug { "Create temporary sub directory. [$path]" }
             Files.createDirectory(path).toFile()
         } catch (e: IOException) {
-            throw TempFolderException("Fail to create temporary directory. dir=$dir")
+            throw TempFolderException("Fail to create temporary sub directory. dir=$dir")
         }
     }
 

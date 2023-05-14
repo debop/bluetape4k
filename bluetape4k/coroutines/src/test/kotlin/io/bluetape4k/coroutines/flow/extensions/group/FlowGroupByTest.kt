@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
@@ -96,30 +95,26 @@ class FlowGroupByTest {
     }
 
     @Test
-    fun `main errors no items`() {
+    fun `main errors no items`() = runTest {
         assertFailsWith<IllegalStateException> {
-            runBlocking {
-                (1..10).asFlow()
-                    .map { if (it < 5) error("oops") else it }
-                    .groupBy { it % 2 == 0 }
-                    .flatMapMerge { it }
-                    .onEach { log.trace { it } }
-                    .collect()
-            }
+            (1..10).asFlow()
+                .map { if (it < 5) error("oops") else it }
+                .groupBy { it % 2 == 0 }
+                .flatMapMerge { it }
+                .onEach { log.trace { it } }
+                .collect()
         }
     }
 
     @Test
-    fun `main errors some items`() {
+    fun `main errors some items`() = runTest {
         assertFailsWith<IllegalStateException> {
-            runBlocking {
-                (1..10).asFlow()
-                    .map { if (it > 5) error("oops") else it }
-                    .groupBy { it % 2 == 0 }
-                    .flatMapMerge { it }
-                    .onEach { log.trace { it } }
-                    .collect()
-            }
+            (1..10).asFlow()
+                .map { if (it > 5) error("oops") else it }
+                .groupBy { it % 2 == 0 }
+                .flatMapMerge { it }
+                .onEach { log.trace { it } }
+                .collect()
         }
     }
 }

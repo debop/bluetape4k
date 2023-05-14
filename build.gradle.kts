@@ -96,6 +96,7 @@ subprojects {
                     "kotlinx.coroutines.ExperimentalCoroutinesApi",
                     "kotlinx.coroutines.InternalCoroutinesApi",
                     "kotlinx.coroutines.FlowPreview",
+                    "kotlinx.coroutines.DelicateCoroutinesApi",
                 )
                 freeCompilerArgs = freeCompilerArgs.plus(experimentalAnnotations.map { "-opt-in=$it" })
             }
@@ -128,6 +129,7 @@ subprojects {
                     "kotlinx.coroutines.ExperimentalCoroutinesApi",
                     "kotlinx.coroutines.InternalCoroutinesApi",
                     "kotlinx.coroutines.FlowPreview",
+                    "kotlinx.coroutines.DelicateCoroutinesApi",
                 )
                 freeCompilerArgs = freeCompilerArgs.plus(experimentalAnnotations.map { "-opt-in=$it" })
             }

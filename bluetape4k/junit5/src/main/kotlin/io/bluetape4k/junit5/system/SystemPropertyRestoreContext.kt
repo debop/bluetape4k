@@ -28,8 +28,8 @@ internal class SystemPropertyRestoreContext(
 
 
     class Builder {
-        val propertyNames = HashSet<String>()
-        val restoreProperties = LinkedHashMap<String, String>()
+        private val propertyNames = HashSet<String>()
+        private val restoreProperties = LinkedHashMap<String, String>()
 
         fun addPropertyName(name: String) = apply {
             propertyNames.add(name)

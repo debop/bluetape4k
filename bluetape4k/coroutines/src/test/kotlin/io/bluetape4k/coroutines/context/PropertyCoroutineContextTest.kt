@@ -6,6 +6,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
@@ -46,6 +47,7 @@ class PropertyCoroutineContextTest {
             propCtx["key1"] shouldBeEqualTo 1
             propCtx["key2"] shouldBeEqualTo "two"
         }
+        yield()
 
         job1.join()
         job2.join()

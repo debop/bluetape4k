@@ -11,7 +11,7 @@ fun <T, K, V> Flow<T>.groupBy(keySelector: suspend (T) -> K, valueSelector: susp
     FlowGroupBy(this, keySelector, valueSelector)
 
 /**
- * [GroupedFlow]의 Value 들만 묶어, `List<V>` 형태의 요소를 제공하는 [Flow]로 변환합니다.
+ * [GroupedFlow]의 Value들만 묶어, `List<V>` 형태의 요소를 제공하는 [Flow]로 변환합니다.
  */
 fun <K, V> GroupedFlow<K, V>.asValuesFlow(): Flow<List<V>> {
     val self = this
@@ -22,7 +22,7 @@ fun <K, V> GroupedFlow<K, V>.asValuesFlow(): Flow<List<V>> {
 }
 
 /**
- * [GroupedFlow]의 [key] 와 Value 들을 묶어, `Pair<K, List<V>>` 형태의 요소를 제공하는 [Flow]로 변환합니다.
+ * [GroupedFlow]의 [key] 와 Value들을 묶어, `Pair<K, List<V>>` 형태의 요소를 제공하는 [Flow]로 변환합니다.
  */
 fun <K, V> GroupedFlow<K, V>.asKeyValuesFlow(): Flow<Pair<K, List<V>>> {
     val self = this

@@ -14,9 +14,7 @@ import org.junit.jupiter.api.Test
 
 class DeferredExtensionsTest {
 
-    companion object: KLogging() {
-        private const val REPEAT_SIZE = 10
-    }
+    companion object: KLogging()
 
     @Test
     fun `값 계산은 async로 시작합니다`() = runTest {

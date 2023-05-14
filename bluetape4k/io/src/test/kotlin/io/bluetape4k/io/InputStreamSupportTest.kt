@@ -25,7 +25,8 @@ class InputStreamExtensionsTest {
         private val faker = Fakers.faker
 
         @JvmStatic
-        private fun randomString() = Fakers.randomString(2048, 4096)
+        private fun randomString(length: Int = 2048): String =
+            Fakers.fixedString(length)
     }
 
     @RepeatedTest(REPEAT_SIZE)

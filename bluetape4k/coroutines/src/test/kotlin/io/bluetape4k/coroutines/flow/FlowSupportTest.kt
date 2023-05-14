@@ -2,11 +2,10 @@ package io.bluetape4k.coroutines.flow
 
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import io.bluetape4k.support.randomString
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -26,14 +25,13 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.RepeatedTest
 import kotlin.random.Random
 
-@OptIn(DelicateCoroutinesApi::class)
 class FlowSupportTest {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 3
     }
 
-    private val dispatcher = newFixedThreadPoolContext(4, "flowext")
+    private val dispatcher = newFixedThreadPoolContext(8, "flowext")
 
     @RepeatedTest(REPEAT_SIZE)
     fun `repeatFlow operator`() = runTest {
@@ -114,6 +112,7 @@ class FlowSupportTest {
                 _slidingCount.incrementAndGet()
             }
             .collect()
+
         slidingCount shouldBeEqualTo 20
     }
 
@@ -131,6 +130,7 @@ class FlowSupportTest {
                 _slidingCount.incrementAndGet()
             }
             .collect()
+
         slidingCount shouldBeEqualTo 20
     }
 
@@ -149,6 +149,7 @@ class FlowSupportTest {
                 _windowedCount.incrementAndGet()
             }
             .collect()
+
         windowedCount shouldBeEqualTo 20
     }
 
@@ -167,6 +168,7 @@ class FlowSupportTest {
                 _windowedCount.incrementAndGet()
             }
             .collect()
+
         windowedCount shouldBeEqualTo 5
     }
 
@@ -185,6 +187,7 @@ class FlowSupportTest {
                 _windowedCount.incrementAndGet()
             }
             .collect()
+
         windowedCount shouldBeEqualTo 4
     }
 
@@ -206,6 +209,7 @@ class FlowSupportTest {
                     _windowedCount.incrementAndGet()
                 }
                 .collect()
+
             windowedCount shouldBeEqualTo 20
         }
 
@@ -225,6 +229,7 @@ class FlowSupportTest {
                     _windowedCount.incrementAndGet()
                 }
                 .collect()
+
             windowedCount shouldBeEqualTo 5
         }
 
@@ -244,6 +249,7 @@ class FlowSupportTest {
                     _windowedCount.incrementAndGet()
                 }
                 .collect()
+
             windowedCount shouldBeEqualTo 4
         }
     }
@@ -260,7 +266,7 @@ class FlowSupportTest {
                 .map { rows ->
                     Order(rows[0].orderId, rows.map { OrderItem(it.itemId, it.itemName, it.itemQuantity) })
                 }
-                .toList()
+                .toFastList()
 
             orders shouldHaveSize orderCount
             orders.all { it.items.size == itemCount }.shouldBeTrue()
@@ -276,7 +282,7 @@ class FlowSupportTest {
                     OrderRow(
                         oid + 1,
                         (oid + 1) * 10 + itemId + 1,
-                        randomString(16),
+                        Fakers.fixedString(16),
                         Random.nextInt(10, 99)
                     )
                 }
