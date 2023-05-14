@@ -1,6 +1,8 @@
 package io.bluetape4k.infra.micrometer.instrument.retrofit2
 
 import com.jakewharton.retrofit2.adapter.reactor.ReactorCallAdapterFactory
+import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.concurrent.sequence
 import io.bluetape4k.infra.micrometer.AbstractMicrometerTest
 import io.bluetape4k.io.retrofit2.clients.vertx.vertxCallFactoryOf
 import io.bluetape4k.io.retrofit2.defaultJsonConverterFactory
@@ -10,6 +12,7 @@ import io.bluetape4k.io.retrofit2.service
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import io.bluetape4k.support.classIsPresent
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import kotlinx.coroutines.Dispatchers
@@ -64,7 +67,7 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
         call.shouldNotBeNull()
         val posts = call.execute().body()
         posts.shouldNotBeNull()
-        log.debug { "posts=$posts" }
+        log.trace { "posts=$posts" }
 
         repeat(REPEAT_SIZE) {
             httpbinApi.getPosts().execute()
@@ -86,11 +89,9 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
         call.shouldNotBeNull()
         val posts = call.executeAsync().await().body()
         posts.shouldNotBeNull()
-        log.debug { "posts=$posts" }
+        log.trace { "posts=$posts" }
 
-        List(REPEAT_SIZE) {
-            api.getPosts().executeAsync()
-        }.map { it.await() }
+        fastList(REPEAT_SIZE) { api.getPosts().executeAsync() }.sequence().await()
 
         registry.meters.forEach { meter ->
             log.debug { "id=${meter.id}, tags=${meter.measure().joinToString()}" }
@@ -105,9 +106,9 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
         val api = createRetrofit(factory).service<TestService.CoroutineJsonPlaceholderApi>()
 
         val posts = api.getPosts()
-        log.debug { "posts=$posts" }
+        log.trace { "posts=$posts" }
 
-        List(REPEAT_SIZE) {
+        fastList(REPEAT_SIZE) {
             launch(Dispatchers.IO) {
                 api.getPosts()
             }
