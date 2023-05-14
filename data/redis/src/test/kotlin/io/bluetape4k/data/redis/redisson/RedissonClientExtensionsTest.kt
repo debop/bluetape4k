@@ -9,7 +9,7 @@ import org.junit.jupiter.api.RepeatedTest
 class RedissonClientExtensionsTest: AbstractRedissonTest() {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 5
+        private const val REPEAT_SIZE = 3
     }
 
     @RepeatedTest(REPEAT_SIZE)

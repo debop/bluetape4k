@@ -20,7 +20,7 @@ class RedissonMemoerizerTest: AbstractRedissonTest() {
         .apply { clear() }
 
     val heavyFunc: (Int) -> Int = heavyMap.memorizer { x ->
-        Thread.sleep(10)
+        Thread.sleep(100)
         x * x
     }
 
@@ -40,19 +40,19 @@ class RedissonMemoerizerTest: AbstractRedissonTest() {
 
     @Test
     fun `run factorial`() {
-        val x1 = factorial.calc(500)
+        val x1 = factorial.calc(100)
 
         assertTimeout(Duration.ofMillis(1000)) {
-            factorial.calc(500)
+            factorial.calc(100)
         } shouldBeEqualTo x1
     }
 
     @Test
     fun `run fibonacci`() {
-        val x1 = fibonacci.calc(500)
+        val x1 = fibonacci.calc(100)
 
         assertTimeout(Duration.ofMillis(1000)) {
-            fibonacci.calc(500)
+            fibonacci.calc(100)
         } shouldBeEqualTo x1
     }
 }

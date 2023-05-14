@@ -39,7 +39,7 @@ class FlowSupportTest {
     fun `repeatFlow operator`() = runTest {
         val repeated = repeatFlow(4) {
             log.trace { "Processing $it" }
-            delay(Random.nextLong(100))
+            delay(Random.nextLong(30))
             42
         }
             .flowOn(dispatcher)
@@ -55,7 +55,7 @@ class FlowSupportTest {
         val results = ranges.asFlow()
             .asyncMap(dispatcher) {
                 log.trace { "AsyncMap Started $it" }
-                delay(Random.nextLong(300))
+                delay(Random.nextLong(30))
                 it
             }
             .map {

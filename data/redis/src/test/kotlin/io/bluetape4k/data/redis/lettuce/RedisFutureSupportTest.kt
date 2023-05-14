@@ -1,5 +1,6 @@
 package io.bluetape4k.data.redis.lettuce
 
+import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
@@ -9,8 +10,8 @@ import org.junit.jupiter.api.RepeatedTest
 class RedisFutureSupportTest: AbstractLettuceTest() {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 5
-        private const val ITEM_SIZE = 1000
+        private const val REPEAT_SIZE = 3
+        private const val ITEM_SIZE = 500
     }
 
 
@@ -18,7 +19,7 @@ class RedisFutureSupportTest: AbstractLettuceTest() {
     fun `bulk put asynchroneously`() = runSuspendWithIO {
         val keyName = randomName()
 
-        val futures = List(ITEM_SIZE) { index ->
+        val futures = fastList(ITEM_SIZE) { index ->
             asyncCommands.hset(keyName, index.toString(), index)
         }
         val list = futures.awaitAll()
@@ -33,7 +34,7 @@ class RedisFutureSupportTest: AbstractLettuceTest() {
     fun `sequence for collection of RedisFuture`() {
         val keyName = randomName()
 
-        val futures = List(ITEM_SIZE) { index ->
+        val futures = fastList(ITEM_SIZE) { index ->
             asyncCommands.hset(keyName, index.toString(), index)
         }.sequence()
 

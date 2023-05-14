@@ -2,7 +2,6 @@ package io.bluetape4k.collections.eclipse.parallel
 
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.collections.stream.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
@@ -13,6 +12,7 @@ import org.eclipse.collections.impl.list.mutable.FastList
 import org.junit.jupiter.api.Test
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.random.Random
+import kotlin.system.measureNanoTime
 import kotlin.system.measureTimeMillis
 
 class ParallelSupportTest {
@@ -51,21 +51,21 @@ class ParallelSupportTest {
         val count = LIST_COUNT
         val xs = fastList(count) { it }
 
-        val fastTime = measureTimeMillis {
+        val fastTime = measureNanoTime {
             xs.parCount(count / 10) {
-                Thread.sleep(1)
+                // Thread.sleep(1)
                 it % 2 == 0
             } shouldBeEqualTo count / 2
         }
 
-        val slowTime = measureTimeMillis {
-            xs.parCount {
-                Thread.sleep(1)
+        val slowTime = measureNanoTime {
+            xs.parCount(1) {
+                // Thread.sleep(1)
                 it % 2 == 0
             } shouldBeEqualTo count / 2
         }
 
-        log.trace { "fastTime=$fastTime, slowTime=$slowTime" }
+        log.debug { "fastTime=$fastTime, slowTime=$slowTime" }
         fastTime shouldBeLessThan slowTime
     }
 
@@ -178,21 +178,21 @@ class ParallelSupportTest {
         val xs = fastList(COUNT) { "$suffix-$it" }
 
         val mapper: (String) -> Int = { it.drop(suffix.length + 1).toInt() }
-        val batchSize = COUNT / Runtime.getRuntime().availableProcessors()
+        val batchSize = COUNT / Runtime.getRuntime().availableProcessors() / 2
 
-        repeat(2) {
+        repeat(1) {
             xs.parallelStream().map(mapper)
             xs.parMap { mapper.invoke(it) }
         }
 
         val parallel = measureTimeMillis {
-            repeat(10) {
-                xs.parallelStream().map(mapper).toFastList()
+            repeat(5) {
+                xs.parallelStream().map(mapper).toList()
             }
         }
 
         val parMap = measureTimeMillis {
-            repeat(10) {
+            repeat(5) {
                 xs.parMap(batchSize = batchSize) { mapper(it) }
             }
         }

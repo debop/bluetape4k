@@ -29,7 +29,7 @@ import javax.persistence.EntityManagerFactory
         "spring.jpa.properties.hibernate.format_sql=true",
         "spring.jpa.properties.hibernate.highlight_sql=true",
         // 성능 측정 정보 제공
-        "spring.jpa.properties.hibernate.generate_statistics=true",
+        "spring.jpa.properties.hibernate.generate_statistics=false",
         //"spring.jpa.properties.hibernate.use_sql_comments=true",
         //
         // NOTE: literal 을 parameter 로 binding 시킵니다
@@ -44,11 +44,11 @@ import javax.persistence.EntityManagerFactory
         // Seond Cache
         "spring.jpa.properties.hibernate.cache.use_secoond_level_cache=false",
         // Query Cache
-        "spring.jpa.properties.hibernate.cache.use_query_cache=false",
+        "spring.jpa.properties.hibernate.cache.use_query_cache=true",
 
         // JPA Batch Insert (https://cheese10yun.github.io/jpa-batch-insert/)
         // MySQL인 경우 jdbc url에 `rewriteBatchedStatements=true` 추가해야 함
-        "spring.jpa.properties.hibernate.jdbc.batch_size=10",
+        "spring.jpa.properties.hibernate.jdbc.batch_size=30",
         "spring.jpa.properties.hibernate.order_inserts=true",
         "spring.jpa.properties.hibernate.order_updates=true"
     ],

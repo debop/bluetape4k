@@ -5,6 +5,8 @@ import com.datastax.oss.driver.api.core.config.DefaultDriverOption
 import com.datastax.oss.driver.api.core.cql.AsyncResultSet
 import com.datastax.oss.driver.api.core.cql.PreparedStatement
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto
+import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.data.cassandra.AbstractCassandraTest
 import io.bluetape4k.data.cassandra.cql.executeSuspending
 import io.bluetape4k.data.cassandra.querybuilder.bindMarker
@@ -17,6 +19,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.RepeatedTest
+import java.io.Serializable
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
@@ -30,7 +33,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
 
     companion object: KLogging() {
         private const val CONCURRENCY_LEVEL = 32
-        private const val TOTAL_NUMBER_OF_INSERTS = 10_000
+        private const val TOTAL_NUMBER_OF_INSERTS = 1_000
         private const val IN_FLIGHT_REQUESTS = 500
 
         private const val REPEAT_SIZE = 3
@@ -111,7 +114,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
         val pst = prepareStatemet(session)
 
         val ranges = createRanges(CONCURRENCY_LEVEL, TOTAL_NUMBER_OF_INSERTS)
-        val pending = arrayListOf<CompletionStage<AsyncResultSet>>()
+        val pending = fastListOf<CompletionStage<AsyncResultSet>>()
 
         // Every range will have dedicated CompletableFuture handling the execution.
         ranges.forEach { range ->
@@ -149,7 +152,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
     }
 
     private fun createRanges(concurrencyLevel: Int, totalNumberOfInserts: Int): List<Range> {
-        val ranges = arrayListOf<Range>()
+        val ranges = fastListOf<Range>()
         val numberOfElementsInRange = totalNumberOfInserts / concurrencyLevel
 
         repeat(concurrencyLevel) {
@@ -163,7 +166,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
         return ranges
     }
 
-    private data class Range(val first: Int, val last: Int)
+    private data class Range(val first: Int, val last: Int): Serializable
 
     @RepeatedTest(REPEAT_SIZE)
     fun `개별 작업을 모두 비동기로 수행 - 기본 Throttle 적용`() {
@@ -179,7 +182,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
         println("throttle=$throttle")
 
         val pst = prepareStatemet(session)
-        val pending = arrayListOf<CompletableFuture<AsyncResultSet>>()
+        val pending = fastListOf<CompletableFuture<AsyncResultSet>>()
 
         repeat(TOTAL_NUMBER_OF_INSERTS) {
             val stmt = pst.bind().setUuid("id", UUID.randomUUID()).setInt("value", it)
@@ -207,7 +210,7 @@ class LimitConcurrencyExamples: AbstractCassandraTest() {
 
         val pst = prepareStatemet(session)
         runSuspendWithIO {
-            val tasks = List(TOTAL_NUMBER_OF_INSERTS) {
+            val tasks = fastList(TOTAL_NUMBER_OF_INSERTS) {
                 async(Dispatchers.IO) {
                     val stmt = pst.bind().setUuid("id", UUID.randomUUID()).setInt("value", it)
                     session.executeSuspending(stmt)

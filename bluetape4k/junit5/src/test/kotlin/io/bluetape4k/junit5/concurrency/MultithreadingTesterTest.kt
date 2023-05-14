@@ -40,10 +40,10 @@ class MultithreadingTesterTest {
                 .numThreads(2)
                 .roundsPerThread(1)
                 .add {
-                    Thread.sleep(1000)
+                    Thread.sleep(100)
                 }
                 .run()
-        } shouldBeLessOrEqualTo 2000
+        } shouldBeLessOrEqualTo 200
     }
 
     @Test

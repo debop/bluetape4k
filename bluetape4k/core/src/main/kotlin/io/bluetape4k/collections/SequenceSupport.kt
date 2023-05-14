@@ -120,8 +120,8 @@ inline fun <T> Sequence<T>.forEachCatching(crossinline action: (T) -> Unit): Seq
  * @param size Sliding 요소의 수
  * @return Sliding 된 요소를 담은 컬렉션
  */
-fun <T> Sequence<T>.sliding(size: Int, partialWindows: Boolean = true): List<List<T>> =
-    asIterable().windowed(size, 1, partialWindows)
+fun <T> Sequence<T>.sliding(size: Int, partialWindows: Boolean = true): Sequence<List<T>> =
+    windowed(size, 1, partialWindows)
 
 /**
  * 컬렉션의 요소를 [size]만큼의 켤렉션으로 묶은 것을 [transform]으로 변환하여 반환합니다.
@@ -130,5 +130,5 @@ fun <T> Sequence<T>.sliding(size: Int, partialWindows: Boolean = true): List<Lis
  * @param transform 변환 함수
  * @return Sliding 된 요소를 변환한 컬렉션
  */
-fun <T, R> Sequence<T>.sliding(size: Int, partialWindows: Boolean = true, transform: (List<T>) -> R): List<R> =
-    asIterable().windowed(size, 1, partialWindows, transform)
+fun <T, R> Sequence<T>.sliding(size: Int, partialWindows: Boolean = true, transform: (List<T>) -> R): Sequence<R> =
+    windowed(size, 1, partialWindows, transform)

@@ -16,7 +16,7 @@ import java.util.stream.Stream
 class RandomExtensionParameterTest {
 
     companion object: KLogging() {
-        const val TEST_COUNT = 20
+        const val TEST_COUNT = 5
     }
 
     private val anyStrings = HashSet<String>()

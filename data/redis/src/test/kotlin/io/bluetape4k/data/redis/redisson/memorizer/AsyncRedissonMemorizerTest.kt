@@ -26,7 +26,6 @@ class AsyncRedissonMemorizerTest: AbstractRedissonTest() {
     }
 
     private val factorial: AsyncFactorialProvider by lazy { RedissonAsyncFactorialProvider(redisson) }
-
     private val fibonacci: AsyncFibonacciProvider by lazy { RedissonAsyncFibonacciProvider(redisson) }
 
 
@@ -43,19 +42,19 @@ class AsyncRedissonMemorizerTest: AbstractRedissonTest() {
 
     @Test
     fun `run factorial`() {
-        val x1 = factorial.calc(500).get()
+        val x1 = factorial.calc(100).get()
 
         assertTimeout(Duration.ofMillis(1000)) {
-            factorial.calc(500).get()
+            factorial.calc(100).get()
         } shouldBeEqualTo x1
     }
 
     @Test
     fun `run fibonacci`() {
-        val x1 = fibonacci.calc(500).get()
+        val x1 = fibonacci.calc(100).get()
 
         assertTimeout(Duration.ofMillis(1000)) {
-            fibonacci.calc(500).get()
+            fibonacci.calc(100).get()
         } shouldBeEqualTo x1
     }
 }

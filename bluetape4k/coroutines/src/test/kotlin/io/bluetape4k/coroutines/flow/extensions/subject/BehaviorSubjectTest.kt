@@ -3,7 +3,6 @@ package io.bluetape4k.coroutines.flow.extensions.subject
 import io.bluetape4k.coroutines.tests.withSingleThread
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.logging.info
 import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +42,7 @@ class BehaviorSubjectTest {
                 subject.collect {
                     log.trace { "Subject1 collect: $it" }
                 }
-                log.info { "Done subject1." }
+                log.debug { "Done subject1." }
             }
             val job2 = launch(Dispatchers.IO) {
                 subject.collect {

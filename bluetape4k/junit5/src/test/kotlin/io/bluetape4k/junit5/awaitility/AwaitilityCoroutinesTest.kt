@@ -17,9 +17,9 @@ class AwaitilityCoroutinesTest {
 
         await untilSuspending {
             log.trace { "await untilSuspending" }
-            System.currentTimeMillis() > start + 1000
+            System.currentTimeMillis() > start + 100
         }
 
-        System.currentTimeMillis() shouldBeGreaterThan start + 1000
+        System.currentTimeMillis() shouldBeGreaterThan start + 100
     }
 }

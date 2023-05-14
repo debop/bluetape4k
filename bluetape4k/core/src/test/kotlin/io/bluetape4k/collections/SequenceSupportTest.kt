@@ -79,9 +79,9 @@ class SequenceSupportTest {
         val list = listOf(1, 2, 3, 4)
 
         val sliding = list.asSequence().sliding(3, false)
-        sliding shouldBeEqualTo listOf(listOf(1, 2, 3), listOf(2, 3, 4))
+        sliding.toList() shouldBeEqualTo listOf(listOf(1, 2, 3), listOf(2, 3, 4))
 
         val sliding2 = list.asSequence().sliding(3, true)
-        sliding2 shouldBeEqualTo listOf(listOf(1, 2, 3), listOf(2, 3, 4), listOf(3, 4), listOf(4))
+        sliding2.toList() shouldBeEqualTo listOf(listOf(1, 2, 3), listOf(2, 3, 4), listOf(3, 4), listOf(4))
     }
 }

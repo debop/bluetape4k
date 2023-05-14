@@ -34,6 +34,8 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
             }
             st
         }
+
+        private const val EXPECTED_DESC = "python"
     }
 
     @Test
@@ -41,7 +43,7 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
         dataSource.withConnect { conn ->
             val ps = conn.prepareStatement(SELECT_ID_BY_DESCRIPTION)
             ps.arguments {
-                string[1] = "python"
+                string[1] = EXPECTED_DESC
             }
             ps.executeQuery().use { rs ->
                 rs.extract {
@@ -57,7 +59,7 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
             conn.withStatement { stmt ->
                 val rs = stmt.executeQuery(SELECT1)
                 val x = rs.extract { string["description"] }.firstOrNull()
-                x shouldBeEqualTo "python"
+                x shouldBeEqualTo EXPECTED_DESC
             }
         }
     }
@@ -75,7 +77,7 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
                 string["description"]
             }
         }
-        actual.firstOrNull() shouldBeEqualTo "python"
+        actual.firstOrNull() shouldBeEqualTo EXPECTED_DESC
     }
 
     @Test
@@ -92,7 +94,7 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
     @Test
     fun `query by statement with arguments`() {
         val ids = jdbcTemplate.query(SELECT_ID_BY_DESCRIPTION,
-            PreparedStatementSetter { ps -> ps.arguments { string[1] = "python" } },
+            PreparedStatementSetter { ps -> ps.arguments { string[1] = EXPECTED_DESC } },
             ResultSetExtractor { rs -> rs.extract { int["id"] } })
         ids?.firstOrNull() shouldBeEqualTo 1
     }
@@ -139,15 +141,13 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
 
     @Test
     fun `query for object`() {
-        val expected = "python"
-
-        jdbcTemplate.queryForObject(SELECT1, mapperFunction)?.description shouldBeEqualTo expected
+        jdbcTemplate.queryForObject(SELECT1, mapperFunction)?.description shouldBeEqualTo EXPECTED_DESC
         jdbcTemplate.queryForObject(
             SELECT_BY_ID,
             arrayOf(1),
             intArrayOf(Types.INTEGER),
             mapperFunction
-        )?.description shouldBeEqualTo expected
+        )?.description shouldBeEqualTo EXPECTED_DESC
 
 //        jdbcTemplate.queryForObject(
 //            SELECT_BY_ID,

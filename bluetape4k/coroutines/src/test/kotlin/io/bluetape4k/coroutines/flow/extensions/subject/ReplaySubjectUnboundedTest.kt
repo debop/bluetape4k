@@ -2,7 +2,6 @@ package io.bluetape4k.coroutines.flow.extensions.subject
 
 import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
 import io.bluetape4k.coroutines.tests.withSingleThread
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
@@ -10,6 +9,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeTrue
@@ -21,7 +21,7 @@ class ReplaySubjectUnboundedTest {
     companion object: KLogging()
 
     @Test
-    fun `basic online`() = runSuspendTest {
+    fun `basic online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
             val result = intArrayListOf()
@@ -46,7 +46,7 @@ class ReplaySubjectUnboundedTest {
     }
 
     @Test
-    fun `basic offline`() = runSuspendTest {
+    fun `basic offline`() = runTest {
         val replay = ReplaySubject<Int>()
 
         repeat(5) {
@@ -65,7 +65,7 @@ class ReplaySubjectUnboundedTest {
     }
 
     @Test
-    fun `error online`() = runSuspendTest {
+    fun `error online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
 
@@ -97,7 +97,7 @@ class ReplaySubjectUnboundedTest {
     }
 
     @Test
-    fun `error offline`() = runSuspendTest {
+    fun `error offline`() = runTest {
         val replay = ReplaySubject<Int>()
 
         val result = intArrayListOf()
@@ -121,7 +121,7 @@ class ReplaySubjectUnboundedTest {
     }
 
     @Test
-    fun `take online`() = runSuspendTest {
+    fun `take online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
             val result = intArrayListOf()
@@ -145,7 +145,7 @@ class ReplaySubjectUnboundedTest {
     }
 
     @Test
-    fun `take offline`() = runSuspendTest {
+    fun `take offline`() = runTest {
         val replay = ReplaySubject<Int>()
 
         repeat(5) {
@@ -163,7 +163,7 @@ class ReplaySubjectUnboundedTest {
     }
 
     @Test
-    fun `multiple online`() = runSuspendTest {
+    fun `multiple online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
 
@@ -199,7 +199,7 @@ class ReplaySubjectUnboundedTest {
     }
 
     @Test
-    fun `multiple with take online`() = runSuspendTest {
+    fun `multiple with take online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
 
@@ -235,7 +235,7 @@ class ReplaySubjectUnboundedTest {
     }
 
     @Test
-    fun `cancelled consumer`() = runSuspendTest {
+    fun `cancelled consumer`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
 
@@ -272,7 +272,7 @@ class ReplaySubjectUnboundedTest {
     }
 
     @Test
-    fun `cancelled one collector second completes`() = runSuspendTest {
+    fun `cancelled one collector second completes`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
 

@@ -3,7 +3,6 @@ package io.bluetape4k.data.redis.lettuce.codec
 import com.google.protobuf.Timestamp
 import com.google.protobuf.timestamp
 import io.bluetape4k.data.redis.lettuce.AbstractLettuceTest
-import io.bluetape4k.data.redis.lettuce.LettuceClients
 import io.bluetape4k.data.redis.messages.SimpleMessage
 import io.bluetape4k.data.redis.messages.simpleMessage
 import io.bluetape4k.junit5.faker.Fakers
@@ -55,7 +54,7 @@ class LettuceBinaryCodecTest: AbstractLettuceTest() {
     @ParameterizedTest(name = "codec={0}")
     @MethodSource("getRedisCodecs")
     fun `codec for kotlin data class`(codec: RedisCodec<String, Any>) {
-        LettuceClients.connect(client, codec).use { connection ->
+        client.connect(codec).use { connection ->
             // client.connect(codec).use { connection ->
             val commands = connection.sync()
 
@@ -72,7 +71,7 @@ class LettuceBinaryCodecTest: AbstractLettuceTest() {
     @ParameterizedTest(name = "codec={0}")
     @MethodSource("getRedisCodecs")
     fun `codec for collection of kotlin data class`(codec: RedisCodec<String, Any>) {
-        LettuceClients.connect(client, codec).use { connection ->
+        client.connect(codec).use { connection ->
             // client.connect(codec).use { connection ->
             val commands = connection.sync()
 

@@ -2,7 +2,7 @@ package io.bluetape4k.data.hibernate.stateless
 
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import io.bluetape4k.support.asInt
 import io.bluetape4k.support.asString
 import net.datafaker.Faker
@@ -19,7 +19,7 @@ import kotlin.system.measureTimeMillis
 class StatelessSessionTest: AbstractHibernateTest() {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 3
+        private const val REPEAT_SIZE = 2
         private const val ENTITY_COUNT = 100
 
         val faker = Faker()
@@ -41,13 +41,13 @@ class StatelessSessionTest: AbstractHibernateTest() {
     fun `warm up`() {
         // Use Stateless Session (단 JPA EntityListener가 작동하지 않습니다)
         tem.entityManager.withStateless { stateless ->
-            repeat(5) {
+            repeat(2) {
                 stateless.insert(getStatelessEntity(it))
             }
         }
 
         // Use Stateful Session
-        repeat(5) {
+        repeat(2) {
             tem.persist(getStatelessEntity(it))
         }
         flushAndClear()
@@ -64,7 +64,7 @@ class StatelessSessionTest: AbstractHibernateTest() {
                 }
                 flush()
             }
-            log.debug { "Session save: $elapsed  msec" }
+            log.trace { "Session save: $elapsed  msec" }
         }
 
         @RepeatedTest(REPEAT_SIZE)
@@ -76,7 +76,7 @@ class StatelessSessionTest: AbstractHibernateTest() {
                 }
                 tem.flush()
             }
-            log.debug { "Session save: $elapsed msec" }
+            log.trace { "Session save: $elapsed msec" }
         }
     }
 
@@ -92,7 +92,7 @@ class StatelessSessionTest: AbstractHibernateTest() {
                     }
                 }
             }
-            log.debug { "Stateless save: $elapsed  msec" }
+            log.trace { "Stateless save: $elapsed  msec" }
         }
 
         @RepeatedTest(REPEAT_SIZE)
@@ -108,7 +108,7 @@ class StatelessSessionTest: AbstractHibernateTest() {
                     }
                 }
             }
-            log.debug { "Stateless save: $elapsed msec" }
+            log.trace { "Stateless save: $elapsed msec" }
         }
     }
 
@@ -136,7 +136,7 @@ class StatelessSessionTest: AbstractHibernateTest() {
             val id = row[0].asInt()
             val name = row[1].asString()
             val master = StatelessMaster(name).also { it.id = id }
-            log.debug { "master=$master" }
+            log.trace { "master=$master" }
         }
     }
 

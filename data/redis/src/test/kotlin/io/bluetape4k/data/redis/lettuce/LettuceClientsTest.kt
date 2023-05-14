@@ -10,8 +10,6 @@ class LettuceClientsTest: AbstractLettuceTest() {
 
     @Test
     fun `connect to redis server`() {
-        val commands = LettuceClients.commands(client)
-
         val result = commands.ping()
         result shouldBeEqualTo "PONG"
     }

@@ -26,7 +26,15 @@
             <!-- <property name="jakarta.persistence.sql-load-script-source" value="data.sql" />-->
 
             <!-- The Vert.x SQL Client connection pool size -->
-            <property name="hibernate.connection.pool_size" value="20"/>
+            <property name="hibernate.connection.pool_size" value="30"/>
+
+            <!--
+            JPA Batch Insert (https://cheese10yun.github.io/jpa-batch-insert/)
+            MySQL인 경우 jdbc url에 `rewriteBatchedStatements=true` 추가해야 함
+            -->
+            <property name="hibernate.jdbc.batch_size" value="30"/>
+            <property name="hibernate.order_inserts" value="true"/>
+            <property name="hibernate.order_updates" value="true"/>
 
             <!-- SQL statement logging -->
             <property name="hibernate.show_sql" value="false"/>
