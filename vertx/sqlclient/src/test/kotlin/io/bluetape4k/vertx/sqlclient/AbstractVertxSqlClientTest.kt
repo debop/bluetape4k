@@ -60,7 +60,7 @@ abstract class AbstractVertxSqlClientTest {
             poolOptions: PoolOptions = defaultPoolOptions,
         ): MySQLPool {
             connectOptions.host.requireNotBlank("host")
-            return MySQLPool.pool(this, connectOptions, poolOptions)
+            return MySQLPool.pool(this@getMySQLPool, connectOptions, poolOptions)
         }
 
         fun Vertx.getH2Pool(

@@ -9,10 +9,10 @@ import io.vertx.sqlclient.Pool
 import io.vertx.sqlclient.SqlConnection
 import kotlinx.coroutines.runBlocking
 
-inline fun Vertx.testWithTransactionSuspending(
+fun Vertx.testWithTransactionSuspending(
     testContext: VertxTestContext,
     pool: Pool,
-    crossinline block: suspend (conn: SqlConnection) -> Unit,
+    block: suspend (conn: SqlConnection) -> Unit,
 ) {
     runBlocking(dispatcher()) {
         try {
@@ -24,10 +24,10 @@ inline fun Vertx.testWithTransactionSuspending(
     }
 }
 
-inline fun Vertx.testWithRollbackSuspending(
+fun Vertx.testWithRollbackSuspending(
     testContext: VertxTestContext,
     pool: Pool,
-    crossinline block: suspend (conn: SqlConnection) -> Unit,
+    block: suspend (conn: SqlConnection) -> Unit,
 ) {
     runBlocking(dispatcher()) {
         try {

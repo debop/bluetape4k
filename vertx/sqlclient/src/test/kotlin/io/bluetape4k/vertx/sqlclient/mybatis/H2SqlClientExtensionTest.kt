@@ -31,7 +31,6 @@ class H2SqlClientExtensionTest: AbstractSqlClientExtensionsTest() {
                     select(add(max(person.addressId), constant<Int>("1"))) { from(person) }
                 }
                 where { person.id isEqualTo 3 }
-
             }.renderForVertx()
 
             updateProvider.updateStatement shouldBeEqualTo
