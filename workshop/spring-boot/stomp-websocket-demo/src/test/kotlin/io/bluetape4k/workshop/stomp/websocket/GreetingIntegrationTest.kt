@@ -2,6 +2,7 @@ package io.bluetape4k.workshop.stomp.websocket
 
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.spring.coroutines.await
@@ -9,7 +10,6 @@ import io.bluetape4k.workshop.stomp.websocket.model.Greeting
 import io.bluetape4k.workshop.stomp.websocket.model.HelloMessage
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
@@ -79,7 +79,7 @@ class GreetingIntegrationTest(
     }
 
     @Test
-    fun `get greeting with coroutines`() = runBlocking<Unit> {
+    fun `get greeting with coroutines`() = runSuspendWithIO {
         val received = atomic<Greeting?>(null)
         val failure = atomic<Throwable?>(null)
         val handler: StompSessionHandler = getStopmSessionHandler(received, failure)

@@ -21,7 +21,7 @@ class GreetingController {
     @SendTo("/topic/greetings")
     fun greeting(message: HelloMessage): Greeting {
         log.debug { "Received message: ${message.name}" }
-        Thread.sleep(1000)
+        Thread.sleep(100)
         return Greeting("Hello, ${HtmlUtils.htmlEscape(message.name)}!").apply {
             log.debug { "Sending greeting to client. $this" }
         }
