@@ -19,11 +19,13 @@ import org.junit.jupiter.api.parallel.ExecutionMode
 @Execution(ExecutionMode.SAME_THREAD)
 class MongoDBServerTest {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        private const val DATABASE_NAME = "bluetape4k"
+    }
 
     @Test
     fun `launch mongodb 4+ server`() {
-        MongoDBServer().use { mongo ->
+        MongoDBServer(databaseName = DATABASE_NAME).use { mongo ->
             mongo.start()
             mongo.isRunning.shouldBeTrue()
             mongo.replicaSetUrl.shouldNotBeNullOrBlank()
@@ -35,7 +37,7 @@ class MongoDBServerTest {
 
     @Test
     fun `launch mongodb 4+ server with default port`() {
-        MongoDBServer(useDefaultPort = true).use { mongo ->
+        MongoDBServer(useDefaultPort = true, databaseName = DATABASE_NAME).use { mongo ->
             mongo.start()
             mongo.isRunning.shouldBeTrue()
             mongo.replicaSetUrl.shouldNotBeNullOrBlank()
@@ -48,7 +50,7 @@ class MongoDBServerTest {
     private fun verifyMongo(mongo: MongoDBServer) {
         Thread.sleep(100)
         MongoClients.create(mongo.url).use { client ->
-            val db = client.getDatabase("test")
+            val db = client.getDatabase(DATABASE_NAME)
             val customers = db.getCollection("customers")
 
             val document = Document().apply {

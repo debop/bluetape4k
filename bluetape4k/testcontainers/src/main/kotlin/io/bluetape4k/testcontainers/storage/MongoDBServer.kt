@@ -14,6 +14,7 @@ class MongoDBServer private constructor(
     imageName: DockerImageName,
     useDefaultPort: Boolean,
     reuse: Boolean,
+    private val databaseName: String,
 ): MongoDBContainer(imageName), GenericServer {
 
     companion object: KLogging() {
@@ -21,15 +22,17 @@ class MongoDBServer private constructor(
         const val TAG = "6"
         const val NAME = "mongo"
         const val PORT = 27017
+        const val DATABASE_NAME = "test"
 
         @JvmStatic
         operator fun invoke(
             tag: String = TAG,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
+            databaseName: String = DATABASE_NAME,
         ): MongoDBServer {
             val imageName = DockerImageName.parse(IMAGE).withTag(tag)
-            return MongoDBServer(imageName, useDefaultPort, reuse)
+            return MongoDBServer(imageName, useDefaultPort, reuse, databaseName)
         }
 
         @JvmStatic
@@ -37,13 +40,18 @@ class MongoDBServer private constructor(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
+            databaseName: String = DATABASE_NAME,
         ): MongoDBServer {
-            return MongoDBServer(imageName, useDefaultPort, reuse)
+            return MongoDBServer(imageName, useDefaultPort, reuse, databaseName)
         }
     }
 
     override val port: Int get() = getMappedPort(PORT)
-    override val url: String get() = this.replicaSetUrl
+
+    /**
+     * Url (예: mongodb://localhost:27017/test)
+     */
+    override val url: String get() = this.getReplicaSetUrl(databaseName)
 
     init {
         addExposedPorts(PORT)
