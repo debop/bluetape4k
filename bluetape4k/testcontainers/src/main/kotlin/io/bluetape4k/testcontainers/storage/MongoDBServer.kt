@@ -64,7 +64,7 @@ class MongoDBServer private constructor(
 
     override fun start() {
         super.start()
-        writeToSystemProperties(IMAGE)
+        writeToSystemProperties(NAME)
     }
 
     object Launcher {

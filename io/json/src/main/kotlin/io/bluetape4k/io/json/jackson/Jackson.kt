@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -66,7 +65,10 @@ object Jackson: KLogging() {
                 DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL,
                 DeserializationFeature.READ_ENUMS_USING_TO_STRING,
             )
-            disable(FAIL_ON_IGNORED_PROPERTIES)
+            disable(
+                DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES,
+                DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+            )
 
         }.apply {
             if (needTypeInfo) {

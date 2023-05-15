@@ -91,9 +91,12 @@ object Fakers: KLogging() {
         faker.bothify(format, isUpper)
 
 
-    private val uuidGenerator: NoArgGenerator by lazy {
+    private val timeBasedUuidGenerator: NoArgGenerator by lazy {
         Generators.timeBasedReorderedGenerator()
     }
 
-    fun randomUuid(): UUID = uuidGenerator.generate()
+    /**
+     * Time-based UUID를 생성합니다.
+     */
+    fun randomUuid(): UUID = timeBasedUuidGenerator.generate()
 }

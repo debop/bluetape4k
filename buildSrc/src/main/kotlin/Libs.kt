@@ -110,6 +110,7 @@ object Versions {
     const val mapstruct = "1.5.5.Final"
     const val reflectasm = "1.11.9"
 
+    // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
     const val mongo_driver = "4.9.1"
     const val lettuce = "6.2.4.RELEASE"
 
