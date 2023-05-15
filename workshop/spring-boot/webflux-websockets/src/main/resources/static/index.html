@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Sample WebSocket</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/webjars/font-awesome/css/all.css"/>
+    <style>
+        .stockTicker {
+            margin: 2px;
+            min-height: 400px
+        }
+
+        .stockWrapper {
+            display: block;
+            padding: 20px;
+            font-weight: 300;
+        }
+
+        .stockSymbol {
+            font-weight: 600;
+        }
+
+    </style>
+    <script>
+        function updateStock() {
+            $.ajax({
+                url: "/quotes",
+                type: "GET",
+                data: {},
+                success: function (event) {
+                    //console.log(event);
+                    processEvent(event);
+                },
+                dataType: "json"
+            });
+        }
+
+        function processEvent(event) {
+            if (event.data && event.data.length) {
+                var htmlStr = '';
+                event.data.forEach(function (quote) {
+                    var stockCode = quote.ticker;
+                    var newStockPrice = quote.price;
+                    var currentStockPrice = STOCK_CODES_UPDATES[stockCode];
+                    htmlStr += '<div class="stockWrapper">';
+                    htmlStr += '<span class="stockSymbol">' + stockCode + ': $' + newStockPrice + ' </span>';
+                    if (currentStockPrice) {
+                        if (newStockPrice > currentStockPrice) {
+                            htmlStr += '<span style="font-size:1em; color:Green;"><i class="fas fa-arrow-up"></i></span>';
+                        } else {
+                            htmlStr += '<span style="font-size:1em; color:Red;"><i class="fas fa-arrow-down"></i></span>';
+                        }
+                    }
+                    STOCK_CODES_UPDATES[stockCode] = newStockPrice;
+                    htmlStr += '</div>';
+                });
+                $('.stockTicker').html(htmlStr);
+            }
+            $('.traceId').html(event.id);
+        }
+
+        function subscribeToEvents() {
+            var webSocket = new WebSocket("ws://localhost:8080/event-emitter");
+            webSocket.onopen = function () {
+                //console.log(event);
+                $('.socketMsg').html("Connected (WebSocket open)");
+                $('.socketStatus').css("color", "green");
+            };
+            webSocket.onclose = function () {
+                //console.log(event);
+                $('.socketMsg').html("Disconnected (WebSocket closed), Reconnect will be attempted in 1 second");
+                $('.socketStatus').css("color", "red");
+                setTimeout(function () {
+                    subscribeToEvents();
+                }, 1000);
+            };
+            webSocket.onmessage = function (event) {
+                //console.log(event);
+                processEvent(JSON.parse(event.data));
+            };
+            webSocket.onerror = function (error) {
+                //console.log(event);
+                $('.socketMsg').html("WebSocket Error: " + error.message)
+                webSocket.close();
+            };
+        }
+
+        var STOCK_CODES_UPDATES = {};
+        window.addEventListener("load", subscribeToEvents);
+    </script>
+</head>
+
+<body onLoad="">
+<header id="main-header" class="py-2 bg-success text-white">
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-6 text-center">
+                <h1><i class="fas fa-cog"></i> Webflux</h1>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="card bg-light m-2" style="min-height: 15rem;">
+                    <div class="card-header"><h5>Trace ID</h5></div>
+                    <div class="card-body">
+                        <p class="card-text font-weight-bold traceId"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card bg-light m-2" style="min-height: 15rem;">
+                    <div class="card-header"><h5>WebSocket Status</h5></div>
+                    <div class="card-body networking">
+                        <p class="card-text socketMsg">Pending status...</p>
+                        <span class="socketStatus" style="font-size:1em;"><i class="fas fa-circle fa-2x"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="card bg-light m-2">
+                    <div class="card-header">
+                        <h5>Stock Price Updates
+                            <button type="button" class="btn btn-primary float-right" onclick="updateStock()">Get Stock
+                                Updates
+                            </button>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="stockTicker">Pending subscription...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
