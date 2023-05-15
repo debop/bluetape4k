@@ -13,6 +13,10 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import org.springframework.web.reactive.function.server.coRouter
 import java.time.Duration
 
+/**
+ * `@RestController` 가 아닌 Functional router 로 router를 정의
+ * `router` 대신 coroutines 를 사용하는 `coRouter` 사용하면 Flow 를 사용할 수 있습니다.
+ */
 @Configuration
 class SampleWebfluxRouter(
     @Value("classpath:/static/index.html")
