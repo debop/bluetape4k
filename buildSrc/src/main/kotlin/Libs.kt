@@ -15,7 +15,7 @@ object Plugins {
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.7"
         const val spring_boot = "2.7.11"
-        const val quarkus = "2.16.6.Final"
+        const val quarkus = "2.16.7.Final"
     }
 
     const val detekt = "io.gitlab.arturbosch.detekt"
@@ -60,7 +60,9 @@ object Versions {
     const val reactor_bom = "2022.0.6"
     const val spring_statemachine = "3.2.0"
 
+    const val chaos_monkey = "2.7.2"
     const val blockhound = "1.0.8.RELEASE"
+
 
     // GraphQL
     // Netflix DGS 의 bom (5.5.x) 에서 graph-java 버전이 낮아서 (18.3) 최신 버전 (19.2)으로 강제 update 해야 한다
@@ -72,7 +74,7 @@ object Versions {
     const val quarkus = Plugins.Versions.quarkus
     const val resteasy = "6.2.3.Final"
     const val mutiny = "2.2.0"
-    const val vertx = "4.4.1"
+    const val vertx = "4.4.2"
     const val agroal = "1.16"
 
     const val swagger = "1.6.2"
@@ -417,6 +419,9 @@ object Libs {
     val spring_statemachine_bom get() = springStatemachine("bom")
     val spring_statemachine_core get() = springStatemachine("core")
 
+    // Chaos Monkey (https://github.com/codecentric/chaos-monkey-spring-boot)
+    val chaos_monkey_spring_boot get() = "de.codecentric:chaos-monkey-spring-boot:${Versions.chaos_monkey}"
+
     // GraphQL JAVA
     fun graphqlJava(module: String) = "com.graphql-java:$module:${Versions.graphql_java}"
     val graphql_java get() = graphqlJava("graphql-java")
@@ -519,7 +524,6 @@ object Libs {
     val resilience4j_kotlin get() = resilience4j("kotlin")
     val resilience4j_metrics get() = resilience4j("metrics")
     val resilience4j_micrometer get() = resilience4j("micrometer")
-    val resilience4j_prometheus get() = resilience4j("prometheus")
     val resilience4j_ratelimiter get() = resilience4j("ratelimiter")
     val resilience4j_ratpack get() = resilience4j("ratpack")
     val resilience4j_reactor get() = resilience4j("reactor")

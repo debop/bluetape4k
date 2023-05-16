@@ -92,12 +92,12 @@ class CoroutinesCacheImpl<K, V>(override val jcache: javax.cache.Cache<K, V>): C
 
     private fun onCacheMiss(cacheKey: K) {
         _metrics.onCacheMiss()
-        publicCacheEvent { CacheOnMissEvent(name, cacheKey) }
+        publicCacheEvent { CacheOnMissEvent(name, cacheKey!!) }
     }
 
     private fun onCacheHit(cacheKey: K) {
         _metrics.onCacheHit()
-        publicCacheEvent { CacheOnHitEvent(name, cacheKey) }
+        publicCacheEvent { CacheOnHitEvent(name, cacheKey!!) }
     }
 
     private fun onError(throwable: Throwable) {

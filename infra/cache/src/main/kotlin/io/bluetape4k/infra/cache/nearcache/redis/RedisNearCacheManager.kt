@@ -28,7 +28,6 @@ import javax.cache.spi.CachingProvider
 import javax.management.MBeanServer
 import javax.management.ObjectName
 
-
 /**
  * [NearCache]를 위한 JCache 용 [CacheManager] 구현체입니다.
  *
@@ -396,7 +395,7 @@ class RedisNearCacheManager(
      * @throws SecurityException     when the operation could not be performed
      * due to the current security settings
      */
-    override fun enableManagement(cacheName: String?, enabled: Boolean) {
+    override fun enableManagement(cacheName: String, enabled: Boolean) {
         log.info { "현재는 지원하지 않습니다." }
     }
 
@@ -405,6 +404,7 @@ class RedisNearCacheManager(
         return ObjectName(name)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun unregisterManagementBean(cache: NearCache<*, *>) {
         log.info { "현재는 지원하지 않습니다." }
     }
