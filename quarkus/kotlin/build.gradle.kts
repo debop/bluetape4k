@@ -34,7 +34,10 @@ dependencies {
     api(Libs.javax_annotation_api)
     api(Libs.javax_inject)
     api(Libs.javax_interceptor_api)
+    api(Libs.javax_persistence_api)
+    api(Libs.javax_transaction_api)
 
+    api(Libs.quarkus_arc)
     api(Libs.quarkus_kotlin)
     compileOnly(Libs.quarkus_arc)
     compileOnly(Libs.quarkus_hibernate_reactive_panache)
