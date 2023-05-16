@@ -15,7 +15,8 @@ object Plugins {
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.7"
         const val spring_boot = "2.7.11"
-        const val quarkus = "2.12.3.Final"
+        const val quarkus = "2.16.7.Final"
+        const val jandex = "1.86"
     }
 
     const val detekt = "io.gitlab.arturbosch.detekt"
@@ -42,6 +43,9 @@ object Plugins {
 
     // Quarkus
     const val quarkus = "io.quarkus"
+
+    // https://mvnrepository.com/artifact/com.github.vlsi.jandex/com.github.vlsi.jandex.gradle.plugin
+    const val jandex = "com.github.vlsi.jandex"
 }
 
 object Versions {

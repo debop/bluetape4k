@@ -24,6 +24,7 @@ configurations {
 
 dependencies {
     implementation(enforcedPlatform(Libs.quarkus_bom))
+    implementation(enforcedPlatform(Libs.quarkus_universe_bom))
 
     api(project(":bluetape4k-core"))
     api(project(":bluetape4k-utils-mutiny"))
@@ -31,15 +32,9 @@ dependencies {
     compileOnly(project(":bluetape4k-testcontainers"))
     compileOnly(project(":bluetape4k-junit5"))
 
-    api(Libs.javax_annotation_api)
-    api(Libs.javax_inject)
-    api(Libs.javax_interceptor_api)
-    api(Libs.javax_persistence_api)
-    api(Libs.javax_transaction_api)
-
-    api(Libs.quarkus_arc)
     api(Libs.quarkus_kotlin)
-    compileOnly(Libs.quarkus_arc)
+    implementation(Libs.quarkus_arc)
+
     compileOnly(Libs.quarkus_hibernate_reactive_panache)
     compileOnly(Libs.quarkus_junit5)
     compileOnly(Libs.quarkus_vertx)

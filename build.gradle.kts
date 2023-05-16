@@ -149,6 +149,11 @@ subprojects {
             // OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
             jvmArgs("-Xshare:off")
 
+            if (project.name.contains("quarkus")) {
+                // [Quarkus Logging](https://quarkus.io/guides/logging)
+                systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")
+            }
+
             testLogging {
                 showExceptions = true
                 showCauses = true
@@ -338,19 +343,8 @@ subprojects {
             dependency(Libs.javax_validation_api)
             dependency(Libs.javax_ws_rs_api)
 
-            // Jakarta API
-            dependency(Libs.jakarta_activation_api)
-            dependency(Libs.jakarta_annotation_api)
-            dependency(Libs.jakarta_el_api)
-            dependency(Libs.jakarta_inject_api)
-            dependency(Libs.jakarta_interceptor_api)
-            dependency(Libs.jakarta_jms_api)
-            dependency(Libs.jakarta_json_api)
-            dependency(Libs.jakarta_persistence_api)
-            dependency(Libs.jakarta_servlet_api)
-            dependency(Libs.jakarta_transaction_api)
-            dependency(Libs.jakarta_validation_api)
-            dependency(Libs.jakarta_ws_rs_api)
+            // 현재 Quarkus 에서만 jakarta api 를 사용하는데, Quarkus 가 사용하는 버전을 사용하도록 한다.
+            // Jakarta 는 명시적으로는 사용하지 않도록 한다 
 
             // Compressor
             dependency(Libs.snappy_java)
