@@ -1,118 +1,121 @@
 package io.bluetape4k.workshop.resilience4j.circuitbreaker
 
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
-class ReactiveCircuitBreakerTest: AbstractCircuitBreakerTest() {
+class CoroutineCircuitBreakerTest: AbstractCircuitBreakerTest() {
 
     @Test
-    fun `Backend A Mono - 연속된 예외에 CircuitBreaker 가 OPEN 됩니다`() {
+    fun `Backend A Suspend - 연속된 예외에 CircuitBreaker 가 OPEN 됩니다`() {
         repeat(2) {
-            procedureMonoFailure(BACKEND_A)
+            procedureSuspendFailure(BACKEND_A)
         }
         checkHealthStatus(BACKEND_A, CircuitBreaker.State.OPEN)
     }
 
     @Test
-    fun `Backend A Mono - 연속적으로 작업이 성공하면 Circuit Breaker 는 CLOSE 되어 있어야 한다`() {
+    fun `Backend A Suspend - 연속적으로 작업이 성공하면 Circuit Breaker 는 CLOSE 되어 있어야 한다`() {
         // OPEN 상태에서는 HALF OPEN 상태로 만든 후에야 CLOSE 상태로 돌아갈 수 있다
         // 먼저 Circuit Breaker 를 Half Open 상태로 만든다
         transitionToOpenState(BACKEND_A)
         circuirtBreakerRegistry.circuitBreaker(BACKEND_A).transitionToHalfOpenState()
 
         repeat(4) {
-            procedureMonoSuccess(BACKEND_A)
+            procedureSuspendSuccess(BACKEND_A)
         }
 
         checkHealthStatus(BACKEND_A, CircuitBreaker.State.CLOSED)
     }
 
     @Test
-    fun `Backend B Mono - 연속된 예외에 CircuitBreaker 가 OPEN 됩니다`() {
+    fun `Backend B Suspend - 연속된 예외에 CircuitBreaker 가 OPEN 됩니다`() {
         repeat(4) {
-            procedureMonoFailure(BACKEND_B)
+            procedureSuspendFailure(BACKEND_B)
         }
         checkHealthStatus(BACKEND_B, CircuitBreaker.State.OPEN)
     }
 
     @Test
-    fun `Backend B Mono - 연속적으로 작업이 성공하면 Circuit Breaker 는 CLOSE 되어 있어야 한다`() {
+    fun `Backend B Suspend - 연속적으로 작업이 성공하면 Circuit Breaker 는 CLOSE 되어 있어야 한다`() {
         // OPEN 상태에서는 HALF OPEN 상태로 만든 후에야 CLOSE 상태로 돌아갈 수 있다
         // 먼저 Circuit Breaker 를 Half Open 상태로 만든다
         transitionToOpenState(BACKEND_B)
         circuirtBreakerRegistry.circuitBreaker(BACKEND_B).transitionToHalfOpenState()
 
         repeat(5) {
-            procedureMonoSuccess(BACKEND_B)
+            procedureSuspendSuccess(BACKEND_B)
         }
 
         checkHealthStatus(BACKEND_B, CircuitBreaker.State.CLOSED)
     }
 
+    @Disabled("Flow 에 대해서는 @CircuitBreaker 가 적용되지 않는다")
     @Test
-    fun `Backend A Flux - 예외가 누적되면 Circuit Breaker가 Open 됩니다`() {
+    fun `Backend A Flow - 예외가 누적되면 Circuit Breaker가 Open 됩니다`() {
         repeat(2) {
-            procedureFluxFailure(BACKEND_A)
+            procedureFlowFailure(BACKEND_A)
         }
         checkHealthStatus(BACKEND_A, CircuitBreaker.State.OPEN)
     }
 
     @Test
-    fun `Backend A Flux - 연속적으로 작업이 성공하면 Circuit Breaker 는 CLOSE 되어 있어야 한다`() {
+    fun `Backend A Flow - 연속적으로 작업이 성공하면 Circuit Breaker 는 CLOSE 되어 있어야 한다`() {
         // OPEN 상태에서는 HALF OPEN 상태로 만든 후에야 CLOSE 상태로 돌아갈 수 있다
         // 먼저 Circuit Breaker 를 Half Open 상태로 만든다
         transitionToOpenState(BACKEND_A)
         circuirtBreakerRegistry.circuitBreaker(BACKEND_A).transitionToHalfOpenState()
 
         repeat(4) {
-            procedureFluxSuccess(BACKEND_A)
+            procedureFlowSuccess(BACKEND_A)
         }
 
         checkHealthStatus(BACKEND_A, CircuitBreaker.State.CLOSED)
     }
 
     @Test
-    fun `Backend B Flux - 예외가 누적되면 CircuitBreaker 가 OPEN 됩니다`() {
+    fun `Backend B Flow - 예외가 누적되면 CircuitBreaker 가 OPEN 됩니다`() {
         repeat(4) {
-            procedureFluxFailure(BACKEND_B)
+            procedureFlowFailure(BACKEND_B)
         }
         checkHealthStatus(BACKEND_B, CircuitBreaker.State.OPEN)
     }
 
     @Test
-    fun `Backend B Flux - 연속적으로 작업이 성공하면 Circuit Breaker 는 CLOSE 되어 있어야 한다`() {
+    fun `Backend B Flow - 연속적으로 작업이 성공하면 Circuit Breaker 는 CLOSE 되어 있어야 한다`() {
         // OPEN 상태에서는 HALF OPEN 상태로 만든 후에야 CLOSE 상태로 돌아갈 수 있다
         // 먼저 Circuit Breaker 를 Half Open 상태로 만든다
         transitionToOpenState(BACKEND_B)
         circuirtBreakerRegistry.circuitBreaker(BACKEND_B).transitionToHalfOpenState()
 
         repeat(5) {
-            procedureFluxSuccess(BACKEND_B)
+            procedureFlowSuccess(BACKEND_B)
         }
 
         checkHealthStatus(BACKEND_B, CircuitBreaker.State.CLOSED)
     }
 
-    private fun procedureMonoFailure(backendName: String) {
-        webClient.get().uri("/$backendName/monoFailure")
+
+    private fun procedureSuspendFailure(backendName: String) {
+        webClient.get().uri("/coroutine/$backendName/suspendFailure")
             .exchange()
             .expectStatus().is5xxServerError
     }
 
-    private fun procedureMonoSuccess(backendName: String) {
-        webClient.get().uri("/$backendName/monoSuccess")
+    private fun procedureSuspendSuccess(backendName: String) {
+        webClient.get().uri("/coroutine/$backendName/suspendSuccess")
             .exchange()
             .expectStatus().is2xxSuccessful
     }
 
-    private fun procedureFluxFailure(backendName: String) {
-        webClient.get().uri("/$backendName/fluxFailure")
+    private fun procedureFlowFailure(backendName: String) {
+        webClient.get().uri("/coroutine/$backendName/flowFailure")
             .exchange()
             .expectStatus().is5xxServerError
     }
 
-    private fun procedureFluxSuccess(backendName: String) {
-        webClient.get().uri("/$backendName/fluxSuccess")
+    private fun procedureFlowSuccess(backendName: String) {
+        webClient.get().uri("/coroutine/$backendName/flowSuccess")
             .exchange()
             .expectStatus().is2xxSuccessful
     }
