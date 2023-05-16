@@ -18,6 +18,8 @@ plugins {
     id(Plugins.dependency_management) version Plugins.Versions.dependency_management
     id(Plugins.spring_boot) version Plugins.Versions.spring_boot apply false
 
+    id(Plugins.quarkus) version Plugins.Versions.quarkus apply false
+
     id(Plugins.dokka) version Plugins.Versions.dokka
     id(Plugins.testLogger) version Plugins.Versions.testLogger
     id(Plugins.shadow) version Plugins.Versions.shadow apply false
@@ -68,6 +70,7 @@ subprojects {
     tasks {
 
         compileJava {
+            options.isIncremental = true
             sourceCompatibility = javaVersion
             targetCompatibility = javaVersion
         }
@@ -75,6 +78,8 @@ subprojects {
         compileKotlin {
             kotlinOptions {
                 jvmTarget = javaVersion
+                incremental = true
+                javaParameters = true
                 languageVersion = "1.8"
                 apiVersion = "1.8"
                 freeCompilerArgs = listOf(
@@ -105,6 +110,8 @@ subprojects {
         compileTestKotlin {
             kotlinOptions {
                 jvmTarget = javaVersion
+                incremental = true
+                javaParameters = true
                 languageVersion = "1.8"
                 apiVersion = "1.8"
                 freeCompilerArgs = listOf(
@@ -270,6 +277,10 @@ subprojects {
             mavenBom(Libs.resilience4j_bom)
             mavenBom(Libs.netty_bom)
             mavenBom(Libs.jackson_bom)
+
+            mavenBom(Libs.quarkus_bom)
+            mavenBom(Libs.quarkus_universe_bom)
+            mavenBom(Libs.quarkiverse_aws_bom)
 
             mavenBom(Libs.kotlinx_coroutines_bom)
             mavenBom(Libs.kotlin_bom)

@@ -72,9 +72,19 @@ object Versions {
     const val apollo_kotlin = "3.7.4"
 
     const val quarkus = Plugins.Versions.quarkus
+
+    object quarkiverse {
+        const val aws = "1.1.3"
+        const val junit5_mockk = "1.1.1"
+        const val logging_sentry = "1.2.1"
+        const val vault = "1.1.0"
+        const val reactive_messaging_http = "1.0.3"
+    }
+
     const val resteasy = "6.2.3.Final"
     const val mutiny = "2.2.0"
     const val vertx = "4.4.2"
+    const val camel_quarkus = "2.11.0"
     const val agroal = "1.16"
 
     const val swagger = "1.6.2"
@@ -305,6 +315,7 @@ object Libs {
     val javax_annotation_api get() = "javax.annotation:javax.annotation-api:1.3.2"
     val javax_cache_api get() = "javax.cache:cache-api:1.1.1"
     val javax_inject get() = "javax.inject:javax.inject:1"
+    val javax_interceptor_api get() = "javax.interceptor:javax.interceptor-api:1.2.2"
     val javax_persistence_api get() = "javax.persistence:javax.persistence-api:2.2"
     val javax_servlet_api get() = "javax.servlet:javax.servlet-api:4.0.1"
     val javax_transaction_api get() = "javax.transaction:jta:1.1"
@@ -465,6 +476,44 @@ object Libs {
     fun quarkus(extension: String) = "io.quarkus:quarkus-$extension:${Versions.quarkus}"
 
     val quarkus_bom get() = "io.quarkus.platform:quarkus-bom:${Versions.quarkus}"
+    val quarkus_universe_bom get() = quarkus("universe-bom")
+
+    val quarkus_arc get() = quarkus("arc")
+    val quarkus_hibernate_reactive_panache get() = quarkus("hibernate-reactive-panache")
+    val quarkus_kotlin get() = quarkus("kotlin")
+    val quarkus_mutiny get() = quarkus("mutiny")
+    val quarkus_junit5 get() = quarkus("junit5")
+    val quarkus_security get() = quarkus("security")
+    val quarkus_vertx get() = quarkus("vertx")
+    val quarkus_vertx_http get() = quarkus("vertx-http")
+
+    val quarkus_reactive_routes get() = quarkus("reactive-routes")
+    val quarkus_reactive_mysql_client get() = quarkus("reactive-routes-mysql-client")
+    val quarkus_reactive_pg_client get() = quarkus("reactive-routes-pg-client")
+
+    val quarkus_test_security get() = quarkus("test-security")
+    val quarkus_test_keycloak_server get() = quarkus("test-keycloak-server")
+
+    // Quarkiverse AWS
+    val quarkiverse_aws_bom get() = "io.quarkiverse.amazonservices:quarkus-amazon-services-bom:${Versions.quarkiverse.aws}"
+    fun quarkiverseAws(module: String) = "io.quarkiverse.amazonservices:quarkus-amazon-$module"
+    val quarkiverse_amazon_s3 get() = quarkiverseAws("s3")
+
+    // Quarkiverse ( https://github.com/quarkiverse/quarkiverse/wiki )
+    // quarkiverse/quarkus-mockk (https://github.com/quarkiverse/quarkus-mockk)
+    val quarkiverse_junit5_mockk get() = "io.quarkiverse.mockk:quarkus-junit5-mockk:${Versions.quarkiverse.junit5_mockk}"
+    val quarkiverse_logging_sentry get() = "io.quarkiverse.loggingsentry:quarkus-logging-sentry:${Versions.quarkiverse.logging_sentry}"
+    val quarkiverse_vault get() = "io.quarkiverse.vault:quarkus-vault:${Versions.quarkiverse.vault}"
+
+    val quarkiverse_reactivemessaing_http
+        get() = "io.quarkiverse.reactivemessaging.http:quarkus-reactive-messaging-http:${Versions.quarkiverse.reactive_messaging_http}"
+
+    // Quarkus Blaze Persistence
+    val quarkus_blaze_persistence_bom get() = "io.quarkus.platform:quarkus-blaze-persistence-bom:${Versions.quarkus}"
+
+    // Smallrye
+    fun smallrye(module: String) = "io.smallrye:smallrye-$module"
+    fun smallryeReactive(module: String) = "io.smallrye.reactive:smallrye-$module"
 
     // rest-assured
     fun restAssured(module: String) = "io.rest-assured:$module"
@@ -497,6 +546,15 @@ object Libs {
     val resteasy_jackson2_provider get() = resteasy("jackson2-provider")
     val resteasy_spring get() = resteasy("spring")
     val resteasy_vertx get() = resteasy("vertx")
+
+    // Camel Quarkus
+    fun camelQuarkus(extension: String, version: String = Versions.camel_quarkus) =
+        "org.apache.camel.quarkus:camel-quarkus-$extension:$version"
+
+    val camel_quarkus_bom get() = camelQuarkus("bom")
+    val camel_quarkus_sql get() = camelQuarkus("sql")
+    val camel_quarkus_kotlin get() = camelQuarkus("kotlin")
+    val camel_quarkus_vertx get() = camelQuarkus("vertx")
 
     // Agroal Data for Vertx
     fun agroal(module: String, version: String = Versions.agroal) = "io.agroal:agroal-$module:$version"
