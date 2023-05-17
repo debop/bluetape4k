@@ -98,7 +98,7 @@ object Versions {
 
     const val bucket4j = "7.6.0"
     const val resilience4j = "2.0.2"
-    const val netty = "4.1.91.Final"
+    const val netty = "4.1.92.Final"
 
     // https://mvnrepository.com/artifact/com.amazonaws
     const val aws = "1.12.459"

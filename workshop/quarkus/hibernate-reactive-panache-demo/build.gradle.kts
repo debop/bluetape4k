@@ -19,11 +19,9 @@ configurations {
 }
 
 dependencies {
-    implementation(enforcedPlatform(Libs.quarkus_bom))
+    // NOTE: Quarkus 는 꼭 gradle platform 으로 참조해야 제대로 빌드가 된다.
+    implementation(platform(Libs.quarkus_bom))
     implementation(platform(Libs.quarkus_universe_bom))
-
-//    api(Libs.jakarta_persistence_api)
-//    api(Libs.jakarta_validation_api)
 
     implementation(project(":bluetape4k-core"))
     implementation(project(":bluetape4k-quarkus-kotlin"))

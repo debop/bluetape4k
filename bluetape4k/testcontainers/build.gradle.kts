@@ -2,13 +2,6 @@ configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }
 
-dependencyManagement {
-    imports {
-        mavenBom(Libs.aws2_bom)
-        mavenBom(Libs.testcontainers_bom)
-    }
-}
-
 dependencies {
     api(project(":bluetape4k-core"))
     compileOnly(project(":bluetape4k-io"))

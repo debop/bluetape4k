@@ -2,6 +2,7 @@ package io.bluetape4k.vertx.examples
 
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Vertx
 import io.vertx.core.http.HttpMethod
@@ -20,7 +21,6 @@ import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.concurrent.TimeUnit
-import kotlin.coroutines.CoroutineContext
 
 @ExtendWith(VertxExtension::class)
 class VertxJunit5Examples {
@@ -111,18 +111,19 @@ class VertxJunit5Examples {
 
         inner class HttpServerVerticle: AbstractVerticle() {
             override fun start() {
-                vertx.createHttpServer().requestHandler { req ->
-                    req.response()
-                        .putHeader("content-type", "text/html")
-                        .end("<html><body><h1>Hello from $this</h1></body></html>")
-                }
-                    .listen(8080)
+                vertx.createHttpServer()
+                    .requestHandler { req ->
+                        req.response()
+                            .putHeader("content-type", "text/html")
+                            .end("<html><body><h1>Hello from $this</h1></body></html>")
+                    }
+                    .listen(9999)
             }
         }
 
         @BeforeEach
         fun `deploy verticle`(vertx: Vertx, testContext: VertxTestContext) {
-            runBlocking(vertx.dispatcher() as CoroutineContext) {
+            runBlocking(vertx.dispatcher()) {
                 vertx.deployVerticle(HttpServerVerticle()).await()
                 testContext.completeNow()
             }
@@ -132,15 +133,17 @@ class VertxJunit5Examples {
         fun `check http server response`(
             vertx: Vertx,
             testContext: VertxTestContext,
-        ) = runSuspendTest(vertx.dispatcher() as CoroutineContext) {
+        ) = runSuspendTest(vertx.dispatcher()) {
             val client = vertx.createHttpClient()
-            val request = client.request(HttpMethod.GET, 8080, "localhost", "/").await()
+            val request = client.request(HttpMethod.GET, 9999, "localhost", "/").await()
 
             val response = request.send().await()
             val buffer = response.body().await()
 
             testContext.verify {
-                buffer.toString() shouldContain "Hello from"
+                val responseText = buffer.toString()
+                log.debug { "response: $responseText" }
+                responseText shouldContain "Hello from"
                 testContext.completeNow()
             }
         }

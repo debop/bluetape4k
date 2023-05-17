@@ -18,13 +18,21 @@ allOpen {
     annotation("javax.persistence.Entity")
 }
 
+dependencyManagement {
+    imports {
+        mavenBom(Libs.quarkus_bom)
+        mavenBom(Libs.quarkus_universe_bom)
+    }
+}
+
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }
 
 dependencies {
-    implementation(enforcedPlatform(Libs.quarkus_bom))
-    implementation(enforcedPlatform(Libs.quarkus_universe_bom))
+    // NOTE: Quarkus 는 꼭 gradle platform 으로 참조해야 제대로 빌드가 된다.
+    implementation(platform(Libs.quarkus_bom))
+    implementation(platform(Libs.quarkus_universe_bom))
 
     api(project(":bluetape4k-core"))
     api(project(":bluetape4k-utils-mutiny"))
