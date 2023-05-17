@@ -283,10 +283,6 @@ subprojects {
             mavenBom(Libs.netty_bom)
             mavenBom(Libs.jackson_bom)
 
-            mavenBom(Libs.quarkus_bom)
-            mavenBom(Libs.quarkus_universe_bom)
-            mavenBom(Libs.quarkiverse_aws_bom)
-
             mavenBom(Libs.kotlinx_coroutines_bom)
             mavenBom(Libs.kotlin_bom)
         }

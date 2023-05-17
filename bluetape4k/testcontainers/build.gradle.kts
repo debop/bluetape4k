@@ -2,6 +2,13 @@ configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }
 
+dependencyManagement {
+    imports {
+        mavenBom(Libs.aws2_bom)
+        mavenBom(Libs.testcontainers_bom)
+    }
+}
+
 dependencies {
     api(project(":bluetape4k-core"))
     compileOnly(project(":bluetape4k-io"))
@@ -80,6 +87,8 @@ dependencies {
 
     // Amazon SDK V2
     compileOnly(Libs.aws2_auth)
+    testImplementation(Libs.aws2_aws_core)
+    testImplementation(Libs.aws2_sdk_core)
     testImplementation(Libs.aws2_apache_client)
     testImplementation(Libs.aws2_cloudwatch)
     testImplementation(Libs.aws2_cloudwatchevents)
@@ -89,6 +98,10 @@ dependencies {
     testImplementation(Libs.aws2_s3)
     testImplementation(Libs.aws2_ses)
     testImplementation(Libs.aws2_sqs)
+
+    // https://docs.aws.amazon.com/ko_kr/sdk-for-java/latest/developer-guide/http-configuration-crt.html
+    // https://mvnrepository.com/artifact/software.amazon.awssdk.crt/aws-crt
+    testImplementation(Libs.aws2_aws_crt)
 
     testImplementation(Libs.metrics_jmx)
 

@@ -8,15 +8,16 @@ import java.util.*
 
 object ShutdownQueue: KLogging() {
 
-    private val queue: LinkedList<AutoCloseable> = LinkedList()
+    private val closeables = Stack<AutoCloseable>()
 
     init {
         Runtimex.addShutdownHook {
-            var closeable: AutoCloseable?
-            while (queue.pollLast().apply { closeable = this } != null) {
-                log.debug { "Closing AutoCloseable instance ... $closeable" }
-                closeable?.closeTimeout(3000L) { it.printStackTrace() }
-                log.info { "Success to close AutoCloseable instance ... $closeable" }
+            while (closeables.isNotEmpty()) {
+                closeables.pop()?.let { closeable ->
+                    log.debug { "Closing AutoCloseable instance ... $closeable" }
+                    closeable.closeTimeout(3000L) { it.printStackTrace() }
+                    log.info { "Success to close AutoCloseable instance ... $closeable" }
+                }
             }
         }
     }
@@ -26,6 +27,6 @@ object ShutdownQueue: KLogging() {
      */
     fun register(closeable: AutoCloseable) {
         log.debug { "JVM Shutdown 시 자동 정리할 객체를 등록합니다. $closeable" }
-        queue.add(closeable)
+        closeables.push(closeable)
     }
 }

@@ -1,3 +1,9 @@
+dependencyManagement {
+    imports {
+        mavenBom(Libs.kotlinx_coroutines_bom)
+    }
+}
+
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }
