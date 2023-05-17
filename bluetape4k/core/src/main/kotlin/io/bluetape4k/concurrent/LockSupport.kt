@@ -26,6 +26,28 @@ inline fun <T> Int.withLatch(operation: CountDownLatch.() -> T): T {
     return result
 }
 
+/**
+ * [CountDownLatch]를 이용하여 `operation`을 수행하고, 대기합니다.
+ *
+ * ```
+ * val result = withLatch {
+ *    // do something
+ *    countDown()
+ *    42
+ * }
+ * result shouldBeEqualTo 42
+ * ```
+ *
+ * @receiver Int CountDownLatch의 count
+ * @param operation [@kotlin.ExtensionFunctionType] Function1<CountDownLatch, T>
+ * @return T
+ */
+inline fun <T> withLatch(count: Int = 1, operation: CountDownLatch.() -> T): T {
+    val latch = CountDownLatch(count)
+    val result: T = latch.operation()
+    latch.await()
+    return result
+}
 
 /**
  * [ReentrantReadWriteLock]의 read lock을 걸고 `block`을 실행한다
