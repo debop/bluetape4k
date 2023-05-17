@@ -99,10 +99,10 @@ class ConcurrencyReducer<T> private constructor(
 
         future.whenComplete { result, error ->
             limit.release()
-            if (error == null) {
-                job.promise.complete(result)
-            } else {
+            if (error != null) {
                 job.promise.completeExceptionally(error)
+            } else {
+                job.promise.complete(result)
             }
             pump()
         }

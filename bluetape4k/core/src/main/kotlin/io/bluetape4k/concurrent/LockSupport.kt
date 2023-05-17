@@ -7,29 +7,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
  * [CountDownLatch]를 이용하여 `operation`을 수행하고, 대기합니다.
  *
  * ```
- * val result = 1.withLatch {
- *    // do something
- *    countDown()
- *    42
- * }
- * result shouldBeEqualTo 42
- * ```
- *
- * @receiver Int CountDownLatch의 count
- * @param operation [@kotlin.ExtensionFunctionType] Function1<CountDownLatch, T>
- * @return T
- */
-inline fun <T> Int.withLatch(operation: CountDownLatch.() -> T): T {
-    val latch = CountDownLatch(this)
-    val result: T = latch.operation()
-    latch.await()
-    return result
-}
-
-/**
- * [CountDownLatch]를 이용하여 `operation`을 수행하고, 대기합니다.
- *
- * ```
  * val result = withLatch {
  *    // do something
  *    countDown()

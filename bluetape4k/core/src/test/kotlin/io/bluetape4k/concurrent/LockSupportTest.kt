@@ -17,8 +17,7 @@ class LockSupportTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `with CountDownLatch`() {
-
-        val x = 1.withLatch {
+        val result = withLatch(1) {
             log.trace { "with CountDownLatch ..." }
             Thread.sleep(10)
             countDown()
@@ -26,7 +25,7 @@ class LockSupportTest {
             42
         }
 
-        x shouldBeEqualTo 42
+        result shouldBeEqualTo 42
     }
 
     @RepeatedTest(REPEAT_SIZE)
