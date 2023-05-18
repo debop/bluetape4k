@@ -18,19 +18,18 @@ import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlin.coroutines.CoroutineContext
 
 @ExtendWith(VertxExtension::class)
 class MovieRatingVerticeTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     /**
      * BeforeAll, BeforeEach 에서는 testContext 가 불필요합니다. 만약 injection을 받으면 꼭 completeNow() 를 호출해야 합니다.
      */
     @BeforeAll
     fun beforeAll(vertx: Vertx) {
-        runBlocking(vertx.dispatcher() as CoroutineContext) {
+        runBlocking(vertx.dispatcher()) {
             vertx.deployVerticle(MovieRatingVerticle()).await()
             log.debug { "MovieRatingVerticle deployed." }
         }

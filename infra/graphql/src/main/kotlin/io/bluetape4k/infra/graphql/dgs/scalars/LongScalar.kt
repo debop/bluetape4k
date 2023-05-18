@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.graphql.dgs.scalar
+package io.bluetape4k.infra.graphql.dgs.scalars
 
 import com.netflix.graphql.dgs.DgsScalar
 import graphql.schema.Coercing

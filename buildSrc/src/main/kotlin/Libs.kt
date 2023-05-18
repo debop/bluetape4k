@@ -16,7 +16,9 @@ object Plugins {
         const val kotlinx_benchmark = "0.4.7"
         const val spring_boot = "2.7.11"
         const val quarkus = "2.16.7.Final"
-        const val jandex = "1.86"
+        const val apollo = "3.7.4"
+        const val dgs = "5.6.9"
+        const val docker_compose = "0.16.11"
     }
 
     const val detekt = "io.gitlab.arturbosch.detekt"
@@ -44,8 +46,15 @@ object Plugins {
     // Quarkus
     const val quarkus = "io.quarkus"
 
-    // https://mvnrepository.com/artifact/com.github.vlsi.jandex/com.github.vlsi.jandex.gradle.plugin
-    const val jandex = "com.github.vlsi.jandex"
+    // Apollo GraphQL
+    const val apollo = "com.apollographql.apollo3"
+
+    // Netflix DGS
+    // https://github.com/Netflix/dgs-codegen
+    const val dgs_codegen = "com.netflix.dgs.codegen"
+
+    // docker-compose (https://plugins.gradle.org/plugin/com.avast.gradle.docker-compose)
+    const val docker_compose = "com.avast.gradle.docker-compose"
 }
 
 object Versions {
@@ -67,13 +76,12 @@ object Versions {
     const val chaos_monkey = "2.7.2"
     const val blockhound = "1.0.8.RELEASE"
 
-
     // GraphQL
-    // Netflix DGS 의 bom (5.5.x) 에서 graph-java 버전이 낮아서 (18.3) 최신 버전 (19.2)으로 강제 update 해야 한다
+    // Netflix DGS 의 bom (5.5.x) 에서 graph-java 버전이 낮아서 (18.3) 최신 버전 (19.+)으로 강제 update 해야 한다
     // https://github.com/Netflix/dgs-framework/issues/1281#issuecomment-1284694300
-    const val graphql_java = "19.2"
-    const val graphql_dgs = "5.5.1"
-    const val apollo_kotlin = "3.7.4"
+    const val graphql_java = "19.3"
+    const val graphql_dgs = "5.5.3"
+    const val apollo3 = "3.7.4"
 
     const val quarkus = Plugins.Versions.quarkus
 
@@ -460,14 +468,14 @@ object Libs {
     val graphql_dgs_webflux_starter = graphqlDgs("webflux-starter")
     const val graphql_dgs_error_types = "com.netflix.graphql.dgs:graphql-error-types:${Versions.graphql_dgs}"
 
-    // Apollo Kotlin
-    fun apolloKotlin(module: String) = "com.apollographql.apollo3:apollo-$module:${Versions.apollo_kotlin}"
-    val apollo_adapters = apolloKotlin("adapters")
-    val apollo_mockserver = apolloKotlin("mockserver")
-    val apollo_normalized_cache = apolloKotlin("normalized-cache")
-    val apollo_runtime = apolloKotlin("runtime")
-    val apollo_runtime_jvm = apolloKotlin("runtime-jvm")
-    val apollo_testing_support = apolloKotlin("testing-support")
+    // Apollo3 
+    fun apollo3(module: String) = "com.apollographql.apollo3:apollo-$module:${Versions.apollo3}"
+    val apollo_adapters = apollo3("adapters")
+    val apollo_mockserver = apollo3("mockserver")
+    val apollo_normalized_cache = apollo3("normalized-cache")
+    val apollo_runtime = apollo3("runtime")
+    val apollo_runtime_jvm = apollo3("runtime-jvm")
+    val apollo_testing_support = apollo3("testing-support")
 
     // Apollo Federation (DGS bom에 정의되어 있다)
     fun apolloFederation(module: String) = "com.apollographql.federation:federation-$module"

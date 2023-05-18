@@ -16,6 +16,7 @@ import io.bluetape4k.junit5.folder.TempFolder
 import io.bluetape4k.junit5.folder.TempFolderExtension
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
+import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import okhttp3.Cache
 import okhttp3.CacheControl
@@ -43,6 +44,8 @@ import kotlin.test.assertFailsWith
 
 @RandomizedTest
 class Recipes: AbstractHttpTest() {
+
+    companion object: KLogging()
 
     private val client = okhttp3Client {
         retryOnConnectionFailure(true)
@@ -73,8 +76,7 @@ class Recipes: AbstractHttpTest() {
         val lock = CountDownLatch(1)
 
         val request = okhttp3RequestOf(HELLOWORLD_URL)
-
-        client.newCall(request).enqueue(object: Callback {
+        val callback = object: Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
                 lock.countDown()
@@ -86,7 +88,8 @@ class Recipes: AbstractHttpTest() {
                 log.debug { response.bodyAsString() }
                 lock.countDown()
             }
-        })
+        }
+        client.newCall(request).enqueue(callback)
         lock.await()
     }
 

@@ -22,6 +22,8 @@ class MySQL8Server private constructor(
         const val TAG = "8.0"
         const val NAME = "mysql"
         const val PORT: Int = 3306
+        private const val USERNAME = "test"
+        private const val PASSWORD = "test"
         const val DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver"
 
         @JvmStatic
@@ -29,12 +31,12 @@ class MySQL8Server private constructor(
             tag: String = TAG,
             useDefaultPort: Boolean = true,
             configuration: String = "",
-            username: String = "test",
-            password: String = "test",
+            username: String = USERNAME,
+            password: String = PASSWORD,
             reuse: Boolean = true,
         ): MySQL8Server {
             val imageName = DockerImageName.parse(IMAGE).withTag(tag)
-            return MySQL8Server(imageName, useDefaultPort, configuration, username, password, reuse)
+            return invoke(imageName, useDefaultPort, configuration, username, password, reuse)
         }
 
         @JvmStatic
@@ -42,8 +44,8 @@ class MySQL8Server private constructor(
             imageName: DockerImageName,
             useDefaultPort: Boolean = true,
             configuration: String = "",
-            username: String = "test",
-            password: String = "test",
+            username: String = USERNAME,
+            password: String = PASSWORD,
             reuse: Boolean = true,
         ): MySQL8Server {
             return MySQL8Server(imageName, useDefaultPort, configuration, username, password, reuse)

@@ -23,7 +23,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlin.coroutines.CoroutineContext
 
 @ExtendWith(VertxExtension::class)
 abstract class AbstractVertxSqlClientTest {
@@ -78,7 +77,7 @@ abstract class AbstractVertxSqlClientTest {
     protected lateinit var pool: Pool
 
     @BeforeAll
-    fun setup(vertx: Vertx) = runSuspendTest(vertx.dispatcher() as CoroutineContext) {
+    fun setup(vertx: Vertx) = runSuspendTest(vertx.dispatcher()) {
         pool = vertx.getPool()
 
         log.info { "Initialize database" }

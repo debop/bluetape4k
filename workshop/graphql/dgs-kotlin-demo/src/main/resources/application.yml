@@ -1,0 +1,7 @@
+spring:
+    application:
+        name: dgs-kotlin-demo
+
+    web:
+        resources:
+            static-locations: file:uploaded-images

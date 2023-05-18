@@ -1,0 +1,16 @@
+spring:
+    application.name: dgs-webflux-demo
+    config.activate.on-profile: local
+    output.ansi.enabled: ALWAYS
+    
+    #    web:
+    #        resources:
+    #            static-locations: file:uploaded-images
+
+    web:
+        resources:
+            static-locations: file:uploaded-images
+
+logging:
+    level:
+        io.bluetape4k.workshop: DEBUG

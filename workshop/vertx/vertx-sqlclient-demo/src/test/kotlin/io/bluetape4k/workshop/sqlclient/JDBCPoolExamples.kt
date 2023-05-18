@@ -17,7 +17,6 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import kotlin.coroutines.CoroutineContext
 
 class JDBCPoolExamples: AbstractSqlClientTest() {
 
@@ -25,7 +24,7 @@ class JDBCPoolExamples: AbstractSqlClientTest() {
     @BeforeAll
     fun setup(vertx: Vertx) {
         // setup 에서는 testContext 가 불필요합니다. 만약 injection을 받으면 꼭 completeNow() 를 호출해야 합니다.
-        runBlocking(vertx.dispatcher() as CoroutineContext) {
+        runBlocking(vertx.dispatcher()) {
             val pool = vertx.getH2Pool()
             pool.withTransactionSuspending { conn: SqlConnection ->
                 conn

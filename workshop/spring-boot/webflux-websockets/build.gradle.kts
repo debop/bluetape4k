@@ -23,6 +23,7 @@ dependencies {
     implementation(Libs.springBoot("autoconfigure"))
     kapt(Libs.springBoot("autoconfigure-processor"))
     kapt(Libs.springBoot("configuration-processor"))
+    runtimeOnly(Libs.springBoot("devtools"))
 
     implementation(Libs.springBootStarter("webflux"))
     implementation(Libs.springCloudStarter("sleuth"))
