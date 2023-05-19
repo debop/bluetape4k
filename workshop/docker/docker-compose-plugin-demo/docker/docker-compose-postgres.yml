@@ -1,0 +1,17 @@
+---
+version: '3'
+
+services:
+    postgres:
+        image: postgres:14
+        environment:
+            POSTGRES_USER: debop
+            POSTGRES_PASSWORD: debop
+            POSTGRES_DB: debop
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        ports:
+            - "5432:5432"

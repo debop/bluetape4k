@@ -2,7 +2,6 @@
 <configuration>
 
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
-
         <immediateFlush>true</immediateFlush>
         <encoder>
             <!-- @formatter:off -->
@@ -12,8 +11,7 @@
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.io.feign" level="TRACE"/>
-    <logger name="feign" level="INFO"/>
+    <logger name="io.bluetape4k" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="Console"/>

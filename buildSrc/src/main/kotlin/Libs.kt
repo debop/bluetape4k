@@ -53,7 +53,7 @@ object Plugins {
     // https://github.com/Netflix/dgs-codegen
     const val dgs_codegen = "com.netflix.dgs.codegen"
 
-    // docker-compose (https://plugins.gradle.org/plugin/com.avast.gradle.docker-compose)
+    // docker-compose gradle plugin(https://plugins.gradle.org/plugin/com.avast.gradle.docker-compose)
     const val docker_compose = "com.avast.gradle.docker-compose"
 }
 

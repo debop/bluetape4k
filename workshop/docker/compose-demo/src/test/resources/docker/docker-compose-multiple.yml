@@ -1,0 +1,11 @@
+---
+version: '3'
+
+services:
+    redis:
+        image: redis:6.2.5
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
+        environment:
+            - discovery.type=single-node

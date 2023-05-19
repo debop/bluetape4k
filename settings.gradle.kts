@@ -27,6 +27,7 @@ includeModules("vertx")
 includeModules("examples", false)
 // Workshop (application style examples)
 
+includeModules("workshop/docker", false, false)
 includeModules("workshop/graphql", false, false)
 includeModules("workshop/quarkus", false, false)
 includeModules("workshop/spring-boot", false, false)

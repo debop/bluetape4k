@@ -60,12 +60,6 @@ dependencies {
     api(Libs.kotlinx_coroutines_jdk8)
     testImplementation(Libs.kotlinx_coroutines_test)
 
-    testImplementation(Libs.vertx_mysql_client) // MySQL
-    // Testcontainers MySQL 에서 검증을 위해 사용하기 위해 불가피하게 필요합니다
-    // reactive 방식에서는 항상 verx-mysql-client 를 사용합니다
-    testImplementation(Libs.hikaricp)
-    testImplementation(Libs.mysql_connector_j)
-
     testImplementation(project(":bluetape4k-junit5"))
 
     // bluetape4k-data-hibernate 의 테스트용 엔티티를 사용하기 위해 추가합니다
@@ -93,6 +87,11 @@ dependencies {
 
     testImplementation(project(":bluetape4k-testcontainers"))
     testImplementation(Libs.testcontainers_mysql)
+    testImplementation(Libs.vertx_mysql_client) // MySQL
+    // Testcontainers MySQL 에서 검증을 위해 사용하기 위해 불가피하게 필요합니다
+    // reactive 방식에서는 항상 verx-mysql-client 를 사용합니다
+    testImplementation(Libs.hikaricp)
+    testImplementation(Libs.mysql_connector_j)
 
     // bluetape4k-data-hibernate의 entity 들을 재사용하려고 testArchives 를 참조한다
     // persistence.xml 에서도 jar-file에 entity path를 추가해야 한다

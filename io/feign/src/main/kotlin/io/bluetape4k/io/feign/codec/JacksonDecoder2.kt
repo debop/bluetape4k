@@ -64,10 +64,10 @@ class JacksonDecoder2 private constructor(
                 return null
             }
             reader.reset()
-            log.trace { "Read json format response body. type=$type" }
+            log.trace { "Read json format response body. target type=$type" }
             return mapper.readValue(reader, mapper.constructType(type))
         } catch (e: JsonParseException) {
-            log.error(e) { "Failed to read json format response body. type=$type" }
+            log.error(e) { "Fail to read json format response body. type=$type" }
 
             if (e.cause is IOException) {
                 throw e.cause as IOException
@@ -78,6 +78,9 @@ class JacksonDecoder2 private constructor(
                 response.request(),
                 e
             )
+        } catch (e: Throwable) {
+            log.error(e) { "Fail to decode response body. type=$type" }
+            throw e
         } finally {
             reader.closeSafe()
         }

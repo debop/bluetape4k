@@ -1,0 +1,34 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+
+    <persistence-unit name="default">
+        <provider>org.hibernate.reactive.provider.ReactivePersistenceProvider</provider>
+
+        <class>io.bluetape4k.workshop.webflux.hibernate.reactive.model.City</class>
+        <class>io.bluetape4k.workshop.webflux.hibernate.reactive.model.Customer</class>
+        <!-- 테스트 시에는 build/classes 에 있는 entity 를 scan 한다  -->
+        <!--        <jar-file>build/classes</jar-file>-->
+
+        <properties>
+            <!-- Automatic schema export -->
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+
+            <!-- initial loading script -->
+            <!-- <property name="javax.persistence.sql-load-script-source" value="data.sql" />-->
+
+            <!-- The Vert.x SQL Client connection pool size -->
+            <property name="hibernate.connection.pool_size" value="20"/>
+
+            <!-- SQL statement logging -->
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.highlight_sql" value="true"/>
+            <property name="hibernate.generate_statistics" value="true"/>
+
+        </properties>
+
+    </persistence-unit>
+
+</persistence>
