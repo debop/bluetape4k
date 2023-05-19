@@ -2,6 +2,7 @@ package io.bluetape4k.testcontainers.storage
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
@@ -104,11 +105,16 @@ class RedisClusterServer private constructor(
             fun getRedissonConfig(redisCluster: RedisClusterServer): Config {
                 return Config().apply {
                     useClusterServers()
-                        // .addNodeAddress(*redisCluster.nodeAddresses.toTypedArray())
-                        .addNodeAddress(*redisCluster.nodeAddresses.toTypedArray())
                         .setScanInterval(2000)
                         .setReadMode(ReadMode.SLAVE)
                         .setSubscriptionMode(SubscriptionMode.SLAVE)
+                        .setNatMapper { redisURI ->
+                            val port = redisCluster.mappedPorts[redisURI.port]!!
+                            org.redisson.misc.RedisURI("redis", "localhost", port)
+                        }
+                        .apply {
+                            nodeAddresses = redisCluster.nodeAddresses
+                        }
 
                     this.setCodec(LZ4Codec())
                 }
@@ -125,7 +131,7 @@ class RedisClusterServer private constructor(
         object LettuceLib {
 
             fun clientResources(redisCluster: RedisClusterServer): ClientResources {
-                log.debug { "Get ClientResources..." }
+                log.trace { "Get ClientResources..." }
                 val socketAddressResolver = object: SocketAddressResolver() {
                     override fun resolve(redisURI: RedisURI): SocketAddress {
                         log.debug { "Resolve redisURI=$redisURI" }
@@ -136,7 +142,7 @@ class RedisClusterServer private constructor(
                         if (mappedPort != null) {
                             val socketAddress = redisCluster.socketAddresses[mappedPort]
                             if (socketAddress != null) {
-                                log.debug { "mappedPort=$mappedPort, RedisCluster socketAddress=$socketAddress" }
+                                log.trace { "mappedPort=$mappedPort, RedisCluster socketAddress=$socketAddress" }
                                 return socketAddress
                             }
                             redisURI.port = mappedPort
@@ -145,7 +151,7 @@ class RedisClusterServer private constructor(
                         redisURI.host = DockerClientFactory.instance().dockerHostIpAddress()
                         val socketAddress = super.resolve(redisURI)
                         redisCluster.socketAddresses.putIfAbsent(redisURI.port, socketAddress)
-                        log.debug { "RedisCluster socketAddress=$socketAddress" }
+                        log.trace { "RedisCluster socketAddress=$socketAddress" }
                         return socketAddress
                     }
                 }

@@ -29,12 +29,12 @@ class RedisClusterServerTest {
             redisCluster.isRunning.shouldBeTrue()
 
             verifyWithLettuce(redisCluster)
-            // verifyWithRedisson(redisCluster)
+            verifyWithRedisson(redisCluster)
 
         }
     }
 
-    // @Disabled("Mac AirPlay 가 Port 5000, 7000를 사용해서 충돌이 생깁니다")
+    //    @Disabled("Mac AirPlay 사용 시 Port 5000, 7000를 사용해서 충돌이 생깁니다")
     @Test
     fun `create redis server with default port`() {
         RedisClusterServer(useDefaultPort = true).use { redisCluster ->
@@ -106,6 +106,10 @@ class RedisClusterServerTest {
         try {
             redisson.getRedisNodes(RedisNodes.CLUSTER).masters.all { it.ping() }.shouldBeTrue()
             redisson.getRedisNodes(RedisNodes.CLUSTER).pingAll().shouldBeTrue()
+
+            val map = redisson.getMap<String, String>("bluetape4k:map")
+            map["key"] = "value"
+            map["key"] shouldBeEqualTo "value"
         } finally {
             redisson.shutdown()
         }
