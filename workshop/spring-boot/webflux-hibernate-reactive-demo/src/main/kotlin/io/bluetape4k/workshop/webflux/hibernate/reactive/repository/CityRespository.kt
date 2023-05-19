@@ -4,6 +4,7 @@ import io.bluetape4k.data.hibernate.reactive.mutiny.asMutinySessionFactory
 import io.bluetape4k.data.hibernate.reactive.mutiny.createQueryAs
 import io.bluetape4k.data.hibernate.reactive.mutiny.getAs
 import io.bluetape4k.data.hibernate.reactive.mutiny.withStatelessSessionSuspending
+import io.bluetape4k.data.hibernate.reactive.mutiny.withTransactionSuspending
 import io.bluetape4k.workshop.webflux.hibernate.reactive.model.City
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import org.hibernate.reactive.mutiny.Mutiny
@@ -25,6 +26,12 @@ class CityRespository(@Autowired emf: EntityManagerFactory) {
     suspend fun findAll(): List<City> {
         return sf.withStatelessSessionSuspending { stateless ->
             stateless.createQueryAs<City>("from City").resultList.awaitSuspending()
+        }
+    }
+
+    suspend fun <T> persist(entity: T): T {
+        return sf.withTransactionSuspending { session ->
+            session.persist(entity).replaceWith(entity).awaitSuspending()
         }
     }
 }

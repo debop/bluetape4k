@@ -34,9 +34,9 @@ class DataInitializer(
             val smith = Customer("Smith").apply { city = london }
             val bob = Customer("Bob").apply { city = newyork }
 
-            log.info { "Intialize sample data." }
 
-            // repository.sf.withTransactionSuspending { session: Mutiny.Session ->
+            log.info { "Initialize sample data..." }
+
             emf.asMutinySessionFactory().withTransactionSuspending { session: Mutiny.Session ->
                 session.persist(seoul).awaitSuspending()
                 session.persist(london).awaitSuspending()
@@ -46,9 +46,8 @@ class DataInitializer(
                 session.persist(kim).awaitSuspending()
                 session.persist(smith).awaitSuspending()
                 session.persist(bob).awaitSuspending()
-
-                log.debug { "Saved customer. debop=$debop" }
             }
+            log.debug { "Saved customer. debop=$debop" }
         }
     }
 }

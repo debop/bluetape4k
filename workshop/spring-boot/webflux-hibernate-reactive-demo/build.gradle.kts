@@ -44,8 +44,8 @@ dependencies {
     implementation(Libs.vertx_mysql_client) // MySQL
 
     // hibernate-reactive 는 querydsl 을 사용하지 못한다. 대신 jpamodelgen 을 사용합니다.
-    kapt(Libs.hibernate_jpamodelgen)
-    kaptTest(Libs.hibernate_jpamodelgen)
+//    kapt(Libs.hibernate_jpamodelgen)
+//    kaptTest(Libs.hibernate_jpamodelgen)
 
     // MySQL Container
     implementation(project(":bluetape4k-testcontainers"))

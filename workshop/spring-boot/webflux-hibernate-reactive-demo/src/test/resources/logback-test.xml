@@ -29,7 +29,7 @@
     <!-- HQL 실행 통계를 로그에 출력합니다.-->
     <!-- eg. HHH000117: HQL: select generatedAlias0 from Article as generatedAlias0 order by generatedAlias0.addedAt desc, time: 1ms, rows: 2-->
     <logger name="org.hibernate.stat" level="DEBUG"/>
-    <logger name="org.hibernate.engine.internal" level="INFO"/>
+    <logger name="org.hibernate.engine.internal" level="OFF"/>
 
     <!-- Hibernate >= 5.4.5 -->
 
@@ -44,7 +44,7 @@
     <!--<logger name="org.hibernate.loader.plan.build.spi.LoadPlanTreePrinter" level="DEBUG"/>-->
 
     <!-- 2nd Level Cache -->
-    <logger name="org.hibernate.cache" level="DEBUG"/>
+    <!-- <logger name="org.hibernate.cache" level="DEBUG"/> -->
 
     <root level="INFO">
         <appender-ref ref="console"/>
