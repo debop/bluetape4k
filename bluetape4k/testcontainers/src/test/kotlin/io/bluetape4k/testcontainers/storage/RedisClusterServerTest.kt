@@ -28,6 +28,7 @@ class RedisClusterServerTest {
             redisCluster.start()
             redisCluster.isRunning.shouldBeTrue()
 
+            // NOTE: Redisson 은 Cluster 구성이 완료되었는지 확인이 어려움 (Lettuce 로 먼저 확인해서 구성완료가 되었음을 확인한 후 접속하면 잘 작동함)
             verifyWithLettuce(redisCluster)
             verifyWithRedisson(redisCluster)
 
@@ -42,6 +43,7 @@ class RedisClusterServerTest {
             redisCluster.isRunning.shouldBeTrue()
             redisCluster.port shouldBeEqualTo RedisClusterServer.PORTS[0]
 
+            // NOTE: Redisson 은 Cluster 구성이 완료되었는지 확인이 어려움 (Lettuce 로 먼저 확인해서 구성완료가 되었음을 확인한 후 접속하면 잘 작동함)
             verifyWithLettuce(redisCluster)
             verifyWithRedisson(redisCluster)
         }
