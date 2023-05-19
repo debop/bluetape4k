@@ -8,6 +8,7 @@ import io.lettuce.core.api.StatefulRedisConnection
 import io.lettuce.core.api.async.RedisAsyncCommands
 import io.lettuce.core.api.sync.RedisCommands
 import io.lettuce.core.codec.RedisCodec
+import io.lettuce.core.resource.ClientResources
 import java.time.Duration
 
 object LettuceClients: KLogging() {
@@ -32,6 +33,14 @@ object LettuceClients: KLogging() {
      * @return [RedisClient] instance
      */
     fun clientOf(redisUri: RedisURI): RedisClient = RedisClient.create(redisUri)
+
+    /**
+     * [RedisClient] 인스턴스를 생성합니다.
+     *
+     * @param redisUri Redis Server URI
+     * @return [RedisClient] instance
+     */
+    fun clientOf(clientResources: ClientResources): RedisClient = RedisClient.create(clientResources)
 
     /**
      * [RedisClient] 인스턴스를 생성합니다.

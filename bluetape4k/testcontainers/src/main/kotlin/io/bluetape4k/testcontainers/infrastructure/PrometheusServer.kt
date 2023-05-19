@@ -6,6 +6,7 @@ import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.GenericContainer
+import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 import org.testcontainers.utility.DockerImageName
 import java.time.Duration
@@ -62,6 +63,8 @@ class PrometheusServer private constructor(
         addExposedPorts(*EXPOSED_PORTS)
         withReuse(reuse)
 
+        withLogConsumer(Slf4jLogConsumer(log))
+
         val waitStrategy = LogMessageWaitStrategy()
             .withRegEx(".*Server is ready to receive web requests.*")
             .withTimes(1)
@@ -70,7 +73,7 @@ class PrometheusServer private constructor(
         setWaitStrategy(waitStrategy)
 
         if (useDefaultPort) {
-            // 위에 withExposedPorts 를 등록했으면, 따로 지정하지 않으면 그 값들을 사용합니다.
+            // 위에 addExposedPorts 를 등록했으면, 따로 지정하지 않으면 그 값들을 사용합니다.
             exposeCustomPorts(*EXPOSED_PORTS)
         }
     }

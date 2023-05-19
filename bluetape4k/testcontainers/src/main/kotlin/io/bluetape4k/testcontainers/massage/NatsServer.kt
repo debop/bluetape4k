@@ -59,7 +59,7 @@ class NatsServer private constructor(
         withReuse(reuse)
 
         if (useDefaultPort) {
-            // 위에 withExposedPorts 를 등록했으면, 따로 지정하지 않으면 그 값들을 사용합니다.
+            // 위에 addExposedPorts 를 등록했으면, 따로 지정하지 않으면 그 값들을 사용합니다.
             exposeCustomPorts(*NATS_PORTS)
         }
     }
