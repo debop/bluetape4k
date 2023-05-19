@@ -56,7 +56,7 @@ class Cassandra4Server private constructor(
             reuse: Boolean = true,
         ): Cassandra4Server {
             val imageName = DockerImageName.parse(IMAGE).withTag(tag)
-            return Cassandra4Server(imageName, useDefaultPort, reuse)
+            return invoke(imageName, useDefaultPort, reuse)
         }
 
         @JvmStatic
@@ -73,7 +73,7 @@ class Cassandra4Server private constructor(
     val cqlPort: Int get() = getMappedPort(CQL_PORT)
 
     override val url: String get() = "$host:$port"
-    val contactPoint: InetSocketAddress get() = InetSocketAddress(host, cqlPort)
+    val contactPoint: InetSocketAddress get() = InetSocketAddress(host, port)
 
     private var configLocation: String = EMPTY_STRING
     private var initScriptPath: String = EMPTY_STRING

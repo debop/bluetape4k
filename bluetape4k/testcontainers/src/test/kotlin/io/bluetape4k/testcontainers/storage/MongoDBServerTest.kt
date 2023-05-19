@@ -48,7 +48,6 @@ class MongoDBServerTest {
     }
 
     private fun verifyMongo(mongo: MongoDBServer) {
-        Thread.sleep(100)
         MongoClients.create(mongo.url).use { client ->
             val db = client.getDatabase(DATABASE_NAME)
             val customers = db.getCollection("customers")

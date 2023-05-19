@@ -38,10 +38,9 @@ class Cassandra4ServerTest {
     }
 
     @Test
-    fun `launch cassandra with init script`() {
+    fun `launch cassandra with init script with default port`() {
         Cassandra4Server(useDefaultPort = true).use { server ->
             server.withInitScript("cassandra/init.cql")
-
             server.start()
 
             CqlSessionBuilder()

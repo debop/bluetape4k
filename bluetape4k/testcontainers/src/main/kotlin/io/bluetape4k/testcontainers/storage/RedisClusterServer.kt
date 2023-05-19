@@ -20,7 +20,6 @@ import org.redisson.config.SubscriptionMode
 import org.testcontainers.DockerClientFactory
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.output.Slf4jLogConsumer
-import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 import java.net.SocketAddress
 import java.util.concurrent.ConcurrentHashMap
@@ -32,11 +31,13 @@ class RedisClusterServer private constructor(
 ): GenericContainer<RedisClusterServer>(imageName), GenericServer {
 
     companion object: KLogging() {
-        const val IMAGE = "grokzen/redis-cluster"
-        const val TAG = "6.2.1"
+        //        const val IMAGE = "bitnami/redis-cluster"
+//        const val TAG = "7.0"
+//        const val IMAGE = "grokzen/redis-cluster"
+//        const val TAG = "6.2.1"
+        const val IMAGE = "tommy351/redis-cluster"
+        const val TAG = "6.2"
 
-        //        const val IMAGE = "tommy351/redis-cluster"
-//        const val TAG = "6.2"
         const val NAME = "redis.cluster"
 
         val PORTS = intArrayOf(7000, 7001, 7002, 7003, 7004, 7005)
@@ -74,9 +75,19 @@ class RedisClusterServer private constructor(
         addExposedPorts(*PORTS)
         withReuse(reuse)
         withLogConsumer(Slf4jLogConsumer(log))
-        setWaitStrategy(Wait.forListeningPort())
+        // setWaitStrategy(Wait.forListeningPort())
 
+        // grokzen/redis-cluster
         addEnv("IP", "0.0.0.0")
+
+        // tommy351/redis-cluster
+        addEnv("CLUSTER_ANNOUNCE_IP", "127.0.0.1")
+
+        // https://hub.docker.com/r/bitnami/redis-cluster
+//        addEnv("ALLOW_EMPTY_PASSWORD", "yes")
+//        addEnv("REDIS_NODES", PORTS.joinToString(" ") { "locahost:$it" })
+//        addEnv("REDIS_CLUSTER_SLEEP_BEFORE_DNS_LOOKUP", "30")
+//        addEnv("REDIS_CLUSTER_DNS_LOOKUP_SLEEP", "5")
 
         if (useDefaultPort) {
             exposeCustomPorts(*PORTS)
@@ -90,6 +101,9 @@ class RedisClusterServer private constructor(
             "nodes" to nodeAddresses.joinToString(",")
         )
         writeToSystemProperties(NAME, extraMaps)
+
+        // TODO: Cluster 구성에 시간이 걸린다. 이 시간을 대기해야 하고, await 같은 것으로 대기하는 코드가 필요하다
+        Thread.sleep(10_000)
     }
 
     object Launcher {

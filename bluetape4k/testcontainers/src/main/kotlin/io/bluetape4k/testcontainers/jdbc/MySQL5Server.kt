@@ -37,6 +37,8 @@ class MySQL5Server private constructor(
         const val TAG = "5.7"
         const val NAME = "mysql"
         const val PORT: Int = 3306
+        private const val USERNAME = "test"
+        private const val PASSWORD = "test"
         const val DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver"
 
         @JvmStatic
@@ -44,8 +46,8 @@ class MySQL5Server private constructor(
             tag: String = TAG,
             useDefaultPort: Boolean = true,
             configuration: String = "",
-            username: String = "test",
-            password: String = "test",
+            username: String = USERNAME,
+            password: String = PASSWORD,
             reuse: Boolean = true,
         ): MySQL5Server {
             val imageName = DockerImageName.parse(IMAGE).withTag(tag).asCompatibleSubstituteFor(NAME)
@@ -57,8 +59,8 @@ class MySQL5Server private constructor(
             imageName: DockerImageName,
             useDefaultPort: Boolean = true,
             configuration: String = "",
-            username: String = "test",
-            password: String = "test",
+            username: String = USERNAME,
+            password: String = PASSWORD,
             reuse: Boolean = true,
         ): MySQL5Server {
             return MySQL5Server(imageName, useDefaultPort, configuration, username, password, reuse)
@@ -79,8 +81,9 @@ class MySQL5Server private constructor(
         withPassword(password)
 
         withReuse(reuse)
-        // withLogConsumer(Slf4jLogConsumer(log))
         setWaitStrategy(Wait.forListeningPort())
+
+        withEnv("ALLOW_EMPTY_PASSWORD", "yes")
 
         if (useDefaultPort) {
             exposeCustomPorts(PORT)

@@ -11,9 +11,9 @@ import org.testcontainers.utility.DockerImageName
 class MySQL8Server private constructor(
     imageName: DockerImageName,
     useDefaultPort: Boolean = false,
-    configuration: String = "",
-    username: String = "test",
-    password: String = "test",
+    configuration: String,
+    username: String,
+    password: String,
     reuse: Boolean = true,
 ): MySQLContainer<MySQL8Server>(imageName), JdbcServer {
 
