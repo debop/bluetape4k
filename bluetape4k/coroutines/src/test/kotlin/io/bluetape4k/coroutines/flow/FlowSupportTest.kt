@@ -2,6 +2,7 @@ package io.bluetape4k.coroutines.flow
 
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet
+import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
@@ -34,7 +35,7 @@ class FlowSupportTest {
     private val dispatcher = newFixedThreadPoolContext(8, "flowext")
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `repeatFlow operator`() = runTest {
+    fun `repeatFlow operator`() = runSuspendTest {
         val repeated = repeatFlow(4) {
             log.trace { "Processing $it" }
             delay(Random.nextLong(30))

@@ -30,9 +30,14 @@ import kotlin.coroutines.CoroutineContext
 fun <T> repeatFlow(times: Int, func: suspend (Int) -> T): Flow<T> {
     times.requirePositiveNumber("times")
     return flow {
-        repeat(times) {
-            emit(func(it))
+        for (i in 0 until times) {
+            emit(func(i))
         }
+        // 같은 코드인데, 다음과 같은 예외가 발생한다. inline 함수라는 게 의심스럽다.
+        // Duplicate field name "L$0" with signature
+//        repeat(times) {
+//            emit(func(it))
+//        }
     }
 }
 
