@@ -1,11 +1,6 @@
 plugins {
     kotlin("plugin.spring")
     kotlin("kapt")
-    id(Plugins.spring_boot)
-}
-
-springBoot {
-    mainClass.set("io.bluetape4k.workshop.mongo.MongoApplicationKt")
 }
 
 dependencies {
