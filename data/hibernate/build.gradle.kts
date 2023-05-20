@@ -113,9 +113,7 @@ dependencies {
 
     // Caching 테스트
     testImplementation(project(":bluetape4k-infra-cache"))
-    testImplementation(Libs.springBootStarter("cache"))
-    testImplementation(Libs.caffeine)
-    testImplementation(Libs.caffeine_jcache)
+    testImplementation(Libs.hibernate_jcache)
 
     // JDBC 와 같이 사용
     testImplementation(project(":bluetape4k-data-jdbc"))

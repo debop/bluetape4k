@@ -1,19 +1,18 @@
 package io.bluetape4k.workshop.webflux.hibernate.reactive.model
 
+import io.bluetape4k.core.ToStringBuilder
+import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.data.hibernate.model.LongJpaEntity
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.FetchProfile
 import javax.persistence.Access
 import javax.persistence.AccessType
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 
-// TODO: LongJpaEntity 를 상속받는 것으로 변경하자 
 @Entity
 @Access(AccessType.FIELD)
 // NOTE: city 를 lazy 로 얻기 위해서는 @FetchProfile 을 이용해야 합니다.
@@ -24,16 +23,39 @@ import javax.persistence.ManyToOne
         FetchProfile.FetchOverride(entity = Customer::class, association = "city", mode = FetchMode.JOIN)
     ]
 )
-data class Customer(
-    @field:Column(nullable = false)
-    open var name: String,
-): java.io.Serializable {
+class Customer: LongJpaEntity() {
 
-    @field:Id
-    @field:GeneratedValue(strategy = GenerationType.IDENTITY)
-    open var id: Long = 0L
+    companion object {
+        @JvmStatic
+        operator fun invoke(name: String): Customer {
+            name.requireNotBlank("name")
+            return Customer().apply {
+                this.name = name
+            }
+        }
+    }
 
-    @field:ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @field:JoinColumn(name = "city_id")
-    open var city: City? = null
+    @Column(nullable = false, length = 255)
+    var name: String = ""
+
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        optional = true,
+        cascade = [CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE]
+    )
+    var city: City? = null
+
+    override fun equalProperties(other: Any): Boolean =
+        other is Customer && name == other.name
+
+    override fun equals(other: Any?): Boolean =
+        other != null && super.equals(other)
+
+    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
+
+    override fun buildStringHelper(): ToStringBuilder {
+        return super.buildStringHelper()
+            .add("name", name)
+            .add("city", city?.name)
+    }
 }

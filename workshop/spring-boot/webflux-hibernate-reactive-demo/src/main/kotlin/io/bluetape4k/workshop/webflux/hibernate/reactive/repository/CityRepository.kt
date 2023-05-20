@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository
 import javax.persistence.EntityManagerFactory
 
 @Repository
-class CityRespository(@Autowired emf: EntityManagerFactory) {
+class CityRepository(@Autowired emf: EntityManagerFactory) {
 
     val sf: Mutiny.SessionFactory = emf.asMutinySessionFactory()
 

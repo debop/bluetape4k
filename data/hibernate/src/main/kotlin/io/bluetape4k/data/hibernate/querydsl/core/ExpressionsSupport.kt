@@ -349,6 +349,8 @@ fun simplePathOf(parent: Path<*>, variable: String): StringPath =
 fun simplePathOf(metadata: PathMetadata): StringPath =
     Expressions.stringPath(metadata)
 
+fun StringPath.eqOrNull(name: String?): BooleanExpression? = name?.let { this.eq(it) }
+
 // BooleanPath
 
 fun booleanPathOf(variable: String): BooleanPath =

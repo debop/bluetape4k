@@ -31,21 +31,25 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-data-hibernate-reactive"))
-    api(project(":bluetape4k-utils-mutiny"))
-    api(project(":bluetape4k-vertx-core"))
-    api(project(":bluetape4k-spring-support"))
+    implementation(project(":bluetape4k-data-hibernate-reactive"))
+    implementation(project(":bluetape4k-utils-mutiny"))
+    implementation(project(":bluetape4k-vertx-core"))
+    implementation(project(":bluetape4k-spring-support"))
     implementation(project(":bluetape4k-io-json"))
     implementation(project(":bluetape4k-io-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Hibernate Reactive
     implementation(Libs.hibernate_reactive_core)
+    implementation(Libs.hibernate_core)
+    implementation(Libs.javassist)
+
     implementation(Libs.vertx_mysql_client) // MySQL
+    implementation(Libs.vertx_lang_kotlin_coroutines)
 
     // hibernate-reactive 는 querydsl 을 사용하지 못한다. 대신 jpamodelgen 을 사용합니다.
-//    kapt(Libs.hibernate_jpamodelgen)
-//    kaptTest(Libs.hibernate_jpamodelgen)
+    kapt(Libs.hibernate_jpamodelgen)
+    kaptTest(Libs.hibernate_jpamodelgen)
 
     // MySQL Container
     implementation(project(":bluetape4k-testcontainers"))
@@ -88,4 +92,6 @@ dependencies {
     implementation(Libs.reactor_netty)
     implementation(Libs.reactor_kotlin_extensions)
     testImplementation(Libs.reactor_test)
+
+    implementation(Libs.datafaker)
 }

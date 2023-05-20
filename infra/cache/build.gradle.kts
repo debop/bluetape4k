@@ -12,12 +12,12 @@ dependencies {
 
     api(Libs.javax_cache_api)
 
+    api(Libs.caffeine)
+    api(Libs.caffeine_jcache)
+
     // Cache Providers
     compileOnly(Libs.cache2k_core)
     compileOnly(Libs.cache2k_jcache)
-
-    api(Libs.caffeine)
-    api(Libs.caffeine_jcache)
 
     compileOnly(Libs.ehcache)
     compileOnly(Libs.ehcache_clustered)

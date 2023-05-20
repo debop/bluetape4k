@@ -5,6 +5,8 @@ import com.querydsl.core.types.dsl.NumberExpression
 import com.querydsl.core.types.dsl.StringExpression
 import com.querydsl.core.types.dsl.StringExpressions
 
+operator fun StringExpression.plus(other: Expression<String>): StringExpression = this.append(other)
+operator fun StringExpression.plus(str: String): StringExpression = this.append(str)
 
 fun Expression<String>.ltrim(): StringExpression = StringExpressions.ltrim(this)
 fun Expression<String>.rtrim(): StringExpression = StringExpressions.rtrim(this)

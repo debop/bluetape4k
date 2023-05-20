@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 
 class CustomerRespositoryTest(
     @Autowired private val customerRepo: CustomerRepository,
-    @Autowired private val cityRepo: CityRespository,
+    @Autowired private val cityRepo: CityRepository,
 ): AbstractHibernateReactiveTest() {
 
     companion object: KLogging()
@@ -67,7 +67,7 @@ class CustomerRespositoryTest(
     fun `delete customer`() = runSuspendTest {
         val custoemers = customerRepo.findAll()
         val last = custoemers.last()
-        val deleted = customerRepo.deleteCustomerById(last.id)
+        val deleted = customerRepo.deleteCustomerById(last.identifier)
         deleted shouldBeEqualTo last
     }
 }

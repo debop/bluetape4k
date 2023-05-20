@@ -8,6 +8,8 @@
 
         <class>io.bluetape4k.workshop.webflux.hibernate.reactive.model.City</class>
         <class>io.bluetape4k.workshop.webflux.hibernate.reactive.model.Customer</class>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
         <!-- 테스트 시에는 build/classes 에 있는 entity 를 scan 한다  -->
         <!--        <jar-file>build/classes</jar-file>-->
 
@@ -20,6 +22,14 @@
 
             <!-- The Vert.x SQL Client connection pool size -->
             <property name="hibernate.connection.pool_size" value="20"/>
+
+            <!--
+            JPA Batch Insert (https://cheese10yun.github.io/jpa-batch-insert/)
+            MySQL인 경우 jdbc url에 `rewriteBatchedStatements=true` 추가해야 함
+            -->
+            <property name="hibernate.jdbc.batch_size" value="30"/>
+            <property name="hibernate.order_inserts" value="true"/>
+            <property name="hibernate.order_updates" value="true"/>
 
             <!-- SQL statement logging -->
             <property name="hibernate.show_sql" value="false"/>

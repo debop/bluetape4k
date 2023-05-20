@@ -1,6 +1,5 @@
-package io.bluetape4k.data.hibernate
+package io.bluetape4k.examples.jpa.querydsl
 
-import io.bluetape4k.infra.cache.jcache.JCaching
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import net.datafaker.Faker
@@ -11,8 +10,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import javax.persistence.EntityManager
 import javax.persistence.EntityManagerFactory
 
+
 /**
- * `@DataJpaTest`를 사용하려면 SprinBootApplication 이 정의되어 있어야 합니다 (see [SpringDataJpaTestApplication])
+ * `@DataJpaTest`를 사용하려면 SpringBootApplication 이 정의되어 있어야 합니다 (see [SpringDataJpaTestApplication])
  *
  * 참고: [Hibernate Configuration](https://docs.jboss.org/hibernate/orm/5.6/userguide/html_single/Hibernate_User_Guide.html#configurations)
  */
@@ -33,7 +33,7 @@ import javax.persistence.EntityManagerFactory
         "spring.jpa.properties.hibernate.format_sql=true",
         "spring.jpa.properties.hibernate.highlight_sql=true",
         // 성능 측정 정보 제공
-        "spring.jpa.properties.hibernate.generate_statistics=true",
+        "spring.jpa.properties.hibernate.generate_statistics=false",
         //"spring.jpa.properties.hibernate.use_sql_comments=true",
         //
         // NOTE: literal 을 parameter 로 binding 시킵니다
@@ -45,8 +45,11 @@ import javax.persistence.EntityManagerFactory
         // <logger name="org.hibernate.SQL_SLOW" level="INFO"/>
         "spring.jpa.properties.hibernate.session.events.log.LOG_QUERIES_SLOWER_THAN_MS=10",
 
+        // Hibernate Configuration
+        // 참고: https://docs.jboss.org/hibernate/orm/5.6/userguide/html_single/Hibernate_User_Guide.html#configurations
+
         // Seond Cache
-        "spring.jpa.properties.hibernate.cache.use_secoond_level_cache=false",
+        "spring.jpa.properties.hibernate.cache.use_secoond_level_cache=true",
 
         // Query Cache
         "spring.jpa.properties.hibernate.cache.use_query_cache=true",
@@ -60,16 +63,17 @@ import javax.persistence.EntityManagerFactory
         "spring.jpa.properties.hibernate.cache.region.factory_class=jcache",
         "spring.jpa.properties.hibernate.javax.cache.provider=com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider",
 
+
         // JPA Batch Insert (https://cheese10yun.github.io/jpa-batch-insert/)
         // MySQL인 경우 jdbc url에 `rewriteBatchedStatements=true` 추가해야 함
         "spring.jpa.properties.hibernate.jdbc.batch_size=30",
         "spring.jpa.properties.hibernate.order_inserts=true",
         "spring.jpa.properties.hibernate.order_updates=true"
     ],
-    showSql = true,
+    showSql = false,
     excludeAutoConfiguration = [FlywayAutoConfiguration::class]
 )
-abstract class AbstractHibernateTest {
+abstract class AbstractQuerydslTest {
 
     companion object: KLogging() {
         // @DataJpaTest 는 H2 를 사용합니다. @SprintBootTest 로 직접적으로 사용하려면 MySQLServer를 생성해야 합니다.
@@ -79,6 +83,8 @@ abstract class AbstractHibernateTest {
         //                ShutdownQueue.register(this)
         //            }
         //        }
+
+        // Sample Data 생성용 data faker
         @JvmStatic
         val faker: Faker = Fakers.faker
     }
@@ -94,7 +100,6 @@ abstract class AbstractHibernateTest {
     }
 
     protected fun flush() {
-        JCaching.Cache2k
         tem.flush()
     }
 

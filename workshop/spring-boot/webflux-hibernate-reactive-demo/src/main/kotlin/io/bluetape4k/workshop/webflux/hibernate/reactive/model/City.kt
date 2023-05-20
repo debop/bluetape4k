@@ -1,21 +1,39 @@
 package io.bluetape4k.workshop.webflux.hibernate.reactive.model
 
+import io.bluetape4k.core.ToStringBuilder
+import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.data.hibernate.model.LongJpaEntity
 import javax.persistence.Access
 import javax.persistence.AccessType
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
 
-// TODO: LongJpaEntity 를 상속받는 것으로 변경하자 
 @Entity
 @Access(AccessType.FIELD)
-data class City(
-    @field:Column(nullable = false)
-    open var name: String,
-): java.io.Serializable {
-    @field:Id
-    @field:GeneratedValue(strategy = GenerationType.IDENTITY)
-    open var id: Long = 0L
+class City: LongJpaEntity() {
+
+    companion object {
+        @JvmStatic
+        operator fun invoke(name: String): City {
+            name.requireNotBlank("name")
+            return City().apply {
+                this.name = name
+            }
+        }
+    }
+
+    @Column(nullable = false, length = 255)
+    var name: String = ""
+
+    override fun equalProperties(other: Any): Boolean =
+        other is City && name == other.name
+
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
+
+    override fun hashCode(): Int = id?.hashCode() ?: name.hashCode()
+
+    override fun buildStringHelper(): ToStringBuilder {
+        return super.buildStringHelper()
+            .add("name", name)
+    }
 }
