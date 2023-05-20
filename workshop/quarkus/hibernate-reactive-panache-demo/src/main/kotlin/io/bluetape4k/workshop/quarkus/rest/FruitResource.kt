@@ -31,7 +31,6 @@ class FruitResource(
         return repository.listAll().awaitSuspending().asFlow()
     }
 
-
     @GET
     @Path("/{name}")
     suspend fun findByName(name: String): Fruit {

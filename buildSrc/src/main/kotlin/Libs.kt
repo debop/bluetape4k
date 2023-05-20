@@ -95,7 +95,7 @@ object Versions {
 
     const val resteasy = "6.2.3.Final"
     const val mutiny = "2.2.0"
-    const val vertx = "4.4.2"
+    const val vertx = "4.3.8"
     const val camel_quarkus = "2.11.0"
     const val agroal = "1.16"
 

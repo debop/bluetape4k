@@ -23,7 +23,7 @@ interface ReactiveGreetingClient {
     @Produces(MediaType.APPLICATION_JSON)
     fun greeting(name: String): Uni<Greeting>
 
-    // NOTE: Multi<Greeting> 으
+    // NOTE: Multi<Greeting> 을 반환하면, 클라이언트에서는 Uni<List<Greeting>> 으로 받아야 한다.
     @GET
     @Path("/greeting/{count}/{name}")
     @Produces(MediaType.APPLICATION_JSON)
