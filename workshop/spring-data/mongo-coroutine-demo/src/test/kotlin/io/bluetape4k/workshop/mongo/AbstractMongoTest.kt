@@ -14,7 +14,12 @@ abstract class AbstractMongoTest {
         val faker = Fakers.faker
 
         @JvmStatic
-        fun newPerson() = Person(faker.name().firstName(), faker.name().lastName())
+        fun newPerson(): Person =
+            Person(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                faker.random().nextInt(10, 80)
+            )
     }
 
 }

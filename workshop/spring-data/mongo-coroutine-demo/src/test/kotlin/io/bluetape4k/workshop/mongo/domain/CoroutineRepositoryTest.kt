@@ -51,7 +51,7 @@ class CoroutineRepositoryTest @Autowired constructor(
             repository.save(newPerson())
         }
 
-        val persons = repository.findAllByLastname("Bae").toFastList()
+        val persons = repository.findByLastname("Bae").toFastList()
         persons shouldHaveSize 2
         persons shouldBeEqualTo listOf(person1, person2)
 
