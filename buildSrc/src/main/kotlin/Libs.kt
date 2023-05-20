@@ -988,6 +988,8 @@ object Libs {
     val redisson_spring_data_24 = redisson("redisson-spring-data-24")
     val redisson_spring_data_25 = redisson("redisson-spring-data-25")
     val redisson_spring_data_26 = redisson("redisson-spring-data-26")
+    val redisson_spring_data_27 = redisson("redisson-spring-data-27")
+    val redisson_spring_data_30 = redisson("redisson-spring-data-30")
 
     // Cassandra
     fun cassandra(module: String, version: String = Versions.cassandra): String =
