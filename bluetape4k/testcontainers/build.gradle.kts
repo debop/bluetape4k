@@ -7,6 +7,7 @@ dependencies {
     compileOnly(project(":bluetape4k-io"))
     testImplementation(project(":bluetape4k-junit5"))
 
+    api(Libs.awaitility_kotlin)
 
     api(Libs.testcontainers)
     compileOnly(Libs.testcontainers_junit_jupiter)

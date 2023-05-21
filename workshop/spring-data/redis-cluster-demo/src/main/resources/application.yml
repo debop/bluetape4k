@@ -1,0 +1,18 @@
+spring:
+    data:
+        redis:
+            repositories:
+                enabled: true
+    redis:
+        cluster:
+            nodes: ${testcontainers.redis.cluster.nodes}
+
+        lettuce:
+            cluster:
+                refresh:
+                    adaptive: true
+                    dynamic-refresh-sources: true
+            pool:
+                enabled: true
+                max-active: 16
+                max-idle: 8
