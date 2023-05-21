@@ -1037,7 +1037,7 @@ object Libs {
     const val spring_kafka = "org.springframework.kafka:spring-kafka:2.9.4"
 
     // Pulsar
-    const val pulsar_client = "org.apache.pulsar:pulsar-client:2.7.0"
+    const val pulsar_client = "org.apache.pulsar:pulsar-client:3.0.0"
 
     // Nats
     // https://github.com/nats-io/nats.java

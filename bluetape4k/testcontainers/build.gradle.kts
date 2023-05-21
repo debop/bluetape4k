@@ -59,6 +59,10 @@ dependencies {
     compileOnly(Libs.testcontainers_kafka)
     compileOnly(Libs.kafka_clients)
 
+    // Pulsar
+    compileOnly(Libs.testcontainers_pulsar)
+    compileOnly(Libs.pulsar_client)
+
     // NATS
     testImplementation(Libs.jnats)
 

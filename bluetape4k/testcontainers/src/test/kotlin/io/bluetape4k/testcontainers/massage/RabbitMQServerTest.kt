@@ -19,9 +19,9 @@ import java.util.*
 class RabbitMQServerTest {
 
     companion object: KLogging() {
-        const val RABBITMQ_TEST_EXCHANGE = "TestExchange"
-        const val RABBITMQ_TEST_ROUTING_KEY = "TestRoutingKey"
-        const val RABBITMQ_TEST_MESSAGE = "Hello world"
+        private const val RABBITMQ_TEST_EXCHANGE = "TestExchange"
+        private const val RABBITMQ_TEST_ROUTING_KEY = "TestRoutingKey"
+        private const val RABBITMQ_TEST_MESSAGE = "Hello world"
     }
 
     private val rabbitMQ = RabbitMQServer.Launcher.rabbitMQ
