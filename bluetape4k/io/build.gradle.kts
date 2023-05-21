@@ -64,4 +64,7 @@ dependencies {
     testImplementation(Libs.kotlinx_benchmark_runtime)
     testImplementation(Libs.kotlinx_benchmark_runtime_jvm)
     testImplementation(Libs.jmh_core)
+
+    // Binary Serializer 와 비교하기 하기 위해 Benchmark 에서 사용합니다.
+    testImplementation(Libs.jackson_module_kotlin)
 }
