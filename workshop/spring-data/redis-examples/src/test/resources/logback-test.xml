@@ -24,6 +24,6 @@
     <logger name="io.bluetape4k.workshop.redis" level="DEBUG"/>
 
     <root level="INFO">
-        <appender-ref ref="console"/>
+        <appender-ref  ref="console"/>
     </root>
 </configuration>
