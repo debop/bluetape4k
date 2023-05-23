@@ -40,16 +40,8 @@ val <T: Temporal> T.firstOfMonth: T get() = with(TemporalAdjusters.firstDayOfMon
 val <T: Temporal> T.lastOfMonth: T get() = with(TemporalAdjusters.lastDayOfMonth()) as T
 val <T: Temporal> T.firstOfNextMonth: T get() = with(TemporalAdjusters.firstDayOfNextMonth()) as T
 
-// FIXME: startOfDay() 가 사용하는 truncatedTo 함수가 DayOfYear 를 지원하지 않습니다.
-@Deprecated("use startOfYear()", replaceWith = ReplaceWith("startOfYear()"))
 val <T: Temporal> T.firstOfYear: T get() = with(TemporalAdjusters.firstDayOfYear()) as T
-
-// FIXME: endOfDay() 가 사용하는 truncatedTo 함수가 DayOfYear 를 지원하지 않습니다.
-@Deprecated("use endOfYear()", replaceWith = ReplaceWith("endOfYear()"))
 val <T: Temporal> T.lastOfYear: T get() = with(TemporalAdjusters.lastDayOfYear()) as T
-
-// FIXME: startOfNextDay() 가 사용하는 truncatedTo 함수가 DayOfYear 를 지원하지 않습니다.
-@Deprecated("use startOfNextYear()", replaceWith = ReplaceWith("startOfNextYear()"))
 val <T: Temporal> T.firstOfNextYear: T get() = with(TemporalAdjusters.firstDayOfNextYear()) as T
 
 fun <T: Temporal> T.dayOfWeekInMonth(ordinal: Int, dayOfWeek: DayOfWeek): T =
@@ -74,7 +66,6 @@ fun <T: Temporal> T.toEpochMillis(): Long = when (this) {
     is LocalDate      -> zonedDateTimeOf(year, monthValue, dayOfMonth).toEpochMillis()
     is LocalDateTime  -> toZonedDateTime(UtcOffset).toEpochMillis()
     is OffsetDateTime -> toInstant().toEpochMilli()
-    //    is OffsetTime     -> toInstant().toEpochMilli()
     is ZonedDateTime  -> toInstant().toEpochMilli()
     else              ->
         if (isSupported(ChronoField.EPOCH_DAY) && isSupported(ChronoField.MILLI_OF_DAY)) {

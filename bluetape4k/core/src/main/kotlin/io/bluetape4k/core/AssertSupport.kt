@@ -79,36 +79,16 @@ fun <T> T.assertEquals(expected: T, parameterName: String): T = apply {
     assert(this == expected) { "$parameterName[$this] must be equal to $expected" }
 }
 
-@Deprecated("use assertGt", replaceWith = ReplaceWith("assertGt(expected, parameterName)"))
-fun <T: Comparable<T>> T.assertGreaterThan(expected: T, parameterName: String): T = apply {
-    assert(this > expected) { "$parameterName[$this] must be greater than $expected." }
-}
-
 fun <T: Comparable<T>> T.assertGt(expected: T, parameterName: String): T = apply {
     assert(this > expected) { "$parameterName[$this] must be greater than $expected." }
-}
-
-@Deprecated("use assertGe", replaceWith = ReplaceWith("assertGe(expected, parameterName)"))
-fun <T: Comparable<T>> T.assertGreaterThanOrEqualTo(expected: T, parameterName: String): T = apply {
-    assert(this >= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
 fun <T: Comparable<T>> T.assertGe(expected: T, parameterName: String): T = apply {
     assert(this >= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-@Deprecated("use assertLt", replaceWith = ReplaceWith("assertLt(expected, parameterName)"))
-fun <T: Comparable<T>> T.assertLessThan(expected: T, parameterName: String): T = apply {
-    assert(this < expected) { "$parameterName[$this] must be greater than $expected." }
-}
-
 fun <T: Comparable<T>> T.assertLt(expected: T, parameterName: String): T = apply {
     assert(this < expected) { "$parameterName[$this] must be greater than $expected." }
-}
-
-@Deprecated("use assertLe", replaceWith = ReplaceWith("assertLe(expected, parameterName)"))
-fun <T: Comparable<T>> T.assertLessThanOrEqualTo(expected: T, parameterName: String): T = apply {
-    assert(this <= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
 fun <T: Comparable<T>> T.assertLe(expected: T, parameterName: String): T = apply {

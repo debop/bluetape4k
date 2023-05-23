@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
 
 /**
  * 두 개의 [Deferred]의 값을 하나의 [Deferred]로 만듭니다.
@@ -28,24 +27,13 @@ inline fun <T1, T2, R> CoroutineScope.zip(
 /**
  * Deferred 의 값을 [transform]로 변환하여 새로운 Deferred 를 만듭니다.
  */
-suspend inline fun <T, R> Deferred<T>.map(crossinline transform: suspend (T) -> R): Deferred<R> = coroutineScope {
-    val self = this@map
-    async {
-        transform(self.await())
-    }
-}
-
-
-@Deprecated("use mapAll", replaceWith = ReplaceWith("mapAll(coroutineStart, mapper)"))
-suspend fun <K, T: Collection<K>, R> Deferred<T>.flatMap(
+suspend inline fun <T, R> Deferred<T>.map(
     coroutineStart: CoroutineStart = CoroutineStart.DEFAULT,
-    mapper: suspend (K) -> Iterable<R>,
-): Deferred<Collection<R>> = coroutineScope {
-    val self = this@flatMap
+    crossinline transform: suspend (T) -> R,
+): Deferred<R> = coroutineScope {
+    val self = this@map
     async(start = coroutineStart) {
-        self.await()
-            .map { withContext(coroutineContext) { mapper(it) } }
-            .flatten()
+        transform(self.await())
     }
 }
 

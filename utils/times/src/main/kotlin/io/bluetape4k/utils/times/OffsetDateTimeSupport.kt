@@ -35,14 +35,6 @@ fun offsetDateTimeOf(
 ): OffsetDateTime =
     OffsetDateTime.of(localDate, localTime, offset)
 
-@Deprecated("어디다 써야 할지 ???")
-fun OffsetDateTime.toUtcInstant(): Instant = Instant.ofEpochSecond(this.toEpochSecond())
-
-//fun OffsetDateTime.startOfYear(): OffsetDateTime = withDayOfYear(1)
-//fun OffsetDateTime.startOfMonth(): OffsetDateTime = withDayOfMonth(1)
-//fun OffsetDateTime.startOfWeek(): OffsetDateTime = startOfDay() - (dayOfWeek.value - DayOfWeek.MONDAY.value).days()
-//fun OffsetDateTime.startOfDay(): OffsetDateTime = this.truncatedTo(ChronoUnit.DAYS)
-
 fun offsetTimeOf(
     hourOfDay: Int,
     minuteOfHour: Int = 0,

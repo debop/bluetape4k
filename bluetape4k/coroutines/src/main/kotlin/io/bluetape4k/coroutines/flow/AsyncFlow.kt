@@ -15,10 +15,10 @@ import kotlin.coroutines.CoroutineContext
 
 
 /**
- * CoroutineScope 하에서 지연된 값을 계산하는 suspend 함수를 이용하여 값을 계산합니다.
+ * suspend 함수를 비동기 실행으로 값을 계산합니다.
  *
  * @param T
- * @property dispatcher
+ * @property coroutineContext
  * @property block
  */
 @PublishedApi

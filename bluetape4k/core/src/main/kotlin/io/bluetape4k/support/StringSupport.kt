@@ -42,14 +42,6 @@ fun String?.asNullIfEmpty(): String? = if (isNullOrEmpty()) null else this
  * @receiver String
  * @return ByteArray
  */
-@Deprecated("use toUtf8Bytes() instead", ReplaceWith("toUtf8Bytes()"))
-fun String?.toUtf8ByteArray(): ByteArray = this?.run { toByteArray(UTF_8) } ?: emptyByteArray
-
-/**
- * 문자열을 UTF-8 인코딩의 [ByteArray]로 변환합니다.
- * @receiver String
- * @return ByteArray
- */
 fun String.toUtf8Bytes(): ByteArray = toByteArray(UTF_8)
 
 /**

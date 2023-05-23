@@ -5,6 +5,8 @@ import io.bluetape4k.utils.times.UtcZoneId
 import io.bluetape4k.utils.times.startOf
 import io.bluetape4k.utils.times.temporalAmount
 import io.bluetape4k.utils.times.toEpochDay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.time.Duration
 import java.time.LocalDate
 import java.time.Period
@@ -152,19 +154,6 @@ fun <T> ReadableTemporalInterval<T>.toPeriod(unit: ChronoUnit): Period where T: 
 // Sequence of Interval
 //
 
-@Deprecated("use sequence(Int, ChronoUnit)")
-@Suppress("UNCHECKED_CAST")
-fun <T> ReadableTemporalInterval<T>.sequence(step: TemporalAmount): Sequence<T> where T: Temporal, T: Comparable<T> {
-    return sequence {
-        var current = startInclusive
-        // NOTE: TemporalInterval 은 OpenedRange ( [start, end) ) 입니다.
-        while (current < endExclusive) {
-            yield(current)
-            current = (current + step) as T
-        }
-    }
-}
-
 @Suppress("UNCHECKED_CAST")
 fun <T> ReadableTemporalInterval<T>.sequence(
     step: Int,
@@ -175,8 +164,29 @@ fun <T> ReadableTemporalInterval<T>.sequence(
     return sequence {
         var current = startInclusive.startOf(unit)
         val increment = step.temporalAmount(unit)
+
+        // TemporalInterval 은 OpenedRange ( [start, end) ) 입니다.
         while (current < endExclusive) {
             yield(current)
+            current = (current + increment) as T
+        }
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+fun <T> ReadableTemporalInterval<T>.flow(
+    step: Int,
+    unit: ChronoUnit,
+): Flow<T> where T: Temporal, T: Comparable<T> {
+    step.assertPositiveNumber("step")
+
+    return flow {
+        var current = startInclusive.startOf(unit)
+        val increment = step.temporalAmount(unit)
+
+        // TemporalInterval 은 OpenedRange ( [start, end) ) 입니다.
+        while (current < endExclusive) {
+            emit(current)
             current = (current + increment) as T
         }
     }

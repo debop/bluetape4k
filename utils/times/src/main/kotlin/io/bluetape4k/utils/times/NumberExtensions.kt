@@ -123,24 +123,6 @@ val NowLocalDate: LocalDate get() = LocalDate.now()
 val NowLocalTime: LocalTime get() = LocalTime.now()
 val NowLocalDateTime: LocalDateTime get() = LocalDateTime.now()
 
-@Deprecated("use dayPeriod()", replaceWith = ReplaceWith("dayPeriod()"))
-val Int.days: Period
-    get() = Period.ofDays(this)
-
-@Deprecated("use weekPeriod()", replaceWith = ReplaceWith("weekPeriod()"))
-val Int.weeks: Period
-    get() = Period.ofWeeks(this)
-
-
-@Deprecated("use monthPeriod()", replaceWith = ReplaceWith("monthPeriod()"))
-val Int.months: Period
-    get() = Period.ofMonths(this)
-
-@Deprecated("use yearPeriod()", replaceWith = ReplaceWith("yearPeriod()"))
-val Int.years: Period
-    get() = Period.ofYears(this)
-
-
 operator fun Duration.component1(): Long = this.seconds
 operator fun Duration.component2(): Int = this.nano
 

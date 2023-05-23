@@ -3,6 +3,7 @@ package io.bluetape4k.coroutines.chains
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -149,3 +150,10 @@ fun <T, U, R> Chain<T>.zip(other: Chain<U>, zipper: suspend (T, U) -> R): Chain<
     override suspend fun next(): R = zipper(this@zip.next(), other.next())
     override suspend fun fork(): Chain<R> = this@zip.fork().zip(other.fork(), zipper)
 }
+
+operator fun <T> Chain<T>.iterator(): Iterator<T> = object: Iterator<T> {
+    override fun hasNext(): Boolean = true
+    override fun next(): T = runBlocking { next() }
+}
+
+fun <T> Chain<T>.asSequence(): Sequence<T> = Sequence { this@asSequence.iterator() }

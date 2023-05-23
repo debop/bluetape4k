@@ -7,18 +7,6 @@ import java.nio.charset.Charset
 import kotlin.text.Charsets.UTF_8
 
 /**
- * [ByteBuffer]에서 더 읽을 수 있는 부분이 남았는지 파악합니다.
- */
-@Deprecated("use isRemaining()", replaceWith = ReplaceWith("!isRemaining()"))
-fun ByteBuffer.isEmpty(): Boolean = this.remaining() == 0
-
-/**
- * [ByteBuffer]에서 더 읽을 수 있는 부분이 남았는지 파악합니다.
- */
-@Deprecated("use hasRemaining", replaceWith = ReplaceWith("hasRemaining()"))
-fun ByteBuffer.isRemaining(): Boolean = this.remaining() > 0
-
-/**
  * ByteBuffer를 읽어 바이트 배열을 빌드합니다
  */
 fun ByteBuffer.getBytes(): ByteArray {

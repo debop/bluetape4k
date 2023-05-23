@@ -6,9 +6,8 @@ import io.bluetape4k.io.json.jackson.Jackson
 import io.vertx.sqlclient.Row
 import io.vertx.sqlclient.templates.RowMapper
 
-
 // 현재로서는 Jackson 을 이용하여 Row -> JSON -> Record 로 만드는 방법 밖에는 없을 듯 ...
-// NOTE: 제대로 작동하지 않습니다. (특히 alias 등이 있으므로)
+// NOTE: alias 같은 게 포함되어 있는 경우에 제대로 작동하지 않습니다.
 @Deprecated("제대로 동작하지 않습니다")
 inline fun <reified T: Any> rowMapperAs(
     jsonMapper: JsonMapper = Jackson.defaultJsonMapper,
