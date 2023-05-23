@@ -14,10 +14,11 @@ import kotlin.coroutines.cancellation.CancellationException
 /**
  * Groups transformed values of the source flow based on a key selector function.
  */
+@PublishedApi
 internal class FlowGroupBy<T, K, V>(
-    private val source: Flow<T>,
-    private val keySelector: suspend (T) -> K,
-    private val valueSelector: suspend (T) -> V,
+    val source: Flow<T>,
+    val keySelector: (T) -> K,
+    val valueSelector: (T) -> V,
 ): AbstractFlow<GroupedFlow<K, V>>() {
 
     override suspend fun collectSafely(collector: FlowCollector<GroupedFlow<K, V>>) {

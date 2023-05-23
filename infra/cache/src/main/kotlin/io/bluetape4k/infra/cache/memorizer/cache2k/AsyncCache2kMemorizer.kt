@@ -64,7 +64,6 @@ class Cache2kAsyncMemorizer<T: Any, R: Any>(
                     }
                 }
         }
-
         return promise
     }
 

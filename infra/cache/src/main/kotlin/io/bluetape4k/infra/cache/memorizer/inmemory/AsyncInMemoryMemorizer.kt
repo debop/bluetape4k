@@ -19,18 +19,22 @@ class AsyncInMemoryMemorizer<in T, R>(
     override fun invoke(key: T): CompletableFuture<R> {
         val promise = CompletableFuture<R>()
 
-        if (resultCache.containsKey(key)) {
-            promise.complete(resultCache[key])
-        } else {
-            evaluator(key)
-                .whenComplete { result, error ->
-                    if (error != null) {
-                        promise.completeExceptionally(error)
-                    } else {
-                        resultCache[key] = result
-                        promise.complete(resultCache[key])
+        try {
+            if (resultCache.containsKey(key)) {
+                promise.complete(resultCache[key])
+            } else {
+                evaluator(key)
+                    .whenComplete { result, error ->
+                        if (error != null) {
+                            promise.completeExceptionally(error)
+                        } else {
+                            resultCache[key] = result
+                            promise.complete(resultCache[key])
+                        }
                     }
-                }
+            }
+        } catch (e: Throwable) {
+            promise.completeExceptionally(e)
         }
 
         return promise

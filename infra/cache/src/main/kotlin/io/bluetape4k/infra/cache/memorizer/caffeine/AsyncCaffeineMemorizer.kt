@@ -50,5 +50,8 @@ class AsyncCaffeineMemorizer<in T: Any, R: Any>(
  * @param R cache value type
  * @param evaluator cache value를 반환하는 메소드
  */
-fun <T: Any, R: Any> Cache<T, R>.asyncMemorizer(evaluator: (T) -> CompletableFuture<R>): AsyncCaffeineMemorizer<T, R> =
-    AsyncCaffeineMemorizer(this, evaluator)
+fun <T: Any, R: Any> Cache<T, R>.asyncMemorizer(
+    evaluator: (T) -> CompletableFuture<R>,
+): AsyncCaffeineMemorizer<T, R> {
+    return AsyncCaffeineMemorizer(this, evaluator)
+}

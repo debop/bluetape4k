@@ -13,7 +13,8 @@ import kotlinx.coroutines.delay
 import java.time.Duration
 import kotlin.coroutines.CoroutineContext
 
-private val log = KotlinLogging.logger { }
+@PublishedApi
+internal val log = KotlinLogging.logger { }
 
 /**
  * 연속해서 중복되는 요소를 제거하도록 합니다.
@@ -50,9 +51,9 @@ suspend fun <E> ReceiveChannel<E>.distinctUntilChanged(
  * @param equalOperator 요소들을 비교해서 같은지 판단하도록 한다 (두 요소가 같으면 true를 반환)
  * @return
  */
-suspend fun <E> ReceiveChannel<E>.distinctUntilChanged(
+suspend inline fun <E> ReceiveChannel<E>.distinctUntilChanged(
     context: CoroutineContext = Dispatchers.Default,
-    equalOperator: (E, E) -> Boolean,
+    crossinline equalOperator: suspend (E, E) -> Boolean,
 ): ReceiveChannel<E> = coroutineScope {
     val self = this@distinctUntilChanged
     produce(context, Channel.BUFFERED) {
@@ -80,9 +81,9 @@ suspend fun <E> ReceiveChannel<E>.distinctUntilChanged(
  * @param accumulator
  * @return
  */
-suspend fun <E> ReceiveChannel<E>.reduce(
+suspend inline fun <E> ReceiveChannel<E>.reduce(
     context: CoroutineContext = Dispatchers.Default,
-    accumulator: (acc: E, item: E) -> E,
+    crossinline accumulator: suspend (acc: E, item: E) -> E,
 ): ReceiveChannel<E> = coroutineScope {
     produce(context, Channel.BUFFERED) {
         var acc = receive()
@@ -101,10 +102,10 @@ suspend fun <E> ReceiveChannel<E>.reduce(
  * @param accumulator
  * @return
  */
-suspend fun <E> ReceiveChannel<E>.reduce(
+suspend inline fun <E> ReceiveChannel<E>.reduce(
     initValue: E,
     context: CoroutineContext = Dispatchers.Default,
-    accumulator: (acc: E, item: E) -> E,
+    crossinline accumulator: suspend (acc: E, item: E) -> E,
 ): ReceiveChannel<E> = coroutineScope {
     produce(context, Channel.BUFFERED) {
         var acc = initValue

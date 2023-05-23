@@ -1,11 +1,9 @@
 package io.bluetape4k.coroutines.flow
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.core.assertPositiveNumber
 import io.bluetape4k.core.requireGe
 import io.bluetape4k.core.requireGt
-import io.bluetape4k.core.requirePositiveNumber
+import io.bluetape4k.coroutines.RingBuffer
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.DEFAULT_CONCURRENCY
@@ -27,31 +25,25 @@ import kotlin.coroutines.CoroutineContext
  * @param func 반복 실행할 function
  * @return
  */
-fun <T> repeatFlow(times: Int, func: suspend (Int) -> T): Flow<T> {
-    times.requirePositiveNumber("times")
-    return flow {
-        for (i in 0 until times) {
-            emit(func(i))
-        }
-        // 같은 코드인데, 다음과 같은 예외가 발생한다. inline 함수라는 게 의심스럽다.
-        // Duplicate field name "L$0" with signature
-//        repeat(times) {
-//            emit(func(it))
-//        }
+inline fun <T> repeatFlow(times: Int, crossinline func: suspend (value: Int) -> T): Flow<T> = flow {
+    times.assertPositiveNumber("times")
+
+    repeat(times) { index ->
+        emit(func(index))
     }
 }
 
 /**
- * asyncMap 은 flow의 요소들을 각각 비동기 방식으로 mapping 을 수행하여 처리속도를 높힙니다.
+ * flow의 요소들을 [concurrency]만큼 병렬로 [transform]을 수행하여 처리속도를 높힙니다.
  *
  * @param coroutineContext Coroutine context
  * @param concurrency 동시 실행할 숫자
- * @param transform  mapping 함수
+ * @param transform  변환 함수
  */
-fun <T, R> Flow<T>.asyncMap(
+inline fun <T, R> Flow<T>.mapParallel(
     coroutineContext: CoroutineContext = Dispatchers.Default,
     concurrency: Int = DEFAULT_CONCURRENCY,
-    transform: suspend (T) -> R,
+    crossinline transform: suspend (value: T) -> R,
 ): Flow<R> {
     concurrency.assertPositiveNumber("concurrency")
 
@@ -94,29 +86,28 @@ fun <T> Flow<T>.sliding(size: Int): Flow<List<T>> = windowed(size, 1)
  * @param size window size (require positive number)
  * @param step step (require positive number)
  */
-fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> {
+fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> = flow {
     size.requireGt(0, "size")
     step.requireGt(0, "step")
     size.requireGe(step, "step")
 
-    return flow {
-        var elements = fastListOf<T>()
-        val counter = atomic(0)
 
-        this@windowed.onEach { element ->
-            elements.add(element)
-            if (counter.incrementAndGet() == size) {
-                emit(elements)
-                elements = elements.drop(step).toFastList()
-                counter.addAndGet(-step)
-            }
-        }.collect()
+    var elements = mutableListOf<T>()
+    val counter = atomic(0)
 
-        while (counter.value > 0) {
-            emit(elements.take(counter.value))
-            elements = elements.drop(step).toFastList()
+    this@windowed.onEach { element ->
+        elements.add(element)
+        if (counter.incrementAndGet() == size) {
+            emit(elements.toList())
+            elements = elements.drop(step).toMutableList()
             counter.addAndGet(-step)
         }
+    }.collect()
+
+    while (counter.value > 0) {
+        emit(elements.take(step))
+        elements = elements.drop(step).toMutableList()
+        counter.addAndGet(-step)
     }
 }
 
@@ -132,29 +123,27 @@ fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> {
  * @param size window size (require positive number)
  * @param step step (require positive number)
  */
-fun <T> Flow<T>.windowed2(size: Int, step: Int): Flow<Flow<T>> {
+fun <T> Flow<T>.windowedFlow(size: Int, step: Int): Flow<Flow<T>> = channelFlow {
     size.requireGt(0, "size")
     step.requireGt(0, "step")
     size.requireGe(step, "step")
 
-    return channelFlow {
-        var elements = fastListOf<T>()
-        val counter = atomic(0)
+    var elements = mutableListOf<T>()
+    val counter = atomic(0)
 
-        this@windowed2.collect { element ->
-            elements.add(element)
-            if (counter.incrementAndGet() == size) {
-                send(elements.asFlow())
-                elements = elements.drop(step).toFastList()
-                counter.addAndGet(-step)
-            }
-        }
-
-        while (counter.value > 0) {
-            send(elements.take(counter.value).asFlow())
-            elements = elements.drop(step).toFastList()
+    this@windowedFlow.collect { element ->
+        elements.add(element)
+        if (counter.incrementAndGet() == size) {
+            send(elements.asFlow())
+            elements = elements.drop(step).toMutableList()
             counter.addAndGet(-step)
         }
+    }
+
+    while (counter.value > 0) {
+        send(elements.take(step).asFlow())
+        elements = elements.drop(step).toMutableList()
+        counter.addAndGet(-step)
     }
 }
 
@@ -164,31 +153,53 @@ fun <T> Flow<T>.windowed2(size: Int, step: Int): Flow<Flow<T>> {
  *
  * 참고: [Spring R2DBC OneToMany RowMapping](https://heesutory.tistory.com/33)
  */
-fun <T, V: Any> Flow<T>.bufferUntilChanged(groupSelector: (T) -> V): Flow<List<T>> {
+fun <T, V: Any> Flow<T>.bufferUntilChanged(groupSelector: (T) -> V): Flow<List<T>> = channelFlow {
     // HINT: kotlin-flow-extensions 에 있는 groupBy 사용
     //    return this@bufferUntilChanged
     //        .groupBy { groupSelector(it) }
     //        .flatMapMerge { it.toList() }
 
-    return channelFlow {
-        var elements = fastListOf<T>()
-        var prevGroup: V? = null
 
-        this@bufferUntilChanged.collect { element ->
-            val currentGroup = groupSelector(element)
-            if (prevGroup == null) {
-                prevGroup = currentGroup
-            }
-            if (prevGroup == currentGroup) {
-                elements.add(element)
-            } else {
-                send(elements)
-                elements = fastListOf(element)
-                prevGroup = currentGroup
-            }
+    val elements = mutableListOf<T>()
+    var prevGroup: V? = null
+
+    this@bufferUntilChanged.collect { element ->
+        val currentGroup = groupSelector(element)
+        if (prevGroup == null) {
+            prevGroup = currentGroup
         }
-        if (elements.isNotEmpty()) {
-            send(elements)
+        if (prevGroup == currentGroup) {
+            elements.add(element)
+        } else {
+            send(elements.toList())
+            elements.clear()
+            elements.add(element)
+            prevGroup = currentGroup
         }
+    }
+    if (elements.isNotEmpty()) {
+        send(elements)
+    }
+}
+
+/**
+ * [size] 만큼이 채워지기 전까지는 현재 요소만 반환하고, 모든 요소가 채워지면, sliding으로 진행한다
+ *
+ * ```
+ * val flow = flowOf(1,2,3,4,5)
+ * val sliding = flow.bufferedSliding(3)   // {1}, {1,2}, {1,2,3}, {2,3,4}, {3,4,5}
+ * ```
+ *
+ * @param T
+ * @param size sliding size. (require greater than 0)
+ * @return
+ */
+fun <T> Flow<T>.bufferedSliding(size: Int): Flow<List<T>> = channelFlow {
+    size.requireGt(1, "window size")
+    val ringBuffer = RingBuffer.boxing<T>(size)
+
+    this@bufferedSliding.collect { element ->
+        ringBuffer.push(element)
+        send(ringBuffer.snapshot())
     }
 }

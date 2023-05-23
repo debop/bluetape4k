@@ -15,22 +15,23 @@ import kotlinx.coroutines.withContext
  * @param coroutineStart [CoroutineStart] 값
  * @param zipper 두 [Deferred] 값의 zip 함수
  */
-fun <T1, T2, R> CoroutineScope.zip(
+inline fun <T1, T2, R> CoroutineScope.zip(
     src1: Deferred<T1>,
     src2: Deferred<T2>,
     coroutineStart: CoroutineStart = CoroutineStart.DEFAULT,
-    zipper: suspend (T1, T2) -> R,
+    crossinline zipper: (T1, T2) -> R,
 ): Deferred<R> =
     async(start = coroutineStart) {
         zipper(src1.await(), src2.await())
     }
 
 /**
- * Deferred 의 값을 [mapper]로 변환하여 새로운 Deferred 를 만듭니다.
+ * Deferred 의 값을 [transform]로 변환하여 새로운 Deferred 를 만듭니다.
  */
-suspend fun <T, R> Deferred<T>.map(mapper: suspend (T) -> R): Deferred<R> = coroutineScope {
+suspend inline fun <T, R> Deferred<T>.map(crossinline transform: suspend (T) -> R): Deferred<R> = coroutineScope {
+    val self = this@map
     async {
-        mapper(this@map.await())
+        transform(self.await())
     }
 }
 
@@ -40,30 +41,30 @@ suspend fun <K, T: Collection<K>, R> Deferred<T>.flatMap(
     coroutineStart: CoroutineStart = CoroutineStart.DEFAULT,
     mapper: suspend (K) -> Iterable<R>,
 ): Deferred<Collection<R>> = coroutineScope {
+    val self = this@flatMap
     async(start = coroutineStart) {
-        this@flatMap.await()
+        self.await()
             .map { withContext(coroutineContext) { mapper(it) } }
             .flatten()
     }
 }
 
-suspend fun <K, T: Collection<K>, R> Deferred<T>.mapAll(
+suspend inline fun <K, T: Collection<K>, R> Deferred<T>.mapAll(
     coroutineStart: CoroutineStart = CoroutineStart.DEFAULT,
-    mapper: suspend (K) -> Iterable<R>,
+    crossinline transform: (K) -> Iterable<R>,
 ): Deferred<Collection<R>> = coroutineScope {
+    val self = this@mapAll
     async(start = coroutineStart) {
-        this@mapAll.await()
-            .map { withContext(coroutineContext) { mapper(it) } }
-            .flatten()
+        self.await().map { transform(it) }.flatten()
     }
 }
 
-suspend fun <K, T: Collection<K>, R> Deferred<T>.concatMap(
+suspend inline fun <K, T: Collection<K>, R> Deferred<T>.concatMap(
     coroutineStart: CoroutineStart = CoroutineStart.DEFAULT,
-    mapper: suspend (K) -> R,
+    crossinline transform: (K) -> R,
 ): Deferred<Collection<R>> = coroutineScope {
+    val self = this@concatMap
     async(start = coroutineStart) {
-        this@concatMap.await()
-            .map { withContext(coroutineContext) { mapper(it) } }
+        self.await().map { transform(it) }
     }
 }

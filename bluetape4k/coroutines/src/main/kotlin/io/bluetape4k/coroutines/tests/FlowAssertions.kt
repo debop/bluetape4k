@@ -1,7 +1,6 @@
 package io.bluetape4k.coroutines.tests
 
 import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.coroutines.flow.toFastList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -11,11 +10,11 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import kotlin.test.assertFailsWith
 
-suspend fun <T> Flow<T>.assertResult(vararg values: T) {
-    toFastList() shouldBeEqualTo values.toFastList()
+suspend inline fun <T> Flow<T>.assertResult(vararg values: T) {
+    toList() shouldBeEqualTo values.toFastList()
 }
 
-suspend fun <T> Flow<T>.assertResultSet(vararg values: T) {
+suspend inline fun <T> Flow<T>.assertResultSet(vararg values: T) {
     toSet() shouldBeEqualTo values.toSet()
 }
 

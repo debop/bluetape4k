@@ -79,36 +79,16 @@ fun <T> T.requireEquals(expected: T, parameterName: String): T = apply {
     require(this == expected) { "$parameterName[$this] must be equal to $expected" }
 }
 
-@Deprecated("use requireGt", replaceWith = ReplaceWith("requireGt(expected, parameterName)"))
-fun <T: Comparable<T>> T.requireGreaterThan(expected: T, parameterName: String): T = apply {
-    require(this > expected) { "$parameterName[$this] must be greater than $expected." }
-}
-
 fun <T: Comparable<T>> T.requireGt(expected: T, parameterName: String): T = apply {
     require(this > expected) { "$parameterName[$this] must be greater than $expected." }
-}
-
-@Deprecated("use requireGe", replaceWith = ReplaceWith("requireGe(expected, parameterName)"))
-fun <T: Comparable<T>> T.requireGreaterThanOrEqualTo(expected: T, parameterName: String): T = apply {
-    require(this >= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
 fun <T: Comparable<T>> T.requireGe(expected: T, parameterName: String): T = apply {
     require(this >= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
-@Deprecated("use requireLt", replaceWith = ReplaceWith("requireLt(expected, parameterName)"))
-fun <T: Comparable<T>> T.requireLessThan(expected: T, parameterName: String): T = apply {
-    require(this < expected) { "$parameterName[$this] must be greater than $expected." }
-}
-
 fun <T: Comparable<T>> T.requireLt(expected: T, parameterName: String): T = apply {
     require(this < expected) { "$parameterName[$this] must be greater than $expected." }
-}
-
-@Deprecated("use requireLe", replaceWith = ReplaceWith("requireLe(expected, parameterName)"))
-fun <T: Comparable<T>> T.requireLessThanOrEqualTo(expected: T, parameterName: String): T = apply {
-    require(this <= expected) { "$parameterName[$this] must be greater than $expected." }
 }
 
 fun <T: Comparable<T>> T.requireLe(expected: T, parameterName: String): T = apply {

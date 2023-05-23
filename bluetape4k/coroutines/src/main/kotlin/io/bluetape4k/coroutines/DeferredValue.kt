@@ -19,7 +19,7 @@ fun <T> deferredValueOf(factory: suspend () -> T): DeferredValue<T> = DeferredVa
  *
  * @property factory 값 계산을 수행하는 함수
  */
-data class DeferredValue<T>(private inline val factory: suspend () -> T): DefaultCoroutineScope(), ValueObject {
+data class DeferredValue<T>(internal inline val factory: suspend () -> T): DefaultCoroutineScope(), ValueObject {
 
     private val deferredValue: Deferred<T> = async { factory() }
 

@@ -10,11 +10,10 @@ import kotlin.coroutines.cancellation.CancellationException
 @Suppress("UNCHECKED_CAST")
 suspend fun <T> Future<T>.awaitSuspending(): T = when (this) {
     is CompletionStage<*> -> await() as T
-    else                  ->
+    else ->
         when {
-            isDone      -> {
+            isDone -> {
                 try {
-                    @Suppress("BlockingMethodInNonBlockingContext")
                     get() as T
                 } catch (e: ExecutionException) {
                     throw e.cause ?: e
@@ -22,6 +21,6 @@ suspend fun <T> Future<T>.awaitSuspending(): T = when (this) {
             }
 
             isCancelled -> throw CancellationException()
-            else        -> this.asCompletableFuture().await()
+            else -> this.asCompletableFuture().await()
         }
 }

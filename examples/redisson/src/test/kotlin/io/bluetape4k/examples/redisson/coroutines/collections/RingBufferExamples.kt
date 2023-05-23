@@ -7,6 +7,7 @@ import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
+import org.redisson.api.RRingBuffer
 
 /**
  * Ring buffer examples
@@ -19,7 +20,7 @@ class RingBufferExamples: AbstractRedissonCoroutineTest() {
 
     @Test
     fun `use Ring Buffer`() = runSuspendTest {
-        val buffer = redisson.getRingBuffer<Int>(randomName())
+        val buffer: RRingBuffer<Int> = redisson.getRingBuffer<Int>(randomName())
         // 버퍼 용량을 미리 설정해주어야 합니다.
         buffer.trySetCapacity(4)
         buffer.capacityAsync().awaitSuspending() shouldBeEqualTo 4

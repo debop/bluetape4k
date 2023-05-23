@@ -10,34 +10,6 @@ import java.util.concurrent.Executors
  * Coroutines 작업을 이해하기 쉽고, 테스트하기 쉽게 1개의 Thread에서 실행되도록 합니다.
  *
  * ```
- * withSingle { dispatcher ->
- *      val subject = PublishSubject<Int>()
- *      val n = 10_000
- *      val counter = atomic(0)
- *
- *      val job = launch(dispatcher) {
- *          subject.collect {
- *              counter.lazySet(counter.value + 1)
- *          }
- *      }
- *      ...
- * }
- * ```
- */
-@Deprecated("use withSingleThread", replaceWith = ReplaceWith("withSingleThread {}"))
-suspend inline fun withSingle(crossinline block: suspend (executor: CoroutineDispatcher) -> Unit) {
-    val executor = Executors.newSingleThreadExecutor()
-    try {
-        block(executor.asCoroutineDispatcher())
-    } finally {
-        runCatching { executor.shutdownNow() }
-    }
-}
-
-/**
- * Coroutines 작업을 이해하기 쉽고, 테스트하기 쉽게 1개의 Thread에서 실행되도록 합니다.
- *
- * ```
  * withSingleThread { dispatcher ->
  *      val subject = PublishSubject<Int>()
  *      val n = 10_000

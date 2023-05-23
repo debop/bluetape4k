@@ -4,10 +4,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
 
-fun <T, K> Flow<T>.groupBy(keySelector: suspend (T) -> K): Flow<GroupedFlow<K, T>> =
+fun <T, K> Flow<T>.groupBy(keySelector: (T) -> K): Flow<GroupedFlow<K, T>> =
     FlowGroupBy(this, keySelector) { it }
 
-fun <T, K, V> Flow<T>.groupBy(keySelector: suspend (T) -> K, valueSelector: suspend (T) -> V): Flow<GroupedFlow<K, V>> =
+fun <T, K, V> Flow<T>.groupBy(keySelector: (T) -> K, valueSelector: (T) -> V): Flow<GroupedFlow<K, V>> =
     FlowGroupBy(this, keySelector, valueSelector)
 
 /**

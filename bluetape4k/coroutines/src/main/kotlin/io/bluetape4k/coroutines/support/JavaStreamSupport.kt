@@ -68,20 +68,20 @@ suspend fun IntStream.coForEach(
 
 fun <R> IntStream.coMap(
     coroutineContext: CoroutineContext = Dispatchers.Default,
-    mapper: suspend (Int) -> R,
+    transform: suspend (Int) -> R,
 ): Flow<R> = channelFlow {
     consumeAsFlow()
         .buffer()
         .flowOn(coroutineContext)
-        .onEach { send(mapper(it)) }
+        .onEach { send(transform(it)) }
         .collect()
 }
 
-private class IntStreamFlow(private val stream: IntStream): Flow<Int> {
+internal class IntStreamFlow(private val stream: IntStream): Flow<Int> {
     private val consumed = atomic(false)
 
     override suspend fun collect(collector: FlowCollector<Int>) {
-        if (!consumed.compareAndSet(false, true))
+        if (!consumed.compareAndSet(expect = false, update = true))
             error("IntStream.consumeAsFlow can be collected only once")
 
         stream.use { stream ->
@@ -118,11 +118,11 @@ fun <R> LongStream.coMap(
         .collect()
 }
 
-private class LongStreamFlow(private val stream: LongStream): Flow<Long> {
+internal class LongStreamFlow(private val stream: LongStream): Flow<Long> {
     private val consumed = atomic(false)
 
     override suspend fun collect(collector: FlowCollector<Long>) {
-        if (!consumed.compareAndSet(false, true))
+        if (!consumed.compareAndSet(expect = false, update = true))
             error("LongStream.consumeAsFlow can be collected only once")
 
         stream.use { stream ->
@@ -159,11 +159,11 @@ fun <R> DoubleStream.coMap(
         .collect()
 }
 
-private class DoubleStreamFlow(private val stream: DoubleStream): Flow<Double> {
+internal class DoubleStreamFlow(private val stream: DoubleStream): Flow<Double> {
     private val consumed = atomic(false)
 
     override suspend fun collect(collector: FlowCollector<Double>) {
-        if (!consumed.compareAndSet(false, true))
+        if (!consumed.compareAndSet(expect = false, update = true))
             error("LongStream.consumeAsFlow can be collected only once")
 
         stream.use { stream ->

@@ -17,20 +17,23 @@ class AsyncJCacheMemorizer<in T: Any, R: Any>(
 
     override fun invoke(p1: T): CompletableFuture<R> {
         val promise = CompletableFuture<R>()
-
-        val value = jcache.get(p1)
-        if (value != null) {
-            promise.complete(value)
-        } else {
-            evaluator(p1)
-                .whenComplete { result, error ->
-                    if (error != null)
-                        promise.completeExceptionally(error)
-                    else {
-                        jcache.put(p1, result)
-                        promise.complete(result)
+        try {
+            val value = jcache.get(p1)
+            if (value != null) {
+                promise.complete(value)
+            } else {
+                evaluator(p1)
+                    .whenComplete { result, error ->
+                        if (error != null)
+                            promise.completeExceptionally(error)
+                        else {
+                            jcache.put(p1, result)
+                            promise.complete(result)
+                        }
                     }
-                }
+            }
+        } catch (e: Throwable) {
+            promise.completeExceptionally(e)
         }
 
         return promise
