@@ -3,12 +3,13 @@
 ## TODO
 
 현재 제작된 버전은 RSA 방식이라 KeyChain 관리 등이 상당히 복잡하다
-
 차라리 Access Token, Refresh Token 을 활용하고, Algorithm을 HMAC 방식으로 사용하는 것이 더 좋을 것 같다.
+
+Spring Security 에서 이미 JWT 를 제공하므로, 굳이 이렇게 따로 제공할 필요가 없을 듯 하다
 
 참고: [Jwt Refresh Token 적용기](https://velog.io/@jkijki12/Jwt-Refresh-Token-%EC%A0%81%EC%9A%A9%EA%B8%B0)
 
-참고 : workshop/webflux-security (단 JWT Library는 jjwt 가 최신이다)
+참고 : workshop/webflux-security (단 JWT Library는 jjwt 가 최신이다) -> Spring Security의 JWT 를 사용하는게 낫다.
 
 Json Web Token 을 생성하고, Parsing 하는 라이브러리입니다.
 

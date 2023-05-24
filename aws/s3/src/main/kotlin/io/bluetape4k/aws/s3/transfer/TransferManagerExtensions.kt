@@ -19,6 +19,14 @@ import software.amazon.awssdk.transfer.s3.model.UploadRequest
 import software.amazon.awssdk.transfer.s3.progress.LoggingTransferListener
 import java.nio.file.Path
 
+/**
+ * [S3TransferManager]를 이용하여 S3 Object 를 다운로드 받습니다.
+ *
+ * @param T
+ * @param responseTransformer 응답을 변환할 transformer
+ * @param initializer [DownloadRequest] 를 구성하는 람다 함수
+ * @return [Download] 인스턴스
+ */
 inline fun <T> S3TransferManager.download(
     responseTransformer: AsyncResponseTransformer<GetObjectResponse, T>,
     @BuilderInference initializer: DownloadRequest.UntypedBuilder.() -> Unit,
@@ -26,6 +34,16 @@ inline fun <T> S3TransferManager.download(
     return download(downloadRequest(responseTransformer, initializer))
 }
 
+/**
+ * [S3TransferManager]를 이용하여 S3 Object 를 다운로드 받습니다.
+ *
+ * @param T
+ * @param bucket bucket name
+ * @param key key
+ * @param responseTransformer 응답을 변환할 비동기 transformer
+ * @param getObjectRequestBuilder [GetObjectRequest.Builder] 를 구성하는 람다 함수
+ * @return 다운로드한 S3 Object
+ */
 fun <T> S3TransferManager.download(
     bucket: String,
     key: String,
@@ -74,7 +92,17 @@ fun S3TransferManager.downloadFile(
     }
 }
 
-fun S3TransferManager.upload(
+/**
+ * [S3TransferManager]를 이용하여 객체를 S3에 업로드 합니다.
+ *
+ * @param bucket bucket name
+ * @param key key
+ * @param asyncRequestBody 업로드할 객체
+ * @param additionalUploadRequest  추가로 구성할 [UploadRequest.Builder]를 구성하는 람다 함수
+ * @receiver
+ * @return
+ */
+inline fun S3TransferManager.upload(
     bucket: String,
     key: String,
     asyncRequestBody: AsyncRequestBody,
@@ -91,7 +119,7 @@ fun S3TransferManager.upload(
     return upload(request)
 }
 
-fun S3TransferManager.uploadByteArray(
+inline fun S3TransferManager.uploadByteArray(
     bucket: String,
     key: String,
     content: ByteArray,
@@ -107,23 +135,6 @@ fun S3TransferManager.uploadByteArray(
     }
     return upload(request)
 }
-
-//fun S3TransferManager.uploadFile(
-//    bucket: String,
-//    key: String,
-//    source: Path,
-//    additionalUploadRequest: (UploadRequest.Builder) -> Unit = {},
-//): Upload {
-//    val request = uploadRequest {
-//        putObjectRequest {
-//            it.bucket(bucket)
-//            it.key(key)
-//        }
-//        requestBody(source.toAsyncRequestBody())
-//        additionalUploadRequest(this)
-//    }
-//    return upload(request)
-//}
 
 fun S3TransferManager.uploadFile(
     bucket: String,
