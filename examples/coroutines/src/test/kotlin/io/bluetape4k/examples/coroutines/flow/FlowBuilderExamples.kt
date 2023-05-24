@@ -5,6 +5,7 @@ import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
 import io.bluetape4k.coroutines.flow.asFlow
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
@@ -67,6 +68,7 @@ class FlowBuilderExamples {
         function.asFlow()
             .collect {
                 log.debug { "element=$it" }
+                it shouldBeEqualTo "UserName"
             }
     }
 
@@ -80,6 +82,7 @@ class FlowBuilderExamples {
         ::getUserName.asFlow()
             .collect {
                 log.debug { "element=$it" }
+                it shouldBeEqualTo "UserName"
             }
     }
 
@@ -87,20 +90,33 @@ class FlowBuilderExamples {
     fun `flow builder`() = runTest {
         val nums = flow {
             repeat(3) { num ->
-                delay(100)
+                delay(10)
                 emit(num)
             }
         }
+        val counter1 = atomic(0)
+        val counter2 = atomic(0)
         // flow 를 여러 subscriber 가 중복해서 받아갈 수 있다
         coroutineScope {
             launch {
                 nums.collect {
                     log.debug { "Job1 element=$it" }
+                    counter1.incrementAndGet()
                 }
             }
             launch {
-                // https://github.com/cashapp/turbine/
-                // turbine 을 이용하여 assertions 를 수행할 수 있습니다.
+                // delay 를 줘도 flow 는 cold stream 이므로, buffer 에 쌓여있는 값들은 모두 처리됩니다.
+                delay(15)
+                nums.collect {
+                    log.debug { "Job2 element=$it" }
+                    counter2.incrementAndGet()
+                }
+            }
+            // https://github.com/cashapp/turbine/
+            // turbine 을 이용하여 assertions 를 수행할 수 있습니다.
+            // flow 는 cold stream 이므로 반복적으로 collect 할 수 있습니다.
+            launch {
+
                 nums.test {
                     awaitItem() shouldBeEqualTo 0
                     awaitItem() shouldBeEqualTo 1
@@ -109,12 +125,15 @@ class FlowBuilderExamples {
                 }
             }
             launch {
-                // delay 를 줘도 flow 는 cold stream 이므로, buffer 에 쌓여있는 값들은 모두 처리됩니다.
-                delay(150)
-                nums.collect {
-                    log.debug { "Job2 element=$it" }
+                nums.test {
+                    awaitItem() shouldBeEqualTo 0
+                    awaitItem() shouldBeEqualTo 1
+                    awaitItem() shouldBeEqualTo 2
+                    awaitComplete()
                 }
             }
         }
+        counter1.value shouldBeEqualTo 3
+        counter2.value shouldBeEqualTo 3
     }
 }

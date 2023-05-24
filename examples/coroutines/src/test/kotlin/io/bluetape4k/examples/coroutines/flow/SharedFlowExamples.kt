@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
@@ -29,32 +31,42 @@ class SharedFlowExamples {
     fun `shared flow 기본 사용법`() = runTest {
         coroutineScope {
             val mutableSharedFlow = MutableSharedFlow<String>(replay = 0) // replay = 0: 캐시를 사용하지 않음
+            val collected1 = atomic(0)
+            val collected2 = atomic(0)
 
             launch {
                 mutableSharedFlow.collect {
                     log.info { "#1 received $it" }
+                    collected1.incrementAndGet()
                 }
             }
 
             launch {
                 mutableSharedFlow.collect {
                     log.info { "#2 received $it" }
+                    collected2.incrementAndGet()
                 }
             }
 
-            delay(100)
+            yield()
 
             launch {
-                mutableSharedFlow.test {
-                    mutableSharedFlow.emit("Message1")
-                    mutableSharedFlow.emit("Message2")
+                // 2 개의 메시지를 보낸다
+                mutableSharedFlow.emit("Message1")
+                mutableSharedFlow.emit("Message2")
+                yield()
 
+                mutableSharedFlow.test {
                     awaitItem() shouldBeEqualTo "Message1"
                     awaitItem() shouldBeEqualTo "Message2"
                     cancelAndConsumeRemainingEvents()
                 }
             }
             delay(100)
+
+            collected1.value shouldBeEqualTo 2
+            collected2.value shouldBeEqualTo 2
+
             coroutineContext.cancelChildren()
         }
     }
@@ -69,20 +81,25 @@ class SharedFlowExamples {
         sharedFlow.emit("Message2")
         sharedFlow.emit("Message3")
 
+        val collectCounter1 = atomic(0)
+        val collectCounter2 = atomic(0)
+
         coroutineScope {
             sharedFlow.replayCache shouldBeEqualTo listOf("Message2", "Message3")
 
             launch {
                 sharedFlow.collect {
                     log.info { "#1 received $it" }  // Message 2, Message 3
+                    collectCounter1.incrementAndGet()
                 }
             }
             launch {
                 sharedFlow.collect {
                     log.info { "#2 received $it" }  // Message 2, Message 3
+                    collectCounter2.incrementAndGet()
                 }
             }
-            delay(100)
+            delay(10)
 
             launch {
                 sharedFlow.test {
@@ -93,6 +110,9 @@ class SharedFlowExamples {
             }
 
             delay(100)
+            collectCounter1.value shouldBeEqualTo 2
+            collectCounter2.value shouldBeEqualTo 2
+
             coroutineContext.cancelChildren()
         }
     }
@@ -127,22 +147,40 @@ class SharedFlowExamples {
 
         val sharedFlow = flow.shareIn(this, started = SharingStarted.Eagerly, replay = 0)
 
+        val counter1 = atomic(0)
+        val counter2 = atomic(0)
+        val counter3 = atomic(0)
+
         delay(500)
         launch {
-            sharedFlow.collect { log.info { "#1 $it" } }
+            sharedFlow.collect {
+                log.info { "#1 $it" }
+                counter1.incrementAndGet()
+            }
         }
 
         delay(1000)
         launch {
-            sharedFlow.collect { log.info { "#2 $it" } }
+            sharedFlow.collect {
+                log.info { "#2 $it" }
+                counter2.incrementAndGet()
+            }
         }
 
         delay(1000)
         launch {
-            sharedFlow.collect { log.info { "#3 $it" } }
+            sharedFlow.collect {
+                log.info { "#3 $it" }
+                counter3.incrementAndGet()
+            }
         }
 
         delay(5000)
+
+        counter1.value shouldBeEqualTo 3
+        counter2.value shouldBeEqualTo 2
+        counter3.value shouldBeEqualTo 1
+
         coroutineContext.cancelChildren()
     }
 }

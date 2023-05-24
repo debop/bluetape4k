@@ -33,7 +33,7 @@ class FlowOperatorExamples {
             .map { it * it }            // [1, 4, 9]
             .collect { sum += it }      // 14
 
-        sum shouldBeEqualTo 14
+        sum shouldBeEqualTo 1 + 4 + 9
     }
 
     @Test

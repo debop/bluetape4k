@@ -1,7 +1,6 @@
 package io.bluetape4k.coroutines.support
 
 import io.bluetape4k.exceptions.BluetapeException
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.SupervisorJob
@@ -9,6 +8,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.future.future
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeEqualTo
@@ -23,7 +23,7 @@ class CompletableFutureExamples {
     companion object: KLogging()
 
     @Test
-    fun `성공하는 suspend 함수를 CompletableFuture로 변환하기`() = runSuspendTest {
+    fun `성공하는 suspend 함수를 CompletableFuture로 변환하기`() = runTest {
         val future = future {
             delay(Random.nextLong(10))
             42
@@ -32,7 +32,7 @@ class CompletableFutureExamples {
     }
 
     @Test
-    fun `예외를 일으키는 suspend 함수를 CompletableFuture로 변환하기`() = runSuspendTest {
+    fun `예외를 일으키는 suspend 함수를 CompletableFuture로 변환하기`() = runTest {
         assertFailsWith<BluetapeException> {
             withContext(SupervisorJob()) {
                 val future = future {
@@ -48,7 +48,7 @@ class CompletableFutureExamples {
     }
 
     @Test
-    fun `suspend 함수를 CompetableFuture로 변환하고, 취소할 때`() = runSuspendTest {
+    fun `suspend 함수를 CompetableFuture로 변환하고, 취소하면 CancellationException이 발생한다`() = runTest {
         val future = future {
             delay(10)
             42

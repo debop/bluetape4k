@@ -1,7 +1,7 @@
 package io.bluetape4k.examples.coroutines.flow
 
-import io.bluetape4k.coroutines.flow.toFastList
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -46,7 +46,7 @@ class ChannelFlowExamples {
             log.trace { "Fetching page $page" }
             val users = api.takePage(page++)
             emitAll(users)
-        } while (users.toFastList().isNotEmpty())
+        } while (users.toList().isNotEmpty())
     }
 
     /**
@@ -60,7 +60,7 @@ class ChannelFlowExamples {
         val user = users
             .firstOrNull {
                 log.trace { "Checking $it" }
-                delay(1000)
+                delay(100)
                 it.name == "User3"
             }
 
@@ -74,8 +74,12 @@ class ChannelFlowExamples {
         do {
             log.trace { "Fetching page $page" }
             val users = api.takePage(page++)
-            users.collect { send(it) }
-        } while (users.toList().isNotEmpty())
+            var sent = 0
+            users.collect {
+                send(it)
+                sent++
+            }
+        } while (sent > 0)
     }
 
     /**
@@ -88,8 +92,8 @@ class ChannelFlowExamples {
 
         val user = users
             .firstOrNull {
-                log.trace { "Checking $it" }
-                delay(1000)
+                log.debug { "Checking $it" }
+                delay(100)
                 it.name == "User3"
             }
 
