@@ -157,7 +157,7 @@ object Versions {
     const val blaze_persistence = "1.6.8"
 
     const val slf4j = "1.7.36"
-    const val logback = "1.2.11"
+    const val logback = "1.2.12"
     const val log4j = "2.20.0"
 
     const val metrics = "4.1.25"
@@ -821,7 +821,7 @@ object Libs {
 
     // Json assertions
     const val jsonpath = "com.jayway.jsonpath:json-path:2.7.0"
-    const val jsonassert = "org.skyscreamer:jsonassert:1.5.0"
+    const val jsonassert = "org.skyscreamer:jsonassert:1.5.1"
 
     // GSON
     const val gson = "com.google.code.gson:gson:2.10.1"

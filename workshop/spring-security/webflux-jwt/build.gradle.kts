@@ -4,8 +4,9 @@ plugins {
 }
 
 springBoot {
-    mainClass.set("io.bluetape4k.workshop.spring.security.KotlinApplicationKt")
+    mainClass.set("io.bluetape4k.workshop.security.jwt.JwtApplicationKt")
 }
+
 
 // NOTE: implementation 나 runtimeOnly로 지정된 Dependency를 testimplementation 으로도 지정하도록 합니다.
 configurations {
@@ -20,10 +21,9 @@ dependencies {
     // Spring Security
     implementation(Libs.springBootStarter("security"))
     implementation(Libs.springBootStarter("oauth2-resource-server"))
-    implementation(Libs.springBootStarter("web"))
-    implementation(Libs.springBootStarter("thymeleaf"))
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
     testImplementation(Libs.springSecurity("test"))
+
+    implementation(Libs.springBootStarter("webflux"))
 
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
