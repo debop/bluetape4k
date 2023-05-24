@@ -4,7 +4,7 @@ import org.apache.kafka.common.header.Headers
 
 class ByteArrayKafkaCodec: AbstractKafkaCodec<ByteArray>() {
 
-    override fun doSerialize(topic: String?, headers: Headers?, graph: ByteArray): ByteArray? {
+    override fun doSerialize(topic: String?, headers: Headers?, graph: ByteArray): ByteArray {
         return graph
     }
 

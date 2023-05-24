@@ -36,25 +36,6 @@ suspend fun <K, V> Producer<K, V>.sendFlow(records: Flow<ProducerRecord<K, V>>):
         .buffer()
         .map { record -> sendSuspending(record) }
         .onCompletion { flush() }
-//    val producer = this
-//    return callbackFlow {
-//        records.buffer()
-//            //.catch { cause -> close(cause) }
-//            .collect { record ->
-//                producer.send(record) { metadata, error ->
-//                    if (error != null) {
-//                        close(error)
-//
-//                    } else {
-//                        trySend(metadata)
-//                    }
-//                }
-//            }
-//
-//        awaitClose {
-//            producer.flush()
-//        }
-//    }
 }
 
 /**

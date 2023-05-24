@@ -32,12 +32,12 @@ class StringKafkaCodec: AbstractKafkaCodec<String>() {
         }
     }
 
-    override fun doSerialize(topic: String?, headers: Headers?, graph: String): ByteArray? {
+    override fun doSerialize(topic: String?, headers: Headers?, graph: String): ByteArray {
         return graph.toByteArray(serializerEncoding)
     }
 
     override fun doDeserialize(topic: String?, headers: Headers?, bytes: ByteArray): String? {
-        return bytes.toString(deserializerEncoding)
+        return if (bytes.isEmpty()) null else bytes.toString(deserializerEncoding)
     }
 
     private fun getSerializerEncoding(configs: Map<String, *>, isKey: Boolean): Charset {

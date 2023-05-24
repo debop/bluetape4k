@@ -70,7 +70,7 @@ object Versions {
 
     const val spring_boot = Plugins.Versions.spring_boot
     const val spring_cloud = "2021.0.6"
-    const val reactor_bom = "2022.0.6"
+    const val reactor_bom = "2022.0.7"
     const val spring_statemachine = "3.2.0"
 
     const val chaos_monkey = "2.7.2"
@@ -422,6 +422,7 @@ object Libs {
     fun springBoot(module: String) = "org.springframework.boot:spring-boot-$module"
     fun springBootStarter(module: String) = "org.springframework.boot:spring-boot-starter-$module"
     fun springData(module: String) = "org.springframework.data:spring-data-$module"
+
     fun springSecurity(module: String) = "org.springframework.security:spring-security-$module"
 
     // Spring Cloud
@@ -860,12 +861,18 @@ object Libs {
     // Reactor
     const val reactor_bom = "io.projectreactor:reactor-bom:${Versions.reactor_bom}"
     const val reactor_core = "io.projectreactor:reactor-core"
-    const val reactor_adapter = "io.projectreactor.addons:reactor-adapter"
-    const val reactor_extra = "io.projectreactor.addons:reactor-extra"
+    const val reactor_core_micrometer = "io.projectreactor:reactor-core-micrometer"
     const val reactor_kafka = "io.projectreactor.kafka:reactor-kafka"
     const val reactor_netty = "io.projectreactor.netty:reactor-netty"
+    const val reactor_netty_http_brave = "io.projectreactor.netty:reactor-netty-http-brave"
     const val reactor_test = "io.projectreactor:reactor-test"
+    const val reactor_tools = "io.projectreactor:reactor-tools"
     const val reactor_kotlin_extensions = "io.projectreactor.kotlin:reactor-kotlin-extensions"
+
+    const val reactor_addons_reactor_adapter = "io.projectreactor.addons:reactor-adapter"
+    const val reactor_addons_reactor_extra = "io.projectreactor.addons:reactor-extra"
+    const val reactor_addons_reactor_pool = "io.projectreactor.addons:reactor-pool"
+    const val reactor_addons_reactor_pool_micrometer = "io.projectreactor.addons:reactor-pool-micrometer"
 
     const val blockhound = "io.projectreactor.tools:blockhound:${Versions.blockhound}"
     const val blockhound_junit_platform = "io.projectreactor.tools:blockhound-junit-platform:${Versions.blockhound}"

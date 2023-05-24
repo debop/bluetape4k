@@ -32,6 +32,7 @@ includeModules("workshop/graphql", false, false)
 includeModules("workshop/quarkus", false, false)
 includeModules("workshop/spring-boot", false, false)
 includeModules("workshop/spring-data", false, false)
+includeModules("workshop/spring-security", false, false)
 includeModules("workshop/vertx", false, false)
 
 fun includeModules(baseDir: String, withProjectName: Boolean = true, withBaseDir: Boolean = true) {

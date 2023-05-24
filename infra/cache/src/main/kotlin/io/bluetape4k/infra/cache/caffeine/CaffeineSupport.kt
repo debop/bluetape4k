@@ -66,8 +66,8 @@ fun <K: Any, V: Any> Caffeine<Any, Any>.asyncCache(): AsyncCache<K, V> = buildAs
  * @param loader    Cache value loader
  * @return [AsyncLoadingCache] instance
  */
-fun <K: Any, V: Any> Caffeine<Any, Any>.asyncLoadingCache(
-    loader: (key: K) -> CompletableFuture<V>,
+inline fun <K: Any, V: Any> Caffeine<Any, Any>.asyncLoadingCache(
+    crossinline loader: (key: K) -> CompletableFuture<V>,
 ): AsyncLoadingCache<K, V> = buildAsync { key: K, _: Executor -> loader(key) }
 
 /**
@@ -78,8 +78,8 @@ fun <K: Any, V: Any> Caffeine<Any, Any>.asyncLoadingCache(
  * @param loader    Cache value loader
  * @return [AsyncLoadingCache] instance
  */
-fun <K: Any, V: Any> Caffeine<Any, Any>.asyncLoadingCache(
-    loader: (key: K, executor: Executor) -> CompletableFuture<V>,
+inline fun <K: Any, V: Any> Caffeine<Any, Any>.asyncLoadingCache(
+    crossinline loader: (key: K, executor: Executor) -> CompletableFuture<V>,
 ): AsyncLoadingCache<K, V> =
     buildAsync { key: K, executor: Executor -> loader(key, executor) }
 
@@ -110,9 +110,9 @@ inline fun <K: Any, V: Any> Caffeine<Any, Any>.suspendLoadingCache(
  * @param loader  cache value loader
  * @return [CompletableFuture] for cache value
  */
-fun <K: Any, V: Any> AsyncCache<K, V>.getSuspending(
+inline fun <K: Any, V: Any> AsyncCache<K, V>.getSuspending(
     key: K,
-    loader: suspend (K) -> V,
+    crossinline loader: suspend (key: K) -> V,
 ): CompletableFuture<V> {
     return this.get(key) { k: K, executor: Executor ->
         CoroutineScope(executor.asCoroutineDispatcher()).future {

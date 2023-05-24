@@ -8,7 +8,7 @@ abstract class BinaryKafkaCodec<T: Any>(
     private val serializer: BinarySerializer,
 ): AbstractKafkaCodec<T>() {
 
-    override fun doSerialize(topic: String?, headers: Headers?, graph: T): ByteArray? {
+    override fun doSerialize(topic: String?, headers: Headers?, graph: T): ByteArray {
         return serializer.serialize(graph)
     }
 

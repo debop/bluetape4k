@@ -45,7 +45,7 @@ abstract class AbstractKafkaCodec<T: Any>: KafkaCodec<T> {
         fun <T: Any> defaultCodec(): KafkaCodec<T> = JacksonKafkaCodec()
     }
 
-    protected abstract fun doSerialize(topic: String?, headers: Headers?, graph: T): ByteArray?
+    protected abstract fun doSerialize(topic: String?, headers: Headers?, graph: T): ByteArray
     protected abstract fun doDeserialize(topic: String?, headers: Headers?, bytes: ByteArray): T?
 
     override fun serialize(topic: String?, headers: Headers?, data: T?): ByteArray? {

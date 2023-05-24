@@ -54,8 +54,6 @@ class CustomerRespositoryTest(
     @Test
     fun `create new customer`() = runSuspendTest {
         val hell = City("Hell")
-        customerRepo.persist(hell)
-
         val customer = Customer("Lucifer").apply { city = hell }
         customerRepo.persist(customer)
 
