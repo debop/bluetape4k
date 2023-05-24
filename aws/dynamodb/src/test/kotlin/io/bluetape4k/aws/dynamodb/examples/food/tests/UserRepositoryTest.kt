@@ -3,7 +3,6 @@ package io.bluetape4k.aws.dynamodb.examples.food.tests
 import io.bluetape4k.aws.dynamodb.examples.food.AbstractFoodApplicationTest
 import io.bluetape4k.aws.dynamodb.examples.food.model.UserDocument
 import io.bluetape4k.aws.dynamodb.examples.food.repository.UserRepository
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
@@ -29,7 +28,7 @@ class UserRepositoryTest: AbstractFoodApplicationTest() {
     }
 
     @Test
-    fun `save item and load`() = runSuspendTest {
+    fun `save item and load`() = runTest {
         val user = createUser()
         repository.save(user)
 

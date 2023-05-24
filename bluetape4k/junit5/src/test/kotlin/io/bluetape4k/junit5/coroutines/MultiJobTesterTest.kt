@@ -38,7 +38,7 @@ class MultiJobTesterTest {
             .roundsPerThread(2)
             .add {
                 log.trace { "Run suspend block ${counter.value}" }
-                delay(1000)
+                delay(10)
                 counter.incrementAndGet()
             }
             .run()

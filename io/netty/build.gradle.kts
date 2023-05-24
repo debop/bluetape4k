@@ -12,7 +12,6 @@ dependencies {
 
     // Coroutines
     compileOnly(Libs.kotlinx_coroutines_core)
-    compileOnly(Libs.kotlinx_coroutines_jdk8)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // NOTE: linux-x86_64 를 따로 추가해줘야 제대로 classifier가 지정된다. 이유는 모르겠지만, 이렇게 해야 제대로 된 jar를 참조한다
