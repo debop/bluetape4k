@@ -4,12 +4,16 @@ package io.bluetape4k.examples.redisson.coroutines.locks
 import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.data.redis.redisson.coroutines.getLockId
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit
 
@@ -31,6 +35,8 @@ class FairLockExamples: AbstractRedissonCoroutineTest() {
     @Test
     fun `acquire fair lock`() = runSuspendWithIO {
         val lock = redisson.getFairLock(randomName())
+        val lockCounter = atomic(0)
+
         val size = 10
 
         val jobs = List(size) {
@@ -39,11 +45,36 @@ class FairLockExamples: AbstractRedissonCoroutineTest() {
                 // 나머지 요청은 최대 5초간 대기하다가 요청 중단된다
                 val lockId = redisson.getLockId(lock.name)
                 log.trace { "lockId=$lockId" }
-                lock.tryLockAsync(5, 10, TimeUnit.SECONDS, lockId).awaitSuspending()
+                val locked = lock.tryLockAsync(5, 10, TimeUnit.SECONDS, lockId).awaitSuspending()
+                if (locked) {
+                    lockCounter.incrementAndGet()
+                }
                 delay(10)
                 lock.unlockAsync(lockId).awaitSuspending()
             }
         }
         jobs.joinAll()
+        lockCounter.value shouldBeEqualTo size
+    }
+
+    @Test
+    fun `acquire fair lock in multi threading`() {
+        val lock = redisson.getFairLock(randomName())
+        val lockCounter = atomic(0)
+
+        MultithreadingTester()
+            .numThreads(16)
+            .roundsPerThread(2)
+            .add {
+                val locked = lock.tryLock(5, 10, TimeUnit.SECONDS)
+                if (locked) {
+                    lockCounter.incrementAndGet()
+                }
+                Thread.sleep(10)
+                lock.unlock()
+            }
+            .run()
+
+        lockCounter.value shouldBe 32
     }
 }

@@ -93,17 +93,21 @@ class FlowOperatorExamples {
 
     @Test
     fun `combine elements of flows`() = runTest {
-        val flow1 = flowOf("A", "B", "C").onEach { delay(400); println("delay 400") }
-        val flow2 = flowOf(1, 2, 3, 4).onEach { delay(1000); println("delay 1000") }
+        val flow1 = flowOf("A", "B", "C")
+            .onEach {
+                delay(400)
+                println("delay 400, $it")
+            }
+        val flow2 = flowOf(1, 2, 3, 4)
+            .onEach {
+                delay(1000)
+                println("delay 1000, $it")
+            }
 
-        val combined = flow1.combine(flow2) { f1, f2 -> "${f1}_${f2}" }.onEach { println(it) }.toList()
-
-        /**
-         * combine 에서는 A 는 쌍이 없는 상태에서 B가 왔기 때문에 A는 버린다
-         *
-         * .... A .... B .... C
-         * .............. 1 ............. 2 .......... 3 .......... 4
-         */
+        val combined = flow1
+            .combine(flow2) { f1, f2 -> "${f1}_${f2}" }
+            .onEach { println(it) }
+            .toList()
 
         /**
          * combine 에서는 A 는 쌍이 없는 상태에서 B가 왔기 때문에 A는 버린다
@@ -116,7 +120,11 @@ class FlowOperatorExamples {
 
     @Test
     fun `fold - accumulate all values in flow`() = runTest {
-        val list = flowOf(1, 2, 3, 4).onEach { delay(1000); println("delay 1000") }
+        val list = flowOf(1, 2, 3, 4)
+            .onEach {
+                delay(10)
+                println("delay 1000, element=$it")
+            }
         val res = list.fold(0) { acc, i -> acc + i }
         res shouldBeEqualTo 10
     }
@@ -125,7 +133,10 @@ class FlowOperatorExamples {
     fun `scan - sliding fold`() = runTest {
         val list = flowOf(1, 2, 3, 4)
         val res = list
-            .onEach { delay(1000); println("delay 1000") }
+            .onEach {
+                delay(10)
+                println("delay 1000, element=$it")
+            }
             .scan(0) { acc, i -> acc + i }
             .toFastList()
         res shouldBeEqualTo listOf(0, 1, 3, 6, 10)
@@ -135,8 +146,8 @@ class FlowOperatorExamples {
     fun `flatMapConcat - concat two flows`() = runTest {
         fun flowFrom(elem: String) = flowOf(1, 2, 3)
             .onEach {
-                delay(1000)
-                println("delay 1000")
+                delay(100)
+                println("delay 1000, $it")
             }
             .map { "${it}_${elem}" }
 
@@ -152,13 +163,13 @@ class FlowOperatorExamples {
     fun `flatMapMerge - merge two flows`() = runTest {
         fun flowFrom(elem: String) = flowOf(1, 2, 3)
             .onEach {
-                delay(1000)
-                println("delay 1000")
+                delay(10)
+                println("delay 10, $it")
             }
             .map { "${it}_${elem}" }
 
         val result = flowOf("A", "B", "C")
-            .flatMapMerge { flowFrom(it) }
+            .flatMapMerge(concurrency = 3) { flowFrom(it) }
             .onEach { print("$it, ") }
             .toFastList()
 
@@ -169,8 +180,8 @@ class FlowOperatorExamples {
     fun `flatMapMerge with concurrency - merge two flows`() = runTest {
         fun flowFrom(elem: String) = flowOf(1, 2, 3)
             .onEach {
-                delay(1000)
-                println("delay 1000")
+                delay(10)
+                println("delay 10, $it")
             }
             .map { "${it}_${elem}" }
 
@@ -186,16 +197,11 @@ class FlowOperatorExamples {
     fun `flatMapLatest - latest element with two flows`() = runTest {
         fun flowFrom(elem: String) = flowOf(1, 2, 3)
             .onEach {
-                delay(1000)
-                println("delay 1000")
+                delay(10)
+                println("delay 10, $it")
             }
             .map { "${it}_${elem}" }
 
-        /**
-         * ..........1_A..........2_A..........3_A
-         * ..........1_B..........2_B..........3_B
-         * ..........1_C..........2_C..........3_C
-         */
         /**
          * ..........1_A..........2_A..........3_A
          * ..........1_B..........2_B..........3_B
@@ -219,14 +225,9 @@ class FlowOperatorExamples {
             .map { "${it}_${elem}" }
 
         /**
-         * ..........1_A..........1_A..........1_A
-         * .........................1_B..........2_B..........2_B
-         * ........................................1_C..........2_C..........3_C
-         */
-        /**
-         * ..........1_A..........1_A..........1_A
-         * .........................1_B..........2_B..........2_B
-         * ........................................1_C..........2_C..........3_C
+         * ..........1_A..........2_A..........3_A
+         * ...............1_B..........2_B..........2_B
+         * ................................1_C..........2_C..........3_C
          */
         val result = flowOf("A", "B", "C")
             .onEach { delay(1200); println("delay 1200") }

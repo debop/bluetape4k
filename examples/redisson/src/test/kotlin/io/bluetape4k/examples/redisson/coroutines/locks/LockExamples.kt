@@ -3,11 +3,14 @@ package io.bluetape4k.examples.redisson.coroutines.locks
 import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.data.redis.redisson.coroutines.getLockId
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
@@ -92,5 +95,27 @@ class LockExamples: AbstractRedissonCoroutineTest() {
         val ttl3 = lock.remainTimeToLiveAsync().awaitSuspending()
         log.debug { "TTL3: $ttl3, PrevTTL: $prevTtl" }
         ttl3 shouldBeGreaterOrEqualTo prevTtl
+    }
+
+
+    @Test
+    fun `acquire lock in multi threading`() {
+        val lock = redisson.getLock(randomName())
+        val lockCounter = atomic(0)
+
+        MultithreadingTester()
+            .numThreads(16)
+            .roundsPerThread(2)
+            .add {
+                val locked = lock.tryLock(5, 10, TimeUnit.SECONDS)
+                if (locked) {
+                    lockCounter.incrementAndGet()
+                }
+                Thread.sleep(10)
+                lock.unlock()
+            }
+            .run()
+
+        lockCounter.value shouldBe 32
     }
 }
