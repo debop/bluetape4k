@@ -22,7 +22,7 @@ suspend inline fun RedissonClient.withTransactionSuspending(
     options: TransactionOptions = TransactionOptions.defaults(),
     action: RTransaction.() -> Unit,
 ) {
-    val tx = createTransaction(options)
+    val tx: RTransaction = createTransaction(options)
     try {
         action(tx)
         tx.commitAsync().awaitSuspending()

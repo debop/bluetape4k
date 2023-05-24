@@ -125,10 +125,11 @@ class RedissonLeaderElection private constructor(
     ): CompletableFuture<T> {
         val lockName = lock.name
         log.debug { "Leader로 승격하여 비동기 작업을 수행합니다. lock=$lockName, threadId=$currentThreadId" }
+
         return action()
             .thenComposeAsync(
                 { result: T ->
-                    log.debug { "작업이 완료되어 Leader 권한을 반납했습니다. lock=$lockName, threadId=$currentThreadId" }
+                    log.debug { "작업이 완료되어 Leader 권한을 반납합니다... lock=$lockName, threadId=$currentThreadId" }
                     lock
                         .unlockAsync(currentThreadId)
                         .whenComplete { _, error ->
