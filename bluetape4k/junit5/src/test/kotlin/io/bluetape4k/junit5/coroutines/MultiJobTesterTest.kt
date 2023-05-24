@@ -34,7 +34,7 @@ class MultiJobTesterTest {
         val count by counter
 
         MultiJobTester()
-            .numJob(2)
+            .numThreads(2)
             .roundsPerThread(2)
             .add {
                 log.trace { "Run suspend block ${counter.value}" }
@@ -52,7 +52,7 @@ class MultiJobTesterTest {
         val block = CountingSuspendBlock()
 
         MultiJobTester()
-            .numJob(11)
+            .numThreads(11)
             .roundsPerThread(13)
             .add(block)
             .run()
@@ -66,7 +66,7 @@ class MultiJobTesterTest {
         val block2 = CountingSuspendBlock()
 
         MultiJobTester()
-            .numJob(3)
+            .numThreads(3)
             .roundsPerThread(1)
             .addAll(block1, block2)
             .run()
@@ -81,7 +81,7 @@ class MultiJobTesterTest {
 
         assertFailsWith<IllegalStateException> {
             MultiJobTester()
-                .numJob(2)
+                .numThreads(2)
                 .roundsPerThread(1)
                 .add(block)
                 .add(block)

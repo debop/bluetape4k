@@ -9,7 +9,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
-import kotlinx.coroutines.withTimeout
 
 /**
  * suspend 함수를 제한된 스레드 수에서 동시에 실행시키고, 모든 suspend 함수가 종료되기를 기다린다.
@@ -37,7 +36,7 @@ class MultiJobTester {
         const val DEFAULT_ROUNDS_PER_THREADS: Int = 10
     }
 
-    private var numJobs = DEFAULT_NUM_JOBS
+    private var numThreads = DEFAULT_NUM_JOBS
     private var roundsPerThreads = DEFAULT_ROUNDS_PER_THREADS
     private val suspendBlocks = mutableListOf<suspend () -> Unit>()
 
@@ -48,9 +47,9 @@ class MultiJobTester {
     private lateinit var workerDispatcher: ExecutorCoroutineDispatcher
     private lateinit var workerJobs: List<Job>
 
-    fun numJob(numJobs: Int): MultiJobTester = apply {
-        check(numJobs in 2..2000) { "Invalid numThreads: $numJobs -- must be range in 2..2000" }
-        this.numJobs = numJobs
+    fun numThreads(numThreads: Int): MultiJobTester = apply {
+        check(numThreads in 2..2000) { "Invalid numThreads: $numThreads -- must be range in 2..2000" }
+        this.numThreads = numThreads
     }
 
     fun roundsPerThread(roundsPerThreads: Int) = apply {
@@ -74,8 +73,8 @@ class MultiJobTester {
 
     suspend fun run() {
         check(suspendBlocks.isNotEmpty()) { "No suspend blocks to run" }
-        check(numJobs >= suspendBlocks.size) {
-            "numThreads($numJobs) must be greater than suspendBlocks.size(${suspendBlocks.size})"
+        check(numThreads >= suspendBlocks.size) {
+            "numThreads($numThreads) must be greater than suspendBlocks.size(${suspendBlocks.size})"
         }
 
         val me = MultiException()
@@ -91,8 +90,8 @@ class MultiJobTester {
 
         var iter = suspendBlocks.iterator()
 
-        workerDispatcher = newFixedThreadPoolContext(numJobs, "coroutine-tester")
-        workerJobs = List(numJobs) {
+        workerDispatcher = newFixedThreadPoolContext(numThreads, "coroutine-tester")
+        workerJobs = List(numThreads) {
             if (!iter.hasNext()) {
                 iter = suspendBlocks.iterator()
             }
@@ -111,9 +110,7 @@ class MultiJobTester {
 
     private suspend fun awaitWorkerJobs() {
         log.debug { "Await worker jobs ..." }
-        withTimeout(30000) {
-            workerJobs.joinAll()
-        }
+        workerJobs.joinAll()
         runCatching { workerDispatcher.close() }
     }
 }

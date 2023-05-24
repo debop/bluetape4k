@@ -1,5 +1,6 @@
 package io.bluetape4k.data.redis.redisson.coroutines
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.coroutines.support.awaitSuspending
 import org.redisson.api.BatchOptions
 import org.redisson.api.BatchResult
@@ -31,6 +32,8 @@ suspend inline fun RedissonClient.withTransactionSuspending(
     }
 }
 
+private const val LOCK_ID_NAME_PREFIX = "$LibraryName:lock-id"
+
 /**
  * Redisson은 Thread 기반의 Lock을 지원합니다.
  * Coroutines 환경에서 Lock을 사용하고자 한다면, Unique 한 Lock Id를 제공해야 합니다.
@@ -41,6 +44,6 @@ suspend inline fun RedissonClient.withTransactionSuspending(
  */
 fun RedissonClient.getLockId(lockName: String): Long {
     val epochDay = LocalDate.now().toEpochDay()
-    val sequenceName = "bluetape4k:lock:$lockName:$epochDay"
+    val sequenceName = "$LOCK_ID_NAME_PREFIX:$lockName:$epochDay"
     return getAtomicLong(sequenceName).andIncrement
 }

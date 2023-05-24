@@ -48,7 +48,7 @@ dependencies {
     compileOnly(project(":bluetape4k-io-grpc"))
     compileOnly(project(":bluetape4k-coroutines"))
     compileOnly(project(":bluetape4k-infra-cache"))
-    testImplementation(project(":bluetape4k-utils-idgenerators"))
+    compileOnly(project(":bluetape4k-utils-idgenerators"))
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-testcontainers"))
     // Redisson Map Read/Write Through 예제

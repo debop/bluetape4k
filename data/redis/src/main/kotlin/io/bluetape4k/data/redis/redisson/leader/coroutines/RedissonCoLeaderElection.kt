@@ -2,13 +2,13 @@ package io.bluetape4k.data.redis.redisson.leader.coroutines
 
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
-import io.bluetape4k.data.redis.redisson.coroutines.getLockId
 import io.bluetape4k.data.redis.redisson.leader.RedissonLeaderElectionOptions
 import io.bluetape4k.leader.CoLeaderElection
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.warn
 import io.bluetape4k.support.uninitialized
+import io.bluetape4k.utils.idgenerators.snowflake.Snowfloker
 import kotlinx.coroutines.coroutineScope
 import org.redisson.api.RLock
 import org.redisson.api.RedissonClient
@@ -52,7 +52,11 @@ class RedissonCoLeaderElection(
             log.debug { "Leader 승격을 요청합니다 ..." }
             // Thread Id 기반으로 Lock 을 걸게 되므로, Coroutines 환경에서는 사용할 수 없다.
             // 고유의 Id 값을 제공해야 하므로 [RAtomicLong] 을 사용한다.
-            val lockId = redissonClient.getLockId(lockName)
+            // val lockId = redissonClient.getLockId(lockName)
+
+            // Redis IO 를 줄이기 위해 Default Snowflake 를 사용합니다.
+            val lockId = Snowfloker.Default.nextId()
+
             val acquired = lock.tryLockAsync(waitTimeMills, leaseTimeMills, TimeUnit.MILLISECONDS, lockId)
                 .awaitSuspending()
             if (acquired) {

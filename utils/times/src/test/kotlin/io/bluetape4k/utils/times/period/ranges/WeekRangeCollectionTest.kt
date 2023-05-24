@@ -114,7 +114,7 @@ class WeekRangeCollectionTest: AbstractPeriodTest() {
         val today = todayZonedDateTime()
 
         MultiJobTester()
-            .numJob(64)
+            .numThreads(64)
             .roundsPerThread(10)
             .add {
                 weekCounts.forEach { weekCount ->
