@@ -18,7 +18,7 @@ interface AvroSpecificRecordSerializer {
     fun <T: SpecificRecord> serialize(graph: T?): ByteArray?
 
     /**
-     * Avro [SpecificRecord]의 직렬화된 정보를 역직렬화하여 [class] 형식의 인스턴스를 빌드합니다.
+     * Avro [SpecificRecord]의 직렬화된 정보를 역직렬화하여 [clazz] 형식의 인스턴스를 빌드합니다.
      *
      * @param avroBytes [SpecificRecord]의 직렬화된 정보
      * @param clazz 대상 수형 정보
@@ -39,7 +39,7 @@ interface AvroSpecificRecordSerializer {
     }
 
     /**
-     * Avro [SpecificRecord]의 직렬화된 정보를 역직렬화하여 [class] 형식의 인스턴스를 빌드합니다.
+     * Avro [SpecificRecord]의 직렬화된 정보를 역직렬화하여 [clazz] 형식의 인스턴스를 빌드합니다.
      *
      * @param T 대상 수형
      * @param avroBytes [SpecificRecord]의 직렬화된 정보
