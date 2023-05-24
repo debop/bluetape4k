@@ -112,8 +112,13 @@ object Versions {
     const val aws = "1.12.459"
 
     // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
-    const val aws2 = "2.20.56"
-    const val aws2_crt = "0.21.14"
+    const val aws2 = "2.20.69"
+
+    // https://mvnrepository.com/artifact/software.amazon.awssdk.crt
+    const val aws2_crt = "0.21.17"
+
+    // https://mvnrepository.com/artifact/aws.sdk.kotlin
+    const val aws_kotlin = "0.25.0-beta"
 
     const val grpc = "1.54.1"
     const val grpc_kotlin = "1.3.0"
@@ -225,20 +230,21 @@ object Libs {
     fun getOsClassifier(): String {
         val os = DefaultNativePlatform.getCurrentOperatingSystem()
         val osName = when {
-            os.isMacOsX -> "osx"
-            os.isLinux -> "linux"
+            os.isMacOsX  -> "osx"
+            os.isLinux   -> "linux"
             os.isWindows -> "windows"
-            else -> ""
+            else         -> ""
         }
-        if (osName.isEmpty()) {
-            return osName
+
+        return if (osName.isEmpty()) {
+            osName
         } else {
             // FIXME: isArm 이 제대로 동작하지 않는다 ㅠ.ㅠ
             val architecture = DefaultNativePlatform.getCurrentArchitecture()
             println("architecture=$architecture")
 
             val archName = if (architecture.name.startsWith("arm")) "aarch_64" else "x86_64"
-            return "$osName-$archName".apply {
+            "$osName-$archName".apply {
                 println("classifier=$this")
             }
         }
@@ -721,6 +727,20 @@ object Libs {
     // https://mvnrepository.com/artifact/software.amazon.awssdk.crt/aws-crt
     const val aws2_aws_crt = "software.amazon.awssdk.crt:aws-crt:${Versions.aws2_crt}"
 
+    // https://docs.aws.amazon.com/sdk-for-kotlin/latest/developer-guide/get-started.html
+    // https://mvnrepository.com/artifact/aws.sdk.kotlin
+    fun awsKotlin(name: String, version: String = Versions.aws_kotlin) = "aws.sdk.kotlin:$name:$version"
+    val aws_kotlin_aws_core = awsKotlin("aws-core")
+    val aws_kotlin_aws_config = awsKotlin("aws-config")
+    val aws_kotlin_aws_endpoint = awsKotlin("aws-endpoint")
+    val aws_kotlin_aws_http = awsKotlin("aws-http")
+    val aws_kotlin_cloudwatch = awsKotlin("cloudwatch")
+    val aws_kotlin_dynamodb = awsKotlin("dynamodb")
+    val aws_kotlin_kafka = awsKotlin("kafka")
+    val aws_kotlin_kms = awsKotlin("kms")
+    val aws_kotlin_rds = awsKotlin("rds")
+    val aws_kotlin_s3 = awsKotlin("s3")
+    val aws_kotlin_testing = awsKotlin("testing")
 
     // AsyncHttpClient
     const val async_http_client = "org.asynchttpclient:async-http-client:${Versions.asynchttpclient}"
