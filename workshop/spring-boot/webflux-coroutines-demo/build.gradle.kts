@@ -28,16 +28,15 @@ dependencies {
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(module = "mockito-core")
     }
 
     // Coroutines
     implementation(Libs.kotlinx_coroutines_core)
-    implementation(Libs.kotlinx_coroutines_jdk8)
     implementation(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // Reactor
-    implementation(Libs.netty_all)
     implementation(Libs.reactor_netty)
     implementation(Libs.reactor_kotlin_extensions)
     testImplementation(Libs.reactor_test)

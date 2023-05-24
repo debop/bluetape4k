@@ -28,19 +28,19 @@ dependencies {
     implementation(Libs.springBootStarter("webflux"))
     implementation(Libs.springCloudStarter("sleuth"))
 
-    implementation(Libs.webjar("webjars-locator-core", "0.46"))
-    implementation(Libs.webjar("bootstrap", "4.3.1"))
-    implementation(Libs.webjar("jquery", "3.4.1"))
-    implementation(Libs.webjar("font-awesome", "5.8.2"))
+    implementation(Libs.webjar("webjars-locator-core", "0.52"))
+    implementation(Libs.webjar("bootstrap", "5.2.3"))
+    implementation(Libs.webjar("jquery", "3.6.4"))
+    implementation(Libs.webjar("font-awesome", "6.4.0"))
 
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(module = "mockito-core")
     }
 
     // Coroutines
     implementation(Libs.kotlinx_coroutines_core)
-    implementation(Libs.kotlinx_coroutines_jdk8)
     implementation(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 

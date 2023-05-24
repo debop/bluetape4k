@@ -44,9 +44,10 @@ dependencies {
     implementation(Libs.testcontainers_mongodb)
 
     // JWT
+    // TODO: Spring Security에서 제공하는 JWT 라이브러리를 사용하도록 변경
     implementation(project(":bluetape4k-utils-jwt"))
     implementation("com.auth0:java-jwt:4.4.0")
-//    implementation("net.logstash.logback:logstash-logback-encoder:6.5")
+    implementation("net.logstash.logback:logstash-logback-encoder:7.3")
 
     // Validation
     implementation(Libs.javax_validation_api)

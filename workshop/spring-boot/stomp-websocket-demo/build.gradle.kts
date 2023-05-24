@@ -4,6 +4,10 @@ plugins {
     id(Plugins.spring_boot)
 }
 
+springBoot {
+    mainClass.set("io.bluetape4k.workshop.stomp.SampleApplicationKt")
+}
+
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }
@@ -34,6 +38,7 @@ dependencies {
     implementation(Libs.webjar("stomp-websocket", "2.3.4"))
     implementation(Libs.webjar("bootstrap", "5.2.3"))
     implementation(Libs.webjar("jquery", "3.6.4"))
+    implementation(Libs.webjar("font-awesome", "6.4.0"))
 
     // Coroutines
     implementation(Libs.kotlinx_coroutines_core)
