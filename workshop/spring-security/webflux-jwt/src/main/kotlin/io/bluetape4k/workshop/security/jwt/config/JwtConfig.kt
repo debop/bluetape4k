@@ -8,8 +8,6 @@ import io.bluetape4k.logging.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.authentication.ReactiveAuthenticationManager
-import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.config.web.server.invoke
@@ -42,12 +40,7 @@ class JwtConfig {
     private lateinit var privateKey: RSAPrivateKey
 
     @Bean
-    fun securityWebFilterChain(
-        http: ServerHttpSecurity,
-        authenticationManager: ReactiveAuthenticationManager,
-        jwtEncoder: JwtEncoder,
-        jwtDecoder: ReactiveJwtDecoder,
-    ): SecurityWebFilterChain {
+    fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http.invoke {
             authorizeExchange {
                 // 모든 resource 가 인증을 받아야 한다 (인증되지 않은 경우 401 예외가 발생한다)
@@ -56,13 +49,9 @@ class JwtConfig {
             }
             csrf { disable() }
             oauth2ResourceServer {
-                jwt {
-                    this.jwtDecoder = jwtDecoder
-                }
+                jwt { }                     // Specify the authentication mechanisms
             }
-            httpBasic {
-                this.authenticationManager = authenticationManager
-            }
+            httpBasic { }
             exceptionHandling {
                 authenticationEntryPoint = BearerTokenServerAuthenticationEntryPoint()
                 accessDeniedHandler = BearerTokenServerAccessDeniedHandler()
@@ -74,7 +63,7 @@ class JwtConfig {
     }
 
     @Bean
-    fun reactiveAuthenticationManager(passwordEncoder: PasswordEncoder): ReactiveAuthenticationManager {
+    fun userDetailsService(passwordEncoder: PasswordEncoder): MapReactiveUserDetailsService {
 
         val userDetails = User.builder()
             .username("user")
@@ -83,8 +72,7 @@ class JwtConfig {
             .passwordEncoder(passwordEncoder::encode)
             .build()
 
-        val userDetailsService = MapReactiveUserDetailsService(userDetails)
-        return UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService)
+        return MapReactiveUserDetailsService(userDetails)
     }
 
     @Bean
