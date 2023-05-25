@@ -20,7 +20,7 @@ fun currentOtelContext(): Context = Context.current()
 fun rootOtelContext(): Context = Context.root()
 
 /**
- * Current Context scope 하에서 [action]을 실행합니다.
+ * Current Opentelemetry [Context] 하에서 [action]을 실행합니다.
  *
  * @param T [action]의 실행 결과 타입입니다.
  * @param action 실행할 코드 블록입니다.

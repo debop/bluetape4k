@@ -72,7 +72,7 @@ suspend inline fun <T> SpanBuilder.useSpanSuspending(
  * [span]이 속한 Context 하에서 [block]을 실행합니다.
  * Coroutines 환경 하에서는 OpenTelemetry의 Context가 전달 안되기 때문에 `withContext`에 `span.asContextElement()`를 전달합니다.
  *
- * @see [withOtelContext]
+ * @see [withOtelCurrent]
  *
  * @param T [block]의 실행 결과 타입입니다.
  * @param span [block]을 실행할 때 사용할 Span 입니다.
@@ -80,10 +80,10 @@ suspend inline fun <T> SpanBuilder.useSpanSuspending(
  * @receiver CoroutineScope
  * @return [block]의 실행 결과입니다.
  */
-suspend fun <T> withSpanContext(
+suspend inline fun <T> withSpanContext(
     span: Span,
     coroutineContext: CoroutineContext = EmptyCoroutineContext,
-    block: suspend (Span) -> T,
+    crossinline block: suspend (Span) -> T,
 ): T {
     val coContext = when {
         coroutineContext != EmptyCoroutineContext -> coroutineContext
