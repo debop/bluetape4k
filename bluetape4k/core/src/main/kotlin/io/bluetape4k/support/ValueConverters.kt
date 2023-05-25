@@ -4,6 +4,10 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.OffsetDateTime
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -22,8 +26,9 @@ fun Any?.asDouble(defaultValue: Double = 0.0): Double = runCatching {
 }.getOrDefault(defaultValue)
 
 
-fun Any?.asDoubleOrNull(): Double? =
-    runCatching { this?.toString()?.toDoubleOrNull() }.getOrNull()
+fun Any?.asDoubleOrNull(): Double? = this?.run {
+    runCatching { this.toString().toDoubleOrNull() }.getOrNull()
+}
 
 /**
  * 객체를 Float 수형으로 변환합니다.
@@ -31,7 +36,6 @@ fun Any?.asDoubleOrNull(): Double? =
  * @receiver Any?
  * @param defaultValue 변환 실패 시 대체 값
  */
-@JvmOverloads
 fun Any?.asFloat(defaultValue: Float = 0.0F): Float = runCatching {
     when (this) {
         null            -> defaultValue
@@ -52,7 +56,6 @@ fun Any?.asFloatOrNull(): Float? = runCatching {
  * @receiver Any?
  * @param defaultValue 변환 실패 시 대체 값
  */
-@JvmOverloads
 fun Any?.asLong(defaultValue: Long = 0L): Long = runCatching {
     when (this) {
         null            -> defaultValue
@@ -73,7 +76,6 @@ fun Any?.asLongOrNull(): Long? = runCatching {
  * @receiver Any?
  * @param defaultValue 변환 실패 시 대체 값
  */
-@JvmOverloads
 fun Any?.asInt(defaultValue: Int = 0): Int = runCatching {
     when (this) {
         null      -> defaultValue
@@ -93,7 +95,6 @@ fun Any?.asIntOrNull(): Int? = runCatching {
  * @receiver Any?
  * @param defaultValue 변환 실패 시 대체 값
  */
-@JvmOverloads
 fun Any?.asShort(defaultValue: Short = 0): Short = runCatching {
     when (this) {
         null      -> defaultValue
@@ -113,7 +114,6 @@ fun Any?.asShortOrNull(): Short? = runCatching {
  * @receiver Any?
  * @param defaultValue 변환 실패 시 대체 값
  */
-@JvmOverloads
 fun Any?.asByte(defaultValue: Byte = 0.toByte()): Byte = runCatching {
     when (this) {
         null      -> defaultValue
@@ -135,7 +135,6 @@ fun Any?.asByteOrNull(): Byte? = runCatching {
  * @receiver Any?
  * @param defaultValue 변환 실패 시 대체 값
  */
-@JvmOverloads
 fun Any?.asChar(defaultValue: Char = 0.toChar()): Char = runCatching {
     when (this) {
         null            -> defaultValue
@@ -149,13 +148,26 @@ fun Any?.asCharOrNull(): Char? = runCatching {
     this?.toString()?.toCharArray()?.firstOrNull()
 }.getOrNull()
 
+fun Any?.asBoolean(defaultValue: Boolean = false): Boolean = runCatching {
+    when (this) {
+        null            -> defaultValue
+        is Boolean      -> this
+        is Number       -> this.toInt() != 0
+        is CharSequence -> this.toString().toBoolean()
+        else            -> this.toString().toBoolean()
+    }
+}.getOrDefault(defaultValue)
+
+fun Any?.asBooleanOrNull(): Boolean? = runCatching {
+    this?.toString()?.toBoolean()
+}.getOrNull()
+
 /**
  * 객체를 BigDecimal 수형으로 변환합니다.
  *
  * @receiver Any?
  * @param defaultValue 변환 실패 시 대체 값
  */
-@JvmOverloads
 fun Any?.asBigDecimal(defaultValue: BigDecimal = BigDecimal.ZERO): BigDecimal = runCatching {
     when (this) {
         null          -> defaultValue
@@ -175,7 +187,6 @@ fun Any?.asBigDecimalOrNull(): BigDecimal? = runCatching {
  * @receiver Any?
  * @param defaultValue 변환 실패 시 대체 값
  */
-@JvmOverloads
 fun Any?.asBigInt(defaultValue: BigInteger = BigInteger.ZERO): BigInteger = runCatching {
     when (this) {
         null          -> defaultValue
@@ -195,7 +206,6 @@ fun Any?.asBigIntOrNull(): BigInteger? = runCatching {
  * @receiver Any?
  * @param defaultValue 변환 실패 시 대체 값
  */
-@JvmOverloads
 fun Any?.asString(defaultValue: String = ""): String =
     this?.toString() ?: defaultValue
 
@@ -210,7 +220,6 @@ internal val SIMPLE_DATE_FORMAT = SimpleDateFormat()
  * @receiver Any?
  * @param defaultValue 변환 실패 시 대체 값
  */
-@JvmOverloads
 fun Any?.asDate(defaultValue: Date = Date(0L)): Date = runCatching {
     when (this) {
         null      -> defaultValue
@@ -220,12 +229,71 @@ fun Any?.asDate(defaultValue: Date = Date(0L)): Date = runCatching {
     }
 }.getOrDefault(defaultValue)
 
-fun Any?.asDateOrNull(): Date? =
-    this?.run {
-        runCatching { SIMPLE_DATE_FORMAT.parse(this.toString()) }.getOrNull()
-    }
+fun Any?.asDateOrNull(): Date? = this?.run {
+    runCatching { SIMPLE_DATE_FORMAT.parse(this.toString()) }.getOrNull()
+}
 
-@JvmOverloads
+fun Any?.asLocalDate(defaultValue: LocalDate = LocalDate.MIN): LocalDate = runCatching {
+    when (this) {
+        null         -> defaultValue
+        is LocalDate -> this
+        else         -> LocalDate.parse(this.toString())
+    }
+}.getOrDefault(defaultValue)
+
+fun Any?.asLocalDateOrNull(): LocalDate? = this?.run {
+    runCatching { LocalDate.parse(this.toString()) }.getOrNull()
+}
+
+fun Any?.asLocalTime(defaultValue: LocalTime = LocalTime.MIN): LocalTime = runCatching {
+    when (this) {
+        null         -> defaultValue
+        is LocalTime -> this
+        else         -> LocalTime.parse(this.toString())
+    }
+}.getOrDefault(defaultValue)
+
+fun Any?.asLocalTimeOrNull(): LocalTime? = this?.run {
+    runCatching { LocalTime.parse(this.toString()) }.getOrNull()
+}
+
+fun Any?.asLocalDateTime(defaultValue: LocalDateTime = LocalDateTime.MIN): LocalDateTime = runCatching {
+    when (this) {
+        null             -> defaultValue
+        is LocalDateTime -> this
+        else             -> LocalDateTime.parse(this.toString())
+    }
+}.getOrDefault(defaultValue)
+
+fun Any?.asLocalDateTimeOrNull(): LocalDateTime? = this?.run {
+    runCatching { LocalDateTime.parse(this.toString()) }.getOrNull()
+}
+
+fun Any?.asOffsetDateTime(defaultValue: OffsetDateTime = OffsetDateTime.MIN): OffsetDateTime = runCatching {
+    when (this) {
+        null              -> defaultValue
+        is OffsetDateTime -> this
+        else              -> OffsetDateTime.parse(this.toString())
+    }
+}.getOrDefault(defaultValue)
+
+fun Any?.asOffsetDateTimeOrNull(): OffsetDateTime? = this?.run {
+    runCatching { OffsetDateTime.parse(this.toString()) }.getOrNull()
+}
+
+fun Any?.asUUID(defaultValue: UUID = UUID.randomUUID()): UUID = runCatching {
+    when (this) {
+        null    -> defaultValue
+        is UUID -> this
+        else    -> UUID.fromString(this.toString())
+    }
+}.getOrDefault(defaultValue)
+
+fun Any?.asUUIDOrNull(): UUID? = this?.run {
+    runCatching { UUID.fromString(this.toString()) }.getOrNull()
+}
+
+
 fun Any?.asByteArray(charset: Charset = Charsets.UTF_8, defaultValue: ByteArray = emptyByteArray): ByteArray =
     runCatching {
         when (this) {
@@ -235,10 +303,9 @@ fun Any?.asByteArray(charset: Charset = Charsets.UTF_8, defaultValue: ByteArray 
         }
     }.getOrDefault(emptyByteArray)
 
-@JvmOverloads
-fun Any?.asByteArrayOrNull(charset: Charset = Charsets.UTF_8): ByteArray? = runCatching {
-    this?.toString()?.toByteArray(charset)
-}.getOrNull()
+fun Any?.asByteArrayOrNull(charset: Charset = Charsets.UTF_8): ByteArray? = this?.run {
+    runCatching { this.toString().toByteArray(charset) }.getOrNull()
+}
 
 //
 // Floor, Round for specific decimal point

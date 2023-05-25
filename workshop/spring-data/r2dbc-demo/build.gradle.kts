@@ -7,7 +7,7 @@ configurations {
 }
 
 dependencies {
-    implementation(project(":bluetape4k-io-json"))
+    implementation(project(":bluetape4k-spring-support"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Coroutines

@@ -1,4 +1,4 @@
-package io.bluetape4k.workshop.redis.examples.utils
+package io.bluetape4k.spring.data
 
 import org.springframework.data.domain.ExampleMatcher
 import kotlin.reflect.KClass

@@ -8,6 +8,7 @@ configurations {
 
 dependencies {
     implementation(project(":bluetape4k-data-redis"))
+    implementation(project(":bluetape4k-spring-support"))
     implementation(project(":bluetape4k-coroutines"))
     implementation(project(":bluetape4k-io-json"))
     implementation(project(":bluetape4k-utils-idgenerators"))

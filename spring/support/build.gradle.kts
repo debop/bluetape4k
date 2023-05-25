@@ -12,6 +12,8 @@ dependencies {
     testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.spring("context-support"))
+    compileOnly(Libs.springData("commons"))
+
     api(Libs.javax_annotation_api)
     compileOnly(Libs.findbugs)
 
