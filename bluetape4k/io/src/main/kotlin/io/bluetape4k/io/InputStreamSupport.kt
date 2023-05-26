@@ -9,6 +9,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.io.OutputStreamWriter
 import java.io.Reader
+import java.io.StringWriter
 import java.io.Writer
 import java.nio.ByteBuffer
 import java.nio.channels.ReadableByteChannel
@@ -31,6 +32,13 @@ fun InputStream.copyTo(out: Writer, cs: Charset = UTF_8, bufferSize: Int = DEFAU
     this.reader(cs).copyTo(out, bufferSize)
 
 
+/**
+ * [InputStream]을 읽어 [OutputStream]에 씁니다.
+ *
+ * @param out         데이터를 쓸 대상 [OutputStream]
+ * @param bufferSize  buffer size
+ * @return 복사한 데이터의 Byte 크기
+ */
 fun InputStream.copyTo(out: OutputStream, bufferSize: Int = DEFAULT_BUFFER_SIZE): Long {
     bufferSize.assertPositiveNumber("bufferSize")
 
@@ -70,6 +78,13 @@ fun Reader.copyTo(out: OutputStream, bufferSize: Int = DEFAULT_BUFFER_SIZE, cs: 
         val count = copyTo(writer, bufferSize)
         out.flush()
         return count
+    }
+}
+
+fun Reader.copyToString(bufferSize: Int = DEFAULT_BUFFER_SIZE): String {
+    return StringWriter(bufferSize).use { writer ->
+        this.copyTo(writer)
+        writer.toString()
     }
 }
 
@@ -139,6 +154,7 @@ fun ByteArray.toLineSequence(cs: Charset = UTF_8, blockSize: Int = DEFAULT_BLOCK
 
 fun ByteArray.toUtf8LineSequence(blockSize: Int = DEFAULT_BLOCK_SIZE): Sequence<String> =
     toInputStream().toUtf8LineSequence(blockSize)
+
 
 /**
  * InputStream 정보를 읽어 `dst`에 씁니다.

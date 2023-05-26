@@ -20,6 +20,7 @@ import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousFileChannel
 import java.nio.channels.CompletionHandler
 import java.nio.charset.Charset
+import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.util.concurrent.CompletableFuture
@@ -125,7 +126,6 @@ fun File.deleteDirectoryRecursively(): Boolean {
     return false
 }
 
-@JvmOverloads
 fun File.deleteDirectory(recusive: Boolean = true): Boolean {
     return if (recusive) {
         deleteDirectoryRecursively()
@@ -197,13 +197,10 @@ fun File.readAllLines(cs: Charset = UTF_8): List<String> =
 fun Path.readAllLinesAsync(cs: Charset = UTF_8): CompletableFuture<List<String>> =
     readAllBytesAsync().thenApplyAsync { it.toString(cs).lines() }
 
-
-@JvmOverloads
 fun File.write(bytes: ByteArray, append: Boolean = false) {
     FileUtils.writeByteArrayToFile(this, bytes, append)
 }
 
-@JvmOverloads
 fun File.writeLines(lines: Collection<String>, append: Boolean = false, cs: Charset = UTF_8) {
     FileUtils.writeLines(this, cs.name(), lines, append)
 }
@@ -235,7 +232,6 @@ fun Path.writeAsync(bytes: ByteArray, append: Boolean = false): CompletableFutur
     return promise
 }
 
-@JvmOverloads
 fun Path.writeLinesAsync(
     lines: Collection<String>,
     append: Boolean = false,
@@ -252,7 +248,6 @@ fun Path.writeLinesAsync(
  * @param bufferSize Int
  * @return BufferedReader
  */
-@JvmOverloads
 fun Path.bufferedReader(cs: Charset = UTF_8, bufferSize: Int = DEFAULT_BUFFER_SIZE) =
     InputStreamReader(FileInputStream(this.toFile()), cs).buffered(bufferSize)
 
@@ -263,6 +258,10 @@ fun Path.bufferedReader(cs: Charset = UTF_8, bufferSize: Int = DEFAULT_BUFFER_SI
  * @param bufferSize Int
  * @return BufferedWriter
  */
-@JvmOverloads
 fun Path.bufferedWriter(cs: Charset = UTF_8, bufferSize: Int = DEFAULT_BUFFER_SIZE): BufferedWriter =
     OutputStreamWriter(FileOutputStream(this.toFile()), cs).buffered(bufferSize)
+
+/**
+ * File을 읽어 [ByteArray] 로 빌드합니다.
+ */
+fun File.toByteArray(): ByteArray = Files.newInputStream(this.toPath()).readBytes()
