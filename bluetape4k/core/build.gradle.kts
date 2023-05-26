@@ -11,7 +11,7 @@ dependencies {
     // Apache Commons
     api(Libs.commons_lang3)
     compileOnly(Libs.commons_codec)
-    compileOnly(Libs.commons_text)
+    // compileOnly(Libs.commons_text)
 
     // Coroutines
     api(Libs.kotlinx_coroutines_core)

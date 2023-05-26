@@ -4,7 +4,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.EMPTY_STRING
 import io.bluetape4k.support.emptyByteArray
 import io.bluetape4k.support.toUtf8Bytes
-import org.apache.commons.codec.binary.Base64
+import java.util.*
 
 /**
  * 문자열을 Base64 형태로 인코딩/디코딩 합니다
@@ -12,8 +12,8 @@ import org.apache.commons.codec.binary.Base64
 class Base64StringEncoder: StringEncoder {
 
     companion object: KLogging() {
-        // Url safe base64 encoder
-        private val base64 = Base64(true)
+        private val encoder by lazy { Base64.getUrlEncoder() }
+        private val decoder by lazy { Base64.getUrlDecoder() }
     }
 
     /**
@@ -23,7 +23,7 @@ class Base64StringEncoder: StringEncoder {
      * @return
      */
     override fun encode(bytes: ByteArray?): String {
-        return bytes?.run { base64.encodeAsString(this) } ?: EMPTY_STRING
+        return bytes?.run { encoder.encodeToString(this) } ?: EMPTY_STRING
     }
 
     /**
@@ -33,7 +33,7 @@ class Base64StringEncoder: StringEncoder {
      * @return
      */
     override fun decode(encoded: String?): ByteArray {
-        return encoded?.takeIf { it.isNotBlank() }?.run { base64.decode(this.toUtf8Bytes()) }
+        return encoded?.takeIf { it.isNotBlank() }?.run { decoder.decode(this.toUtf8Bytes()) }
             ?: emptyByteArray
     }
 }
