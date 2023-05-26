@@ -173,3 +173,8 @@ fun `map asynchronously with dispatcher`() = runSuspendTest {
         }
 }
 ```
+
+## 참고 자료
+
+* [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html)
+* [Kotlin Coroutines Best practices](https://kt.academy/article/cc-best-practices)

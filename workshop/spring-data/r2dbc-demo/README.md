@@ -6,6 +6,7 @@
 * [Spring Data Examples - r2dbc/query-by-example](https://github.com/spring-projects/spring-data-examples/tree/main/r2dbc/query-by-example)
 
 * [Spring Data R2DBC and Kotlin Coroutines](https://xebia.com/blog/spring-data-r2dbc-and-kotlin-coroutines/)
+* [Kotlin + Spring Webflux + R2DBC](https://dgahn.tistory.com/8)
 
 This projects shows some sample usage of the work-in-progress R2DBC support for Spring Data.
 
