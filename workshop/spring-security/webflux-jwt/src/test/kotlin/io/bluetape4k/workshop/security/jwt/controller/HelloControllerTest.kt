@@ -76,7 +76,7 @@ class HelloControllerTest(@Autowired private val client: WebTestClient) {
 
     @Test
     fun `인증 안된 user가 새로운 토큰 발급을 요청하면 인증 예외가 발생합니다`() {
-        val token = client.post()
+        client.post()
             .uri("/token")
             .exchange()
             .expectStatus().isUnauthorized

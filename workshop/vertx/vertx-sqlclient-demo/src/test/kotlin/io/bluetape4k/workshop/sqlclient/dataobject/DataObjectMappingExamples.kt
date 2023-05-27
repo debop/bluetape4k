@@ -85,11 +85,11 @@ class DataObjectMappingExamples: AbstractSqlClientTest() {
         val pool = vertx.getH2Pool()
         vertx.testWithTransactionSuspending(testContext, pool) {
 
-            val user = UserDataObject().apply {
-                id = 42
-                firstName = "Alien"
-                lastName = "Lukas"
-            }
+//            val user = UserDataObject().apply {
+//                id = 42
+//                firstName = "Alien"
+//                lastName = "Lukas"
+//            }
 
             // FIXME: Kotlin 에서 @ParametersMapped 를 이용한 Parrameter Mapping 코드 생성에 문제가 있다.
 //            val result = SqlTemplate

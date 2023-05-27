@@ -67,7 +67,6 @@ dependencies {
     api(Libs.hibernate_validator)
 
     // Converter
-    compileOnly(project(":bluetape4k-io"))
     compileOnly(project(":bluetape4k-io-cryptography"))
     compileOnly(project(":bluetape4k-io-json"))
 

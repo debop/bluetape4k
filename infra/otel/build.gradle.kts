@@ -31,7 +31,6 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    testImplementation(project(":bluetape4k-io"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // OpenTelemetry

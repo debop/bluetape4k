@@ -2,6 +2,7 @@ package io.bluetape4k.workshop.redis.examples.movie
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.spring.data.buildExampleMatcher
 import io.bluetape4k.workshop.redis.examples.AbstractRedisTest
 import io.bluetape4k.workshop.redis.examples.movie.model.Actor
 import io.bluetape4k.workshop.redis.examples.movie.model.Movie
@@ -11,7 +12,6 @@ import io.bluetape4k.workshop.redis.examples.movie.repository.ActorRepository
 import io.bluetape4k.workshop.redis.examples.movie.repository.MovieActorReferenceRepository
 import io.bluetape4k.workshop.redis.examples.movie.repository.MovieActorRepository
 import io.bluetape4k.workshop.redis.examples.movie.repository.MovieRepository
-import io.bluetape4k.workshop.redis.examples.utils.buildExampleMatcher
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldHaveSize

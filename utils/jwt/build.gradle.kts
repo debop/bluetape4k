@@ -20,7 +20,6 @@ dependencies {
     api(Libs.jackson_module_kotlin)
 
     // Compressor
-    compileOnly(project(":bluetape4k-io"))
     compileOnly(Libs.lz4_java)
     compileOnly(Libs.snappy_java)
     compileOnly(Libs.zstd_jni)

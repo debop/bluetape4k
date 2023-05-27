@@ -66,7 +66,6 @@ dependencies {
     testImplementation(project(path = ":bluetape4k-data-hibernate", configuration = "testJar"))
 
     // Converter 때문에
-    testImplementation(project(":bluetape4k-io"))
     compileOnly(project(":bluetape4k-io-cryptography"))
     testImplementation(project(":bluetape4k-io-json"))
 
