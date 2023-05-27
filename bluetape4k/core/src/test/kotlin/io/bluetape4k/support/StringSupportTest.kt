@@ -1,5 +1,6 @@
 package io.bluetape4k.support
 
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
@@ -109,10 +110,10 @@ class StringSupportTest {
 
     @Test
     fun `remove all whitespace`() {
-        blankValue.removeWhitespace().shouldBeEmpty()
-        someValue.removeWhitespace() shouldBeEqualTo someValue
+        blankValue.trimAllWhitespace().shouldBeEmpty()
+        someValue.trimAllWhitespace() shouldBeEqualTo someValue
 
-        " a b\tc\t d".removeWhitespace() shouldBeEqualTo "abcd"
+        " a b\tc\t d".trimAllWhitespace() shouldBeEqualTo "abcd"
     }
 
     @Test
@@ -128,7 +129,8 @@ class StringSupportTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `string ellipsis`(@RandomValue str: String) {
+    fun `string ellipsis`() {
+        val str = Fakers.fixedString(1024)
         val origin = str.replicate(10)
         val length = origin.length
 

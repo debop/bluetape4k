@@ -21,7 +21,7 @@ class ParallelSupportTest {
         private const val COUNT = DEFAULT_BATCH_SIZE * 16
         private val intRange = (0 until COUNT)
 
-        private const val LIST_COUNT = 1000
+        private const val LIST_COUNT = 10_000
     }
 
     private val xs: FastList<Int> = fastList(COUNT) { it }
@@ -52,7 +52,7 @@ class ParallelSupportTest {
         val xs = fastList(count) { it }
 
         val fastTime = measureNanoTime {
-            xs.parCount(count / 10) {
+            xs.parCount(count / 100) {
                 // Thread.sleep(1)
                 it % 2 == 0
             } shouldBeEqualTo count / 2

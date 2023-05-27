@@ -24,7 +24,7 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-io"))
+    api(project(":bluetape4k-core"))
     testImplementation(project(":bluetape4k-io-http"))
     testImplementation(project(":bluetape4k-junit5"))
 

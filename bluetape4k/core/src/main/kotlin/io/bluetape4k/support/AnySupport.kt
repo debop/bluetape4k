@@ -18,6 +18,20 @@ fun <T> uninitialized(): T = null as T
  */
 fun <T: Any> T?.toOptional(): Optional<T> = Optional.ofNullable(this)
 
+fun Any.unwrapOptional(): Any? {
+    if (this is Optional<*>) {
+        if (!this.isPresent) {
+            return null
+        }
+        val result = this.get()
+        check(result !is Optional<*>) { "Multi-level Optional usage not allowed." }
+        return result
+    }
+    return this
+}
+
+val Any.isArray: Boolean get() = this.javaClass.isArray
+
 /**
  * 객체들을 조합하여 hash 값을 계산합니다.
  */
@@ -32,7 +46,7 @@ fun areEquals(a: Any?, b: Any?): Boolean =
 /**
  * 두 객체가 모두 null인 경우는 false를 반환하고, array 인 경우에는 array 요소까지 비교합니다.
  */
-fun safeAreEquals(a: Any?, b: Any?): Boolean {
+fun areEqualsSafe(a: Any?, b: Any?): Boolean {
     if (a === b)
         return true
 
@@ -59,13 +73,16 @@ fun arrayEquals(a: Any, b: Any): Boolean {
     if (a is BooleanArray && b is BooleanArray) {
         return a.contentEquals(b)
     }
-    if (a is CharArray && b is CharArray) {
-        return a.contentEquals(b)
-    }
     if (a is ByteArray && b is ByteArray) {
         return a.contentEquals(b)
     }
-    if (a is ShortArray && b is ShortArray) {
+    if (a is CharArray && b is CharArray) {
+        return a.contentEquals(b)
+    }
+    if (a is DoubleArray && b is DoubleArray) {
+        return a.contentEquals(b)
+    }
+    if (a is FloatArray && b is FloatArray) {
         return a.contentEquals(b)
     }
     if (a is IntArray && b is IntArray) {
@@ -74,12 +91,10 @@ fun arrayEquals(a: Any, b: Any): Boolean {
     if (a is LongArray && b is LongArray) {
         return a.contentEquals(b)
     }
-    if (a is FloatArray && b is FloatArray) {
+    if (a is ShortArray && b is ShortArray) {
         return a.contentEquals(b)
     }
-    if (a is DoubleArray && b is DoubleArray) {
-        return a.contentEquals(b)
-    }
+
     return false
 }
 
@@ -100,3 +115,31 @@ infix fun <T: Any, R: Any> Collection<T?>.whenAnyNotNull(block: (Collection<T>) 
         block(this.filterNotNull())
     }
 }
+
+fun <T: Any> T?.hashCodeSafe(): Int {
+    if (this == null) {
+        return 0
+    }
+    if (this.isArray) {
+        when (this) {
+            is Array<*>     -> Arrays.hashCode(this)
+            is BooleanArray -> Arrays.hashCode(this)
+            is ByteArray    -> Arrays.hashCode(this)
+            is CharArray    -> Arrays.hashCode(this)
+            is DoubleArray  -> Arrays.hashCode(this)
+            is FloatArray   -> Arrays.hashCode(this)
+            is IntArray     -> Arrays.hashCode(this)
+            is LongArray    -> Arrays.hashCode(this)
+            is ShortArray   -> Arrays.hashCode(this)
+            else            -> Objects.hash(this)
+        }
+    }
+    return this.hashCode()
+}
+
+fun Any?.identityToString(): String = when (this) {
+    null -> EMPTY_STRING
+    else -> javaClass.name + "@" + this.identityHexString()
+}
+
+fun Any.identityHexString(): String = Integer.toHexString(System.identityHashCode(this))

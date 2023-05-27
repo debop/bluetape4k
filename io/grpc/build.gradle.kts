@@ -53,7 +53,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-coroutines"))
-    api(project(":bluetape4k-io"))
+    api(project(":bluetape4k-core"))
     api(project(":bluetape4k-io-json"))
     api(project(":bluetape4k-io-netty"))
     compileOnly(project(":bluetape4k-utils-money"))

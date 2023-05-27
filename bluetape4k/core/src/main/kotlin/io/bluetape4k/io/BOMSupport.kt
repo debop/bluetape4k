@@ -17,15 +17,34 @@ fun ByteArray.getBOM(cs: Charset = UTF_8): Pair<Int, Charset> {
     val bom = this.copyOf(4)
 
     when (bom) {
-        byteArrayOf(ZZ, ZZ, FE, FF) -> return Pair(4, Charsets.UTF_32BE)
-        byteArrayOf(FE, ZZ, ZZ, ZZ) -> return Pair(4, Charsets.UTF_32LE)
+        byteArrayOf(
+            io.bluetape4k.io.ZZ,
+            io.bluetape4k.io.ZZ,
+            io.bluetape4k.io.FE,
+            io.bluetape4k.io.FF
+        ),
+        -> return Pair(
+            4,
+            Charsets.UTF_32BE
+        )
+
+        byteArrayOf(
+            io.bluetape4k.io.FE,
+            io.bluetape4k.io.ZZ,
+            io.bluetape4k.io.ZZ,
+            io.bluetape4k.io.ZZ
+        ),
+        -> return Pair(
+            4,
+            Charsets.UTF_32LE
+        )
     }
     when (bom.copyOf(3)) {
-        byteArrayOf(EF, BB, BF) -> return Pair(3, UTF_8)
+        byteArrayOf(io.bluetape4k.io.EF, io.bluetape4k.io.BB, io.bluetape4k.io.BF) -> return Pair(3, UTF_8)
     }
     when (bom.copyOf(2)) {
-        byteArrayOf(FE, FF) -> return Pair(2, Charsets.UTF_16BE)
-        byteArrayOf(FF, FE) -> return Pair(2, Charsets.UTF_16LE)
+        byteArrayOf(io.bluetape4k.io.FE, io.bluetape4k.io.FF) -> return Pair(2, Charsets.UTF_16BE)
+        byteArrayOf(io.bluetape4k.io.FF, io.bluetape4k.io.FE) -> return Pair(2, Charsets.UTF_16LE)
     }
     return Pair(0, cs)
 }
@@ -38,8 +57,8 @@ fun ByteArray.removeBom(cs: Charset = UTF_8): Pair<ByteArray, Charset> {
 }
 
 fun InputStream.withoutBom(cs: Charset = UTF_8): Pair<InputStream, Charset> {
-    val bom = ByteArray(BOM_SIZE)
-    val pushbackStream = PushbackInputStream(this, BOM_SIZE)
+    val bom = ByteArray(io.bluetape4k.io.BOM_SIZE)
+    val pushbackStream = PushbackInputStream(this, io.bluetape4k.io.BOM_SIZE)
     val readSize = pushbackStream.read(bom, 0, bom.size)
     val (skipSize, charset) = bom.getBOM(cs)
 

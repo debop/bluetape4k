@@ -10,7 +10,7 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-io"))
+    api(project(":bluetape4k-core"))
     compileOnly(project(":bluetape4k-io-cryptography"))
     testImplementation(project(":bluetape4k-junit5"))
 

@@ -42,7 +42,7 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-io"))
+    api(project(":bluetape4k-core"))
     api(project(":bluetape4k-io-netty"))
     compileOnly(project(":bluetape4k-io-json"))
     compileOnly(project(":bluetape4k-io-grpc"))

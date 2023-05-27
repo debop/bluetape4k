@@ -1,10 +1,10 @@
 package io.bluetape4k.concurrent
 
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -29,29 +29,29 @@ class LockSupportTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `with readLock`() = runSuspendTest {
+    fun `with readLock`() = runTest {
         var counter = 0
 
         val rwLock = ReentrantReadWriteLock()
 
         val result1 = async {
             rwLock.withWriteLock {
-                delay(20)
+                delay(200)
                 counter = 42
             }
             rwLock.withReadLock {
-                delay(2)
+                delay(20)
                 counter
             }
         }
 
         val result2 = async {
             rwLock.withWriteLock {
-                delay(2)
+                delay(20)
                 counter = 21
             }
             rwLock.withReadLock {
-                delay(20)
+                delay(200)
                 counter
             }
         }

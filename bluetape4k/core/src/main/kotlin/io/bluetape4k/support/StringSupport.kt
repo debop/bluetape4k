@@ -10,6 +10,7 @@ import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.contracts.contract
 
 private typealias JChar = Character
 
@@ -32,7 +33,14 @@ val UTF_8: Charset = Charsets.UTF_8
 fun CharSequence?.isWhitespace(): Boolean = isNullOrBlank()
 fun CharSequence?.isNotWhitespace(): Boolean = !isWhitespace()
 
-fun CharSequence?.hasText(): Boolean = !isNullOrEmpty() && !this.indices.any { this[it].isWhitespace() }
+fun CharSequence?.hasLength(): Boolean {
+    contract {
+        returns(true) implies (this@hasLength != null)
+    }
+    return !isNullOrEmpty()
+}
+
+fun CharSequence?.hasText(): Boolean = hasLength() && !this.indices.any { this[it].isWhitespace() }
 fun CharSequence?.noText(): Boolean = isNullOrEmpty() || this.indices.all { this[it].isWhitespace() }
 
 fun String?.asNullIfEmpty(): String? = if (isNullOrEmpty()) null else this
@@ -83,7 +91,6 @@ inline fun String?.ifNullOrBlank(fallback: () -> String): String = when {
     else            -> this
 }
 
-fun String?.hasLength(): Boolean = (this != null && length > 0)
 
 /**
  * 문자열 앞 뒤의 Whitespace를 제거합니다.
@@ -132,11 +139,11 @@ fun String.trimEndWhitespace(): String {
 /**
  * 문자열의 모든 곳의 Whitespace를 제거합니다.
  */
-fun String.removeWhitespace(): String {
+fun String.trimAllWhitespace(): String {
     if (isEmpty()) return this.trim()
 
     return buildString(length) {
-        this@removeWhitespace
+        this@trimAllWhitespace
             .filterNot { JChar.isWhitespace(it) }
             .forEach { append(it) }
     }
@@ -161,7 +168,7 @@ fun randomString(size: Int = 10): String {
 }
 
 fun String?.needEllipsis(maxLength: Int = ELLIPSIS_LENGTH): Boolean {
-    return this != null && isNotBlank() && length > maxLength
+    return !isNullOrBlank() && length > maxLength
 }
 
 fun String?.ellipsisEnd(maxLength: Int = ELLIPSIS_LENGTH): String {
@@ -359,6 +366,17 @@ fun String.sliding(size: Int): Sequence<String> = sequence {
  * ```
  */
 fun String.redact(mask: String = "*"): String = mask.repeat(length)
+
+/**
+ * 비밀번호 등 지정한 문자를 외부에 공개 안되도록 '*' 문자로 변경합니다.
+ *
+ * ```
+ * val password = "debop"
+ * log.debug { "password=${password.redact()}" }    // "debop" --> "*****"
+ * ```
+ */
+fun String.mask(mask: String = "*"): String = mask.repeat(length)
+
 
 /**
  * [delimiter](기본=`-`)로 구분된 문자열을 camel case 문자열로 변환합니다.
