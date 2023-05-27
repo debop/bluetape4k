@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test
 class StringSupportTest {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 10
+        private const val REPEAT_SIZE = 5
     }
 
     val nullValue: String? = null

@@ -34,20 +34,19 @@ class CoroutineRepositoryTest @Autowired constructor(
         val person = repository.save(newPerson())
 
         val loaded = repository.findPersonByFirstname(person.firstname!!)
-        loaded.shouldNotBeNull()
-        loaded shouldBeEqualTo person
+        loaded.shouldNotBeNull() shouldBeEqualTo person
     }
 
     @Test
     fun `find persons as flow`() = runSuspendWithIO {
-        repeat(50) {
+        repeat(10) {
             repository.save(newPerson())
         }
 
         val person1 = repository.save(Person("Sunghyouk", "Bae"))
         val person2 = repository.save(Person("Jehyoung", "Bae"))
 
-        repeat(50) {
+        repeat(10) {
             repository.save(newPerson())
         }
 

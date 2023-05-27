@@ -36,7 +36,6 @@ object Base62: KLogging() {
         return if (result.isEmpty()) DIGITS.substring(0, 1) else result.toString()
     }
 
-    @JvmOverloads
     fun decode(text: String, bitLimit: Int = DEFAULT_BIT_LIMIT): BigInteger {
         text.requireNotBlank("text")
 

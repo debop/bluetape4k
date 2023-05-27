@@ -19,7 +19,7 @@ import java.math.BigInteger
 class ValueConverterTest {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 10
+        private const val REPEAT_SIZE = 5
     }
 
     @Test

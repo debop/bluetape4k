@@ -3,7 +3,7 @@ package io.bluetape4k.codec
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
+import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
@@ -21,7 +21,7 @@ class Url62Test {
     fun `encode uuid and decode url62 text`(@RandomValue(type = UUID::class, size = 20) uuids: List<UUID>) {
         uuids.forEach { uuid ->
             val encoded = Url62.encode(uuid)
-            log.trace { "encoded=$encoded" }
+            log.debug { "uuid=$uuid, encoded=$encoded" }
             Url62.decode(encoded) shouldBeEqualTo uuid
         }
     }

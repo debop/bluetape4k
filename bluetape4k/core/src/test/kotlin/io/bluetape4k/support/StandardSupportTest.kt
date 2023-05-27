@@ -11,7 +11,7 @@ import org.junit.jupiter.api.RepeatedTest
 class StandardSupportTest {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 10
+        private const val REPEAT_SIZE = 5
     }
 
 

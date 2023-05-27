@@ -16,8 +16,8 @@ object BigIntegerPair {
 
     fun pair(hi: BigInteger, lo: BigInteger): BigInteger = lo.unsinged() + hi.unsinged() * HALF
 
-    fun unpair(value: BigInteger): Array<BigInteger> {
+    fun unpair(value: BigInteger): Pair<BigInteger, BigInteger> {
         val parts = value.divideAndRemainder(HALF)
-        return arrayOf(parts[0].signed(), parts[1].signed())
+        return parts[0].signed() to parts[1].signed()
     }
 }

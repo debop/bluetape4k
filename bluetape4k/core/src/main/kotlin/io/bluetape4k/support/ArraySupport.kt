@@ -157,3 +157,27 @@ inline fun <T, R> Array<T>.mapCatching(mapper: (T) -> R): List<Result<R>> {
 inline fun <T> Array<T>.forEachCatching(action: (T) -> Unit): List<Result<Unit>> {
     return map { runCatching { action(it) } }
 }
+
+fun ByteArray.leadingZeros(): Int {
+    var zc = 0
+    while (zc < size && this[zc] == 0.toByte()) zc++
+    return zc
+}
+
+fun ShortArray.leadingZeros(): Int {
+    var zc = 0
+    while (zc < size && this[zc] == 0.toShort()) zc++
+    return zc
+}
+
+fun IntArray.leadingZeros(): Int {
+    var zc = 0
+    while (zc < size && this[zc] == 0) zc++
+    return zc
+}
+
+fun LongArray.leadingZeros(): Int {
+    var zc = 0
+    while (zc < size && this[zc] == 0L) zc++
+    return zc
+}
