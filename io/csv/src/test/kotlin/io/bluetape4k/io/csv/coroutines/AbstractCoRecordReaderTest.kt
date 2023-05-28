@@ -7,6 +7,7 @@ import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.flow.buffer
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldNotBeBlank
 import org.amshove.kluent.shouldNotBeEmpty
@@ -48,6 +49,7 @@ abstract class AbstractCoRecordReaderTest {
         Resourcex.getInputStream(productTypePath)!!.buffered().use { input ->
             reader
                 .read(input, UTF_8, true)
+                .buffer()
                 .collect { record ->
                     log.trace { "product type record=$record" }
                     val row = record.values.toList()
@@ -65,6 +67,7 @@ abstract class AbstractCoRecordReaderTest {
         Resourcex.getInputStream(productTypePath)!!.buffered().use { input ->
             reader
                 .read(input, UTF_8, true, mapper)
+                .buffer()
                 .collect { productType ->
                     log.trace { "ProductType=$productType" }
                     productType.shouldNotBeNull()
@@ -81,6 +84,7 @@ abstract class AbstractCoRecordReaderTest {
 
             reader
                 .read(input, UTF_8, true)
+                .buffer()
                 .collect { record ->
                     log.trace { "extra words record=$record" }
                     val row = record.values

@@ -4,12 +4,12 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    api(project(":bluetape4k-core"))
     testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.univocity_parsers)
 
+    // Coroutines
+    compileOnly(project(":bluetape4k-coroutines"))
     compileOnly(Libs.kotlinx_coroutines_core)
-    compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 }
