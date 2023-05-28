@@ -12,6 +12,7 @@ import io.bluetape4k.utils.times.period.ranges.MonthRange
 import io.bluetape4k.utils.times.period.ranges.WeekRangeCollection
 import io.bluetape4k.utils.times.period.ranges.YearRange
 import io.bluetape4k.utils.times.zonedDateTimeOf
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldHaveSize
@@ -25,7 +26,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
     companion object: KLogging()
 
     @Test
-    fun `collect years`() {
+    fun `collect years`() = runTest {
         val filter = CalendarPeriodCollectorFilter().apply {
             years.addAll(2006, 2007, 2012)
         }
@@ -46,7 +47,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `collect months`() {
+    fun `collect months`() = runTest {
         val filter = CalendarPeriodCollectorFilter().apply {
             monthOfYears.add(Month.JANUARY.value)
         }
@@ -67,7 +68,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `collect days`() {
+    fun `collect days`() = runTest {
         val filter = CalendarPeriodCollectorFilter().apply {
             // 1월의 금요일만 추출
             monthOfYears.add(Month.JANUARY.value)
@@ -98,7 +99,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `collect hours`() {
+    fun `collect hours`() = runTest {
         val filter = CalendarPeriodCollectorFilter().apply {
             // 1월의 금요일의 08:00~18:00 추출
             monthOfYears.add(Month.JANUARY.value)
@@ -133,7 +134,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `collect hours with minutes`() {
+    fun `collect hours with minutes`() = runTest {
         val filter = CalendarPeriodCollectorFilter().apply {
             // 1월의 금요일의 08:00~18:00 추출
             monthOfYears.add(Month.JANUARY.value)
@@ -194,7 +195,7 @@ class CalendarPeriodCollectorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `collect exclude periods`() {
+    fun `collect exclude periods`() = runTest {
         val workingDays2011 = 365 - 2 - (51 * 2) - 1
         val workingDaysMarch2011 = 31 - 8  // total days - weekend days
 

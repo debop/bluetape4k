@@ -11,7 +11,7 @@ import io.bluetape4k.utils.times.period.TimePeriodCollection
  */
 class TimePeriodCombiner<T: ITimePeriod> @JvmOverloads constructor(val mapper: ITimePeriodMapper? = null) {
 
-    fun combinePeriods(periods: Collection<ITimePeriod>): ITimePeriodCollection {
+    suspend fun combinePeriods(periods: Collection<ITimePeriod>): ITimePeriodCollection {
         return TimeLine<T>(TimePeriodCollection.ofAll(periods), null, mapper).combinePeriods()
     }
 }

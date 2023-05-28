@@ -66,21 +66,6 @@ open class TemporalClosedProgression<T> protected constructor(
 
     open fun isEmpty(): Boolean = if (step.isPositive) first >= last else first <= last
 
-    override fun equals(other: Any?): Boolean = when (other) {
-        is TemporalClosedProgression<*> -> (isEmpty() && other.isEmpty()) ||
-            (first == other.first && last == other.last && step == other.step)
-
-        else -> false
-    }
-
-    override fun hashCode(): Int = if (isEmpty()) -1 else hashOf(first, last, step)
-
-    override fun toString(): String = when {
-        step.isZero     -> "$first..$last"
-        step.isPositive -> "$first..$last step $step"
-        else            -> "$first..$last step ${step.millis}"
-    }
-
     @Suppress("UNCHECKED_CAST")
     open fun sequence(): Sequence<T> = sequence seq@{
         fun canContinue(current: T): Boolean = when {
@@ -98,4 +83,19 @@ open class TemporalClosedProgression<T> protected constructor(
     }
 
     override fun iterator(): Iterator<T> = sequence().iterator()
+
+    override fun equals(other: Any?): Boolean = when (other) {
+        is TemporalClosedProgression<*> -> (isEmpty() && other.isEmpty()) ||
+            (first == other.first && last == other.last && step == other.step)
+
+        else                            -> false
+    }
+
+    override fun hashCode(): Int = if (isEmpty()) -1 else hashOf(first, last, step)
+
+    override fun toString(): String = when {
+        step.isZero     -> "$first..$last"
+        step.isPositive -> "$first..$last step $step"
+        else            -> "$first..$last step ${step.millis}"
+    }
 }

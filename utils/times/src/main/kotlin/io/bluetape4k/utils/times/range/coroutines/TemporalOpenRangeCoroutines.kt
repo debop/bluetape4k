@@ -22,7 +22,6 @@ fun <T> TemporalOpenedRange<T>.asFlow(): Flow<T> where T: Temporal, T: Comparabl
     }
 
 @Suppress("UNCHECKED_CAST")
-@JvmOverloads
 fun <T> TemporalOpenedRange<T>.windowedFlow(
     size: Int,
     step: Int = 1,
@@ -94,7 +93,6 @@ fun <T> TemporalOpenedRange<T>.windowedFlowMillis(
     windowedFlow(size, step, ChronoUnit.MILLIS)
 
 
-@JvmOverloads
 fun <T> TemporalOpenedRange<T>.chunkedFlow(
     size: Int,
     unit: ChronoUnit = ChronoUnit.YEARS,

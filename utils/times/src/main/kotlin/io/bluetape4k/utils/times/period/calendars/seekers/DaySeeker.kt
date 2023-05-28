@@ -30,7 +30,7 @@ open class DaySeeker private constructor(
         }
     }
 
-    open fun findDay(startDay: DayRange, dayCount: Int): DayRange? {
+    open suspend fun findDay(startDay: DayRange, dayCount: Int): DayRange? {
         log.trace { "find day... startDay=$startDay, dayCount=$dayCount" }
 
         if (dayCount == 0)

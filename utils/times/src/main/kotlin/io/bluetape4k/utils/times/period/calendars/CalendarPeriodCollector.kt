@@ -41,13 +41,13 @@ class CalendarPeriodCollector private constructor(
 
     val periods: ITimePeriodCollection = TimePeriodCollection()
 
-    fun collectYears(): Unit = collectByScope(CollectKind.Year)
-    fun collectMonths() = collectByScope(CollectKind.Month)
-    fun collectDays() = collectByScope(CollectKind.Day)
-    fun collectHours() = collectByScope(CollectKind.Hour)
-    fun collectMinutes() = collectByScope(CollectKind.Minute)
+    suspend fun collectYears(): Unit = collectByScope(CollectKind.Year)
+    suspend fun collectMonths() = collectByScope(CollectKind.Month)
+    suspend fun collectDays() = collectByScope(CollectKind.Day)
+    suspend fun collectHours() = collectByScope(CollectKind.Hour)
+    suspend fun collectMinutes() = collectByScope(CollectKind.Minute)
 
-    private fun collectByScope(scope: CollectKind) {
+    private suspend fun collectByScope(scope: CollectKind) {
         val context = CalendarPeriodCollectorContext(scope)
         startPeriodVisit(context)
     }

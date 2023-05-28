@@ -7,8 +7,7 @@ dependencies {
     api(project(":bluetape4k-coroutines"))
     testImplementation(project(":bluetape4k-junit5"))
 
-    compileOnly(Libs.kotlinx_coroutines_jdk9)
-    testImplementation(Libs.kotlinx_coroutines_debug)
+    api(Libs.kotlinx_coroutines_core)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     compileOnly(Libs.eclipse_collections)

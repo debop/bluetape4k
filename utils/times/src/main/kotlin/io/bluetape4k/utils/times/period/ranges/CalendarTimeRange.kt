@@ -32,6 +32,7 @@ open class CalendarTimeRange protected constructor(
             return CalendarTimeRange(period, calendar)
         }
 
+        @JvmStatic
         operator fun invoke(
             start: ZonedDateTime,
             end: ZonedDateTime,

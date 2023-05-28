@@ -10,17 +10,17 @@ import io.bluetape4k.utils.times.period.TimeCalendar
 import io.bluetape4k.utils.times.weeks
 import java.time.ZonedDateTime
 
-fun yearRanges(year: Int, yearCount: Int = 1, calendar: ITimeCalendar = TimeCalendar.Default): Sequence<YearRange> {
-    yearCount.assertPositiveNumber("yearCount")
-
-    return sequence {
-        var count = 0
-        var current = YearRange(year, calendar)
-        while (count < yearCount) {
-            yield(current)
-            current = current.nextYear()
-            count++
-        }
+fun yearRanges(
+    year: Int,
+    yearCount: Int = 1,
+    calendar: ITimeCalendar = TimeCalendar.Default,
+): Sequence<YearRange> = sequence {
+    var count = 0
+    var current = YearRange(year, calendar)
+    while (count < yearCount) {
+        yield(current)
+        current = current.nextYear()
+        count++
     }
 }
 
@@ -28,17 +28,15 @@ fun quarterRanges(
     startTime: ZonedDateTime,
     quarterCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): Sequence<QuarterRange> {
+): Sequence<QuarterRange> = sequence {
     quarterCount.assertPositiveNumber("quarterCount")
 
-    return sequence {
-        var count = 0
-        var current = QuarterRange(startTime, calendar)
-        while (count < quarterCount) {
-            yield(current)
-            current = current.nextQuarter()
-            count++
-        }
+    var count = 0
+    var current = QuarterRange(startTime, calendar)
+    while (count < quarterCount) {
+        yield(current)
+        current = current.nextQuarter()
+        count++
     }
 }
 

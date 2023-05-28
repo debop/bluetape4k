@@ -7,7 +7,7 @@ import io.bluetape4k.utils.times.period.ITimePeriodMapper
 
 open class TimeGapCalculator<T: ITimePeriod>(val mapper: ITimePeriodMapper? = null) {
 
-    fun gaps(excludePeriods: ITimePeriodContainer, limits: ITimePeriod? = null): ITimePeriodCollection =
+    suspend fun gaps(excludePeriods: ITimePeriodContainer, limits: ITimePeriod? = null): ITimePeriodCollection =
         TimeLine<T>(excludePeriods, limits, mapper).calculateGaps()
 
 }

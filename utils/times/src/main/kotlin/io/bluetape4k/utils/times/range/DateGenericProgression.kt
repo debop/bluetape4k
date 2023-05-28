@@ -10,7 +10,6 @@ import java.util.*
 /**
  * Create [DateGenericProgression] instance
  */
-@JvmOverloads
 fun <T: Date> dateProgressionOf(
     start: T,
     endInclusive: T,

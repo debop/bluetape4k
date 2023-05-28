@@ -10,6 +10,10 @@ import io.bluetape4k.utils.times.period.TimePeriodCollection
 import io.bluetape4k.utils.times.period.TimeRange
 import io.bluetape4k.utils.times.period.intersectRange
 import io.bluetape4k.utils.times.period.intersectWith
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNot
 import java.time.ZonedDateTime
 
 /**
@@ -36,7 +40,7 @@ class TimeLine<T: ITimePeriod> private constructor(
     override val limits: ITimePeriod
         get() = _limits?.let { TimeRange(it) } ?: TimeRange(periods)
 
-    override fun combinePeriods(): ITimePeriodCollection {
+    override suspend fun combinePeriods(): ITimePeriodCollection {
         if (periods.isEmpty())
             return TimePeriodCollection.EMPTY
 
@@ -45,7 +49,7 @@ class TimeLine<T: ITimePeriod> private constructor(
         else TimeLines.combinePeriods(moments)
     }
 
-    override fun intersectPeriods(): ITimePeriodCollection {
+    override suspend fun intersectPeriods(): ITimePeriodCollection {
         if (periods.isEmpty()) {
             return TimePeriodCollection.EMPTY
         }
@@ -54,14 +58,14 @@ class TimeLine<T: ITimePeriod> private constructor(
         else TimeLines.intersectPeriods(moments)
     }
 
-    override fun calculateGaps(): ITimePeriodCollection {
+    override suspend fun calculateGaps(): ITimePeriodCollection {
         log.trace { "calculate gaps ... periods=$periods, limits=$limits" }
 
         val tpc = TimePeriodCollection()
 
-        periods.periods
+        periods.periods.asFlow().buffer()
             .filter { tp -> limits.intersectWith(tp) }
-            .forEach { tp -> tpc.add(TimeRange(tp)) }
+            .collect { tp -> tpc.add(TimeRange(tp)) }
 
         val moments = timeLineMoments(periods)
         return if (moments.isEmpty()) {
@@ -73,7 +77,7 @@ class TimeLine<T: ITimePeriod> private constructor(
         }
     }
 
-    private fun timeLineMoments(periods: Collection<ITimePeriod>): ITimeLineMomentCollection {
+    private suspend fun timeLineMoments(periods: Collection<ITimePeriod>): ITimeLineMomentCollection {
         val moments = TimeLineMomentCollection()
         if (periods.isEmpty()) {
             log.trace { "specified eriods is empty" }
@@ -84,8 +88,10 @@ class TimeLine<T: ITimePeriod> private constructor(
         val intersections = TimePeriodCollection()
 
         periods
+            .asFlow()
+            .buffer()
             .filterNot { it.isMoment }
-            .forEach { p ->
+            .collect { p ->
                 val intersection = limits.intersectRange(p)
                 // log.trace { "intersection=$intersection" }
                 if (intersection != null && !intersection.isMoment) {

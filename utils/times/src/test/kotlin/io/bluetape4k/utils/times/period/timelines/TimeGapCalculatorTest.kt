@@ -16,6 +16,7 @@ import io.bluetape4k.utils.times.period.ranges.DayRangeCollection
 import io.bluetape4k.utils.times.period.ranges.MonthRange
 import io.bluetape4k.utils.times.period.samples.SchoolDay
 import io.bluetape4k.utils.times.zonedDateTimeOf
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
@@ -32,13 +33,13 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     private val calculator: TimeGapCalculator<ITimePeriod> = TimeGapCalculator()
 
     @Test
-    fun `no periods`() {
+    fun `no periods`() = runTest {
         val gaps = calculator.gaps(TimePeriodCollection.EMPTY, limits)
         gaps.toList() shouldBeEqualTo listOf(limits)
     }
 
     @Test
-    fun `when exclude period is equal to limits`() {
+    fun `when exclude period is equal to limits`() = runTest {
         val excludePeriod = TimePeriodCollection(limits)
 
         val gaps = calculator.gaps(excludePeriod, limits)
@@ -46,7 +47,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `when exclude periods larger than limits`() {
+    fun `when exclude periods larger than limits`() = runTest {
         val excludePeriods = TimePeriodCollection(
             TimeRange(
                 zonedDateTimeOf(2018, 2, 1),
@@ -59,7 +60,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `when exclude period is outside with limits`() {
+    fun `when exclude period is outside with limits`() = runTest {
         val excludePeriods = TimePeriodCollection(
             TimeRange(
                 zonedDateTimeOf(2018, 2, 1),
@@ -76,7 +77,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `when exclude periods outside touching limits`() {
+    fun `when exclude periods outside touching limits`() = runTest {
         val limits = MonthRange(2018, 3)
         val excludePeriods = TimePeriodCollection(
             TimeRange(
@@ -99,7 +100,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `simple gaps`() {
+    fun `simple gaps`() = runTest {
         val limits = TimeRange(
             zonedDateTimeOf(2018, 3, 1),
             zonedDateTimeOf(2018, 3, 20)
@@ -120,7 +121,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `when exclude periods touching start of limits`() {
+    fun `when exclude periods touching start of limits`() = runTest {
         val limits = TimeRange(
             zonedDateTimeOf(2018, 3, 1),
             zonedDateTimeOf(2018, 3, 20)
@@ -143,7 +144,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `when exclude periods touching end of limits`() {
+    fun `when exclude periods touching end of limits`() = runTest {
         val limits = TimeRange(
             zonedDateTimeOf(2018, 3, 1),
             zonedDateTimeOf(2018, 3, 20)
@@ -166,7 +167,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `when exclude period is moment`() {
+    fun `when exclude period is moment`() = runTest {
         val limits = TimeRange(
             zonedDateTimeOf(2018, 3, 1),
             zonedDateTimeOf(2018, 3, 20), true
@@ -183,7 +184,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `all exclude periods touching`() {
+    fun `all exclude periods touching`() = runTest {
         val limits = TimeRange(
             zonedDateTimeOf(2018, 3, 29),
             zonedDateTimeOf(2018, 4, 1), true
@@ -218,7 +219,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `overlapping exclude periods 1`() {
+    fun `overlapping exclude periods 1`() = runTest {
         val limits = TimeRange(
             zonedDateTimeOf(2018, 3, 29),
             zonedDateTimeOf(2018, 4, 1), true
@@ -253,7 +254,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `overlapping exclude periods 2`() {
+    fun `overlapping exclude periods 2`() = runTest {
         val limits = TimeRange(
             zonedDateTimeOf(2018, 3, 29),
             zonedDateTimeOf(2018, 4, 1), true
@@ -292,7 +293,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `overlapping exclude periods 3`() {
+    fun `overlapping exclude periods 3`() = runTest {
         val limits = TimeRange(
             zonedDateTimeOf(2018, 3, 29),
             zonedDateTimeOf(2018, 4, 1), true
@@ -323,7 +324,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `calculate gap`() {
+    fun `calculate gap`() = runTest {
         val schoolDay = SchoolDay(now)
 
         val excludePeriods = TimePeriodCollection.ofAll(schoolDay)
@@ -383,7 +384,7 @@ class TimeGapCalculatorTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `calculate gap with calendar`() {
+    fun `calculate gap with calendar`() = runTest {
         val calendars = listOf(TimeCalendar.Default, TimeCalendar.EmptyOffset)
 
         calendars.forEach { calendar ->

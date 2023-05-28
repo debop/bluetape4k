@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.times.period.calendars
 
+import io.bluetape4k.logging.KLogging
 import io.bluetape4k.utils.times.MaxPeriodTime
 import io.bluetape4k.utils.times.days
 import io.bluetape4k.utils.times.hours
@@ -9,6 +10,7 @@ import io.bluetape4k.utils.times.period.SeekBoundaryMode
 import io.bluetape4k.utils.times.period.TimeRange
 import io.bluetape4k.utils.times.todayZonedDateTime
 import io.bluetape4k.utils.times.zonedDateTimeOf
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.Test
@@ -17,8 +19,10 @@ import java.time.Duration
 
 class DateAddTest: AbstractPeriodTest() {
 
+    companion object: KLogging()
+
     @Test
-    fun `simple add duration`() {
+    fun `simple add duration`() = runTest {
         val dateAdd = DateAdd()
         val today = todayZonedDateTime()
 
@@ -31,7 +35,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `date add with exclude periods`() {
+    fun `date add with exclude periods`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period1 = TimeRange(
             zonedDateTimeOf(2011, 4, 20),
@@ -62,7 +66,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `date subtract with exclude periods`() {
+    fun `date subtract with exclude periods`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 30)
         val period1 = TimeRange(
             zonedDateTimeOf(2011, 4, 20),
@@ -88,7 +92,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `include period with outside max`() {
+    fun `include period with outside max`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period = TimeRange(
             zonedDateTimeOf(2011, 4, 20),
@@ -107,7 +111,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `include period with outside min`() {
+    fun `include period with outside min`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period = TimeRange(
             null,
@@ -126,7 +130,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `include period is same with exclude period`() {
+    fun `include period is same with exclude period`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period = TimeRange(
             zonedDateTimeOf(2011, 4, 10),
@@ -145,7 +149,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `include period is same with two exclude period`() {
+    fun `include period is same with two exclude period`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period1 = TimeRange(
             zonedDateTimeOf(2011, 4, 10),
@@ -175,7 +179,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `include period is end touching with exclude period`() {
+    fun `include period is end touching with exclude period`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period1 = TimeRange(
             zonedDateTimeOf(2011, 4, 10),
@@ -198,7 +202,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `start of period is same with start`() {
+    fun `start of period is same with start`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period = TimeRange(start)
         val dateAdd = DateAdd()
@@ -219,7 +223,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `only include period`() {
+    fun `only include period`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period = TimeRange(zonedDateTimeOf(2011, 4, 1), MaxPeriodTime)
 
@@ -234,7 +238,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `two include periods which is split`() {
+    fun `two include periods which is split`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period1 = TimeRange(
             zonedDateTimeOf(2011, 4, 1),
@@ -263,7 +267,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `start is before exclude period`() {
+    fun `start is before exclude period`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period = TimeRange(
             zonedDateTimeOf(2011, 4, 15),
@@ -283,7 +287,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `two exclude period with splitted`() {
+    fun `two exclude period with splitted`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period1 = TimeRange(
             zonedDateTimeOf(2011, 4, 15),
@@ -311,7 +315,7 @@ class DateAddTest: AbstractPeriodTest() {
 
 
     @Test
-    fun `include period and exclude period is same with start is same with period start`() {
+    fun `include period and exclude period is same with start is same with period start`() = runTest {
         val start = zonedDateTimeOf(2011, 3, 5)
         val period1 = TimeRange(
             zonedDateTimeOf(2011, 3, 5),
@@ -337,7 +341,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `포함기간 내에 여러 예외기간이 있을 때`() {
+    fun `포함기간 내에 여러 예외기간이 있을 때`() = runTest {
         val dateAdd = DateAdd().apply {
             includePeriods.add(TimeRange(zonedDateTimeOf(2011, 3, 17), zonedDateTimeOf(2011, 4, 20)))
 
@@ -371,7 +375,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `포함기간과 예외기간이 연속으로 있는 경우`() {
+    fun `포함기간과 예외기간이 연속으로 있는 경우`() = runTest {
         val dateAdd = DateAdd().apply {
             includePeriods.add(
                 TimeRange(
@@ -462,7 +466,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `예외기간과 포함기간이 연속으로 있는 경우 2`() {
+    fun `예외기간과 포함기간이 연속으로 있는 경우 2`() = runTest {
         val dateAdd = DateAdd().apply {
             excludePeriods.add(
                 TimeRange(
@@ -492,7 +496,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `포함기간과 예외기간이 같은 경우`() {
+    fun `포함기간과 예외기간이 같은 경우`() = runTest {
         val dateAdd = DateAdd().apply {
             includePeriods.add(
                 TimeRange(
@@ -522,7 +526,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `포함기간이 예외기간 안에 있을 경우`() {
+    fun `포함기간이 예외기간 안에 있을 경우`() = runTest {
         val dateAdd = DateAdd().apply {
             includePeriods.add(
                 TimeRange(
@@ -556,7 +560,7 @@ class DateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `두개의 예외기간 사이에 포함기간이 있을 경우`() {
+    fun `두개의 예외기간 사이에 포함기간이 있을 경우`() = runTest {
         val dateAdd = DateAdd().apply {
             includePeriods.add(
                 TimeRange(

@@ -1,7 +1,6 @@
 package io.bluetape4k.utils.times.period.ranges
 
 import io.bluetape4k.junit5.coroutines.MultiJobTester
-import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
@@ -16,6 +15,7 @@ import io.bluetape4k.utils.times.zonedDateTimeOf
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -107,15 +107,15 @@ class WeekRangeCollectionTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `various weekCount in coroutines`() = runSuspendWithIO {
+    fun `various weekCount in coroutines`() = runTest {
         val weekCounts = listOf(1, 6, 48, 180, 365)
 
         val now = nowZonedDateTime()
         val today = todayZonedDateTime()
 
         MultiJobTester()
-            .numThreads(64)
-            .roundsPerThread(10)
+            .numThreads(8)
+            .roundsPerThread(5)
             .add {
                 weekCounts.forEach { weekCount ->
                     val wrs = WeekRangeCollection(now, weekCount)

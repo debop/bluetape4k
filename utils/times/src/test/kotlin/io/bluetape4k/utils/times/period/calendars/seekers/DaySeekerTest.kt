@@ -9,6 +9,7 @@ import io.bluetape4k.utils.times.period.calendars.CalendarVisitorFilter
 import io.bluetape4k.utils.times.period.ranges.DayRange
 import io.bluetape4k.utils.times.period.ranges.DayRangeCollection
 import io.bluetape4k.utils.times.zonedDateTimeOf
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.Test
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.Test
 class DaySeekerTest: AbstractPeriodTest() {
 
     @Test
-    fun `simple forward seeker`() {
+    fun `simple forward seeker`() = runTest {
         val start = DayRange()
         val daySeeker = DaySeeker()
 
@@ -34,7 +35,7 @@ class DaySeekerTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `simple backward seeker`() {
+    fun `simple backward seeker`() = runTest {
         val start = DayRange()
         val daySeeker = DaySeeker(CalendarVisitorFilter(), SeekDirection.BACKWARD)
 
@@ -52,7 +53,7 @@ class DaySeekerTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `various SeekDirection`() {
+    fun `various SeekDirection`() = runTest {
         val start = DayRange()
         val daySeeker = DaySeeker()
 
@@ -72,21 +73,21 @@ class DaySeekerTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `minimum date`() {
+    fun `minimum date`() = runTest {
         val daySeeker = DaySeeker()
         val day = daySeeker.findDay(DayRange(MinPeriodTime), -10)
         day.shouldBeNull()
     }
 
     @Test
-    fun `maximum date`() {
+    fun `maximum date`() = runTest {
         val daySeeker = DaySeeker()
         val day = daySeeker.findDay(DayRange(MaxPeriodTime - 1.days()), 10)
         day.shouldBeNull()
     }
 
     @Test
-    fun `seek with exclude periods`() {
+    fun `seek with exclude periods`() = runTest {
         val start = DayRange(2011, 2, 15)
 
         val filter = CalendarVisitorFilter().apply {

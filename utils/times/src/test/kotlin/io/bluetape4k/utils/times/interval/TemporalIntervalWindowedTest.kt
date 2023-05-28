@@ -1,7 +1,6 @@
 package io.bluetape4k.utils.times.interval
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.times.nowZonedDateTime
 import io.bluetape4k.utils.times.startOf
@@ -34,7 +33,7 @@ class TemporalIntervalWindowedTest {
             val chunks = interval.chunked(4, chronoUnit).toList()
 
             chunks.forEachIndexed { index, chunk ->
-                log.debug { "chunks[$index] = $chunk" }
+                log.trace { "chunks[$index] = $chunk" }
                 chunk.size shouldBeLessOrEqualTo 4
                 Assertions.assertTrue { chunk.first() in interval }
                 Assertions.assertTrue { chunk.last() in interval }
@@ -90,7 +89,7 @@ class TemporalIntervalWindowedTest {
 
             val windowed = interval.windowed(3, 2, unit)
             windowed.forEachIndexed { index, items ->
-                log.debug { "index=$index, items=$items" }
+                log.trace { "index=$index, items=$items" }
 
                 Assertions.assertTrue { items.first() in interval }
                 Assertions.assertTrue { items.last() in interval }

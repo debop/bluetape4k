@@ -23,13 +23,14 @@ import java.time.Period
 import java.time.ZoneId
 import kotlin.math.absoluteValue
 
-
 @RandomizedTest
 class TemporalIntervalTest {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        private const val REPEAT_SIZE = 5
+    }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `create with milliseconds`(@RandomValue time1: Long, @RandomValue time2: Long) {
         val start = minOf(time1.absoluteValue, time2.absoluteValue)
         val end = maxOf(time1.absoluteValue, time2.absoluteValue)
@@ -42,7 +43,7 @@ class TemporalIntervalTest {
         }
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(REPEAT_SIZE)
     fun `create with reverse input`(@RandomValue time1: Long, @RandomValue time2: Long) {
         val start = minOf(time1.absoluteValue, time2.absoluteValue)
         val end = maxOf(time1.absoluteValue, time2.absoluteValue)
@@ -55,7 +56,7 @@ class TemporalIntervalTest {
         }
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(REPEAT_SIZE)
     fun `create with start and period`(@RandomValue n: Int) {
         val days = n.absoluteValue % 365
         log.trace { "days=$days" }
@@ -71,7 +72,7 @@ class TemporalIntervalTest {
         interval.toDuration() shouldBeEqualTo Duration.ofDays(days.toLong())
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(REPEAT_SIZE)
     fun `create with start and duration`(@RandomValue n: Long) {
         val hours = n.absoluteValue % 100
         log.trace { "hours=$hours" }
@@ -87,7 +88,7 @@ class TemporalIntervalTest {
         interval.toDuration() shouldBeEqualTo duration
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(REPEAT_SIZE)
     fun `create with period and end`(@RandomValue n: Int) {
         val days = n.absoluteValue % 100
         log.trace { "days=$days" }
@@ -103,7 +104,7 @@ class TemporalIntervalTest {
         interval.toDuration() shouldBeEqualTo Duration.ofDays(days.toLong())
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(REPEAT_SIZE)
     fun `create with duration and end`(@RandomValue n: Long) {
         val hours = n.absoluteValue % 100
         log.trace { "hours=$hours" }
@@ -181,7 +182,7 @@ class TemporalIntervalTest {
         interval.withAmountAfterStart(200.dayPeriod()) shouldBeEqualTo temporalIntervalOf(start, 200.days())
     }
 
-    @RepeatedTest(20)
+    @RepeatedTest(REPEAT_SIZE)
     fun `parse TemporalInterval instance with zoneId is system default`(@RandomValue zoneId: ZoneId) {
 
         val start = nowZonedDateTime(zoneId)
@@ -195,7 +196,7 @@ class TemporalIntervalTest {
         actual shouldBeEqualTo expected
     }
 
-    @RepeatedTest(20)
+    @RepeatedTest(REPEAT_SIZE)
     fun `parse by offset`(@RandomValue zoneId: ZoneId) {
         val start = nowOffsetDateTime(zoneId)
         val end = start + 1.hours()

@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.flow
 import java.time.temporal.ChronoUnit
 import java.time.temporal.Temporal
 
-
 fun <T> TemporalClosedProgression<T>.asFlow(): Flow<T> where T: Temporal, T: Comparable<T> =
     flow {
         forEach { value -> emit(value) }
@@ -23,7 +22,6 @@ fun <T> TemporalClosedRange<T>.asFlow(): Flow<T> where T: Temporal, T: Comparabl
     }
 
 @Suppress("UNCHECKED_CAST")
-@JvmOverloads
 fun <T> TemporalClosedRange<T>.windowedFlow(
     size: Int,
     step: Int = 1,
@@ -46,64 +44,54 @@ fun <T> TemporalClosedRange<T>.windowedFlow(
     }
 }
 
-@JvmOverloads
 fun <T> TemporalClosedRange<T>.windowedFlowYears(
     size: Int,
     step: Int = 1,
 ): Flow<List<T>> where T: Temporal, T: Comparable<T> =
     windowedFlow(size, step, ChronoUnit.YEARS)
 
-@JvmOverloads
 fun <T> TemporalClosedRange<T>.windowedFlowMonths(
     size: Int,
     step: Int = 1,
 ): Flow<List<T>> where T: Temporal, T: Comparable<T> =
     windowedFlow(size, step, ChronoUnit.MONTHS)
 
-@JvmOverloads
 fun <T> TemporalClosedRange<T>.windowedFlowWeeks(
     size: Int,
     step: Int = 1,
 ): Flow<List<T>> where T: Temporal, T: Comparable<T> =
     windowedFlow(size, step, ChronoUnit.WEEKS)
 
-@JvmOverloads
 fun <T> TemporalClosedRange<T>.windowedFlowDays(
     size: Int,
     step: Int = 1,
 ): Flow<List<T>> where T: Temporal, T: Comparable<T> =
     windowedFlow(size, step, ChronoUnit.DAYS)
 
-@JvmOverloads
 fun <T> TemporalClosedRange<T>.windowedFlowHours(
     size: Int,
     step: Int = 1,
 ): Flow<List<T>> where T: Temporal, T: Comparable<T> =
     windowedFlow(size, step, ChronoUnit.HOURS)
 
-@JvmOverloads
 fun <T> TemporalClosedRange<T>.windowedFlowMinutes(
     size: Int,
     step: Int = 1,
 ): Flow<List<T>> where T: Temporal, T: Comparable<T> =
     windowedFlow(size, step, ChronoUnit.MINUTES)
 
-@JvmOverloads
 fun <T> TemporalClosedRange<T>.windowedFlowSeconds(
     size: Int,
     step: Int = 1,
 ): Flow<List<T>> where T: Temporal, T: Comparable<T> =
     windowedFlow(size, step, ChronoUnit.SECONDS)
 
-@JvmOverloads
 fun <T> TemporalClosedRange<T>.windowedFlowMillis(
     size: Int,
     step: Int = 1,
 ): Flow<List<T>> where T: Temporal, T: Comparable<T> =
     windowedFlow(size, step, ChronoUnit.MILLIS)
 
-
-@JvmOverloads
 fun <T> TemporalClosedRange<T>.chunkedFlow(
     size: Int,
     unit: ChronoUnit = ChronoUnit.YEARS,

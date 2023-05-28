@@ -17,10 +17,10 @@ interface ITimeLine: ValueObject {
 
     val mapper: ITimePeriodMapper?
 
-    fun combinePeriods(): ITimePeriodCollection
+    suspend fun combinePeriods(): ITimePeriodCollection
 
-    fun intersectPeriods(): ITimePeriodCollection
+    suspend fun intersectPeriods(): ITimePeriodCollection
 
-    fun calculateGaps(): ITimePeriodCollection
+    suspend fun calculateGaps(): ITimePeriodCollection
 
 }

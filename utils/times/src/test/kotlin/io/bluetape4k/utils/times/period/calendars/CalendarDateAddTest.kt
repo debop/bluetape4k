@@ -12,6 +12,7 @@ import io.bluetape4k.utils.times.period.ranges.DayRange
 import io.bluetape4k.utils.times.period.ranges.HourRangeInDay
 import io.bluetape4k.utils.times.unaryMinus
 import io.bluetape4k.utils.times.zonedDateTimeOf
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.Test
@@ -23,7 +24,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
     companion object: KLogging()
 
     @Test
-    fun `no period`() {
+    fun `no period`() = runTest {
         val dateAdd = CalendarDateAdd()
         val now = nowZonedDateTime()
 
@@ -39,7 +40,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `period with limits`() {
+    fun `period with limits`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period1 = TimeRange(
             zonedDateTimeOf(2011, 4, 20),
@@ -70,7 +71,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `period subtract with limit`() {
+    fun `period subtract with limit`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 30)
         val period1 = TimeRange(
             zonedDateTimeOf(2011, 4, 20),
@@ -97,7 +98,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `one exclude period`() {
+    fun `one exclude period`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
         val period = TimeRange(
             zonedDateTimeOf(2011, 4, 15),
@@ -117,7 +118,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `two exclude periods`() {
+    fun `two exclude periods`() = runTest {
         val start = zonedDateTimeOf(2011, 4, 12)
 
         val period1 = TimeRange(
@@ -145,7 +146,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `when seek boundary mode`() {
+    fun `when seek boundary mode`() = runTest {
         val dateAdd = CalendarDateAdd().apply {
             addWorkingWeekdays()
             excludePeriods.add(DayRange(2011, 4, 4, calendar))
@@ -160,7 +161,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `calendar date add 1`() {
+    fun `calendar date add 1`() = runTest {
         val dateAdd = CalendarDateAdd().apply {
             addWorkingWeekdays()
             excludePeriods.add(DayRange(zonedDateTimeOf(2011, 4, 4), calendar))
@@ -177,7 +178,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `calendar date add 2`() {
+    fun `calendar date add 2`() = runTest {
         val dateAdd = CalendarDateAdd().apply {
             addWorkingWeekdays()
             excludePeriods.add(DayRange(zonedDateTimeOf(2011, 4, 4), calendar))
@@ -193,7 +194,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `calendar date add 3`() {
+    fun `calendar date add 3`() = runTest {
         val dateAdd = CalendarDateAdd().apply {
             addWorkingWeekdays()
             excludePeriods.add(DayRange(2011, 4, 4, calendar))
@@ -209,7 +210,7 @@ class CalendarDateAddTest: AbstractPeriodTest() {
     }
 
     @Test
-    fun `empty start week`() {
+    fun `empty start week`() = runTest {
         val dateAdd = CalendarDateAdd()
 
         // 주중(월-금)을 working time으로 추가

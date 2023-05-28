@@ -13,6 +13,9 @@ import io.bluetape4k.utils.times.period.TimeRange
 import io.bluetape4k.utils.times.period.hasInsideWith
 import io.bluetape4k.utils.times.period.timelines.TimeGapCalculator
 import io.bluetape4k.utils.times.period.timelines.TimePeriodCombiner
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.firstOrNull
 import java.time.Duration
 import java.time.ZonedDateTime
 
@@ -26,12 +29,6 @@ open class DateAdd protected constructor() {
         @JvmStatic
         operator fun invoke(): DateAdd = DateAdd()
     }
-
-//    protected val _includePeriods = TimePeriodCollection()
-//    protected val _excludePeriods = TimePeriodCollection()
-//
-//    open val includePeriods: TimePeriodCollection get() = _includePeriods
-//    open val excludePeriods: TimePeriodCollection get() = _excludePeriods
 
     open var includePeriods: TimePeriodCollection = TimePeriodCollection()
         protected set
@@ -47,8 +44,7 @@ open class DateAdd protected constructor() {
      * @param seekBoundary 마지막 일자 포함 여부
      * @return 시작 일자로부터 offset 기간 이후의 일자
      */
-    @JvmOverloads
-    open fun add(
+    open suspend fun add(
         start: ZonedDateTime,
         offset: Duration,
         seekBoundary: SeekBoundaryMode = SeekBoundaryMode.NEXT,
@@ -77,8 +73,7 @@ open class DateAdd protected constructor() {
      * @param seekBoundary 마지막 일자 포함 여부
      * @return 시작 일자로부터 offset 기간 이전의 일자
      */
-    @JvmOverloads
-    open fun subtract(
+    open suspend fun subtract(
         start: ZonedDateTime,
         offset: Duration,
         seekBoundary: SeekBoundaryMode = SeekBoundaryMode.NEXT,
@@ -100,7 +95,7 @@ open class DateAdd protected constructor() {
     }
 
     @JvmOverloads
-    protected open fun calculateEnd(
+    protected open suspend fun calculateEnd(
         start: ZonedDateTime,
         offset: Duration?,
         seekDir: SeekDirection,
@@ -160,7 +155,7 @@ open class DateAdd protected constructor() {
         }
     }
 
-    private fun getAvailablePeriods(searchPeriods: ITimePeriodCollection): ITimePeriodCollection {
+    private suspend fun getAvailablePeriods(searchPeriods: ITimePeriodCollection): ITimePeriodCollection {
         val availablePeriods = TimePeriodCollection()
 
         if (excludePeriods.isEmpty()) {
@@ -168,13 +163,15 @@ open class DateAdd protected constructor() {
         } else {
             val gapCalculator = TimeGapCalculator<TimeRange>()
 
-            searchPeriods.forEach { p ->
-                if (excludePeriods.hasOverlapPeriods(p)) {
-                    gapCalculator.gaps(excludePeriods, p).forEach { gap -> availablePeriods += gap }
-                } else {
-                    availablePeriods += p
+            searchPeriods
+                .asFlow()
+                .collect { p ->
+                    if (excludePeriods.hasOverlapPeriods(p)) {
+                        gapCalculator.gaps(excludePeriods, p).forEach { gap -> availablePeriods += gap }
+                    } else {
+                        availablePeriods += p
+                    }
                 }
-            }
         }
 
         log.trace { "availablePeriods=$availablePeriods" }
@@ -241,35 +238,36 @@ open class DateAdd protected constructor() {
         val startIndex = availablePeriods.indexOf(startPeriod)
         // val length = availablePeriods.size
 
-        (startIndex downTo 0).forEach { i ->
-            val gap = availablePeriods[i]
-            val gapRemaining = Duration.between(gap.start, seekMoment)
+        (startIndex downTo 0)
+            .forEach { i ->
+                val gap = availablePeriods[i]
+                val gapRemaining = Duration.between(gap.start, seekMoment)
 
-            log.trace { "gap=$gap, gapRemaining=$gapRemaining, remaining=$remaining, seekMoment=$seekMoment" }
+                log.trace { "gap=$gap, gapRemaining=$gapRemaining, remaining=$remaining, seekMoment=$seekMoment" }
 
-            val isTargetPeriod = when {
-                seekBoundary.isFill -> gapRemaining >= remaining
-                else                -> gapRemaining > remaining
+                val isTargetPeriod = when {
+                    seekBoundary.isFill -> gapRemaining >= remaining
+                    else                -> gapRemaining > remaining
+                }
+
+                if (isTargetPeriod) {
+                    val foundMoment = seekMoment - remaining
+                    log.trace { "find datetime=$foundMoment" }
+                    return Pair(foundMoment, null)
+                }
+
+                remaining = remaining?.minus(gapRemaining)
+
+                if (i > 0) {
+                    seekMoment = availablePeriods[i - 1].end
+                }
             }
-
-            if (isTargetPeriod) {
-                val foundMoment = seekMoment - remaining
-                log.trace { "find datetime=$foundMoment" }
-                return Pair(foundMoment, null)
-            }
-
-            remaining = remaining?.minus(gapRemaining)
-
-            if (i > 0) {
-                seekMoment = availablePeriods[i - 1].end
-            }
-        }
 
         log.trace { "해당일자를 찾지 못했습니다. remaining=$remaining" }
         return Pair(null, remaining)
     }
 
-    private fun findNextPeriod(
+    private suspend fun findNextPeriod(
         start: ZonedDateTime,
         periods: Collection<ITimePeriod>,
     ): Pair<ITimePeriod?, ZonedDateTime> {
@@ -279,12 +277,15 @@ open class DateAdd protected constructor() {
 
         log.trace { "find next period. start=$start, periods=$periods" }
 
+        var pair: Pair<ITimePeriod?, ZonedDateTime>? = null
         periods
+            .asFlow()
             .filter { it.end >= start }
-            .forEach { period ->
+            .firstOrNull { period ->
                 // start가 기간에 속한다면
                 if (period.hasInsideWith(start)) {
-                    return Pair(period, start)
+                    pair = Pair(period, start)
+                    return@firstOrNull true
                 }
 
                 // 근처 값이 아니라면 포기
@@ -295,11 +296,12 @@ open class DateAdd protected constructor() {
                     nearest = period
                     moment = period.start
                 }
+                false
             }
-        return Pair(nearest, moment)
+        return pair ?: Pair(nearest, moment)
     }
 
-    private fun findPrevPeriod(
+    private suspend fun findPrevPeriod(
         start: ZonedDateTime,
         periods: Collection<ITimePeriod>,
     ): Pair<ITimePeriod?, ZonedDateTime> {
@@ -309,12 +311,14 @@ open class DateAdd protected constructor() {
 
         log.trace { "find prev period. start=$start, periods=$periods" }
 
-        periods
+        var pair: Pair<ITimePeriod?, ZonedDateTime>? = null
+        periods.asFlow()
             .filter { it.start <= start }
-            .forEach { period ->
+            .firstOrNull { period ->
                 // start가 기간에 속한다면
                 if (period.hasInsideWith(start)) {
-                    return Pair(period, start)
+                    pair = Pair(period, start)
+                    return@firstOrNull true
                 }
 
                 // 근처 값이 아니라면 포기
@@ -324,8 +328,9 @@ open class DateAdd protected constructor() {
                     nearest = period
                     moment = period.end
                 }
+                false
             }
-        return Pair(nearest, moment)
 
+        return pair ?: Pair(nearest, moment)
     }
 }

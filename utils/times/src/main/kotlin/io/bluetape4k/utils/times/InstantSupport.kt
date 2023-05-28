@@ -23,7 +23,6 @@ val EPOCH: Instant = Instant.EPOCH
  * @param epochMillis epoch millis
  * @return Instant
  */
-@JvmOverloads
 fun instantOf(epochMillis: Long = System.currentTimeMillis()): Instant =
     Instant.ofEpochMilli(epochMillis)
 
@@ -40,7 +39,6 @@ fun Instant.toLocalDate(): LocalDate =
  * @param zoneId Local에 해당하는 zone (기본 값: [ZoneId.systemDefault()])
  * @return LocalDateTime
  */
-@JvmOverloads
 fun Instant.toLocalDateTime(zoneId: ZoneId = SystemZoneId): LocalDateTime =
     LocalDateTime.ofInstant(this, zoneId)
 
@@ -51,7 +49,6 @@ fun Instant.toLocalDateTime(zoneId: ZoneId = SystemZoneId): LocalDateTime =
  * @param zoneId Local에 해당하는 zone (기본 값: [ZoneId.systemDefault()])
  * @return OffsetDateTime
  */
-@JvmOverloads
 fun Instant.toOffsetDateTime(zoneId: ZoneId = SystemZoneId): OffsetDateTime =
     OffsetDateTime.ofInstant(this, zoneId)
 
@@ -62,7 +59,6 @@ fun Instant.toOffsetDateTime(zoneId: ZoneId = SystemZoneId): OffsetDateTime =
  * @param zoneId Local에 해당하는 zone (기본 값: [ZoneId.systemDefault()])
  * @return OffsetDateTime
  */
-@JvmOverloads
 fun Instant.toZonedDateTime(zoneId: ZoneId = SystemZoneId): ZonedDateTime =
     ZonedDateTime.ofInstant(this, zoneId)
 
@@ -97,7 +93,6 @@ fun Instant.toCalendar(timeZone: TimeZone = TimeZone.getDefault()): Calendar =
  * @param zoneOffset [ZoneOffset] 인스턴스 (기본: ZoneOffset.UTC)
  * @return Instant
  */
-@JvmOverloads
 fun Instant.with(
     year: Int,
     monthOfYear: Int = 1,

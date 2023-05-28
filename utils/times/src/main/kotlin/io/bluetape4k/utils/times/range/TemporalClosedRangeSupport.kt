@@ -5,16 +5,7 @@ import io.bluetape4k.utils.times.startOf
 import io.bluetape4k.utils.times.temporalAmount
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import java.time.temporal.ChronoUnit.DAYS
-import java.time.temporal.ChronoUnit.HOURS
-import java.time.temporal.ChronoUnit.MILLIS
-import java.time.temporal.ChronoUnit.MINUTES
-import java.time.temporal.ChronoUnit.MONTHS
-import java.time.temporal.ChronoUnit.SECONDS
-import java.time.temporal.ChronoUnit.WEEKS
-import java.time.temporal.ChronoUnit.YEARS
 import java.time.temporal.Temporal
-
 
 /**
  * Create [TemporalClosedRange] instance
@@ -60,7 +51,7 @@ internal val SupportChronoUnits: Array<ChronoUnit> =
 fun <T> TemporalClosedRange<T>.windowed(
     size: Int,
     step: Int = 1,
-    unit: ChronoUnit = YEARS,
+    unit: ChronoUnit = ChronoUnit.YEARS,
 ): Sequence<List<T>>
     where T: Temporal, T: Comparable<T> {
     size.assertPositiveNumber("size")
@@ -82,49 +73,49 @@ fun <T> TemporalClosedRange<T>.windowedYears(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    windowed(size, step, YEARS)
+    windowed(size, step, ChronoUnit.YEARS)
 
 fun <T> TemporalClosedRange<T>.windowedMonths(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    windowed(size, step, MONTHS)
+    windowed(size, step, ChronoUnit.MONTHS)
 
 fun <T> TemporalClosedRange<T>.windowedWeeks(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    windowed(size, step, WEEKS)
+    windowed(size, step, ChronoUnit.WEEKS)
 
 fun <T> TemporalClosedRange<T>.windowedDays(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    windowed(size, step, DAYS)
+    windowed(size, step, ChronoUnit.DAYS)
 
 fun <T> TemporalClosedRange<T>.windowedHours(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    windowed(size, step, HOURS)
+    windowed(size, step, ChronoUnit.HOURS)
 
 fun <T> TemporalClosedRange<T>.windowedMinutes(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    windowed(size, step, MINUTES)
+    windowed(size, step, ChronoUnit.MINUTES)
 
 fun <T> TemporalClosedRange<T>.windowedSeconds(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    windowed(size, step, SECONDS)
+    windowed(size, step, ChronoUnit.SECONDS)
 
 fun <T> TemporalClosedRange<T>.windowedMillis(
     size: Int,
     step: Int = 1,
 ): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    windowed(size, step, MILLIS)
+    windowed(size, step, ChronoUnit.MILLIS)
 
 /**
  * 기간을 `chronoUnit` 단위의 Sequence로 chunk 합니다.
@@ -147,7 +138,7 @@ fun <T> TemporalClosedRange<T>.chunked(
  * @return Sequence<List<T>> N 년씩 나뉜 Sequence
  */
 fun <T> TemporalClosedRange<T>.chunkedYears(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    chunked(chunkSize, YEARS)
+    chunked(chunkSize, ChronoUnit.YEARS)
 
 /**
  * 기간을 월 단위의 Sequence로 chunk 합니다.
@@ -157,7 +148,7 @@ fun <T> TemporalClosedRange<T>.chunkedYears(chunkSize: Int): Sequence<List<T>> w
  * @return Sequence<List<T>> N 월씩 나뉜 Sequence
  */
 fun <T> TemporalClosedRange<T>.chunkedMonths(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    chunked(chunkSize, MONTHS)
+    chunked(chunkSize, ChronoUnit.MONTHS)
 
 /**
  * 기간을 주(week) 단위의 Sequence로 chunk 합니다.
@@ -167,7 +158,7 @@ fun <T> TemporalClosedRange<T>.chunkedMonths(chunkSize: Int): Sequence<List<T>> 
  * @return Sequence<List<T>> N 주(week) 씩 나뉜 Sequence
  */
 fun <T> TemporalClosedRange<T>.chunkedWeeks(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    chunked(chunkSize, WEEKS)
+    chunked(chunkSize, ChronoUnit.WEEKS)
 
 
 /**
@@ -178,7 +169,7 @@ fun <T> TemporalClosedRange<T>.chunkedWeeks(chunkSize: Int): Sequence<List<T>> w
  * @return Sequence<List<T>> N 일(day)씩 나뉜 Sequence
  */
 fun <T> TemporalClosedRange<T>.chunkedDays(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    chunked(chunkSize, DAYS)
+    chunked(chunkSize, ChronoUnit.DAYS)
 
 /**
  * 기간을 시(hour) 단위의 Sequence로 chunk 합니다.
@@ -188,7 +179,7 @@ fun <T> TemporalClosedRange<T>.chunkedDays(chunkSize: Int): Sequence<List<T>> wh
  * @return Sequence<List<T>> N 시(hour)씩 나뉜 Sequence
  */
 fun <T> TemporalClosedRange<T>.chunkedHours(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    chunked(chunkSize, HOURS)
+    chunked(chunkSize, ChronoUnit.HOURS)
 
 /**
  * 기간을 분(minutes) 단위의 Sequence로 chunk 합니다.
@@ -198,7 +189,7 @@ fun <T> TemporalClosedRange<T>.chunkedHours(chunkSize: Int): Sequence<List<T>> w
  * @return Sequence<List<T>> N 분(minute)씩 나뉜 Sequence
  */
 fun <T> TemporalClosedRange<T>.chunkedMinutes(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    chunked(chunkSize, MINUTES)
+    chunked(chunkSize, ChronoUnit.MINUTES)
 
 /**
  * 기간을 초(second) 단위의 Sequence로 chunk 합니다.
@@ -208,7 +199,7 @@ fun <T> TemporalClosedRange<T>.chunkedMinutes(chunkSize: Int): Sequence<List<T>>
  * @return Sequence<List<T>> N 초(second)씩 나뉜 Sequence
  */
 fun <T> TemporalClosedRange<T>.chunkedSeconds(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    chunked(chunkSize, SECONDS)
+    chunked(chunkSize, ChronoUnit.SECONDS)
 
 /**
  * 기간을 밀리초(millisecond) 단위의 Sequence로 chunk 합니다.
@@ -218,7 +209,7 @@ fun <T> TemporalClosedRange<T>.chunkedSeconds(chunkSize: Int): Sequence<List<T>>
  * @return N 밀리초(millisecond)씩 나뉜 Sequence
  */
 fun <T> TemporalClosedRange<T>.chunkedMillis(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
-    chunked(chunkSize, MILLIS)
+    chunked(chunkSize, ChronoUnit.MILLIS)
 
 /**
  * 현재 요소와 다음 요소를 [Pair]로 만들어 Sequence를 제공한다
@@ -245,25 +236,25 @@ fun <T> TemporalClosedRange<T>.zipWithNext(unit: ChronoUnit): Sequence<Pair<T, T
 }
 
 fun <T> TemporalClosedRange<T>.zipWithNextYear(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
-    zipWithNext(YEARS)
+    zipWithNext(ChronoUnit.YEARS)
 
 fun <T> TemporalClosedRange<T>.zipWithNextMonth(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
-    zipWithNext(MONTHS)
+    zipWithNext(ChronoUnit.MONTHS)
 
 fun <T> TemporalClosedRange<T>.zipWithNextWeek(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
-    zipWithNext(WEEKS)
+    zipWithNext(ChronoUnit.WEEKS)
 
 fun <T> TemporalClosedRange<T>.zipWithNextDay(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
-    zipWithNext(DAYS)
+    zipWithNext(ChronoUnit.DAYS)
 
 fun <T> TemporalClosedRange<T>.zipWithNextHour(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
-    zipWithNext(HOURS)
+    zipWithNext(ChronoUnit.HOURS)
 
 fun <T> TemporalClosedRange<T>.zipWithNextMinute(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
-    zipWithNext(MINUTES)
+    zipWithNext(ChronoUnit.MINUTES)
 
 fun <T> TemporalClosedRange<T>.zipWithNextSecond(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
-    zipWithNext(SECONDS)
+    zipWithNext(ChronoUnit.SECONDS)
 
 fun <T> TemporalClosedRange<T>.zipWithNextMilli(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
-    zipWithNext(MILLIS)
+    zipWithNext(ChronoUnit.MILLIS)

@@ -47,7 +47,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
         weekDays.addAll(dayOfWeeks.asList())
     }
 
-    override fun add(start: ZonedDateTime, offset: Duration, seekBoundary: SeekBoundaryMode): ZonedDateTime? {
+    override suspend fun add(start: ZonedDateTime, offset: Duration, seekBoundary: SeekBoundaryMode): ZonedDateTime? {
         log.trace { "add... start=$start, offset=$offset, seekBoundary=$seekBoundary" }
 
         val allEmpty = weekDays.isEmpty() && excludePeriods.isEmpty() && workingHours.isEmpty()
@@ -64,7 +64,11 @@ open class CalendarDateAdd private constructor(): DateAdd() {
         return end
     }
 
-    override fun subtract(start: ZonedDateTime, offset: Duration, seekBoundary: SeekBoundaryMode): ZonedDateTime? {
+    override suspend fun subtract(
+        start: ZonedDateTime,
+        offset: Duration,
+        seekBoundary: SeekBoundaryMode,
+    ): ZonedDateTime? {
         log.trace { "subtract... start=$start, offset=$offset, seekBoundary=$seekBoundary" }
 
         val allEmpty = weekDays.isEmpty() && excludePeriods.isEmpty() && workingHours.isEmpty()
@@ -81,7 +85,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
         return endInclusive
     }
 
-    override fun calculateEnd(
+    override suspend fun calculateEnd(
         start: ZonedDateTime,
         offset: Duration?,
         seekDir: SeekDirection,
@@ -134,7 +138,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
         return Pair(end, remaining)
     }
 
-    private fun findNextWeek(current: WeekRange): WeekRange? {
+    private suspend fun findNextWeek(current: WeekRange): WeekRange? {
         log.trace { "current week=$current 의 이후 week 기간을 구합니다..." }
 
         val nextWeek = when {
@@ -156,7 +160,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
         return nextWeek
     }
 
-    private fun findPrevWeek(current: WeekRange): WeekRange? {
+    private suspend fun findPrevWeek(current: WeekRange): WeekRange? {
         log.trace { "current week=$current 의 이전 week 기간을 구합니다..." }
 
         val prevWeek = when {
@@ -178,7 +182,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
         return prevWeek
     }
 
-    private fun getAvailableWeekPeriods(limits: ITimePeriod): List<ITimePeriod> {
+    private suspend fun getAvailableWeekPeriods(limits: ITimePeriod): List<ITimePeriod> {
         log.trace { "가능한 주간 기간을 추출합니다. limits=$limits" }
 
         val workingDayIsEmpty = weekDays.isEmpty() && workingHours.isEmpty() && workingDayOfWeekHours.isEmpty()

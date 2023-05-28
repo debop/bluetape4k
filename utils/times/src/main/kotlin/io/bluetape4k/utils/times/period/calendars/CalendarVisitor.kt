@@ -18,6 +18,8 @@ import io.bluetape4k.utils.times.period.ranges.MinuteRange
 import io.bluetape4k.utils.times.period.ranges.MonthRange
 import io.bluetape4k.utils.times.period.ranges.YearRange
 import io.bluetape4k.utils.times.period.ranges.YearRangeCollection
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.buffer
 
 
 /**
@@ -37,11 +39,11 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
 
     val isForward: Boolean get() = seekDirection.isForward
 
-    protected fun startPeriodVisit(context: C) {
+    protected suspend fun startPeriodVisit(context: C) {
         startPeriodVisit(limits, context)
     }
 
-    protected fun startPeriodVisit(period: ITimePeriod, context: C) {
+    protected suspend fun startPeriodVisit(period: ITimePeriod, context: C) {
         log.trace { "기간을 탐색합니다. period=$period, context=$context, seekDir=$seekDirection" }
 
         if (period.isMoment)
@@ -64,55 +66,63 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         }
     }
 
-    private fun visitYears(yearsToVisit: Sequence<YearRange>, period: ITimePeriod, context: C) {
-        yearsToVisit.forEach { year ->
-            val canVisit = year.overlapWith(period) && onVisitYear(year, context) && enterMonths(year, context)
-            if (canVisit) {
-                val monthsToVisit = when {
-                    isForward -> year.monthSequence()
-                    else      -> year.monthSequence().sortedByDescending { it.end }
+    private suspend fun visitYears(yearsToVisit: Sequence<YearRange>, period: ITimePeriod, context: C) {
+        yearsToVisit.asFlow()
+            .buffer()
+            .collect { year ->
+                val canVisit = year.overlapWith(period) && onVisitYear(year, context) && enterMonths(year, context)
+                if (canVisit) {
+                    val monthsToVisit = when {
+                        isForward -> year.monthSequence()
+                        else      -> year.monthSequence().sortedByDescending { it.end }
+                    }
+                    visitMonths(monthsToVisit, period, context)
                 }
-                visitMonths(monthsToVisit, period, context)
             }
-        }
     }
 
-    private fun visitMonths(monthsToVisit: Sequence<MonthRange>, period: ITimePeriod, context: C) {
-        monthsToVisit.forEach { m ->
-            val canVisit = m.overlapWith(period) && onVisitMonth(m, context) && enterDays(m, context)
-            if (canVisit) {
-                val daysToVisit = when {
-                    isForward -> m.daySequence()
-                    else      -> m.daySequence().sortedByDescending { it.end }
+    private suspend fun visitMonths(monthsToVisit: Sequence<MonthRange>, period: ITimePeriod, context: C) {
+        monthsToVisit.asFlow()
+            .buffer()
+            .collect { m ->
+                val canVisit = m.overlapWith(period) && onVisitMonth(m, context) && enterDays(m, context)
+                if (canVisit) {
+                    val daysToVisit = when {
+                        isForward -> m.daySequence()
+                        else      -> m.daySequence().sortedByDescending { it.end }
+                    }
+                    visitDays(daysToVisit, period, context)
                 }
-                visitDays(daysToVisit, period, context)
             }
-        }
     }
 
-    private fun visitDays(daysToVisit: Sequence<DayRange>, period: ITimePeriod, context: C) {
-        daysToVisit.forEach { day ->
-            val canVisit = day.overlapWith(period) && onVisitDay(day, context) && enterHours(day, context)
-            if (canVisit) {
-                val hoursToVisit = when {
-                    isForward -> day.hourSequence()
-                    else      -> day.hourSequence().sortedByDescending { it.end }
+    private suspend fun visitDays(daysToVisit: Sequence<DayRange>, period: ITimePeriod, context: C) {
+        daysToVisit.asFlow()
+            .buffer()
+            .collect { day ->
+                val canVisit = day.overlapWith(period) && onVisitDay(day, context) && enterHours(day, context)
+                if (canVisit) {
+                    val hoursToVisit = when {
+                        isForward -> day.hourSequence()
+                        else      -> day.hourSequence().sortedByDescending { it.end }
+                    }
+                    visitHours(hoursToVisit, period, context)
                 }
-                visitHours(hoursToVisit, period, context)
             }
-        }
     }
 
-    private fun visitHours(hoursToVisit: Sequence<HourRange>, period: ITimePeriod, context: C) {
-        hoursToVisit.forEach { hour ->
-            val canVisit = hour.overlapWith(period) && onVisitHour(hour, context)
-            if (canVisit) {
-                enterMinutes(hour, context)
+    private suspend fun visitHours(hoursToVisit: Sequence<HourRange>, period: ITimePeriod, context: C) {
+        hoursToVisit.asFlow()
+            .buffer()
+            .collect { hour ->
+                val canVisit = hour.overlapWith(period) && onVisitHour(hour, context)
+                if (canVisit) {
+                    enterMinutes(hour, context)
+                }
             }
-        }
     }
 
-    protected open fun startYearVisit(year: YearRange, context: C, seekDir: SeekDirection): YearRange? {
+    protected open suspend fun startYearVisit(year: YearRange, context: C, seekDir: SeekDirection): YearRange? {
         onVisitStart()
 
         var lastVisited: YearRange? = null
@@ -134,7 +144,7 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         return lastVisited
     }
 
-    protected open fun startMonthVisit(month: MonthRange, context: C, seekDir: SeekDirection): MonthRange? {
+    protected open suspend fun startMonthVisit(month: MonthRange, context: C, seekDir: SeekDirection): MonthRange? {
         onVisitStart()
 
         var lastVisited: MonthRange? = null
@@ -156,7 +166,7 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         return lastVisited
     }
 
-    protected open fun startDayVisit(day: DayRange, context: C, seekDir: SeekDirection): DayRange? {
+    protected open suspend fun startDayVisit(day: DayRange, context: C, seekDir: SeekDirection): DayRange? {
         onVisitStart()
 
         var lastVisited: DayRange? = null
@@ -178,7 +188,7 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         return lastVisited
     }
 
-    protected open fun startHourVisit(hour: HourRange, context: C, seekDir: SeekDirection): HourRange? {
+    protected open suspend fun startHourVisit(hour: HourRange, context: C, seekDir: SeekDirection): HourRange? {
         onVisitStart()
 
         val offset = seekDir.direction
