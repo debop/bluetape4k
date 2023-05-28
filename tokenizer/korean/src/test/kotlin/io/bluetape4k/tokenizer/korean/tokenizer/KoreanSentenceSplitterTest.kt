@@ -2,6 +2,8 @@ package io.bluetape4k.tokenizer.korean.tokenizer
 
 import io.bluetape4k.tokenizer.korean.TestBase
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanSentenceSplitter.split
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Test
 
@@ -9,7 +11,7 @@ import org.junit.jupiter.api.Test
 class KoreanSentenceSplitterTest: TestBase() {
 
     @Test
-    fun `should split a string into sentences`() {
+    fun `should split a string into sentences`() = runTest {
         var actual = split("안녕? iphone6안녕? 세상아?").toList()
         var expected = listOf(
             Sentence("안녕?", 0, 3),

@@ -4,6 +4,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.tokenizer.korean.TestBase
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Test
@@ -66,7 +67,7 @@ class NounTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `tokenize should return expected tokens`() {
+    fun `tokenize should return expected tokens`() = runTest {
         val expected = listOf(
             KoreanToken("개", Noun, 0, 1),
             KoreanToken("루루", Noun, 1, 2),
@@ -156,7 +157,7 @@ class NounTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `should be able to tokenize long non-space-correctable ones`() {
+    fun `should be able to tokenize long non-space-correctable ones`() = runTest {
         val actual = NounTokenizer.tokenize("훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌")
         val expected =
             (0 until 24).map { KoreanToken("훌쩍", Noun, it * 2, 2) } + KoreanToken("훌", Noun, 48, 1, unknown = true)
@@ -164,7 +165,7 @@ class NounTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `should tokenize edge cases`() {
+    fun `should tokenize edge cases`() = runTest {
         val actual = NounTokenizer.tokenize("해쵸쵸쵸쵸쵸쵸쵸쵸춏")
         val expected = listOf(
             KoreanToken("해", Noun, 0, 1),

@@ -27,7 +27,7 @@ object KoreanDetokenizer: Serializable {
     @JvmField
     val PrefixPos: ImmutableSet<KoreanPos> = Sets.immutable.of(Modifier, VerbPrefix)
 
-    fun detokenize(input: Collection<String>): String {
+    suspend fun detokenize(input: Collection<String>): String {
         // Space guide prevents tokenizing a word that was not tokenized in the input.
         val spaceGuide = getSpaceGuide(input)
 

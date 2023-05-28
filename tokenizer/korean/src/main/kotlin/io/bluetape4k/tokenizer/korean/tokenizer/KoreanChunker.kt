@@ -18,6 +18,9 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Punctuation
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.ScreenName
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Space
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.URL
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.toList
 import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.map.mutable.UnifiedMap
 import java.io.Serializable
@@ -58,7 +61,7 @@ object KoreanChunker: KLogging(), Serializable {
         Punctuation
     )
 
-    fun getChunks(input: String, keepSpace: Boolean = true): List<String> {
+    suspend fun getChunks(input: String, keepSpace: Boolean = true): List<String> {
         return chunk(input).map { if (keepSpace) it.text else it.text.trim() }.toFastList()
     }
 
@@ -69,26 +72,22 @@ object KoreanChunker: KLogging(), Serializable {
         }
     }
 
-    private fun splitBySpaceKeepingSpace(s: CharSequence): List<String> {
+    private fun splitBySpaceKeepingSpace(s: CharSequence): Flow<String> = flow {
         val space = POS_PATTERNS[Space]!!
         val m = space.matcher(s)
-
-        val tokens = fastListOf<String>()
         var index = 0
 
         while (m.find()) {
             if (index < m.start()) {
-                tokens.add(s.subSequence(index, m.start()).toString())
+                emit(s.subSequence(index, m.start()).toString())
             }
-            tokens.add(s.subSequence(m.start(), m.end()).toString())
+            emit(s.subSequence(m.start(), m.end()).toString())
             index = m.end()
         }
 
         if (index < s.length) {
-            tokens.add(s.subSequence(index, s.length).toString())
+            emit(s.subSequence(index, s.length).toString())
         }
-
-        return tokens
     }
 
     /**
@@ -188,7 +187,7 @@ object KoreanChunker: KLogging(), Serializable {
      *            CashTag, Korean, KoreanParticle, Number, Alpha, Punctuation
      * @return sequence of Korean chunk strings
      */
-    fun getChunksByPos(input: String, pos: KoreanPos): List<KoreanToken> {
+    suspend fun getChunksByPos(input: String, pos: KoreanPos): List<KoreanToken> {
         return chunk(input).toFastList().select { it.pos == pos }
     }
 
@@ -199,13 +198,15 @@ object KoreanChunker: KLogging(), Serializable {
      * @param input input string
      * @return sequence of KoreanTokens
      */
-    fun chunk(input: CharSequence): List<KoreanToken> {
+    suspend fun chunk(input: CharSequence): List<KoreanToken> {
         val s = input.toString()
 
         // fold 대신 forEach 구문을 이용하여, 메모리를 절약하도록 했다
         val tokens = fastListOf<KoreanToken>()
         var i = 0
+
         splitBySpaceKeepingSpace(s)
+            .toList()
             .flatMap { splitChunks(it) }
             .forEach { m ->
                 val segStart = s.indexOf(m.text, i)

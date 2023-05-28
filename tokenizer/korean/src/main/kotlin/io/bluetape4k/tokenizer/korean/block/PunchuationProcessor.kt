@@ -32,7 +32,7 @@ class PunctuationProcessor {
         private val punctuationPos = arrayOf(Punctuation, Email, Hashtag, CashTag)
     }
 
-    fun removePunctuation(text: String): String {
+    suspend fun removePunctuation(text: String): String {
         val tokens = findPunctuation(text).toFastList()
         var result = text
         tokens.reverseThis()
@@ -46,7 +46,7 @@ class PunctuationProcessor {
         return result
     }
 
-    fun findPunctuation(text: String): List<Pair<KoreanToken, Boolean>> {
+    suspend fun findPunctuation(text: String): List<Pair<KoreanToken, Boolean>> {
         val chunks = KoreanChunker.chunk(text)
 
         return chunks.sliding(3, false)

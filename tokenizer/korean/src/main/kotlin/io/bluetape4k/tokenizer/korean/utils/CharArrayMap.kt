@@ -155,7 +155,7 @@ open class CharArrayMap<V>(startSize: Int): UnifiedMap<Any, V>(), Serializable {
     }
 
     private fun rehash() {
-        assert(_keys.size == _values.size) { "keys size [${_keys.size}] must equals to _values size[${_values.size}" }
+        require(_keys.size == _values.size) { "keys size [${_keys.size}] must equals to _values size[${_values.size}" }
 
         val newSize = 2 * _keys.size
         val oldKeys = _keys
@@ -172,8 +172,8 @@ open class CharArrayMap<V>(startSize: Int): UnifiedMap<Any, V>(), Serializable {
                 _values[slot] = oldValues[i]
             }
         }
-        Arrays.fill(oldKeys, null)
-        Arrays.fill(oldValues, null)
+        oldKeys.fill(null)
+        oldValues.fill(null)
     }
 
     private fun equals(text1: CharArray, off: Int, len: Int, text2: CharArray): Boolean {
@@ -196,7 +196,6 @@ open class CharArrayMap<V>(startSize: Int): UnifiedMap<Any, V>(), Serializable {
             if (text1[i] != text2[i])
                 return false
         }
-
         return true
     }
 

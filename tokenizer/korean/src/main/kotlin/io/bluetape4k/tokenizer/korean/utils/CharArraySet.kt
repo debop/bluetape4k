@@ -78,15 +78,15 @@ open class CharArraySet(val map: CharArrayMap<Any>): java.util.AbstractSet<Any>(
         return map.originalKeySet.iterator()
     }
 
-    override fun toString(): String {
-        val sb = StringBuilder("[")
-        for (item in this) {
-            if (sb.length > 1) sb.append(", ")
+    override fun toString(): String = buildString {
+        append("[")
+        this@CharArraySet.forEach { item ->
+            if (this.length > 1) append(", ")
             when (item) {
-                is CharArray -> sb.append(item)
-                else         -> sb.append(item.toString())
+                is CharArray -> append(item)
+                else         -> append(item.toString())
             }
         }
-        return sb.append("]").toString()
+        append("]")
     }
 }

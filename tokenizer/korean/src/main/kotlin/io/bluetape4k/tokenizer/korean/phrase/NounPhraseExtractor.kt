@@ -117,6 +117,7 @@ object NounPhraseExtractor: KLogging(), Serializable {
                             phrase.tokens.dropWhile { it.pos == Space },
                             phrase.pos
                         )
+
                         i == phrasesToTrim.size - 1 -> {
                             val tokens = phrase.tokens.dropLastWhile { it.pos == Space }
                             KoreanPhrase(tokens, phrase.pos)
@@ -204,11 +205,11 @@ object NounPhraseExtractor: KLogging(), Serializable {
                     // Extend the current phase
                     val (ct, nt) = getTries(token, curTrie)
 
-                    if (phrases.isEmpty() || curTrie == CollapseTrie) {
+                    if (phrases.isEmpty || curTrie == CollapseTrie) {
                         phrases.add(KoreanPhrase(fastListOf(token), ct?.ending ?: Noun))
                     } else {
                         val newPhrase = KoreanPhrase(phrases.last().tokens + token, ct?.ending ?: Noun)
-                        if (phrases.isEmpty()) {
+                        if (phrases.isEmpty) {
                             phrases.add(newPhrase)
                         } else {
                             phrases[phrases.lastIndex] = newPhrase

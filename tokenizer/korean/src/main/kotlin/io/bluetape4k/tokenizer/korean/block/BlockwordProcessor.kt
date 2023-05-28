@@ -44,7 +44,7 @@ object BlockwordProcessor: KLogging() {
      * @param request 금칙어 처리 요청 정보 [BlockwordRequest]
      * @return 금칙어를 처리한 결과 [BlockwordResponse]
      */
-    fun maskBlockwords(request: BlockwordRequest): BlockwordResponse {
+    suspend fun maskBlockwords(request: BlockwordRequest): BlockwordResponse {
         if (request.text.isBlank()) {
             return BlockwordResponse(request, EMPTY_STRING)
         }

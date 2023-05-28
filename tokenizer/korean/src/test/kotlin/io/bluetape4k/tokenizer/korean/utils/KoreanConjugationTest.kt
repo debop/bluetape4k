@@ -3,29 +3,34 @@ package io.bluetape4k.tokenizer.korean.utils
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
 import io.bluetape4k.tokenizer.korean.TestBase
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 
 class KoreanConjugationTest: TestBase() {
 
     @Test
-    fun `should expand codas of verbs`() {
+    fun `should expand codas of verbs`() = runTest {
         assertConjudations("verb_conjugate.txt", false)
     }
 
     @Test
-    fun `should expand codas of adjectives`() {
+    fun `should expand codas of adjectives`() = runTest {
         assertConjudations("adj_conjugate.txt", true)
     }
 
-    private fun assertConjudations(filename: String, isAdjective: Boolean) {
+    private suspend fun assertConjudations(filename: String, isAdjective: Boolean) {
         log.debug { "load file=[$filename], isAdjective=$isAdjective" }
 
-        val input = KoreanDictionaryProvider.readWordsAsSeq(filename)
-        val loaded: List<Pair<String, String>> = input.asIterable().map {
-            val sp = it.split("\t")
-            Pair(sp[0], sp[1])
-        }
+        val input = KoreanDictionaryProvider.readWordsAsFlow(filename)
+        val loaded: List<Pair<String, String>> = input
+            .map {
+                val sp = it.split("\t")
+                Pair(sp[0], sp[1])
+            }
+            .toList()
 
         val result = loaded.fold(true) { output, (predicate, goldensetExpanded) ->
             val conjugated = KoreanConjugation.conjugatePredicatesToCharArraySet(hashSetOf(predicate), isAdjective)

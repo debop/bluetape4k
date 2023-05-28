@@ -265,8 +265,12 @@ object KoreanConjugation: KLogging(), Serializable {
             )
     }
 
-    private val PRE_EOMI_있다 by lazy { PRE_EOMI_COMMON + PRE_EOMI_1_2 + PRE_EOMI_1_3 + PRE_EOMI_2 + PRE_EOMI_4 + PRE_EOMI_5 + PRE_EOMI_6 }
-    private val PRE_EOMI_밝다 by lazy { PRE_EOMI_COMMON + PRE_EOMI_1_2 + PRE_EOMI_1_3 + PRE_EOMI_2 + PRE_EOMI_4 + PRE_EOMI_5 }
+    private val PRE_EOMI_있다 by lazy {
+        PRE_EOMI_COMMON + PRE_EOMI_1_2 + PRE_EOMI_1_3 + PRE_EOMI_2 + PRE_EOMI_4 + PRE_EOMI_5 + PRE_EOMI_6
+    }
+    private val PRE_EOMI_밝다 by lazy {
+        PRE_EOMI_COMMON + PRE_EOMI_1_2 + PRE_EOMI_1_3 + PRE_EOMI_2 + PRE_EOMI_4 + PRE_EOMI_5
+    }
 
     private val EDGE_CASE = hashSetOf("아니", "입", "입니", "나는")
 
@@ -278,7 +282,7 @@ object KoreanConjugation: KLogging(), Serializable {
             val init = word.substring(0, word.length - 1)
             val lastChar = word.last()
             val lastCharString = lastChar.toString()
-            val (onset, vowel, coda) = Hangul.decomposeHangul(lastChar)
+            val (onset, vowel, coda) = decomposeHangul(lastChar)
 
             val expandedList: List<String> =
                 if (onset == 'ㅎ' && vowel == 'ㅏ' && coda == ' ') {

@@ -265,7 +265,7 @@ object KoreanPhraseExtractor: KLogging(), Serializable {
         return phraseChunks.reverseThis()
     }
 
-    private fun getCandidatePhraseChunks(
+    private suspend fun getCandidatePhraseChunks(
         phrases: KoreanPhraseChunk,
         filterSpam: Boolean = false,
     ): List<KoreanPhraseChunk> {
@@ -381,7 +381,7 @@ object KoreanPhraseExtractor: KLogging(), Serializable {
      * @param addHashtags true if #hashtags to be included
      * @return A list of KoreanPhrase
      */
-    fun extractPhrases(
+    suspend fun extractPhrases(
         tokens: List<KoreanToken>,
         filterSpam: Boolean = false,
         addHashtags: Boolean = true,

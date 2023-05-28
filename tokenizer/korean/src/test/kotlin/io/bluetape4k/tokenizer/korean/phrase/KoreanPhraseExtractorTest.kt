@@ -9,6 +9,7 @@ import io.bluetape4k.tokenizer.korean.tokenizer.KoreanTokenizer.tokenize
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.KoreanParticle
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Modifier
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldBeLessThan
@@ -66,7 +67,7 @@ class KoreanPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `should not deduplicate phrases`() {
+    fun `should not deduplicate phrases`() = runTest {
         val phrases = extractPhrases(tokenize("성탄절 쇼핑 성탄절 쇼핑 성탄절 쇼핑 성탄절 쇼핑"), filterSpam = false)
 
         val expected = phrases.map { it.text }.distinct()
@@ -75,7 +76,7 @@ class KoreanPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `should extract long noun-only phrases in reasonable time`() {
+    fun `should extract long noun-only phrases in reasonable time`() = runTest {
         assertExtraction(superLongText, "허니버터칩(Noun: 0, 5), 정규직(Noun: 5, 3), 크리스마스(Noun: 8, 5)")
 
         val tokens = tokenize(superLongText)
@@ -84,8 +85,8 @@ class KoreanPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `should extract the example set`() {
-        fun phraseExtractor(text: String): String {
+    fun `should extract the example set`() = runTest {
+        suspend fun phraseExtractor(text: String): String {
             val normalized = KoreanNormalizer.normalize(text)
             val tokens = tokenize(normalized)
             return extractPhrases(tokens).joinToString("/")
@@ -94,7 +95,7 @@ class KoreanPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `should filter out spam and profane words`() {
+    fun `should filter out spam and profane words`() = runTest {
         extractPhrases(tokenize(spamText), filterSpam = false).size shouldBeGreaterThan 5
 
         extractPhrases(
@@ -133,7 +134,7 @@ class KoreanPhraseExtractorTest: TestBase() {
         )
     }
 
-    private fun assertExtraction(s: String, expected: String) {
+    private fun assertExtraction(s: String, expected: String) = runTest {
         val tokens = tokenize(s)
         val actual = extractPhrases(tokens).joinToString(", ")
 

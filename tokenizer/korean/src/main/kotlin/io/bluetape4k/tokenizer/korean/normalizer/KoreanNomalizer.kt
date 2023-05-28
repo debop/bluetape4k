@@ -15,6 +15,7 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Eomi
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
 import io.bluetape4k.tokenizer.korean.utils.koreanContains
+import kotlinx.coroutines.runBlocking
 import java.io.Serializable
 import java.util.regex.MatchResult
 import java.util.regex.Matcher
@@ -37,13 +38,15 @@ object KoreanNormalizer: KLogging(), Serializable {
 
     private data class Segment(val text: String, val matchData: MatchResult?)
 
-    fun normalize(input: CharSequence): CharSequence {
+    suspend fun normalize(input: CharSequence): CharSequence {
         return EXTENTED_KOREAN_REGEX.replace(input) { m ->
-            normalizeKoreanChunk(m.groupValues.first())
+            runBlocking {
+                normalizeKoreanChunk(m.groupValues.first())
+            }
         }
     }
 
-    private fun normalizeKoreanChunk(input: CharSequence): CharSequence {
+    private suspend fun normalizeKoreanChunk(input: CharSequence): CharSequence {
 
         // Normalize endings: 안됔ㅋㅋㅋ -> 안돼ㅋㅋ
         val endingNormalized = KOREAN_TO_NORMALIZE_REGEX.replace(input) {
@@ -93,7 +96,7 @@ object KoreanNormalizer: KLogging(), Serializable {
         return output
     }
 
-    fun normalizeCodaN(chunk: CharSequence): CharSequence {
+    suspend fun normalizeCodaN(chunk: CharSequence): CharSequence {
         if (chunk.length < 2)
             return chunk
 

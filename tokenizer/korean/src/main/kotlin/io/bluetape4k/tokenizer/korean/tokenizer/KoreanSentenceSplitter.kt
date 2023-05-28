@@ -1,5 +1,8 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
 import java.io.Serializable
 
 /**
@@ -23,9 +26,10 @@ object KoreanSentenceSplitter: Serializable {
             .trimMargin()
             .toRegex()
 
-    fun split(text: CharSequence): Sequence<Sentence> {
+    fun split(text: CharSequence): Flow<Sentence> {
         return re
             .findAll(text)
+            .asFlow()
             .map { mr ->
                 Sentence(mr.groupValues[0], mr.range.first, mr.range.last + 1)
             }

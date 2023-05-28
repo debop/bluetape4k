@@ -22,17 +22,12 @@ import io.bluetape4k.tokenizer.model.Severity
 import io.bluetape4k.tokenizer.model.Severity.HIGH
 import io.bluetape4k.tokenizer.model.Severity.LOW
 import io.bluetape4k.tokenizer.model.Severity.MIDDLE
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 
 /**
  * 한글 형태소 분석기
  */
 object KoreanProcessor {
-
-    private val scope = CoroutineScope(Dispatchers.Default)
 
     /**
      * Normalize Korean text. Uses KoreanNormalizer.normalize().
@@ -40,19 +35,8 @@ object KoreanProcessor {
      * @param text Input text
      * @return Normalized Korean text
      */
-    fun normalize(text: CharSequence): CharSequence = KoreanNormalizer.normalize(text)
+    suspend fun normalize(text: CharSequence): CharSequence = KoreanNormalizer.normalize(text)
 
-    /**
-     * Async Normalize Korean text. Uses KoreanNormalizer.normalize().
-     *
-     * @param text Input text
-     * @return Normalized Korean text
-     */
-    fun normalizeAsync(text: CharSequence): Deferred<CharSequence> {
-        return scope.async {
-            KoreanNormalizer.normalize(text)
-        }
-    }
 
     /**
      * Tokenize text (with a custom profile) into a sequence of KoreanTokens,
@@ -62,40 +46,20 @@ object KoreanProcessor {
      * @param profile TokenizerProfile
      * @return A sequence of KoreanTokens.
      */
-    @JvmOverloads
-    fun tokenize(
+    suspend fun tokenize(
         text: CharSequence,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<KoreanToken> {
         return KoreanTokenizer.tokenize(text, profile)
     }
 
-    @JvmOverloads
-    fun tokenizeForProduct(
+    suspend fun tokenizeForNoun(
         text: CharSequence,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<KoreanToken> {
         return NounTokenizer.tokenize(text, profile)
     }
 
-
-    /**
-     * Tokenize text (with a custom profile) into a sequence of KoreanTokens,
-     * which includes part-of-speech information and whether a token is an out-of-vocabulary term.
-     *
-     * @param text input text
-     * @param profile TokenizerProfile
-     * @return A sequence of KoreanTokens.
-     */
-    @JvmOverloads
-    fun tokenizeAsync(
-        text: CharSequence,
-        profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
-    ): Deferred<List<KoreanToken>> {
-        return scope.async {
-            KoreanTokenizer.tokenize(text, profile)
-        }
-    }
 
     /**
      * Tokenize text (with a custom profile) into a sequence of KoreanTokens,
@@ -107,23 +71,12 @@ object KoreanProcessor {
      * @param profile TokenizerProfile
      * @return A sequence of sequences of KoreanTokens.
      */
-    fun tokenizeTopN(
+    suspend fun tokenizeTopN(
         text: CharSequence,
         n: Int = 1,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<List<List<KoreanToken>>> =
         KoreanTokenizer.tokenizeTopN(text, n, profile)
-
-    fun tokenizeTopNAsync(
-        text: CharSequence,
-        n: Int = 1,
-        profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
-    ): Deferred<List<List<List<KoreanToken>>>> {
-        return scope.async {
-            KoreanTokenizer.tokenizeTopN(text, n, profile)
-        }
-    }
-
 
     /**
      * Add user-defined word list to the noun dictionary. Spaced words are not allowed.
@@ -203,20 +156,7 @@ object KoreanProcessor {
      * @param text input text
      * @return A sequence of sentences.
      */
-    fun splitSentences(text: CharSequence): Sequence<Sentence> = KoreanSentenceSplitter.split(text)
-
-    /**
-     * Split input text into sentences.
-     *
-     * @param text input text
-     * @return A sequence of sentences.
-     */
-    fun splitSentencesAsync(text: CharSequence): Deferred<Sequence<Sentence>> {
-        return scope.async(Dispatchers.Default) {
-            KoreanSentenceSplitter.split(text)
-        }
-    }
-
+    fun splitSentences(text: CharSequence): Flow<Sentence> = KoreanSentenceSplitter.split(text)
 
     /**
      * Extract noun-phrases from Korean text
@@ -226,8 +166,7 @@ object KoreanProcessor {
      * @param enableHashtags true if #hashtags to be included (default: true)
      * @return A sequence of extracted phrases
      */
-    @JvmOverloads
-    fun extractPhrases(
+    suspend fun extractPhrases(
         tokens: List<KoreanToken>,
         filterSpam: Boolean = false,
         enableHashtags: Boolean = true,
@@ -235,24 +174,6 @@ object KoreanProcessor {
         return KoreanPhraseExtractor.extractPhrases(tokens, filterSpam, enableHashtags)
     }
 
-    /**
-     * Extract noun-phrases from Korean text
-     *
-     * @param tokens         Korean tokens
-     * @param filterSpam     true if spam/slang terms to be filtered out (default: false)
-     * @param enableHashtags true if #hashtags to be included (default: true)
-     * @return A sequence of extracted phrases
-     */
-    @JvmOverloads
-    fun extractPhrasesAsync(
-        tokens: List<KoreanToken>,
-        filterSpam: Boolean = false,
-        enableHashtags: Boolean = true,
-    ): Deferred<List<KoreanPhrase>> {
-        return scope.async {
-            KoreanPhraseExtractor.extractPhrases(tokens, filterSpam, enableHashtags)
-        }
-    }
 
     /**
      * Extract noun-phrases from Korean text
@@ -265,24 +186,12 @@ object KoreanProcessor {
     }
 
     /**
-     * Extract noun-phrases from Korean text
-     *
-     * @param tokens         Korean tokens
-     * @return A sequence of extracted phrases
-     */
-    fun extractPhrasesAsyncProduct(tokens: List<KoreanToken>): Deferred<List<KoreanPhrase>> {
-        return scope.async {
-            NounPhraseExtractor.extractPhrases(tokens)
-        }
-    }
-
-    /**
      * Removes Ending tokens recovering the root form of predicates
      *
      * @param tokens A sequence of tokens
      * @return A sequence of collapsed Korean tokens
      */
-    fun stem(tokens: List<KoreanToken>): List<KoreanToken> {
+    suspend fun stem(tokens: List<KoreanToken>): List<KoreanToken> {
         return KoreanStemmer.stem(tokens)
     }
 
@@ -293,20 +202,8 @@ object KoreanProcessor {
      * @param tokens List of words.
      * @return Detokenized string.
      */
-    fun detokenize(tokens: Collection<String>): String =
+    suspend fun detokenize(tokens: Collection<String>): String =
         KoreanDetokenizer.detokenize(tokens)
-
-    /**
-     * Detokenize the input list of words.
-     *
-     * @param tokens List of words.
-     * @return Detokenized string.
-     */
-    fun detokenizeAsync(tokens: Collection<String>): Deferred<String> {
-        return scope.async {
-            KoreanDetokenizer.detokenize(tokens)
-        }
-    }
 
     /**
      * 금칙어 (Block words) 를 masking 합니다.
@@ -316,7 +213,7 @@ object KoreanProcessor {
      * @param request 금칙어 처리 요청 정보 [BlockwordRequest]
      * @return 금칙어를 처리한 결과 [BlockwordResponse]
      */
-    fun maskBlockwords(request: BlockwordRequest): BlockwordResponse {
+    suspend fun maskBlockwords(request: BlockwordRequest): BlockwordResponse {
         return BlockwordProcessor.maskBlockwords(request)
     }
 }

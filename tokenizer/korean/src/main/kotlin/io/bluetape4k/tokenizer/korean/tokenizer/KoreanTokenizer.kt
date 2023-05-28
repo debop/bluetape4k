@@ -87,7 +87,7 @@ object KoreanTokenizer: KLogging(), Serializable {
      * @param text Input Korean chunk
      * @return sequence of KoreanTokens
      */
-    fun tokenize(
+    suspend fun tokenize(
         text: CharSequence,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<KoreanToken> {
@@ -105,7 +105,7 @@ object KoreanTokenizer: KLogging(), Serializable {
      * @param topN number of top candidates
      * @return sequence of KoreanTokens
      */
-    fun tokenizeTopN(
+    suspend fun tokenizeTopN(
         text: CharSequence,
         topN: Int = 1,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,

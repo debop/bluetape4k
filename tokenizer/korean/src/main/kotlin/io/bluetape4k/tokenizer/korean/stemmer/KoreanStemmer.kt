@@ -9,6 +9,8 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adjective
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Eomi
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.PreEomi
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.buffer
 import java.io.Serializable
 
 
@@ -33,32 +35,34 @@ object KoreanStemmer: KLogging(), Serializable {
      * @param tokens A sequence of tokens
      * @return A sequence of collapsed Korean tokens
      */
-    fun stem(tokens: List<KoreanToken>): List<KoreanToken> {
+    suspend fun stem(tokens: List<KoreanToken>): List<KoreanToken> {
         if (!tokens.any { Predicates.contains(it.pos) }) {
             return tokens
         }
 
         val stemmed = fastListOf<KoreanToken>()
 
-        tokens.forEach { token ->
-            if (stemmed.isNotEmpty() && Endings.contains(token.pos)) {
-                if (Predicates.contains(stemmed.first().pos)) {
-                    val prevToken = stemmed.first()
-                    val token1 = prevToken.copy(
-                        text = prevToken.text + token.text,
-                        length = prevToken.length + token.length
-                    )
-                    stemmed[0] = token1
+        tokens.asFlow()
+            .buffer()
+            .collect { token ->
+                if (stemmed.isNotEmpty() && Endings.contains(token.pos)) {
+                    if (Predicates.contains(stemmed.first().pos)) {
+                        val prevToken = stemmed.first()
+                        val token1 = prevToken.copy(
+                            text = prevToken.text + token.text,
+                            length = prevToken.length + token.length
+                        )
+                        stemmed[0] = token1
+                    } else {
+                        stemmed.add(0, token)
+                    }
+                } else if (Predicates.contains(token.pos)) {
+                    val token1 = token.copy(stem = KoreanDictionaryProvider.predicateStems[token.pos]?.get(token.text))
+                    stemmed.add(0, token1)
                 } else {
                     stemmed.add(0, token)
                 }
-            } else if (Predicates.contains(token.pos)) {
-                val token1 = token.copy(stem = KoreanDictionaryProvider.predicateStems[token.pos]?.get(token.text))
-                stemmed.add(0, token1)
-            } else {
-                stemmed.add(0, token)
             }
-        }
         return stemmed.reverseThis()
     }
 }

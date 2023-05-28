@@ -14,7 +14,6 @@ import io.bluetape4k.tokenizer.korean.tokenizer.KoreanToken
 import io.bluetape4k.tokenizer.korean.tokenizer.Sentence
 import io.bluetape4k.tokenizer.korean.tokenizer.TokenizerProfile
 import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adjective
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Josa
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.KoreanParticle
@@ -24,6 +23,8 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.model.BlockwordRequest
 import io.bluetape4k.tokenizer.model.Severity
 import io.bluetape4k.utils.Systemx
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeLessThan
@@ -33,17 +34,18 @@ import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.Test
 import kotlin.system.measureTimeMillis
+import kotlin.time.Duration.Companion.seconds
 
 
 class KoreanTextProcessorTest: TestBase() {
 
     @Test
-    fun `should normailize`() {
+    fun `should normailize`() = runTest {
         normalize("그랰ㅋㅋㅋㅋ 샤릉햌ㅋㅋ") shouldBeEqualTo "그래ㅋㅋㅋ 사랑해ㅋㅋ"
     }
 
     @Test
-    fun `should reflect custom parameters`() {
+    fun `should reflect custom parameters`() = runTest {
         val actual = tokenize("스윗박스가 점점 좁아지더니, 의자 두개 붙여놓은 것만큼 좁아졌어요. 맘에드는이성분과 앉으면 가까워질거에요 ㅎㅎ")
         val expected = tokenize(
             "스윗박스가 점점 좁아지더니, 의자 두개 붙여놓은 것만큼 좁아졌어요. 맘에드는이성분과 앉으면 가까워질거에요 ㅎㅎ",
@@ -57,14 +59,14 @@ class KoreanTextProcessorTest: TestBase() {
     }
 
     @Test
-    fun `should tokenize ignoring punctuations`() {
+    fun `should tokenize ignoring punctuations`() = runTest {
         val actual = tokenize("^///^규앙ㅇ").joinToString("/")
         val expected = "^///^(Punctuation: 0, 5)/규앙(Exclamation: 5, 2)/ㅇ(KoreanParticle: 7, 1)"
         actual shouldBeEqualTo expected
     }
 
     @Test
-    fun `should tokenize the example sentence`() {
+    fun `should tokenize the example sentence`() = runTest {
         val actual = tokenize(normalize("한국어를 처리하는 예시입니닼ㅋㅋㅋㅋ"))
         val expected = listOf(
             KoreanToken("한국어", Noun, 0, 3),
@@ -81,14 +83,14 @@ class KoreanTextProcessorTest: TestBase() {
     }
 
     @Test
-    fun `should extract phrase from the example stence`() {
+    fun `should extract phrase from the example stence`() = runTest {
         val actual = extractPhrases(tokenize(normalize("한국어를 처리하는 예시입니닼ㅋㅋㅋㅋ"))).joinToString("/")
         val expected = "한국어(Noun: 0, 3)/처리(Noun: 5, 2)/처리하는 예시(Noun: 5, 7)/예시(Noun: 10, 2)"
         actual shouldBeEqualTo expected
     }
 
     @Test
-    fun `should tokenize a long chunk within reasonable time`() {
+    fun `should tokenize a long chunk within reasonable time`() = runTest {
         val timeout = 15_000L
 
         measureTimeMillis {
@@ -118,7 +120,7 @@ class KoreanTextProcessorTest: TestBase() {
     }
 
     @Test
-    fun `should tokenize company names correctly`() {
+    fun `should tokenize company names correctly`() = runTest {
         var actual = tokenize("삼성전자서비스")
         var expected = listOf(
             KoreanToken("삼성", Noun, 0, 2),
@@ -138,7 +140,7 @@ class KoreanTextProcessorTest: TestBase() {
         actual = tokenize("삼성그룹 현대중공업 한화케미칼 삼성전자스토어")
         expected = listOf(
             KoreanToken("삼성", Noun, 0, 2),
-            KoreanToken("그룹", KoreanPos.Noun, 2, 2),
+            KoreanToken("그룹", Noun, 2, 2),
             KoreanToken(" ", Space, 4, 1),
             KoreanToken("현대", Noun, 5, 2),
             KoreanToken("중공업", Noun, 7, 3),
@@ -154,13 +156,14 @@ class KoreanTextProcessorTest: TestBase() {
     }
 
     @Test
-    fun `should correctly tokenize the example set with normalization`() {
-        fun process(input: String): String = tokenize(normalize(input)).joinToString("/")
-        assertExamples("current_parsing.txt", log) { process(it) }
+    fun `should correctly tokenize the example set with normalization`() = runTest(timeout = 30.seconds) {
+        assertExamples("current_parsing.txt", log) { input ->
+            tokenize(normalize(input)).joinToString("/")
+        }
     }
 
     @Test
-    fun `should split sentences`() {
+    fun `should split sentences`() = runTest {
         val actual = splitSentences("가을이다! 남자는 가을을 탄다...... 그렇지? 루루야! 버버리코트 사러 가자!!!!").toList()
         val expected = listOf(
             Sentence("가을이다!", 0, 5),
@@ -173,7 +176,7 @@ class KoreanTextProcessorTest: TestBase() {
     }
 
     @Test
-    fun `add nouns to the dictionary`() {
+    fun `add nouns to the dictionary`() = runTest {
         val dictionary = KoreanDictionaryProvider.koreanDictionary[Noun]!!
 
         dictionary.contains("후랴오교").shouldBeFalse()
@@ -183,7 +186,7 @@ class KoreanTextProcessorTest: TestBase() {
     }
 
     @Test
-    fun `tokenizeTopN return top cadidates`() {
+    fun `tokenizeTopN return top cadidates`() = runTest {
         val actual = tokenizeTopN("대선 후보", 3).toString()
         val expected =
             """
@@ -197,7 +200,7 @@ class KoreanTextProcessorTest: TestBase() {
     }
 
     @Test
-    fun `tokenizeTopN with a given profile return different top cadidates from the defualt tokenizeTopN`() {
+    fun `tokenizeTopN with a given profile return different top cadidates from the defualt tokenizeTopN`() = runTest {
         val topN1 = tokenizeTopN("대선 후보", 3)
         val topN2 = tokenizeTopN(
             "대선 후보", 3, TokenizerProfile(
@@ -210,14 +213,14 @@ class KoreanTextProcessorTest: TestBase() {
     }
 
     @Test
-    fun `tokensToStrings return correct strings`() {
+    fun `tokensToStrings return correct strings`() = runTest {
         val actual = tokensToStrings(tokenize("사랑해"))
         val expected = listOf("사랑", "해")
         actual shouldBeEqualTo expected
     }
 
     @Test
-    fun `tokenize product name`() {
+    fun `tokenize product name`() = runTest {
         val productName = "[주간특가] 홈쇼핑 1위 착즙 주스! \"산지애\" 원액 배그대로 주스30팩+사과주스30팩"
         val actual = tokensToStrings(tokenize(productName))
         val expected = listOf(
@@ -229,7 +232,7 @@ class KoreanTextProcessorTest: TestBase() {
     }
 
     @Test
-    fun `tokenize and stem product name`() {
+    fun `tokenize and stem product name`() = runTest {
         val productName = "[주간특가] 홈쇼핑 1위 착즙 주스! \"산지애\" 원액 배그대로 주스30팩+사과주스30팩"
         val actual = stem(tokenize(productName))
         val expected = listOf(
@@ -242,7 +245,7 @@ class KoreanTextProcessorTest: TestBase() {
 
 
     @Test
-    fun `mask block words`() {
+    fun `mask block words`() = runTest {
         // `걸.레` 는 resources/koreantext/block/block_low.txt 에 이미 등록되어 있다
         // KoreanTextProcessor.addBlockwordToDictionary(listOf("걸.레"), Severity.LOW)
 
@@ -257,7 +260,7 @@ class KoreanTextProcessorTest: TestBase() {
     }
 
     @Test
-    fun `add block word dynamically`() {
+    fun `add block word dynamically`() = runTest {
         KoreanProcessor.addBlockwords(listOf("은꼴사", "물쑈", "혼숙"), severity = Severity.LOW)
 
         val original = "홈쇼핑 미니미는 무슨 은꼴사야 어쩌라구? 물쑈야? 혼숙이야?"
