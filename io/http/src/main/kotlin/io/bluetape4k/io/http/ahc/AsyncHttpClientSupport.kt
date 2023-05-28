@@ -77,7 +77,6 @@ inline fun asyncHttpClientConfig(
         .build()
 }
 
-
 fun asyncHttpClientConfigOf(
     requestFilters: Collection<RequestFilter> = emptyList(),
     responseFilters: Collection<ResponseFilter> = emptyList(),
@@ -99,12 +98,14 @@ fun asyncHttpClientConfigOf(
  * }
  * ```
  *
- * @param config methods of [DefaultAsyncHttpClientConfig.Builder] that customize resulting AsyncHttpClient
+ * @param initializer methods of [DefaultAsyncHttpClientConfig.Builder] that customize resulting AsyncHttpClient
  * @return
  */
-inline fun asyncHttpClient(config: DefaultAsyncHttpClientConfig.Builder.() -> Unit): AsyncHttpClient {
-    val builder = DefaultAsyncHttpClientConfig.Builder().apply(config)
-    return Dsl.asyncHttpClient(builder)
+inline fun asyncHttpClient(
+    initializer: DefaultAsyncHttpClientConfig.Builder.() -> Unit,
+): AsyncHttpClient {
+    val configBuilder = DefaultAsyncHttpClientConfig.Builder().apply(initializer)
+    return Dsl.asyncHttpClient(configBuilder)
 }
 
 

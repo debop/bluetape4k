@@ -5,8 +5,6 @@ import okhttp3.CacheControl
 import okhttp3.Callback
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
 import java.io.IOException
 import java.io.InputStream
 import java.time.Duration
@@ -69,35 +67,35 @@ fun okhttp3CacheControlOf(
     }
 }
 
-inline fun okhttp3Request(initializer: Request.Builder.() -> Unit): Request {
-    return Request.Builder().apply(initializer).build()
+inline fun okhttp3Request(initializer: okhttp3.Request.Builder.() -> Unit): okhttp3.Request {
+    return okhttp3.Request.Builder().apply(initializer).build()
 }
 
-fun okhttp3RequestOf(url: String, vararg nameAndValues: String): Request {
+fun okhttp3RequestOf(url: String, vararg nameAndValues: String): okhttp3.Request {
     return okhttp3Request {
         url(url)
         okhttp3.Headers.Companion.headersOf(*nameAndValues)
     }
 }
 
-fun okhttp3RequestOf(url: String, headers: okhttp3.Headers): Request {
+fun okhttp3RequestOf(url: String, headers: okhttp3.Headers): okhttp3.Request {
     return okhttp3Request {
         url(url)
         headers(headers)
     }
 }
 
-inline fun okhttp3Response(initializer: okhttp3.Response.Builder.() -> Unit): Response {
-    return Response.Builder().apply(initializer).build()
+inline fun okhttp3Response(initializer: okhttp3.Response.Builder.() -> Unit): okhttp3.Response {
+    return okhttp3.Response.Builder().apply(initializer).build()
 }
 
-fun Response?.bodyAsInputStream(): InputStream? = this?.body?.byteStream()
+fun okhttp3.Response?.bodyAsInputStream(): InputStream? = this?.body?.byteStream()
 
-fun Response?.bodyAsByteArray(): ByteArray? = this?.body?.bytes()
+fun okhttp3.Response?.bodyAsByteArray(): ByteArray? = this?.body?.bytes()
 
-fun Response?.bodyAsString(): String? = this?.body?.string()
+fun okhttp3.Response?.bodyAsString(): String? = this?.body?.string()
 
-fun OkHttpClient.execute(request: Request): Response = newCall(request).execute()
+fun OkHttpClient.execute(request: okhttp3.Request): okhttp3.Response = newCall(request).execute()
 
 /**
  * [OkHttpClient]를 비동기 방식으로 실행합니다. (단 CompletableFuture를 반환하므로, Non-Blocking 은 아닙니다)
@@ -108,13 +106,13 @@ fun OkHttpClient.execute(request: Request): Response = newCall(request).execute(
  * @return [okhttp3.Response]를 가지는 CompletableFuture 인스턴스
  */
 inline fun OkHttpClient.executeAsync(
-    request: Request,
+    request: okhttp3.Request,
     crossinline cancelHandler: (Throwable) -> Unit = {},
-): CompletableFuture<Response> {
-    val promise = CompletableFuture<Response>()
+): CompletableFuture<okhttp3.Response> {
+    val promise = CompletableFuture<okhttp3.Response>()
 
     val callback = object: Callback {
-        override fun onResponse(call: okhttp3.Call, response: Response) {
+        override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
             when {
                 response.isSuccessful -> promise.complete(response)
                 call.isCanceled()     -> handleCanceled(IOException("Canceled"))
@@ -122,7 +120,7 @@ inline fun OkHttpClient.executeAsync(
             }
         }
 
-        override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+        override fun onFailure(call: okhttp3.Call, e: IOException) {
             if (call.isCanceled()) {
                 handleCanceled(e)
             } else {

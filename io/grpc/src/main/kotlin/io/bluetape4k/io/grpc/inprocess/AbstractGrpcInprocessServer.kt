@@ -28,7 +28,9 @@ abstract class AbstractGrpcInprocessServer(
 
     companion object: KLogging()
 
-    private val server: Server = builder.apply { services.forEach { addService(it) } }.build()
+    private val server: Server by lazy {
+        builder.apply { services.forEach { addService(it) } }.build()
+    }
 
     private val running = atomic(false)
 

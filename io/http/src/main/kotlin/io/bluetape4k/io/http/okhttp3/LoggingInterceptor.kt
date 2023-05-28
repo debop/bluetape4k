@@ -19,6 +19,7 @@ class LoggingInterceptor private constructor(
          *
          * @param logger 로그를 출력할 [org.slf4j.Logger]
          */
+        @JvmStatic
         operator fun invoke(logger: org.slf4j.Logger): LoggingInterceptor {
             return LoggingInterceptor(logger)
         }

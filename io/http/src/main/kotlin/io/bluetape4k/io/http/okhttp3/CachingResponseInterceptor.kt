@@ -19,12 +19,14 @@ class CachingResponseInterceptor private constructor(
 ): Interceptor {
 
     companion object: KLogging() {
+        @JvmStatic
         operator fun invoke(
             cacheControl: CacheControl = okhttp3CacheControlOf(),
         ): CachingResponseInterceptor {
             return CachingResponseInterceptor(cacheControl)
         }
 
+        @JvmStatic
         operator fun invoke(
             maxAgeInSeconds: Int = 0,
             maxStaleInSeconds: Int = 0,

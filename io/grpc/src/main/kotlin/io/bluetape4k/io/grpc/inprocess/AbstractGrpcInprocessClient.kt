@@ -21,6 +21,7 @@ abstract class AbstractGrpcInprocessClient(protected val channel: ManagedChannel
 
     companion object: KLogging() {
 
+        @JvmStatic
         private fun buildChannelByName(name: String): ManagedChannel {
             return InProcessChannelBuilder
                 .forName(name)
@@ -29,6 +30,7 @@ abstract class AbstractGrpcInprocessClient(protected val channel: ManagedChannel
                 .build()
         }
 
+        @JvmStatic
         private fun buildChannelByAddress(host: String, port: Int): ManagedChannel {
             return InProcessChannelBuilder
                 .forAddress(host, port)
