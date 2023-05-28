@@ -41,7 +41,13 @@ class PersonRepositoryIntegrationTest @Autowired constructor(
         runBlocking {
             val statements = listOf(
                 "DROP TABLE IF EXISTS person;",
-                "CREATE TABLE person (id SERIAL PRIMARY KEY, firstname VARCHAR(100) NOT NULL, lastname VARCHAR(100) NOT NULL, age INTEGER NOT NULL);"
+                """
+                CREATE TABLE person (
+                    id SERIAL PRIMARY KEY, 
+                    firstname VARCHAR(100) NOT NULL, 
+                    lastname VARCHAR(100) NOT NULL, 
+                    age INTEGER NOT NULL
+                );""".trimIndent()
             )
 
             skyler = Person("Skyler", "White", 45)

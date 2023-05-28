@@ -14,7 +14,7 @@ object Plugins {
         const val testLogger = "3.2.0"
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.7"
-        const val spring_boot = "2.7.11"
+        const val spring_boot = "2.7.12"
         const val quarkus = "2.16.7.Final"
         const val apollo = "3.7.4"
         const val dgs = "5.6.9"

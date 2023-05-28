@@ -34,6 +34,9 @@ import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.util.*
 
+inline fun <reified T: Any> Row.getOrNull(index: Int): T? = get(index, T::class.java)
+inline fun <reified T: Any> Row.getOrNull(name: String): T? = get(name, T::class.java)
+
 fun Row.boolean(index: Int): Boolean = get(index).asBoolean()
 fun Row.boolean(name: String): Boolean = get(name).asBoolean()
 fun Row.booleanOrNull(index: Int): Boolean? = get(index).asBooleanOrNull()

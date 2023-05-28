@@ -19,6 +19,8 @@ dependencies {
     compileOnly(Libs.kotlinx_coroutines_jdk8)
     testImplementation(Libs.kotlinx_coroutines_test)
 
+    compileOnly(Libs.commons_io)
+
     testImplementation(project(":bluetape4k-testcontainers"))
     testImplementation(Libs.testcontainers_localstack)
 }
