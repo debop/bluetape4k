@@ -2,7 +2,7 @@
 
 ## 개요
 
-Application 성능 측정을 수행하는 http://micrometer.io/[micrometer.io] 에서 제공하지 않는 라이브러리에 대한 성능 측정 정보를 제공합니다.
+Application 성능 측정을 수행하는 [micrometer.io](http://micrometer.io/) 에서 제공하지 않는 라이브러리에 대한 성능 측정 정보를 제공합니다.
 
 ## 사용법
 

@@ -3,7 +3,9 @@ package io.bluetape4k.infra.resilience4j
 import io.github.resilience4j.core.CallableUtils
 import java.util.concurrent.Callable
 
-inline fun <T: Any> Callable<T>.recover(crossinline errorHandler: (Throwable) -> T): Callable<T> {
+inline fun <T: Any> Callable<T>.recover(
+    crossinline errorHandler: (Throwable) -> T,
+): Callable<T> {
     return CallableUtils
         .recover(this) { error: Throwable ->
             errorHandler(error)

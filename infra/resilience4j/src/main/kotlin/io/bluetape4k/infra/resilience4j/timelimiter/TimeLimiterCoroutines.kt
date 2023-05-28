@@ -39,24 +39,3 @@ inline fun <T, U, R> TimeLimiter.decorateSuspendBiFunction(
 ): suspend (T, U) -> R = { t: T, u: U ->
     decorateSuspendFunction { bifunc(t, u) }.invoke()
 }
-
-//suspend inline fun <T, R> TimeLimiter.executeSuspendFunction1(
-//    input: T,
-//    crossinline func: suspend (T) -> R,
-//): R {
-//    val timeoutMillis = timeLimiterConfig.timeoutDuration.toMillis()
-//    return withTimeout(timeoutMillis) {
-//        func(input)
-//    }
-//}
-//
-//suspend inline fun <T, U, R> TimeLimiter.executeSuspendBiFunction(
-//    t: T,
-//    u: U,
-//    crossinline bifunc: suspend (T, U) -> R,
-//): R {
-//    val timeoutMillis = timeLimiterConfig.timeoutDuration.toMillis()
-//    return withTimeout(timeoutMillis) {
-//        bifunc(t, u)
-//    }
-//}

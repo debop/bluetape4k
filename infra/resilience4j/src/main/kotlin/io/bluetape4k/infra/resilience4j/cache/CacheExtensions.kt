@@ -18,7 +18,9 @@ fun <K, V> ((K) -> CompletionStage<V>).cache(cache: Cache<K, V>): (K) -> Complet
     return cache.decorateCompletionStage(this)
 }
 
-fun <K, V> Cache<K, V>.decorateFunction1(func: (K) -> V): (K) -> V = { key: K ->
+inline fun <K, V> Cache<K, V>.decorateFunction1(
+    crossinline func: (K) -> V,
+): (K) -> V = { key: K ->
     this.computeIfAbsent(key!!) { func(key) }
 }
 

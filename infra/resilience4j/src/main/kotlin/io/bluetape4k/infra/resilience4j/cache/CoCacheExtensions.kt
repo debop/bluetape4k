@@ -14,12 +14,15 @@ fun <K, V> CoCache<K, V>.decorateSuspendedSupplier(
     executeSuspendedFunction(cacheKey, loader)
 }
 
-fun <K, V> CoCache<K, V>.decorateSuspendedFunction(
-    loader: suspend (K) -> V,
+inline fun <K, V> CoCache<K, V>.decorateSuspendedFunction(
+    crossinline loader: suspend (K) -> V,
 ): suspend (K) -> V = { cacheKey: K ->
     executeSuspendedFunction(cacheKey) { loader(cacheKey) }
 }
 
-suspend fun <K, V> CoCache<K, V>.executeSuspendedFunction(cacheKey: K, loader: suspend () -> V): V {
-    return computeIfAbsent(cacheKey, loader)
+suspend inline fun <K, V> CoCache<K, V>.executeSuspendedFunction(
+    cacheKey: K,
+    crossinline loader: suspend () -> V,
+): V {
+    return computeIfAbsent(cacheKey) { loader() }
 }

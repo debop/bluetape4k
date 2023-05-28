@@ -39,39 +39,3 @@ inline fun <T, U, R> CircuitBreaker.decorateSuspendBiFunction(
 ): suspend (T, U) -> R = { t: T, u: U ->
     decorateSuspendFunction { bifunc(t, u) }.invoke()
 }
-
-//
-//suspend inline fun <T, R> CircuitBreaker.executeSuspendFunction1(
-//    input: T,
-//    crossinline func: suspend (T) -> R,
-//): R {
-//    acquirePermission()
-//
-//    val start = System.nanoTime()
-//    try {
-//        val result = func(input)
-//        onSuccess(System.nanoTime() - start, TimeUnit.NANOSECONDS)
-//        return result
-//    } catch (e: Throwable) {
-//        onError(System.nanoTime() - start, TimeUnit.NANOSECONDS, e)
-//        throw e
-//    }
-//}
-//
-//suspend inline fun <T, U, R> CircuitBreaker.executeSuspendBiFunction(
-//    t: T,
-//    u: U,
-//    crossinline bifunc: suspend (T, U) -> R,
-//): R {
-//    acquirePermission()
-//
-//    val start = System.nanoTime()
-//    try {
-//        val result = bifunc(t, u)
-//        onSuccess(System.nanoTime() - start, TimeUnit.NANOSECONDS)
-//        return result
-//    } catch (e: Throwable) {
-//        onError(System.nanoTime() - start, TimeUnit.NANOSECONDS, e)
-//        throw e
-//    }
-//}

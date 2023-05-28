@@ -63,18 +63,24 @@ inline fun <T, R> Retry.checkedFunction(
  * @return decorated supplier
  */
 inline fun <T> Retry.completionStage(
-    scheduler: ScheduledExecutorService,
+    scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     crossinline supplier: () -> CompletionStage<T>,
 ): () -> CompletionStage<T> = {
-    Retry.decorateCompletionStage(this, scheduler) { supplier() }.get()
+    Retry.decorateCompletionStage(this, scheduler) { supplier() }
+        .get()
+        .whenComplete { _, _ -> scheduler.shutdown() }
+
 }
 
 inline fun <T, R> withRetry(
     retry: Retry,
-    scheduler: ScheduledExecutorService,
+    scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     crossinline supplier: (T) -> CompletableFuture<R>,
 ): (T) -> CompletableFuture<R> = { input: T ->
-    Retry.decorateCompletionStage(retry, scheduler) { supplier.invoke(input) }.get().toCompletableFuture()
+    Retry.decorateCompletionStage(retry, scheduler) { supplier.invoke(input) }
+        .get()
+        .toCompletableFuture()
+        .whenComplete { _, _ -> scheduler.shutdown() }
 }
 
 inline fun <T, R> Retry.completableFutureFunction(
@@ -88,5 +94,7 @@ inline fun <T, R> Retry.completableFuture(
     scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     crossinline func: (T) -> CompletableFuture<R>,
 ): (T) -> CompletableFuture<R> = { input: T ->
-    this.executeCompletionStage<R>(scheduler) { func.invoke(input) }.toCompletableFuture()
+    this.executeCompletionStage<R>(scheduler) { func.invoke(input) }
+        .toCompletableFuture()
+        .whenComplete { _, _ -> scheduler.shutdown() }
 }
