@@ -1,5 +1,6 @@
 package io.bluetape4k.io.json
 
+import io.bluetape4k.support.EMPTY_STRING
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
 
@@ -23,10 +24,10 @@ interface JsonSerializer {
     fun <T: Any> deserialize(bytes: ByteArray?, clazz: Class<T>): T?
 
     fun serializeAsString(graph: Any?): String =
-        serialize(graph).toUtf8String()
+        graph?.let { serialize(it).toUtf8String() } ?: EMPTY_STRING
 
     fun <T: Any> deserializeAsString(jsonText: String?, clazz: Class<T>): T? =
-        deserialize(jsonText?.toUtf8Bytes(), clazz)
+        jsonText?.let { deserialize(it.toUtf8Bytes(), clazz) }
 }
 
 inline fun <reified T: Any> JsonSerializer.deserialize(bytes: ByteArray?): T? =

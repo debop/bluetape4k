@@ -43,7 +43,6 @@ class JsonEncryptDeserializer(
         return safeLet(annotation, p) { ann, parser ->
             val codec = parser.codec
             val encryptedText = codec.readValue(parser, String::class.java)
-
             val encryptor = JsonEncryptors.getEncryptor(ann.encryptor)
             encryptor.decrypt(encryptedText)
         }

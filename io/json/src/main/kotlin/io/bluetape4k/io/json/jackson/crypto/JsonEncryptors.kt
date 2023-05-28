@@ -10,9 +10,9 @@ object JsonEncryptors: KLogging() {
 
     private val encryptors = ConcurrentHashMap<KClass<*>, Encryptor>()
 
-    fun getEncryptor(encryptor: KClass<out Encryptor>): Encryptor {
-        return encryptors.getOrPut(encryptor) {
-            encryptor.newInstanceOrNull()!!
+    fun getEncryptor(encryptorType: KClass<out Encryptor>): Encryptor {
+        return encryptors.getOrPut(encryptorType) {
+            encryptorType.newInstanceOrNull()!!
         }
     }
 }

@@ -14,11 +14,11 @@ import com.google.gson.GsonBuilder
  * }
  * ```
  *
- * @param builder [GsonBuilder]를 이용하여 Gson 설정을 수행합니다.
+ * @param initializer [GsonBuilder]를 이용하여 Gson 설정을 수행합니다.
  * @return [Gson] 인스턴스
  */
-fun gson(builder: GsonBuilder.() -> Unit): Gson {
-    return GsonBuilder().apply(builder).create()
+inline fun gson(initializer: GsonBuilder.() -> Unit): Gson {
+    return GsonBuilder().apply(initializer).create()
 }
 
 /**
