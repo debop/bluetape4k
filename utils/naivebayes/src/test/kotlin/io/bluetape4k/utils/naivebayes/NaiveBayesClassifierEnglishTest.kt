@@ -4,6 +4,7 @@ import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
@@ -37,7 +38,7 @@ class NaiveBayesClassifierEnglishTest: AbstractNaiveBayesClassifierTest() {
     )
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `classify spam`() {
+    fun `classify spam`() = runTest {
         val nbc = naiveBayesClassifierOf(
             emails,
             categorySelector = { it.isSpam },
@@ -107,7 +108,7 @@ class NaiveBayesClassifierEnglishTest: AbstractNaiveBayesClassifierTest() {
     )
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `bank transaction example`() {
+    fun `bank transaction example`() = runTest {
         val nbc = naiveBayesClassifierOf(
             bankTransactions,
             featuresSelector = { it.memo.splitWords().toSet() },

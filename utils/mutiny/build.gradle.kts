@@ -7,15 +7,12 @@ dependencies {
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-utils-idgenerators"))
 
-    compileOnly(Libs.kotlinx_atomicfu)
-
     // Smallrye Mutiny
     api(Libs.mutiny)
     api(Libs.mutiny_kotlin)
 
     // Coroutines
     api(Libs.kotlinx_coroutines_core)
-    api(Libs.kotlinx_coroutines_jdk8)
+    compileOnly(Libs.kotlinx_coroutines_reactive)
     testImplementation(Libs.kotlinx_coroutines_test)
-
 }

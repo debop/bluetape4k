@@ -6,6 +6,14 @@ import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import org.eclipse.collections.api.list.ImmutableList
 import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.map.mutable.UnifiedMap
@@ -35,10 +43,9 @@ class NaiveBayesClassifier<F: Any, C: Any>(
     }
 
     @Volatile
-    private var probabilities: UnifiedMap<FeatureProbability.Key<F, C>, FeatureProbability<F, C>> =
-        unifiedMapOf<FeatureProbability.Key<F, C>, FeatureProbability<F, C>>()
+    private var probabilities: UnifiedMap<FeatureProbability.Key<F, C>, FeatureProbability<F, C>> = unifiedMapOf()
 
-    private val _population: FastList<BayesInput<F, C>> = fastListOf<BayesInput<F, C>>()
+    private val _population: FastList<BayesInput<F, C>> = fastListOf()
     val population: ImmutableList<BayesInput<F, C>> get() = _population.toImmutable()
 
     private val modelStaler = atomic(false)
@@ -87,62 +94,64 @@ class NaiveBayesClassifier<F: Any, C: Any>(
     /**
      *  Predicts a category `C` for a given set of `F` features
      */
-    fun predict(vararg features: F): C? = predictWithProbability(features.toSet())?.category
+    suspend fun predict(vararg features: F): C? = predictWithProbability(features.toSet())?.category
 
     /**
      * Predicts a category `C` for a given set of `F` features
      */
-    fun predict(features: Iterable<F>): C? = predictWithProbability(features)?.category
-
+    suspend fun predict(features: Iterable<F>): C? = predictWithProbability(features)?.category
 
     /**
      *  Predicts a category `C` for a given set of `F` features,
      *  but also returns the probability of that category being correct.
      */
-    fun predictWithProbability(features: Iterable<F>): CategoryProbability<C>? {
+    suspend fun predictWithProbability(features: Iterable<F>): CategoryProbability<C>? = coroutineScope {
         if (modelStaled) {
             rebuildModel()
         }
 
         val f = features.toSet()
 
-        return categories.asSequence()
-            .filter { c ->
-                population.any { it.category == c } && probabilities.values.any { it.feature in f }
+        categories.asFlow()
+            .buffer()
+            .filter { category: C ->
+                population.any { it.category == category } && probabilities.values.any { it.feature in f }
             }
-            .map { c ->
-                val probIfCategory = probabilities.values
-                    .filter { it.category == c }
-                    .map {
-                        if (it.feature in f) {
-                            ln(it.probability)
-                        } else {
-                            ln(1.0 - it.probability)
+            .map { category: C ->
+                val probIfCategory = async(Dispatchers.Default) {
+                    probabilities.values
+                        .filter { it.category == category }
+                        .sumOf {
+                            if (it.feature in f) {
+                                ln(it.probability)
+                            } else {
+                                ln(1.0 - it.probability)
+                            }
                         }
-                    }
-                    .sum()
-                    .run { exp(this) }
+                        .run { exp(this) }
+                }
 
-                val probIfNotCategory = probabilities.values
-                    .filter { it.category == c }
-                    .map {
-                        if (it.feature in f) {
-                            ln(it.notProbability)
-                        } else {
-                            ln(1.0 - it.notProbability)
+                val probIfNotCategory = async(Dispatchers.Default) {
+                    probabilities.values
+                        .filter { it.category == category }
+                        .sumOf {
+                            if (it.feature in f) {
+                                ln(it.notProbability)
+                            } else {
+                                ln(1.0 - it.notProbability)
+                            }
                         }
-                    }
-                    .sum()
-                    .run { exp(this) }
+                        .run { exp(this) }
+                }
 
                 CategoryProbability(
-                    category = c,
-                    probability = probIfCategory / (probIfCategory + probIfNotCategory)
+                    category = category,
+                    probability = probIfCategory.await() / (probIfCategory.await() + probIfNotCategory.await())
                 )
             }
             .filter { it.probability >= 0.1 }
-            .sortedByDescending { it.probability }
-            .firstOrNull()
+            .toList()
+            .maxByOrNull { it.probability }
     }
 
     class FeatureProbability<F: Any, C: Any>(val feature: F, val category: C, nbc: NaiveBayesClassifier<F, C>) {
