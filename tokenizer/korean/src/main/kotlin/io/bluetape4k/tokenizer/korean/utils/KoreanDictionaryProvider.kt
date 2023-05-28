@@ -20,12 +20,13 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.VerbPrefix
 import io.bluetape4k.tokenizer.model.Severity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
@@ -40,15 +41,16 @@ import java.util.zip.GZIPInputStream
  */
 object KoreanDictionaryProvider: KLogging(), Serializable {
 
-    // TODO: Kotlin Coroutines 를 이용한 Async IO 로 구현
-    //
     private fun readStreamByLine(stream: InputStream): Flow<String> {
-        return flow {
+        return channelFlow {
             InputStreamReader(stream, Charsets.UTF_8).buffered().use { reader ->
                 reader.lineSequence()
-                    .filter { it.isNotBlank() }
-                    .forEach {
-                        emit(it.trim())
+                    .asFlow()
+                    .buffer()
+                    .collect {
+                        if (it.isNotBlank()) {
+                            send(it.trim())
+                        }
                     }
             }
         }
@@ -112,6 +114,7 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
     suspend fun readWords(vararg filenames: String): CharArraySet {
         val set = newCharArraySet()
         filenames.asFlow()
+            .buffer()
             .flatMapMerge { readFileByLineFromResources(it) }
             .collect {
                 set.add(it)
@@ -166,21 +169,35 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
                     )
                 )
 
-                put(Verb, conjugatePredicatesToCharArraySet(readWordsAsSet("verb/verb.txt")))
+                val verbs = async { readWordsAsSet("verb/verb.txt") }
+                val adjective = async { readWordsAsSet("adjective/adjective.txt") }
+                val adveb = async { readWords("adverb/adverb.txt") }
+                val determiner = async { readWords("auxiliary/determiner.txt") }
+                val exclamation = async { readWords("auxiliary/exclamation.txt") }
+                val josa = async { readWords("josa/josa.txt") }
+                val eomi = async { readWords("verb/eomi.txt") }
+                val preEomi = async { readWords("verb/pre_eomi.txt") }
+                val conjuction = async { readWords("auxiliary/conjunctions.txt") }
+                val modifier = async { readWords("substantives/modifier.txt") }
+                val verbPrefix = async { readWords("verb/verb_prefix.txt") }
+                val suffix = async { readWords("substantives/suffix.txt") }
+
+                put(Verb, conjugatePredicatesToCharArraySet(verbs.await()))
                 put(
                     Adjective,
-                    conjugatePredicatesToCharArraySet(readWordsAsSet("adjective/adjective.txt"), true)
+                    conjugatePredicatesToCharArraySet(adjective.await(), true)
                 )
-                put(Adverb, readWords("adverb/adverb.txt"))
-                put(Determiner, readWords("auxiliary/determiner.txt"))
-                put(Exclamation, readWords("auxiliary/exclamation.txt"))
-                put(Josa, readWords("josa/josa.txt"))
-                put(Eomi, readWords("verb/eomi.txt"))
-                put(PreEomi, readWords("verb/pre_eomi.txt"))
-                put(Conjunction, readWords("auxiliary/conjunctions.txt"))
-                put(Modifier, readWords("substantives/modifier.txt"))
-                put(VerbPrefix, readWords("verb/verb_prefix.txt"))
-                put(Suffix, readWords("substantives/suffix.txt"))
+
+                put(Adverb, adveb.await())
+                put(Determiner, determiner.await())
+                put(Exclamation, exclamation.await())
+                put(Josa, josa.await())
+                put(Eomi, eomi.await())
+                put(PreEomi, preEomi.await())
+                put(Conjunction, conjuction.await())
+                put(Modifier, modifier.await())
+                put(VerbPrefix, verbPrefix.await())
+                put(Suffix, suffix.await())
             }
         }
     }
@@ -200,10 +217,14 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
      */
     val blockWords by lazy {
         runBlocking(Dispatchers.IO) {
+            val low = async { readWords("block/block_low.txt", "block/block_middle.txt", "block/block_high.txt") }
+            val middle = async { readWords("block/block_middle.txt", "block/block_high.txt") }
+            val high = async { readWords("block/block_high.txt") }
+
             unifiedMapOf(
-                Severity.LOW to readWords("block/block_low.txt", "block/block_middle.txt", "block/block_high.txt"),
-                Severity.MIDDLE to readWords("block/block_middle.txt", "block/block_high.txt"),
-                Severity.HIGH to readWords("block/block_high.txt"),
+                Severity.LOW to low.await(),
+                Severity.MIDDLE to middle.await(),
+                Severity.HIGH to high.await(),
             )
         }
     }
@@ -233,10 +254,13 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
 
     val nameDictionary: Map<String, CharArraySet> by lazy {
         runBlocking(Dispatchers.IO) {
+            val familyName = async { readWords("substantives/family_names.txt") }
+            val givenName = async { readWords("substantives/given_names.txt") }
+            val fullName = async { readWords("noun/kpop.txt", "noun/foreign.txt", "noun/names.txt") }
             unifiedMapOf(
-                "family_name" to readWords("substantives/family_names.txt"),
-                "given_name" to readWords("substantives/given_names.txt"),
-                "full_name" to readWords("noun/kpop.txt", "noun/foreign.txt", "noun/names.txt")
+                "family_name" to familyName.await(),
+                "given_name" to givenName.await(),
+                "full_name" to fullName.await()
             )
         }
     }
@@ -262,10 +286,13 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
                 }
                 .toUnifiedMap()
         }
+
         runBlocking(Dispatchers.IO) {
+            val verb = async { readWordsAsSet("verb/verb.txt") }
+            val adjective = async { readWordsAsSet("adjective/adjective.txt") }
             unifiedMapOf(
-                Verb to getConjugationMap(readWordsAsSet("verb/verb.txt"), false),
-                Adjective to getConjugationMap(readWordsAsSet("adjective/adjective.txt"), true)
+                Verb to getConjugationMap(verb.await(), false),
+                Adjective to getConjugationMap(adjective.await(), true)
             )
         }
     }
