@@ -48,5 +48,4 @@ class ResultCallAdapterFactory: CallAdapter.Factory() {
 
         return null
     }
-
 }

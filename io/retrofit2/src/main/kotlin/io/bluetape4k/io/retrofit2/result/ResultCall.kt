@@ -23,10 +23,10 @@ class ResultCall<T> private constructor(
 ): Call<Result<T>> {
 
     companion object: KLogging() {
+        @JvmStatic
         operator fun <T> invoke(delegate: Call<T>): ResultCall<T> {
             if (delegate.isCanceled) {
                 error("Call is canceled. delegate=$delegate")
-
             }
             return ResultCall(delegate)
         }
@@ -95,29 +95,10 @@ class ResultCall<T> private constructor(
         }
     }
 
-    override fun isExecuted(): Boolean {
-        return delegate.isExecuted
-    }
-
-
-    override fun cancel() {
-        delegate.cancel()
-    }
-
-    override fun isCanceled(): Boolean {
-        return delegate.isCanceled
-    }
-
-    override fun request(): Request {
-        return delegate.request()
-    }
-
-    override fun timeout(): Timeout {
-        return delegate.timeout()
-    }
-
-    override fun clone(): Call<Result<T>> {
-        return ResultCall(delegate.clone())
-    }
-
+    override fun isExecuted(): Boolean = delegate.isExecuted
+    override fun cancel() = delegate.cancel()
+    override fun isCanceled(): Boolean = delegate.isCanceled
+    override fun request(): Request = delegate.request()
+    override fun timeout(): Timeout = delegate.timeout()
+    override fun clone(): Call<Result<T>> = ResultCall(delegate.clone())
 }

@@ -66,10 +66,7 @@ class CaffeineCoCache<K: Any, V: Any>(private val cache: AsyncCache<K, V>): CoCa
 
     override fun getAll(keys: Set<K>): Flow<CoCacheEntry<K, V>> = flow {
         keys.forEach { keyToLoad ->
-            val value = get(keyToLoad)
-            if (value != null) {
-                emit(CoCacheEntry(keyToLoad, value))
-            }
+            get(keyToLoad)?.let { emit(CoCacheEntry(keyToLoad, it)) }
         }
     }
 
@@ -98,14 +95,12 @@ class CaffeineCoCache<K: Any, V: Any>(private val cache: AsyncCache<K, V>): CoCa
         entries.onEach { put(it.first, it.second) }.collect()
     }
 
-    override suspend fun putIfAbsent(key: K, value: V): Boolean {
-        return coroutineScope {
-            if (!containsKey(key)) {
-                cache.put(key, future { value })
-                true
-            } else {
-                false
-            }
+    override suspend fun putIfAbsent(key: K, value: V): Boolean = coroutineScope {
+        if (!containsKey(key)) {
+            cache.put(key, future { value })
+            true
+        } else {
+            false
         }
     }
 

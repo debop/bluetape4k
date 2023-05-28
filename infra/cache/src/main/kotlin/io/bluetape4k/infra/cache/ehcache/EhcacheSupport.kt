@@ -32,9 +32,7 @@ inline fun ehcacheManager(initializer: ConfigurationBuilder.() -> Unit): CacheMa
 
 inline fun <reified K: Any, reified V: Any> CacheManager.getOrCreateCache(
     cacheName: String,
-    builder: ResourcePoolsBuilder.() -> Unit = {
-        this.heap(10_000L, EntryUnit.ENTRIES)
-    },
+    builder: ResourcePoolsBuilder.() -> Unit = { this.heap(10_000L, EntryUnit.ENTRIES) },
 ): Cache<K, V> {
     cacheName.requireNotBlank("cacheName")
 

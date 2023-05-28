@@ -23,5 +23,7 @@ class EhcacheSupportTest {
 
         cache.putIfAbsent("key", "value").shouldBeNull()  // 기존 값을 반환한다
         cache.get("key") shouldBeEqualTo "value"
+
+        cache.clear()
     }
 }

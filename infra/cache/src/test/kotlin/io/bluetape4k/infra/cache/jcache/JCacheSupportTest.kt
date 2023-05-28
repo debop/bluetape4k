@@ -30,11 +30,12 @@ class JCacheSupportTest {
         cache.putIfAbsent("first-put", 1L).shouldBeFalse()
 
         cache.getOrPut("first-put") { 2L } shouldBeEqualTo 0L
-
         cache.getOrPut("second-put") { 3L } shouldBeEqualTo 3L
 
         cache["first-put"] shouldBeEqualTo 0L
         cache["second-put"] shouldBeEqualTo 3L
         cache["not-exists"].shouldBeNull()
+
+        cache.close()
     }
 }

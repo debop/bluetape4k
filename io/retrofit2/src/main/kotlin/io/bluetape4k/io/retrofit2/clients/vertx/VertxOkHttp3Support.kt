@@ -3,11 +3,13 @@ package io.bluetape4k.io.retrofit2.clients.vertx
 import io.bluetape4k.io.http.okhttp3.okhttp3Response
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.trace
+import io.vertx.core.AsyncResult
 import io.vertx.core.http.HttpClientRequest
 import io.vertx.core.http.HttpClientResponse
 import io.vertx.core.http.HttpMethod
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Protocol
+import okhttp3.RequestBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
 import java.io.IOException
@@ -26,7 +28,7 @@ internal fun HttpClientRequest.parse(okRequest: okhttp3.Request) {
     method = HttpMethod.valueOf(okRequest.method)
 
     // Build Vertx HttpClientRequest Body
-    okRequest.body?.let { body ->
+    okRequest.body?.let { body: RequestBody ->
         if (body.contentLength() > 0) {
             log.trace { "Build Vertx HttpClientRequest body..." }
             val contentType = body.contentType()
@@ -50,7 +52,7 @@ internal fun HttpClientResponse.toOkhttp3Response(
     callback: okhttp3.Callback,
 ) {
     val self: HttpClientResponse = this
-    body { ar ->
+    body { ar: AsyncResult<io.vertx.core.buffer.Buffer> ->
         when {
             ar.succeeded() -> {
                 log.trace { "Convert Vertx HttpClientResponse to okhttp3.Response." }
@@ -74,7 +76,7 @@ internal fun HttpClientResponse.toOkhttp3Response(
                 callback.onResponse(call, response)
             }
 
-            else -> callback.onFailure(call, IOException(ar.cause()))
+            else           -> callback.onFailure(call, IOException(ar.cause()))
         }
     }
 }

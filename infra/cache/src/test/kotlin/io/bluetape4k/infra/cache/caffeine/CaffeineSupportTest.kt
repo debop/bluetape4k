@@ -37,6 +37,8 @@ class CaffeineSupportTest {
         cache.invalidate("key")
 
         cache.getIfPresent("key").shouldBeNull()
+
+        cache.cleanUp()
     }
 
     @Test
@@ -49,6 +51,8 @@ class CaffeineSupportTest {
 
         cache.getIfPresent("key").shouldBeNull()
         cache["key"] shouldBeEqualTo "value of key"
+
+        cache.cleanUp()
     }
 
     @Test

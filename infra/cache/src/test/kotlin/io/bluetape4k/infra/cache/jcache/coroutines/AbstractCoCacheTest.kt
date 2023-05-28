@@ -10,12 +10,14 @@ import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldHaveSize
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -30,7 +32,7 @@ abstract class AbstractCoCacheTest {
 
         @JvmStatic
         protected fun randomString(): String =
-            Fakers.randomString(1024, 8192)
+            Fakers.randomString(1024, 2048)
     }
 
     protected abstract val coCache: CoCache<String, Any>
@@ -41,6 +43,11 @@ abstract class AbstractCoCacheTest {
     @BeforeEach
     fun setup() {
         runSuspendWithIO { coCache.clear() }
+    }
+
+    @AfterAll
+    fun afterAll() {
+        runBlocking { coCache.close() }
     }
 
     @Test

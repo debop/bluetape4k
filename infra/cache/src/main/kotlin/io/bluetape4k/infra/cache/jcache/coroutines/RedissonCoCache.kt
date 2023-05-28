@@ -28,6 +28,7 @@ class RedissonCoCache<K: Any, V: Any>(private val cache: JCache<K, V>): CoCache<
 
     companion object: KLogging() {
 
+        @JvmStatic
         operator fun <K: Any, V: Any> invoke(
             cacheName: String,
             redisson: RedissonClient,
@@ -38,6 +39,7 @@ class RedissonCoCache<K: Any, V: Any>(private val cache: JCache<K, V>): CoCache<
             return RedissonCoCache(jcache)
         }
 
+        @JvmStatic
         inline operator fun <reified K: Any, reified V: Any> invoke(
             cacheName: String,
             config: Config,

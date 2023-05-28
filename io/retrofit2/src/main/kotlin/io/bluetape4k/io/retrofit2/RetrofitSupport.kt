@@ -28,7 +28,7 @@ fun jacksonConverterFactoryOf(
     return JacksonConverterFactory.create(mapper)
 }
 
-fun retrofitBuilder(initialize: Retrofit.Builder.() -> Unit): Retrofit.Builder {
+inline fun retrofitBuilder(initialize: Retrofit.Builder.() -> Unit): Retrofit.Builder {
     return Retrofit.Builder().apply(initialize)
 }
 

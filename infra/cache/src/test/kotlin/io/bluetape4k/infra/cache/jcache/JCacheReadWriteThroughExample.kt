@@ -7,6 +7,7 @@ import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -22,13 +23,12 @@ import javax.cache.integration.CacheWriter
 class JCacheReadWriteThroughExample {
 
     companion object: KLogging() {
-
         @JvmStatic
         private fun randomKey(): String = Fakers.randomUuid().encodeBase62()
 
         @JvmStatic
         private fun randomString() =
-            Fakers.randomString(1024, 2048)
+            Fakers.randomString(512, 1024)
     }
 
     private val remoteCache = JCaching.EhCache.getOrCreate<String, Any>("remote")
@@ -76,6 +76,11 @@ class JCacheReadWriteThroughExample {
     fun setup() {
         nearCache.clear()
         remoteCache.clear()
+    }
+
+    @AfterAll
+    fun afterAll() {
+        nearCache.close()
     }
 
     @Test

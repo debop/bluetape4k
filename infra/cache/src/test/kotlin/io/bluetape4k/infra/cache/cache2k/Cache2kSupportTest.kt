@@ -25,5 +25,7 @@ class Cache2kSupportTest {
         }
 
         value shouldBeEqualTo 42
+
+        cache.close()
     }
 }
