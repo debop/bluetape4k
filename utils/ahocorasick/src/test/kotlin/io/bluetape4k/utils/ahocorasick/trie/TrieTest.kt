@@ -4,6 +4,7 @@ import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull
@@ -21,7 +22,7 @@ class TrieTest {
     }
 
     @Test
-    fun `keyword and text are same`() {
+    fun `keyword and text are same`() = runTest {
         val trie = Trie.builder()
             .addKeyword(ALPHABET[0])
             .build()
@@ -31,7 +32,7 @@ class TrieTest {
     }
 
     @Test
-    fun `keyword and text are the same first match`() {
+    fun `keyword and text are the same first match`() = runTest {
         val trie = Trie.builder()
             .addKeyword(ALPHABET[0])
             .build()
@@ -41,7 +42,7 @@ class TrieTest {
     }
 
     @Test
-    fun `text is longer than keyword`() {
+    fun `text is longer than keyword`() = runTest {
         val trie = Trie.builder()
             .addKeyword(ALPHABET[0])
             .build()
@@ -51,7 +52,7 @@ class TrieTest {
     }
 
     @Test
-    fun `text is longer than keyword first match`() {
+    fun `text is longer than keyword first match`() = runTest {
         val trie = Trie.builder()
             .addKeyword(ALPHABET[0])
             .build()
@@ -61,7 +62,7 @@ class TrieTest {
     }
 
     @Test
-    fun `various keywords on match`() {
+    fun `various keywords on match`() = runTest {
         val trie = Trie.builder()
             .addKeywords(ALPHABET)
             .build()
@@ -71,7 +72,7 @@ class TrieTest {
     }
 
     @Test
-    fun `various keywords first match`() {
+    fun `various keywords first match`() = runTest {
         val trie = Trie.builder()
             .addKeywords(ALPHABET)
             .build()
@@ -81,7 +82,7 @@ class TrieTest {
     }
 
     @Test
-    fun `ushers test and stop on hit`() {
+    fun `ushers test and stop on hit`() = runTest {
         val trie = Trie.builder()
             .addKeywords(PRONOUNS)
             .stopOnHit()
@@ -93,7 +94,7 @@ class TrieTest {
     }
 
     @Test
-    fun `ushers test stop on hit skip first one`() {
+    fun `ushers test stop on hit skip first one`() = runTest {
         val trie = Trie.builder()
             .addKeywords(PRONOUNS)
             .stopOnHit()
@@ -117,7 +118,7 @@ class TrieTest {
     }
 
     @Test
-    fun `ushers test`() {
+    fun `ushers test`() = runTest {
         val trie = Trie.builder()
             .addKeywords(PRONOUNS)
             .build()
@@ -130,7 +131,7 @@ class TrieTest {
     }
 
     @Test
-    fun `ushers test with capital keywords`() {
+    fun `ushers test with capital keywords`() = runTest {
         val trie = Trie.builder()
             .ignoreCase()
             .addKeywords(PRONOUNS.map { it.lowercase() })
@@ -144,7 +145,7 @@ class TrieTest {
     }
 
     @Test
-    fun `ushers test first match`() {
+    fun `ushers test first match`() = runTest {
         val trie = Trie.builder()
             .addKeywords(PRONOUNS)
             .build()
@@ -160,9 +161,7 @@ class TrieTest {
             .build()
 
         val emits = fastListOf<Emit>()
-        val emitHandler = object: EmitHandler {
-            override fun emit(emit: Emit): Boolean = emits.add(emit)
-        }
+        val emitHandler = EmitHandler { emit -> emits.add(emit) }
         trie.runParseText("ushers", emitHandler)
 
         emits.size shouldBeEqualTo 3
@@ -172,7 +171,7 @@ class TrieTest {
     }
 
     @Test
-    fun `mis leading test`() {
+    fun `mis leading test`() = runTest {
         val trie = Trie.builder()
             .addKeyword("hers")
             .build()
@@ -182,7 +181,7 @@ class TrieTest {
     }
 
     @Test
-    fun `food recipes`() {
+    fun `food recipes`() = runTest {
         val trie = Trie.builder()
             .addKeywords(FOOD)
             .build()
@@ -196,7 +195,7 @@ class TrieTest {
     }
 
     @Test
-    fun `food recipes first match`() {
+    fun `food recipes first match`() = runTest {
         val trie = Trie.builder()
             .addKeywords(FOOD)
             .build()
@@ -206,7 +205,7 @@ class TrieTest {
     }
 
     @Test
-    fun `long and short overlapping match`() {
+    fun `long and short overlapping match`() = runTest {
         val trie = Trie.builder()
             .addKeyword("he")
             .addKeyword("hehehehe")
@@ -225,7 +224,7 @@ class TrieTest {
     }
 
     @Test
-    fun `non overlapping`() {
+    fun `non overlapping`() = runTest {
         val trie = Trie.builder()
             .ignoreOverlaps()
             .addKeyword("ab")
@@ -241,7 +240,7 @@ class TrieTest {
     }
 
     @Test
-    fun `non overlapping first match`() {
+    fun `non overlapping first match`() = runTest {
         val trie = Trie.builder()
             .ignoreOverlaps()
             .addKeyword("ab")
@@ -254,7 +253,7 @@ class TrieTest {
     }
 
     @Test
-    fun `contains match`() {
+    fun `contains match`() = runTest {
         val trie = Trie.builder()
             .addKeyword("ab")
             .addKeyword("cba")
@@ -265,7 +264,7 @@ class TrieTest {
     }
 
     @Test
-    fun `start of churchill speech`() {
+    fun `start of churchill speech`() = runTest {
         val trie = Trie.builder()
             .ignoreOverlaps()
             .addKeywords("T", "u", "ur", "r", "urn", "ni", "i", "in", "n", "urning")
@@ -278,7 +277,7 @@ class TrieTest {
     }
 
     @Test
-    fun `partial match`() {
+    fun `partial match`() = runTest {
         val trie = Trie.builder()
             .onlyWholeWords()
             .addKeyword("sugar")
@@ -290,7 +289,7 @@ class TrieTest {
     }
 
     @Test
-    fun `partial match first match`() {
+    fun `partial match first match`() = runTest {
         val trie = Trie.builder()
             .onlyWholeWords()
             .addKeyword("sugar")
@@ -301,7 +300,7 @@ class TrieTest {
     }
 
     @Test
-    fun `tokenize full sentence`() {
+    fun `tokenize full sentence`() = runTest {
         val trie = Trie.builder()
             .addKeywords(GREEK_LETTERS)
             .build()
@@ -319,7 +318,7 @@ class TrieTest {
     }
 
     @Test
-    fun `string index out of bounds exception`() {
+    fun `string index out of bounds exception`() = runTest {
         val trie = Trie.builder()
             .ignoreCase()
             .onlyWholeWords()
@@ -337,7 +336,7 @@ class TrieTest {
     }
 
     @Test
-    fun `test ignorecase`() {
+    fun `test ignorecase`() = runTest {
         val trie = Trie.builder()
             .ignoreCase()
             .onlyWholeWords()
@@ -355,7 +354,7 @@ class TrieTest {
     }
 
     @Test
-    fun `test ignorecase first match`() {
+    fun `test ignorecase first match`() = runTest {
         val trie = Trie.builder()
             .ignoreCase()
             .onlyWholeWords()
@@ -368,7 +367,7 @@ class TrieTest {
     }
 
     @Test
-    fun `tokenize Tokens in sequence`() {
+    fun `tokenize Tokens in sequence`() = runTest {
         val trie = Trie.builder()
             .addKeywords(GREEK_LETTERS)
             .build()
@@ -378,7 +377,7 @@ class TrieTest {
     }
 
     @Test
-    fun `zero length`() {
+    fun `zero length`() = runTest {
         val trie = Trie.builder()
             .ignoreCase()
             .ignoreOverlaps()
@@ -400,7 +399,7 @@ class TrieTest {
     }
 
     @Test
-    fun `parse unicode text 1`() {
+    fun `parse unicode text 1`() = runTest {
         val target = "LİKE THIS"  // The second character ('İ') is Unicode, which was read by AC as a 2-byte char
         target.substring(5, 9) shouldBeEqualTo "THIS"
 
@@ -416,7 +415,7 @@ class TrieTest {
     }
 
     @Test
-    fun `parse unicode text 2`() {
+    fun `parse unicode text 2`() = runTest {
         val target = "LİKE THIS"  // The second character ('İ') is Unicode, which was read by AC as a 2-byte char
         target.substring(5, 9) shouldBeEqualTo "THIS"
 
@@ -431,7 +430,7 @@ class TrieTest {
     }
 
     @Test
-    fun `partial match whitespace`() {
+    fun `partial match whitespace`() = runTest {
         val trie = Trie.builder()
             .onlyWholeWordsWhiteSpaceSeparated()
             .addKeyword("#sugar-123")
@@ -443,7 +442,7 @@ class TrieTest {
     }
 
     @Test
-    fun `large string`() {
+    fun `large string`() = runTest {
         val interval = 100
         val textSize = 1_000_000
         val keyword = FOOD[2]

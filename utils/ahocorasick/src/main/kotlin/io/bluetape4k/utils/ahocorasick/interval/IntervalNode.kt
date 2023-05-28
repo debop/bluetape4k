@@ -10,9 +10,10 @@ class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
     var left: IntervalNode? = null
     var right: IntervalNode? = null
     val intervals = fastListOf<Intervalable>()
-    val median = determineMedian(inputs)
+    val median: Int
 
     init {
+        median = determineMedian(inputs)
         buildTree(inputs)
     }
 
@@ -45,7 +46,7 @@ class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
         }
     }
 
-    fun findOverlaps(interval: Intervalable): MutableList<Intervalable> {
+    suspend fun findOverlaps(interval: Intervalable): MutableList<Intervalable> {
         val overlaps = fastListOf<Intervalable>()
 
         when {
@@ -54,7 +55,7 @@ class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
                 addToOverlaps(interval, overlaps, checkForOverlapsToRight(interval))
             }
 
-            interval.end < median -> {
+            interval.end < median   -> {
                 addToOverlaps(interval, overlaps, findOverlappingRanges(left, interval))
                 addToOverlaps(interval, overlaps, checkForOverlapsToLeft(interval))
             }
@@ -102,7 +103,7 @@ class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
         return overlaps
     }
 
-    private fun findOverlappingRanges(node: IntervalNode?, interval: Intervalable): List<Intervalable> =
+    private suspend fun findOverlappingRanges(node: IntervalNode?, interval: Intervalable): List<Intervalable> =
         node?.findOverlaps(interval) ?: fastListOf()
 
     override fun equalProperties(other: Any): Boolean {

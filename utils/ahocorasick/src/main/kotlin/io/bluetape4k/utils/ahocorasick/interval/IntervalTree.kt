@@ -22,11 +22,11 @@ class IntervalTree private constructor(private val rootNode: IntervalNode): Valu
         }
     }
 
-    fun findOverlaps(interval: Intervalable): List<Intervalable> {
+    suspend fun findOverlaps(interval: Intervalable): List<Intervalable> {
         return rootNode.findOverlaps(interval).toFastList().sortThis(PositionComparator)
     }
 
-    fun <T: Intervalable> removeOverlaps(intervals: Collection<T>): MutableList<T> {
+    suspend fun <T: Intervalable> removeOverlaps(intervals: Collection<T>): MutableList<T> {
         // size가 큰 것부터
         val results = intervals.toFastList()
         results.sortThis(ReverseSizeComparator)

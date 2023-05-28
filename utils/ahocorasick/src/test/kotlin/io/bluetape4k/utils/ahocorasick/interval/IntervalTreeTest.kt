@@ -4,6 +4,7 @@ import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
@@ -12,7 +13,7 @@ class IntervalTreeTest {
     companion object: KLogging()
 
     @Test
-    fun `find overlaps`() {
+    fun `find overlaps`() = runTest {
         val intervals = fastList(6) { Interval(it, it + 2) }
         val tree = IntervalTree(intervals)
 
@@ -21,7 +22,7 @@ class IntervalTreeTest {
     }
 
     @Test
-    fun `find overlaps with various size`() {
+    fun `find overlaps with various size`() = runTest {
         val intervals = fastListOf(
             Interval(0, 2),
             Interval(4, 5),
@@ -55,7 +56,7 @@ class IntervalTreeTest {
     }
 
     @Test
-    fun `remove overlap`() {
+    fun `remove overlap`() = runTest {
         val intervals = fastListOf(
             Interval(0, 2),
             Interval(4, 5),

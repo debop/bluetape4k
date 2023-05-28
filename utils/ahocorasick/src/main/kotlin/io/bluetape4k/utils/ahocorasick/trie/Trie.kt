@@ -22,7 +22,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
 
     private val ignoreCase: Boolean get() = config.ignoreCase
 
-    fun replace(text: String, map: Map<String, String>): String {
+    suspend fun replace(text: String, map: Map<String, String>): String {
         val tokens = tokenize(text)
 
         return buildString {
@@ -37,7 +37,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
         }
     }
 
-    fun tokenize(text: String): MutableList<Token> {
+    suspend fun tokenize(text: String): MutableList<Token> {
         val tokens = fastListOf<Token>()
         if (text.isEmpty()) {
             return tokens
@@ -61,7 +61,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
         return tokens
     }
 
-    fun parseText(text: CharSequence, emitHandler: StatefulEmitHandler = DefaultEmitHandler()): List<Emit> {
+    suspend fun parseText(text: CharSequence, emitHandler: StatefulEmitHandler = DefaultEmitHandler()): List<Emit> {
         runParseText(text, emitHandler)
         var collectedEmits = emitHandler.emits
 
@@ -82,7 +82,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
         return collectedEmits
     }
 
-    fun containsMatch(text: CharSequence): Boolean = firstMatch(text) != null
+    suspend fun containsMatch(text: CharSequence): Boolean = firstMatch(text) != null
 
     fun runParseText(text: CharSequence, emitHandler: EmitHandler) {
         var currentState = rootState
@@ -105,7 +105,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
      * @param text The text to search for keywords
      * @return null if no matches found.
      */
-    fun firstMatch(text: CharSequence): Emit? {
+    suspend fun firstMatch(text: CharSequence): Emit? {
         if (!config.allowOverlaps) {
             return parseText(text).firstOrNull()
         }
