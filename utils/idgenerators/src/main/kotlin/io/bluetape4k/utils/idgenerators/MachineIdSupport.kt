@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.idgenerators
 
+import io.bluetape4k.utils.idgenerators.snowflake.MAX_MACHINE_ID
 import java.net.NetworkInterface
 import java.security.SecureRandom
 import kotlin.math.absoluteValue
@@ -11,7 +12,7 @@ private val random: SecureRandom by lazy { SecureRandom.getInstanceStrong() }
  */
 const val ALPHA_NUMERIC_BASE = Character.MAX_RADIX
 
-fun getMachineId(maxNumber: Int): Int {
+fun getMachineId(maxNumber: Int = MAX_MACHINE_ID): Int {
     val machineId = try {
         buildString {
             NetworkInterface.getNetworkInterfaces().asSequence()
