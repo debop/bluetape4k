@@ -10,20 +10,15 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun IntArray.toIntArrayList(): IntArrayList = IntArrayList.newListWith(*this)
 
-fun Sequence<Int>.toIntArrayList(): IntArrayList =
-    IntArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Sequence<Int>.toIntArrayList(): IntArrayList = IntArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-fun Iterable<Int>.toIntArrayList(): IntArrayList =
-    IntArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Iterable<Int>.toIntArrayList(): IntArrayList = IntArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-inline fun intArrayList(
-    size: Int,
-    @BuilderInference initializer: (Int) -> Int = { it },
-): IntArrayList {
+inline fun intArrayList(size: Int, initializer: (Int) -> Int = { it }): IntArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = IntArrayList(size)

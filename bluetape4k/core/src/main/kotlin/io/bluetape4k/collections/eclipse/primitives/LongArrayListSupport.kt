@@ -10,20 +10,15 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun LongArray.toLongArrayList(): LongArrayList = LongArrayList.newListWith(*this)
 
-fun Sequence<Long>.toLongArrayList(): LongArrayList =
-    LongArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Sequence<Long>.toLongArrayList(): LongArrayList = LongArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-fun Iterable<Long>.toLongArrayList(): LongArrayList =
-    LongArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Iterable<Long>.toLongArrayList(): LongArrayList = LongArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-inline fun longArrayList(
-    size: Int,
-    @BuilderInference initializer: (Int) -> Long,
-): LongArrayList {
+inline fun longArrayList(size: Int, initializer: (Int) -> Long): LongArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = LongArrayList(size)

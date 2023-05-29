@@ -1,7 +1,7 @@
 package io.bluetape4k.collections.eclipse.primitives
 
 import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.intSequence
+import io.bluetape4k.collections.intSequenceOf
 import io.bluetape4k.collections.toList
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
@@ -25,7 +25,7 @@ class IntArrayListSupportTest {
 
     @Test
     fun `sequence to primitive array list`() {
-        val array = intSequence(1, 5).take(5).toIntArrayList()
+        val array = intSequenceOf(1, 5).take(5).toIntArrayList()
         array shouldBeEqualTo expectedArrayList
     }
 

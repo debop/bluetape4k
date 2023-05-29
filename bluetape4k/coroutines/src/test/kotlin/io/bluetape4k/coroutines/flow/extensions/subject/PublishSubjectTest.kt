@@ -1,7 +1,7 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
 import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
-import io.bluetape4k.collections.eclipse.ranges.toIntArrayList
+import io.bluetape4k.collections.ranges.toIntArrayList
 import io.bluetape4k.coroutines.tests.withSingleThread
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info

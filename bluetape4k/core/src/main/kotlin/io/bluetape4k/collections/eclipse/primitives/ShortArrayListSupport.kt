@@ -10,20 +10,15 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun ShortArray.toShortArrayList(): ShortArrayList = ShortArrayList.newListWith(*this)
 
-fun Sequence<Short>.toShortArrayList(): ShortArrayList =
-    ShortArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Sequence<Short>.toShortArrayList(): ShortArrayList = ShortArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-fun Iterable<Short>.toShortArrayList(): ShortArrayList =
-    ShortArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Iterable<Short>.toShortArrayList(): ShortArrayList = ShortArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-inline fun shortArrayList(
-    size: Int,
-    @BuilderInference initializer: (Int) -> Short,
-): ShortArrayList {
+inline fun shortArrayList(size: Int, initializer: (Int) -> Short): ShortArrayList {
     size.assertZeroOrPositiveNumber("size")
     val array = ShortArrayList(size)
     repeat(size) {

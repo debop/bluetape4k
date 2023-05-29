@@ -4,6 +4,7 @@ import com.github.luben.zstd.Zstd
 import io.bluetape4k.io.getBytes
 import io.bluetape4k.io.toByteBufferDirect
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.coerce
 import io.bluetape4k.support.emptyByteArray
 import java.nio.ByteBuffer
 
@@ -20,7 +21,7 @@ class ZstdCompressor private constructor(val level: Int): AbstractCompressor() {
         const val DEFAULT_LEVEL: Int = 3
 
         operator fun invoke(level: Int = DEFAULT_LEVEL): ZstdCompressor {
-            val cLevel = maxOf(Zstd.minCompressionLevel(), minOf(level, Zstd.maxCompressionLevel()))
+            val cLevel = level.coerce(Zstd.minCompressionLevel(), Zstd.maxCompressionLevel())
             return ZstdCompressor(cLevel)
         }
     }
@@ -40,7 +41,7 @@ class ZstdCompressor private constructor(val level: Int): AbstractCompressor() {
             sourceBuffer,
             0,
             sourceBuffer.remaining(),
-            level
+            level,
         ).toInt()
 
         return ByteArray(MAGIC_NUMBER_SIZE + outputSize).apply {
@@ -65,7 +66,7 @@ class ZstdCompressor private constructor(val level: Int): AbstractCompressor() {
             outputSize,
             sourceBuffer,
             MAGIC_NUMBER_SIZE,
-            sourceBuffer.remaining() - MAGIC_NUMBER_SIZE
+            sourceBuffer.remaining() - MAGIC_NUMBER_SIZE,
         )
 
         return outputBuffer.getBytes()

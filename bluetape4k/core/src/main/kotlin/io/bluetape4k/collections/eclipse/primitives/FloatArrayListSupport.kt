@@ -10,20 +10,15 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun FloatArray.toFloatArrayList(): FloatArrayList = FloatArrayList.newListWith(*this)
 
-fun Sequence<Float>.toFloatArrayList(): FloatArrayList =
-    FloatArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Sequence<Float>.toFloatArrayList(): FloatArrayList = FloatArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-fun Iterable<Float>.toFloatArrayList(): FloatArrayList =
-    FloatArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Iterable<Float>.toFloatArrayList(): FloatArrayList = FloatArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-inline fun floatArrayList(
-    size: Int,
-    @BuilderInference initializer: (Int) -> Float,
-): FloatArrayList {
+inline fun floatArrayList(size: Int, initializer: (Int) -> Float): FloatArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = FloatArrayList(size)

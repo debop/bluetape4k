@@ -1,6 +1,6 @@
 package io.bluetape4k.utils.math.integration
 
-import io.bluetape4k.collections.doubleSequence
+import io.bluetape4k.collections.doubleSequenceOf
 import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
@@ -59,7 +59,7 @@ abstract class AbstractIntegratorTest {
 
     @Test
     fun `integeration with double array`() {
-        val identities = doubleSequence(0.0, 1.0, 1e-4)
+        val identities = doubleSequenceOf(0.0, 1.0, 1e-4)
             .map { it to 1.0 }
             .toFastList()
 
@@ -70,7 +70,7 @@ abstract class AbstractIntegratorTest {
 
     @Test
     fun `integeration with double array with flip values`() {
-        val identities = doubleSequence(0.0, 1.0, 1e-4)
+        val identities = doubleSequenceOf(0.0, 1.0, 1e-4)
             .map { it to (0.5 - it) }
             .toFastList()
 
@@ -81,7 +81,7 @@ abstract class AbstractIntegratorTest {
 
     @Test
     fun `integeration with double array with interpolation`() {
-        val identities = doubleSequence(0.0, 1.0, 1e-4)
+        val identities = doubleSequenceOf(0.0, 1.0, 1e-4)
             .map { it to it }
             .toFastList()
 

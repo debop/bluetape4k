@@ -10,20 +10,15 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun DoubleArray.toDoubleArrayList(): DoubleArrayList = DoubleArrayList.newListWith(*this)
 
-fun Sequence<Double>.toDoubleArrayList(): DoubleArrayList =
-    DoubleArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Sequence<Double>.toDoubleArrayList(): DoubleArrayList = DoubleArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-fun Iterable<Double>.toDoubleArrayList(): DoubleArrayList =
-    DoubleArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Iterable<Double>.toDoubleArrayList(): DoubleArrayList = DoubleArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-inline fun doubleArrayList(
-    size: Int,
-    @BuilderInference initializer: (Int) -> Double,
-): DoubleArrayList {
+inline fun doubleArrayList(size: Int, initializer: (Int) -> Double): DoubleArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = DoubleArrayList(size)

@@ -9,21 +9,16 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun CharArray.toCharArrayList(): CharArrayList = CharArrayList.newListWith(*this)
 
-fun Sequence<Char>.toCharArrayList(): CharArrayList =
-    CharArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Sequence<Char>.toCharArrayList(): CharArrayList = CharArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-fun Iterable<Char>.toCharArrayList(): CharArrayList =
-    CharArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Iterable<Char>.toCharArrayList(): CharArrayList = CharArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
 
-inline fun charArrayList(
-    size: Int,
-    @BuilderInference initializer: (Int) -> Char,
-): CharArrayList {
+inline fun charArrayList(size: Int, initializer: (Int) -> Char): CharArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val chars = CharArrayList(size)

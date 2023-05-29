@@ -1,5 +1,6 @@
 package io.bluetape4k.io.compressor
 
+import io.bluetape4k.io.DEFAULT_BLOCK_SIZE
 import io.bluetape4k.io.toByteArray
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -26,7 +27,7 @@ class GZipCompressor @JvmOverloads constructor(
     override fun doDecompress(compressed: ByteArray): ByteArray {
         return ByteArrayInputStream(compressed).buffered(bufferSize).use { bis ->
             GZIPInputStream(bis, bufferSize).use { gzip ->
-                gzip.toByteArray(DEFAULT_BUFFER_SIZE)
+                gzip.toByteArray(DEFAULT_BLOCK_SIZE)
             }
         }
     }

@@ -1,7 +1,7 @@
 package io.bluetape4k.collections.eclipse.primitives
 
 import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.longSequence
+import io.bluetape4k.collections.longSequenceOf
 import io.bluetape4k.collections.toList
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
@@ -24,7 +24,7 @@ class LongArrayListSupportTest {
 
     @Test
     fun `sequence to primitive array list`() {
-        val array = longSequence(1, 5).take(5).toLongArrayList()
+        val array = longSequenceOf(1, 5).take(5).toLongArrayList()
         array shouldBeEqualTo expectedArrayList
     }
 

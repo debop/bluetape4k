@@ -1,6 +1,6 @@
 package io.bluetape4k.collections.eclipse.primitives
 
-import io.bluetape4k.collections.doubleSequence
+import io.bluetape4k.collections.doubleSequenceOf
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.toList
 import org.amshove.kluent.shouldBeEqualTo
@@ -24,7 +24,7 @@ class DoubleArrayListSupportTest {
 
     @Test
     fun `sequence to primitive array list`() {
-        val array = doubleSequence(1.0, 5.0).take(5).toDoubleArrayList()
+        val array = doubleSequenceOf(1.0, 5.0).take(5).toDoubleArrayList()
         array shouldBeEqualTo expectedArrayList
     }
 

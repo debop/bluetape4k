@@ -10,20 +10,15 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun ByteArray.toByteArrayList(): ByteArrayList = ByteArrayList.newListWith(*this)
 
-fun Sequence<Byte>.toByteArrayList(): ByteArrayList =
-    ByteArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Sequence<Byte>.toByteArrayList(): ByteArrayList = ByteArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-fun Iterable<Byte>.toByteArrayList(): ByteArrayList =
-    ByteArrayList().also { array ->
-        forEach { array.add(it) }
-    }
+fun Iterable<Byte>.toByteArrayList(): ByteArrayList = ByteArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-inline fun byteArrayList(
-    size: Int,
-    @BuilderInference initializer: (Int) -> Byte,
-): ByteArrayList {
+inline fun byteArrayList(size: Int, initializer: (Int) -> Byte): ByteArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = ByteArrayList(size)

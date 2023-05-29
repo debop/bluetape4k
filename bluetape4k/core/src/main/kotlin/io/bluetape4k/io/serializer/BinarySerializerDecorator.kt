@@ -24,9 +24,6 @@ open class CompressableBinarySerializer(
         bytes?.run { super.deserialize(compressor.decompress(this)) }
 
     override fun toString(): String {
-        return "CompressableBinarySerializer(" +
-            "compressor=${compressor.javaClass.simpleName}, " +
-            "serializer=${serializer.javaClass.simpleName}" +
-            ")"
+        return "CompressableBinarySerializer(compressor=${compressor.javaClass.simpleName}, serializer=${serializer.javaClass.simpleName})"
     }
 }

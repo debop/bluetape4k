@@ -3,6 +3,7 @@ package io.bluetape4k.coroutines.flow
 import io.bluetape4k.core.assertPositiveNumber
 import io.bluetape4k.core.requireGe
 import io.bluetape4k.core.requireGt
+import io.bluetape4k.core.requireLe
 import io.bluetape4k.coroutines.RingBuffer
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,62 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlin.coroutines.CoroutineContext
+
+fun charFlowOf(start: Char, endInclusive: Char, step: Int = 1): Flow<Char> = flow {
+    start.requireLe(endInclusive, "start")
+    var current = start
+    while (current <= endInclusive) {
+        emit(current)
+        current += step
+    }
+}
+
+fun byteFlowOf(start: Byte, endInclusive: Byte, step: Byte = 1): Flow<Byte> = flow {
+    start.requireLe(endInclusive, "start")
+
+    var current = start
+    while (current <= endInclusive) {
+        emit(current)
+        current = (current + step).toByte()
+    }
+}
+
+fun intFlowOf(start: Int, endInclusive: Int, step: Int = 1): Flow<Int> = flow {
+    start.requireLe(endInclusive, "start")
+    var current = start
+    while (current <= endInclusive) {
+        emit(current)
+        current += step
+    }
+}
+
+fun longFlowOf(start: Long, endInclusive: Long, step: Long = 1L): Flow<Long> = flow {
+    start.requireLe(endInclusive, "start")
+    var current = start
+    while (current <= endInclusive) {
+        emit(current)
+        current += step
+    }
+}
+
+fun floatFlowOf(start: Float, endInclusive: Float, step: Float = 1.0F): Flow<Float> = flow {
+    start.requireLe(endInclusive, "start")
+
+    var current = start
+    while (current <= endInclusive) {
+        emit(current)
+        current += step
+    }
+}
+
+fun doubleFlowOf(start: Double, endInclusive: Double, step: Double = 1.0): Flow<Double> = flow {
+    start.requireLe(endInclusive, "start")
+    var current = start
+    while (current <= endInclusive) {
+        emit(current)
+        current += step
+    }
+}
 
 /**
  * [times]만큼 반복해서 [func]을 수행하며, 결과를 flow 로 emit 합니다.

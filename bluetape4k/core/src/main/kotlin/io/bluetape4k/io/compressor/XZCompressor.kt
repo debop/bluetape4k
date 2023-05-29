@@ -1,7 +1,9 @@
 package io.bluetape4k.io.compressor
 
+import io.bluetape4k.io.DEFAULT_BLOCK_SIZE
 import io.bluetape4k.io.toByteArray
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.coerce
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
 import java.io.ByteArrayInputStream
@@ -33,13 +35,13 @@ class XZCompressor private constructor(
             preset: Int = DEFAULT_PRESET,
             bufferSize: Int = DEFAULT_BUFFER_SIZE,
         ): XZCompressor {
-            val ps = maxOf(0, minOf(preset, 6))
+            val ps = preset.coerce(0, 6)
             return XZCompressor(ps, bufferSize)
         }
     }
 
     override fun doCompress(plain: ByteArray): ByteArray {
-        return ByteArrayOutputStream().use { bos ->
+        return ByteArrayOutputStream(bufferSize).use { bos ->
             XZCompressorOutputStream(bos, preset).use { xz ->
                 xz.write(plain)
                 xz.flush()
@@ -51,7 +53,7 @@ class XZCompressor private constructor(
     override fun doDecompress(compressed: ByteArray): ByteArray {
         return ByteArrayInputStream(compressed).buffered(bufferSize).use { bis ->
             XZCompressorInputStream(bis).use { xz ->
-                xz.toByteArray(bufferSize)
+                xz.toByteArray(DEFAULT_BLOCK_SIZE)
             }
         }
     }

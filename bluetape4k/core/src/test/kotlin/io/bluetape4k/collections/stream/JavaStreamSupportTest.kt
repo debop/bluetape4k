@@ -85,12 +85,10 @@ class JavaStreamSupportTest {
         val stream = sequence.toIntStream()
 
         // Sequence 는 여러번 호출해도 된다.
-        //
-        sequence.count()
+        sequence.count() shouldBeEqualTo 10
         sequence.toList() shouldBeEqualTo List(10) { it }
 
         // NOTE: Stream은 한번 사용하면 다시 사용할 수 없다!!!
-        //
         stream.toList() shouldBeEqualTo List(10) { it }
 
         assertFailsWith<IllegalStateException> {

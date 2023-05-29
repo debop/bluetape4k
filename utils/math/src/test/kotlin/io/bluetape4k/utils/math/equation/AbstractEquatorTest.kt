@@ -1,6 +1,6 @@
 package io.bluetape4k.utils.math.equation
 
-import io.bluetape4k.collections.doubleSequence
+import io.bluetape4k.collections.doubleSequenceOf
 import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
@@ -20,7 +20,7 @@ abstract class AbstractEquatorTest {
 
     @Test
     fun `root find for linear`() {
-        val values = doubleSequence(-1.0, 1.0, 0.03)
+        val values = doubleSequenceOf(-1.0, 1.0, 0.03)
             .map { it to it }
             .toFastList()
 
@@ -31,7 +31,7 @@ abstract class AbstractEquatorTest {
 
     @Test
     open fun `경계가 같은 + 부호를 가지는 경우`() {
-        val values = doubleSequence(-1.0, 1.0, 0.1)
+        val values = doubleSequenceOf(-1.0, 1.0, 0.1)
             .map { it to 1.0 }
             .toFastList()
 
@@ -43,7 +43,7 @@ abstract class AbstractEquatorTest {
 
     @Test
     open fun `경계가 같은 - 부호를 가지는 경우`() {
-        val values = doubleSequence(-1.0, 1.0, 0.1)
+        val values = doubleSequenceOf(-1.0, 1.0, 0.1)
             .map { it to -1.0 }
             .toFastList()
 

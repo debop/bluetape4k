@@ -6,10 +6,12 @@ import java.io.ByteArrayOutputStream
 /**
  * Kryo Serializer
  */
-class KryoSerializer: AbstractBinarySerializer() {
+class KryoSerializer(
+    private val bufferSize: Int = DEFAULT_BUFFER_SIZE,
+): AbstractBinarySerializer() {
 
     override fun doSerialize(graph: Any): ByteArray {
-        return ByteArrayOutputStream(DEFAULT_BUFFER_SIZE).use { bos ->
+        return ByteArrayOutputStream(bufferSize).use { bos ->
             withKryoOutput { output ->
                 output.outputStream = bos
                 withKryo {
@@ -23,8 +25,12 @@ class KryoSerializer: AbstractBinarySerializer() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T: Any> doDeserialize(bytes: ByteArray): T? {
+        if (bytes.isEmpty()) {
+            return null
+        }
+
         return withKryoInput { input ->
-            input.inputStream = ByteArrayInputStream(bytes).buffered(DEFAULT_BUFFER_SIZE)
+            input.inputStream = ByteArrayInputStream(bytes).buffered(bufferSize)
             withKryo {
                 readClassAndObject(input) as? T
             }

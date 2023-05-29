@@ -1,5 +1,6 @@
 package io.bluetape4k.collections
 
+import io.bluetape4k.core.requireLe
 import io.bluetape4k.support.asByte
 import io.bluetape4k.support.asChar
 import io.bluetape4k.support.asDouble
@@ -8,10 +9,14 @@ import io.bluetape4k.support.asInt
 import io.bluetape4k.support.asLong
 import io.bluetape4k.support.asString
 
-fun charSequence(start: Char, endInclusive: Char, step: Int = 1): Sequence<Char> =
-    CharProgression.fromClosedRange(start, endInclusive, step).asSequence()
+fun charSequenceOf(start: Char, endInclusive: Char, step: Int = 1): Sequence<Char> {
+    start.requireLe(endInclusive, "start")
+    return CharProgression.fromClosedRange(start, endInclusive, step).asSequence()
+}
 
-fun byteSequence(start: Byte, endInclusive: Byte, step: Byte = 1): Sequence<Byte> = sequence {
+fun byteSequenceOf(start: Byte, endInclusive: Byte, step: Byte = 1): Sequence<Byte> = sequence {
+    start.requireLe(endInclusive, "start")
+
     var current = start
     while (current <= endInclusive) {
         yield(current)
@@ -19,13 +24,19 @@ fun byteSequence(start: Byte, endInclusive: Byte, step: Byte = 1): Sequence<Byte
     }
 }
 
-fun intSequence(start: Int, endInclusive: Int, step: Int = 1): Sequence<Int> =
-    IntProgression.fromClosedRange(start, endInclusive, step).asSequence()
+fun intSequenceOf(start: Int, endInclusive: Int, step: Int = 1): Sequence<Int> {
+    start.requireLe(endInclusive, "start")
+    return IntProgression.fromClosedRange(start, endInclusive, step).asSequence()
+}
 
-fun longSequence(start: Long, endInclusive: Long, step: Long = 1L): Sequence<Long> =
-    LongProgression.fromClosedRange(start, endInclusive, step).asSequence()
+fun longSequenceOf(start: Long, endInclusive: Long, step: Long = 1L): Sequence<Long> {
+    start.requireLe(endInclusive, "start")
+    return LongProgression.fromClosedRange(start, endInclusive, step).asSequence()
+}
 
-fun floatSequence(start: Float, endInclusive: Float, step: Float = 1.0F): Sequence<Float> = sequence {
+fun floatSequenceOf(start: Float, endInclusive: Float, step: Float = 1.0F): Sequence<Float> = sequence {
+    start.requireLe(endInclusive, "start")
+
     var current = start
     while (current <= endInclusive) {
         yield(current)
@@ -33,7 +44,8 @@ fun floatSequence(start: Float, endInclusive: Float, step: Float = 1.0F): Sequen
     }
 }
 
-fun doubleSequence(start: Double, endInclusive: Double, step: Double = 1.0): Sequence<Double> = sequence {
+fun doubleSequenceOf(start: Double, endInclusive: Double, step: Double = 1.0): Sequence<Double> = sequence {
+    start.requireLe(endInclusive, "start")
     var current = start
     while (current <= endInclusive) {
         yield(current)

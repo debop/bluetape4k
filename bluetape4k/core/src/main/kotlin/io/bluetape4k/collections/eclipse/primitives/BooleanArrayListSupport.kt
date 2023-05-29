@@ -9,16 +9,15 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet
 
 fun BooleanArray.toBooleanArrayList(): BooleanArrayList = BooleanArrayList.newListWith(*this)
 
-fun Sequence<Boolean>.toBooleanArrayList(): BooleanArrayList =
-    BooleanArrayList.newListWith(*this.toList().toBooleanArray())
+fun Sequence<Boolean>.toBooleanArrayList(): BooleanArrayList = BooleanArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-fun Iterable<Boolean>.toBooleanArrayList(): BooleanArrayList =
-    BooleanArrayList.newListWith(*this.toList().toBooleanArray())
+fun Iterable<Boolean>.toBooleanArrayList(): BooleanArrayList = BooleanArrayList().also { list ->
+    forEach { list.add(it) }
+}
 
-inline fun booleanArrayList(
-    size: Int,
-    @BuilderInference initializer: (Int) -> Boolean,
-): BooleanArrayList {
+inline fun booleanArrayList(size: Int, initializer: (Int) -> Boolean): BooleanArrayList {
     size.assertZeroOrPositiveNumber("size")
 
     val array = BooleanArrayList(size)

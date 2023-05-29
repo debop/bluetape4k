@@ -1,5 +1,6 @@
 package io.bluetape4k.io.compressor
 
+import io.bluetape4k.io.DEFAULT_BLOCK_SIZE
 import io.bluetape4k.io.toByteArray
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -25,7 +26,7 @@ class DeflateCompressor @JvmOverloads constructor(
     override fun doDecompress(compressed: ByteArray): ByteArray {
         return ByteArrayInputStream(compressed).buffered(bufferSize).use { bis ->
             InflaterInputStream(bis).use { inflater ->
-                inflater.toByteArray(DEFAULT_BUFFER_SIZE)
+                inflater.toByteArray(DEFAULT_BLOCK_SIZE)
             }
         }
     }

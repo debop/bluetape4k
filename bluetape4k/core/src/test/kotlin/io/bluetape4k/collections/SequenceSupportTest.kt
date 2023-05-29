@@ -10,7 +10,7 @@ class SequenceSupportTest {
 
     @Test
     fun `build char sequence`() {
-        val sequence = charSequence('a', 'z', 2)
+        val sequence = charSequenceOf('a', 'z', 2)
         val array = sequence.toCharArray()
 
         array.size shouldBeEqualTo sequence.count()
@@ -21,7 +21,7 @@ class SequenceSupportTest {
 
     @Test
     fun `build byte sequence`() {
-        val sequence = byteSequence(1, 100, 2)
+        val sequence = byteSequenceOf(1, 100, 2)
         val array = sequence.toByteArray()
 
         array.size shouldBeEqualTo sequence.count()
@@ -32,7 +32,7 @@ class SequenceSupportTest {
 
     @Test
     fun `build int sequence`() {
-        val sequence = intSequence(1, 100, 2)
+        val sequence = intSequenceOf(1, 100, 2)
         val array = sequence.toIntArray()
 
         array.size shouldBeEqualTo sequence.count()
@@ -43,7 +43,7 @@ class SequenceSupportTest {
 
     @Test
     fun `build long sequence`() {
-        val sequence = longSequence(1L, 100L, 2L)
+        val sequence = longSequenceOf(1L, 100L, 2L)
         val array = sequence.toLongArray()
 
         array.size shouldBeEqualTo sequence.count()
@@ -54,7 +54,7 @@ class SequenceSupportTest {
 
     @Test
     fun `build float sequence`() {
-        val sequence = floatSequence(1.0F, 10.0F, 0.5F)
+        val sequence = floatSequenceOf(1.0F, 10.0F, 0.5F)
         val array = sequence.toFloatArray()
 
         array.size shouldBeEqualTo sequence.count()
@@ -65,7 +65,7 @@ class SequenceSupportTest {
 
     @Test
     fun `build double sequence`() {
-        val sequence = doubleSequence(1.0, 10.0, 0.5)
+        val sequence = doubleSequenceOf(1.0, 10.0, 0.5)
         val array = sequence.toDoubleArray()
 
         array.size shouldBeEqualTo sequence.count()
