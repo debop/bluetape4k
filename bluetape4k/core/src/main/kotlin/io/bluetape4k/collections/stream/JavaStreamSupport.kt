@@ -37,34 +37,33 @@ fun <T> Iterable<T>.asStream(): Stream<T> = iterator().asStream()
 fun <T> Sequence<T>.asStream(): Stream<T> = iterator().asStream()
 
 fun <T> Iterator<T>.asParallelStream(): Stream<T> = asStream().parallel()
-fun <T> Iterable<T>.asParallelStream(): Stream<T> = iterator().asStream().parallel()
-fun <T> Sequence<T>.asParallelStream(): Stream<T> = iterator().asStream().parallel()
-
+fun <T> Iterable<T>.asParallelStream(): Stream<T> = asStream().parallel()
+fun <T> Sequence<T>.asParallelStream(): Stream<T> = asStream().parallel()
 
 fun IntStream.asSequence(): Sequence<Int> = Sequence { iterator() }
 fun IntStream.asIterable(): Iterable<Int> = Iterable { iterator() }
-fun IntStream.toList(): List<Int> = asIterable().toList()
-fun IntStream.toIntArray(): IntArray = asIterable().asIntArray()
+fun IntStream.toList(): List<Int> = asSequence().toList()
+fun IntStream.toIntArray(): IntArray = asSequence().asIntArray()
 
-fun Sequence<Int>.toIntStream(): IntStream = asIterable().asStream().mapToInt { it }
+fun Sequence<Int>.toIntStream(): IntStream = asStream().mapToInt { it }
 fun Iterable<Int>.toIntStream(): IntStream = asStream().mapToInt { it }
 fun IntArray.toIntStream(): IntStream = Arrays.stream(this)
 
 fun LongStream.asSequence(): Sequence<Long> = Sequence { iterator() }
 fun LongStream.asIterable(): Iterable<Long> = Iterable { iterator() }
-fun LongStream.toList(): List<Long> = asIterable().toList()
-fun LongStream.toLongArray(): LongArray = asIterable().asLongArray()
+fun LongStream.toList(): List<Long> = asSequence().toList()
+fun LongStream.toLongArray(): LongArray = asSequence().asLongArray()
 
-fun Sequence<Long>.toLongStream(): LongStream = asIterable().asStream().mapToLong { it }
+fun Sequence<Long>.toLongStream(): LongStream = asStream().mapToLong { it }
 fun Iterable<Long>.toLongStream(): LongStream = asStream().mapToLong { it }
 fun LongArray.toLongStream(): LongStream = Arrays.stream(this)
 
 fun DoubleStream.asSequence(): Sequence<Double> = Sequence { iterator() }
 fun DoubleStream.asIterable(): Iterable<Double> = Iterable { iterator() }
-fun DoubleStream.toList(): List<Double> = asIterable().toList()
-fun DoubleStream.toDoubleArray(): DoubleArray = asIterable().asDoubleArray()
+fun DoubleStream.toList(): List<Double> = asSequence().toList()
+fun DoubleStream.toDoubleArray(): DoubleArray = asSequence().asDoubleArray()
 
-fun Sequence<Double>.toDoubleStream(): DoubleStream = asIterable().asStream().mapToDouble { it }
+fun Sequence<Double>.toDoubleStream(): DoubleStream = asStream().mapToDouble { it }
 fun Iterable<Double>.toDoubleStream(): DoubleStream = asStream().mapToDouble { it }
 fun DoubleArray.toDoubleStream(): DoubleStream = Arrays.stream(this)
 

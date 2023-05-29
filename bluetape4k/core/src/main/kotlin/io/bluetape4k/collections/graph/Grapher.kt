@@ -1,7 +1,7 @@
 package io.bluetape4k.collections.graph
 
-import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.collections.eclipse.unifiedSetOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.filterNot
@@ -43,7 +43,7 @@ object Graph {
             crossinline adjacents: (T) -> Sequence<T>,
         ): Sequence<T> = sequence {
             val toScan = ArrayDeque<T>().apply { addFirst(source) }
-            val visited = fastListOf<T>()
+            val visited = unifiedSetOf<T>()
 
             while (toScan.isNotEmpty()) {
                 val current = toScan.removeFirst()
@@ -69,7 +69,7 @@ object Graph {
             crossinline adjacents: (T) -> Flow<T>,
         ): Flow<T> = channelFlow {
             val toScan = ArrayDeque<T>().apply { addFirst(source) }
-            val visited = fastListOf<T>()
+            val visited = unifiedSetOf<T>()
 
             while (toScan.isNotEmpty()) {
                 val current = toScan.removeFirst()
@@ -81,7 +81,6 @@ object Graph {
                     .toList()
                     .sortedDescending()
                     .forEach { toScan.addFirst(it) }
-
             }
         }
     }
@@ -112,7 +111,7 @@ object Graph {
             crossinline adjacents: (T) -> Sequence<T>,
         ): Sequence<T> = sequence {
             val toScan = ArrayDeque<T>().apply { addLast(source) }
-            val visited = fastListOf<T>()
+            val visited = unifiedSetOf<T>()
 
             while (toScan.isNotEmpty()) {
                 val current = toScan.removeFirst()
@@ -138,7 +137,7 @@ object Graph {
             crossinline adjacents: (T) -> Flow<T>,
         ): Flow<T> = channelFlow {
             val toScan = ArrayDeque<T>().apply { addLast(source) }
-            val visited = fastListOf<T>()
+            val visited = unifiedSetOf<T>()
 
             while (toScan.isNotEmpty()) {
                 val current = toScan.removeFirst()

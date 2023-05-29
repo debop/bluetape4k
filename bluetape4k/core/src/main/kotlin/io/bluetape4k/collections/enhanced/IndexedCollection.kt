@@ -112,7 +112,7 @@ class IndexedCollection<K, E> private constructor(
     }
 
     override fun retainAll(elements: Collection<E>): Boolean {
-        val changed = super.retainAll(elements)
+        val changed = super.retainAll(elements.toSet())
         if (changed) {
             reindex()
         }

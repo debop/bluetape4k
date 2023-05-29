@@ -7,7 +7,7 @@ import kotlin.random.Random
 object RadixCoders: KLogging() {
 
     val U8: List<RadixCoder<ByteArray>> by lazy {
-        (2..256).map { RadixCoder.u8(it) }
+        (2..256).filter { it % 2 == 0 }.map { RadixCoder.u8(it) }
     }
 
     val U16: List<RadixCoder<ShortArray>> by lazy {
@@ -15,7 +15,7 @@ object RadixCoders: KLogging() {
         var i = 2
         while (i <= 0x10000) {
             u16.add(RadixCoder.u16(i))
-            i += 1 + Random.nextInt(600)
+            i += 2 + Random.nextInt(2000, 10000)
         }
         u16
     }

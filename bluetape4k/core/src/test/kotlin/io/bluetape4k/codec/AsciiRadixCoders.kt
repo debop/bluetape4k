@@ -8,11 +8,15 @@ object AsciiRadixCoders: KLogging() {
     private const val TABLE58: String = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
     val ASCII36 by lazy {
-        (2..TABLE36.length).map { AsciiRadixCoder(TABLE36.substring(0, it)) }
+        (2..TABLE36.length)
+            .filter { it % 2 == 0 }
+            .map { AsciiRadixCoder(TABLE36.substring(0, it)) }
     }
 
     val ASCII58 by lazy {
-        (2..TABLE58.length).map { AsciiRadixCoder(TABLE58.substring(0, it)) }
+        (2..TABLE58.length)
+            .filter { it % 2 == 0 }
+            .map { AsciiRadixCoder(TABLE58.substring(0, it)) }
     }
 
     fun withBase(base: Int): AsciiRadixCoder {

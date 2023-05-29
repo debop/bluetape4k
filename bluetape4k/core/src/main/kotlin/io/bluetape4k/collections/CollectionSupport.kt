@@ -1,5 +1,7 @@
 package io.bluetape4k.collections
 
+import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.core.assertInRange
 
 /**
@@ -31,7 +33,8 @@ fun <T> MutableList<T>.prepend(vararg elements: T): MutableList<T> = apply {
  * @param elements 리스트 끝에 추가할 요소들
  */
 fun <T> MutableList<T>.append(vararg elements: T): MutableList<T> = apply {
-    plus(listOf(*elements))
+    addAll(elements)
+    // plus(listOf(*elements))
 }
 
 /**
@@ -65,7 +68,7 @@ inline fun <reified T> List<T>.padTo(newSize: Int, item: T): List<T> {
         return this
     }
 
-    return this.toMutableList().apply {
-        addAll(List(remains) { item })
+    return this.toFastList().apply {
+        addAll(fastList(remains) { item })
     }
 }

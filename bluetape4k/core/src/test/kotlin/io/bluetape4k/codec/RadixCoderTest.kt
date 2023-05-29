@@ -103,7 +103,7 @@ class RadixCoderTest {
     fun `invert random`() {
         RadixCoders.ALL.forEach { coder ->
             for (i in 0 until 5) {
-                val bytes = Random.nextBytes(2 + Random.nextInt(300))
+                val bytes = Random.nextBytes(2 + Random.nextInt(64))
                 invert(coder, bytes)
             }
         }

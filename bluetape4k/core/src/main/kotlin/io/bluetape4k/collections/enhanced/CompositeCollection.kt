@@ -10,7 +10,12 @@ import java.util.function.Consumer
 import java.util.function.Predicate
 import java.util.stream.Stream
 
-
+/**
+ * 여러개의 [MutableCollection]을 하나의 [MutableCollection]처럼 제공하는 클래스입니다.
+ *
+ * @param E
+ * @constructor Create empty Composite collection
+ */
 class CompositeCollection<E> private constructor(): MutableCollection<E>, Serializable {
 
     companion object: KLogging() {
@@ -61,9 +66,9 @@ class CompositeCollection<E> private constructor(): MutableCollection<E>, Serial
         }
 
         return sequence {
-            all.forEach {
-                it.forEach {
-                    yield(it)
+            all.forEach { coll ->
+                coll.forEach { item ->
+                    yield(item)
                 }
             }
         }
@@ -76,8 +81,8 @@ class CompositeCollection<E> private constructor(): MutableCollection<E>, Serial
             return false
         }
         var changed = false
-        all.forEach {
-            changed = changed or it.retainAll(elements)
+        all.forEach { coll ->
+            changed = changed or coll.retainAll(elements.toSet())
         }
         return changed
     }
@@ -87,8 +92,8 @@ class CompositeCollection<E> private constructor(): MutableCollection<E>, Serial
             return false
         }
         var changed = false
-        all.forEach {
-            changed = changed or it.removeAll(elements)
+        all.forEach { coll ->
+            changed = changed or coll.removeAll(elements.toSet())
         }
         return changed
     }
@@ -161,7 +166,7 @@ class CompositeCollection<E> private constructor(): MutableCollection<E>, Serial
          *
          * @param composite  the CompositeCollection being changed
          * @param collections  all of the Collection instances in this CompositeCollection
-         * @param obj  the object being added
+         * @param element  the object being added
          * @return true if the collection is changed
          */
         fun add(
@@ -175,7 +180,7 @@ class CompositeCollection<E> private constructor(): MutableCollection<E>, Serial
          *
          * @param composite  the CompositeCollection being changed
          * @param collections  all of the Collection instances in this CompositeCollection
-         * @param coll  the collection being added
+         * @param elements  the collection being added
          * @return true if the collection is changed
          */
         fun addAll(
@@ -189,7 +194,7 @@ class CompositeCollection<E> private constructor(): MutableCollection<E>, Serial
          *
          * @param composite  the CompositeCollection being changed
          * @param collections  all of the Collection instances in this CompositeCollection
-         * @param obj  the object being removed
+         * @param element  the object being removed
          * @return true if the collection is changed
          */
         fun remove(
