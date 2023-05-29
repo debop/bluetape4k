@@ -5,7 +5,6 @@ import io.vertx.core.http.HttpClient
 import io.vertx.core.http.HttpClientOptions
 import io.vertx.kotlin.core.http.httpClientOptionsOf
 
-
 @JvmField
 val defaultVertxHttpClientOptions: HttpClientOptions = httpClientOptionsOf(
     protocolVersion = HttpClientOptions.DEFAULT_PROTOCOL_VERSION,
@@ -17,8 +16,9 @@ val defaultVertxHttpClientOptions: HttpClientOptions = httpClientOptionsOf(
     tryUsePerMessageWebSocketCompression = true
 )
 
-@JvmField
-val defaultVertxHttpClient = vertxHttpClientOf(defaultVertxHttpClientOptions)
+val defaultVertxHttpClient: HttpClient by lazy(mode = LazyThreadSafetyMode.PUBLICATION) {
+    vertxHttpClientOf(defaultVertxHttpClientOptions)
+}
 
 fun vertxHttpClientOf(options: HttpClientOptions = defaultVertxHttpClientOptions): HttpClient {
     return currentVertx().createHttpClient(options)

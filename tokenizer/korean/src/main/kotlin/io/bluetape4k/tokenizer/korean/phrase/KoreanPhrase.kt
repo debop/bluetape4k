@@ -9,15 +9,15 @@ data class KoreanPhrase(
     val pos: KoreanPos = KoreanPos.Noun,
 ): Serializable {
 
-    val offset by lazy(mode = LazyThreadSafetyMode.NONE) {
+    val offset by lazy(mode = LazyThreadSafetyMode.PUBLICATION) {
         this.tokens.first().offset
     }
 
-    val text by lazy(mode = LazyThreadSafetyMode.NONE) {
+    val text by lazy(mode = LazyThreadSafetyMode.PUBLICATION) {
         this.tokens.joinToString("") { it.text }
     }
 
-    val length by lazy(mode = LazyThreadSafetyMode.NONE) {
+    val length by lazy(mode = LazyThreadSafetyMode.PUBLICATION) {
         this.tokens.sumOf { it.text.length }
     }
 

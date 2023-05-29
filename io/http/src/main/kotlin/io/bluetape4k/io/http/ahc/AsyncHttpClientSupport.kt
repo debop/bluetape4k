@@ -16,7 +16,7 @@ import org.asynchttpclient.filter.ResponseFilter
 // NOTE: 비동기 방식에서는 OS 차원에서 open file 제한을 늘려야 합니다.
 // 참고 : https://gist.github.com/tombigel/d503800a282fcadbee14b537735d202c
 
-val defaultAsyncHttpClientConfig: DefaultAsyncHttpClientConfig by lazy {
+val defaultAsyncHttpClientConfig: DefaultAsyncHttpClientConfig by lazy(mode = LazyThreadSafetyMode.PUBLICATION) {
     DefaultAsyncHttpClientConfig.Builder().apply {
         runCatching {
             if (Systemx.isUnix && classIsPresent("io.netty.channel.epoll.EpollEventLoopGroup")) {
@@ -37,7 +37,7 @@ val defaultAsyncHttpClientConfig: DefaultAsyncHttpClientConfig by lazy {
 /**
  * Default [AsyncHttpClient] instance
  */
-val defaultAsyncHttpClient: AsyncHttpClient by lazy {
+val defaultAsyncHttpClient: AsyncHttpClient by lazy(mode = LazyThreadSafetyMode.PUBLICATION) {
     Dsl.asyncHttpClient(defaultAsyncHttpClientConfig)
 }
 
