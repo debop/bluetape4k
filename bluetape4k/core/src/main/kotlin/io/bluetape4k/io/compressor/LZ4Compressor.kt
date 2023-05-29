@@ -1,10 +1,11 @@
 package io.bluetape4k.io.compressor
 
+import io.bluetape4k.io.getBytes
+import io.bluetape4k.io.toByteBufferDirect
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.emptyByteArray
-import io.bluetape4k.support.toByteArray
-import io.bluetape4k.support.toInt
 import net.jpountz.lz4.LZ4Factory
+import java.nio.ByteBuffer
 
 /**
  * LZ4 Compressor
@@ -22,32 +23,43 @@ class LZ4Compressor: AbstractCompressor() {
         val sourceSize = plain.size
         val maxOutputSize = compressor.maxCompressedLength(sourceSize)
 
-        // TODO: ByteBuffer 를 사용하는 것이 더 효율적일 수 있음
+        val sourceBuffer = plain.toByteBufferDirect()
+        val outputBuffer = ByteBuffer.allocateDirect(MAGIC_NUMBER_SIZE + maxOutputSize)
+        outputBuffer.putInt(0, sourceSize)
 
-        val compressedArray = ByteArray(MAGIC_NUMBER_SIZE + maxOutputSize)
-        val compressedSize = compressor.compress(
-            plain,
+        val outputSize = compressor.compress(
+            sourceBuffer,
             0,
             sourceSize,
-            compressedArray,
+            outputBuffer,
             MAGIC_NUMBER_SIZE,
-            maxOutputSize - MAGIC_NUMBER_SIZE
+            maxOutputSize
         )
 
-        sourceSize.toByteArray().copyInto(compressedArray, 0, 0)
-        return compressedArray.copyOfRange(0, compressedSize + MAGIC_NUMBER_SIZE)
+        return ByteArray(MAGIC_NUMBER_SIZE + outputSize).apply {
+            outputBuffer.get(this, 0, MAGIC_NUMBER_SIZE + outputSize)
+        }
     }
 
     override fun doDecompress(compressed: ByteArray): ByteArray {
-        val originSize = compressed.toInt()
+        if (compressed.isEmpty()) {
+            return emptyByteArray
+        }
+
+        val sourceBuffer = compressed.toByteBufferDirect()
+        val originSize = sourceBuffer.getInt(0)
         if (originSize <= 0) {
             return emptyByteArray
         }
 
-        // TODO: ByteBuffer 를 사용하는 것이 더 효율적일 수 있음
-
-        val originArray = ByteArray(originSize)
-        decompressor.decompress(compressed, MAGIC_NUMBER_SIZE, originArray, 0, originArray.size)
-        return originArray
+        val outputBuffer = ByteBuffer.allocateDirect(originSize)
+        decompressor.decompress(
+            sourceBuffer,
+            MAGIC_NUMBER_SIZE,
+            outputBuffer,
+            0,
+            originSize
+        )
+        return outputBuffer.getBytes()
     }
 }

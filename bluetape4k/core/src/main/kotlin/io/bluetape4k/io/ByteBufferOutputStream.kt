@@ -27,6 +27,16 @@ open class ByteBufferOutputStream private constructor(
         operator fun invoke(buffer: ByteBuffer): ByteBufferOutputStream {
             return ByteBufferOutputStream(buffer)
         }
+
+        @JvmStatic
+        fun direct(capacity: Int = DEFAULT_BUFFER_SIZE): ByteBufferOutputStream {
+            return ByteBufferOutputStream(ByteBuffer.allocateDirect(capacity))
+        }
+
+        @JvmStatic
+        fun direct(bytes: ByteArray): ByteBufferOutputStream {
+            return ByteBufferOutputStream(bytes.toByteBufferDirect())
+        }
     }
 
     override fun write(b: Int) {

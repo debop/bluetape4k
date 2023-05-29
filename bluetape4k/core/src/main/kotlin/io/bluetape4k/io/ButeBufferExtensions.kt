@@ -19,7 +19,7 @@ fun ByteBuffer.getBytes(): ByteArray {
             array().copyOfRange(offset, offset + length)
         }
     } else {
-        ByteArray(length).apply { this@getBytes.duplicate().get(this) }
+        ByteArray(length).apply { this@getBytes.get(this) }
     }
 }
 
@@ -27,7 +27,7 @@ fun ByteBuffer.getBytes(): ByteArray {
  * 대상 [ByteBuffer]를 건드리지 않고, 내용만 추출합니다.
  */
 fun ByteBuffer.extractBytes(): ByteArray =
-    ByteArray(remaining()).apply { this@extractBytes.duplicate().get(this) }
+    ByteArray(remaining()).apply { this@extractBytes.get(this) }
 
 
 /**
@@ -37,7 +37,7 @@ fun ByteBuffer.getAllBytes(): ByteArray {
     return if (hasArray()) {
         array()
     } else {
-        ByteArray(remaining()).apply { this@getAllBytes.duplicate().get(this) }
+        ByteArray(remaining()).apply { this@getAllBytes.get(this) }
     }
 }
 

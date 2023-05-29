@@ -1,10 +1,11 @@
 package io.bluetape4k.io.compressor
 
 import com.github.luben.zstd.Zstd
+import io.bluetape4k.io.getBytes
+import io.bluetape4k.io.toByteBufferDirect
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.emptyByteArray
-import io.bluetape4k.support.toByteArray
-import io.bluetape4k.support.toInt
+import java.nio.ByteBuffer
 
 
 /**
@@ -28,36 +29,45 @@ class ZstdCompressor private constructor(val level: Int): AbstractCompressor() {
         val sourceSize = plain.size
         val maxOutputSize = Zstd.compressBound(plain.size.toLong()).toInt()
 
-        val compressedArray = ByteArray(MAGIC_NUMBER_SIZE + maxOutputSize)
-        val compressedSize = Zstd.compressByteArray(
-            compressedArray,
+        val sourceBuffer = plain.toByteBufferDirect()
+        val outputBuffer = ByteBuffer.allocateDirect(MAGIC_NUMBER_SIZE + maxOutputSize)
+        outputBuffer.putInt(0, sourceSize)
+
+        val outputSize = Zstd.compressDirectByteBuffer(
+            outputBuffer,
             MAGIC_NUMBER_SIZE,
             maxOutputSize - MAGIC_NUMBER_SIZE,
-            plain,
+            sourceBuffer,
             0,
-            sourceSize,
+            sourceBuffer.remaining(),
             level
-        )
+        ).toInt()
 
-        sourceSize.toByteArray().copyInto(compressedArray, 0, 0)
-        return compressedArray.copyOfRange(0, compressedSize.toInt() + MAGIC_NUMBER_SIZE)
+        return ByteArray(MAGIC_NUMBER_SIZE + outputSize).apply {
+            outputBuffer.get(this, 0, MAGIC_NUMBER_SIZE + outputSize)
+        }
     }
 
     override fun doDecompress(compressed: ByteArray): ByteArray {
-        val originSize = compressed.toInt()
-        if (originSize <= 0) {
+        if (compressed.isEmpty()) {
+            return emptyByteArray
+        }
+        val sourceBuffer = compressed.toByteBufferDirect()
+        val outputSize = sourceBuffer.getInt(0)
+        if (outputSize <= 0) {
             return emptyByteArray
         }
 
-        val originArray = ByteArray(originSize)
-        Zstd.decompressByteArray(
-            originArray,
+        val outputBuffer = ByteBuffer.allocateDirect(outputSize)
+        Zstd.decompressDirectByteBuffer(
+            outputBuffer,
             0,
-            originSize,
-            compressed,
+            outputSize,
+            sourceBuffer,
             MAGIC_NUMBER_SIZE,
-            compressed.size - MAGIC_NUMBER_SIZE
+            sourceBuffer.remaining() - MAGIC_NUMBER_SIZE
         )
-        return originArray
+
+        return outputBuffer.getBytes()
     }
 }

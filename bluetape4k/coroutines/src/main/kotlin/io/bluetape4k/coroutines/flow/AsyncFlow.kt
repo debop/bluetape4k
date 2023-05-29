@@ -64,12 +64,12 @@ class AsyncFlow<out T> @PublishedApi internal constructor(
      */
     override suspend fun collect(collector: FlowCollector<T>) {
         channelFlow {
-            deferredFlow.collect {
-                it.start(this)
-                send(it)
+            deferredFlow.collect { defer ->
+                defer.start(this)
+                send(defer)
             }
-        }.collect {
-            collector.emit(it.await())
+        }.collect { defer ->
+            collector.emit(defer.await())
         }
     }
 }
@@ -104,12 +104,12 @@ suspend fun <T> AsyncFlow<T>.collect(capacity: Int = Channel.BUFFERED, collector
     channelFlow {
         deferredFlow
             .buffer(capacity)
-            .collect {
-                it.start(this)
-                send(it)
+            .collect { defer ->
+                defer.start(this)
+                send(defer)
             }
-    }.collect {
-        collector.emit(it.await())
+    }.collect { defer ->
+        collector.emit(defer.await())
     }
 }
 

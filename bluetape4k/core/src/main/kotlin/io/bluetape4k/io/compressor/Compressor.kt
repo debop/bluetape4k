@@ -54,7 +54,6 @@ interface Compressor {
         decompress(compressedStream.toByteArray()).toInputStream()
 }
 
-
 /**
  * [Compressor]의 최상위 추상화 클래스입니다.
  */

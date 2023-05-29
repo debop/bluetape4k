@@ -9,6 +9,7 @@ import io.bluetape4k.support.replicate
 import io.bluetape4k.support.toUtf8Bytes
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.xerial.snappy.Snappy
@@ -66,7 +67,9 @@ abstract class AbstractCompressorTest {
         val expected = getRandomString().toUtf8Bytes()
 
         val compressed = compressor.compress(expected)
+        compressed.size shouldBeGreaterThan 0
         val actual = compressor.decompress(compressed)
+        actual.size shouldBeGreaterThan 0
 
         log.debug { "${compressor.javaClass.simpleName} ratio=${compressed.size * 100.0 / expected.size}" }
         actual shouldBeEqualTo expected
