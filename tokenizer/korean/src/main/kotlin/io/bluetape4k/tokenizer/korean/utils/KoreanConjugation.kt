@@ -9,12 +9,11 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.tokenizer.korean.utils.Hangul.composeHangul
 import io.bluetape4k.tokenizer.korean.utils.Hangul.decomposeHangul
 import io.bluetape4k.tokenizer.korean.utils.Hangul.hasCoda
-import java.io.Serializable
 
 /**
  * Expands Korean verbs and adjectives to all possible conjugation forms.
  */
-object KoreanConjugation: KLogging(), Serializable {
+object KoreanConjugation: KLogging() {
 
     // ㅋ, ㅎ for 잨ㅋㅋㅋㅋ 잔댛ㅎㅎㅎㅎ
     private val CODAS_COMMON = charArrayOf('ㅂ', 'ㅆ', 'ㄹ', 'ㄴ', 'ㅁ')
@@ -101,45 +100,52 @@ object KoreanConjugation: KLogging(), Serializable {
      * 맞추다, 겨누다, 재우다
      */
     private fun expandChar_겨누다(lastChar: Char, onset: Char): List<String> {
-        return addPreEomi(lastChar, PRE_EOMI_겨누다) +
-            CODAS_NO_PAST.map { composeHangul(onset, 'ㅜ', it).toString() }.toFastList() +
-            fastListOf(
-                composeHangul(onset, 'ㅝ').toString(),
-                composeHangul(onset, 'ㅝ', 'ㅆ').toString(),
-                lastChar.toString()
-            )
+        return fastListOf<String>().apply {
+            addAll(addPreEomi(lastChar, PRE_EOMI_겨누다))
+            addAll(CODAS_NO_PAST.map { composeHangul(onset, 'ㅜ', it).toString() })
+
+            add(composeHangul(onset, 'ㅝ').toString())
+            add(composeHangul(onset, 'ㅝ', 'ㅆ').toString())
+            add(lastChar.toString())
+        }
     }
 
     private val PRE_EOMI_UNION_2_6 by lazy { PRE_EOMI_2 + PRE_EOMI_6 }
 
     private fun expandChar_치르다(lastChar: Char, onset: Char): List<String> {
-        return addPreEomi(lastChar, PRE_EOMI_2 + PRE_EOMI_6) +
-            CODAS_NO_PAST.map { composeHangul(onset, 'ㅡ', it).toString() }.toFastList() +
-            fastListOf(
-                composeHangul(onset, 'ㅝ').toString(),
-                composeHangul(onset, 'ㅓ').toString(),
-                composeHangul(onset, 'ㅏ').toString(),
-                composeHangul(onset, 'ㅝ', 'ㅆ').toString(),
-                composeHangul(onset, 'ㅓ', 'ㅆ').toString(),
-                composeHangul(onset, 'ㅏ', 'ㅆ').toString(),
-                lastChar.toString()
+        return fastListOf<String>().apply {
+            addAll(addPreEomi(lastChar, PRE_EOMI_2 + PRE_EOMI_6))
+            addAll(CODAS_NO_PAST.map { composeHangul(onset, 'ㅡ', it).toString() })
+            addAll(
+                fastListOf(
+                    composeHangul(onset, 'ㅝ').toString(),
+                    composeHangul(onset, 'ㅓ').toString(),
+                    composeHangul(onset, 'ㅏ').toString(),
+                    composeHangul(onset, 'ㅝ', 'ㅆ').toString(),
+                    composeHangul(onset, 'ㅓ', 'ㅆ').toString(),
+                    composeHangul(onset, 'ㅏ', 'ㅆ').toString(),
+                    lastChar.toString()
+                )
             )
+        }
     }
 
     private fun expandChar_사귀다(lastChar: Char): List<String> {
-        return addPreEomi(lastChar, PRE_EOMI_UNION_2_6) +
-            CODAS_NO_PAST.map { composeHangul('ㄱ', 'ㅟ', it).toString() }.toFastList() +
-            fastListOf(
-                composeHangul('ㄱ', 'ㅕ', ' ').toString(),
-                composeHangul('ㄱ', 'ㅕ', 'ㅆ').toString(),
-                lastChar.toString()
-            )
+        return fastListOf<String>().apply {
+            addAll(addPreEomi(lastChar, PRE_EOMI_UNION_2_6))
+            addAll(CODAS_NO_PAST.map { composeHangul('ㄱ', 'ㅟ', it).toString() })
+            add(composeHangul('ㄱ', 'ㅕ', ' ').toString())
+            add(composeHangul('ㄱ', 'ㅕ', 'ㅆ').toString())
+            add(lastChar.toString())
+        }
     }
 
     private fun expandChar_쥐다(lastChar: Char, onset: Char): List<String> {
-        return CODAS_NO_PAST.map { composeHangul(onset, 'ㅟ', it).toString() }.toFastList() +
-            addPreEomi(lastChar, PRE_EOMI_UNION_2_6) +
-            fastListOf(lastChar.toString())
+        return fastListOf<String>().apply {
+            addAll(CODAS_NO_PAST.map { composeHangul(onset, 'ㅟ', it).toString() })
+            addAll(addPreEomi(lastChar, PRE_EOMI_UNION_2_6))
+            add(lastChar.toString())
+        }
 
     }
 
@@ -147,23 +153,25 @@ object KoreanConjugation: KLogging(), Serializable {
      * 마시다, 엎드리다, 치다, 이다, 아니다
      */
     private fun expandChar_마시다(lastChar: Char, onset: Char): List<String> {
-        return CODAS_NO_PAST.map { composeHangul(onset, 'ㅣ', it).toString() }.toFastList() +
-            addPreEomi(lastChar, PRE_EOMI_1_2 + PRE_EOMI_UNION_2_6) +
-            fastListOf(
-                composeHangul(onset, 'ㅣ', 'ㅂ') + "니",
-                composeHangul(onset, 'ㅕ').toString(),
-                composeHangul(onset, 'ㅕ', 'ㅆ').toString(),
-                lastChar.toString()
-            )
+        return fastListOf<String>().apply {
+            addAll(CODAS_NO_PAST.map { composeHangul(onset, 'ㅣ', it).toString() })
+            addAll(addPreEomi(lastChar, PRE_EOMI_1_2 + PRE_EOMI_UNION_2_6))
+            add(composeHangul(onset, 'ㅣ', 'ㅂ') + "니")
+            add(composeHangul(onset, 'ㅕ').toString())
+            add(composeHangul(onset, 'ㅕ', 'ㅆ').toString())
+            add(lastChar.toString())
+        }
     }
 
     /**
      * 꿰다, 꾀다
      */
     private fun expandChar_꿰다(lastChar: Char, onset: Char, vowel: Char): List<String> {
-        return addPreEomi(lastChar, PRE_EOMI_UNION_2_6) +
-            CODAS_COMMON.map { composeHangul(onset, vowel, it).toString() }.toFastList() +
-            fastListOf(lastChar.toString())
+        return fastListOf<String>().apply {
+            addAll(addPreEomi(lastChar, PRE_EOMI_UNION_2_6))
+            addAll(CODAS_COMMON.map { composeHangul(onset, vowel, it).toString() })
+            add(lastChar.toString())
+        }
     }
 
     private val PRE_EOMI_물러서다 by lazy { PRE_EOMI_VOWEL + PRE_EOMI_1_1 + PRE_EOMI_2 + PRE_EOMI_6 }
@@ -172,9 +180,11 @@ object KoreanConjugation: KLogging(), Serializable {
      * 나머지 받침없는 서술어 (둘러서다, 켜다, 세다, 캐다, 차다)
      */
     private fun expandChar_물러서다(lastChar: Char, onset: Char, vowel: Char): List<String> {
-        return CODAS_COMMON.map { composeHangul(onset, vowel, it).toString() }.toFastList() +
-            addPreEomi(lastChar, PRE_EOMI_물러서다) +
-            fastListOf(lastChar.toString())
+        return fastListOf<String>().apply {
+            addAll(CODAS_COMMON.map { composeHangul(onset, vowel, it).toString() })
+            addAll(addPreEomi(lastChar, PRE_EOMI_물러서다))
+            add(lastChar.toString())
+        }
     }
 
     private val PRE_EOMI_만들다 by lazy { PRE_EOMI_1_2 + PRE_EOMI_3 }
@@ -184,40 +194,48 @@ object KoreanConjugation: KLogging(), Serializable {
      * Cases with codas : 만들다, 알다, 풀다
      */
     private fun expandChar_만들다(lastChar: Char, onset: Char, vowel: Char): List<String> {
-        return addPreEomi(lastChar, PRE_EOMI_만들다) +
-            addPreEomi(composeHangul(onset, vowel), PRE_EOMI_만들다_2).toFastList() +
-            fastListOf(
-                composeHangul(onset, vowel, 'ㄻ').toString(),
-                composeHangul(onset, vowel, 'ㄴ').toString(),
-                lastChar.toString()
+        return fastListOf<String>().apply {
+            addAll(addPreEomi(lastChar, PRE_EOMI_만들다))
+            addAll(addPreEomi(composeHangul(onset, vowel), PRE_EOMI_만들다_2))
+            addAll(
+                fastListOf(
+                    composeHangul(onset, vowel, 'ㄻ').toString(),
+                    composeHangul(onset, vowel, 'ㄴ').toString(),
+                    lastChar.toString()
+                )
             )
+        }
     }
 
     private val PRE_EOMI_UNION_4_5 by lazy { PRE_EOMI_4 + PRE_EOMI_5 }
 
     private fun expandChar_낫다(lastChar: Char, onset: Char): List<String> {
-        return addPreEomi(lastChar, PRE_EOMI_UNION_2_6) +
-            addPreEomi(composeHangul(onset, 'ㅏ'), PRE_EOMI_UNION_4_5).toFastList() +
-            fastListOf(lastChar.toString())
+        return fastListOf<String>().apply {
+            addAll(addPreEomi(lastChar, PRE_EOMI_UNION_2_6))
+            addAll(addPreEomi(composeHangul(onset, 'ㅏ'), PRE_EOMI_UNION_4_5))
+            add(lastChar.toString())
+        }
     }
 
     private val PRE_EOMI_붇다 by lazy { PRE_EOMI_1_2 + PRE_EOMI_1_4 + PRE_EOMI_4 + PRE_EOMI_5 }
 
     private fun expandChar_붇다(lastChar: Char, onset: Char): List<String> {
-        return addPreEomi(lastChar, PRE_EOMI_UNION_2_6) +
-            addPreEomi(composeHangul(onset, 'ㅜ'), PRE_EOMI_붇다).toFastList() +
-            fastListOf(
-                composeHangul(onset, 'ㅜ', 'ㄹ').toString(),
-                lastChar.toString()
-            )
+        return fastListOf<String>().apply {
+            addAll(addPreEomi(lastChar, PRE_EOMI_UNION_2_6))
+            addAll(addPreEomi(composeHangul(onset, 'ㅜ'), PRE_EOMI_붇다))
+            add(composeHangul(onset, 'ㅜ', 'ㄹ').toString())
+            add(lastChar.toString())
+        }
     }
 
     private val PRE_EOMI_눕다 by lazy { PRE_EOMI_1_4 + PRE_EOMI_4 + PRE_EOMI_5 }
 
     private fun expandChar_눕다(lastChar: Char, onset: Char): List<String> {
-        return addPreEomi(lastChar, PRE_EOMI_UNION_2_6) +
-            addPreEomi(composeHangul(onset, 'ㅜ'), PRE_EOMI_눕다) +
-            fastListOf(lastChar.toString())
+        return fastListOf<String>().apply {
+            addAll(addPreEomi(lastChar, PRE_EOMI_UNION_2_6))
+            addAll(addPreEomi(composeHangul(onset, 'ㅜ'), PRE_EOMI_눕다))
+            add(lastChar.toString())
+        }
     }
 
     private val PRE_EOMI_UNION_1_4_7 by lazy { PRE_EOMI_1_4 + PRE_EOMI_7 }
@@ -226,43 +244,51 @@ object KoreanConjugation: KLogging(), Serializable {
      *  간지럽다, 갑작스럽다 -> 갑작스런
      */
     private fun expandChar_간지럽다(lastChar: Char, onset: Char): List<String> {
-        return addPreEomi(composeHangul(onset, 'ㅓ'), PRE_EOMI_UNION_1_4_7) +
-            fastListOf(
-                composeHangul(onset, 'ㅓ').toString(),
-                composeHangul(onset, 'ㅓ', 'ㄴ').toString(),
-                lastChar.toString()
-            )
+        return fastListOf<String>().apply {
+            addAll(addPreEomi(composeHangul(onset, 'ㅓ'), PRE_EOMI_UNION_1_4_7))
+            add(composeHangul(onset, 'ㅓ').toString())
+            add(composeHangul(onset, 'ㅓ', 'ㄴ').toString())
+            add(lastChar.toString())
+        }
     }
 
     private fun expandChar_아름답다(lastChar: Char, onset: Char, vowel: Char): List<String> {
-        return addPreEomi(composeHangul(onset, vowel), PRE_EOMI_UNION_1_4_7) +
-            fastListOf(
-                composeHangul(onset, vowel).toString(),
-                lastChar.toString()
-            )
+        return fastListOf<String>().apply {
+            addAll(addPreEomi(composeHangul(onset, vowel), PRE_EOMI_UNION_1_4_7))
+            add(composeHangul(onset, vowel).toString())
+            add(lastChar.toString())
+        }
     }
 
     private fun expandChar_놓다(lastChar: Char, onset: Char): List<String> {
-        return addPreEomi(lastChar, PRE_EOMI_UNION_2_6) +
-            CODAS_COMMON.map { composeHangul(onset, 'ㅗ', it).toString() }.toFastList() +
-            fastListOf(
-                composeHangul(onset, 'ㅘ').toString(),
-                composeHangul(onset, 'ㅗ').toString(),
-                lastChar.toString()
+        return fastListOf<String>().apply {
+            addAll(addPreEomi(lastChar, PRE_EOMI_UNION_2_6))
+            addAll(CODAS_COMMON.map { composeHangul(onset, 'ㅗ', it).toString() })
+            addAll(
+                fastListOf(
+                    composeHangul(onset, 'ㅘ').toString(),
+                    composeHangul(onset, 'ㅗ').toString(),
+                    lastChar.toString()
+                )
             )
+        }
     }
 
     /**
      * 파랗다, 퍼렇다, 어떻다
      */
     private fun expandChar_파랗다(lastChar: Char, onset: Char, vowel: Char): List<String> {
-        return CODAS_COMMON.map { composeHangul(onset, vowel, it).toString() }.toFastList() +
-            CODAS_FOR_CONTRACTION.map { composeHangul(onset, 'ㅐ', it).toString() }.toFastList() +
-            fastListOf(
-                composeHangul(onset, 'ㅐ').toString(),
-                composeHangul(onset, vowel).toString(),
-                lastChar.toString()
+        return fastListOf<String>().apply {
+            addAll(CODAS_COMMON.map { composeHangul(onset, vowel, it).toString() })
+            addAll(CODAS_FOR_CONTRACTION.map { composeHangul(onset, 'ㅐ', it).toString() })
+            addAll(
+                fastListOf(
+                    composeHangul(onset, 'ㅐ').toString(),
+                    composeHangul(onset, vowel).toString(),
+                    lastChar.toString()
+                )
             )
+        }
     }
 
     private val PRE_EOMI_있다 by lazy {
@@ -348,19 +374,23 @@ object KoreanConjugation: KLogging(), Serializable {
                     'ㄹ'
                 )
                 val o = onset
-                val conjugation = addPreEomi(lastChar, PRE_EOMI_UNION_2_6) +
-                    CODAS_NO_PAST.map { composeHangul(o, 'ㅡ', it).toString() }.toFastList() +
-                    fastListOf(
-                        composeHangul(o, 'ㅝ').toString(),
-                        composeHangul(o, 'ㅓ').toString(),
-                        composeHangul(o, 'ㅏ').toString(),
-                        composeHangul(o, 'ㅝ', 'ㅆ').toString(),
-                        composeHangul(o, 'ㅓ', 'ㅆ').toString(),
-                        composeHangul(o, 'ㅏ', 'ㅆ').toString(),
-                        lastCharString
+                val conjugation = fastListOf<String>().apply {
+                    addAll(addPreEomi(lastChar, PRE_EOMI_UNION_2_6))
+                    addAll(CODAS_NO_PAST.map { composeHangul(o, 'ㅡ', it).toString() })
+                    addAll(
+                        fastListOf(
+                            composeHangul(o, 'ㅝ').toString(),
+                            composeHangul(o, 'ㅓ').toString(),
+                            composeHangul(o, 'ㅏ').toString(),
+                            composeHangul(o, 'ㅝ', 'ㅆ').toString(),
+                            composeHangul(o, 'ㅓ', 'ㅆ').toString(),
+                            composeHangul(o, 'ㅏ', 'ㅆ').toString(),
+                            lastCharString
+                        )
                     )
+                }
 
-                conjugation.map { newInit + it }.toFastList()
+                conjugation.collect { newInit + it }
             } else {
                 emptyFastList()
             }

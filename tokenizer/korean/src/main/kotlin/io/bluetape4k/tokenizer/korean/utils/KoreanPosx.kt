@@ -91,14 +91,28 @@ object KoreanPosx: Serializable {
         val end = if (isFinal(rest)) endingPos else null
 
         return when (rule) {
-            '+'  -> fastListOf(KoreanPosTrie(pos, fastListOf(SelfNode) + buildTrie(rest, endingPos), end))
-            '*'  -> fastListOf(
-                KoreanPosTrie(pos, fastListOf(SelfNode) + buildTrie(rest, endingPos), end)
-            ) +
-                buildTrie(rest, endingPos)
+            '+'  -> fastListOf(
+                KoreanPosTrie(
+                    pos,
+                    fastListOf<KoreanPosTrie>().apply {
+                        add(SelfNode)
+                        addAll(buildTrie(rest, endingPos))
+                    },
+                    end
+                )
+            )
+
+            '*'  -> fastListOf<KoreanPosTrie>().apply {
+                add(KoreanPosTrie(pos, fastListOf(SelfNode) + buildTrie(rest, endingPos), end))
+                addAll(buildTrie(rest, endingPos))
+            }
 
             '1'  -> fastListOf(KoreanPosTrie(pos, buildTrie(rest, endingPos), end))
-            '0'  -> fastListOf(KoreanPosTrie(pos, buildTrie(rest, endingPos), end)) + buildTrie(rest, endingPos)
+            '0'  -> fastListOf<KoreanPosTrie>().apply {
+                add(KoreanPosTrie(pos, buildTrie(rest, endingPos), end))
+                addAll(buildTrie(rest, endingPos))
+            }
+
             else -> error("Not supported rule. only support [+, *, 1, 0]")
         }
     }

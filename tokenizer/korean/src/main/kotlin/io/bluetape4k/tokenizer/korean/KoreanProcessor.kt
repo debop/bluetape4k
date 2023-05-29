@@ -181,7 +181,7 @@ object KoreanProcessor {
      * @param tokens         Korean tokens
      * @return A sequence of extracted phrases
      */
-    fun extractPhrasesForProduct(tokens: List<KoreanToken>): List<KoreanPhrase> {
+    suspend fun extractPhrasesForNoun(tokens: List<KoreanToken>): List<KoreanPhrase> {
         return NounPhraseExtractor.extractPhrases(tokens)
     }
 

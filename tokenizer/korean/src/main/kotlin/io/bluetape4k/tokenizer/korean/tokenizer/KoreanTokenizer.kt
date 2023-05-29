@@ -19,6 +19,9 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Unknown
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
 import io.bluetape4k.tokenizer.korean.utils.KoreanSubstantive
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import org.eclipse.collections.impl.list.mutable.FastList
 import java.io.Serializable
 
 
@@ -93,7 +96,6 @@ object KoreanTokenizer: KLogging(), Serializable {
     ): List<KoreanToken> {
         val tokenized = tokenizeTopN(text, 1, profile)
             .flatMap { it.firstOrNull() ?: emptyList() }
-            .toFastList()
 
         return KoreanStemmer.stem(tokenized)
     }
@@ -138,26 +140,28 @@ object KoreanTokenizer: KLogging(), Serializable {
      *              for performance optimization. This method is private and is called only by tokenize.
      * @return The best possible parse.
      */
-    private fun parseKoreanChunk(
+    private suspend fun parseKoreanChunk(
         chunk: KoreanToken,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
         topN: Int = 1,
     ): List<List<KoreanToken>> {
-        return findTopCandidates(chunk, profile).take(topN).toFastList()
+        return findTopCandidates(chunk, profile).take(topN)
     }
 
-    private fun findTopCandidates(chunk: KoreanToken, profile: TokenizerProfile): List<List<KoreanToken>> {
-        val directMatch: List<List<KoreanToken>> = findDirectMatch(chunk)
+    private suspend fun findTopCandidates(chunk: KoreanToken, profile: TokenizerProfile): List<List<KoreanToken>> =
+        coroutineScope {
+            // val directMatch: List<List<KoreanToken>> = findDirectMatch(chunk)
+            val directMatch = async { findDirectMatch(chunk) }
 
-        // Buffer for solution
-        val solutions = unifiedMapOf<Int, List<CandidateParse>>()
-            .apply {
-                val candidateParse = CandidateParse(
-                    parse = ParsedChunk(fastListOf<KoreanToken>(), 1, profile),
-                    curTrie = koreanPosTrie,
-                    ending = null
-                )
-                put(0, listOf(candidateParse))
+            // Buffer for solution
+            val solutions = unifiedMapOf<Int, List<CandidateParse>>()
+                .apply {
+                    val candidateParse = CandidateParse(
+                        parse = ParsedChunk(fastListOf<KoreanToken>(), 1, profile),
+                        curTrie = koreanPosTrie,
+                        ending = null
+                    )
+                    put(0, listOf(candidateParse))
             }
 
         // Find N best parses per state
@@ -236,17 +240,18 @@ object KoreanTokenizer: KLogging(), Serializable {
             }
         }
 
-        val topCandidates =
-            if (solutions[chunk.length]!!.isEmpty()) {
-                fastListOf(fastListOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
-            } else {
-                solutions[chunk.length]!!.sortedBy { it.parse.score }.map { it.parse.posNodes }.toFastList()
+            val topCandidates = async {
+                if (solutions[chunk.length]!!.isEmpty()) {
+                    fastListOf(fastListOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
+                } else {
+                    solutions[chunk.length]!!.sortedBy { it.parse.score }.map { it.parse.posNodes }.toFastList()
+                }
             }
 
-        return (directMatch + topCandidates).distinct()
+            (directMatch.await() + topCandidates.await()).distinct()
     }
 
-    private fun findDirectMatch(chunk: KoreanToken): List<List<KoreanToken>> {
+    private fun findDirectMatch(chunk: KoreanToken): FastList<FastList<KoreanToken>> {
         for ((pos, dict) in koreanDictionary.entries) {
             if (dict.contains(chunk.text)) {
                 return fastListOf(fastListOf(chunk.copy(pos = pos)))

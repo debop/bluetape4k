@@ -27,15 +27,15 @@ class HangulTest: TestBase() {
 
     @Test
     fun `decomposeHangul with invalid char`() {
-        assertThrows<IllegalArgumentException> {
+        assertThrows<AssertionError> {
             Hangul.decomposeHangul('ㅋ')
         }
 
-        assertThrows<IllegalArgumentException> {
+        assertThrows<AssertionError> {
             Hangul.decomposeHangul('ㅏ')
         }
 
-        assertThrows<IllegalArgumentException> {
+        assertThrows<AssertionError> {
             Hangul.decomposeHangul('ㅀ')
         }
     }
@@ -71,15 +71,15 @@ class HangulTest: TestBase() {
 
     @Test
     fun `compose only vowel`() {
-        assertThrows<IllegalArgumentException> {
+        assertThrows<AssertionError> {
             Hangul.composeHangul(' ', 'ㅏ', ' ')
         }
 
-        assertThrows<IllegalArgumentException> {
+        assertThrows<AssertionError> {
             Hangul.composeHangul('ㄲ', ' ', ' ')
         }
 
-        assertThrows<IllegalArgumentException> {
+        assertThrows<AssertionError> {
             Hangul.composeHangul(' ', ' ', 'ㄴ')
         }
     }

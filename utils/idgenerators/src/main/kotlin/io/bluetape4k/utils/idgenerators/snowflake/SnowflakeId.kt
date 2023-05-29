@@ -12,10 +12,10 @@ data class SnowflakeId(
     /**
      * Snowflake Id 값
      */
-    val value: Long by lazy { makeId(timestamp, machineId, sequence) }
+    val value: Long by lazy(mode = LazyThreadSafetyMode.NONE) { makeId(timestamp, machineId, sequence) }
 
     /**
      * Snowflake Id 값을 36진수로 표현한 문자열
      */
-    val valueAsString: String by lazy { value.toString(ALPHA_NUMERIC_BASE) }
+    val valueAsString: String by lazy(mode = LazyThreadSafetyMode.NONE) { value.toString(ALPHA_NUMERIC_BASE) }
 }

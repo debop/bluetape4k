@@ -59,7 +59,7 @@ object Hangul: Serializable {
      *  @return (onset:Char, vowel:Char, coda:Char)
      */
     fun decomposeHangul(c: Char): HangulChar {
-        require(!(ONSET_MAP.containsKey(c) || VOWEL_MAP.containsKey(c) || CODA_MAP.containsKey(c))) {
+        assert(!(ONSET_MAP.containsKey(c) || VOWEL_MAP.containsKey(c) || CODA_MAP.containsKey(c))) {
             "Input character is not a valid Korean character"
         }
         val u = (c - HANGUL_BASE).code
@@ -82,7 +82,7 @@ object Hangul: Serializable {
      * @param coda 종성
      */
     fun composeHangul(onset: Char, vowel: Char, coda: Char = ' '): Char {
-        require(onset != ' ' && vowel != ' ') { "Input characters are not valid" }
+        assert(onset != ' ' && vowel != ' ') { "Input characters are not valid" }
 
         return (HANGUL_BASE +
             ((ONSET_MAP[onset] ?: 0) * ONSET_BASE) +

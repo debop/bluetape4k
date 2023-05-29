@@ -11,6 +11,8 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Punctuation
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Suffix
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.VerbPrefix
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.buffer
 import org.eclipse.collections.api.factory.Sets
 import org.eclipse.collections.api.set.ImmutableSet
 import java.io.Serializable
@@ -45,32 +47,33 @@ object KoreanDetokenizer: Serializable {
         return collapseTokens(tokenized).joinToString(" ")
     }
 
-    private fun collapseTokens(tokenized: List<KoreanToken>): List<String> {
+    private suspend fun collapseTokens(tokenized: List<KoreanToken>): List<String> {
         val output = fastListOf<String>()
         var isPrefix = false
         var prevToken: KoreanToken? = null
 
-        tokenized.forEach { token ->
-            if (output.isNotEmpty() && (isPrefix || token.pos in SuffixPos)) {
-                val attached = output.last() + token.text
-                output[output.lastIndex] = attached
-                isPrefix = false
-                prevToken = token
-            } else if (prevToken != null && prevToken!!.pos == Noun && token.pos == Verb) {
-                val attached = output.last() + token.text
-                output[output.lastIndex] = attached
-                isPrefix = false
-                prevToken = token
-            } else if (token.pos in PrefixPos) {
-                output.add(token.text)
-                isPrefix = true
-                prevToken = token
-            } else {
-                output.add(token.text)
-                isPrefix = false
-                prevToken = token
+        tokenized.asFlow().buffer()
+            .collect { token ->
+                if (output.isNotEmpty() && (isPrefix || token.pos in SuffixPos)) {
+                    val attached = output.last() + token.text
+                    output[output.lastIndex] = attached
+                    isPrefix = false
+                    prevToken = token
+                } else if (prevToken != null && prevToken!!.pos == Noun && token.pos == Verb) {
+                    val attached = output.last() + token.text
+                    output[output.lastIndex] = attached
+                    isPrefix = false
+                    prevToken = token
+                } else if (token.pos in PrefixPos) {
+                    output.add(token.text)
+                    isPrefix = true
+                    prevToken = token
+                } else {
+                    output.add(token.text)
+                    isPrefix = false
+                    prevToken = token
+                }
             }
-        }
         return output
     }
 

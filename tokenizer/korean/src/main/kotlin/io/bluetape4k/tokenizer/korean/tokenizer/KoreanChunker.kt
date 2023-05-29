@@ -19,8 +19,9 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.ScreenName
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Space
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.URL
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
 import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.map.mutable.UnifiedMap
 import java.io.Serializable
@@ -112,7 +113,7 @@ object KoreanChunker: KLogging(), Serializable {
         }
     }
 
-    private fun splitChunks(text: String): List<ChunkMatch> {
+    private suspend fun splitChunks(text: String): List<ChunkMatch> {
         return if (text.isNotEmpty() && text[0].isSpaceChar) {
             fastListOf(ChunkMatch(0, text.length, text, Space))
         } else {
@@ -206,9 +207,8 @@ object KoreanChunker: KLogging(), Serializable {
         var i = 0
 
         splitBySpaceKeepingSpace(s)
-            .toList()
-            .flatMap { splitChunks(it) }
-            .forEach { m ->
+            .flatMapConcat { splitChunks(it).asFlow() }
+            .collect { m ->
                 val segStart = s.indexOf(m.text, i)
                 tokens.add(0, KoreanToken(m.text, m.pos, segStart, m.text.length))
                 i = segStart + m.text.length

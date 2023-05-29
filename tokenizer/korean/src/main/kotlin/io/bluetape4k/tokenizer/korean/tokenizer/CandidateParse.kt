@@ -7,5 +7,5 @@ import java.io.Serializable
 data class CandidateParse(
     val parse: ParsedChunk,
     val curTrie: List<KoreanPosTrie>,
-    val ending: KoreanPos?,
+    val ending: KoreanPos? = null,
 ): Serializable

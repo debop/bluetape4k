@@ -9,11 +9,17 @@ data class KoreanPhrase(
     val pos: KoreanPos = KoreanPos.Noun,
 ): Serializable {
 
-    val offset get() = this.tokens.first().offset
+    val offset by lazy(mode = LazyThreadSafetyMode.NONE) {
+        this.tokens.first().offset
+    }
 
-    val text get() = this.tokens.map { it.text }.joinToString("")
+    val text by lazy(mode = LazyThreadSafetyMode.NONE) {
+        this.tokens.joinToString("") { it.text }
+    }
 
-    val length get() = this.tokens.map { it.text.length }.sum()
+    val length by lazy(mode = LazyThreadSafetyMode.NONE) {
+        this.tokens.sumOf { it.text.length }
+    }
 
     override fun toString(): String =
         "${this.text}($pos: ${this.offset}, ${this.length})"

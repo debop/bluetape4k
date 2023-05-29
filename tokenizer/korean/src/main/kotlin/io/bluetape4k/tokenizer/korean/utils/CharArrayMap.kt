@@ -64,8 +64,8 @@ open class CharArrayMap<V>(startSize: Int): UnifiedMap<Any, V>(), Serializable {
 
     override fun clear() {
         _count = 0
-        Arrays.fill(_keys, null)
-        Arrays.fill(_values, null)
+        _keys.fill(null)
+        _values.fill(null)
     }
 
     open fun containsKey(text: CharArray, off: Int, len: Int): Boolean {
@@ -229,13 +229,13 @@ open class CharArrayMap<V>(startSize: Int): UnifiedMap<Any, V>(), Serializable {
 
     override val size: Int get() = _count
 
-    override fun toString(): String {
-        val sb = StringBuilder("{")
-        this.entries.forEach { entry ->
-            if (sb.length > 1) sb.append(", ")
-            sb.append(entry)
+    override fun toString(): String = buildString {
+        append("{")
+        this@CharArrayMap.entries.forEach { entry ->
+            if (length > 1) append(", ")
+            append(entry)
         }
-        return sb.append("}").toString()
+        append("}")
     }
 
     private val _entrySet: EntrySet by lazy { createEntrySet() }

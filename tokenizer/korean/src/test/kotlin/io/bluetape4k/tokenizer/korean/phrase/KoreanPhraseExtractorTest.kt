@@ -24,7 +24,7 @@ class KoreanPhraseExtractorTest: TestBase() {
     private val superLongText = "허니버터칩정규직크리스마스".repeat(50)
 
     @Test
-    fun `collapse KoreanPos sequence`() {
+    fun `collapse KoreanPos sequence`() = runTest {
         var actual = collapsePos(
             listOf(
                 KoreanToken("N", Noun, 0, 1),

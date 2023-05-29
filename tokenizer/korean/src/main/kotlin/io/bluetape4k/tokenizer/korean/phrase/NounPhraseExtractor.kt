@@ -19,6 +19,8 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Suffix
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosTrie
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.buffer
 import java.io.Serializable
 
 
@@ -101,7 +103,6 @@ object NounPhraseExtractor: KLogging(), Serializable {
         fun trimNonNouns() = phrases
             .dropWhile { !PhraseHeadPoses.contains(it.pos) }
             .dropLastWhile { !PhraseTailPoses.contains(it.pos) }
-            .toFastList()
 
         fun trimSpacesFromPhrase(phrasesToTrim: Collection<KoreanPhrase>): List<KoreanPhrase> {
             return phrasesToTrim
@@ -126,19 +127,17 @@ object NounPhraseExtractor: KLogging(), Serializable {
                         else                        -> phrase
                     }
                 }
-                .toFastList()
         }
 
         val trimNon = trimNonNouns()
         val result = trimSpacesFromPhrase(trimNon)
-        return result
+        return result.toFastList()
     }
 
     private fun trimPhrase(phrase: KoreanPhrase): KoreanPhrase {
         val tokens = phrase.tokens
             .dropWhile { it.pos == Space }
             .dropLastWhile { it.pos == Space }
-            .toFastList()
 
         return KoreanPhrase(tokens, phrase.pos)
     }
@@ -183,7 +182,7 @@ object NounPhraseExtractor: KLogging(), Serializable {
         return isRightLength() && notEndingInNonPhrasesSuffix()
     }
 
-    fun collapsePos(tokens: List<KoreanToken>): List<KoreanPhrase> {
+    suspend fun collapsePos(tokens: List<KoreanToken>): List<KoreanPhrase> {
 
         fun getTries(token: KoreanToken, trie: List<KoreanPosTrie?>): Pair<KoreanPosTrie?, List<KoreanPosTrie?>> {
             val curTrie = trie.firstOrNull { it != null && it.curPos == token.pos }
@@ -199,39 +198,40 @@ object NounPhraseExtractor: KLogging(), Serializable {
         var curTrie: List<KoreanPosTrie?> = CollapseTrie
 
 
-        tokens.forEach { token ->
-            when {
-                curTrie.any { it != null && it.curPos == token.pos } -> {
-                    // Extend the current phase
-                    val (ct, nt) = getTries(token, curTrie)
+        tokens.asFlow().buffer()
+            .collect { token ->
+                when {
+                    curTrie.any { it != null && it.curPos == token.pos } -> {
+                        // Extend the current phase
+                        val (ct, nt) = getTries(token, curTrie)
 
-                    if (phrases.isEmpty || curTrie == CollapseTrie) {
-                        phrases.add(KoreanPhrase(fastListOf(token), ct?.ending ?: Noun))
-                    } else {
-                        val newPhrase = KoreanPhrase(phrases.last().tokens + token, ct?.ending ?: Noun)
-                        if (phrases.isEmpty) {
-                            phrases.add(newPhrase)
+                        if (phrases.isEmpty || curTrie == CollapseTrie) {
+                            phrases.add(KoreanPhrase(fastListOf(token), ct?.ending ?: Noun))
                         } else {
-                            phrases[phrases.lastIndex] = newPhrase
+                            val newPhrase = KoreanPhrase(phrases.last().tokens + token, ct?.ending ?: Noun)
+                            if (phrases.isEmpty) {
+                                phrases.add(newPhrase)
+                            } else {
+                                phrases[phrases.lastIndex] = newPhrase
+                            }
                         }
+                        curTrie = nt
                     }
-                    curTrie = nt
-                }
 
-                CollapseTrie.any { it.curPos == token.pos }          -> {
-                    // Start a new phrase
-                    val (ct, nt) = getTries(token, CollapseTrie)
-                    phrases.add(KoreanPhrase(fastListOf(token), ct?.ending ?: Noun))
-                    curTrie = nt
-                }
+                    CollapseTrie.any { it.curPos == token.pos }          -> {
+                        // Start a new phrase
+                        val (ct, nt) = getTries(token, CollapseTrie)
+                        phrases.add(KoreanPhrase(fastListOf(token), ct?.ending ?: Noun))
+                        curTrie = nt
+                    }
 
-                else                                                 -> {
-                    // Add a single word
-                    phrases.add(KoreanPhrase(fastListOf(token), token.pos))
-                    curTrie = CollapseTrie
+                    else                                                 -> {
+                        // Add a single word
+                        phrases.add(KoreanPhrase(fastListOf(token), token.pos))
+                        curTrie = CollapseTrie
+                    }
                 }
             }
-        }
 
         return phrases
     }
@@ -251,7 +251,7 @@ object NounPhraseExtractor: KLogging(), Serializable {
         return phraseChunks.reverseThis()
     }
 
-    private fun getCandidatePhraseChunks(phrases: KoreanPhraseChunk): List<KoreanPhraseChunk> {
+    private suspend fun getCandidatePhraseChunks(phrases: KoreanPhraseChunk): List<KoreanPhraseChunk> {
 
         fun isNonNounPhraseCandidate(phrase: KoreanPhrase): Boolean {
             val trimmed = trimPhrase(phrase)
@@ -274,30 +274,31 @@ object NounPhraseExtractor: KLogging(), Serializable {
             return isAlphaNumeric() || isModifyingPredicate()
         }
 
-        fun collapseNounPhrases(phrases1: KoreanPhraseChunk): KoreanPhraseChunk {
+        suspend fun collapseNounPhrases(phrases1: KoreanPhraseChunk): KoreanPhraseChunk {
 
             val output = fastListOf<KoreanPhrase>()
             val buffer = fastListOf<KoreanPhrase>()
 
-            phrases1.forEach {
-                if (it.pos == Noun || it.pos == ProperNoun) {
-                    buffer.add(it)
-                } else {
-                    val tempPhrase =
-                        if (buffer.isNotEmpty()) fastListOf(KoreanPhrase(buffer.flatMap { it.tokens }), it)
-                        else arrayListOf(it)
-                    output.addAll(tempPhrase)
-                    buffer.clear()
+            phrases1.asFlow().buffer()
+                .collect {
+                    if (it.pos == Noun || it.pos == ProperNoun) {
+                        buffer.add(it)
+                    } else {
+                        val tempPhrase =
+                            if (buffer.isNotEmpty()) fastListOf(KoreanPhrase(buffer.flatMap { it.tokens }), it)
+                            else fastListOf(it)
+                        output.addAll(tempPhrase)
+                        buffer.clear()
+                    }
                 }
-            }
 
             if (buffer.isNotEmpty()) {
-                output.add(KoreanPhrase(buffer.flatMap { it.tokens }))
+                output.add(KoreanPhrase(tokens = buffer.flatMap { it.tokens }))
             }
             return output
         }
 
-        fun collapsePhrases(phrases1: KoreanPhraseChunk): List<KoreanPhraseChunk> {
+        suspend fun collapsePhrases(phrases1: KoreanPhraseChunk): List<KoreanPhraseChunk> {
             fun addPhraseToBuffer(phrase: KoreanPhrase, buffer: List<KoreanPhraseChunk>): List<KoreanPhraseChunk> =
                 buffer.map { it + phrase }.toFastList()
 
@@ -308,20 +309,21 @@ object NounPhraseExtractor: KLogging(), Serializable {
             val output = fastListOf<KoreanPhraseChunk>()
             var buffer = newBuffer()
 
-            phrases1.forEach {
-                buffer = if (it.pos in PhraseTokens) {
-                    val bufferWithThisPhrase = addPhraseToBuffer(it, buffer)
-                    if (it.pos == Noun || it.pos == ProperNoun) {
-                        output.addAll(bufferWithThisPhrase)
+            phrases1.asFlow().buffer()
+                .collect {
+                    buffer = if (it.pos in PhraseTokens) {
+                        val bufferWithThisPhrase = addPhraseToBuffer(it, buffer)
+                        if (it.pos == Noun || it.pos == ProperNoun) {
+                            output.addAll(bufferWithThisPhrase)
+                        }
+                        bufferWithThisPhrase.toFastList()
+                    } else if (it.pos != Space && isNonNounPhraseCandidate(it)) {
+                        addPhraseToBuffer(it, buffer).toFastList()
+                    } else {
+                        output.addAll(buffer)
+                        newBuffer()
                     }
-                    bufferWithThisPhrase.toFastList()
-                } else if (it.pos != Space && isNonNounPhraseCandidate(it)) {
-                    addPhraseToBuffer(it, buffer).toFastList()
-                } else {
-                    output.addAll(buffer)
-                    newBuffer()
                 }
-            }
 
             if (buffer.isNotEmpty()) {
                 output.addAll(buffer)
@@ -342,7 +344,6 @@ object NounPhraseExtractor: KLogging(), Serializable {
             return phrases
                 .filter { isSingle(it) }
                 .map { fastListOf(trimPhrase(it)) }
-                .toFastList()
         }
 
         val nounPhrases = collapseNounPhrases(phrases)
@@ -359,7 +360,7 @@ object NounPhraseExtractor: KLogging(), Serializable {
      * @param addHashtags true if #hashtags to be included
      * @return A list of KoreanPhrase
      */
-    fun extractPhrases(tokens: List<KoreanToken>): List<KoreanPhrase> {
+    suspend fun extractPhrases(tokens: List<KoreanToken>): List<KoreanPhrase> {
 
         val collapsed = collapsePos(tokens)
         val candidates = getCandidatePhraseChunks(collapsed)
@@ -369,9 +370,8 @@ object NounPhraseExtractor: KLogging(), Serializable {
             .map { chunk ->
                 KoreanPhrase(trimPhraseChunk(chunk).flatMap { phrase -> phrase.tokens })
             }
-            .toFastList()
     }
 
     private fun permutateCandidates(candidates: List<KoreanPhraseChunk>): List<KoreanPhraseChunk> =
-        distinctPhrases(candidates.filter { isProperPhraseChunk(it) }.toFastList())
+        distinctPhrases(candidates.filter { isProperPhraseChunk(it) })
 }

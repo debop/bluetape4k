@@ -101,7 +101,7 @@ abstract class CharacterUtils: Serializable {
 
         override fun fill(buffer: KharacterBuffer, reader: Reader, numChars: Int): Boolean {
             assert(buffer.buffer.size >= 2) { "buffer size must be >= 2" }
-            require(numChars in 2..buffer.buffer.size) { "numCharrs must be 2 .. buffer size" }
+            assert(numChars in 2..buffer.buffer.size) { "numCharrs must be 2 .. buffer size" }
 
             val charBuffer = buffer.buffer
             buffer.offset = 0
@@ -171,7 +171,7 @@ abstract class CharacterUtils: Serializable {
 
         override fun offsetByCodePoints(buf: CharArray, start: Int, count: Int, index: Int, offset: Int): Int {
             val result = index + offset
-            require(result in 0..count) { "index[$index]+offset[$offset] must be 0 .. count[$count]" }
+            check(result in 0..count) { "index[$index]+offset[$offset] must be 0 .. count[$count]" }
             return result
         }
 
