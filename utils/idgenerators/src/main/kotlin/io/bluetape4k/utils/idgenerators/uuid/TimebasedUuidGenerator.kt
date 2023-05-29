@@ -32,12 +32,10 @@ class TimebasedUuidGenerator {
      * @param size 원하는 크기
      * @return UUID Collection
      */
-    fun nextUUIDs(size: Int): Sequence<UUID> {
+    fun nextUUIDs(size: Int): Sequence<UUID> = sequence {
         size.assertPositiveNumber("size")
-        return sequence {
-            repeat(size) {
-                yield(nextUUID())
-            }
+        repeat(size) {
+            yield(nextUUID())
         }
     }
 
@@ -51,12 +49,10 @@ class TimebasedUuidGenerator {
      * 지정한 size 만큼 Time based UUID를 생성하고, 이를 [Base62]로 인코딩해서 반환합니다.
      * @return UUID 값을 [Base62]로 인코딩한 문자열의 컬렉션
      */
-    fun nextBase62Strings(size: Int): Sequence<String> {
+    fun nextBase62Strings(size: Int): Sequence<String> = sequence {
         size.assertPositiveNumber("size")
-        return sequence {
-            repeat(size) {
-                yield(nextBase62String())
-            }
+        repeat(size) {
+            yield(nextBase62String())
         }
     }
 }

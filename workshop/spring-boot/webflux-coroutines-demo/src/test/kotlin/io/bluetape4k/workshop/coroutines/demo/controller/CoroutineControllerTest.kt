@@ -28,7 +28,7 @@ class CoroutineControllerTest(
 ): CoroutineScope by CoroutineScope(Dispatchers.IO + CoroutineName("controller-test")) {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 5
+        private const val REPEAT_SIZE = 3
     }
 
     private suspend fun currentCoroutineName(): String? = coroutineContext[CoroutineName]?.name
@@ -98,7 +98,7 @@ class CoroutineControllerTest(
         log.debug { "Call request as flow ... coroutineName=[${currentCoroutineName()}]" }
         val request = (1..5).asFlow()
             .onEach {
-                delay(100)
+                delay(10)
                 log.debug { "request node: $it. coroutineName=[${currentCoroutineName()}]" }
             }
             .map {

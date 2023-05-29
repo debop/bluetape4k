@@ -12,4 +12,8 @@ dependencies {
     api(Libs.commons_codec)
 
     testImplementation(Libs.eclipse_collections)
+
+    // Coroutines
+    implementation(Libs.kotlinx_coroutines_core)
+    testImplementation(Libs.kotlinx_coroutines_test)
 }

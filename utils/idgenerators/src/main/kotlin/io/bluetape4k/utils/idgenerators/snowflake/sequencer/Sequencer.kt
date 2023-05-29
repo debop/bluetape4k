@@ -11,5 +11,5 @@ interface Sequencer {
 
     fun nextSequence(): SnowflakeId
 
-    fun nextSequences(size: Int): List<SnowflakeId>
+    fun nextSequences(size: Int): Sequence<SnowflakeId>
 }

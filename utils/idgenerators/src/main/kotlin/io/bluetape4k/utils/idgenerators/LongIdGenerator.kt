@@ -9,7 +9,7 @@ interface LongIdGenerator: IdGenerator<Long> {
 
     override fun nextIdAsString(): String = nextId().toString(ALPHA_NUMERIC_BASE)
 
-    override fun nextIdsAsString(size: Int): List<String> {
+    override fun nextIdsAsString(size: Int): Sequence<String> {
         size.assertPositiveNumber("size")
         return nextIds(size).map { it.toString(ALPHA_NUMERIC_BASE) }
     }

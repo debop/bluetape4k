@@ -17,7 +17,7 @@ abstract class AbstractSnowflake(val sequencer: Sequencer): Snowflake {
         return sequencer.nextSequence().value
     }
 
-    override fun nextIds(size: Int): List<Long> {
+    override fun nextIds(size: Int): Sequence<Long> {
         size.assertPositiveNumber("size")
         return sequencer.nextSequences(size).map { it.value }
     }

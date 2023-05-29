@@ -1,6 +1,5 @@
 package io.bluetape4k.utils.idgenerators
 
-import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.core.assertPositiveNumber
 
 interface IdGenerator<ID> {
@@ -9,13 +8,17 @@ interface IdGenerator<ID> {
 
     fun nextIdAsString(): String
 
-    fun nextIds(size: Int): List<ID> {
+    fun nextIds(size: Int): Sequence<ID> = sequence {
         size.assertPositiveNumber("size")
-        return fastList(size) { nextId() }
+        repeat(size) {
+            yield(nextId())
+        }
     }
 
-    fun nextIdsAsString(size: Int): List<String> {
+    fun nextIdsAsString(size: Int): Sequence<String> = sequence {
         size.assertPositiveNumber("size")
-        return fastList(size) { nextIdAsString() }
+        repeat(size) {
+            yield(nextIdAsString())
+        }
     }
 }

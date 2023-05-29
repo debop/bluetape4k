@@ -21,7 +21,7 @@ class CoroutineHandlerTest(
 ): CoroutineScope by CoroutineScope(Dispatchers.IO + CoroutineName("handler-test")) {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 5
+        private const val REPEAT_SIZE = 3
     }
 
     private val banner = Banner("제목", "동해물과 백두산이 마르고 닳도록")

@@ -6,12 +6,14 @@ import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.collections.stream.toFastList
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
+import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.toLongArray
 import io.bluetape4k.support.toUUID
 import io.bluetape4k.utils.Runtimex
 import io.bluetape4k.utils.idgenerators.hashids.Hashids
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldContainSame
@@ -71,9 +73,22 @@ class TimebasedUuidGeneratorTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `generate timebased uuids in multithread`() {
+    fun `generate timebased uuids in multi thread`() {
         val idMap = ConcurrentHashMap<UUID, Int>()
         MultithreadingTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(TEST_COUNT)
+            .add {
+                val id = uuidGenerator.nextUUID()
+                idMap.putIfAbsent(id, 1).shouldBeNull()
+            }
+            .run()
+    }
+
+    @RepeatedTest(REPEAT_SIZE)
+    fun `generate timebased uuids in multi job`() = runTest {
+        val idMap = ConcurrentHashMap<UUID, Int>()
+        MultiJobTester()
             .numThreads(2 * Runtimex.availableProcessors)
             .roundsPerThread(TEST_COUNT)
             .add {
