@@ -11,7 +11,7 @@ class CategoricalStatisticsTest {
 
     @Test
     fun `mode for Ints`() {
-        val ints = listOf(2, 54, 67, 3, 4, 5, 2, 2)
+        val ints = intArrayOf(2, 54, 67, 3, 4, 5, 2, 2)
 
         // 요소 중 가장 빈도 수가 높은 놈들을 가져옵니다.
         // {2=3, 54=1, 67=1, 3=1, 4=1, 5=1}
@@ -22,7 +22,7 @@ class CategoricalStatisticsTest {
 
     @Test
     fun `mode for Ints has top is same`() {
-        val ints = listOf(2, 2, 2, 3, 3, 3, 4, 4)
+        val ints = intArrayOf(2, 2, 2, 3, 3, 3, 4, 4)
 
         // 요소 중 가장 빈도 수가 높은 놈들을 가져옵니다.
         // {2=3, 3=3, 4=2}

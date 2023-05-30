@@ -1,5 +1,7 @@
 package io.bluetape4k.workshop.redis.examples
 
+import io.bluetape4k.data.redis.spring.serializer.RedisBinarySerializers
+import io.bluetape4k.data.redis.spring.serializer.redisSerializationContext
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.uninitialized
@@ -13,8 +15,8 @@ import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.RedisSerializer
+import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport
 import java.util.concurrent.TimeUnit
 import javax.annotation.PreDestroy
@@ -39,17 +41,23 @@ class RedisApplication {
 
     @Bean
     fun redisTemplate(factory: RedisConnectionFactory): RedisTemplate<*, *> {
+        // RedisSerializer 를 압축이 가능한 BinarySerializer 를 사용합니다.
         return RedisTemplate<ByteArray, ByteArray>().apply {
             setConnectionFactory(factory)
+            keySerializer = StringRedisSerializer.UTF_8
+            valueSerializer = RedisBinarySerializers.LZ4Kryo
         }
     }
 
     @Bean
     fun reactiveRedisTemplate(factory: ReactiveRedisConnectionFactory): ReactiveRedisTemplate<*, *> {
-        val context = RedisSerializationContext
-            .newSerializationContext<ByteArray, ByteArray>(RedisSerializer.byteArray())
-            .build()
-
+        val context = redisSerializationContext<ByteArray, ByteArray>(RedisSerializer.byteArray()) {
+            key(RedisSerializer.byteArray())
+            hashKey(RedisSerializer.byteArray())
+            value(RedisBinarySerializers.LZ4)
+            hashValue(RedisBinarySerializers.LZ4)
+            string(RedisSerializer.string())
+        }
         return ReactiveRedisTemplate(factory, context)
     }
 

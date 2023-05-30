@@ -54,7 +54,7 @@ class ValueOperationsTest(
             var value = valueOperations.get(cacheKey).awaitSingleOrNull()
             if (value == null) {
                 value = cacheValue()
-                valueOperations.set(cacheKey, value, Duration.ofSeconds(10)).awaitSingle()
+                valueOperations.set(cacheKey, value, Duration.ofSeconds(3)).awaitSingle()
             }
 
             value shouldBeEqualTo CACHED_VALUE

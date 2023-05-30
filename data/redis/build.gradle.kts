@@ -61,7 +61,10 @@ dependencies {
     // Lettuce
     compileOnly(Libs.lettuce_core)
 
+    // Spring Data Redis
+    compileOnly(Libs.springData("redis"))
     compileOnly(Libs.springBootStarter("data-redis"))
+
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
