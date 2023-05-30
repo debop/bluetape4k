@@ -35,9 +35,9 @@ allprojects {
     version = baseVersion + snapshotVersion
 
     repositories {
-        mavenLocal()
         mavenCentral()
         google()
+        mavenLocal()
     }
 }
 
