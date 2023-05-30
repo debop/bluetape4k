@@ -24,7 +24,8 @@ class ProtobufCodecTest: AbstractRedissonTest() {
     private fun getTestCodecs() = listOf(
         Arguments.of(RedissonCodecs.Protobuf),
         Arguments.of(RedissonCodecs.LZ4Protobuf),
-        Arguments.of(RedissonCodecs.SnappyProtobuf)
+        Arguments.of(RedissonCodecs.SnappyProtobuf),
+        Arguments.of(RedissonCodecs.ZstdProtobuf),
     )
 
     data class CustomData(
@@ -64,14 +65,14 @@ class ProtobufCodecTest: AbstractRedissonTest() {
 
     @ParameterizedTest(name = "codec for simple string with {0}")
     @MethodSource("getTestCodecs")
-    fun `codec for simple string`(codec: Codec) {
+    fun `codec for simple string with fallback codec`(codec: Codec) {
         val origin = "Hello world! 동해물과 백두산이"
         codec.verifyCodec(origin)
     }
 
     @ParameterizedTest(name = "codec for kotlin data class with {0}")
     @MethodSource("getTestCodecs")
-    fun `codec for kotlin data class`(codec: Codec) {
+    fun `codec for kotlin data class with fallback codec`(codec: Codec) {
         repeat(REPEAT_SIZE) {
             val origin = CustomData(faker.random().nextInt(), faker.name().fullName())
             codec.verifyCodec(origin)

@@ -8,6 +8,7 @@ import io.bluetape4k.logging.debug
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 
 class RedissonClientCoroutineTest: AbstractRedissonCoroutineTest() {
@@ -40,19 +41,22 @@ class RedissonClientCoroutineTest: AbstractRedissonCoroutineTest() {
     @Test
     fun `use transaction async`() = runSuspendWithIO {
         val map = redisson.getMap<String, String>(randomName())
+        val set = redisson.getSet<String>(randomName())
 
         try {
-            val value = randomString(32)
+            val value: String = randomString(32)
             redisson.withTransactionSuspending {
                 map.putAsync("1", value).awaitSuspending()
                 map.getAsync("3").awaitSuspending()
 
-                val set = getSet<String>(randomName())
-                set.addAsync(value ?: "fallback").awaitSuspending()
+                set.addAsync(value).awaitSuspending()
             }
             map.getAsync("1").awaitSuspending() shouldBeEqualTo value
+            set.containsAsync(value).awaitSuspending().shouldBeTrue()
+
         } finally {
             map.delete()
+            set.delete()
         }
     }
 
@@ -67,10 +71,11 @@ class RedissonClientCoroutineTest: AbstractRedissonCoroutineTest() {
         try {
             MultiJobTester()
                 .numThreads(4)
-                .roundsPerThread(4)
+                .roundsPerThread(8)
                 .add {
+                    // redisson.runIfLeaderSuspending(lockName) {
                     leaderElection.runIfLeader(lockName) {
-                        val value = randomString(32)
+                        val value = randomString(64)
                         redisson.withTransactionSuspending {
                             map.putAsync("1", value).awaitSuspending()
                             map.putAsync("2", value).awaitSuspending()
@@ -85,7 +90,7 @@ class RedissonClientCoroutineTest: AbstractRedissonCoroutineTest() {
                 }
                 .run()
 
-            counter.value shouldBeEqualTo 16
+            counter.value shouldBeEqualTo 32
         } finally {
             map.delete()
         }

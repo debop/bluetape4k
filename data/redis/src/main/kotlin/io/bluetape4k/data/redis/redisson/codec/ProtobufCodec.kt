@@ -41,11 +41,13 @@ class ProtobufCodec private constructor(private val fallbackCodec: Codec): BaseC
         }
 
         // classLoader를 인자로 받는 보조 생성자는 Redisson에서 환경설정 정보를 바탕으로 동적으로 Codec 생성 시에 필요합니다.
+        @Suppress("UNUSED_PARAMETER")
         @JvmStatic
         operator fun invoke(classLoader: ClassLoader): ProtobufCodec {
             return invoke()
         }
 
+        @Suppress("UNUSED_PARAMETER")
         @JvmStatic
         operator fun invoke(classLoader: ClassLoader, codec: ProtobufCodec): ProtobufCodec {
             return invoke(classLoader)
@@ -53,8 +55,6 @@ class ProtobufCodec private constructor(private val fallbackCodec: Codec): BaseC
 
         val classCache = ConcurrentHashMap<String, Class<Message>>()
     }
-
-    // private val fallbackCodec by lazy { MarshallingCodec() }
 
     private val _encoder: Encoder = Encoder { graph ->
         if (graph is Message) {
