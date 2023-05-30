@@ -19,13 +19,13 @@ class SuspendLazyTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `get suspend lazy value in coroutine scope`() = runTest {
-        val _called = atomic(0)
-        val called by _called
+        val callCounter = atomic(0)
+        val called by callCounter
 
         val lazyValue = suspendLazy {
             delay(Random.nextLong(100))
             log.trace { "Calculate lazy value in suspend function." }
-            _called.incrementAndGet()
+            callCounter.incrementAndGet()
             42
         }
         called shouldBeEqualTo 0
@@ -40,13 +40,13 @@ class SuspendLazyTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `get lazy value in blocking mode`() = runTest {
-        val _called = atomic(0)
-        val called by _called
+        val callCounter = atomic(0)
+        val called by callCounter
 
         val lazyValue = suspendBlockingLazy {
             Thread.sleep(Random.nextLong(100))
             log.trace { "Calculate lazy value in blocking mode." }
-            _called.incrementAndGet()
+            callCounter.incrementAndGet()
             42
         }
         called shouldBeEqualTo 0
@@ -61,13 +61,13 @@ class SuspendLazyTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `get lazy value in blocking mode with IO dispatchers`() = runTest {
-        val _called = atomic(0)
-        val called by _called
+        val callCounter = atomic(0)
+        val called by callCounter
 
         val lazyValue = suspendBlockingLazyIO {
             Thread.sleep(Random.nextLong(100))
             log.trace { "Calculate lazy value in blocking mode with IO dispatchers" }
-            _called.incrementAndGet()
+            callCounter.incrementAndGet()
             42
         }
         called shouldBeEqualTo 0

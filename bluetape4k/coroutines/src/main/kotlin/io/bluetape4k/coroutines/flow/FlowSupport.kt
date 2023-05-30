@@ -82,7 +82,7 @@ fun doubleFlowOf(start: Double, endInclusive: Double, step: Double = 1.0): Flow<
  * @param func 반복 실행할 function
  * @return
  */
-inline fun <T> repeatFlow(times: Int, crossinline func: suspend (value: Int) -> T): Flow<T> = flow {
+inline fun <T> repeatFlow(times: Int, crossinline func: suspend (index: Int) -> T): Flow<T> = flow {
     times.assertPositiveNumber("times")
 
     repeat(times) { index ->

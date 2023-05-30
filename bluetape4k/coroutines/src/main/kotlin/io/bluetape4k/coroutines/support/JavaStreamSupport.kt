@@ -34,30 +34,26 @@ suspend fun <T> Stream<T>.coForEach(
     consumeAsFlow()
         .buffer()
         .flowOn(coroutineContext)
-        .onEach { consumer(it) }
-        .collect()
+        .collect { consumer(it) }
 }
 
-fun <T, R> Stream<T>.coMap(
+inline fun <T, R> Stream<T>.coMap(
     coroutineContext: CoroutineContext = Dispatchers.Default,
-    mapper: suspend (T) -> R,
+    crossinline transform: suspend (T) -> R,
 ): Flow<R> = channelFlow {
     consumeAsFlow()
         .buffer()
         .flowOn(coroutineContext)
-        .onEach { send(mapper(it)) }
-        .collect()
+        .collect { send(transform(it)) }
 }
-
 
 fun IntStream.consumeAsFlow(): Flow<Int> = IntStreamFlow(this)
 
 fun IntStream.asFlow(): Flow<Int> = consumeAsFlow()
 
-
-suspend fun IntStream.coForEach(
+suspend inline fun IntStream.coForEach(
     coroutineContext: CoroutineContext = Dispatchers.Default,
-    consumer: suspend (Int) -> Unit,
+    crossinline consumer: suspend (Int) -> Unit,
 ) {
     consumeAsFlow()
         .buffer()
@@ -66,9 +62,9 @@ suspend fun IntStream.coForEach(
         .collect()
 }
 
-fun <R> IntStream.coMap(
+inline fun <R> IntStream.coMap(
     coroutineContext: CoroutineContext = Dispatchers.Default,
-    transform: suspend (Int) -> R,
+    crossinline transform: suspend (Int) -> R,
 ): Flow<R> = channelFlow {
     consumeAsFlow()
         .buffer()
@@ -96,9 +92,9 @@ fun LongStream.consumeAsFlow(): Flow<Long> = LongStreamFlow(this)
 
 fun LongStream.asFlow(): Flow<Long> = consumeAsFlow()
 
-suspend fun LongStream.coForEach(
+suspend inline fun LongStream.coForEach(
     coroutineContext: CoroutineContext = Dispatchers.Default,
-    consumer: suspend (Long) -> Unit,
+    crossinline consumer: suspend (Long) -> Unit,
 ) {
     consumeAsFlow()
         .buffer()
@@ -107,14 +103,14 @@ suspend fun LongStream.coForEach(
         .collect()
 }
 
-fun <R> LongStream.coMap(
+inline fun <R> LongStream.coMap(
     coroutineContext: CoroutineContext = Dispatchers.Default,
-    mapper: suspend (Long) -> R,
+    crossinline transform: suspend (Long) -> R,
 ): Flow<R> = channelFlow {
     consumeAsFlow()
         .buffer()
         .flowOn(coroutineContext)
-        .onEach { send(mapper(it)) }
+        .onEach { send(transform(it)) }
         .collect()
 }
 
@@ -137,9 +133,9 @@ fun DoubleStream.consumeAsFlow(): Flow<Double> = DoubleStreamFlow(this)
 
 fun DoubleStream.asFlow(): Flow<Double> = consumeAsFlow()
 
-suspend fun DoubleStream.coForEach(
+suspend inline fun DoubleStream.coForEach(
     coroutineContext: CoroutineContext = Dispatchers.Default,
-    consumer: suspend (Double) -> Unit,
+    crossinline consumer: suspend (Double) -> Unit,
 ) {
     consumeAsFlow()
         .buffer()
@@ -148,9 +144,9 @@ suspend fun DoubleStream.coForEach(
         .collect()
 }
 
-fun <R> DoubleStream.coMap(
+inline fun <R> DoubleStream.coMap(
     coroutineContext: CoroutineContext = Dispatchers.Default,
-    mapper: suspend (Double) -> R,
+    crossinline mapper: suspend (Double) -> R,
 ): Flow<R> = channelFlow {
     consumeAsFlow()
         .buffer()

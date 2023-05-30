@@ -17,7 +17,8 @@ fun interface SuspendLazy<out T> {
     suspend operator fun invoke(): T
 }
 
-private class SuspendLazyBlockImpl<out T>(
+@PublishedApi
+internal class SuspendLazyBlockImpl<out T>(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
     @BuilderInference initializer: () -> T,
 ): SuspendLazy<T> {
@@ -29,7 +30,8 @@ private class SuspendLazyBlockImpl<out T>(
     }
 }
 
-private class SuspendLazySuspendingImpl<out T>(
+@PublishedApi
+internal class SuspendLazySuspendingImpl<out T>(
     coroutineScope: CoroutineScope,
     coroutineContext: CoroutineContext,
     @BuilderInference initializer: suspend CoroutineScope.() -> T,
@@ -83,8 +85,10 @@ fun <T> suspendBlockingLazy(
  * @param initializer 지연된 계산을 수행하는 함수
  * @return
  */
-fun <T> suspendBlockingLazyIO(@BuilderInference initializer: () -> T): SuspendLazy<T> =
-    SuspendLazyBlockImpl(Dispatchers.IO, initializer)
+inline fun <T> suspendBlockingLazyIO(
+    @BuilderInference crossinline initializer: () -> T,
+): SuspendLazy<T> =
+    SuspendLazyBlockImpl(Dispatchers.IO) { initializer() }
 
 /**
  * 지연된 값을 구할 때 suspend 함수를 이용하여 비동기 방식으로 구하고, 값을 조회할 때도 CoroutineScope 하에서 구합니다.
@@ -104,8 +108,9 @@ fun <T> suspendBlockingLazyIO(@BuilderInference initializer: () -> T): SuspendLa
  * @param initializer 지연된 계산을 수행하는 함수
  * @return
  */
-fun <T> CoroutineScope.suspendLazy(
+inline fun <T> CoroutineScope.suspendLazy(
     context: CoroutineContext = Dispatchers.Default,
-    @BuilderInference initializer: suspend CoroutineScope.() -> T,
-): SuspendLazy<T> =
-    SuspendLazySuspendingImpl(this, context, initializer)
+    @BuilderInference crossinline initializer: suspend CoroutineScope.() -> T,
+): SuspendLazy<T> {
+    return SuspendLazySuspendingImpl(this, context) { initializer() }
+}
