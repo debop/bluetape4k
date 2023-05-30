@@ -1,6 +1,12 @@
 package io.bluetape4k.utils.times
 
 import io.bluetape4k.core.assertInRange
+import io.bluetape4k.utils.times.TimeSpec.MonthsPerQuarter
+import io.bluetape4k.utils.times.TimeSpec.Q1Months
+import io.bluetape4k.utils.times.TimeSpec.Q2Months
+import io.bluetape4k.utils.times.TimeSpec.Q3Months
+import io.bluetape4k.utils.times.TimeSpec.Q4Months
+import io.bluetape4k.utils.times.TimeSpec.QuartersPerYear
 
 
 /**

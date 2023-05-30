@@ -2,9 +2,9 @@ package io.bluetape4k.utils.times.period.ranges
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import io.bluetape4k.utils.times.MonthsPerQuarter
-import io.bluetape4k.utils.times.MonthsPerYear
 import io.bluetape4k.utils.times.Quarter
+import io.bluetape4k.utils.times.TimeSpec.MonthsPerQuarter
+import io.bluetape4k.utils.times.TimeSpec.MonthsPerYear
 import io.bluetape4k.utils.times.monthPeriod
 import io.bluetape4k.utils.times.nowZonedDateTime
 import io.bluetape4k.utils.times.period.AbstractPeriodTest

@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.times.period.calendars.seekers
 
-import io.bluetape4k.utils.times.MaxPeriodTime
-import io.bluetape4k.utils.times.MinPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MaxPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MinPeriodTime
 import io.bluetape4k.utils.times.days
 import io.bluetape4k.utils.times.period.AbstractPeriodTest
 import io.bluetape4k.utils.times.period.SeekDirection

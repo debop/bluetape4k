@@ -3,10 +3,10 @@ package io.bluetape4k.utils.times.period.calendars
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import io.bluetape4k.utils.times.MaxPeriodTime
-import io.bluetape4k.utils.times.MinPeriodTime
-import io.bluetape4k.utils.times.Weekdays
-import io.bluetape4k.utils.times.Weekends
+import io.bluetape4k.utils.times.TimeSpec.MaxPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MinPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.Weekdays
+import io.bluetape4k.utils.times.TimeSpec.Weekends
 import io.bluetape4k.utils.times.isNotNegative
 import io.bluetape4k.utils.times.nanos
 import io.bluetape4k.utils.times.period.ITimePeriod

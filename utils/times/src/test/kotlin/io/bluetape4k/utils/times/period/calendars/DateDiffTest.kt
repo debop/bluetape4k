@@ -2,12 +2,12 @@ package io.bluetape4k.utils.times.period.calendars
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.utils.times.HoursPerDay
-import io.bluetape4k.utils.times.MinutesPerHour
-import io.bluetape4k.utils.times.MonthsPerQuarter
-import io.bluetape4k.utils.times.MonthsPerYear
-import io.bluetape4k.utils.times.QuartersPerYear
-import io.bluetape4k.utils.times.SecondsPerMinute
+import io.bluetape4k.utils.times.TimeSpec.HoursPerDay
+import io.bluetape4k.utils.times.TimeSpec.MinutesPerHour
+import io.bluetape4k.utils.times.TimeSpec.MonthsPerQuarter
+import io.bluetape4k.utils.times.TimeSpec.MonthsPerYear
+import io.bluetape4k.utils.times.TimeSpec.QuartersPerYear
+import io.bluetape4k.utils.times.TimeSpec.SecondsPerMinute
 import io.bluetape4k.utils.times.days
 import io.bluetape4k.utils.times.hours
 import io.bluetape4k.utils.times.minutes

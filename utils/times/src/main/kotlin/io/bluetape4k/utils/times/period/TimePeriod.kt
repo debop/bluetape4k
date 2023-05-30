@@ -6,8 +6,8 @@ import io.bluetape4k.core.assertGe
 import io.bluetape4k.core.assertLe
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.hashOf
-import io.bluetape4k.utils.times.MaxPeriodTime
-import io.bluetape4k.utils.times.MinPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MaxPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MinPeriodTime
 import io.bluetape4k.utils.times.isPositive
 import io.bluetape4k.utils.times.max
 import io.bluetape4k.utils.times.min

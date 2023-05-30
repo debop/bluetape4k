@@ -3,8 +3,8 @@ package io.bluetape4k.utils.times.period.calendars
 import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.core.ToStringBuilder
-import io.bluetape4k.utils.times.Weekdays
-import io.bluetape4k.utils.times.Weekends
+import io.bluetape4k.utils.times.TimeSpec.Weekdays
+import io.bluetape4k.utils.times.TimeSpec.Weekends
 import io.bluetape4k.utils.times.period.ITimePeriodCollection
 import io.bluetape4k.utils.times.period.TimePeriodCollection
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList

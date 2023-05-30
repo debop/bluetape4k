@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.times.interval
 
 import io.bluetape4k.core.assertPositiveNumber
-import io.bluetape4k.utils.times.UtcZoneId
+import io.bluetape4k.utils.times.TimeSpec.UtcZoneId
 import io.bluetape4k.utils.times.startOf
 import io.bluetape4k.utils.times.temporalAmount
 import io.bluetape4k.utils.times.toEpochDay

@@ -1,8 +1,8 @@
 package io.bluetape4k.utils.times.period.ranges
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.times.HoursPerDay
-import io.bluetape4k.utils.times.MinNegativeDuration
+import io.bluetape4k.utils.times.TimeSpec.HoursPerDay
+import io.bluetape4k.utils.times.TimeSpec.MinNegativeDuration
 import io.bluetape4k.utils.times.days
 import io.bluetape4k.utils.times.hours
 import io.bluetape4k.utils.times.nowZonedDateTime

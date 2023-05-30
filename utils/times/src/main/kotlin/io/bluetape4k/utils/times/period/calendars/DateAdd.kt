@@ -2,7 +2,7 @@ package io.bluetape4k.utils.times.period.calendars
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import io.bluetape4k.utils.times.MaxDuration
+import io.bluetape4k.utils.times.TimeSpec.MaxDuration
 import io.bluetape4k.utils.times.isNotNegative
 import io.bluetape4k.utils.times.period.ITimePeriod
 import io.bluetape4k.utils.times.period.ITimePeriodCollection

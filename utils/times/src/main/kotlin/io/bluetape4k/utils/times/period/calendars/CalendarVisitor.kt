@@ -2,8 +2,8 @@ package io.bluetape4k.utils.times.period.calendars
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import io.bluetape4k.utils.times.MaxPeriodTime
-import io.bluetape4k.utils.times.MinPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MaxPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MinPeriodTime
 import io.bluetape4k.utils.times.period.ITimeCalendar
 import io.bluetape4k.utils.times.period.ITimePeriod
 import io.bluetape4k.utils.times.period.SeekDirection

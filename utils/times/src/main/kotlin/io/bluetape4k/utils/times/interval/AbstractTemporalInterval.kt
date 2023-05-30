@@ -3,7 +3,7 @@ package io.bluetape4k.utils.times.interval
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.areEquals
 import io.bluetape4k.support.hashOf
-import io.bluetape4k.utils.times.SystemZoneId
+import io.bluetape4k.utils.times.TimeSpec.SystemZoneId
 import io.bluetape4k.utils.times.interval.ReadableTemporalInterval.Companion.SEPARATOR
 import io.bluetape4k.utils.times.toEpochMillis
 import java.time.ZoneId
@@ -76,7 +76,7 @@ abstract class AbstractTemporalInterval<T>: ReadableTemporalInterval<T> where T:
 
     /**
      * This interval is before to given instant
-     * @param instant
+     * @param moment 시각
      */
     override fun isBefore(moment: T): Boolean = endExclusive < moment
 

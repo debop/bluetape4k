@@ -1,9 +1,9 @@
 package io.bluetape4k.utils.times.period
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.times.MaxDuration
-import io.bluetape4k.utils.times.MaxPeriodTime
-import io.bluetape4k.utils.times.MinPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MaxDuration
+import io.bluetape4k.utils.times.TimeSpec.MaxPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MinPeriodTime
 import java.time.Duration
 import java.time.ZonedDateTime
 

@@ -1,6 +1,7 @@
 package io.bluetape4k.utils.times
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.utils.times.TimeSpec.UtcZoneId
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import java.time.DayOfWeek

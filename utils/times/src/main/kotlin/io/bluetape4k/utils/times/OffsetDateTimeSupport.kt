@@ -1,5 +1,6 @@
 package io.bluetape4k.utils.times
 
+import io.bluetape4k.utils.times.TimeSpec.SystemOffset
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime

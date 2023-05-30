@@ -1,5 +1,7 @@
 package io.bluetape4k.utils.times
 
+import io.bluetape4k.utils.times.TimeSpec.DaysPerWeek
+import io.bluetape4k.utils.times.TimeSpec.MonthsPerQuarter
 import org.apache.commons.lang3.time.DurationFormatUtils
 import java.time.Duration
 import java.time.temporal.Temporal

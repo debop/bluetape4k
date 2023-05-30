@@ -4,7 +4,7 @@ import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import io.bluetape4k.utils.times.UtcZoneId
+import io.bluetape4k.utils.times.TimeSpec.UtcZoneId
 import io.bluetape4k.utils.times.dayPeriod
 import io.bluetape4k.utils.times.days
 import io.bluetape4k.utils.times.hours

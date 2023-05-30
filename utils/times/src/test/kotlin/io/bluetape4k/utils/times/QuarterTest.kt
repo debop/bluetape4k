@@ -2,6 +2,8 @@ package io.bluetape4k.utils.times
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import io.bluetape4k.utils.times.TimeSpec.MonthsPerQuarter
+import io.bluetape4k.utils.times.TimeSpec.QuartersPerYear
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Test

@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.times.period.calendars
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.times.MaxPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MaxPeriodTime
 import io.bluetape4k.utils.times.days
 import io.bluetape4k.utils.times.hours
 import io.bluetape4k.utils.times.nanos

@@ -2,7 +2,7 @@ package io.bluetape4k.utils.times.period.ranges
 
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.core.ToStringBuilder
-import io.bluetape4k.utils.times.MaxDaysPerMonth
+import io.bluetape4k.utils.times.TimeSpec.MaxDaysPerMonth
 
 /**
  * 한달 동안의 날짜 간견을 나타냅니다.

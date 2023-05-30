@@ -1,5 +1,7 @@
 package io.bluetape4k.utils.times
 
+import io.bluetape4k.utils.times.TimeSpec.DaysPerWeek
+import io.bluetape4k.utils.times.TimeSpec.SystemZoneId
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate

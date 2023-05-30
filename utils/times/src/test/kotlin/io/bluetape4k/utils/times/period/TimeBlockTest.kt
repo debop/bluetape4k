@@ -1,11 +1,11 @@
 package io.bluetape4k.utils.times.period
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.times.EmptyDuration
-import io.bluetape4k.utils.times.MaxPeriodTime
-import io.bluetape4k.utils.times.MinDuration
-import io.bluetape4k.utils.times.MinPeriodTime
-import io.bluetape4k.utils.times.MinPositiveDuration
+import io.bluetape4k.utils.times.TimeSpec.EmptyDuration
+import io.bluetape4k.utils.times.TimeSpec.MaxPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MinDuration
+import io.bluetape4k.utils.times.TimeSpec.MinPeriodTime
+import io.bluetape4k.utils.times.TimeSpec.MinPositiveDuration
 import io.bluetape4k.utils.times.durationOfHour
 import io.bluetape4k.utils.times.hours
 import io.bluetape4k.utils.times.millis

@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.times.period.ranges
 
 import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.utils.times.HoursPerDay
+import io.bluetape4k.utils.times.TimeSpec.HoursPerDay
 import io.bluetape4k.utils.times.period.ITimeCalendar
 import io.bluetape4k.utils.times.period.TimeCalendar
 import io.bluetape4k.utils.times.period.relativeDayPeriod

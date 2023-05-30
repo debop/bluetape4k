@@ -2,7 +2,7 @@ package io.bluetape4k.utils.times.period.calendars
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import io.bluetape4k.utils.times.Weekdays
+import io.bluetape4k.utils.times.TimeSpec.Weekdays
 import io.bluetape4k.utils.times.period.AbstractPeriodTest
 import io.bluetape4k.utils.times.period.ranges.CalendarTimeRange
 import io.bluetape4k.utils.times.period.ranges.DayRange

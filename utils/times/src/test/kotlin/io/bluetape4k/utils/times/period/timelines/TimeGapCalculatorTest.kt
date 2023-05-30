@@ -1,9 +1,9 @@
 package io.bluetape4k.utils.times.period.timelines
 
 import io.bluetape4k.logging.trace
+import io.bluetape4k.utils.times.TimeSpec.isWeekend
 import io.bluetape4k.utils.times.days
 import io.bluetape4k.utils.times.hours
-import io.bluetape4k.utils.times.isWeekend
 import io.bluetape4k.utils.times.nanos
 import io.bluetape4k.utils.times.period.AbstractPeriodTest
 import io.bluetape4k.utils.times.period.ITimePeriod

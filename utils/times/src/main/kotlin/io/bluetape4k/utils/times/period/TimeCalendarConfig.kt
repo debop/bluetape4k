@@ -1,10 +1,10 @@
 package io.bluetape4k.utils.times.period
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.times.DefaultEndOffset
-import io.bluetape4k.utils.times.DefaultStartOffset
-import io.bluetape4k.utils.times.EmptyDuration
-import io.bluetape4k.utils.times.FirstDayOfWeek
+import io.bluetape4k.utils.times.TimeSpec.DefaultEndOffset
+import io.bluetape4k.utils.times.TimeSpec.DefaultStartOffset
+import io.bluetape4k.utils.times.TimeSpec.EmptyDuration
+import io.bluetape4k.utils.times.TimeSpec.FirstDayOfWeek
 import java.io.Serializable
 import java.time.DayOfWeek
 import java.time.Duration

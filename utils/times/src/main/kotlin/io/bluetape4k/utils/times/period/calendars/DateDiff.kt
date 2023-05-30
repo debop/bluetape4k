@@ -5,10 +5,10 @@ import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.support.hashOf
-import io.bluetape4k.utils.times.DaysPerWeek
-import io.bluetape4k.utils.times.MonthsPerYear
 import io.bluetape4k.utils.times.Quarter
-import io.bluetape4k.utils.times.QuartersPerYear
+import io.bluetape4k.utils.times.TimeSpec.DaysPerWeek
+import io.bluetape4k.utils.times.TimeSpec.MonthsPerYear
+import io.bluetape4k.utils.times.TimeSpec.QuartersPerYear
 import io.bluetape4k.utils.times.days
 import io.bluetape4k.utils.times.hours
 import io.bluetape4k.utils.times.isLeapYear

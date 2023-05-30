@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.times.interval
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.times.UtcZoneId
+import io.bluetape4k.utils.times.TimeSpec.UtcZoneId
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

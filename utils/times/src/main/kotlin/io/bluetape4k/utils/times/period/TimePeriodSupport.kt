@@ -1,8 +1,8 @@
 package io.bluetape4k.utils.times.period
 
 import io.bluetape4k.core.assertZeroOrPositiveNumber
-import io.bluetape4k.utils.times.DaysPerWeek
-import io.bluetape4k.utils.times.MonthsPerQuarter
+import io.bluetape4k.utils.times.TimeSpec.DaysPerWeek
+import io.bluetape4k.utils.times.TimeSpec.MonthsPerQuarter
 import io.bluetape4k.utils.times.isPositive
 import io.bluetape4k.utils.times.max
 import io.bluetape4k.utils.times.min

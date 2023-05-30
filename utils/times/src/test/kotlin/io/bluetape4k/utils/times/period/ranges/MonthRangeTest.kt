@@ -2,7 +2,7 @@ package io.bluetape4k.utils.times.period.ranges
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.utils.times.MonthsPerYear
+import io.bluetape4k.utils.times.TimeSpec.MonthsPerYear
 import io.bluetape4k.utils.times.days
 import io.bluetape4k.utils.times.lengthOfMonth
 import io.bluetape4k.utils.times.monthPeriod
