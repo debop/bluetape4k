@@ -24,7 +24,7 @@ class JpgCompressor private constructor(val compressionQuality: Float): ImageCom
 
         @JvmStatic
         operator fun invoke(compressionQuality: Float = DEFAULT_COMPRESSION_QUALITY): JpgCompressor {
-            val cq = compressionQuality.coerce(0.3F, 0.9F)
+            val cq = compressionQuality.coerce(0.2F, 0.9F)
             return JpgCompressor(cq)
         }
     }

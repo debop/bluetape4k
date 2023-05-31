@@ -9,4 +9,6 @@ dependencies {
 
     // PNG 압축 (https://github.com/depsypher/pngtastic)
     api("com.github.depsypher:pngtastic:1.7")
+
+    testImplementation(Libs.kotlinx_coroutines_test)
 }
