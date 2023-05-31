@@ -1,14 +1,17 @@
 package io.bluetape4k.utils.images
 
+import io.bluetape4k.junit5.folder.TempFolder
+import io.bluetape4k.junit5.folder.TempFolderTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeGreaterThan
+import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import java.awt.Image
 import java.awt.image.BufferedImage
-import java.io.File
 import javax.imageio.ImageIO
 
+@TempFolderTest
 class ImageFileExamples: AbstractImageTest() {
 
     companion object: KLogging()
@@ -31,7 +34,7 @@ class ImageFileExamples: AbstractImageTest() {
     }
 
     @Test
-    fun `create thumbnail image`() {
+    fun `create thumbnail image`(tempFolder: TempFolder) {
         getImage("images/cafe.jpg").use { input ->
             val scaled = BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB)
 
@@ -39,7 +42,9 @@ class ImageFileExamples: AbstractImageTest() {
             val scaledImage = ImageIO.read(input).getScaledInstance(100, 100, Image.SCALE_SMOOTH)
 
             scaled.drawImage(scaledImage, 0, 0)
-            ImageIO.write(scaled, "jpg", File("cafe_scaled_100_100.jpg"))
+
+            val file = tempFolder.createFile()
+            ImageIO.write(scaled, "jpg", file).shouldBeTrue()
         }
     }
 }
