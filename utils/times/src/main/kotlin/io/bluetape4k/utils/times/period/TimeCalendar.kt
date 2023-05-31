@@ -11,9 +11,9 @@ import java.time.ZonedDateTime
 
 open class TimeCalendar @JvmOverloads constructor(
     private val config: TimeCalendarConfig = TimeCalendarConfig.Default,
-): AbstractValueObject(), ITimeCalendar {
+) : AbstractValueObject(), ITimeCalendar {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         val Default: TimeCalendar = TimeCalendar(TimeCalendarConfig.Default)
 
@@ -51,9 +51,9 @@ open class TimeCalendar @JvmOverloads constructor(
 
     override fun equalProperties(other: Any): Boolean {
         return other is ITimeCalendar &&
-            startOffset == other.startOffset &&
-            endOffset == other.endOffset &&
-            firstDayOfWeek == other.firstDayOfWeek
+               startOffset == other.startOffset &&
+               endOffset == other.endOffset &&
+               firstDayOfWeek == other.firstDayOfWeek
     }
 
     override fun buildStringHelper(): ToStringBuilder {

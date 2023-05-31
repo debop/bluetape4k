@@ -11,7 +11,7 @@ import kotlin.test.assertTrue
 
 class TemporalSupportTest {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `get startOfYear from Temporal`() {

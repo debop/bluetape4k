@@ -18,9 +18,9 @@ data class TimeCalendarConfig(
     val startOffset: Duration = DefaultStartOffset,
     val endOffset: Duration = DefaultEndOffset,
     val firstDayOfWeek: DayOfWeek = FirstDayOfWeek,
-): Serializable {
+) : Serializable {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         val Default: TimeCalendarConfig = TimeCalendarConfig()
 

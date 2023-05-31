@@ -29,9 +29,9 @@ import java.time.temporal.Temporal
 import java.time.temporal.TemporalAmount
 import kotlin.test.assertFailsWith
 
-abstract class TemporalClosedRangeTest<T> where T: Temporal, T: Comparable<T> {
+abstract class TemporalClosedRangeTest<T> where T : Temporal, T : Comparable<T> {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     abstract val start: T
     open val duration: TemporalAmount = 5.hours()
@@ -96,34 +96,34 @@ abstract class TemporalClosedRangeTest<T> where T: Temporal, T: Comparable<T> {
     }
 }
 
-class InstantRangeTest: TemporalClosedRangeTest<Instant>() {
+class InstantRangeTest : TemporalClosedRangeTest<Instant>() {
     override val start: Instant = Instant.now()
 }
 
-class LocalDateTimeRangeTest: TemporalClosedRangeTest<LocalDateTime>() {
+class LocalDateTimeRangeTest : TemporalClosedRangeTest<LocalDateTime>() {
     override val start: LocalDateTime = LocalDateTime.now()
 }
 
-class OffsetDateTimeRangeTest: TemporalClosedRangeTest<OffsetDateTime>() {
+class OffsetDateTimeRangeTest : TemporalClosedRangeTest<OffsetDateTime>() {
     override val start: OffsetDateTime = OffsetDateTime.now()
 }
 
-class ZonedDateTimeRangeTest: TemporalClosedRangeTest<ZonedDateTime>() {
+class ZonedDateTimeRangeTest : TemporalClosedRangeTest<ZonedDateTime>() {
     override val start: ZonedDateTime = ZonedDateTime.now()
 }
 
-class LocalTimeRangeTest: TemporalClosedRangeTest<LocalTime>() {
+class LocalTimeRangeTest : TemporalClosedRangeTest<LocalTime>() {
     override val start: LocalTime = localTimeOf(7, 12, 45)
     override val duration: TemporalAmount = 5.seconds()
 }
 
-class OffsetTimeRangeTest: TemporalClosedRangeTest<OffsetTime>() {
+class OffsetTimeRangeTest : TemporalClosedRangeTest<OffsetTime>() {
     override val start = offsetTimeOf(7, 12, 55)
     override val duration: TemporalAmount = 5.seconds()
 }
 
 @Disabled("LocalDate 는 지원하지 않습니다.")
-class LocalDateRangeTest: TemporalClosedRangeTest<LocalDate>() {
+class LocalDateRangeTest : TemporalClosedRangeTest<LocalDate>() {
     override val start: LocalDate = LocalDate.now()
     override val duration: TemporalAmount = 5.days()
 }

@@ -11,10 +11,10 @@ import java.time.ZonedDateTime
 data class YearQuarter(
     val year: Int,
     val quarter: Quarter,
-): Serializable {
+) : Serializable {
 
-    constructor(moment: LocalDateTime): this(moment.year, Quarter.ofMonth(moment.monthValue))
-    constructor(moment: OffsetDateTime): this(moment.year, Quarter.ofMonth(moment.monthValue))
-    constructor(moment: ZonedDateTime): this(moment.year, Quarter.ofMonth(moment.monthValue))
+    constructor(moment: LocalDateTime) : this(moment.year, Quarter.ofMonth(moment.monthValue))
+    constructor(moment: OffsetDateTime) : this(moment.year, Quarter.ofMonth(moment.monthValue))
+    constructor(moment: ZonedDateTime) : this(moment.year, Quarter.ofMonth(moment.monthValue))
 
 }

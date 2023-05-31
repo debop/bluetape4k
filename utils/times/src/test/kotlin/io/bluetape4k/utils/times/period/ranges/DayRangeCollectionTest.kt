@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
 
-class DayRangeCollectionTest: AbstractPeriodTest() {
+class DayRangeCollectionTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `single day`() {

@@ -18,15 +18,15 @@ class TemporalInterval<T> private constructor(
     override val startInclusive: T,
     override val endExclusive: T,
     override val zoneId: ZoneId,
-): AbstractTemporalInterval<T>() where T: Temporal, T: Comparable<T> {
+) : AbstractTemporalInterval<T>() where T : Temporal, T : Comparable<T> {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         operator fun <T> invoke(
             start: T,
             end: T,
             zoneId: ZoneId = UtcZoneId,
-        ): TemporalInterval<T> where T: Temporal, T: Comparable<T> {
+        ): TemporalInterval<T> where T : Temporal, T : Comparable<T> {
             check(start <= end) { "The end instant[$end] must be greater than the start instant[$start]." }
             return TemporalInterval(start, end, zoneId)
         }
@@ -36,7 +36,7 @@ class TemporalInterval<T> private constructor(
             start: T,
             duration: TemporalAmount,
             zoneId: ZoneId = UtcZoneId,
-        ): TemporalInterval<T> where T: Temporal, T: Comparable<T> {
+        ): TemporalInterval<T> where T : Temporal, T : Comparable<T> {
             return invoke(start, (start + duration) as T, zoneId)
         }
 
@@ -46,7 +46,7 @@ class TemporalInterval<T> private constructor(
             end: T,
             zoneId:
             ZoneId = UtcZoneId,
-        ): TemporalInterval<T> where T: Temporal, T: Comparable<T> {
+        ): TemporalInterval<T> where T : Temporal, T : Comparable<T> {
             return invoke((end - duration) as T, end, zoneId)
         }
 

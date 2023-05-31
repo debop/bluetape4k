@@ -10,7 +10,7 @@ import java.time.ZonedDateTime
 open class DayRange(
     startTime: ZonedDateTime = todayZonedDateTime(),
     calendar: ITimeCalendar = TimeCalendar.Default,
-): DayTimeRange(startTime, 1, calendar) {
+) : DayTimeRange(startTime, 1, calendar) {
 
     constructor(year: Int, monthOfYear: Int, dayOfMonth: Int = 1, calendar: ITimeCalendar = TimeCalendar.Default)
         : this(zonedDateTimeOf(year, monthOfYear, dayOfMonth), calendar)

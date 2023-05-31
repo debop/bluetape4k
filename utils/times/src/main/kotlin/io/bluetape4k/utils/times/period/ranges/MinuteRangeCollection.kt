@@ -9,7 +9,7 @@ open class MinuteRangeCollection(
     startTime: ZonedDateTime = ZonedDateTime.now(),
     minuteCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): MinuteTimeRange(startTime, minuteCount, calendar) {
+) : MinuteTimeRange(startTime, minuteCount, calendar) {
 
     fun minuteSequence(): Sequence<MinuteRange> =
         minuteRanges(startMinuteOfStart, minuteCount, calendar)

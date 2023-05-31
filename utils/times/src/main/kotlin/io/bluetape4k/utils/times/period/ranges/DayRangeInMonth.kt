@@ -11,12 +11,12 @@ import io.bluetape4k.utils.times.TimeSpec.MaxDaysPerMonth
 open class DayRangeInMonth(
     val startDayOfMonth: Int = 1,
     val endDayOfMonth: Int = MaxDaysPerMonth,
-): AbstractValueObject(), Comparable<DayRangeInMonth> {
+) : AbstractValueObject(), Comparable<DayRangeInMonth> {
 
     init {
-        check(startDayOfMonth in 1..MaxDaysPerMonth) { "startDayOfMonth[$startDayOfMonth] must be 1..31" }
-        check(endDayOfMonth in 1..MaxDaysPerMonth) { "startDayOfMonth[$startDayOfMonth] must be 1..31" }
-        check(startDayOfMonth <= endDayOfMonth) {
+        require(startDayOfMonth in 1..MaxDaysPerMonth) { "startDayOfMonth[$startDayOfMonth] must be 1..31" }
+        require(endDayOfMonth in 1..MaxDaysPerMonth) { "startDayOfMonth[$startDayOfMonth] must be 1..31" }
+        require(startDayOfMonth <= endDayOfMonth) {
             "startDayOfMonth[$startDayOfMonth] must be less than or equal endDayOfMonth[$endDayOfMonth"
         }
     }
@@ -42,8 +42,8 @@ open class DayRangeInMonth(
 
     override fun equalProperties(other: Any): Boolean {
         return other is DayRangeInMonth &&
-            startDayOfMonth == other.startDayOfMonth &&
-            endDayOfMonth == other.endDayOfMonth
+               startDayOfMonth == other.startDayOfMonth &&
+               endDayOfMonth == other.endDayOfMonth
 
     }
 

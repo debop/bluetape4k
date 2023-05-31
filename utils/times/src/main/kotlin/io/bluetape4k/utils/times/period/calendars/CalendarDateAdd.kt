@@ -19,13 +19,14 @@ import io.bluetape4k.utils.times.period.ranges.DayOfWeekHourRange
 import io.bluetape4k.utils.times.period.ranges.HourRangeInDay
 import io.bluetape4k.utils.times.period.ranges.WeekRange
 import io.bluetape4k.utils.times.period.timelines.TimeGapCalculator
+import kotlinx.coroutines.yield
 import java.time.DayOfWeek
 import java.time.Duration
 import java.time.ZonedDateTime
 
-open class CalendarDateAdd private constructor(): DateAdd() {
+open class CalendarDateAdd private constructor() : DateAdd() {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         operator fun invoke(): CalendarDateAdd = CalendarDateAdd()
     }
@@ -47,7 +48,11 @@ open class CalendarDateAdd private constructor(): DateAdd() {
         weekDays.addAll(dayOfWeeks.asList())
     }
 
-    override suspend fun add(start: ZonedDateTime, offset: Duration, seekBoundary: SeekBoundaryMode): ZonedDateTime? {
+    override suspend fun add(
+        start: ZonedDateTime,
+        offset: Duration,
+        seekBoundary: SeekBoundaryMode,
+    ): ZonedDateTime? {
         log.trace { "add... start=$start, offset=$offset, seekBoundary=$seekBoundary" }
 
         val allEmpty = weekDays.isEmpty() && excludePeriods.isEmpty() && workingHours.isEmpty()
@@ -93,7 +98,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
     ): Pair<ZonedDateTime?, Duration?> {
         log.trace {
             "기준 시각으로부터 offset 만큼 떨어진 시각을 구합니다..." +
-                "start=$start, offset=$offset, seekDir=$seekDir, seekBoundary=$seekBoundary"
+            "start=$start, offset=$offset, seekDir=$seekDir, seekBoundary=$seekBoundary"
         }
 
         check(offset?.isNotNegative ?: false) { "offset 값은 0 이사이어야 합니다. offset=$offset" }
@@ -133,7 +138,7 @@ open class CalendarDateAdd private constructor(): DateAdd() {
                 }
             }
         }
-
+        yield()
         log.trace { "Calculate done. end=$end, remaining=$remaining" }
         return Pair(end, remaining)
     }

@@ -11,7 +11,7 @@ open class HourTimeRange(
     startTime: ZonedDateTime = ZonedDateTime.now(),
     val hourCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): CalendarTimeRange(startTime.relativeHourPeriod(hourCount), calendar) {
+) : CalendarTimeRange(startTime.relativeHourPeriod(hourCount), calendar) {
 
     val hourOfDayOfEnd: Int get() = end.hour
 

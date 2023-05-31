@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.flow
 import java.time.temporal.ChronoUnit
 import java.time.temporal.Temporal
 
-fun <T> TemporalClosedProgression<T>.asFlow(): Flow<T> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedProgression<T>.asFlow(): Flow<T> where T : Temporal, T : Comparable<T> =
     flow {
         forEach { value -> emit(value) }
     }
 
-fun <T> TemporalClosedRange<T>.asFlow(): Flow<T> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.asFlow(): Flow<T> where T : Temporal, T : Comparable<T> =
     flow {
         forEach { value -> emit(value) }
     }
@@ -27,7 +27,7 @@ fun <T> TemporalClosedRange<T>.windowedFlow(
     step: Int = 1,
     unit: ChronoUnit = ChronoUnit.YEARS,
 ): Flow<List<T>>
-    where T: Temporal, T: Comparable<T> {
+    where T : Temporal, T : Comparable<T> {
     size.assertPositiveNumber("size")
     step.assertPositiveNumber("step")
     assert(unit in SupportChronoUnits) { "Not supoorted ChronoUnit. unit=$unit" }
@@ -47,91 +47,91 @@ fun <T> TemporalClosedRange<T>.windowedFlow(
 fun <T> TemporalClosedRange<T>.windowedFlowYears(
     size: Int,
     step: Int = 1,
-): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     windowedFlow(size, step, ChronoUnit.YEARS)
 
 fun <T> TemporalClosedRange<T>.windowedFlowMonths(
     size: Int,
     step: Int = 1,
-): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     windowedFlow(size, step, ChronoUnit.MONTHS)
 
 fun <T> TemporalClosedRange<T>.windowedFlowWeeks(
     size: Int,
     step: Int = 1,
-): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     windowedFlow(size, step, ChronoUnit.WEEKS)
 
 fun <T> TemporalClosedRange<T>.windowedFlowDays(
     size: Int,
     step: Int = 1,
-): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     windowedFlow(size, step, ChronoUnit.DAYS)
 
 fun <T> TemporalClosedRange<T>.windowedFlowHours(
     size: Int,
     step: Int = 1,
-): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     windowedFlow(size, step, ChronoUnit.HOURS)
 
 fun <T> TemporalClosedRange<T>.windowedFlowMinutes(
     size: Int,
     step: Int = 1,
-): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     windowedFlow(size, step, ChronoUnit.MINUTES)
 
 fun <T> TemporalClosedRange<T>.windowedFlowSeconds(
     size: Int,
     step: Int = 1,
-): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     windowedFlow(size, step, ChronoUnit.SECONDS)
 
 fun <T> TemporalClosedRange<T>.windowedFlowMillis(
     size: Int,
     step: Int = 1,
-): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     windowedFlow(size, step, ChronoUnit.MILLIS)
 
 fun <T> TemporalClosedRange<T>.chunkedFlow(
     size: Int,
     unit: ChronoUnit = ChronoUnit.YEARS,
-): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     windowedFlow(size, size, unit)
 
-fun <T> TemporalClosedRange<T>.chunkedFlowYears(size: Int): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedFlowYears(size: Int): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     chunkedFlow(size, ChronoUnit.YEARS)
 
 
-fun <T> TemporalClosedRange<T>.chunkedFlowMonths(size: Int): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedFlowMonths(size: Int): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     chunkedFlow(size, ChronoUnit.MONTHS)
 
 
-fun <T> TemporalClosedRange<T>.chunkedFlowWeeks(size: Int): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedFlowWeeks(size: Int): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     chunkedFlow(size, ChronoUnit.WEEKS)
 
 
-fun <T> TemporalClosedRange<T>.chunkedFlowDays(size: Int): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedFlowDays(size: Int): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     chunkedFlow(size, ChronoUnit.DAYS)
 
 
-fun <T> TemporalClosedRange<T>.chunkedFlowHours(size: Int): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedFlowHours(size: Int): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     chunkedFlow(size, ChronoUnit.HOURS)
 
 
-fun <T> TemporalClosedRange<T>.chunkedFlowMinutes(size: Int): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedFlowMinutes(size: Int): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     chunkedFlow(size, ChronoUnit.MINUTES)
 
 
-fun <T> TemporalClosedRange<T>.chunkedFlowSeconds(size: Int): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedFlowSeconds(size: Int): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     chunkedFlow(size, ChronoUnit.SECONDS)
 
 
-fun <T> TemporalClosedRange<T>.chunkedFlowMillis(size: Int): Flow<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedFlowMillis(size: Int): Flow<List<T>> where T : Temporal, T : Comparable<T> =
     chunkedFlow(size, ChronoUnit.MILLIS)
 
 
 @Suppress("UNCHECKED_CAST")
-fun <T> TemporalClosedRange<T>.zipWithNextFlow(unit: ChronoUnit): Flow<Pair<T, T>> where T: Temporal, T: Comparable<T> {
+fun <T> TemporalClosedRange<T>.zipWithNextFlow(unit: ChronoUnit): Flow<Pair<T, T>> where T : Temporal, T : Comparable<T> {
     assert(unit in SupportChronoUnits) { "Not supoorted ChronoUnit. unit=$unit" }
 
     return flow {
@@ -147,23 +147,23 @@ fun <T> TemporalClosedRange<T>.zipWithNextFlow(unit: ChronoUnit): Flow<Pair<T, T
     }
 }
 
-fun <T> TemporalClosedRange<T>.zipWithNextFlowYears(): Flow<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextFlowYears(): Flow<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNextFlow(ChronoUnit.YEARS)
 
-fun <T> TemporalClosedRange<T>.zipWithNextFlowMonths(): Flow<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextFlowMonths(): Flow<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNextFlow(ChronoUnit.MONTHS)
 
-fun <T> TemporalClosedRange<T>.zipWithNextFlowDays(): Flow<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextFlowDays(): Flow<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNextFlow(ChronoUnit.DAYS)
 
-fun <T> TemporalClosedRange<T>.zipWithNextFlowHours(): Flow<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextFlowHours(): Flow<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNextFlow(ChronoUnit.HOURS)
 
-fun <T> TemporalClosedRange<T>.zipWithNextFlowMinutes(): Flow<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextFlowMinutes(): Flow<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNextFlow(ChronoUnit.MINUTES)
 
-fun <T> TemporalClosedRange<T>.zipWithNextFlowSeconds(): Flow<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextFlowSeconds(): Flow<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNextFlow(ChronoUnit.SECONDS)
 
-fun <T> TemporalClosedRange<T>.zipWithNextFlowMillis(): Flow<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextFlowMillis(): Flow<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNextFlow(ChronoUnit.MILLIS)

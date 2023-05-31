@@ -21,9 +21,9 @@ import java.time.DayOfWeek
 import java.time.LocalTime
 import java.time.Month
 
-class CalendarPeriodCollectorTest: AbstractPeriodTest() {
+class CalendarPeriodCollectorTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `collect years`() = runTest {

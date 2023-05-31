@@ -11,7 +11,7 @@ import java.time.ZonedDateTime
 open class QuarterRange(
     startTime: ZonedDateTime = todayZonedDateTime(),
     calendar: ITimeCalendar = TimeCalendar.Default,
-): QuarterTimeRange(startTime, 1, calendar) {
+) : QuarterTimeRange(startTime, 1, calendar) {
 
     constructor(year: Int, quarter: Quarter, calendar: ITimeCalendar = TimeCalendar.Default)
         : this(startOfQuarter(year, quarter), calendar)

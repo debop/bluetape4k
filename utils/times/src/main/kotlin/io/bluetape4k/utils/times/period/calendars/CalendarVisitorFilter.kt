@@ -16,7 +16,7 @@ import java.time.Month
 /**
  * Calendar 탐색 시의 필터링을 할 조건을 가지는 클래스입니다.
  */
-open class CalendarVisitorFilter: AbstractValueObject(), ICalendarVisitorFilter, Serializable {
+open class CalendarVisitorFilter : AbstractValueObject(), ICalendarVisitorFilter, Serializable {
 
     override val excludePeriods: ITimePeriodCollection = TimePeriodCollection()
 
@@ -83,12 +83,12 @@ open class CalendarVisitorFilter: AbstractValueObject(), ICalendarVisitorFilter,
 
     override fun equalProperties(other: Any): Boolean {
         return other is CalendarVisitorFilter &&
-            years == other.years &&
-            monthOfYears == other.monthOfYears &&
-            dayOfMonths == other.dayOfMonths &&
-            minuteOfHours == other.minuteOfHours &&
-            dayOfWeeks == other.dayOfWeeks &&
-            excludePeriods == other.excludePeriods
+               years == other.years &&
+               monthOfYears == other.monthOfYears &&
+               dayOfMonths == other.dayOfMonths &&
+               minuteOfHours == other.minuteOfHours &&
+               dayOfWeeks == other.dayOfWeeks &&
+               excludePeriods == other.excludePeriods
     }
 
     override fun buildStringHelper(): ToStringBuilder {

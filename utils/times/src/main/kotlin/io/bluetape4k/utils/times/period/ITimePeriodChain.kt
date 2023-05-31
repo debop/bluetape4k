@@ -3,7 +3,7 @@ package io.bluetape4k.utils.times.period
 import java.time.Duration
 import java.time.ZonedDateTime
 
-interface ITimePeriodChain: ITimePeriodContainer {
+interface ITimePeriodChain : ITimePeriodContainer {
 
     fun headOrNull(): ITimePeriod? = periods.firstOrNull()
 

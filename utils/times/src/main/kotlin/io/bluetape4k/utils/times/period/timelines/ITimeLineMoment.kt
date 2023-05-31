@@ -7,7 +7,7 @@ import java.time.ZonedDateTime
 /**
  * ITimeLineMoment
  */
-interface ITimeLineMoment: ValueObject, Comparable<ITimeLineMoment> {
+interface ITimeLineMoment : ValueObject, Comparable<ITimeLineMoment> {
 
     val moment: ZonedDateTime
 

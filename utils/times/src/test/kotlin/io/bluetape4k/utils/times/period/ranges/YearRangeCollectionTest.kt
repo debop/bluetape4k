@@ -15,9 +15,9 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
-class YearRangeCollectionTest: AbstractPeriodTest() {
+class YearRangeCollectionTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `single years`() {

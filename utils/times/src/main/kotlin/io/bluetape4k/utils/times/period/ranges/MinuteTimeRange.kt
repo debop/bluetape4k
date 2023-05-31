@@ -9,7 +9,7 @@ open class MinuteTimeRange(
     moment: ZonedDateTime = ZonedDateTime.now(),
     val minuteCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): CalendarTimeRange(moment.relativeMinutePeriod(minuteCount), calendar) {
+) : CalendarTimeRange(moment.relativeMinutePeriod(minuteCount), calendar) {
 
     val minuteOfHourOfEnd: Int get() = end.minute
 }

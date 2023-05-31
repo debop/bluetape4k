@@ -7,7 +7,7 @@ import java.util.*
  *
  * @param T [Date]의 하위 클래스
  */
-abstract class DateIterator<out T: Date>: Iterator<T> {
+abstract class DateIterator<out T : Date> : Iterator<T> {
 
     abstract fun nextDate(): T
 

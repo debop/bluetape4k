@@ -7,7 +7,7 @@ import java.time.ZonedDateTime
 /**
  * ITimeLineMomentCollection
  */
-interface ITimeLineMomentCollection: ValueObject, MutableList<ITimeLineMoment> {
+interface ITimeLineMomentCollection : ValueObject, MutableList<ITimeLineMoment> {
 
     fun minOrNull(): ITimeLineMoment?
 

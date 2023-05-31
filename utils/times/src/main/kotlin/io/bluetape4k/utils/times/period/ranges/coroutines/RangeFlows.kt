@@ -17,16 +17,14 @@ fun flowOfYearRange(
     startTime: ZonedDateTime,
     yearCount: Int,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): Flow<YearRange> {
+): Flow<YearRange> = flow {
     yearCount.assertPositiveNumber("yearCount")
 
-    return flow {
-        val start = YearRange(startTime, calendar)
-        var years = 0
-        while (years < yearCount) {
-            emit(start.addYears(years))
-            years++
-        }
+    val start = YearRange(startTime, calendar)
+    var years = 0
+    while (years < yearCount) {
+        emit(start.addYears(years))
+        years++
     }
 }
 
@@ -34,16 +32,14 @@ fun flowOfMonthRange(
     startTime: ZonedDateTime,
     monthCount: Int,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): Flow<MonthRange> {
+): Flow<MonthRange> = flow {
     monthCount.assertPositiveNumber("monthCount")
 
-    return flow {
-        val start = MonthRange(startTime, calendar)
-        var months = 0
-        while (months < monthCount) {
-            emit(start.addMonths(months))
-            months++
-        }
+    val start = MonthRange(startTime, calendar)
+    var months = 0
+    while (months < monthCount) {
+        emit(start.addMonths(months))
+        months++
     }
 }
 
@@ -51,16 +47,14 @@ fun flowOfWeekRange(
     startTime: ZonedDateTime,
     weekCount: Int,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): Flow<WeekRange> {
+): Flow<WeekRange> = flow {
     weekCount.assertPositiveNumber("weekCount")
 
-    return flow {
-        val start = WeekRange(startTime, calendar)
-        var weeks = 0
-        while (weeks < weekCount) {
-            emit(start.addWeeks(weeks))
-            weeks++
-        }
+    val start = WeekRange(startTime, calendar)
+    var weeks = 0
+    while (weeks < weekCount) {
+        emit(start.addWeeks(weeks))
+        weeks++
     }
 }
 
@@ -68,16 +62,14 @@ fun flowOfDayRange(
     startTime: ZonedDateTime,
     dayCount: Int,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): Flow<DayRange> {
+): Flow<DayRange> = flow {
     dayCount.assertPositiveNumber("dayCount")
 
-    return flow {
-        val start = DayRange(startTime, calendar)
-        var days = 0
-        while (days < dayCount) {
-            emit(start.addDays(days))
-            days++
-        }
+    val start = DayRange(startTime, calendar)
+    var days = 0
+    while (days < dayCount) {
+        emit(start.addDays(days))
+        days++
     }
 }
 
@@ -85,16 +77,13 @@ fun flowOfHourRange(
     startTime: ZonedDateTime,
     hourCount: Int,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): Flow<HourRange> {
+): Flow<HourRange> = flow {
     hourCount.assertPositiveNumber("hourCount")
-
-    return flow {
-        val start = HourRange(startTime, calendar)
-        var hours = 0
-        while (hours < hourCount) {
-            emit(start.addHours(hours))
-            hours++
-        }
+    val start = HourRange(startTime, calendar)
+    var hours = 0
+    while (hours < hourCount) {
+        emit(start.addHours(hours))
+        hours++
     }
 }
 
@@ -102,15 +91,13 @@ fun flowOfMinuteRange(
     startTime: ZonedDateTime,
     minuteCount: Int,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): Flow<MinuteRange> {
+): Flow<MinuteRange> = flow {
     minuteCount.assertPositiveNumber("minuteCount")
 
-    return flow {
-        val start = MinuteRange(startTime, calendar)
-        var minutes = 0
-        while (minutes < minuteCount) {
-            emit(start.addMinutes(minutes))
-            minutes++
-        }
+    val start = MinuteRange(startTime, calendar)
+    var minutes = 0
+    while (minutes < minuteCount) {
+        emit(start.addMinutes(minutes))
+        minutes++
     }
 }

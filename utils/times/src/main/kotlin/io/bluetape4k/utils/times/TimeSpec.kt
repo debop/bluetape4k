@@ -11,7 +11,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-object TimeSpec: KLogging() {
+object TimeSpec : KLogging() {
 
     const val NANO_PER_MILLIS: Long = 1_000_000L
     const val NANO_PER_SECOND: Long = 1_000_000_000L

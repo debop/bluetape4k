@@ -13,7 +13,7 @@ import kotlin.test.assertFailsWith
 
 class QuarterTest {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `months in quarter`() {

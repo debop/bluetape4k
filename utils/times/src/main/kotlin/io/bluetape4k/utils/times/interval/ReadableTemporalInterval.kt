@@ -10,11 +10,11 @@ import java.time.temporal.Temporal
 /**
  * JodaTime 의 `ReadableTemporalInterval` 과 같은 기능을 수행합니다.
  */
-interface ReadableTemporalInterval<T>:
+interface ReadableTemporalInterval<T> :
     ClosedOpenRange<T>,
     Comparable<ClosedRange<T>>,
     Serializable
-    where T: Temporal, T: Comparable<T> {
+    where T : Temporal, T : Comparable<T> {
 
     companion object {
         const val SEPARATOR = "~"

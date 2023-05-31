@@ -13,7 +13,7 @@ open class QuarterTimeRange(
     startTime: ZonedDateTime = todayZonedDateTime(),
     val quarterCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): CalendarTimeRange(startTime.relativeQuarterPeriod(quarterCount), calendar) {
+) : CalendarTimeRange(startTime.relativeQuarterPeriod(quarterCount), calendar) {
 
     val quarterOfStart: Quarter get() = Quarter.ofMonth(startMonthOfYear)
     val quarterOfEnd: Quarter get() = Quarter.ofMonth(endMonthOfYear)

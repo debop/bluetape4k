@@ -19,9 +19,9 @@ import org.junit.jupiter.api.Test
 import java.time.LocalTime
 
 
-class CalendarDateAddTest: AbstractPeriodTest() {
+class CalendarDateAddTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `no period`() = runTest {

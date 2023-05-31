@@ -10,7 +10,7 @@ open class HourRangeCollection(
     startTime: ZonedDateTime = ZonedDateTime.now(),
     hourCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): HourTimeRange(startTime, hourCount, calendar) {
+) : HourTimeRange(startTime, hourCount, calendar) {
 
     constructor(
         year: Int,
@@ -19,9 +19,7 @@ open class HourRangeCollection(
         hourOfDay: Int = 0,
         hourCount: Int = 1,
         calendar: ITimeCalendar = TimeCalendar.Default,
-    )
-        : this(zonedDateTimeOf(year, monthOfYear, dayOfMonth, hourOfDay), hourCount, calendar)
-
+    ) : this(zonedDateTimeOf(year, monthOfYear, dayOfMonth, hourOfDay), hourCount, calendar)
 
     fun hourSequence(): Sequence<HourRange> = hourRanges(startHourOfStart, hourCount, calendar)
 

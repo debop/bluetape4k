@@ -12,9 +12,9 @@ import java.time.ZonedDateTime
 /**
  * [ITimePeriodChain] 의 기본 구현체
  */
-open class TimePeriodChain: TimePeriodContainer(), ITimePeriodChain {
+open class TimePeriodChain : TimePeriodContainer(), ITimePeriodChain {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
 
         operator fun invoke(element: ITimePeriod, vararg elements: ITimePeriod): TimePeriodChain {
             return TimePeriodChain().apply {

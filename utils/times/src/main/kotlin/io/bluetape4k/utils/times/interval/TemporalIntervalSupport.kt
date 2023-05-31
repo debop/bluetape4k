@@ -24,7 +24,7 @@ fun <T> temporalIntervalOf(
     start: T,
     end: T,
     zoneId: ZoneId = UtcZoneId,
-): TemporalInterval<T> where T: Temporal, T: Comparable<T> {
+): TemporalInterval<T> where T : Temporal, T : Comparable<T> {
     return when {
         start < end -> TemporalInterval(start, end, zoneId)
         else        -> TemporalInterval(end, start, zoneId)
@@ -36,7 +36,7 @@ fun <T> temporalIntervalOf(
     start: T,
     duration: TemporalAmount,
     zoneId: ZoneId = UtcZoneId,
-): TemporalInterval<T> where T: Temporal, T: Comparable<T> =
+): TemporalInterval<T> where T : Temporal, T : Comparable<T> =
     temporalIntervalOf(start, (start + duration) as T, zoneId)
 
 @Suppress("UNCHECKED_CAST")
@@ -44,7 +44,7 @@ fun <T> temporalIntervalOf(
     duration: TemporalAmount,
     end: T,
     zoneId: ZoneId = UtcZoneId,
-): TemporalInterval<T> where T: Temporal, T: Comparable<T> =
+): TemporalInterval<T> where T : Temporal, T : Comparable<T> =
     temporalIntervalOf((end - duration) as T, end, zoneId)
 
 
@@ -65,7 +65,7 @@ fun <T> mutableTemporalIntervalOf(
     start: T,
     end: T,
     zoneId: ZoneId = UtcZoneId,
-): MutableTemporalInterval<T> where T: Temporal, T: Comparable<T> {
+): MutableTemporalInterval<T> where T : Temporal, T : Comparable<T> {
     return when {
         start < end -> MutableTemporalInterval(start, end, zoneId)
         else        -> MutableTemporalInterval(end, start, zoneId)
@@ -86,7 +86,7 @@ fun <T> mutableTemporalIntervalOf(
     start: T,
     duration: TemporalAmount,
     zoneId: ZoneId = UtcZoneId,
-): MutableTemporalInterval<T> where T: Temporal, T: Comparable<T> =
+): MutableTemporalInterval<T> where T : Temporal, T : Comparable<T> =
     mutableTemporalIntervalOf(start, (start + duration) as T, zoneId)
 
 /**
@@ -103,7 +103,7 @@ fun <T> mutableTemporalIntervalOf(
     duration: TemporalAmount,
     end: T,
     zoneId: ZoneId = UtcZoneId,
-): MutableTemporalInterval<T> where T: Temporal, T: Comparable<T> =
+): MutableTemporalInterval<T> where T : Temporal, T : Comparable<T> =
     mutableTemporalIntervalOf((end - duration) as T, end, zoneId)
 
 //
@@ -113,33 +113,33 @@ fun <T> mutableTemporalIntervalOf(
 /**
  * [ReadableTemporalInterval]의 시작시각과 완료시각으로 [Duration]을 빌드합니다.
  */
-fun <T> ReadableTemporalInterval<T>.toDuration(): Duration where T: Temporal, T: Comparable<T> =
+fun <T> ReadableTemporalInterval<T>.toDuration(): Duration where T : Temporal, T : Comparable<T> =
     Duration.between(startInclusive, endExclusive)
 
 /**
  * [ReadableTemporalInterval]의 시작시각과 완료시각으로 Milliseconds 로 반환합니다.
  */
-fun <T> ReadableTemporalInterval<T>.toDurationMillis(): Long where T: Temporal, T: Comparable<T> =
+fun <T> ReadableTemporalInterval<T>.toDurationMillis(): Long where T : Temporal, T : Comparable<T> =
     toDuration().toMillis()
 
-fun <T> ReadableTemporalInterval<T>.toInterval(): ReadableTemporalInterval<T> where T: Temporal, T: Comparable<T> {
+fun <T> ReadableTemporalInterval<T>.toInterval(): ReadableTemporalInterval<T> where T : Temporal, T : Comparable<T> {
     return temporalIntervalOf(startInclusive, endExclusive, zoneId)
 }
 
-fun <T> ReadableTemporalInterval<T>.toMutableInterval(): MutableTemporalInterval<T> where T: Temporal, T: Comparable<T> {
+fun <T> ReadableTemporalInterval<T>.toMutableInterval(): MutableTemporalInterval<T> where T : Temporal, T : Comparable<T> {
     return mutableTemporalIntervalOf(startInclusive, endExclusive, zoneId)
 }
 
 /**
  * [ReadableTemporalInterval]의 시작시각과 완료시각으로 [Period]을 빌드합니다.
  */
-fun <T> ReadableTemporalInterval<T>.toPeriod(): Period where T: Temporal, T: Comparable<T> =
+fun <T> ReadableTemporalInterval<T>.toPeriod(): Period where T : Temporal, T : Comparable<T> =
     Period.between(LocalDate.ofEpochDay(startInclusive.toEpochDay()), LocalDate.ofEpochDay(endExclusive.toEpochDay()))
 
 /**
  * [ReadableTemporalInterval]의 시작시각과 완료시각으로 [unit] 단위의 [Period]을 빌드합니다.
  */
-fun <T> ReadableTemporalInterval<T>.toPeriod(unit: ChronoUnit): Period where T: Temporal, T: Comparable<T> {
+fun <T> ReadableTemporalInterval<T>.toPeriod(unit: ChronoUnit): Period where T : Temporal, T : Comparable<T> {
     return when (unit) {
         ChronoUnit.DAYS   -> Period.ofDays(toPeriod().days)
         ChronoUnit.WEEKS  -> Period.ofWeeks(toPeriod().days / 7)
@@ -158,7 +158,7 @@ fun <T> ReadableTemporalInterval<T>.toPeriod(unit: ChronoUnit): Period where T: 
 fun <T> ReadableTemporalInterval<T>.sequence(
     step: Int,
     unit: ChronoUnit,
-): Sequence<T> where T: Temporal, T: Comparable<T> {
+): Sequence<T> where T : Temporal, T : Comparable<T> {
     step.assertPositiveNumber("step")
 
     return sequence {
@@ -177,7 +177,7 @@ fun <T> ReadableTemporalInterval<T>.sequence(
 fun <T> ReadableTemporalInterval<T>.flow(
     step: Int,
     unit: ChronoUnit,
-): Flow<T> where T: Temporal, T: Comparable<T> {
+): Flow<T> where T : Temporal, T : Comparable<T> {
     step.assertPositiveNumber("step")
 
     return flow {
@@ -192,43 +192,43 @@ fun <T> ReadableTemporalInterval<T>.flow(
     }
 }
 
-fun <T> ReadableTemporalInterval<T>.millis(step: Int = 1): Sequence<T> where T: Temporal, T: Comparable<T> {
+fun <T> ReadableTemporalInterval<T>.millis(step: Int = 1): Sequence<T> where T : Temporal, T : Comparable<T> {
     return sequence(step, ChronoUnit.MILLIS)
 }
 
-fun <T> ReadableTemporalInterval<T>.seconds(step: Int = 1): Sequence<T> where T: Temporal, T: Comparable<T> {
+fun <T> ReadableTemporalInterval<T>.seconds(step: Int = 1): Sequence<T> where T : Temporal, T : Comparable<T> {
     return sequence(step, ChronoUnit.SECONDS)
 }
 
 /**
  * 기간을 Minute 단위로 열거합니다.
  */
-fun <T> ReadableTemporalInterval<T>.minutes(step: Int = 1): Sequence<T> where T: Temporal, T: Comparable<T> {
+fun <T> ReadableTemporalInterval<T>.minutes(step: Int = 1): Sequence<T> where T : Temporal, T : Comparable<T> {
     return sequence(step, ChronoUnit.MINUTES)
 }
 
 /**
  * 기간을 Hour 단위로 열거합니다.
  */
-fun <T> ReadableTemporalInterval<T>.hours(step: Int = 1): Sequence<T> where T: Temporal, T: Comparable<T> {
+fun <T> ReadableTemporalInterval<T>.hours(step: Int = 1): Sequence<T> where T : Temporal, T : Comparable<T> {
     return sequence(step, ChronoUnit.HOURS)
 }
 
 /**
  * 기간을 Day 단위로 열거합니다.
  */
-fun <T> ReadableTemporalInterval<T>.days(step: Int = 1): Sequence<T> where T: Temporal, T: Comparable<T> {
+fun <T> ReadableTemporalInterval<T>.days(step: Int = 1): Sequence<T> where T : Temporal, T : Comparable<T> {
     return sequence(step, ChronoUnit.DAYS)
 }
 
-fun <T> ReadableTemporalInterval<T>.weeks(step: Int = 1): Sequence<T> where T: Temporal, T: Comparable<T> {
+fun <T> ReadableTemporalInterval<T>.weeks(step: Int = 1): Sequence<T> where T : Temporal, T : Comparable<T> {
     return sequence(step, ChronoUnit.WEEKS)
 }
 
-fun <T> ReadableTemporalInterval<T>.months(months: Int = 1): Sequence<T> where T: Temporal, T: Comparable<T> {
+fun <T> ReadableTemporalInterval<T>.months(months: Int = 1): Sequence<T> where T : Temporal, T : Comparable<T> {
     return sequence(months, ChronoUnit.MONTHS)
 }
 
-fun <T> ReadableTemporalInterval<T>.years(step: Int = 1): Sequence<T> where T: Temporal, T: Comparable<T> {
+fun <T> ReadableTemporalInterval<T>.years(step: Int = 1): Sequence<T> where T : Temporal, T : Comparable<T> {
     return sequence(step, ChronoUnit.YEARS)
 }

@@ -8,7 +8,7 @@ import java.time.ZonedDateTime
 open class HourRange(
     startTime: ZonedDateTime = ZonedDateTime.now(),
     calendar: ITimeCalendar = TimeCalendar.Default,
-): HourTimeRange(startTime, 1, calendar) {
+) : HourTimeRange(startTime, 1, calendar) {
 
     val year: Int get() = startYear
     val monthOfYear: Int get() = startMonthOfYear

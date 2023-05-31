@@ -10,7 +10,7 @@ import java.time.ZonedDateTime
 /**
  * Time period 를 나타내는 인터페이스
  */
-interface ITimePeriod: ValueObject, Comparable<ITimePeriod> {
+interface ITimePeriod : ValueObject, Comparable<ITimePeriod> {
 
     val start: ZonedDateTime
 

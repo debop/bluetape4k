@@ -31,7 +31,7 @@ private fun differenceModulo(a: Long, b: Long, c: Long): Long =
 //}
 
 @Suppress("UNCHECKED_CAST")
-internal fun <T: Date> getProgressionLastElement(start: T, end: T, stepMillis: Long): T = when {
+internal fun <T : Date> getProgressionLastElement(start: T, end: T, stepMillis: Long): T = when {
     stepMillis > 0 -> (end - differenceModulo(end.time, start.time, stepMillis)) as T
     stepMillis < 0 -> (end + differenceModulo(start.time, end.time, -stepMillis)) as T
     else           -> throw IllegalArgumentException("stepMillis must not be zero")
@@ -39,7 +39,7 @@ internal fun <T: Date> getProgressionLastElement(start: T, end: T, stepMillis: L
 
 @Suppress("UNCHECKED_CAST")
 internal fun <T> getProgressionLastElement(start: T, end: T, stepMillis: Long): T
-    where T: Temporal, T: Comparable<T> {
+    where T : Temporal, T : Comparable<T> {
     return if (end.isSupported(ChronoUnit.MILLIS)) {
         when {
             stepMillis > 0 -> end.minus(
@@ -52,7 +52,7 @@ internal fun <T> getProgressionLastElement(start: T, end: T, stepMillis: Long): 
                 ChronoUnit.MILLIS
             ) as T
 
-            else -> throw IllegalArgumentException("stepMillis must not be zero")
+            else           -> throw IllegalArgumentException("stepMillis must not be zero")
         }
     } else {
         when {
@@ -66,7 +66,7 @@ internal fun <T> getProgressionLastElement(start: T, end: T, stepMillis: Long): 
                 ChronoUnit.DAYS
             ) as T
 
-            else -> throw IllegalArgumentException("stepMillis must not be zero")
+            else           -> throw IllegalArgumentException("stepMillis must not be zero")
         }
     }
 }

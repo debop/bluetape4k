@@ -9,9 +9,9 @@ import io.bluetape4k.utils.times.startOfHour
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
-class HourRangeCollectionTest: AbstractPeriodTest() {
+class HourRangeCollectionTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `construct with single hour`() {

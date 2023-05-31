@@ -6,7 +6,7 @@ import io.bluetape4k.utils.times.period.ranges.DayRangeInMonth
 import io.bluetape4k.utils.times.period.ranges.HourRangeInDay
 import io.bluetape4k.utils.times.period.ranges.MonthRangeInYear
 
-open class CalendarPeriodCollectorFilter: CalendarVisitorFilter(), ICalendarPeriodCollectorFilter {
+open class CalendarPeriodCollectorFilter : CalendarVisitorFilter(), ICalendarPeriodCollectorFilter {
 
     override val collectingMonths: MutableList<MonthRangeInYear> = fastListOf()
 

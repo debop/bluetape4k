@@ -21,7 +21,7 @@ fun <T> temporalClosedProgressionOf(
     start: T,
     endInclusive: T,
     step: TemporalAmount,
-): TemporalClosedProgression<T> where T: Temporal, T: Comparable<T> {
+): TemporalClosedProgression<T> where T : Temporal, T : Comparable<T> {
     return TemporalClosedProgression.fromClosedRange(start, endInclusive, step)
 }
 
@@ -32,15 +32,15 @@ open class TemporalClosedProgression<T> protected constructor(
     start: T,
     endInclusive: T,
     val step: TemporalAmount,
-): Iterable<T>, Serializable where T: Temporal, T: Comparable<T> {
+) : Iterable<T>, Serializable where T : Temporal, T : Comparable<T> {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         fun <T> fromClosedRange(
             start: T,
             endInclusive: T,
             step: TemporalAmount,
-        ): TemporalClosedProgression<T> where T: Temporal, T: Comparable<T> {
+        ): TemporalClosedProgression<T> where T : Temporal, T : Comparable<T> {
             assert(!step.isZero) { "step must be non-zero." }
             if (start != endInclusive) {
                 assert((start <= endInclusive) == (step.isPositive)) {
@@ -86,7 +86,7 @@ open class TemporalClosedProgression<T> protected constructor(
 
     override fun equals(other: Any?): Boolean = when (other) {
         is TemporalClosedProgression<*> -> (isEmpty() && other.isEmpty()) ||
-            (first == other.first && last == other.last && step == other.step)
+                                           (first == other.first && last == other.last && step == other.step)
 
         else                            -> false
     }

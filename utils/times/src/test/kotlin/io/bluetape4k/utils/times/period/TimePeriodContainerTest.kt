@@ -6,9 +6,9 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Test
 
-class TimePeriodContainerTest: AbstractPeriodTest() {
+class TimePeriodContainerTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `construct with TimeRange`() {

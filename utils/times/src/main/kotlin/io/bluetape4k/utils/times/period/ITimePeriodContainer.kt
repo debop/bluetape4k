@@ -3,7 +3,7 @@ package io.bluetape4k.utils.times.period
 import io.bluetape4k.core.SortDirection
 import java.time.ZonedDateTime
 
-interface ITimePeriodContainer: MutableList<ITimePeriod>, ITimePeriod {
+interface ITimePeriodContainer : MutableList<ITimePeriod>, ITimePeriod {
 
     val periods: MutableList<ITimePeriod>
 

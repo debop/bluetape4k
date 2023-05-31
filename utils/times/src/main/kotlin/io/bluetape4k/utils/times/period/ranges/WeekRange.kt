@@ -8,9 +8,8 @@ import java.time.ZonedDateTime
 open class WeekRange(
     startTime: ZonedDateTime = ZonedDateTime.now(),
     calendar: ITimeCalendar = TimeCalendar.Default,
-): WeekTimeRange(startTime, 1, calendar) {
+) : WeekTimeRange(startTime, 1, calendar) {
 
-    @JvmOverloads
     constructor(weekyear: Int, weekOfWeekyear: Int, calendar: ITimeCalendar = TimeCalendar.Default)
         : this(startOfWeekOfWeekyear(weekyear, weekOfWeekyear), calendar)
 

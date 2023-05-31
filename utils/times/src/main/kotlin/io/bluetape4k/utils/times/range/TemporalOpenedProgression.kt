@@ -20,7 +20,7 @@ fun <T> temporalOpenedProgression(
     start: T,
     endExclusive: T,
     step: TemporalAmount,
-): TemporalOpenedProgression<T> where T: Temporal, T: Comparable<T> {
+): TemporalOpenedProgression<T> where T : Temporal, T : Comparable<T> {
     return TemporalOpenedProgression.fromOpendRange(start, endExclusive, step)
 }
 
@@ -35,15 +35,15 @@ open class TemporalOpenedProgression<T> protected constructor(
     start: T,
     endExclusive: T,
     step: TemporalAmount,
-): TemporalClosedProgression<T>(start, endExclusive, step) where T: Temporal, T: Comparable<T> {
+) : TemporalClosedProgression<T>(start, endExclusive, step) where T : Temporal, T : Comparable<T> {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         fun <T> fromOpendRange(
             start: T,
             endExclusive: T,
             step: TemporalAmount,
-        ): TemporalOpenedProgression<T> where T: Temporal, T: Comparable<T> {
+        ): TemporalOpenedProgression<T> where T : Temporal, T : Comparable<T> {
             assert(!step.isZero) { "step must be non-zero." }
             if (start != endExclusive) {
                 assert((start < endExclusive) == (step.isPositive)) {
@@ -73,9 +73,9 @@ open class TemporalOpenedProgression<T> protected constructor(
     override fun equals(other: Any?): Boolean = when (other) {
         is TemporalOpenedProgression<*> ->
             (isEmpty() && other.isEmpty()) ||
-                (areEquals(first, other.first) &&
-                    areEquals(last, other.last) &&
-                    areEquals(step, other.step))
+            (areEquals(first, other.first) &&
+             areEquals(last, other.last) &&
+             areEquals(step, other.step))
 
         else                            -> false
     }

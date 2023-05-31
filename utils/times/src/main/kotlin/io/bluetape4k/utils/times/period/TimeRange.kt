@@ -14,27 +14,33 @@ open class TimeRange(
     start: ZonedDateTime? = MinPeriodTime,
     end: ZonedDateTime? = MaxPeriodTime,
     readonly: Boolean = false,
-): TimePeriod(start ?: MinPeriodTime, end ?: MaxPeriodTime, readonly), ITimeRange {
+) : TimePeriod(start ?: MinPeriodTime, end ?: MaxPeriodTime, readonly), ITimeRange {
 
     @JvmOverloads
-    constructor(moment: ZonedDateTime, readonly: Boolean = false): this(moment, moment, readonly)
+    constructor(moment: ZonedDateTime, readonly: Boolean = false) : this(moment, moment, readonly)
 
-    companion object: KLogging() {
+    companion object : KLogging() {
 
+        @JvmField
         val AnyTime: TimeRange = TimeRange(readonly = true)
 
+        @JvmStatic
         operator fun invoke(src: ITimePeriod, readonly: Boolean = src.readonly): TimeRange =
             TimeRange(src.start, src.end, readonly)
 
+        @JvmStatic
         operator fun invoke(moment: ZonedDateTime, readonly: Boolean = false): TimeRange =
             TimeRange(moment, moment, readonly)
 
+        @JvmStatic
         operator fun invoke(start: ZonedDateTime?, end: ZonedDateTime?, readonly: Boolean = false): TimeRange =
             TimeRange(start ?: MinPeriodTime, end ?: MaxPeriodTime, readonly)
 
+        @JvmStatic
         operator fun invoke(start: ZonedDateTime, duration: Duration, readonly: Boolean = false): TimeRange =
             TimeRange(start, start + duration, readonly)
 
+        @JvmStatic
         operator fun invoke(duration: Duration, end: ZonedDateTime, readonly: Boolean = false): TimeRange =
             TimeRange(end - duration, end, readonly)
 

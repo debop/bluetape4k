@@ -8,7 +8,7 @@ import io.bluetape4k.utils.times.period.TimePeriod
 open class YearCalendarTimeRange(
     period: ITimePeriod = TimePeriod.AnyTime,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): CalendarTimeRange(period, calendar) {
+) : CalendarTimeRange(period, calendar) {
 
     private val baseMonth: Int = 1
 

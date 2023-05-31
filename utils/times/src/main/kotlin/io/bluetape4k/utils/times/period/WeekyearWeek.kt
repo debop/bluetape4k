@@ -10,7 +10,7 @@ import java.time.temporal.WeekFields
 data class WeekyearWeek(
     val weekyear: Int,
     val weekOfWeekyear: Int,
-): ValueObject {
+) : ValueObject {
 
     companion object {
         operator fun invoke(moment: TemporalAccessor): WeekyearWeek {

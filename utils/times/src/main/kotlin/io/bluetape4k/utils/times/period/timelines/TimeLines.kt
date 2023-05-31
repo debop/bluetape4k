@@ -5,16 +5,17 @@ import io.bluetape4k.utils.times.period.ITimePeriod
 import io.bluetape4k.utils.times.period.ITimePeriodCollection
 import io.bluetape4k.utils.times.period.TimePeriodCollection
 import io.bluetape4k.utils.times.period.TimeRange
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 
 /**
  * [ITimeLine]을 위한 유틸리티 클래스입니다.
  */
-object TimeLines: KLogging() {
+object TimeLines : KLogging() {
 
-    suspend fun combinePeriods(moments: ITimeLineMomentCollection): ITimePeriodCollection = coroutineScope {
+    suspend fun combinePeriods(
+        moments: ITimeLineMomentCollection,
+    ): ITimePeriodCollection = coroutineScope {
         if (moments.isEmpty()) {
             return@coroutineScope TimePeriodCollection.EMPTY
         }
@@ -23,36 +24,33 @@ object TimeLines: KLogging() {
         val momentsSize = moments.size
         var index = 0
 
-        withContext(Dispatchers.Default) {
-            while (index < momentsSize) {
-                val periodStart = moments[index]
-                var balance = periodStart.startCount
-                check(balance > 0) { "Balance must be positive number. balance=$balance" }
+        while (index < momentsSize) {
+            val periodStart = moments[index]
+            var balance = periodStart.startCount
+            check(balance > 0) { "Balance must be positive number. balance=$balance" }
 
-                withContext(Dispatchers.Default) {
-                    var periodEnd: ITimeLineMoment? = null
+            var periodEnd: ITimeLineMoment? = null
 
-                    while (index < momentsSize - 1 && balance > 0) {
-                        index++
-                        periodEnd = moments[index]
-                        balance += periodEnd.startCount
-                        balance -= periodEnd.endCount
-                    }
-
-                    check(periodEnd != null) { "periodEnd must not be null." }
-
-                    if (periodEnd.startCount <= 0 && index < momentsSize) {
-                        result += TimeRange(periodStart.moment, periodEnd.moment)
-                    }
-                }
-
+            while (index < momentsSize - 1 && balance > 0) {
                 index++
+                periodEnd = moments[index]
+                balance += periodEnd.startCount
+                balance -= periodEnd.endCount
             }
+
+            check(periodEnd != null) { "periodEnd must not be null." }
+            if (periodEnd.startCount <= 0 && index < momentsSize) {
+                result += TimeRange(periodStart.moment, periodEnd.moment)
+            }
+            index++
         }
+        yield()
         return@coroutineScope result
     }
 
-    suspend fun intersectPeriods(moments: ITimeLineMomentCollection): ITimePeriodCollection = coroutineScope {
+    suspend fun intersectPeriods(
+        moments: ITimeLineMomentCollection,
+    ): ITimePeriodCollection = coroutineScope {
         if (moments.isEmpty()) {
             return@coroutineScope TimePeriodCollection.EMPTY
         }
@@ -63,87 +61,81 @@ object TimeLines: KLogging() {
         var balance = 0L
         var index = 0
 
-        withContext(Dispatchers.Default) {
-            while (index < momentsSize) {
-                val moment = moments[index]
-                val startCount = moment.startCount
-                val endCount = moment.endCount
 
-                balance += startCount
-                balance -= endCount
+        while (index < momentsSize) {
+            val moment = moments[index]
+            val startCount = moment.startCount
+            val endCount = moment.endCount
 
-                if (startCount > 0 && balance > 1 && intersectionStart < 0) {
-                    intersectionStart = index
-                } else if (endCount > 0 && balance <= 1 && intersectionStart >= 0) {
-                    result += TimeRange(moments[intersectionStart].moment, moment.moment)
-                    intersectionStart = -1
-                }
+            balance += startCount
+            balance -= endCount
 
-                index++
+            if (startCount > 0 && balance > 1 && intersectionStart < 0) {
+                intersectionStart = index
+            } else if (endCount > 0 && balance <= 1 && intersectionStart >= 0) {
+                result += TimeRange(moments[intersectionStart].moment, moment.moment)
+                intersectionStart = -1
             }
+            index++
         }
-
+        yield()
         return@coroutineScope result
     }
 
-    suspend fun calculateGap(moments: ITimeLineMomentCollection, range: ITimePeriod): ITimePeriodCollection =
-        coroutineScope {
-            if (moments.isEmpty()) {
-                return@coroutineScope TimePeriodCollection.EMPTY
+    suspend fun calculateGap(
+        moments: ITimeLineMomentCollection,
+        range: ITimePeriod,
+    ): ITimePeriodCollection = coroutineScope {
+        if (moments.isEmpty()) {
+            return@coroutineScope TimePeriodCollection.EMPTY
+        }
+
+        val gaps = TimePeriodCollection()
+        val periodStart = moments.minOrNull()
+
+        // 1. find leading gap
+        periodStart?.let { start ->
+            if (range.start < start.moment) {
+                gaps += TimeRange(range.start, start.moment)
+            }
+        }
+
+        // 2. find intermediated gap
+        var index = 0
+        while (index < moments.size) {
+            val moment = moments[index]
+            check(moment.startCount > 0) { "moment.startCount[${moment.startCount}] must be positive number." }
+
+            var balance = moment.startCount
+            var gapStart: ITimeLineMoment? = null
+
+            while (index < moments.size - 1 && balance > 0) {
+                index++
+                gapStart = moments[index]
+
+                balance += gapStart.startCount
+                balance -= gapStart.endCount
             }
 
-            val gaps = TimePeriodCollection()
-            val periodStart = moments.minOrNull()
+            check(gapStart != null) { "gapStart must not be null." }
 
-            // 1. find leading gap
-            withContext(Dispatchers.Default) {
-                periodStart?.let { start ->
-                    if (range.start < start.moment) {
-                        gaps += TimeRange(range.start, start.moment)
-                    }
+            if (gapStart.startCount <= 0) {
+                // found a gap
+                if (index < moments.size - 1) {
+                    gaps += TimeRange(gapStart.moment, moments[index + 1].moment)
                 }
             }
+            index++
+        }
 
-            // 2. find intermediated gap
-            withContext(Dispatchers.Default) {
-                var index = 0
-                while (index < moments.size) {
-                    val moment = moments[index]
-                    check(moment.startCount > 0) { "moment.startCount[${moment.startCount}] must be positive number." }
-
-                    var balance = moment.startCount
-                    var gapStart: ITimeLineMoment? = null
-
-                    while (index < moments.size - 1 && balance > 0) {
-                        index++
-                        gapStart = moments[index]
-
-                        balance += gapStart.startCount
-                        balance -= gapStart.endCount
-                    }
-
-                    check(gapStart != null) { "gapStart must not be null." }
-
-                    if (gapStart.startCount <= 0) {
-                        // found a gap
-                        if (index < moments.size - 1) {
-                            gaps += TimeRange(gapStart.moment, moments[index + 1].moment)
-                        }
-                    }
-                    index++
-                }
+        // 3. find ending gap
+        val periodEnd = moments.maxOrNull()
+        periodEnd?.let { end ->
+            if (range.end > end.moment) {
+                gaps += TimeRange(end.moment, range.end)
             }
-
-            // 3. find ending gap
-            withContext(Dispatchers.Default) {
-                val periodEnd = moments.maxOrNull()
-                periodEnd?.let { end ->
-                    if (range.end > end.moment) {
-                        gaps += TimeRange(end.moment, range.end)
-                    }
-                }
-            }
-
-            return@coroutineScope gaps
+        }
+        yield()
+        return@coroutineScope gaps
     }
 }

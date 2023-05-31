@@ -10,9 +10,8 @@ open class WeekRangeCollection(
     startTime: ZonedDateTime = ZonedDateTime.now(),
     weekCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): WeekTimeRange(startTime, weekCount, calendar) {
+) : WeekTimeRange(startTime, weekCount, calendar) {
 
-    @JvmOverloads
     constructor(weekyear: Int, weekOfWeekyear: Int, weekCount: Int = 1, calendar: ITimeCalendar = TimeCalendar.Default)
         : this(startOfWeekOfWeekyear(weekyear, weekOfWeekyear), weekCount, calendar)
 

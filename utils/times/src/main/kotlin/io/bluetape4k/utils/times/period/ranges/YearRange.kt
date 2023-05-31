@@ -8,13 +8,12 @@ import java.time.ZonedDateTime
 open class YearRange(
     year: Int = nowZonedDateTime().year,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): YearTimeRange(year, 1, calendar) {
+) : YearTimeRange(year, 1, calendar) {
 
-    @JvmOverloads
     constructor(
         moment: ZonedDateTime,
         calendar: ITimeCalendar = TimeCalendar.Default,
-    ): this(moment.year, calendar)
+    ) : this(moment.year, calendar)
 
     fun addYears(years: Int): YearRange = YearRange(year + years, calendar)
 

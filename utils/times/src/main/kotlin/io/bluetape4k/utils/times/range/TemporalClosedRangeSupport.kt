@@ -13,7 +13,7 @@ import java.time.temporal.Temporal
  * @param endInclusive T
  * @return TemporalClosedRange<T>
  */
-fun <T> temporalClosedRangeOf(start: T, endInclusive: T): TemporalClosedRange<T> where T: Temporal, T: Comparable<T> {
+fun <T> temporalClosedRangeOf(start: T, endInclusive: T): TemporalClosedRange<T> where T : Temporal, T : Comparable<T> {
     assert(start !is LocalDate) { "LocalDate는 지원하지 않습니다." }
     assert(endInclusive !is LocalDate) { "LocalDate는 지원하지 않습니다." }
 
@@ -23,7 +23,7 @@ fun <T> temporalClosedRangeOf(start: T, endInclusive: T): TemporalClosedRange<T>
 /**
  * 두 개의 [Temporal]을 이용하여 [TemporalClosedRange]를 빌드합니다.
  */
-operator fun <T> T.rangeTo(endInclusive: T): TemporalClosedRange<T> where T: Temporal, T: Comparable<T> =
+operator fun <T> T.rangeTo(endInclusive: T): TemporalClosedRange<T> where T : Temporal, T : Comparable<T> =
     temporalClosedRangeOf(this, endInclusive)
 
 internal val SupportChronoUnits: Array<ChronoUnit> =
@@ -53,7 +53,7 @@ fun <T> TemporalClosedRange<T>.windowed(
     step: Int = 1,
     unit: ChronoUnit = ChronoUnit.YEARS,
 ): Sequence<List<T>>
-    where T: Temporal, T: Comparable<T> {
+    where T : Temporal, T : Comparable<T> {
     size.assertPositiveNumber("size")
     step.assertPositiveNumber("step")
     assert(SupportChronoUnits.contains(unit)) { "Not supoorted ChronoUnit. unit=$unit" }
@@ -72,49 +72,49 @@ fun <T> TemporalClosedRange<T>.windowed(
 fun <T> TemporalClosedRange<T>.windowedYears(
     size: Int,
     step: Int = 1,
-): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     windowed(size, step, ChronoUnit.YEARS)
 
 fun <T> TemporalClosedRange<T>.windowedMonths(
     size: Int,
     step: Int = 1,
-): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     windowed(size, step, ChronoUnit.MONTHS)
 
 fun <T> TemporalClosedRange<T>.windowedWeeks(
     size: Int,
     step: Int = 1,
-): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     windowed(size, step, ChronoUnit.WEEKS)
 
 fun <T> TemporalClosedRange<T>.windowedDays(
     size: Int,
     step: Int = 1,
-): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     windowed(size, step, ChronoUnit.DAYS)
 
 fun <T> TemporalClosedRange<T>.windowedHours(
     size: Int,
     step: Int = 1,
-): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     windowed(size, step, ChronoUnit.HOURS)
 
 fun <T> TemporalClosedRange<T>.windowedMinutes(
     size: Int,
     step: Int = 1,
-): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     windowed(size, step, ChronoUnit.MINUTES)
 
 fun <T> TemporalClosedRange<T>.windowedSeconds(
     size: Int,
     step: Int = 1,
-): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     windowed(size, step, ChronoUnit.SECONDS)
 
 fun <T> TemporalClosedRange<T>.windowedMillis(
     size: Int,
     step: Int = 1,
-): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     windowed(size, step, ChronoUnit.MILLIS)
 
 /**
@@ -127,7 +127,7 @@ fun <T> TemporalClosedRange<T>.windowedMillis(
 fun <T> TemporalClosedRange<T>.chunked(
     chunkSize: Int,
     chronoUnit: ChronoUnit,
-): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     windowed(chunkSize, chunkSize, chronoUnit)
 
 /**
@@ -137,7 +137,7 @@ fun <T> TemporalClosedRange<T>.chunked(
  * @param chunkSize Int chunk Size
  * @return Sequence<List<T>> N 년씩 나뉜 Sequence
  */
-fun <T> TemporalClosedRange<T>.chunkedYears(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedYears(chunkSize: Int): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     chunked(chunkSize, ChronoUnit.YEARS)
 
 /**
@@ -147,7 +147,7 @@ fun <T> TemporalClosedRange<T>.chunkedYears(chunkSize: Int): Sequence<List<T>> w
  * @param chunkSize Int chunk Size
  * @return Sequence<List<T>> N 월씩 나뉜 Sequence
  */
-fun <T> TemporalClosedRange<T>.chunkedMonths(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedMonths(chunkSize: Int): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     chunked(chunkSize, ChronoUnit.MONTHS)
 
 /**
@@ -157,7 +157,7 @@ fun <T> TemporalClosedRange<T>.chunkedMonths(chunkSize: Int): Sequence<List<T>> 
  * @param chunkSize Int chunk Size
  * @return Sequence<List<T>> N 주(week) 씩 나뉜 Sequence
  */
-fun <T> TemporalClosedRange<T>.chunkedWeeks(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedWeeks(chunkSize: Int): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     chunked(chunkSize, ChronoUnit.WEEKS)
 
 
@@ -168,7 +168,7 @@ fun <T> TemporalClosedRange<T>.chunkedWeeks(chunkSize: Int): Sequence<List<T>> w
  * @param chunkSize Int chunk Size
  * @return Sequence<List<T>> N 일(day)씩 나뉜 Sequence
  */
-fun <T> TemporalClosedRange<T>.chunkedDays(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedDays(chunkSize: Int): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     chunked(chunkSize, ChronoUnit.DAYS)
 
 /**
@@ -178,7 +178,7 @@ fun <T> TemporalClosedRange<T>.chunkedDays(chunkSize: Int): Sequence<List<T>> wh
  * @param chunkSize Int chunk Size
  * @return Sequence<List<T>> N 시(hour)씩 나뉜 Sequence
  */
-fun <T> TemporalClosedRange<T>.chunkedHours(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedHours(chunkSize: Int): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     chunked(chunkSize, ChronoUnit.HOURS)
 
 /**
@@ -188,7 +188,7 @@ fun <T> TemporalClosedRange<T>.chunkedHours(chunkSize: Int): Sequence<List<T>> w
  * @param chunkSize Int chunk Size
  * @return Sequence<List<T>> N 분(minute)씩 나뉜 Sequence
  */
-fun <T> TemporalClosedRange<T>.chunkedMinutes(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedMinutes(chunkSize: Int): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     chunked(chunkSize, ChronoUnit.MINUTES)
 
 /**
@@ -198,7 +198,7 @@ fun <T> TemporalClosedRange<T>.chunkedMinutes(chunkSize: Int): Sequence<List<T>>
  * @param chunkSize Int chunk Size
  * @return Sequence<List<T>> N 초(second)씩 나뉜 Sequence
  */
-fun <T> TemporalClosedRange<T>.chunkedSeconds(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedSeconds(chunkSize: Int): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     chunked(chunkSize, ChronoUnit.SECONDS)
 
 /**
@@ -208,7 +208,7 @@ fun <T> TemporalClosedRange<T>.chunkedSeconds(chunkSize: Int): Sequence<List<T>>
  * @param chunkSize chunk Size
  * @return N 밀리초(millisecond)씩 나뉜 Sequence
  */
-fun <T> TemporalClosedRange<T>.chunkedMillis(chunkSize: Int): Sequence<List<T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.chunkedMillis(chunkSize: Int): Sequence<List<T>> where T : Temporal, T : Comparable<T> =
     chunked(chunkSize, ChronoUnit.MILLIS)
 
 /**
@@ -219,7 +219,7 @@ fun <T> TemporalClosedRange<T>.chunkedMillis(chunkSize: Int): Sequence<List<T>> 
  * @return Sequence<Pair<T, T>>
  */
 @Suppress("UNCHECKED_CAST")
-fun <T> TemporalClosedRange<T>.zipWithNext(unit: ChronoUnit): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> {
+fun <T> TemporalClosedRange<T>.zipWithNext(unit: ChronoUnit): Sequence<Pair<T, T>> where T : Temporal, T : Comparable<T> {
     assert(unit in SupportChronoUnits) { "Not supported ChronoUnit. unit=$unit" }
 
     return sequence {
@@ -235,26 +235,26 @@ fun <T> TemporalClosedRange<T>.zipWithNext(unit: ChronoUnit): Sequence<Pair<T, T
     }
 }
 
-fun <T> TemporalClosedRange<T>.zipWithNextYear(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextYear(): Sequence<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNext(ChronoUnit.YEARS)
 
-fun <T> TemporalClosedRange<T>.zipWithNextMonth(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextMonth(): Sequence<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNext(ChronoUnit.MONTHS)
 
-fun <T> TemporalClosedRange<T>.zipWithNextWeek(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextWeek(): Sequence<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNext(ChronoUnit.WEEKS)
 
-fun <T> TemporalClosedRange<T>.zipWithNextDay(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextDay(): Sequence<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNext(ChronoUnit.DAYS)
 
-fun <T> TemporalClosedRange<T>.zipWithNextHour(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextHour(): Sequence<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNext(ChronoUnit.HOURS)
 
-fun <T> TemporalClosedRange<T>.zipWithNextMinute(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextMinute(): Sequence<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNext(ChronoUnit.MINUTES)
 
-fun <T> TemporalClosedRange<T>.zipWithNextSecond(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextSecond(): Sequence<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNext(ChronoUnit.SECONDS)
 
-fun <T> TemporalClosedRange<T>.zipWithNextMilli(): Sequence<Pair<T, T>> where T: Temporal, T: Comparable<T> =
+fun <T> TemporalClosedRange<T>.zipWithNextMilli(): Sequence<Pair<T, T>> where T : Temporal, T : Comparable<T> =
     zipWithNext(ChronoUnit.MILLIS)

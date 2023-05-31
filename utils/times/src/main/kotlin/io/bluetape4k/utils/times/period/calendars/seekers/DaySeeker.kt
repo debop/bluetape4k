@@ -17,9 +17,9 @@ open class DaySeeker private constructor(
     filter: CalendarVisitorFilter,
     seekDir: SeekDirection,
     calendar: ITimeCalendar,
-): CalendarVisitor<CalendarVisitorFilter, DaySeekerContext>(filter, TimeRange.AnyTime, seekDir, calendar) {
+) : CalendarVisitor<CalendarVisitorFilter, DaySeekerContext>(filter, TimeRange.AnyTime, seekDir, calendar) {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         operator fun invoke(
             filter: CalendarVisitorFilter = CalendarVisitorFilter(),
@@ -66,11 +66,10 @@ open class DaySeeker private constructor(
             context.isFinished                 -> false
             day.isSamePeriod(context.startDay) -> true
             !isMatchingDay(day, context)       -> true
-            !checkLimits(day)                  -> true
+            !isLimits(day)                     -> true
 
             else                               -> {
                 context.processDay(day)
-
                 // context 가 찾기를 완료하면 탐색(Visit)를 중단하도록 합니다.
                 !context.isFinished
             }

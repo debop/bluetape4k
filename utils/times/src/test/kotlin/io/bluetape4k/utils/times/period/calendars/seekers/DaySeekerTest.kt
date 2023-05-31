@@ -14,7 +14,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.Test
 
-class DaySeekerTest: AbstractPeriodTest() {
+class DaySeekerTest : AbstractPeriodTest() {
 
     @Test
     fun `simple forward seeker`() = runTest {

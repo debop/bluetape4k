@@ -13,7 +13,7 @@ open class WeekTimeRange(
     startTime: ZonedDateTime = ZonedDateTime.now(),
     val weekCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): CalendarTimeRange(startTime.relativeWeekPeriod(weekCount), calendar) {
+) : CalendarTimeRange(startTime.relativeWeekPeriod(weekCount), calendar) {
 
     val year: Int get() = startYear
     val weekyear: Int get() = start.weekyear

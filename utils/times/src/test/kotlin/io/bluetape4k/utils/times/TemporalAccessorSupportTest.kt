@@ -15,7 +15,7 @@ import kotlin.test.assertFailsWith
 
 class TemporalAccessorSupportTest {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `format string for Instant`() {

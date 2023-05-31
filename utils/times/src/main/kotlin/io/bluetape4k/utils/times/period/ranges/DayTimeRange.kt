@@ -12,7 +12,7 @@ open class DayTimeRange(
     startTime: ZonedDateTime = todayZonedDateTime(),
     val dayCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): CalendarTimeRange(startTime.relativeDayPeriod(dayCount), calendar) {
+) : CalendarTimeRange(startTime.relativeDayPeriod(dayCount), calendar) {
 
     fun hourSequence(): Sequence<HourRange> =
         hourRanges(startDayOfStart, dayCount * HoursPerDay, calendar)

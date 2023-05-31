@@ -14,9 +14,10 @@ import java.time.Month
 open class MonthRangeInYear(
     val startMonth: Month = Month.JANUARY,
     val endMonth: Month = Month.DECEMBER,
-): AbstractValueObject(), Comparable<MonthRangeInYear> {
+) : AbstractValueObject(), Comparable<MonthRangeInYear> {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
+        @JvmStatic
         operator fun invoke(
             startMonthOfYear: Int,
             endMonthOfYear: Int,
@@ -26,7 +27,7 @@ open class MonthRangeInYear(
     }
 
     init {
-        check(startMonth <= endMonth) {
+        require(startMonth <= endMonth) {
             "startMonth[$startMonth] must be less than or equals endMonth[$endMonth]"
         }
     }
@@ -48,8 +49,8 @@ open class MonthRangeInYear(
 
     override fun equalProperties(other: Any): Boolean {
         return other is MonthRangeInYear &&
-            startMonth == other.startMonth &&
-            endMonth == other.endMonth
+               startMonth == other.startMonth &&
+               endMonth == other.endMonth
     }
 
     override fun buildStringHelper(): ToStringBuilder {

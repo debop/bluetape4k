@@ -9,9 +9,9 @@ import io.bluetape4k.utils.times.startOfMinute
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
-class MinuteRangeCollectionTest: AbstractPeriodTest() {
+class MinuteRangeCollectionTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `single minute`() {

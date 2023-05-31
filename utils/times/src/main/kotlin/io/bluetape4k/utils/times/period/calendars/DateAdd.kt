@@ -25,7 +25,7 @@ import java.time.ZonedDateTime
  */
 open class DateAdd protected constructor() {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         operator fun invoke(): DateAdd = DateAdd()
     }

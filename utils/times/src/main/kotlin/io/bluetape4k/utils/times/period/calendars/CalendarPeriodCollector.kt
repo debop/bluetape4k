@@ -24,10 +24,10 @@ class CalendarPeriodCollector private constructor(
     limits: ITimePeriod,
     seekDir: SeekDirection,
     calendar: ITimeCalendar,
-): CalendarVisitor<CalendarPeriodCollectorFilter,
+) : CalendarVisitor<CalendarPeriodCollectorFilter,
     CalendarPeriodCollectorContext>(filter, limits, seekDir, calendar) {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         operator fun invoke(
             filter: CalendarPeriodCollectorFilter,
@@ -75,7 +75,7 @@ class CalendarPeriodCollector private constructor(
         }
 
         years.yearSequence()
-            .filter { checkLimits(it) }
+            .filter { isLimits(it) }
             .filter { isMatchingYear(it, context) }
             .forEach { periods.add(it) }
 
@@ -90,7 +90,7 @@ class CalendarPeriodCollector private constructor(
         }
 
         val monthFilter = { mr: MonthRange ->
-            checkLimits(mr) && isMatchingMonth(mr, context)
+            isLimits(mr) && isMatchingMonth(mr, context)
         }
 
         if (filter.collectingMonths.isEmpty()) {
@@ -109,7 +109,7 @@ class CalendarPeriodCollector private constructor(
                         m.endMonthOfYear - m.startMonthOfYear,
                         year.calendar
                     )
-                    if (checkLimits(mrc)) {
+                    if (isLimits(mrc)) {
                         val months = mrc.months()
                         val isMatch = months.all { isMatchingMonth(it, context) }
                         if (isMatch) {
@@ -131,7 +131,7 @@ class CalendarPeriodCollector private constructor(
         }
 
         val dayFilter = { dr: DayRange ->
-            checkLimits(dr) && isMatchingDay(dr, context)
+            isLimits(dr) && isMatchingDay(dr, context)
         }
 
         if (filter.collectingDays.isEmpty()) {
@@ -150,7 +150,7 @@ class CalendarPeriodCollector private constructor(
                         day.endDayOfMonth - day.startDayOfMonth,
                         month.calendar
                     )
-                    if (checkLimits(drc)) {
+                    if (isLimits(drc)) {
                         val days = drc.days()
                         val isMatch = days.all { isMatchingDay(it, context) }
                         if (isMatch) {
@@ -169,14 +169,14 @@ class CalendarPeriodCollector private constructor(
 
         if (filter.collectingHours.isEmpty()) {
             day.hourSequence()
-                .filter { checkLimits(it) && isMatchingHour(it, context) }
+                .filter { isLimits(it) && isMatchingHour(it, context) }
                 .forEach { periods.add(it) }
         } else if (isMatchingDay(day, context)) {
             filter.collectingHours.forEach { h ->
                 val start = zonedDateTimeOf(day.start.toLocalDate(), h.start)
                 val end = zonedDateTimeOf(day.start.toLocalDate(), h.end)
                 val hc = CalendarTimeRange(start, end, day.calendar)
-                if (checkExcludePeriods(hc) && checkLimits(hc)) {
+                if (isExcludePeriod(hc) && isLimits(hc)) {
                     periods.add(hc)
                 }
             }

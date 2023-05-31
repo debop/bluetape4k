@@ -24,9 +24,9 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 
 
-class DateDiffTest: AbstractPeriodTest() {
+class DateDiffTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `empty duration`() {

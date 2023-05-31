@@ -17,17 +17,20 @@ import java.time.temporal.Temporal
  * @param start         시작 시각
  * @param endExclusive  완료 시각 (제외)
  */
-class TemporalOpenedRange<T>(start: T, endExclusive: T):
+class TemporalOpenedRange<T>(start: T, endExclusive: T) :
     TemporalOpenedProgression<T>(start, endExclusive, Duration.ofMillis(1)), Serializable
-    where T: Temporal, T: Comparable<T> {
+    where T : Temporal, T : Comparable<T> {
 
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmField
         val EMPTY = TemporalOpenedRange<Instant>(Instant.ofEpochMilli(0L), Instant.ofEpochMilli(0L))
 
         @JvmStatic
-        fun <T> fromOpenedRange(start: T, endExclusive: T): TemporalOpenedRange<T> where T: Temporal, T: Comparable<T> {
+        fun <T> fromOpenedRange(
+            start: T,
+            endExclusive: T,
+        ): TemporalOpenedRange<T> where T : Temporal, T : Comparable<T> {
             assert(start !is LocalDate) { "LocalDate는 지원하지 않습니다." }
             assert(start < endExclusive) { "start[$start] < endInclusive[$endExclusive]" }
             return TemporalOpenedRange(start, endExclusive)

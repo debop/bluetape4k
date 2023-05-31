@@ -11,7 +11,7 @@ open class MonthRangeCollection(
     startTime: ZonedDateTime = todayZonedDateTime(),
     monthCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): MonthTimeRange(startTime, monthCount, calendar) {
+) : MonthTimeRange(startTime, monthCount, calendar) {
 
     constructor(year: Int, monthOfYear: Int, monthCount: Int = 1, calendar: ITimeCalendar = TimeCalendar.Default)
         : this(zonedDateTimeOf(year, monthOfYear), monthCount, calendar)

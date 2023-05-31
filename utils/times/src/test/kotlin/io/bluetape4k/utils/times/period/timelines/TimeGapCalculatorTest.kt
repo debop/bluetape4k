@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
 
-class TimeGapCalculatorTest: AbstractPeriodTest() {
+class TimeGapCalculatorTest : AbstractPeriodTest() {
 
     private val startTime = zonedDateTimeOf(2018, 3, 1)
     private val endTime = zonedDateTimeOf(2018, 3, 5)

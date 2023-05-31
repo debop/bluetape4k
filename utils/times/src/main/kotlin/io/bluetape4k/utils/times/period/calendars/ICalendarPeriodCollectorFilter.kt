@@ -5,7 +5,7 @@ import io.bluetape4k.utils.times.period.ranges.DayRangeInMonth
 import io.bluetape4k.utils.times.period.ranges.HourRangeInDay
 import io.bluetape4k.utils.times.period.ranges.MonthRangeInYear
 
-interface ICalendarPeriodCollectorFilter: ICalendarVisitorFilter {
+interface ICalendarPeriodCollectorFilter : ICalendarVisitorFilter {
 
     val collectingMonths: MutableList<MonthRangeInYear>
 

@@ -5,7 +5,7 @@ import java.time.ZonedDateTime
 /**
  * 시작시각 ~ 완료시각의 기간을 표현하는 Interface
  */
-interface ITimeRange: ITimePeriod {
+interface ITimeRange : ITimePeriod {
 
     override var start: ZonedDateTime
     override var end: ZonedDateTime

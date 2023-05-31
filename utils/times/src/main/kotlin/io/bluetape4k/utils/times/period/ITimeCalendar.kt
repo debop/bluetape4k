@@ -10,7 +10,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.temporal.TemporalAccessor
 
-interface ITimeCalendar: ITimePeriodMapper {
+interface ITimeCalendar : ITimePeriodMapper {
 
     val startOffset: Duration
     val endOffset: Duration

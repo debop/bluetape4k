@@ -6,7 +6,7 @@ import io.bluetape4k.utils.times.zonedDateTimeOf
 
 abstract class AbstractPeriodTest {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     val now = nowZonedDateTime()
 

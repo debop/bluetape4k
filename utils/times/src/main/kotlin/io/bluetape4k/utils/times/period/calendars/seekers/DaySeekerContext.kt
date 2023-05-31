@@ -8,9 +8,9 @@ import kotlin.math.absoluteValue
 open class DaySeekerContext private constructor(
     val startDay: DayRange,
     val dayCount: Int = 0,
-): ICalendarVisitorContext {
+) : ICalendarVisitorContext {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         operator fun invoke(startDay: DayRange, dayCount: Int = 0): DaySeekerContext {
             return DaySeekerContext(startDay, dayCount.absoluteValue)

@@ -12,7 +12,7 @@ open class QuarterRangeCollection(
     startTime: ZonedDateTime = todayZonedDateTime(),
     quarterCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): QuarterTimeRange(startTime, quarterCount, calendar) {
+) : QuarterTimeRange(startTime, quarterCount, calendar) {
 
     constructor(year: Int, quarter: Quarter, quarterCount: Int = 1, calendar: ITimeCalendar = TimeCalendar.Default)
         : this(startOfQuarter(year, quarter), quarterCount, calendar)

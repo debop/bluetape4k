@@ -21,9 +21,9 @@ import java.time.ZonedDateTime
 open class CalendarTimeRange protected constructor(
     val period: ITimePeriod,
     val calendar: ITimeCalendar,
-): TimeRange(calendar.mapStart(period.start), calendar.mapEnd(period.end), true) {
+) : TimeRange(calendar.mapStart(period.start), calendar.mapEnd(period.end), true) {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         operator fun invoke(
             period: ITimePeriod = TimeRange.AnyTime,
@@ -89,8 +89,8 @@ open class CalendarTimeRange protected constructor(
 
     override fun equalProperties(other: Any): Boolean {
         return super.equalProperties(other) &&
-            other is CalendarTimeRange &&
-            calendar == other.calendar
+               other is CalendarTimeRange &&
+               calendar == other.calendar
     }
 
     override fun equals(other: Any?): Boolean = other != null && super.equals(other)

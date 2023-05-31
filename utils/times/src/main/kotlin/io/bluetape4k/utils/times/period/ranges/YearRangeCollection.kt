@@ -9,7 +9,7 @@ open class YearRangeCollection protected constructor(
     year: Int,
     yearCount: Int,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): YearTimeRange(year, yearCount, calendar) {
+) : YearTimeRange(year, yearCount, calendar) {
 
     companion object {
         @JvmStatic

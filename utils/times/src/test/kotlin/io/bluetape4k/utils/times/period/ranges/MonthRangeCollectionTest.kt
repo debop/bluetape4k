@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test
 import java.time.YearMonth
 
 
-class MonthRangeCollectionTest: AbstractPeriodTest() {
+class MonthRangeCollectionTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `single month collection`() {

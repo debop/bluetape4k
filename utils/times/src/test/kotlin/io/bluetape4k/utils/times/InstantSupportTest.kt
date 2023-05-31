@@ -21,7 +21,7 @@ import kotlin.math.absoluteValue
 @RandomizedTest
 class InstantSupportTest {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         private const val REPEAT_SIZE = 10
     }
 

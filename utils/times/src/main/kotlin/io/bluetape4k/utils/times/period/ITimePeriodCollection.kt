@@ -2,7 +2,7 @@ package io.bluetape4k.utils.times.period
 
 import java.time.ZonedDateTime
 
-interface ITimePeriodCollection: ITimePeriodContainer {
+interface ITimePeriodCollection : ITimePeriodContainer {
     fun hasInsidePeriods(that: ITimePeriod): Boolean
     fun hasOverlapPeriods(that: ITimePeriod): Boolean
 

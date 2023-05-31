@@ -8,7 +8,7 @@ import java.time.ZonedDateTime
 open class MinuteRange(
     moment: ZonedDateTime = ZonedDateTime.now(),
     calendar: ITimeCalendar = TimeCalendar.Default,
-): MinuteTimeRange(moment, 1, calendar) {
+) : MinuteTimeRange(moment, 1, calendar) {
 
     val year: Int get() = startYear
     val monthOfYear: Int get() = startMonthOfYear

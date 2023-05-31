@@ -8,9 +8,9 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
 
-class QuarterRangeCollectionTest: AbstractPeriodTest() {
+class QuarterRangeCollectionTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `construct with moment`() {

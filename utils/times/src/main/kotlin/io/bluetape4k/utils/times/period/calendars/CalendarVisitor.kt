@@ -25,14 +25,14 @@ import kotlinx.coroutines.flow.buffer
 /**
  * 특정 기간에 대한 필터링 정보를 기반으로 기간들을 필터링 할 수 있도록 특정 기간을 탐색하는 Visitor입니다.
  */
-abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVisitorContext>(
+abstract class CalendarVisitor<out F : ICalendarVisitorFilter, in C : ICalendarVisitorContext>(
     val filter: F,
     val limits: ITimePeriod,
     val seekDirection: SeekDirection = SeekDirection.FORWARD,
     val calendar: ITimeCalendar = TimeCalendar.Default,
 ) {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmField
         val MaxPeriod = TimeRange(MinPeriodTime, MaxPeriodTime.minusYears(1))
     }
@@ -139,8 +139,8 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         }
 
         onVisitEnd()
-
         log.trace { "Year 단위 탐색 완료. lastVisited=$lastVisited" }
+
         return lastVisited
     }
 
@@ -161,8 +161,8 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         }
 
         onVisitEnd()
-
         log.trace { "Month 단위 탐색 완료. lastVisited=$lastVisited" }
+
         return lastVisited
     }
 
@@ -183,8 +183,8 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         }
 
         onVisitEnd()
-
         log.trace { "Day 단위 탐색 완료. lastVisited=$lastVisited" }
+
         return lastVisited
     }
 
@@ -204,8 +204,8 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         }
 
         onVisitEnd()
-
         log.trace { "Hour 단위 탐색 완료.  lastVisited=$lastVisited" }
+
         return lastVisited
     }
 
@@ -217,9 +217,9 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         log.trace { "End visiting" }
     }
 
-    protected fun checkLimits(target: ITimePeriod): Boolean = limits.hasInsideWith(target)
+    protected fun isLimits(target: ITimePeriod): Boolean = limits.hasInsideWith(target)
 
-    protected fun checkExcludePeriods(target: ITimePeriod): Boolean =
+    protected fun isExcludePeriod(target: ITimePeriod): Boolean =
         filter.excludePeriods.isEmpty() || filter.excludePeriods.overlapPeriods(target).isEmpty()
 
     protected open fun enterYears(years: YearRangeCollection, context: C): Boolean = true
@@ -236,13 +236,13 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
     protected open fun onVisitMinutes(minute: MinuteRange, context: C): Boolean = true
 
     protected open fun isMatchingYear(range: YearRange, context: C): Boolean =
-        checkExcludePeriods(range) &&
-            (filter.years.isEmpty || filter.years.contains(range.year))
+        isExcludePeriod(range) &&
+        (filter.years.isEmpty || filter.years.contains(range.year))
 
     protected open fun isMatchingMonth(range: MonthRange, context: C): Boolean = when {
         filter.years.notEmpty() && !filter.years.contains(range.year)                      -> false
         filter.monthOfYears.notEmpty() && !filter.monthOfYears.contains(range.monthOfYear) -> false
-        else                                                                               -> checkExcludePeriods(range)
+        else                                                                               -> isExcludePeriod(range)
     }
 
     protected open fun isMatchingDay(range: DayRange, context: C): Boolean = when {
@@ -250,7 +250,7 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         filter.monthOfYears.notEmpty() && !filter.monthOfYears.contains(range.monthOfYear) -> false
         filter.dayOfMonths.notEmpty() && !filter.dayOfMonths.contains(range.dayOfMonth)    -> false
         filter.dayOfWeeks.isNotEmpty() && !filter.dayOfWeeks.contains(range.dayOfWeek)     -> false
-        else                                                                               -> checkExcludePeriods(range)
+        else                                                                               -> isExcludePeriod(range)
     }
 
     protected open fun isMatchingHour(range: HourRange, context: C): Boolean = when {
@@ -259,7 +259,7 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         filter.dayOfMonths.notEmpty() && !filter.dayOfMonths.contains(range.dayOfMonth)     -> false
         filter.dayOfWeeks.isNotEmpty() && !filter.dayOfWeeks.contains(range.startDayOfWeek) -> false
         filter.hourOfDays.notEmpty() && !filter.hourOfDays.contains(range.hourOfDay)        -> false
-        else                                                                                -> checkExcludePeriods(range)
+        else                                                                                -> isExcludePeriod(range)
     }
 
     protected open fun isMatchingMinute(range: MinuteRange, context: C): Boolean = when {
@@ -269,8 +269,7 @@ abstract class CalendarVisitor<out F: ICalendarVisitorFilter, in C: ICalendarVis
         filter.dayOfWeeks.isNotEmpty() && !filter.dayOfWeeks.contains(range.startDayOfWeek)   -> false
         filter.hourOfDays.notEmpty() && !filter.hourOfDays.contains(range.hourOfDay)          -> false
         filter.minuteOfHours.notEmpty() && !filter.minuteOfHours.contains(range.minuteOfHour) -> false
-        else                                                                                  -> checkExcludePeriods(
-            range
-        )
+        else                                                                                  ->
+            isExcludePeriod(range)
     }
 }

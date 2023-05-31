@@ -10,18 +10,18 @@ import java.util.*
  * @param start         start date
  * @param endInclusive  end date (inclusive)
  */
-class DateGenericRange<T: Date>(
+class DateGenericRange<T : Date>(
     start: T,
     endInclusive: T,
-): DateGenericProgression<T>(start, endInclusive, Duration.ofMillis(1)),
+) : DateGenericProgression<T>(start, endInclusive, Duration.ofMillis(1)),
     ClosedRange<T> {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmField
         val EMPTY: DateGenericRange<Date> = DateGenericRange(Date(0L), Date(0L))
 
         @JvmStatic
-        fun <T: Date> fromClosedRange(start: T, endInclusive: T): DateGenericRange<T> {
+        fun <T : Date> fromClosedRange(start: T, endInclusive: T): DateGenericRange<T> {
             return DateGenericRange(start, endInclusive)
         }
     }

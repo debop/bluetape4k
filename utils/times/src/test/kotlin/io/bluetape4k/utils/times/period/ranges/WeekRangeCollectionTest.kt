@@ -22,9 +22,9 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 
-class WeekRangeCollectionTest: AbstractPeriodTest() {
+class WeekRangeCollectionTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @ParameterizedTest(name = "single week collection. day={0}")
     @ValueSource(ints = [1, 15, 31])

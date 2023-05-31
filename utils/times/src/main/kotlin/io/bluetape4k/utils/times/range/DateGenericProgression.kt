@@ -10,7 +10,7 @@ import java.util.*
 /**
  * Create [DateGenericProgression] instance
  */
-fun <T: Date> dateProgressionOf(
+fun <T : Date> dateProgressionOf(
     start: T,
     endInclusive: T,
     step: Duration = Duration.ofMillis(1),
@@ -31,11 +31,11 @@ fun <T: Date> dateProgressionOf(
  * @property last  last value of progression
  * @property step  progression step
  */
-open class DateGenericProgression<out T: Date> internal constructor(
+open class DateGenericProgression<out T : Date> internal constructor(
     start: T,
     endInclusive: T,
     val step: Duration,
-): Iterable<T> {
+) : Iterable<T> {
 
     init {
         assert(!step.isZero) { "step must be non-zero" }
@@ -46,10 +46,10 @@ open class DateGenericProgression<out T: Date> internal constructor(
         }
     }
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         @JvmOverloads
-        fun <T: Date> fromClosedRange(
+        fun <T : Date> fromClosedRange(
             start: T,
             endInclusive: T,
             step: Duration = Duration.ofMillis(1),
@@ -68,7 +68,7 @@ open class DateGenericProgression<out T: Date> internal constructor(
     override fun equals(other: Any?): Boolean = when (other) {
         !is DateGenericProgression<*> -> false
         else                          -> (isEmpty() && other.isEmpty()) ||
-            (first == other.first && last == other.last && step == other.step)
+                                         (first == other.first && last == other.last && step == other.step)
     }
 
     override fun hashCode(): Int = when {

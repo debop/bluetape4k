@@ -8,7 +8,7 @@ import java.time.ZonedDateTime
  *
  * @constructor Create empty I time block
  */
-interface ITimeBlock: ITimePeriod {
+interface ITimeBlock : ITimePeriod {
 
     override var start: ZonedDateTime
     override var end: ZonedDateTime

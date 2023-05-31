@@ -32,9 +32,9 @@ open class DateDiff private constructor(
     val start: ZonedDateTime,
     val end: ZonedDateTime = ZonedDateTime.now(),
     val calendar: ITimeCalendar = TimeCalendar.Default,
-): AbstractValueObject() {
+) : AbstractValueObject() {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         operator fun invoke(
             start: ZonedDateTime,
@@ -150,7 +150,7 @@ open class DateDiff private constructor(
         }
 
         val diff = (endYear * MonthsPerYear + endMonthOfYear) -
-            (calendar.year(compareDate) * MonthsPerYear + calendar.monthOfYear(compareDate))
+                   (calendar.year(compareDate) * MonthsPerYear + calendar.monthOfYear(compareDate))
 
         log.trace { "Calc difference by month = $diff" }
         return diff.toLong()
@@ -175,10 +175,12 @@ open class DateDiff private constructor(
 
     override fun equalProperties(other: Any): Boolean =
         other is DateDiff &&
-            start == other.start &&
-            end == other.end &&
-            difference == other.difference &&
-            calendar == other.calendar
+        start == other.start &&
+        end == other.end &&
+        difference == other.difference &&
+        calendar == other.calendar
+
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
 
     override fun hashCode(): Int = hashOf(start, end, calendar)
 

@@ -9,7 +9,7 @@ import io.bluetape4k.utils.times.period.ITimePeriodMapper
 /**
  * [ITimePeriod] 컬렉션을 가지며, 이를 통해 여러 기간에 대한 Union, Intersection, Gap 등을 구할 수 있도록 합니다.
  */
-interface ITimeLine: ValueObject {
+interface ITimeLine : ValueObject {
 
     val periods: ITimePeriodContainer
 

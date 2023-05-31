@@ -15,7 +15,7 @@ import kotlin.test.assertFailsWith
 
 class DateGenericProgressionTest {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     private val today = dateOf()
     private val tomorrow = today + 1.days()

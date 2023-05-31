@@ -5,7 +5,7 @@ import java.time.temporal.ChronoUnit
 
 abstract class AbstractTimesTest {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     val chronoUnits = listOf(
         ChronoUnit.YEARS,

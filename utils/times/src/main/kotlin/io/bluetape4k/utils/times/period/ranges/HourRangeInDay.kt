@@ -15,9 +15,8 @@ import java.time.LocalTime
 open class HourRangeInDay(
     val start: LocalTime = LocalTime.MIN,
     val end: LocalTime = LocalTime.of(23, 0),
-): AbstractValueObject(), Comparable<HourRangeInDay> {
+) : AbstractValueObject(), Comparable<HourRangeInDay> {
 
-    @JvmOverloads
     constructor(startHourOfDay: Int, endHourOfDay: Int = startHourOfDay)
         : this(LocalTime.of(startHourOfDay, 0), LocalTime.of(endHourOfDay, 0))
 
@@ -29,8 +28,8 @@ open class HourRangeInDay(
 
     override fun equalProperties(other: Any): Boolean =
         other is HourRangeInDay &&
-            start == other.start &&
-            end == other.end
+        start == other.start &&
+        end == other.end
 
     override fun buildStringHelper(): ToStringBuilder =
         super.buildStringHelper()

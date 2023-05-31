@@ -19,9 +19,9 @@ import kotlin.math.absoluteValue
 import kotlin.test.assertTrue
 
 
-class QuarterRangeTest: AbstractPeriodTest() {
+class QuarterRangeTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `simple construct`() {

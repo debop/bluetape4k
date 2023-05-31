@@ -8,7 +8,7 @@ import io.bluetape4k.utils.times.todayZonedDateTime
 import java.time.ZonedDateTime
 
 
-class SchoolDay(private val moment: ZonedDateTime = todayZonedDateTime() + 8.hours()): TimePeriodChain() {
+class SchoolDay(private val moment: ZonedDateTime = todayZonedDateTime() + 8.hours()) : TimePeriodChain() {
 
     val lesson1: Lesson
     val break1: ShortBreak
@@ -55,8 +55,8 @@ class SchoolDay(private val moment: ZonedDateTime = todayZonedDateTime() + 8.hou
     }
 }
 
-class Lesson(start: ZonedDateTime): TimeBlock(start, start + SchoolDay.LessonDuration)
+class Lesson(start: ZonedDateTime) : TimeBlock(start, start + SchoolDay.LessonDuration)
 
-class LargeBreak(start: ZonedDateTime): TimeBlock(start, start + SchoolDay.LargeBreakDuration)
+class LargeBreak(start: ZonedDateTime) : TimeBlock(start, start + SchoolDay.LargeBreakDuration)
 
-class ShortBreak(start: ZonedDateTime): TimeBlock(start, start + SchoolDay.ShortBreakDuration)
+class ShortBreak(start: ZonedDateTime) : TimeBlock(start, start + SchoolDay.ShortBreakDuration)

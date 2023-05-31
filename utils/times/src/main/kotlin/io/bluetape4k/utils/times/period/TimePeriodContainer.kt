@@ -14,9 +14,9 @@ import java.time.ZonedDateTime
  */
 open class TimePeriodContainer @JvmOverloads constructor(
     override val periods: MutableList<ITimePeriod> = fastListOf(),
-): TimePeriod(), ITimePeriodContainer, MutableList<ITimePeriod> by periods {
+) : TimePeriod(), ITimePeriodContainer, MutableList<ITimePeriod> by periods {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         operator fun invoke(element: ITimePeriod, vararg elements: ITimePeriod): TimePeriodContainer {
             return TimePeriodContainer().apply {
                 add(element)

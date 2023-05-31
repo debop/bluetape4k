@@ -20,15 +20,15 @@ import java.time.ZonedDateTime
  * [ITimeLine]의 기본 구현체입니다.
  * [ITimePeriod] 컬렉션을 가지며, 이를 통해 여러 기간에 대한 Union, Intersection, Gap 등을 구할 수 있도록 합니다.
  */
-class TimeLine<T: ITimePeriod> private constructor(
+class TimeLine<T : ITimePeriod> private constructor(
     override val periods: ITimePeriodContainer,
     private val _limits: ITimePeriod? = null,
     override val mapper: ITimePeriodMapper? = null,
-): ITimeLine {
+) : ITimeLine {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
-        operator fun <T: ITimePeriod> invoke(
+        operator fun <T : ITimePeriod> invoke(
             periods: ITimePeriodContainer,
             limits: ITimePeriod? = null,
             mapper: ITimePeriodMapper? = null,
@@ -68,6 +68,7 @@ class TimeLine<T: ITimePeriod> private constructor(
             .collect { tp -> tpc.add(TimeRange(tp)) }
 
         val moments = timeLineMoments(periods)
+
         return if (moments.isEmpty()) {
             log.trace { "moment is empty. moments=$moments, limits=$limits, periods=$periods" }
             TimePeriodCollection(limits)

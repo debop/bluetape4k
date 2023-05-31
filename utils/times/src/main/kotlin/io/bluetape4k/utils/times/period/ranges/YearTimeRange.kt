@@ -11,7 +11,7 @@ open class YearTimeRange(
     val year: Int,
     val yearCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): YearCalendarTimeRange(relativeYearPeriodOf(year, yearCount), calendar) {
+) : YearCalendarTimeRange(relativeYearPeriodOf(year, yearCount), calendar) {
 
     fun quarterSequence(): Sequence<QuarterRange> =
         quarterRanges(start, yearCount * QuartersPerYear, calendar)

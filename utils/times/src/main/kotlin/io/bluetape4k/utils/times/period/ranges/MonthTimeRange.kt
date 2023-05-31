@@ -11,7 +11,7 @@ open class MonthTimeRange @JvmOverloads constructor(
     startTime: ZonedDateTime = todayZonedDateTime(),
     val monthCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): CalendarTimeRange(startTime.relativeMonthPeriod(monthCount), calendar) {
+) : CalendarTimeRange(startTime.relativeMonthPeriod(monthCount), calendar) {
 
     fun daySequence(): Sequence<DayRange> = dayRanges(start, end, calendar)
 

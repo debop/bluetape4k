@@ -10,12 +10,11 @@ import java.time.ZonedDateTime
 open class MonthRange(
     startTime: ZonedDateTime = todayZonedDateTime(),
     calendar: ITimeCalendar = TimeCalendar.Default,
-): MonthTimeRange(startTime, 1, calendar) {
+) : MonthTimeRange(startTime, 1, calendar) {
 
     constructor(year: Int, monthOfYear: Int, calendar: ITimeCalendar = TimeCalendar.Default)
         : this(zonedDateTimeOf(year, monthOfYear), calendar)
 
-    @JvmOverloads
     constructor(yearMonth: YearMonth, calendar: ITimeCalendar = TimeCalendar.Default)
         : this(zonedDateTimeOf(yearMonth.year, yearMonth.monthValue), calendar)
 

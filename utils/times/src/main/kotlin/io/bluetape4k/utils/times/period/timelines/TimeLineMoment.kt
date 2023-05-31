@@ -8,7 +8,7 @@ import java.time.ZonedDateTime
 /**
  * [ITimeLineMoment]의 기본 구현체
  */
-open class TimeLineMoment(override val moment: ZonedDateTime): AbstractValueObject(), ITimeLineMoment {
+open class TimeLineMoment(override val moment: ZonedDateTime) : AbstractValueObject(), ITimeLineMoment {
 
     override val periods: TimePeriodCollection = TimePeriodCollection()
 

@@ -9,14 +9,14 @@ import io.bluetape4k.utils.Local
  *
  * @constructor Create empty Period context
  */
-open class PeriodContext: AbstractValueObject() {
+open class PeriodContext : AbstractValueObject() {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmField
         val TIME_CALENDAR_KEY: String = PeriodContext::class.java.name + ".current"
     }
 
-    object Current: KLogging() {
+    object Current : KLogging() {
 
         var calendar: ITimeCalendar
             get() = Local.getOrPut(TIME_CALENDAR_KEY) { TimeCalendar.Default }!!

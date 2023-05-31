@@ -25,9 +25,9 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class TimeBlockTest: AbstractPeriodTest() {
+class TimeBlockTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     private val duration = 1.hours()
     private val offset = 1.seconds()

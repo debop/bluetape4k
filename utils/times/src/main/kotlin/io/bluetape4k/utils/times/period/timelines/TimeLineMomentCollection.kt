@@ -10,9 +10,9 @@ import java.time.ZonedDateTime
  */
 open class TimeLineMomentCollection protected constructor(
     private val moments: MutableList<ITimeLineMoment>,
-): ITimeLineMomentCollection, MutableList<ITimeLineMoment> by moments {
+) : ITimeLineMomentCollection, MutableList<ITimeLineMoment> by moments {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmStatic
         operator fun invoke(moments: MutableList<ITimeLineMoment> = fastListOf()): TimeLineMomentCollection {
             return TimeLineMomentCollection(moments)

@@ -31,9 +31,9 @@ import kotlin.test.assertFailsWith
 
 
 @Suppress("UNCHECKED_CAST")
-abstract class TemporalOpenedRangeTest<T> where T: Temporal, T: Comparable<T> {
+abstract class TemporalOpenedRangeTest<T> where T : Temporal, T : Comparable<T> {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     abstract val start: T
     open val duration: TemporalAmount = 5.hours()
@@ -88,34 +88,34 @@ abstract class TemporalOpenedRangeTest<T> where T: Temporal, T: Comparable<T> {
     }
 }
 
-class InstantRangeExclusiveTest: TemporalOpenedRangeTest<Instant>() {
+class InstantRangeExclusiveTest : TemporalOpenedRangeTest<Instant>() {
     override val start: Instant = Instant.now()
 }
 
-class LocalDateTimeRangeExclusiveTest: TemporalOpenedRangeTest<LocalDateTime>() {
+class LocalDateTimeRangeExclusiveTest : TemporalOpenedRangeTest<LocalDateTime>() {
     override val start: LocalDateTime = LocalDateTime.now()
 }
 
-class OffsetDateTimeRangeExclusiveTest: TemporalOpenedRangeTest<OffsetDateTime>() {
+class OffsetDateTimeRangeExclusiveTest : TemporalOpenedRangeTest<OffsetDateTime>() {
     override val start: OffsetDateTime = OffsetDateTime.now()
 }
 
-class ZonedDateTimeRangeExclusiveTest: TemporalOpenedRangeTest<ZonedDateTime>() {
+class ZonedDateTimeRangeExclusiveTest : TemporalOpenedRangeTest<ZonedDateTime>() {
     override val start: ZonedDateTime = ZonedDateTime.now()
 }
 
-class LocalTimeRangeExclusiveTest: TemporalOpenedRangeTest<LocalTime>() {
+class LocalTimeRangeExclusiveTest : TemporalOpenedRangeTest<LocalTime>() {
     override val start: LocalTime = localTimeOf(7, 12, 45)
     override val duration: TemporalAmount = 5.seconds()
 }
 
-class OffsetTimeRangeExclusiveTest: TemporalOpenedRangeTest<OffsetTime>() {
+class OffsetTimeRangeExclusiveTest : TemporalOpenedRangeTest<OffsetTime>() {
     override val start = offsetTimeOf(7, 12, 55)
     override val duration: TemporalAmount = 5.seconds()
 }
 
 @Disabled("LocalDate 는 지원하지 않습니다.")
-class LocalDateRangeExclusiveTest: TemporalOpenedRangeTest<LocalDate>() {
+class LocalDateRangeExclusiveTest : TemporalOpenedRangeTest<LocalDate>() {
     override val start: LocalDate = LocalDate.now()
     override val duration: TemporalAmount = 5.days()
 }

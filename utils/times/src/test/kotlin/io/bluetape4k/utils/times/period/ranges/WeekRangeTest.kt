@@ -19,9 +19,9 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
 
-class WeekRangeTest: AbstractPeriodTest() {
+class WeekRangeTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `construct with now`() {

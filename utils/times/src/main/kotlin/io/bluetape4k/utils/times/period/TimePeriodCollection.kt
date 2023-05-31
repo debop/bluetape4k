@@ -6,9 +6,9 @@ import java.time.ZonedDateTime
 /**
  * [ITimePeriodCollection]의 기본 구현체
  */
-open class TimePeriodCollection: TimePeriodContainer(), ITimePeriodCollection {
+open class TimePeriodCollection : TimePeriodContainer(), ITimePeriodCollection {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         val EMPTY: TimePeriodCollection = TimePeriodCollection()
 
         @JvmStatic

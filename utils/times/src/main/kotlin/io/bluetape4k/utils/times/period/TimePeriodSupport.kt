@@ -21,7 +21,7 @@ import java.time.ZonedDateTime
 import java.time.temporal.Temporal
 
 
-fun <T> adjustPeriod(left: T?, right: T?): Pair<T?, T?> where T: Temporal, T: Comparable<T> =
+fun <T> adjustPeriod(left: T?, right: T?): Pair<T?, T?> where T : Temporal, T : Comparable<T> =
     Pair(left min right, left max right)
 
 
@@ -36,7 +36,7 @@ fun assertValidPeriod(start: ZonedDateTime?, end: ZonedDateTime?) {
     }
 }
 
-fun <T: ITimePeriod> allItemsAreEquals(left: Iterable<T>, right: Iterable<T>): Boolean {
+fun <T : ITimePeriod> allItemsAreEquals(left: Iterable<T>, right: Iterable<T>): Boolean {
     val leftIter = left.iterator()
     val rightIter = right.iterator()
 

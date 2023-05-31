@@ -8,7 +8,7 @@ import java.time.DayOfWeek
 /**
  * Calendar 탐색 시의 필터링을 할 조건을 표현하는 인터페이스입니다.
  */
-interface ICalendarVisitorFilter: ValueObject {
+interface ICalendarVisitorFilter : ValueObject {
 
     val excludePeriods: ITimePeriodCollection
 

@@ -15,9 +15,9 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
 
-class HourRangeTest: AbstractPeriodTest() {
+class HourRangeTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `simple construct`() {

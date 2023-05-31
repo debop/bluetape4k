@@ -10,7 +10,7 @@ open class DayRangeCollection(
     startTime: ZonedDateTime = todayZonedDateTime(),
     dayCount: Int = 1,
     calendar: ITimeCalendar = TimeCalendar.Default,
-): DayTimeRange(startTime, dayCount, calendar) {
+) : DayTimeRange(startTime, dayCount, calendar) {
 
     fun daySequence(): Sequence<DayRange> = dayRanges(startDayOfStart, dayCount, calendar)
 

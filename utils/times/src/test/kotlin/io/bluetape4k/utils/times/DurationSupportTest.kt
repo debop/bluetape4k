@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 
 class DurationSupportTest {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         val durationIsoFormat: Regex =
             """P(?<year>\d)Y(?<month>\d)M(?<day>\d)DT(?<hour>\d)H(?<minute>\d)M(?<second>\d)\.(?<mills>\d{3})S""".toRegex()
     }

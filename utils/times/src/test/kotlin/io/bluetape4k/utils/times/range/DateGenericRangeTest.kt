@@ -11,7 +11,7 @@ import java.sql.Timestamp
 import java.util.*
 
 @Suppress("UNCHECKED_CAST")
-abstract class DateGenericRangeTest<T: Date> {
+abstract class DateGenericRangeTest<T : Date> {
 
     abstract val current: T
 
@@ -31,11 +31,11 @@ abstract class DateGenericRangeTest<T: Date> {
     }
 }
 
-class DateRangeTest: DateGenericRangeTest<Date>() {
+class DateRangeTest : DateGenericRangeTest<Date>() {
     override val current: Date = Date()
 
 }
 
-class TimestampRangeTest: DateGenericRangeTest<Timestamp>() {
+class TimestampRangeTest : DateGenericRangeTest<Timestamp>() {
     override val current: Timestamp = Timestamp(Date().time)
 }

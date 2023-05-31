@@ -11,12 +11,12 @@ open class DayOfWeekHourRange(
     val dayOfWeek: DayOfWeek,
     startHourOfDay: Int = 0,
     endHourOfDay: Int = 23,
-): HourRangeInDay(startHourOfDay, endHourOfDay) {
+) : HourRangeInDay(startHourOfDay, endHourOfDay) {
 
     init {
-        check(startHourOfDay in 0..23) { "startHourOfDay[$startHourOfDay must be 0..23" }
-        check(endHourOfDay in 0..23) { "endHourOfDay[$endHourOfDay must be 0..23" }
-        check(startHourOfDay <= endHourOfDay) {
+        require(startHourOfDay in 0..23) { "startHourOfDay[$startHourOfDay must be 0..23" }
+        require(endHourOfDay in 0..23) { "endHourOfDay[$endHourOfDay must be 0..23" }
+        require(startHourOfDay <= endHourOfDay) {
             "startHourOfDay[$startHourOfDay must be less than or equals endDayOfHour[$endHourOfDay]"
         }
     }

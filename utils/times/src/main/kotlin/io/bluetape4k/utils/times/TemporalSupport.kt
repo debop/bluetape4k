@@ -29,42 +29,42 @@ import java.time.temporal.TemporalUnit
 // NOTE: [Temporal]에 이미 plus, minus 함수가 있어서 재사용을 못한다
 //
 
-fun <T: Temporal> T.add(period: Period): T = this.plus(period) as T
-fun <T: Temporal> T.add(duration: Duration): T = this.plus(duration) as T
-fun <T: Temporal> T.add(amount: TemporalAmount): T = this.plus(amount) as T
+fun <T : Temporal> T.add(period: Period): T = this.plus(period) as T
+fun <T : Temporal> T.add(duration: Duration): T = this.plus(duration) as T
+fun <T : Temporal> T.add(amount: TemporalAmount): T = this.plus(amount) as T
 
-fun <T: Temporal> T.subtract(period: Period): T = this.minus(period) as T
-fun <T: Temporal> T.subtract(duration: Duration): T = this.minus(duration) as T
-fun <T: Temporal> T.subtract(amount: TemporalAmount): T = this.minus(amount) as T
+fun <T : Temporal> T.subtract(period: Period): T = this.minus(period) as T
+fun <T : Temporal> T.subtract(duration: Duration): T = this.minus(duration) as T
+fun <T : Temporal> T.subtract(amount: TemporalAmount): T = this.minus(amount) as T
 
 // Temporal Adjusters
 
-val <T: Temporal> T.firstOfMonth: T get() = with(TemporalAdjusters.firstDayOfMonth()) as T
-val <T: Temporal> T.lastOfMonth: T get() = with(TemporalAdjusters.lastDayOfMonth()) as T
-val <T: Temporal> T.firstOfNextMonth: T get() = with(TemporalAdjusters.firstDayOfNextMonth()) as T
+val <T : Temporal> T.firstOfMonth: T get() = with(TemporalAdjusters.firstDayOfMonth()) as T
+val <T : Temporal> T.lastOfMonth: T get() = with(TemporalAdjusters.lastDayOfMonth()) as T
+val <T : Temporal> T.firstOfNextMonth: T get() = with(TemporalAdjusters.firstDayOfNextMonth()) as T
 
-val <T: Temporal> T.firstOfYear: T get() = with(TemporalAdjusters.firstDayOfYear()) as T
-val <T: Temporal> T.lastOfYear: T get() = with(TemporalAdjusters.lastDayOfYear()) as T
-val <T: Temporal> T.firstOfNextYear: T get() = with(TemporalAdjusters.firstDayOfNextYear()) as T
+val <T : Temporal> T.firstOfYear: T get() = with(TemporalAdjusters.firstDayOfYear()) as T
+val <T : Temporal> T.lastOfYear: T get() = with(TemporalAdjusters.lastDayOfYear()) as T
+val <T : Temporal> T.firstOfNextYear: T get() = with(TemporalAdjusters.firstDayOfNextYear()) as T
 
-fun <T: Temporal> T.dayOfWeekInMonth(ordinal: Int, dayOfWeek: DayOfWeek): T =
+fun <T : Temporal> T.dayOfWeekInMonth(ordinal: Int, dayOfWeek: DayOfWeek): T =
     with(TemporalAdjusters.dayOfWeekInMonth(ordinal, dayOfWeek)) as T
 
-fun <T: Temporal> T.firstInMonth(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.firstInMonth(dayOfWeek)) as T
-fun <T: Temporal> T.lastInMonth(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.lastInMonth(dayOfWeek)) as T
-fun <T: Temporal> T.previous(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.previous(dayOfWeek)) as T
-fun <T: Temporal> T.previousOrSame(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.previousOrSame(dayOfWeek)) as T
-fun <T: Temporal> T.next(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.next(dayOfWeek)) as T
-fun <T: Temporal> T.nextOrSame(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.nextOrSame(dayOfWeek)) as T
+fun <T : Temporal> T.firstInMonth(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.firstInMonth(dayOfWeek)) as T
+fun <T : Temporal> T.lastInMonth(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.lastInMonth(dayOfWeek)) as T
+fun <T : Temporal> T.previous(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.previous(dayOfWeek)) as T
+fun <T : Temporal> T.previousOrSame(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.previousOrSame(dayOfWeek)) as T
+fun <T : Temporal> T.next(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.next(dayOfWeek)) as T
+fun <T : Temporal> T.nextOrSame(dayOfWeek: DayOfWeek): T = with(TemporalAdjusters.nextOrSame(dayOfWeek)) as T
 
-infix fun <T: Temporal> T.supports(temporalUnit: TemporalUnit): Boolean = isSupported(temporalUnit)
+infix fun <T : Temporal> T.supports(temporalUnit: TemporalUnit): Boolean = isSupported(temporalUnit)
 
-fun <T: TemporalAccessor> T.toInstant(): Instant = Instant.from(this)
+fun <T : TemporalAccessor> T.toInstant(): Instant = Instant.from(this)
 
 /**
  * [Temporal] 을 Epoch 이후의 milli seconds 단위로 표현한 값 (기존 Date#time, Timestamp 와 같은 값을 나타낸다)
  */
-fun <T: Temporal> T.toEpochMillis(): Long = when (this) {
+fun <T : Temporal> T.toEpochMillis(): Long = when (this) {
     is Instant        -> toEpochMilli()
     is LocalDate      -> zonedDateTimeOf(year, monthValue, dayOfMonth).toEpochMillis()
     is LocalDateTime  -> toZonedDateTime(UtcOffset).toEpochMillis()
@@ -80,10 +80,10 @@ fun <T: Temporal> T.toEpochMillis(): Long = when (this) {
         }
 }
 
-fun <T: Temporal> T.toEpochDay(): Long = toEpochMillis() / (24 * 60 * 60 * 1000)
+fun <T : Temporal> T.toEpochDay(): Long = toEpochMillis() / (24 * 60 * 60 * 1000)
 
 @Suppress("UNCHECKED_CAST")
-fun <T: Temporal> T.asTemporal(zoneId: ZoneId = SystemZoneId): T = when (this) {
+fun <T : Temporal> T.asTemporal(zoneId: ZoneId = SystemZoneId): T = when (this) {
     is Instant        -> Instant.ofEpochMilli(this.toEpochMillis()) as T
     is LocalDate      -> Instant.ofEpochMilli(this.toEpochMillis()).toLocalDate() as T
     is LocalDateTime  -> Instant.ofEpochMilli(this.toEpochMillis()).toLocalDateTime() as T
@@ -92,7 +92,7 @@ fun <T: Temporal> T.asTemporal(zoneId: ZoneId = SystemZoneId): T = when (this) {
     else              -> error("Not supported class [${this.javaClass}]")
 }
 
-fun <T: Temporal> T.startOf(chronoUnit: ChronoUnit): T = when (chronoUnit) {
+fun <T : Temporal> T.startOf(chronoUnit: ChronoUnit): T = when (chronoUnit) {
     ChronoUnit.YEARS   -> startOfYear()
     ChronoUnit.MONTHS  -> startOfMonth()
     ChronoUnit.WEEKS   -> previousOrSame(DayOfWeek.MONDAY)
@@ -106,7 +106,7 @@ fun <T: Temporal> T.startOf(chronoUnit: ChronoUnit): T = when (chronoUnit) {
 
 
 @Suppress("UNCHECKED_CAST")
-fun <T: Temporal> T.startOfYear(): T = when (this) {
+fun <T : Temporal> T.startOfYear(): T = when (this) {
     is Instant        -> (startOfDay() as Instant).toZonedDateTime(UtcOffset).withDayOfYear(1).toInstant() as T
     is LocalDate      -> withDayOfYear(1).startOfDay() as T
     is LocalDateTime  -> withDayOfYear(1).startOfDay() as T
@@ -116,7 +116,7 @@ fun <T: Temporal> T.startOfYear(): T = when (this) {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T: Temporal> T.startOfMonth(): T = when (this) {
+fun <T : Temporal> T.startOfMonth(): T = when (this) {
     is Instant        -> (startOfDay() as Instant).toZonedDateTime(UtcOffset).withDayOfMonth(1).toInstant() as T
     is LocalDate      -> withDayOfMonth(1).startOfDay() as T
     is LocalDateTime  -> withDayOfMonth(1).startOfDay() as T
@@ -126,7 +126,7 @@ fun <T: Temporal> T.startOfMonth(): T = when (this) {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T: Temporal> T.startOfWeek(): T = when (this) {
+fun <T : Temporal> T.startOfWeek(): T = when (this) {
     is Instant        -> (startOfDay() as Instant).toZonedDateTime(UtcOffset).startOfWeek() as T
     is LocalDate      -> (startOfDay() - (dayOfWeek.value - DayOfWeek.MONDAY.value).days()) as T
     is LocalDateTime  -> (startOfDay() - (dayOfWeek.value - DayOfWeek.MONDAY.value).days()) as T
@@ -136,7 +136,7 @@ fun <T: Temporal> T.startOfWeek(): T = when (this) {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T: Temporal> T.startOfDay(): T = when (this) {
+fun <T : Temporal> T.startOfDay(): T = when (this) {
     is Instant        -> truncatedTo(ChronoUnit.DAYS) as T
     is LocalDate      -> this
     is LocalTime      -> this
@@ -147,7 +147,7 @@ fun <T: Temporal> T.startOfDay(): T = when (this) {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T: Temporal> T.startOfHour(): T = when (this) {
+fun <T : Temporal> T.startOfHour(): T = when (this) {
     is Instant        -> truncatedTo(ChronoUnit.HOURS) as T
     is LocalDateTime  -> truncatedTo(ChronoUnit.HOURS) as T
     is OffsetDateTime -> truncatedTo(ChronoUnit.HOURS) as T
@@ -158,7 +158,7 @@ fun <T: Temporal> T.startOfHour(): T = when (this) {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T: Temporal> T.startOfMinute(): T = when (this) {
+fun <T : Temporal> T.startOfMinute(): T = when (this) {
     is Instant        -> truncatedTo(ChronoUnit.MINUTES) as T
     is LocalDateTime  -> truncatedTo(ChronoUnit.MINUTES) as T
     is OffsetDateTime -> truncatedTo(ChronoUnit.MINUTES) as T
@@ -169,7 +169,7 @@ fun <T: Temporal> T.startOfMinute(): T = when (this) {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T: Temporal> T.startOfSecond(): T = when (this) {
+fun <T : Temporal> T.startOfSecond(): T = when (this) {
     is Instant        -> truncatedTo(ChronoUnit.SECONDS) as T
     is LocalDateTime  -> truncatedTo(ChronoUnit.SECONDS) as T
     is OffsetDateTime -> truncatedTo(ChronoUnit.SECONDS) as T
@@ -180,7 +180,7 @@ fun <T: Temporal> T.startOfSecond(): T = when (this) {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T: Temporal> T.startOfMillis(): T = when (this) {
+fun <T : Temporal> T.startOfMillis(): T = when (this) {
     is Instant        -> truncatedTo(ChronoUnit.MILLIS) as T
     is LocalDateTime  -> truncatedTo(ChronoUnit.MILLIS) as T
     is OffsetDateTime -> truncatedTo(ChronoUnit.MILLIS) as T
@@ -190,14 +190,14 @@ fun <T: Temporal> T.startOfMillis(): T = when (this) {
     else              -> error("Not supported class [${this.javaClass}]")
 }
 
-infix fun <T> T?.min(that: T?): T? where T: Temporal, T: Comparable<T> = when {
+infix fun <T> T?.min(that: T?): T? where T : Temporal, T : Comparable<T> = when {
     this == null -> that
     that == null -> this
     this < that  -> this
     else         -> that
 }
 
-infix fun <T> T?.max(that: T?): T? where T: Temporal, T: Comparable<T> = when {
+infix fun <T> T?.max(that: T?): T? where T : Temporal, T : Comparable<T> = when {
     this == null -> that
     that == null -> this
     this > that  -> this

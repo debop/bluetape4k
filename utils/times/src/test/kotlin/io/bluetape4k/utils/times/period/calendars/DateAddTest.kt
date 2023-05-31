@@ -17,9 +17,9 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 
 
-class DateAddTest: AbstractPeriodTest() {
+class DateAddTest : AbstractPeriodTest() {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Test
     fun `simple add duration`() = runTest {

@@ -12,9 +12,9 @@ import java.time.temporal.Temporal
 /**
  * JodaTime's AbstractInterval class 를 참고하여 구현하였습니다.
  */
-abstract class AbstractTemporalInterval<T>: ReadableTemporalInterval<T> where T: Temporal, T: Comparable<T> {
+abstract class AbstractTemporalInterval<T> : ReadableTemporalInterval<T> where T : Temporal, T : Comparable<T> {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     override val zoneId: ZoneId
         get() = SystemZoneId
@@ -100,9 +100,9 @@ abstract class AbstractTemporalInterval<T>: ReadableTemporalInterval<T> where T:
 
     override fun equals(other: Any?): Boolean =
         other is ReadableTemporalInterval<*> &&
-            areEquals(startInclusive, other.startInclusive) &&
-            areEquals(endExclusive, other.endExclusive) &&
-            areEquals(zoneId, other.zoneId)
+        areEquals(startInclusive, other.startInclusive) &&
+        areEquals(endExclusive, other.endExclusive) &&
+        areEquals(zoneId, other.zoneId)
 
     override fun hashCode(): Int = hashOf(startInclusive, endExclusive, zoneId)
 

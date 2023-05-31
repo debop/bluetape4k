@@ -16,7 +16,7 @@ import kotlin.test.assertFailsWith
 
 class TemporalIntervalWindowedTest {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
     @Nested
     inner class ChunkedTest {

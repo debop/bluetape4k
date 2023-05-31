@@ -15,29 +15,34 @@ open class TimeBlock(
     start: ZonedDateTime? = MinPeriodTime,
     end: ZonedDateTime? = MaxPeriodTime,
     readonly: Boolean = false,
-): TimePeriod(start ?: MinPeriodTime, end ?: MaxPeriodTime, readonly), ITimeBlock {
+) : TimePeriod(start ?: MinPeriodTime, end ?: MaxPeriodTime, readonly), ITimeBlock {
 
-    constructor(moment: ZonedDateTime, readonly: Boolean = false): this(moment, moment, readonly)
+    constructor(moment: ZonedDateTime, readonly: Boolean = false) : this(moment, moment, readonly)
 
-    companion object: KLogging() {
+    companion object : KLogging() {
 
+        @JvmField
         val AnyTime: TimeBlock = TimeBlock(readonly = true)
 
+        @JvmStatic
         operator fun invoke(start: ZonedDateTime?, end: ZonedDateTime?, readonly: Boolean = false): TimeBlock =
             TimeBlock(start ?: MinPeriodTime, end ?: MaxPeriodTime, readonly)
 
+        @JvmStatic
         operator fun invoke(src: ITimePeriod, readonly: Boolean = src.readonly): TimeBlock =
             TimeBlock(src.start, src.end, readonly)
 
+        @JvmStatic
         operator fun invoke(moment: ZonedDateTime, readonly: Boolean = false): TimeBlock =
             TimeBlock(moment, moment, readonly)
 
+        @JvmStatic
         operator fun invoke(start: ZonedDateTime, duration: Duration, readonly: Boolean = false): TimeBlock =
             TimeBlock(start, start + duration, readonly)
 
+        @JvmStatic
         operator fun invoke(duration: Duration, end: ZonedDateTime, readonly: Boolean = false): TimeBlock =
             TimeBlock(end - duration, end, readonly)
-
     }
 
     private var _duration = super.duration

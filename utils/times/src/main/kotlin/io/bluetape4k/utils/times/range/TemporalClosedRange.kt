@@ -13,18 +13,18 @@ import java.time.temporal.Temporal
 class TemporalClosedRange<T>(
     start: T,
     endInclusive: T,
-): TemporalClosedProgression<T>(start, endInclusive, Duration.ofMillis(1)),
+) : TemporalClosedProgression<T>(start, endInclusive, Duration.ofMillis(1)),
     ClosedRange<T>, Serializable
-    where T: Temporal, T: Comparable<T> {
+    where T : Temporal, T : Comparable<T> {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
         @JvmField
         val EMPTY = TemporalClosedRange<Instant>(Instant.ofEpochMilli(0L), Instant.ofEpochMilli(0L))
 
         fun <T> fromClosedRange(
             start: T,
             endInclusive: T,
-        ): TemporalClosedRange<T> where T: Temporal, T: Comparable<T> {
+        ): TemporalClosedRange<T> where T : Temporal, T : Comparable<T> {
             assert(start !is LocalDate) { "LocalDate는 지원하지 않습니다." }
             assert(start <= endInclusive) { "start[$start] <= endInclusive[$endInclusive]" }
             return TemporalClosedRange(start, endInclusive)
