@@ -14,6 +14,7 @@ object Plugins {
         const val testLogger = "3.2.0"
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.7"
+        
         const val spring_boot = "2.7.12"
         const val quarkus = "2.16.7.Final"
         const val apollo = "3.7.4"
@@ -144,7 +145,7 @@ object Versions {
     const val lettuce = "6.2.4.RELEASE"
 
     // 참고: https://github.com/redisson/redisson/issues/4809
-    const val redisson = "3.21.0"
+    const val redisson = "3.21.3"
 
     // NOTE: Hibernate 는 jakarta 버전인 경우 orm, validator 등이 group 에 포함됩니다.
     // NOTE: 이 경우 기존 javax 를 사용하는 버전과 충돌이 생길 수 있으니 조심하세요 
@@ -169,11 +170,11 @@ object Versions {
     const val prometheus = "0.16.0"
 
     //NOTE: spring boot 2.7.x 를 사용할 시 micrometer는 1.9+ 를 사용해야 합니다.
-    const val micrometer = "1.10.6"
-    const val micrometerTracing = "1.0.4"
+    const val micrometer = "1.10.7"
+    const val micrometerTracing = "1.0.6"
 
     // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom
-    const val opentelemetry = "1.25.0"
+    const val opentelemetry = "1.26.0"
 
     // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom-alpha
     const val opentelemetryAlpha = "$opentelemetry-alpha"
@@ -210,7 +211,7 @@ object Versions {
     const val mockito = "3.12.4"
     const val awaitility = "4.2.0"
     const val jmh = "1.36"
-    const val testcontainers = "1.18.1"
+    const val testcontainers = "1.18.2"
     const val jna = "5.13.0"
     const val archunit = "0.21.0"
 
@@ -1089,13 +1090,31 @@ object Libs {
     val hibernate_spatial = hibernate("spatial")
 
     const val hibernate_reactive_core = "org.hibernate.reactive:hibernate-reactive-core:${Versions.hibernate_reactive}"
-
     const val javassist = "org.javassist:javassist:3.29.2-GA"
 
     // Validators
     const val hibernate_validator = "org.hibernate:hibernate-validator:${Versions.hibernate_validator}"
     const val hibernate_validator_annotation_processor =
         "org.hibernate:hibernate-validator-annotation-processor:${Versions.hibernate_validator}"
+
+    // R2DBC (버전은 spring-data 버전을 사용한다)
+    fun r2dbc(module:String): String = "io.r2dbc:r2dbc-$module"
+    val r2dbc_h2 = r2dbc("h2")
+    val r2dbc_postgres = r2dbc("postgres")
+    val r2dbc_pool = r2dbc("pool")
+    val r2dbc_spi = r2dbc("spi")
+
+    // 참고 : https://github.com/asyncer-io/r2dbc-mysql
+    // NOTE: Spring Boot 2.6 에서는 miku 것을 사용
+    // NOTE: Spring Boot 2.7 에서는 asyncer 0.9+ 를 사용
+    // NOTE: Spring Boot 3.0+ 에서는 asyncer 1.0.2 를 사용 
+    // https://github.com/mirromutth/r2dbc-mysql
+    // https://github.com/asyncer-io/r2dbc-mysql
+    val r2dbc_mysql_0_9 = "io.asyncer:r2dbc-mysql:0.9.3"
+    val r2dbc_mysql_1_0 = "io.asyncer:r2dbc-mysql:1.0.2"
+    val r2dbc_mysql_0_8 = "dev.miku:r2dbc-mysql:0.8.2.RELEASE"
+    // https://github.com/mariadb-corporation/mariadb-connector-r2dbc
+    val r2dbc_mariadb = "org.mariadb:r2dbc-mariadb:1.1.4"
 
     // QueryDSL
     fun querydsl(module: String) = "com.querydsl:querydsl-$module:${Versions.querydsl}"

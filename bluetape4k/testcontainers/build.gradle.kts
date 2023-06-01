@@ -26,6 +26,12 @@ dependencies {
     testImplementation(Libs.mariadb_java_client)
     testImplementation(Libs.postgresql_driver)
 
+    // R2DBC
+    compileOnly(Libs.testcontainers_r2dbc)
+    compileOnly(Libs.r2dbc_mysql_0_9)
+    compileOnly(Libs.r2dbc_mariadb)
+    compileOnly(Libs.r2dbc_postgres)
+
     // Redis
     compileOnly(Libs.redisson)
     compileOnly(Libs.lettuce_core)
