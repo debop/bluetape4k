@@ -6,7 +6,8 @@ Reverse Geocode 서비스를 제공하는 곳은 대표적으로 Google 과 Micr
 
 Google 은 자체 Library 인
 [Google Map Services Java](https://github.com/googlemaps/google-maps-services-java)를 통해 다양한 기능을 제공하고,
-Microsoft 는 Bing의 [Bing Maps REST Services](https://learn.microsoft.com/en-us/bingmaps/rest-services/) 를 통해 지원합니다.
+Microsoft 는 Mobile 용 [maps-sdk](https://learn.microsoft.com/en-us/bingmaps/sdk-native/) 가 제공하지만 서버용은 없습니다. 대신
+Bing의 [Bing Maps REST Services](https://learn.microsoft.com/en-us/bingmaps/rest-services/) 를 통해 지원합니다.
 
 ## 참고
 

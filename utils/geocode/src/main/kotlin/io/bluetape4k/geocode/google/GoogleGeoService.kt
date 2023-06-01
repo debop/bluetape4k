@@ -11,6 +11,7 @@ object GoogleGeoService: KLogging() {
      * 현재 sunghyouk.bae@gmail.com 으로 계정을 만들었습니다.
      *
      * 참고: [API 사용하기](https://developers.google.com/maps/documentation/javascript/get-api-key?hl=ko)
+     * 참고: [Debop의 Google Map Reverse Geocode API Key](https://console.cloud.google.com/apis/credentials/key/2d935790-3118-4d0c-9468-999e0c3aa64f?hl=ko&project=data-rider-388411)
      */
     internal val apiKey: String by lazy {
         Resourcex.getString("GoogleGeocodeApi.key")
