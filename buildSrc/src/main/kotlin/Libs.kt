@@ -1100,7 +1100,6 @@ object Libs {
     // R2DBC (버전은 spring-data 버전을 사용한다)
     fun r2dbc(module:String): String = "io.r2dbc:r2dbc-$module"
     val r2dbc_h2 = r2dbc("h2")
-    val r2dbc_postgres = r2dbc("postgres")
     val r2dbc_pool = r2dbc("pool")
     val r2dbc_spi = r2dbc("spi")
 
@@ -1113,8 +1112,12 @@ object Libs {
     val r2dbc_mysql_0_9 = "io.asyncer:r2dbc-mysql:0.9.3"
     val r2dbc_mysql_1_0 = "io.asyncer:r2dbc-mysql:1.0.2"
     val r2dbc_mysql_0_8 = "dev.miku:r2dbc-mysql:0.8.2.RELEASE"
+
     // https://github.com/mariadb-corporation/mariadb-connector-r2dbc
     val r2dbc_mariadb = "org.mariadb:r2dbc-mariadb:1.1.4"
+
+    // https://github.com/pgjdbc/r2dbc-postgresql
+    val r2dbc_postgresql = "org.postgresql:r2dbc-postgresql:1.0.1.RELEASE"
 
     // QueryDSL
     fun querydsl(module: String) = "com.querydsl:querydsl-$module:${Versions.querydsl}"

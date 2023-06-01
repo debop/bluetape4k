@@ -30,7 +30,8 @@ dependencies {
     compileOnly(Libs.testcontainers_r2dbc)
     compileOnly(Libs.r2dbc_mysql_0_9)
     compileOnly(Libs.r2dbc_mariadb)
-    compileOnly(Libs.r2dbc_postgres)
+    compileOnly(Libs.r2dbc_postgresql)
+    compileOnly(Libs.springBootStarter("data-r2dbc"))
 
     // Redis
     compileOnly(Libs.redisson)
