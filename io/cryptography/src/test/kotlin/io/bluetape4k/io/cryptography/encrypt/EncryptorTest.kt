@@ -10,12 +10,11 @@ import org.junit.jupiter.params.provider.Arguments
 
 class EncryptorTest {
 
-    companion object: KLogging() {
+    companion object : KLogging() {
 
         private const val REPEAT_SIZE = 10
 
-        private fun getRandomString() =
-            Fakers.randomString(256, 4096, true)
+        private fun getRandomString() = Fakers.randomString(256, 4096)
     }
 
     private val encryptors: List<Arguments> =
