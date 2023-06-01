@@ -2,8 +2,23 @@
 
 ## 개요
 
-[MaxMind](https://www.maxmind.com/en/home) 를 이용하여 IP 정보로 실 주소를 얻을 수 있는 기능을 제공합니다.
+Reverse Geocode 서비스를 제공하는 곳은 대표적으로 Google 과 Microsoft 의 Bing 이 있다.
+
+Google 은 자체 Library 인
+[Google Map Services Java](https://github.com/googlemaps/google-maps-services-java)를 통해 다양한 기능을 제공하고,
+Microsoft 는 Bing의 [Bing Maps REST Services](https://learn.microsoft.com/en-us/bingmaps/rest-services/) 를 통해 지원합니다.
 
 ## 참고
 
+### Google
+
 * [GeoIP2 Java API](https://maxmind.github.io/GeoIP2-java/)
+
+### Bing
+
+* [Bing Maps REST Services](https://learn.microsoft.com/en-us/bingmaps/rest-services/)
+
+## TODO
+
+- 캐시 적용하기 (호출횟수 최소화)
+- Resilience4j 를 활용한 resilience 적용하기
