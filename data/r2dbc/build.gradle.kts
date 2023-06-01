@@ -1,5 +1,6 @@
 plugins {
     kotlin("plugin.spring")
+    kotlin("kapt")
 }
 
 configurations {
@@ -7,26 +8,31 @@ configurations {
 }
 
 dependencies {
-    implementation(project(":bluetape4k-spring-support"))
+    api(project(":bluetape4k-core"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Coroutines
-    implementation(project(":bluetape4k-coroutines"))
-    implementation(Libs.kotlinx_coroutines_core)
-    implementation(Libs.kotlinx_coroutines_reactor)
+    api(project(":bluetape4k-coroutines"))
+    api(Libs.kotlinx_coroutines_core)
+    api(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // Reactor
-    implementation(Libs.reactor_core)
-    implementation(Libs.reactor_kotlin_extensions)
+    compileOnly(Libs.reactor_core)
+    compileOnly(Libs.reactor_kotlin_extensions)
     testImplementation(Libs.reactor_test)
 
-    implementation(Libs.springBootStarter("data-r2dbc"))
-    implementation(Libs.r2dbc_h2)
+    compileOnly(project(":bluetape4k-spring-support"))
+    compileOnly(Libs.springBootStarter("data-r2dbc"))
+    compileOnly(Libs.r2dbc_h2)
+    compileOnly(Libs.r2dbc_pool)
+
+    // Spring Boot
+    compileOnly(Libs.springBoot("autoconfigure"))
 
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
-        exclude(module = "mockito-core")
     }
+
 }

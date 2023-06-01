@@ -1,5 +1,10 @@
 plugins {
     kotlin("plugin.spring")
+    id(Plugins.spring_boot)
+}
+
+springBoot {
+
 }
 
 configurations {
@@ -9,6 +14,10 @@ configurations {
 dependencies {
     implementation(project(":bluetape4k-spring-support"))
     testImplementation(project(":bluetape4k-junit5"))
+
+    // PostgreSql Server
+    implementation(project(":bluetape4k-testcontainers"))
+    implementation(Libs.testcontainers_postgresql)
 
     // Coroutines
     implementation(project(":bluetape4k-coroutines"))
@@ -22,11 +31,15 @@ dependencies {
     testImplementation(Libs.reactor_test)
 
     implementation(Libs.springBootStarter("data-r2dbc"))
+    implementation(Libs.r2dbc_postgresql)
     implementation(Libs.r2dbc_h2)
+
+    implementation(Libs.springBootStarter("webflux"))
 
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
         exclude(module = "mockito-core")
     }
+
 }
