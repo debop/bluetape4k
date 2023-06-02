@@ -1,5 +1,7 @@
 package io.bluetape4k.data.r2dbc.query
 
+import io.bluetape4k.core.ToStringBuilder
+
 sealed class Filter {
 
     abstract fun countLeaves(): Int
@@ -14,9 +16,22 @@ sealed class Filter {
                 conditions.filters.fold(0) { count, filter -> count + filter.countLeaves() }
             return countLeaves(this)
         }
+
+        override fun toString(): String {
+            return ToStringBuilder(this)
+                .add("operator", operator)
+                .add("filters", filters.joinToString())
+                .toString()
+        }
     }
 
     class Where(val where: String): Filter() {
         override fun countLeaves(): Int = 1
+
+        override fun toString(): String {
+            return ToStringBuilder(this)
+                .add("where", where)
+                .toString()
+        }
     }
 }

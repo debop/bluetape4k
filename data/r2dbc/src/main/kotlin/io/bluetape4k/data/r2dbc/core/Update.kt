@@ -2,7 +2,14 @@ package io.bluetape4k.data.r2dbc.core
 
 import io.bluetape4k.data.r2dbc.R2dbcClient
 import io.bluetape4k.data.r2dbc.query.Query
+import io.bluetape4k.data.r2dbc.support.bindMap
+import io.bluetape4k.data.r2dbc.support.toParameter
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import org.springframework.data.r2dbc.core.ReactiveUpdateOperation
+import org.springframework.data.relational.core.query.Criteria
+import org.springframework.data.relational.core.query.Query.query
+import org.springframework.data.relational.core.query.Update
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.FetchSpec
 import reactor.core.publisher.Mono
@@ -19,6 +26,40 @@ interface UpdateTableSpec {
 
 inline fun <reified T: Any> UpdateTableSpec.table(): ReactiveUpdateOperation.ReactiveUpdate {
     return table(T::class.java)
+}
+
+inline fun <reified T: Any> ReactiveUpdateOperation.UpdateWithQuery.using(
+    obj: T,
+    client: R2dbcClient,
+): Mono<Int> {
+    val dataAccessStrategy = client.entityTemplate.dataAccessStrategy
+    val idColumns = dataAccessStrategy.getIdentifierColumns(T::class.java)
+    if (idColumns.isEmpty()) {
+        error("Identifier columns not declared")
+    }
+    val columns = dataAccessStrategy.getAllColumns(T::class.java) - idColumns
+    if (columns.isEmpty()) {
+        error("There are no not-identifier columns to update")
+    }
+
+    val firstIdColumn = idColumns.first()
+    val outboundRow = dataAccessStrategy.getOutboundRow(obj)
+    val where = Criteria.where(firstIdColumn.reference).`is`(
+        outboundRow[firstIdColumn]?.value ?: error("Identifier value not set (${firstIdColumn.reference})")
+    )
+    val criteria = idColumns.drop(1).fold(where) { criteria, idColumn ->
+        criteria.and(idColumn.reference).`is`(
+            outboundRow[idColumn]?.value ?: error("Identitifer value not set (${idColumn.reference})")
+        )
+    }
+
+    val firstColumn = columns.first()
+    val firstUpdate = Update.update(firstColumn.reference, outboundRow[firstColumn]?.value)
+    val update = columns.drop(1).fold(firstUpdate) { update, column ->
+        update.set(column.reference, outboundRow[column]?.value)
+    }
+
+    return matching(query(criteria)).apply(update)
 }
 
 internal class UpdateTableSpecImpl(private val client: R2dbcClient): UpdateTableSpec {
@@ -79,36 +120,50 @@ internal class UpdateValuesSpecImpl(
     private val table: String,
 ): UpdateValuesSpec {
 
+    companion object: KLogging()
+
     override val values = mutableMapOf<String, Any?>()
     override val Update: SetterSpec get() = this
 
-    override fun using(setters: SetterSpec.() -> Unit): UpdateValuesSpec {
-        TODO("Not yet implemented")
+    override fun update(field: String, value: Any): UpdateValuesSpec = apply {
+        set(field, value)
+    }
+
+    override fun update(field: String, value: Any?, type: Class<*>): UpdateValuesSpec = apply {
+        set(field, value, type)
+    }
+
+    override fun set(field: String, value: Any): UpdateValuesSpec = apply {
+        values[field] = value
+    }
+
+    override fun set(field: String, value: Any?, type: Class<*>): UpdateValuesSpec = apply {
+        values[field] = value.toParameter(type)
+    }
+
+    override fun set(parameters: Map<String, Any?>): UpdateValuesSpec = apply {
+        parameters.forEach { (key, value) ->
+            when (value) {
+                null -> setNullable<Any>(key, value)
+                else -> set(key, value)
+            }
+        }
+    }
+
+    override fun using(setters: SetterSpec.() -> Unit): UpdateValuesSpec = apply {
+        setters()
     }
 
     override fun matching(where: String?, whereParameters: Map<String, Any?>?): DatabaseClient.GenericExecuteSpec {
-        TODO("Not yet implemented")
+        val updateParameters = values
+            .map { (name, _) -> "$name = :$name" }
+            .joinToString(", ")
+        val sql = "UPDATE $table SET $updateParameters"
+
+        val sqlToExecute = if (where != null) "$sql WHERE $where" else sql
+
+        log.debug { "Update SQL=$sqlToExecute" }
+        return client.databaseClient.sql(sqlToExecute)
+            .bindMap(values + (whereParameters ?: emptyMap()))
     }
-
-    override fun update(field: String, value: Any): UpdateValuesSpec {
-        TODO("Not yet implemented")
-    }
-
-    override fun update(field: String, value: Any?, type: Class<*>): UpdateValuesSpec {
-        TODO("Not yet implemented")
-    }
-
-    override fun set(field: String, value: Any): UpdateValuesSpec {
-        TODO("Not yet implemented")
-    }
-
-    override fun set(field: String, value: Any?, type: Class<*>): UpdateValuesSpec {
-        TODO("Not yet implemented")
-    }
-
-    override fun set(parameters: Map<String, Any?>): UpdateValuesSpec {
-        TODO("Not yet implemented")
-    }
-
-
 }

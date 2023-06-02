@@ -1,9 +1,14 @@
 package io.bluetape4k.data.r2dbc.support
 
+import io.bluetape4k.logging.KotlinLogging
+import io.bluetape4k.logging.debug
 import org.springframework.r2dbc.core.DatabaseClient
 
-fun DatabaseClient.GenericExecuteSpec.bindMap(parameters: Map<String, Any?>) = apply {
-    parameters.entries.fold(this) { spec, entry ->
+private val log = KotlinLogging.logger { }
+
+fun DatabaseClient.GenericExecuteSpec.bindMap(parameters: Map<String, Any?>): DatabaseClient.GenericExecuteSpec {
+    return parameters.entries.fold(this) { spec, entry ->
+        log.debug { "bind map. name=${entry.key}, value=${entry.value}" }
         val value = entry.value
         when (value) {
             null -> spec.bindNull(entry.key, String::class.java)
@@ -12,8 +17,9 @@ fun DatabaseClient.GenericExecuteSpec.bindMap(parameters: Map<String, Any?>) = a
     }
 }
 
-fun DatabaseClient.GenericExecuteSpec.bindIndexedMap(parameters: Map<Int, Any?>) = apply {
-    parameters.entries.fold(this) { spec, entry ->
+fun DatabaseClient.GenericExecuteSpec.bindIndexedMap(parameters: Map<Int, Any?>): DatabaseClient.GenericExecuteSpec {
+    return parameters.entries.fold(this) { spec, entry ->
+        log.debug { "bind map. index=${entry.key}, value=${entry.value}" }
         val value = entry.value
         when (value) {
             null -> spec.bindNull(entry.key, String::class.java)

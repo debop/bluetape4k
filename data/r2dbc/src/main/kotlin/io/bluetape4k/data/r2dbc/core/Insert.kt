@@ -1,7 +1,16 @@
 package io.bluetape4k.data.r2dbc.core
 
 import io.bluetape4k.data.r2dbc.R2dbcClient
+import io.bluetape4k.data.r2dbc.support.bindMap
+import io.bluetape4k.data.r2dbc.support.int
+import io.bluetape4k.data.r2dbc.support.long
+import io.bluetape4k.data.r2dbc.support.toParameter
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
+import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.data.r2dbc.core.ReactiveInsertOperation
+import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.FetchSpec
 import org.springframework.r2dbc.core.RowsFetchSpec
 import org.springframework.r2dbc.core.awaitOne
@@ -15,9 +24,13 @@ fun R2dbcClient.insert(): InsertIntoSpec {
 interface InsertIntoSpec {
     fun into(table: String): InsertValuesSpec
     fun into(table: String, idColumn: String): InsertValuesKeySpec
-    fun into(table: String, idProperty: KProperty<*>): InsertValuesKeySpec = into(table, idProperty.name)
     fun <T> into(type: Class<T>): ReactiveInsertOperation.ReactiveInsert<T>
 }
+
+inline fun <reified T: Any> InsertIntoSpec.into(): ReactiveInsertOperation.ReactiveInsert<T> = into(T::class.java)
+
+suspend inline fun <T: Any> ReactiveInsertOperation.TerminatingInsert<T>.usingAwaitSingle(supplier: () -> T): T =
+    using(supplier.invoke()).awaitSingle()
 
 internal class InsertIntoSpecImpl(private val client: R2dbcClient): InsertIntoSpec {
     override fun into(table: String): InsertValuesSpec {
@@ -36,7 +49,6 @@ internal class InsertIntoSpecImpl(private val client: R2dbcClient): InsertIntoSp
 interface InsertValuesSpec {
     fun value(field: String, value: Any): InsertValuesSpec
     fun value(field: String, value: Any?, type: Class<*>): InsertValuesSpec
-
     fun value(property: KProperty<*>, value: Any): InsertValuesSpec = value(property.name, value)
     fun value(property: KProperty<*>, value: Any?, type: Class<*>): InsertValuesSpec = value(property.name, value, type)
 
@@ -62,36 +74,49 @@ internal class InsertValuesSpecImpl(
     private val table: String,
 ): InsertValuesSpec {
 
-    override fun value(field: String, value: Any): InsertValuesSpec {
-        TODO("Not yet implemented")
+    companion object: KLogging()
+
+    override val values = mutableMapOf<String, Any?>()
+
+    override fun value(field: String, value: Any): InsertValuesSpec = apply {
+        values[field] = value
     }
 
-    override fun value(field: String, value: Any?, type: Class<*>): InsertValuesSpec {
-        TODO("Not yet implemented")
+    override fun value(field: String, value: Any?, type: Class<*>): InsertValuesSpec = apply {
+        values[field] = value.toParameter(type)
     }
 
-    override fun nullValue(field: String): InsertValuesSpec {
-        TODO("Not yet implemented")
+    override fun nullValue(field: String): InsertValuesSpec = apply {
+        values[field] = null
     }
 
-    override fun nullValue(field: String, type: Class<*>): InsertValuesSpec {
-        TODO("Not yet implemented")
+    override fun nullValue(field: String, type: Class<*>): InsertValuesSpec = apply {
+        values[field] = type.toParameter()
+    }
+
+    private fun execute(): DatabaseClient.GenericExecuteSpec {
+        if (values.isEmpty()) {
+            error("No values specified")
+        }
+        val names = values.keys.joinToString(", ")
+        val namedArguments = values.keys.map { ":$it" }.joinToString(", ")
+        val sql = "INSERT INTO $table ($names) VALUES ($namedArguments)"
+        log.debug { "Insert sql=$sql" }
+
+        return client.databaseClient.sql(sql).bindMap(values)
     }
 
     override fun fetch(): FetchSpec<out Any> {
-        TODO("Not yet implemented")
+        return execute().fetch()
     }
 
     override fun then(): Mono<Void> {
-        TODO("Not yet implemented")
+        return execute().then()
     }
 
     override suspend fun await() {
-        TODO("Not yet implemented")
+        execute().then().awaitFirstOrNull()
     }
-
-    override val values: Map<String, Any?>
-        get() = TODO("Not yet implemented")
 }
 
 interface InsertValuesKeySpec {
@@ -128,26 +153,31 @@ internal class InsertValuesKeySpecImpl(
     private val idColumn: String,
 ): InsertValuesKeySpec {
 
-    override val values: Map<String, Any?> = mutableMapOf()
+    companion object: KLogging()
 
-    override fun value(field: String, value: Any): InsertValuesKeySpec {
-        TODO("Not yet implemented")
+    override val values = mutableMapOf<String, Any?>()
+
+    override fun value(field: String, value: Any): InsertValuesKeySpec = apply {
+        values[field] = value
     }
 
-    override fun value(field: String, value: Any?, type: Class<*>): InsertValuesKeySpec {
-        TODO("Not yet implemented")
+    override fun value(field: String, value: Any?, type: Class<*>): InsertValuesKeySpec = apply {
+        values[field] = value.toParameter(type)
     }
 
-    override fun nullValue(field: String): InsertValuesKeySpec {
-        TODO("Not yet implemented")
+    override fun nullValue(field: String): InsertValuesKeySpec = apply {
+        values[field] = null
     }
 
-    override fun nullValue(field: String, type: Class<*>): InsertValuesKeySpec {
-        TODO("Not yet implemented")
+    override fun nullValue(field: String, type: Class<*>): InsertValuesKeySpec = apply {
+        values[field] = type.toParameter()
     }
 
     override fun fetch(): RowsFetchSpec<Int> {
-        TODO("Not yet implemented")
+        val executeSpec = executeSpec()
+        return executeSpec
+            .filter { s -> s.returnGeneratedValues(idColumn) }
+            .map { row -> row.int(idColumn) }
     }
 
     override suspend fun awaitOne(): Int {
@@ -155,7 +185,10 @@ internal class InsertValuesKeySpecImpl(
     }
 
     override fun fetchLong(): RowsFetchSpec<Long> {
-        TODO("Not yet implemented")
+        val executeSpec = executeSpec()
+        return executeSpec
+            .filter { s -> s.returnGeneratedValues(idColumn) }
+            .map { row -> row.long(idColumn) }
     }
 
     override suspend fun awaitOneLong(): Long {
@@ -164,5 +197,17 @@ internal class InsertValuesKeySpecImpl(
 
     override fun then(): Mono<Void> {
         return then()
+    }
+
+    private fun executeSpec(): DatabaseClient.GenericExecuteSpec {
+        if (values.isEmpty()) {
+            error("No value specified")
+        }
+        val names = values.keys.joinToString(", ")
+        val namedArguments = values.keys.map { ":$it" }.joinToString(", ")
+        val sql = "INSERT INTO $table ($names) VALUES ($namedArguments)"
+        log.debug { "Insert sql=$sql" }
+
+        return client.databaseClient.sql(sql).bindMap(values)
     }
 }

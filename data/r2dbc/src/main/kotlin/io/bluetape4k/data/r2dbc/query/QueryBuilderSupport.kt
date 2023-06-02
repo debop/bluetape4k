@@ -17,12 +17,17 @@ inline fun query(
     return QueryBuilder().build(sb) { block() }
 }
 
+inline fun queryCount(
+    sb: StringBuilder = StringBuilder(),
+    crossinline block: QueryBuilder.() -> Unit,
+): Query {
+    return QueryBuilder().buildCount(sb) { block() }
+}
+
 inline fun queryWithCount(
     sb: StringBuilder = StringBuilder(),
     crossinline block: QueryBuilder.() -> Unit,
 ): Pair<Query, Query> {
     val originalSql = sb.toString()
-
-    return QueryBuilder().build(sb) { block() } to
-        QueryBuilder().buildCount(StringBuilder(originalSql)) { block() }
+    return query(sb) { block() } to queryCount(StringBuilder(originalSql)) { block() }
 }

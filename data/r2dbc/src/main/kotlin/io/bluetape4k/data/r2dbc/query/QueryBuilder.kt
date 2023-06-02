@@ -1,6 +1,8 @@
 package io.bluetape4k.data.r2dbc.query
 
 import io.bluetape4k.data.r2dbc.support.toParameter
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.Systemx
 import io.r2dbc.spi.Parameters
 import kotlin.reflect.KProperty
@@ -16,6 +18,8 @@ import kotlin.reflect.KProperty
  * an operator, taking care of cases where groups end up being empty.
  */
 class QueryBuilder {
+
+    companion object: KLogging()
 
     private val selects = LinkedHashSet<String>()
     private var selectCount: String? = null
@@ -62,6 +66,11 @@ class QueryBuilder {
     fun groupBy(groupBy: String) = apply {
         this.groupBy = groupBy
     }
+
+    fun groupBy(groupBy: KProperty<*>) = apply {
+        this.groupBy = groupBy.name
+    }
+
 
     fun having(having: String) = apply {
         this.having = having
@@ -112,7 +121,9 @@ class QueryBuilder {
         limit?.run { sb.appendLine().append("limit ").append(limit) }
         offset?.run { sb.appendLine().append("offset ").append(offset) }
 
-        return Query(sb, params)
+        return Query(sb, params).apply {
+            log.debug { "query. $this" }
+        }
     }
 
     fun buildCount(sb: StringBuilder = StringBuilder(), block: QueryBuilder.() -> Unit): Query {
@@ -124,7 +135,9 @@ class QueryBuilder {
             sb.append("where ")
             appendConditions(sb, filters, true)
         }
-        return Query(sb, params)
+        return Query(sb, params).apply {
+            log.debug { "count query. $this" }
+        }
     }
 
     private fun appendConditions(sb: StringBuilder, conditions: Filter, root: Boolean) {
@@ -141,10 +154,12 @@ class QueryBuilder {
             1    -> appendConditions(sb, filtered.first(), false)
             else -> {
                 if (!root) sb.appendLine().append("(")
-                filtered.forEachIndexed { index, condition ->
-                    appendConditions(sb, conditions, false)
-                    if (index < filtered.indices.last) sb.append(" ${conditions.operator} ")
+                filtered.forEachIndexed { index, cond ->
+                    log.debug { "append condition group index=$index, condition=$cond" }
+                    appendConditions(sb, cond, false)
+                    if (index != filtered.indices.last) sb.append(" ${conditions.operator} ")
                 }
+
                 if (!root) sb.append(")")
             }
         }

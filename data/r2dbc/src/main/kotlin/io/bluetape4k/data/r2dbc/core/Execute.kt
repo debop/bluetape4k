@@ -5,6 +5,8 @@ import io.bluetape4k.data.r2dbc.query.Query
 import io.bluetape4k.data.r2dbc.support.bindIndexedMap
 import io.bluetape4k.data.r2dbc.support.bindMap
 import io.bluetape4k.data.r2dbc.support.toParameter
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import io.r2dbc.spi.Parameters
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.RowsFetchSpec
@@ -43,10 +45,12 @@ inline fun <T: Any, reified V: Any> BindSpec<T>.bindNullable(name: String, value
 
 @PublishedApi
 internal class BindSpecImpl<T: Any>(
-    private val r2dbcClient: R2dbcClient,
+    private val client: R2dbcClient,
     private val sql: String,
     private val type: KClass<T>,
 ): BindSpec<T> {
+
+    companion object: KLogging()
 
     private val indexedParameters = mutableMapOf<Int, Any?>()
     private val namedParameters = mutableMapOf<String, Any?>()
@@ -76,12 +80,13 @@ internal class BindSpecImpl<T: Any>(
     }
 
     override fun fetch(): RowsFetchSpec<T> {
-        return r2dbcClient.databaseClient
+        log.debug { "sql=$sql, named params=$namedParameters" }
+        return client.databaseClient
             .sql(sql)
             .bindMap(namedParameters)
             .bindIndexedMap(indexedParameters)
             .map { row, rowMetadata ->
-                r2dbcClient.mappingConverter.read(type.java, row, rowMetadata)
+                client.mappingConverter.read(type.java, row, rowMetadata)
             }
     }
 }

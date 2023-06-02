@@ -16,3 +16,6 @@ internal fun <V: Any> Any?.toParameter(type: Class<V>): Parameter = when (this) 
     is Parameter -> this
     else         -> Parameters.`in`(this)
 }
+
+@PublishedApi
+internal fun Class<*>.toParameter(): Parameter = Parameters.`in`(this)

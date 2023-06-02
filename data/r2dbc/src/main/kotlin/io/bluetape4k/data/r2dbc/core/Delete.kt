@@ -3,6 +3,8 @@ package io.bluetape4k.data.r2dbc.core
 import io.bluetape4k.data.r2dbc.R2dbcClient
 import io.bluetape4k.data.r2dbc.query.Query
 import io.bluetape4k.data.r2dbc.support.bindMap
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import org.springframework.data.r2dbc.core.ReactiveDeleteOperation
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.FetchSpec
@@ -45,6 +47,8 @@ private class DeleteValueSpecImpl(
     private val table: String,
 ): DeleteValueSpec {
 
+    companion object: KLogging()
+
     override fun matching(
         where: String?,
         whereParameters: Map<String, Any?>?,
@@ -54,6 +58,7 @@ private class DeleteValueSpecImpl(
             null -> sql
             else -> "$sql WHERE $where"
         }
+        log.debug { "Delete SQL=$sqlToExecute" }
         return client.databaseClient.sql(sqlToExecute).bindMap(whereParameters ?: emptyMap())
     }
 }
