@@ -30,6 +30,7 @@ dependencies {
     compileOnly(Libs.httpcore5)
     compileOnly(Libs.httpcore5_h2)
     compileOnly(Libs.httpcore5_reactive)
+    testImplementation(Libs.httpclient5_testing)
 
     // Vertx
     compileOnly(project(":bluetape4k-vertx-core"))

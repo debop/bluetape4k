@@ -754,9 +754,11 @@ object Libs {
     const val httpclient5 = "org.apache.httpcomponents.client5:httpclient5:${Versions.httpclient5}"
     const val httpclient5_cache = "org.apache.httpcomponents.client5:httpclient5-cache:${Versions.httpclient5}"
     const val httpclient5_fluent = "org.apache.httpcomponents.client5:httpclient5-fluent:${Versions.httpclient5}"
+    const val httpclient5_testing = "org.apache.httpcomponents.client5:httpclient5-testing:${Versions.httpclient5}"
     const val httpcore5 = "org.apache.httpcomponents.core5:httpcore5:${Versions.httpclient5}"
     const val httpcore5_h2 = "org.apache.httpcomponents.core5:httpcore5-h2:${Versions.httpclient5}"
     const val httpcore5_reactive = "org.apache.httpcomponents.core5:httpcore5-reactive:${Versions.httpclient5}"
+    const val httpcore5_testing = "org.apache.httpcomponents.core5:httpcore5-testing:${Versions.httpclient5}"
 
     // OpenFeign
     fun feign(module: String) = "io.github.openfeign:feign-$module:${Versions.feign}"
