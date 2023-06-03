@@ -40,7 +40,7 @@ class RedissonCoLeaderElectionTest: AbstractRedissonTest() {
     }
 
     @Test
-    fun `run action if leader in multi threading`() = runSuspendWithIO {
+    fun `run action if leader in multi job`() = runSuspendWithIO {
         val lockName = randomName()
         val leaderElection = RedissonCoLeaderElection(redissonClient)
 

@@ -89,7 +89,7 @@ class SemaphoreExamples: AbstractRedissonCoroutineTest() {
 
         MultithreadingTester()
             .numThreads(8)
-            .roundsPerThread(2)
+            .roundsPerThread(4)
             .add {
                 val redisson2 = newRedisson()
                 try {

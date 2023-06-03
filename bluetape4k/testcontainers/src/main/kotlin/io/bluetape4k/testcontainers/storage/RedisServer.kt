@@ -94,7 +94,11 @@ class RedisServer private constructor(
 
             fun getRedissonConfig(address: String = redis.url): Config =
                 Config().apply {
-                    useSingleServer().address = address
+                    with(useSingleServer()) {
+                        this.address = address
+                        this.connectionPoolSize = 128       // default: 64
+                        this.connectionMinimumIdleSize = 4  // default: 24
+                    }
                 }
 
             fun getRedisson(address: String = redis.url): RedissonClient {

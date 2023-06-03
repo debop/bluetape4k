@@ -1,6 +1,5 @@
 package io.bluetape4k.examples.coroutines.exceptions
 
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.info
@@ -15,6 +14,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import org.amshove.kluent.fail
 import org.amshove.kluent.shouldBeFalse
@@ -43,7 +43,7 @@ class ExceptionHandlingExamples {
 
     @Disabled("예외가 발생하는 launch 구역은 try/catch를 추가해야 합니다.")
     @Test
-    fun `예외처리가 없는 경우에 복수의 Job을 실행하는 방식`() = runSuspendTest {
+    fun `예외처리가 없는 경우에 복수의 Job을 실행하는 방식`() = runTest {
         coroutineScope {
             launch {
                 launch {
@@ -69,7 +69,7 @@ class ExceptionHandlingExamples {
 
     @Disabled("외부에 try catch를 적용해도 예외를 잡지 못합니다")
     @Test
-    fun `외부에 try catch를 적용해도 예외를 잡지 못합니다`() = runSuspendTest {
+    fun `외부에 try catch를 적용해도 예외를 잡지 못합니다`() = runTest {
         try {
             launch {
                 delay(100L)
@@ -86,7 +86,7 @@ class ExceptionHandlingExamples {
     }
 
     @Test
-    fun `내부에 try catch를 적용해야 예외를 잡아냅니다`() = runSuspendTest {
+    fun `내부에 try catch를 적용해야 예외를 잡아냅니다`() = runTest {
         var capturedException: Throwable? = null
 
         coroutineScope {
@@ -111,7 +111,7 @@ class ExceptionHandlingExamples {
      * Supervisor job을 사용하면, 다른 child job이 예외를 발생시키더라도 다른 child job은 계속 실행됩니다.
      */
     @Test
-    fun `SupervisorJob을 활용하여 예외처리하기`() = runSuspendTest {
+    fun `SupervisorJob을 활용하여 예외처리하기`() = runTest {
         val job = SupervisorJob()
         val scope = CoroutineScope(job)
         val run2 = atomic(false)
@@ -140,7 +140,7 @@ class ExceptionHandlingExamples {
      * SupervisorJob 은 child job 중 하나가 예외를 일으켜도, 다른 child job 은 실행시킵니다.
      */
     @Test
-    fun `SupervisorJob을 잘 못 사용하는 예`() = runSuspendTest {
+    fun `SupervisorJob을 잘 못 사용하는 예`() = runTest {
         val secondJob = atomic(false)
         // 이렇게 주입해버리면, parent job 으로서 complete(), join() 을 못하므로 문제가 발생합니다.
         val job = launch(SupervisorJob() + exceptionHandler) {
@@ -162,7 +162,7 @@ class ExceptionHandlingExamples {
     }
 
     @Test
-    fun `SupervisorJob을 이용하여 예외 시에도 다른 모든 Child를 실행하기`() = runSuspendTest {
+    fun `SupervisorJob을 이용하여 예외 시에도 다른 모든 Child를 실행하기`() = runTest {
         var runJob2 = false
 
         val job = SupervisorJob()
@@ -182,7 +182,7 @@ class ExceptionHandlingExamples {
     }
 
     @Test
-    fun `supervisorScope 를 이용하여 예외 전파를 래핑하기`() = runSuspendTest {
+    fun `supervisorScope 를 이용하여 예외 전파를 래핑하기`() = runTest {
         var runJob2 = false
 
         // supervisorScope 를 이용하면 child 간의 예외에 대한 영향을 받지 않습니다.
@@ -204,7 +204,7 @@ class ExceptionHandlingExamples {
     }
 
     @Test
-    fun `suspervisorScope와 await 함수에서 예외 전파를 막기`() = runSuspendTest {
+    fun `suspervisorScope와 await 함수에서 예외 전파를 막기`() = runTest {
         // supervisorScope 환경 하에서 children 을 독립적으로 실행할 수 있습니다.
         supervisorScope {
             val str1 = async<String> {
@@ -232,7 +232,7 @@ class ExceptionHandlingExamples {
     object MyNonPropagatingException: CancellationException()
 
     @Test
-    fun `자식이 취소된다고 부모가 취소되지는 않습니다`() = runSuspendTest {
+    fun `자식이 취소된다고 부모가 취소되지는 않습니다`() = runTest {
         var runJob2 = false
 
         // 자식 1
@@ -256,7 +256,7 @@ class ExceptionHandlingExamples {
     }
 
     @Test
-    fun `Coroutine exception handler 를 사용하여 작업하기`() = runSuspendTest {
+    fun `Coroutine exception handler 를 사용하여 작업하기`() = runTest {
         var hasException = false
 
         val handler = CoroutineExceptionHandler { _, exception ->

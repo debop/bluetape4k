@@ -1,7 +1,6 @@
 package io.bluetape4k.examples.mutiny
 
 import io.bluetape4k.codec.encodeBase62
-import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
@@ -15,11 +14,13 @@ import io.smallrye.mutiny.coroutines.asFlow
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.smallrye.mutiny.tuples.Tuple2
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeIn
 import org.amshove.kluent.shouldContain
@@ -127,7 +128,7 @@ class CompositionTransformationExamples {
     }
 
     @Test
-    fun `06 Multi transform`() = runSuspendWithIO {
+    fun `06 Multi transform`() = runTest {
         val evens = multiRangeOf(1, 100)
             .filter { it % 2 == 0 }
             .select().last(5)
@@ -140,7 +141,7 @@ class CompositionTransformationExamples {
     }
 
     @Test
-    fun `07 Multi transformToUni`() = runSuspendWithIO {
+    fun `07 Multi transformToUni`() = runTest {
         fun increase(n: Int): Uni<Int> {
             val cs = CompletableFuture.supplyAsync(
                 { n * 100 },
@@ -160,7 +161,7 @@ class CompositionTransformationExamples {
     }
 
     @Test
-    fun `08 Multi transformToMulti`() = runSuspendWithIO {
+    fun `08 Multi transformToMulti`() = runTest {
         fun query(n: Int): Multi<Int> = Multi.createFrom()
             .emitter { emitter ->
                 CompletableFuture.runAsync(
@@ -187,7 +188,7 @@ class CompositionTransformationExamples {
     }
 
     @Test
-    fun `09 Multi flatMap`() = runSuspendWithIO {
+    fun `09 Multi flatMap`() = runTest {
         fun query(n: Int): Multi<Int> = Multi.createFrom()
             .emitter { emitter ->
                 CompletableFuture.runAsync(
@@ -215,7 +216,7 @@ class CompositionTransformationExamples {
 
     // merge 는 복수의 Multi로 부터 먼저 오는 것부터 subscribe 한다
     @Test
-    fun `10 Multi merge multiple multi instance`() = runSuspendWithIO {
+    fun `10 Multi merge multiple multi instance`() = runTest {
         val generator1 = Generator(0)
         val generator2 = Generator(100)
 
@@ -234,7 +235,7 @@ class CompositionTransformationExamples {
 
     // concatenate 는 첫번째 Multi 가 끝나야 다음 Multi 로부터 subscribe 한다
     @Test
-    fun `11 Multi concatenate`() = runSuspendWithIO {
+    fun `11 Multi concatenate`() = runTest {
         val generator1 = Generator(0)
         val generator2 = Generator(100)
 
@@ -252,7 +253,7 @@ class CompositionTransformationExamples {
     }
 
     @Test
-    fun `12 Multi combine`() = runSuspendWithIO {
+    fun `12 Multi combine`() = runTest {
         val generator1 = Generator(0)
         val generator2 = Generator(100)
 
@@ -311,7 +312,7 @@ class CompositionTransformationExamples {
     }
 
     @Test
-    fun `13-1 Multi Broadcast in coroutines`() = runSuspendWithIO {
+    fun `13-1 Multi Broadcast in coroutines`() = runTest {
         val counter = atomic(0)
 
         val multi: Multi<Int> = Multi.createBy()
@@ -321,31 +322,31 @@ class CompositionTransformationExamples {
             .toAllSubscribers()
 
         val jobs = listOf(
-            launch {
+            launch(Dispatchers.IO) {
                 multi.onItem().transform { n -> "🚀 $n" }
                     .asFlow()
                     .onEach { n -> log.debug { n } }
                     .collect()
             },
-            launch {
+            launch(Dispatchers.IO) {
                 multi.onItem().transform { n -> "🧪 $n" }
                     .asFlow()
                     .onEach { n -> log.debug { n } }
                     .collect()
             },
-            launch {
+            launch(Dispatchers.IO) {
                 multi.onItem().transform { n -> "💡 $n" }
                     .asFlow()
                     .onEach { n -> log.debug { n } }
                     .collect()
             }
         )
-
         jobs.joinAll()
+        counter.value shouldBeEqualTo 10
     }
 
     @Test
-    fun `14 Multi aggregates`() = runSuspendWithIO {
+    fun `14 Multi aggregates`() = runTest {
         log.debug { "👀 Multi aggregates" }
 
         val persons = Multi.createBy()
@@ -402,7 +403,7 @@ class CompositionTransformationExamples {
     )
 
     @Test
-    fun `15 Multi Buckets`() = runSuspendWithIO {
+    fun `15 Multi Buckets`() = runTest {
         log.debug { "👀 Multi buckets" }
 
         val buckets = Multi.createFrom()
@@ -416,7 +417,7 @@ class CompositionTransformationExamples {
     }
 
     @Test
-    fun `16 Multi Temporal Buckets`() = runSuspendWithIO {
+    fun `16 Multi Temporal Buckets`() = runTest {
         log.debug { "👀 Multi temporal buckets" }
 
         // NOTE: 시간 기준의 debouncing 이다
@@ -434,7 +435,7 @@ class CompositionTransformationExamples {
 
     // Collection.flatMap 과 같은 기능
     @Test
-    fun `17 Multi Disjoint`() = runSuspendWithIO {
+    fun `17 Multi Disjoint`() = runTest {
         log.debug { "👀 Multi disjoint" }
 
         val items = Multi.createFrom().range(0, 10)
@@ -449,7 +450,7 @@ class CompositionTransformationExamples {
     }
 
     @Test
-    fun `18 Multo to Uni and back`() = runSuspendWithIO {
+    fun `18 Multo to Uni and back`() = runTest {
         log.debug { "👀 Multi <--> Uni" }
 
         // toUni() 는 첫번째 요소를 취한다
