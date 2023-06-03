@@ -37,10 +37,10 @@ class LocalStackServer private constructor(
 ): LocalStackContainer(imageName), GenericServer {
 
     companion object: KLogging() {
-        val IMAGE = "localstack/localstack"
-        val NAME = "localstack"
-        val TAG = "2.0"
-        val PORT = 4566
+        const val IMAGE = "localstack/localstack"
+        const val NAME = "localstack"
+        const val TAG = "2.1"
+        const val PORT = 4566
 
         operator fun invoke(
             tag: String = TAG,
