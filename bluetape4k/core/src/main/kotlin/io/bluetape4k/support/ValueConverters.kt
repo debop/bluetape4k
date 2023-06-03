@@ -272,7 +272,7 @@ fun Any?.asOffsetDateTimeOrNull(): OffsetDateTime? = runCatching {
     }
 }.getOrNull()
 
-fun Any?.asUUID(defaultValue: UUID): UUID = asUUIDOrNull() ?: defaultValue
+fun Any?.asUUID(defaultValue: UUID = UUID.randomUUID()): UUID = asUUIDOrNull() ?: defaultValue
 fun Any?.asUUIDOrNull(): UUID? = runCatching {
     when (this) {
         null    -> null
