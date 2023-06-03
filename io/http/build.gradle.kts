@@ -7,6 +7,7 @@ dependencies {
     api(project(":bluetape4k-io-json"))
     api(project(":bluetape4k-infra-resilience4j"))
     testImplementation(project(":bluetape4k-junit5"))
+    testImplementation(project(":bluetape4k-testcontainers"))
 
     // Coroutines
     api(project(":bluetape4k-coroutines"))
