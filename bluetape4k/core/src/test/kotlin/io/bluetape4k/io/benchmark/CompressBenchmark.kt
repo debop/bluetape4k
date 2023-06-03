@@ -25,6 +25,7 @@ class CompressBenchmark {
     private val deflate = Compressors.Deflate
     private val zstd = Compressors.Zstd
     private val zstd_min = ZstdCompressor(Zstd.minCompressionLevel())
+    private val brotli = Compressors.Brotli
 
     // Apple Silicon 에서는 실행이 안됩니다.
     //private val brotli = Compressors.Brotli
@@ -80,8 +81,8 @@ class CompressBenchmark {
         }
     }
 
-//    @Benchmark
-//    fun brotli() {
-//        brotli.decompress(brotli.compress(randomString))
-//    }
+    @Benchmark
+    fun brotli() {
+        brotli.decompress(brotli.compress(randomString))
+    }
 }

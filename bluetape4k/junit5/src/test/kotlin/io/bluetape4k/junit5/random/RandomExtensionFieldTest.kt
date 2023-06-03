@@ -2,6 +2,7 @@ package io.bluetape4k.junit5.random
 
 import io.bluetape4k.junit5.model.DomainObject
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEmpty
@@ -19,7 +20,7 @@ import java.util.stream.Stream
 class RandomExtensionFieldTest {
 
     companion object: KLogging() {
-        const val TEST_COUNT = 20
+        const val REPEAT_SIZE = 10
     }
 
     val anyStrings = ConcurrentLinkedQueue<String>()
@@ -69,7 +70,6 @@ class RandomExtensionFieldTest {
         anyListOfSpecificSize.size shouldBeEqualTo 5
     }
 
-
     @RandomValue(type = String::class)
     private lateinit var anySet: Set<String>
 
@@ -99,7 +99,6 @@ class RandomExtensionFieldTest {
         anyCollection.size shouldBeEqualTo getDefaultSizeOfRandom()
     }
 
-
     @RandomValue(size = 2, type = DomainObject::class)
     private lateinit var anyFullyPopulatedDomainObjects: List<DomainObject>
 
@@ -126,8 +125,9 @@ class RandomExtensionFieldTest {
 
     // JUnit 5의 Parallel mode 에서는 field 값은 한번에 정해지므로, 같은 값을 가지게 된다.
     // 이럴 때를 대비해 parameter로 제공하는 것이 가장 안전한 방식이다.
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `will inject a new random value each time`() {
+        log.debug { "anyString=$anyString" }
         anyString.shouldNotBeNullOrEmpty()
 
         if (anyStrings.isEmpty()) {

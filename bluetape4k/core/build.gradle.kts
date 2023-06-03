@@ -52,7 +52,9 @@ dependencies {
     compileOnly(Libs.zstd_jni)
     compileOnly(Libs.commons_compress)
     compileOnly(Libs.xz)
+
     compileOnly(Libs.brotli4j)
+    compileOnly(Libs.brotli4j_native)
 
     // Binary Serializers
     compileOnly(Libs.kryo)

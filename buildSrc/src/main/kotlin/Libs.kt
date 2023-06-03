@@ -240,11 +240,10 @@ object Libs {
         return if (osName.isEmpty()) {
             osName
         } else {
-            // FIXME: isArm 이 제대로 동작하지 않는다 ㅠ.ㅠ
             val architecture = DefaultNativePlatform.getCurrentArchitecture()
             println("architecture=$architecture")
 
-            val archName = if (architecture.name.startsWith("arm")) "aarch_64" else "x86_64"
+            val archName = if (architecture.name.startsWith("aarch64")) "aarch_64" else "x86_64"
             "$osName-$archName".apply {
                 println("classifier=$this")
             }
@@ -863,13 +862,14 @@ object Libs {
     const val lz4_java = "org.lz4:lz4-java:1.8.0"
 
     // https://github.com/hyperxpro/Brotli4j
-    const val brotli4j = "com.aayushatharva.brotli4j:brotli4j:1.7.1"
+    const val brotli4j = "com.aayushatharva.brotli4j:brotli4j:1.12.0"
     val brotli4j_native = "com.aayushatharva.brotli4j:native-${
         getOsClassifier().replace(
             "aarch_64",
             "aarch64"
         )
-    }:1.7.1"
+    }:1.12.0"
+    const val brotli_dec = "org.brotli:dec:0.1.2"
     const val zstd_jni = "com.github.luben:zstd-jni:1.5.2-2"
     const val xz = "org.tukaani:xz:1.9"
 
