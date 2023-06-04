@@ -22,16 +22,17 @@ inline fun <T> CircuitBreaker.decorateVertxFuture(
     } else {
         val start = System.nanoTime()
         try {
-            supplier.invoke().onComplete { ar ->
-                val durationInNanos = System.nanoTime() - start
-                if (ar.failed()) {
-                    onError(durationInNanos, TimeUnit.NANOSECONDS, ar.cause())
-                    promise.fail(ar.cause())
-                } else {
-                    onSuccess(durationInNanos, TimeUnit.NANOSECONDS)
-                    promise.complete(ar.result())
+            supplier.invoke()
+                .onComplete { ar ->
+                    val durationInNanos = System.nanoTime() - start
+                    if (ar.succeeded()) {
+                        onSuccess(durationInNanos, TimeUnit.NANOSECONDS)
+                        promise.complete(ar.result())
+                    } else {
+                        onError(durationInNanos, TimeUnit.NANOSECONDS, ar.cause())
+                        promise.fail(ar.cause())
+                    }
                 }
-            }
         } catch (e: Exception) {
             val durationInNanos = System.nanoTime() - start
             onError(durationInNanos, TimeUnit.NANOSECONDS, e)

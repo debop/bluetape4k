@@ -6,6 +6,7 @@ import io.bluetape4k.io.feign.feignResponseBuilder
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.trace
+import io.bluetape4k.logging.warn
 import io.bluetape4k.support.isNullOrEmpty
 import io.vertx.core.http.HttpClient
 import io.vertx.core.http.HttpClientRequest
@@ -51,11 +52,9 @@ internal fun HttpClientResponse.convertToFeignResponse(
     responsePromise: CompletableFuture<feign.Response>,
 ) {
     val self = this
-    body { ar ->
-        if (ar.succeeded()) {
+    body()
+        .onSuccess { buffer ->
             log.trace { "Convert Vertx HttpClientResponse to Feign Response. " }
-            val buffer = ar.result()
-
             val headers = with(self.headers()) {
                 names().associateWith { getAll(it) }
             }.toMap()
@@ -69,10 +68,11 @@ internal fun HttpClientResponse.convertToFeignResponse(
                 body(buffer.bytes)
             }
             responsePromise.complete(builder.build())
-        } else {
-            responsePromise.completeExceptionally(ar.cause())
         }
-    }
+        .onFailure { error ->
+            log.warn(error) { "Fail to retrieve body." }
+            responsePromise.completeExceptionally(error)
+        }
 }
 
 /**

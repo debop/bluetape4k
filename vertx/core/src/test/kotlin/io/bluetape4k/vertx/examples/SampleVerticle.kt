@@ -20,14 +20,14 @@ class SampleVerticle: AbstractVerticle() {
                     .end("Yo!")
                 log.info { "Handle a request on path ${req.path()} from ${req.remoteAddress().host()}" }
             }
-            .listen(11981) { ar ->
-                if (ar.succeeded()) {
-                    log.info { "Server is now listening!" }
-                    startPromise.complete()
-                } else {
-                    log.error(ar.cause()) { "Failed to bind!" }
-                    startPromise.fail(ar.cause())
-                }
+            .listen(11981)
+            .onSuccess { server ->
+                log.info { "Server is now listening!" }
+                startPromise.complete()
+            }
+            .onFailure { error ->
+                log.error(error) { "Failed to bind!" }
+                startPromise.fail(error)
             }
     }
 }
