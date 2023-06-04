@@ -6,6 +6,7 @@ import org.apache.hc.client5.http.impl.async.HttpAsyncClientBuilder
 import org.apache.hc.client5.http.impl.async.HttpAsyncClients
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder
+import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.client5.http.impl.io.ManagedHttpClientConnectionFactory
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder
 import org.apache.hc.client5.http.io.HttpClientConnectionManager
@@ -60,11 +61,9 @@ inline fun httpClient(
     return HttpClientBuilder.create().apply(initializer).build()
 }
 
-fun httpClientOf(userAgent: String = "apache httpcomponent5"): CloseableHttpClient {
-    return httpClient {
-        this.setUserAgent(userAgent)
-    }
-}
+fun defaultHttpClient(): CloseableHttpClient = HttpClients.createDefault()
+
+fun httpClientOf(): CloseableHttpClient = HttpClients.createDefault()
 
 inline fun httpAsyncClient(
     initializer: HttpAsyncClientBuilder.() -> Unit,

@@ -1,5 +1,7 @@
-package io.bluetape4k.io.http.hc5
+package io.bluetape4k.io.http.hc5.examples
 
+import io.bluetape4k.io.http.hc5.AbstractHc5Test
+import io.bluetape4k.io.http.hc5.httpConnectionFactory
 import io.bluetape4k.logging.debug
 import org.apache.hc.client5.http.ContextBuilder
 import org.apache.hc.client5.http.HttpRoute
@@ -125,7 +127,7 @@ class ClientConfiguration: AbstractHc5Test() {
             TimeValue.ofMinutes(5),
             null,
             dnsResolver,
-            null
+            connFactory
         )
         // Configure the connection manager to use socket configuration either
         // by default or for a specific host.
@@ -177,7 +179,7 @@ class ClientConfiguration: AbstractHc5Test() {
             .setDefaultRequestConfig(defaultRequestConfig)
             .build()
 
-        try {
+        httpclient.use { _ ->
             val httpget = HttpGet("$httpbinBaseUrl/get")
 
             // Request configuration can be overridden at the request level.
@@ -222,8 +224,6 @@ class ClientConfiguration: AbstractHc5Test() {
             log.debug { "user token = ${context.userToken}" }
 
             log.debug { "context=$context" }
-        } finally {
-            httpclient.close()
         }
     }
 }

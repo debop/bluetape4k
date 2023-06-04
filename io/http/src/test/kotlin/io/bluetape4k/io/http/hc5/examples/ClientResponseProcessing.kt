@@ -1,9 +1,11 @@
-package io.bluetape4k.io.http.hc5
+package io.bluetape4k.io.http.hc5.examples
 
+import io.bluetape4k.io.http.hc5.AbstractHc5Test
+import io.bluetape4k.io.http.hc5.entity.toStringOrNull
+import io.bluetape4k.io.http.hc5.httpClientOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.apache.hc.client5.http.classic.methods.HttpGet
-import org.apache.hc.core5.http.io.entity.EntityUtils
 import org.apache.hc.core5.http.message.StatusLine
 import org.junit.jupiter.api.Test
 
@@ -21,11 +23,11 @@ class ClientResponseProcessing: AbstractHc5Test() {
             val result = httpclient.execute(httpget) { response ->
                 log.debug { "----------------" }
                 log.debug { "$httpget -> " + StatusLine(response) }
-                Result(response.code, EntityUtils.toString(response.entity))
+                Result(response.code, response.entity.toStringOrNull())
             }
             log.debug { result }
         }
     }
 
-    data class Result(val status: Int, val content: String)
+    data class Result(val status: Int, val content: String?)
 }
