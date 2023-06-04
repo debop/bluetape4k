@@ -24,6 +24,9 @@ class AsyncClientHttpExchange: AbstractHc5Test() {
 
     @Test
     fun `asynchronous HTTP 1_1 request execution`() {
+        val target = HttpHost(httpbinServer.host, httpbinServer.port)
+        val requestUris = listOf("/", "/ip", "/user-agent", "/headers")
+
         val ioReactorConfig = IOReactorConfig.custom()
             .setSoTimeout(Timeout.ofSeconds(5))
             .build()
@@ -34,9 +37,6 @@ class AsyncClientHttpExchange: AbstractHc5Test() {
 
         // NOTE: 먼저 start() 를 호출해주어야 합니다.
         client.start()
-
-        val target = HttpHost(httpbinServer.host, httpbinServer.port)
-        val requestUris = listOf("/", "/ip", "/user-agent", "/headers")
 
         requestUris.forEach { requestUri ->
             val request = SimpleRequestBuilder.get()
