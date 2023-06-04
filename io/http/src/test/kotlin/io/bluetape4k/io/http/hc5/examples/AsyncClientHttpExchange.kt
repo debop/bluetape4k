@@ -1,9 +1,13 @@
 package io.bluetape4k.io.http.hc5.examples
 
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
+import io.bluetape4k.io.http.hc5.async.executeSuspending
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.test.runTest
 import org.apache.hc.client5.http.async.methods.SimpleHttpResponse
 import org.apache.hc.client5.http.async.methods.SimpleRequestBuilder
 import org.apache.hc.client5.http.async.methods.SimpleRequestProducer
@@ -67,6 +71,40 @@ class AsyncClientHttpExchange: AbstractHc5Test() {
             future.get()
         }
 
+        log.debug { "Shutting down" }
+        client.close(CloseMode.GRACEFUL)
+    }
+
+    @Test
+    fun `asynchronous HTTP 1_1 request in coroutines`() = runTest {
+        val target = HttpHost(httpbinServer.host, httpbinServer.port)
+        val requestUris = listOf("/", "/ip", "/user-agent", "/headers")
+
+        val ioReactorConfig = IOReactorConfig.custom()
+            .setSoTimeout(Timeout.ofSeconds(5))
+            .build()
+
+        val client: CloseableHttpAsyncClient = HttpAsyncClients.custom()
+            .setIOReactorConfig(ioReactorConfig)
+            .build()
+
+        // NOTE: 먼저 start() 를 호출해주어야 합니다.
+        client.start()
+
+        val responses = requestUris.map {
+            val request = SimpleRequestBuilder.get()
+                .setHttpHost(target)
+                .setPath(it)
+                .build()
+            async {
+                client.executeSuspending(request).apply {
+                    log.debug { "$request -> ${StatusLine(this)}" }
+                    log.debug { this.body }
+                }
+            }
+        }
+
+        responses.awaitAll()
         log.debug { "Shutting down" }
         client.close(CloseMode.GRACEFUL)
     }

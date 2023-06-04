@@ -7,6 +7,7 @@ import org.apache.hc.client5.http.async.methods.SimpleHttpResponse
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient
 import org.apache.hc.client5.http.protocol.HttpClientContext
 import org.apache.hc.core5.concurrent.FutureCallback
+import org.apache.hc.core5.http.HttpHost
 import org.apache.hc.core5.http.nio.AsyncPushConsumer
 import org.apache.hc.core5.http.nio.AsyncRequestProducer
 import org.apache.hc.core5.http.nio.AsyncResponseConsumer
@@ -29,8 +30,8 @@ import kotlin.coroutines.resumeWithException
 suspend fun <T: Any> HttpAsyncClient.executeSuspending(
     requestProducer: AsyncRequestProducer,
     responseConsumer: AsyncResponseConsumer<T>,
-    pushHandlerFactory: HandlerFactory<AsyncPushConsumer>,
-    context: HttpContext = HttpClientContext.create(),
+    pushHandlerFactory: HandlerFactory<AsyncPushConsumer>? = null,
+    context: HttpContext? = null,
 ): T {
     return suspendCancellableCoroutine { cont ->
         val callback = object: FutureCallback<T> {
@@ -46,7 +47,13 @@ suspend fun <T: Any> HttpAsyncClient.executeSuspending(
                 cont.cancel(null)
             }
         }
-        val future = execute(requestProducer, responseConsumer, pushHandlerFactory, context, callback)
+        val future = execute(
+            requestProducer,
+            responseConsumer,
+            pushHandlerFactory,
+            context ?: HttpClientContext.create(),
+            callback
+        )
         cont.invokeOnCancellation { future.cancel(true) }
     }
 }
@@ -81,6 +88,44 @@ suspend fun CloseableHttpAsyncClient.executeSuspending(
             }
         }
         val future = execute(request, context, callback)
+        cont.invokeOnCancellation { future.cancel(true) }
+    }
+}
+
+suspend fun <T: Any> CloseableHttpAsyncClient.executeSuspending(
+    target: HttpHost,
+    requestProducer: AsyncRequestProducer,
+    responseConsumer: AsyncResponseConsumer<T>,
+    pushHandlerFactory: HandlerFactory<AsyncPushConsumer>? = null,
+    context: HttpContext? = null,
+): T {
+    return suspendCancellableCoroutine { cont ->
+        if (status == IOReactorStatus.INACTIVE) {
+            start()
+        }
+
+        val callback = object: FutureCallback<T> {
+            override fun completed(result: T) {
+                cont.resume(result)
+            }
+
+            override fun failed(ex: Exception) {
+                cont.resumeWithException(ex)
+            }
+
+            override fun cancelled() {
+                cont.cancel(null)
+            }
+        }
+
+        val future = execute(
+            target,
+            requestProducer,
+            responseConsumer,
+            pushHandlerFactory,
+            context ?: HttpClientContext.create(),
+            callback
+        )
         cont.invokeOnCancellation { future.cancel(true) }
     }
 }

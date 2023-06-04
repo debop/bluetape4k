@@ -1,9 +1,9 @@
 package io.bluetape4k.io.http.hc5.examples
 
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
-import io.bluetape4k.io.http.hc5.defaultHttpClient
+import io.bluetape4k.io.http.hc5.classic.defaultHttpClient
+import io.bluetape4k.io.http.hc5.classic.httpClient
 import io.bluetape4k.io.http.hc5.entity.consume
-import io.bluetape4k.io.http.hc5.httpClient
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.warn

@@ -1,4 +1,4 @@
-package io.bluetape4k.io.http.hc5
+package io.bluetape4k.io.http.hc5.classic
 
 import org.apache.hc.client5.http.config.RequestConfig
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient

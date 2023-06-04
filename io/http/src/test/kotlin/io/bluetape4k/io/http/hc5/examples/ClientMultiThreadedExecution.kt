@@ -1,8 +1,8 @@
 package io.bluetape4k.io.http.hc5.examples
 
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
-import io.bluetape4k.io.http.hc5.httpClient
-import io.bluetape4k.io.http.hc5.httpClientConnectionManager
+import io.bluetape4k.io.http.hc5.classic.httpClient
+import io.bluetape4k.io.http.hc5.classic.httpClientConnectionManager
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug

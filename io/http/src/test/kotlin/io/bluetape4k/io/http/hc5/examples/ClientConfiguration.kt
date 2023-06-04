@@ -1,7 +1,7 @@
 package io.bluetape4k.io.http.hc5.examples
 
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
-import io.bluetape4k.io.http.hc5.httpConnectionFactory
+import io.bluetape4k.io.http.hc5.classic.httpConnectionFactory
 import io.bluetape4k.logging.debug
 import org.apache.hc.client5.http.ContextBuilder
 import org.apache.hc.client5.http.HttpRoute
