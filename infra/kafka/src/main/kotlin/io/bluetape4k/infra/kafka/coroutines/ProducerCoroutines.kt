@@ -1,14 +1,12 @@
 package io.bluetape4k.infra.kafka.coroutines
 
+import io.bluetape4k.coroutines.flow.async
 import io.bluetape4k.coroutines.support.awaitSuspending
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -34,7 +32,9 @@ suspend fun <K, V> Producer<K, V>.sendFlow(records: Flow<ProducerRecord<K, V>>):
     // TODO: callback flow 를 이용하는 게 낫지 않나?
     return records
         .buffer()
-        .map { record -> sendSuspending(record) }
+        .async {
+            sendSuspending(it)
+        }
         .onCompletion { flush() }
 }
 
@@ -44,16 +44,16 @@ suspend fun <K, V> Producer<K, V>.sendFlow(records: Flow<ProducerRecord<K, V>>):
  * @param records producing 할 record의 flow
  * @return 마지막 record에 대한 producing 한 결과
  */
-suspend fun <K, V> Producer<K, V>.sendFlowParallel(records: Flow<ProducerRecord<K, V>>): RecordMetadata {
-    return coroutineScope {
-        records
-            .buffer()
-            .flatMapMerge { record ->
-                flowOf(sendSuspending(record))
-            }
-            .onCompletion { flush() }
-            .last()
-    }
+suspend fun <K, V> Producer<K, V>.sendFlowParallel(
+    records: Flow<ProducerRecord<K, V>>,
+): RecordMetadata = coroutineScope {
+    records
+        .buffer()
+        .async {
+            sendSuspending(it)
+        }
+        .onCompletion { flush() }
+        .last()
 }
 
 /**
@@ -66,7 +66,9 @@ suspend fun <K, V> Producer<K, V>.sendAndForget(
     needFlush: Boolean = false,
 ) {
     records
-        .map { record -> send(record) }
+        .async {
+            send(it).awaitSuspending()
+        }
         .collectLatest {
             if (needFlush) {
                 flush()

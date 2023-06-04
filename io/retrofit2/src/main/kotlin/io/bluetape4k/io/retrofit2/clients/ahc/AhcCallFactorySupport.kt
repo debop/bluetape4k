@@ -57,7 +57,7 @@ internal class DefaultCoroutineCompletionHandler(
 ): AsyncCompletionHandler<Response>() {
 
     override fun onCompleted(response: Response): Response {
-        return response.apply { cont.resume(this) }
+        return response.apply { cont.resume(response) }
     }
 
     override fun onThrowable(t: Throwable) {

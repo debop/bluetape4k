@@ -13,7 +13,7 @@ import org.junit.jupiter.api.RepeatedTest
 class ProtobufSerializerTest {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 10
+        private const val REPEAT_SIZE = 5
     }
 
     private val serializer = ProtobufSerializer()

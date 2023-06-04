@@ -7,7 +7,6 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
 
 inline fun <T> retrofit2.Call<T>.executeAsync(
     crossinline cancelHandler: (Throwable?) -> Unit = {},
@@ -56,13 +55,16 @@ inline fun <T> retrofit2.Call<T>.executeAsync(
  */
 inline fun <T> retrofit2.Call<T>.executeAsync(
     retry: Retry,
-    scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     crossinline cancelHandler: (Throwable?) -> Unit = {},
 ): CompletableFuture<retrofit2.Response<T>> {
+    val scheduler = Executors.newSingleThreadScheduledExecutor()
 
     return Decorators
         .ofCompletionStage { executeAsync(cancelHandler) }
         .withRetry(retry, scheduler)
         .get()
         .toCompletableFuture()
+        .whenComplete { _, _ ->
+            scheduler.shutdown()
+        }
 }
