@@ -1,7 +1,7 @@
 package io.bluetape4k.io.http.hc5.examples
 
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
-import io.bluetape4k.io.http.hc5.classic.httpConnectionFactory
+import io.bluetape4k.io.http.hc5.io.managedHttpConnectionFactory
 import io.bluetape4k.logging.debug
 import org.apache.hc.client5.http.ContextBuilder
 import org.apache.hc.client5.http.HttpRoute
@@ -85,7 +85,7 @@ class ClientConfiguration: AbstractHc5Test() {
         // initialization of outgoing HTTP connections. Beside standard connection
         // configuration parameters HTTP connection factory can define message
         // parser / writer routines to be employed by individual connections.
-        val connFactory = httpConnectionFactory {
+        val connFactory = managedHttpConnectionFactory {
             http1Config(h1Config)
             charCodingConfig(charCodingConfig)
             requestWriterFactory(requestWriterFactory)

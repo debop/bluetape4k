@@ -1,12 +1,11 @@
 package io.bluetape4k.io.http.hc5.async
 
-import kotlinx.coroutines.suspendCancellableCoroutine
+import io.bluetape4k.coroutines.support.awaitSuspending
 import org.apache.hc.client5.http.async.HttpAsyncClient
 import org.apache.hc.client5.http.async.methods.SimpleHttpRequest
 import org.apache.hc.client5.http.async.methods.SimpleHttpResponse
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient
 import org.apache.hc.client5.http.protocol.HttpClientContext
-import org.apache.hc.core5.concurrent.FutureCallback
 import org.apache.hc.core5.http.HttpHost
 import org.apache.hc.core5.http.nio.AsyncPushConsumer
 import org.apache.hc.core5.http.nio.AsyncRequestProducer
@@ -14,8 +13,6 @@ import org.apache.hc.core5.http.nio.AsyncResponseConsumer
 import org.apache.hc.core5.http.nio.HandlerFactory
 import org.apache.hc.core5.http.protocol.HttpContext
 import org.apache.hc.core5.reactor.IOReactorStatus
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 /**
  * Coroutines 환경에서 [HttpAsyncClient.execute]를 실행합니다.
@@ -33,29 +30,13 @@ suspend fun <T: Any> HttpAsyncClient.executeSuspending(
     pushHandlerFactory: HandlerFactory<AsyncPushConsumer>? = null,
     context: HttpContext? = null,
 ): T {
-    return suspendCancellableCoroutine { cont ->
-        val callback = object: FutureCallback<T> {
-            override fun completed(result: T) {
-                cont.resume(result)
-            }
-
-            override fun failed(ex: Exception) {
-                cont.resumeWithException(ex)
-            }
-
-            override fun cancelled() {
-                cont.cancel(null)
-            }
-        }
-        val future = execute(
-            requestProducer,
-            responseConsumer,
-            pushHandlerFactory,
-            context ?: HttpClientContext.create(),
-            callback
-        )
-        cont.invokeOnCancellation { future.cancel(true) }
-    }
+    return execute(
+        requestProducer,
+        responseConsumer,
+        pushHandlerFactory,
+        context ?: HttpClientContext.create(),
+        null
+    ).awaitSuspending()
 }
 
 /**
@@ -69,27 +50,10 @@ suspend fun CloseableHttpAsyncClient.executeSuspending(
     request: SimpleHttpRequest,
     context: HttpClientContext = HttpClientContext.create(),
 ): SimpleHttpResponse {
-    return suspendCancellableCoroutine { cont ->
-        if (status == IOReactorStatus.INACTIVE) {
-            start()
-        }
-
-        val callback = object: FutureCallback<SimpleHttpResponse> {
-            override fun completed(result: SimpleHttpResponse) {
-                cont.resume(result)
-            }
-
-            override fun failed(ex: Exception) {
-                cont.resumeWithException(ex)
-            }
-
-            override fun cancelled() {
-                cont.cancel(null)
-            }
-        }
-        val future = execute(request, context, callback)
-        cont.invokeOnCancellation { future.cancel(true) }
+    if (status == IOReactorStatus.INACTIVE) {
+        start()
     }
+    return execute(request, context, null).awaitSuspending()
 }
 
 suspend fun <T: Any> CloseableHttpAsyncClient.executeSuspending(
@@ -99,33 +63,12 @@ suspend fun <T: Any> CloseableHttpAsyncClient.executeSuspending(
     pushHandlerFactory: HandlerFactory<AsyncPushConsumer>? = null,
     context: HttpContext? = null,
 ): T {
-    return suspendCancellableCoroutine { cont ->
-        if (status == IOReactorStatus.INACTIVE) {
-            start()
-        }
-
-        val callback = object: FutureCallback<T> {
-            override fun completed(result: T) {
-                cont.resume(result)
-            }
-
-            override fun failed(ex: Exception) {
-                cont.resumeWithException(ex)
-            }
-
-            override fun cancelled() {
-                cont.cancel(null)
-            }
-        }
-
-        val future = execute(
-            target,
-            requestProducer,
-            responseConsumer,
-            pushHandlerFactory,
-            context ?: HttpClientContext.create(),
-            callback
-        )
-        cont.invokeOnCancellation { future.cancel(true) }
-    }
+    return execute(
+        target,
+        requestProducer,
+        responseConsumer,
+        pushHandlerFactory,
+        context ?: HttpClientContext.create(),
+        null
+    ).awaitSuspending()
 }

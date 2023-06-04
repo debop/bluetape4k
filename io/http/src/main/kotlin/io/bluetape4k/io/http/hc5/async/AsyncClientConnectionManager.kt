@@ -1,10 +1,14 @@
 package io.bluetape4k.io.http.hc5.async
 
+import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder
-import org.apache.hc.client5.http.nio.AsyncClientConnectionManager
+
+@JvmField
+val defaultAsyncClientConnectionManager: PoolingAsyncClientConnectionManager =
+    PoolingAsyncClientConnectionManagerBuilder.create().build()
 
 inline fun asyncClientConnectionManager(
     initializer: PoolingAsyncClientConnectionManagerBuilder.() -> Unit,
-): AsyncClientConnectionManager {
+): PoolingAsyncClientConnectionManager {
     return PoolingAsyncClientConnectionManagerBuilder.create().apply(initializer).build()
 }

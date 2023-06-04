@@ -2,9 +2,11 @@ package io.bluetape4k.io.http.hc5.examples
 
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
 import io.bluetape4k.io.http.hc5.async.executeSuspending
+import io.bluetape4k.io.http.hc5.async.methods.simpleHttpRequestOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.runTest
@@ -16,6 +18,7 @@ import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient
 import org.apache.hc.client5.http.impl.async.HttpAsyncClients
 import org.apache.hc.core5.concurrent.FutureCallback
 import org.apache.hc.core5.http.HttpHost
+import org.apache.hc.core5.http.Method
 import org.apache.hc.core5.http.message.StatusLine
 import org.apache.hc.core5.io.CloseMode
 import org.apache.hc.core5.reactor.IOReactorConfig
@@ -91,16 +94,14 @@ class AsyncClientHttpExchange: AbstractHc5Test() {
         // NOTE: 먼저 start() 를 호출해주어야 합니다.
         client.start()
 
-        val responses = requestUris.map {
-            val request = SimpleRequestBuilder.get()
-                .setHttpHost(target)
-                .setPath(it)
-                .build()
-            async {
-                client.executeSuspending(request).apply {
-                    log.debug { "$request -> ${StatusLine(this)}" }
-                    log.debug { this.body }
-                }
+        val responses = requestUris.map { path ->
+            val request = simpleHttpRequestOf(Method.GET, target, path)
+            async(Dispatchers.IO) {
+                client.executeSuspending(request)
+                    .apply {
+                        log.debug { "$request -> ${StatusLine(this)}" }
+                        log.debug { this.body }
+                    }
             }
         }
 
