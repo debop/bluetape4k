@@ -8,31 +8,8 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder
 import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.client5.http.impl.io.ManagedHttpClientConnectionFactory
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder
-import org.apache.hc.client5.http.io.HttpClientConnectionManager
 import org.apache.hc.client5.http.io.ManagedHttpClientConnection
 import org.apache.hc.core5.http.io.HttpConnectionFactory
-
-/**
- * Apache HttpComponent 5 의 [HttpClientConnectionManager]를 빌드합니다.
- *
- * ```
- * val cm = httpClientConnectionManager {
- *      setMaxConnPerRoute(5)
- *      setMaxConnTotal(5)
- * }
- * val httpClient = httpClient { setConnectionManager(cm) }
- * ```
- *
- * @param initializer
- * @receiver
- * @return [HttpClientConnectionManager] instance
- */
-inline fun httpClientConnectionManager(
-    initializer: PoolingHttpClientConnectionManagerBuilder.() -> Unit,
-): HttpClientConnectionManager {
-    return PoolingHttpClientConnectionManagerBuilder.create().apply(initializer).build()
-}
 
 inline fun httpConnectionFactory(
     initializer: ManagedHttpClientConnectionFactory.Builder.() -> Unit,
