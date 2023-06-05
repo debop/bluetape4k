@@ -21,13 +21,14 @@ import org.apache.hc.core5.http.ssl.TLS
 import org.apache.hc.core5.util.TimeValue
 import org.apache.hc.core5.util.Timeout
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.seconds
 
 class AsyncClientConnectionConfig: AbstractHc5Test() {
 
     companion object: KLogging()
 
     @Test
-    fun `connection configuration on a per-route or per-host`() = runTest {
+    fun `connection configuration on a per-route or per-host`() = runTest(timeout = 60.seconds) {
         val cm = asyncClientConnectionManager {
             setConnectionConfigResolver { route ->
                 if (route.isSecure) {
@@ -47,10 +48,11 @@ class AsyncClientConnectionConfig: AbstractHc5Test() {
                 }
             }
             setTlsConfigResolver { host ->
-                if (host.schemeName.contentEquals("httpbin.org", ignoreCase = true)) {
+                log.debug { "scheme name=${host.schemeName}" }
+                if (host.schemeName.contentEquals("https", ignoreCase = true)) {
                     tlsConfigOf(
-                        supportedProtocols = listOf(TLS.V_1_3),
-                        handshakeTimeout = Timeout.ofSeconds(10),
+                        supportedProtocols = listOf(TLS.V_1_0, TLS.V_1_1, TLS.V_1_2, TLS.V_1_3),
+                        handshakeTimeout = Timeout.ofSeconds(60),
                     )
                 } else {
                     TlsConfig.DEFAULT
@@ -61,7 +63,7 @@ class AsyncClientConnectionConfig: AbstractHc5Test() {
         httpAsyncClientOf(cm).use { client ->
             client.start()
 
-            URIScheme.values().forEach { uriSchme ->
+            URIScheme.values().forEach { uriSchme: URIScheme ->
                 val request = simpleHttpRequestOf(
                     method = Method.GET,
                     host = HttpHost(uriSchme.id, "httpbin.org"),

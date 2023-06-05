@@ -13,13 +13,14 @@ inline fun tlsConfig(initializer: TlsConfig.Builder.() -> Unit): TlsConfig {
 }
 
 fun tlsConfigOf(
-    supportedProtocols: Collection<TLS> = listOf(TLS.V_1_3),
-    handshakeTimeout: Timeout = defaultTlsConfig.handshakeTimeout,
-    supportedCipherSuites: Array<String> = defaultTlsConfig.supportedCipherSuites,
-    versionPolicy: HttpVersionPolicy = defaultTlsConfig.httpVersionPolicy,
+    supportedProtocols: Collection<TLS> = listOf(TLS.V_1_0, TLS.V_1_1, TLS.V_1_2, TLS.V_1_3),
+    handshakeTimeout: Timeout? = null,
+    supportedCipherSuites: Array<String>? = null,
+    versionPolicy: HttpVersionPolicy? = null,
 ): TlsConfig = tlsConfig {
     setSupportedProtocols(*supportedProtocols.toTypedArray())
-    setHandshakeTimeout(handshakeTimeout)
-    setSupportedCipherSuites(*supportedCipherSuites)
-    setVersionPolicy(versionPolicy)
+
+    handshakeTimeout?.run { setHandshakeTimeout(handshakeTimeout) }
+    supportedCipherSuites?.run { setSupportedCipherSuites(*supportedCipherSuites) }
+    versionPolicy?.run { setVersionPolicy(versionPolicy) }
 }
