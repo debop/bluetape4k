@@ -1,4 +1,4 @@
-package io.bluetape4k.io.http.hc5
+package io.bluetape4k.io.http.hc5.http
 
 import org.apache.hc.client5.http.ConnectExceptionSupport
 import org.apache.hc.client5.http.ConnectTimeoutException

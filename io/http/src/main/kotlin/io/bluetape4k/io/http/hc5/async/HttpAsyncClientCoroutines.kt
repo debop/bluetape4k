@@ -6,6 +6,7 @@ import org.apache.hc.client5.http.async.methods.SimpleHttpRequest
 import org.apache.hc.client5.http.async.methods.SimpleHttpResponse
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient
 import org.apache.hc.client5.http.protocol.HttpClientContext
+import org.apache.hc.core5.concurrent.FutureCallback
 import org.apache.hc.core5.http.HttpHost
 import org.apache.hc.core5.http.nio.AsyncPushConsumer
 import org.apache.hc.core5.http.nio.AsyncRequestProducer
@@ -24,12 +25,15 @@ import org.apache.hc.core5.reactor.IOReactorStatus
  * @param context  [HttpContext] 인스턴스
  * @return [HttpResponse] 를 `T` 로 변환한 값
  */
-suspend fun <T: Any> HttpAsyncClient.executeSuspending(
+suspend fun <T: Any> CloseableHttpAsyncClient.executeSuspending(
     requestProducer: AsyncRequestProducer,
     responseConsumer: AsyncResponseConsumer<T>,
     pushHandlerFactory: HandlerFactory<AsyncPushConsumer>? = null,
     context: HttpContext? = null,
 ): T {
+    if (status == IOReactorStatus.INACTIVE) {
+        start()
+    }
     return execute(
         requestProducer,
         responseConsumer,
@@ -49,11 +53,27 @@ suspend fun <T: Any> HttpAsyncClient.executeSuspending(
 suspend fun CloseableHttpAsyncClient.executeSuspending(
     request: SimpleHttpRequest,
     context: HttpClientContext = HttpClientContext.create(),
+    callback: FutureCallback<SimpleHttpResponse>? = null,
 ): SimpleHttpResponse {
     if (status == IOReactorStatus.INACTIVE) {
         start()
     }
-    return execute(request, context, null).awaitSuspending()
+    return execute(request, context, callback).awaitSuspending()
+}
+
+suspend fun <T: Any> CloseableHttpAsyncClient.executeSuspending(
+    requestProducer: AsyncRequestProducer,
+    responseConsumer: AsyncResponseConsumer<T>,
+    callback: FutureCallback<T>? = null,
+): T {
+    if (status == IOReactorStatus.INACTIVE) {
+        start()
+    }
+    return execute(
+        requestProducer,
+        responseConsumer,
+        callback,
+    ).awaitSuspending()
 }
 
 suspend fun <T: Any> CloseableHttpAsyncClient.executeSuspending(
@@ -62,13 +82,17 @@ suspend fun <T: Any> CloseableHttpAsyncClient.executeSuspending(
     responseConsumer: AsyncResponseConsumer<T>,
     pushHandlerFactory: HandlerFactory<AsyncPushConsumer>? = null,
     context: HttpContext? = null,
+    callback: FutureCallback<T>? = null,
 ): T {
+    if (status == IOReactorStatus.INACTIVE) {
+        start()
+    }
     return execute(
         target,
         requestProducer,
         responseConsumer,
         pushHandlerFactory,
         context ?: HttpClientContext.create(),
-        null
+        callback,
     ).awaitSuspending()
 }

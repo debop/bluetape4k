@@ -3,6 +3,7 @@ package io.bluetape4k.io.http.hc5.async.methods
 import org.apache.hc.client5.http.async.methods.SimpleBody
 import org.apache.hc.client5.http.async.methods.SimpleHttpRequest
 import org.apache.hc.client5.http.async.methods.SimpleRequestBuilder
+import org.apache.hc.client5.http.async.methods.SimpleRequestProducer
 import org.apache.hc.core5.http.Header
 import org.apache.hc.core5.http.HttpHost
 import org.apache.hc.core5.http.Method
@@ -50,3 +51,6 @@ fun simpleHttpRequestOf(
     body?.run { setBody(body) }
     headers?.run { setHeaders(headers.iterator()) }
 }
+
+fun SimpleHttpRequest.toProducer(): SimpleRequestProducer =
+    simpleRequestProducerOf(this)
