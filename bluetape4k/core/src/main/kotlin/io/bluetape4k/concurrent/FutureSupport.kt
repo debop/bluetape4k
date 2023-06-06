@@ -25,16 +25,17 @@ private class FutureToCompletableFutureWrapper<T> private constructor(
 ): CompletableFuture<T>() {
 
     companion object: KLogging() {
+        @JvmStatic
         operator fun <T> invoke(future: Future<T>): FutureToCompletableFutureWrapper<T> =
             FutureToCompletableFutureWrapper(future).apply {
                 schedule { tryToComplete() }
             }
+    }
 
-        private val service = Executors.newSingleThreadScheduledExecutor()
+    private val service = Executors.newSingleThreadScheduledExecutor()
 
-        private inline fun schedule(crossinline action: () -> Unit) {
-            service.schedule({ action.invoke() }, 10, TimeUnit.NANOSECONDS)
-        }
+    private inline fun schedule(crossinline action: () -> Unit) {
+        service.schedule({ action.invoke() }, 10, TimeUnit.NANOSECONDS)
     }
 
     private fun tryToComplete() {
@@ -47,15 +48,18 @@ private class FutureToCompletableFutureWrapper<T> private constructor(
                 } catch (e: ExecutionException) {
                     this.completeExceptionally(e.cause ?: e)
                 }
+                service.shutdown()
                 return
             }
             if (future.isCancelled) {
                 this.cancel(true)
+                service.shutdown()
                 return
             }
             schedule { tryToComplete() }
         } catch (e: Throwable) {
             log.error(e) { "Fail to wait to complete Future instance." }
+            service.shutdown()
             this.completeExceptionally(e.cause ?: e)
         }
     }
