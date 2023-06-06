@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
+import java.util.function.BiConsumer
 
 @Suppress("UNCHECKED_CAST")
 fun <T> Future<T>.asCompletionStage(): CompletionStage<T> = when (this) {
@@ -35,7 +36,7 @@ private class FutureToCompletableFutureWrapper<T> private constructor(
     private val service = Executors.newSingleThreadScheduledExecutor()
 
     private inline fun schedule(crossinline action: () -> Unit) {
-        service.schedule({ action.invoke() }, 10, TimeUnit.NANOSECONDS)
+        service.schedule({ action() }, 100, TimeUnit.NANOSECONDS)
     }
 
     private fun tryToComplete() {
@@ -44,23 +45,26 @@ private class FutureToCompletableFutureWrapper<T> private constructor(
                 try {
                     this.complete(future.get())
                 } catch (e: InterruptedException) {
-                    this.completeExceptionally(e)
+                    this.completeExceptionally(e.cause ?: e)
                 } catch (e: ExecutionException) {
                     this.completeExceptionally(e.cause ?: e)
                 }
-                service.shutdown()
                 return
             }
             if (future.isCancelled) {
                 this.cancel(true)
-                service.shutdown()
                 return
             }
             schedule { tryToComplete() }
         } catch (e: Throwable) {
             log.error(e) { "Fail to wait to complete Future instance." }
-            service.shutdown()
             this.completeExceptionally(e.cause ?: e)
+        }
+    }
+
+    override fun whenComplete(action: BiConsumer<in T, in Throwable>?): CompletableFuture<T> {
+        return super.whenComplete(action).apply {
+            service.shutdown()
         }
     }
 }
