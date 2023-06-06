@@ -45,7 +45,7 @@ class AsyncClientInterceptors: AbstractHc5Test() {
             setIOReactorConfig(ioReactorConfig)
 
             // Add a simple request ID to each outgoing request
-            addRequestInterceptorFirst(requestInterceptorFirst())
+            addRequestInterceptorFirst(requestInterceptor())
 
             // Simulate a 404 response for some requests without passing the message down to the backend
 
@@ -67,7 +67,7 @@ class AsyncClientInterceptors: AbstractHc5Test() {
         client.close(CloseMode.GRACEFUL)
     }
 
-    private fun requestInterceptorFirst(): HttpRequestInterceptor {
+    private fun requestInterceptor(): HttpRequestInterceptor {
         return HttpRequestInterceptor { request, entity, context ->
             request.setHeader("request-id", counter.incrementAndGet().toString())
             log.debug { "request-id = ${request.getFirstHeader("request-id")}" }
