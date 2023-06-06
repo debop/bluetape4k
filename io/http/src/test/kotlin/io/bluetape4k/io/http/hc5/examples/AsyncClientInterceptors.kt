@@ -4,7 +4,7 @@ import io.bluetape4k.io.http.hc5.AbstractHc5Test
 import io.bluetape4k.io.http.hc5.async.executeSuspending
 import io.bluetape4k.io.http.hc5.async.httpAsyncClient
 import io.bluetape4k.io.http.hc5.async.methods.simpleHttpRequestOf
-import io.bluetape4k.io.http.hc5.http.TEXT_PLAIN_UTF8
+import io.bluetape4k.io.http.hc5.http.ContentTypes
 import io.bluetape4k.io.http.hc5.reactor.ioReactorConfig
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -87,7 +87,7 @@ class AsyncClientInterceptors: AbstractHc5Test() {
                 val content = ByteBuffer.wrap("bad luck".toUtf8Bytes())
                 val asyncDataConsumer = asyncExecCallback.handleResponse(
                     response,
-                    BasicEntityDetails(content.remaining().toLong(), TEXT_PLAIN_UTF8)
+                    BasicEntityDetails(content.remaining().toLong(), ContentTypes.TEXT_PLAIN_UTF8)
                 )
                 asyncDataConsumer.consume(content)
                 asyncDataConsumer.streamEnd(null)

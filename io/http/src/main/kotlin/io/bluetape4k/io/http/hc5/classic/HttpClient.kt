@@ -32,6 +32,12 @@ fun defaultHttpClient(): CloseableHttpClient = HttpClients.createDefault()
 
 fun httpClientOf(): CloseableHttpClient = HttpClients.createDefault()
 
+fun httpClientOf(
+    connectionManager: HttpClientConnectionManager,
+): CloseableHttpClient = httpClient {
+    setConnectionManager(connectionManager)
+}
+
 fun systemHttpClientOf(): CloseableHttpClient = HttpClients.createSystem()
 
 fun minimalHttpClientOf(

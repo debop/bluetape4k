@@ -3,7 +3,6 @@ package io.bluetape4k.io.http.hc5.entity
 import org.apache.hc.core5.http.HttpEntity
 import org.apache.hc.core5.http.NameValuePair
 import org.apache.hc.core5.http.io.entity.EntityUtils
-import java.nio.charset.Charset
 
 /**
  * Ensures that the entity content is fully consumed and the content stream, if exists,
@@ -40,10 +39,9 @@ fun HttpEntity.toByteArrayOrNull(maxResultLength: Int = Int.MAX_VALUE): ByteArra
  * @return the entity content as a String. May be null if [HttpEntity.getContent] is null.
  */
 fun HttpEntity.toStringOrNull(
-    cs: Charset = Charsets.UTF_8,
     maxResultLength: Int = Int.MAX_VALUE,
 ): String? {
-    return EntityUtils.toString(this, cs, maxResultLength)
+    return EntityUtils.toString(this, maxResultLength)
 }
 
 /**

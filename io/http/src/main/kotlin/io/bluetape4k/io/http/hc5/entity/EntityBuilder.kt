@@ -1,6 +1,7 @@
 package io.bluetape4k.io.http.hc5.entity
 
-import io.bluetape4k.io.http.hc5.http.TEXT_PLAIN_UTF8
+import io.bluetape4k.io.http.hc5.http.ContentTypes
+import io.bluetape4k.io.http.hc5.http.ContentTypes.TEXT_PLAIN_UTF8
 import io.bluetape4k.support.ifTrue
 import org.apache.hc.client5.http.entity.EntityBuilder
 import org.apache.hc.core5.http.ContentType
@@ -34,7 +35,7 @@ inline fun httpEntity(initializer: EntityBuilder.() -> Unit): HttpEntity {
 
 fun httpEntityOf(
     text: String? = null,
-    contentType: ContentType = TEXT_PLAIN_UTF8,
+    contentType: ContentType = ContentTypes.TEXT_PLAIN_UTF8,
     contentEncoding: String? = null,
     gzipCompressed: Boolean? = null,
 ): HttpEntity = httpEntity {

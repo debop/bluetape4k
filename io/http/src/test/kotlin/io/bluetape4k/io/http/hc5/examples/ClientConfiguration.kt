@@ -3,6 +3,7 @@ package io.bluetape4k.io.http.hc5.examples
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
 import io.bluetape4k.io.http.hc5.auth.emptyCredentialsProvider
 import io.bluetape4k.io.http.hc5.classic.httpClient
+import io.bluetape4k.io.http.hc5.entity.consume
 import io.bluetape4k.io.http.hc5.http.charCodingConfig
 import io.bluetape4k.io.http.hc5.http.connectionConfig
 import io.bluetape4k.io.http.hc5.http.http1Config
@@ -34,10 +35,8 @@ import org.apache.hc.core5.http.impl.io.DefaultHttpRequestWriterFactory
 import org.apache.hc.core5.http.impl.io.DefaultHttpResponseParser
 import org.apache.hc.core5.http.impl.io.DefaultHttpResponseParserFactory
 import org.apache.hc.core5.http.io.HttpMessageParser
-import org.apache.hc.core5.http.io.entity.EntityUtils
 import org.apache.hc.core5.http.message.BasicHeader
 import org.apache.hc.core5.http.message.BasicLineParser
-import org.apache.hc.core5.http.message.StatusLine
 import org.apache.hc.core5.http.ssl.TLS
 import org.apache.hc.core5.pool.PoolConcurrencyPolicy
 import org.apache.hc.core5.pool.PoolReusePolicy
@@ -207,11 +206,8 @@ class ClientConfiguration: AbstractHc5Test() {
 
             log.debug { "Executing request ${httpget.method} ${httpget.uri}" }
 
-            httpclient.execute(httpget, context) { response ->
-                log.debug { "--------------------" }
-                log.debug { "$httpget -> ${StatusLine(response)}" }
-                EntityUtils.consume(response.entity)
-            }
+            val response = httpclient.execute(httpget, context) { it }
+            response.entity.consume()
 
             // Last executed request
             log.debug { "request = ${context.request}" }

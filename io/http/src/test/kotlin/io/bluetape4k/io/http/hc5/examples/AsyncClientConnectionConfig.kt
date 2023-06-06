@@ -1,17 +1,15 @@
 package io.bluetape4k.io.http.hc5.examples
 
-import io.bluetape4k.coroutines.support.awaitSuspending
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
 import io.bluetape4k.io.http.hc5.async.asyncClientConnectionManager
+import io.bluetape4k.io.http.hc5.async.executeSuspending
 import io.bluetape4k.io.http.hc5.async.httpAsyncClientOf
 import io.bluetape4k.io.http.hc5.async.methods.simpleHttpRequestOf
-import io.bluetape4k.io.http.hc5.async.methods.simpleRequestProducerOf
 import io.bluetape4k.io.http.hc5.http.connectionConfigOf
 import io.bluetape4k.io.http.hc5.http.tlsConfigOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.test.runTest
-import org.apache.hc.client5.http.async.methods.SimpleResponseConsumer
 import org.apache.hc.client5.http.config.TlsConfig
 import org.apache.hc.core5.http.HttpHost
 import org.apache.hc.core5.http.Method
@@ -51,7 +49,7 @@ class AsyncClientConnectionConfig: AbstractHc5Test() {
                 log.debug { "scheme name=${host.schemeName}" }
                 if (host.schemeName.contentEquals("https", ignoreCase = true)) {
                     tlsConfigOf(
-                        supportedProtocols = listOf(TLS.V_1_0, TLS.V_1_1, TLS.V_1_2, TLS.V_1_3),
+                        supportedProtocols = TLS.values().asList(),
                         handshakeTimeout = Timeout.ofSeconds(60),
                     )
                 } else {
@@ -71,13 +69,7 @@ class AsyncClientConnectionConfig: AbstractHc5Test() {
                 )
                 log.debug { "Executing request $request" }
 
-                val response = client
-                    .execute(
-                        simpleRequestProducerOf(request),
-                        SimpleResponseConsumer.create(),
-                        null
-                    )
-                    .awaitSuspending()
+                val response = client.executeSuspending(request)
 
                 log.debug { "$request -> ${StatusLine(response)}" }
                 log.debug { response.body }

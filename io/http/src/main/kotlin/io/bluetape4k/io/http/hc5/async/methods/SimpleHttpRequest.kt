@@ -12,18 +12,14 @@ inline fun simpleHttpRequest(
     method: String,
     initializer: SimpleRequestBuilder.() -> Unit,
 ): SimpleHttpRequest {
-    return SimpleRequestBuilder.create(method)
-        .apply(initializer)
-        .build()
+    return SimpleRequestBuilder.create(method).apply(initializer).build()
 }
 
 inline fun simpleHttpRequest(
     method: Method,
     initializer: SimpleRequestBuilder.() -> Unit,
 ): SimpleHttpRequest {
-    return SimpleRequestBuilder.create(method)
-        .apply(initializer)
-        .build()
+    return SimpleRequestBuilder.create(method).apply(initializer).build()
 }
 
 fun simpleHttpRequestOf(
