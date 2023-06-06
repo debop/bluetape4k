@@ -4,7 +4,7 @@ import io.bluetape4k.coroutines.support.awaitSuspending
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
 import io.bluetape4k.io.http.hc5.async.httpAsyncClient
 import io.bluetape4k.io.http.hc5.http.basicHttpRequestOf
-import io.bluetape4k.io.http.hc5.nio.toProducer
+import io.bluetape4k.io.http.hc5.http.toProducer
 import io.bluetape4k.io.http.hc5.reactor.ioReactorConfig
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug

@@ -5,7 +5,7 @@ import io.bluetape4k.io.http.hc5.async.asyncClientConnectionManager
 import io.bluetape4k.io.http.hc5.async.executeSuspending
 import io.bluetape4k.io.http.hc5.async.methods.simpleHttpRequest
 import io.bluetape4k.io.http.hc5.async.minimalHttpAsyncClientOf
-import io.bluetape4k.io.http.hc5.config.tlsConfigOf
+import io.bluetape4k.io.http.hc5.http.tlsConfigOf
 import io.bluetape4k.io.http.hc5.http2.h2Config
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug

@@ -12,6 +12,8 @@ inline fun credentialsProvider(
     return CredentialsProviderBuilder.create().apply(initializer).build()
 }
 
+fun emptyCredentialsProvider(): CredentialsProvider = credentialsProvider { }
+
 fun credentialsProviderOf(
     authScope: AuthScope,
     credentials: Credentials,

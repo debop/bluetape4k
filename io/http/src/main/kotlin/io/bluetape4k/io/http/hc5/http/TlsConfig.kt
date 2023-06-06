@@ -1,4 +1,4 @@
-package io.bluetape4k.io.http.hc5.config
+package io.bluetape4k.io.http.hc5.http
 
 import org.apache.hc.client5.http.config.TlsConfig
 import org.apache.hc.core5.http.ssl.TLS

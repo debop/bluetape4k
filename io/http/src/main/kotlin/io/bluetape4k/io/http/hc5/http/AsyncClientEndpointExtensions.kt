@@ -1,4 +1,4 @@
-package io.bluetape4k.io.http.hc5.nio
+package io.bluetape4k.io.http.hc5.http
 
 import io.bluetape4k.coroutines.support.awaitSuspending
 import io.bluetape4k.io.http.hc5.async.methods.toProducer

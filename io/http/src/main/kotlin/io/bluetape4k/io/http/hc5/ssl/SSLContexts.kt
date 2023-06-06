@@ -11,3 +11,5 @@ inline fun sslContext(
 }
 
 fun sslContextOf(): SSLContext = SSLContexts.createDefault()
+
+fun sslContextOfSystem(): SSLContext = SSLContexts.createSystemDefault()

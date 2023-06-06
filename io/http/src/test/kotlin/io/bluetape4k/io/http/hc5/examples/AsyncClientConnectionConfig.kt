@@ -6,8 +6,8 @@ import io.bluetape4k.io.http.hc5.async.asyncClientConnectionManager
 import io.bluetape4k.io.http.hc5.async.httpAsyncClientOf
 import io.bluetape4k.io.http.hc5.async.methods.simpleHttpRequestOf
 import io.bluetape4k.io.http.hc5.async.methods.simpleRequestProducerOf
-import io.bluetape4k.io.http.hc5.config.connectionConfigOf
-import io.bluetape4k.io.http.hc5.config.tlsConfigOf
+import io.bluetape4k.io.http.hc5.http.connectionConfigOf
+import io.bluetape4k.io.http.hc5.http.tlsConfigOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.test.runTest

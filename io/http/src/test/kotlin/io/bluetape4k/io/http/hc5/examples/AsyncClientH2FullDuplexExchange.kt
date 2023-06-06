@@ -3,8 +3,8 @@ package io.bluetape4k.io.http.hc5.examples
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
 import io.bluetape4k.io.http.hc5.async.asyncClientConnectionManager
 import io.bluetape4k.io.http.hc5.async.minimalHttpAsyncClientOf
-import io.bluetape4k.io.http.hc5.config.tlsConfigOf
 import io.bluetape4k.io.http.hc5.http.basicHttpRequest
+import io.bluetape4k.io.http.hc5.http.tlsConfigOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info

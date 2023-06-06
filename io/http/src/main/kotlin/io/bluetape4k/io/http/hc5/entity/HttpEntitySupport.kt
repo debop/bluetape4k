@@ -9,15 +9,15 @@ import java.nio.charset.Charset
  * Ensures that the entity content is fully consumed and the content stream, if exists,
  * is closed. The process is done, ***quietly*** , without throwing any IOException.
  */
-fun HttpEntity.consumeQuietly() {
-    EntityUtils.consumeQuietly(this)
+fun HttpEntity?.consumeQuietly() {
+    this?.run { EntityUtils.consumeQuietly(this) }
 }
 
 /**
  * Ensures that the entity content is fully consumed and the content stream, if exists, is closed.
  */
-fun HttpEntity.consume() {
-    EntityUtils.consume(this)
+fun HttpEntity?.consume() {
+    this?.run { EntityUtils.consume(this) }
 }
 
 /**

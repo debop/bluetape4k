@@ -1,4 +1,4 @@
-package io.bluetape4k.io.http.hc5.nio
+package io.bluetape4k.io.http.hc5.http
 
 import org.apache.hc.core5.http.message.BasicHttpRequest
 import org.apache.hc.core5.http.nio.AsyncEntityProducer

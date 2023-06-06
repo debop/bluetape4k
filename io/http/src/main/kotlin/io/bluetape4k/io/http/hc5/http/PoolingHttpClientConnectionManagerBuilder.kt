@@ -1,4 +1,4 @@
-package io.bluetape4k.io.http.hc5.io
+package io.bluetape4k.io.http.hc5.http
 
 import org.apache.hc.client5.http.DnsResolver
 import org.apache.hc.client5.http.HttpRoute
@@ -9,12 +9,9 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuil
 import org.apache.hc.client5.http.io.ManagedHttpClientConnection
 import org.apache.hc.client5.http.socket.ConnectionSocketFactory
 import org.apache.hc.client5.http.socket.LayeredConnectionSocketFactory
-import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory
 import org.apache.hc.core5.function.Resolver
-import org.apache.hc.core5.http.URIScheme
 import org.apache.hc.core5.http.config.Registry
-import org.apache.hc.core5.http.config.RegistryBuilder
 import org.apache.hc.core5.http.io.HttpConnectionFactory
 import org.apache.hc.core5.http.io.SocketConfig
 import org.apache.hc.core5.pool.PoolConcurrencyPolicy
@@ -27,12 +24,9 @@ inline fun poolingHttpClientConnectionManager(
     return PoolingHttpClientConnectionManagerBuilder.create().apply(initializer).build()
 }
 
-val defaultSocketFactoryRegistry: Registry<ConnectionSocketFactory> by lazy {
-    RegistryBuilder.create<ConnectionSocketFactory>()
-        .register(URIScheme.HTTP.id, PlainConnectionSocketFactory.getSocketFactory())
-        .register(URIScheme.HTTPS.id, SSLConnectionSocketFactory.getSocketFactory())
-        .build()
-}
+fun poolingHttpClientConnectionManagerOf(): PoolingHttpClientConnectionManager =
+    poolingHttpClientConnectionManager { }
+
 
 fun poolingHttpClientConnectionManagerOf(
     socketFactoryRegistry: Registry<ConnectionSocketFactory> = defaultSocketFactoryRegistry,

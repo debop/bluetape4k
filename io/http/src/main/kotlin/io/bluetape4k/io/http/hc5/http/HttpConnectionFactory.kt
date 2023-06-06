@@ -1,4 +1,4 @@
-package io.bluetape4k.io.http.hc5.io
+package io.bluetape4k.io.http.hc5.http
 
 import org.apache.hc.client5.http.impl.io.ManagedHttpClientConnectionFactory
 import org.apache.hc.client5.http.io.ManagedHttpClientConnection
