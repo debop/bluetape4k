@@ -50,4 +50,8 @@ dependencies {
     // Gson
     compileOnly(Libs.gson)
     compileOnly(Libs.gson_javatime_serializers)
+
+    // Reactor
+    testImplementation(Libs.reactor_core)
+    testImplementation(Libs.reactor_kotlin_extensions)
 }
