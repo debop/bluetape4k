@@ -36,18 +36,20 @@ class AsyncPreemptiveBasicClientAuthentication: AbstractHc5Test() {
         val localContext = httpClientContext {
             preemptiveBasicAuth(httpHost, UsernamePasswordCredentials("user", "passwd".toCharArray()))
         }
-        val request = simpleHttpRequestOf(Method.GET, httpHost, path)
 
-        log.debug { "Executing request $request" }
         repeat(3) {
+            val request = simpleHttpRequestOf(Method.GET, httpHost, path)
+            log.debug { "Executing request $request" }
             val response = client.executeSuspending(request, localContext)
 
             log.debug { "Response: $request -> ${StatusLine(response)}" }
             log.debug { "Body: ${response.body}" }
         }
 
-        log.debug { "Executing request concurrently $request" }
         val deferreds = List(10) {
+            val request = simpleHttpRequestOf(Method.GET, httpHost, path)
+            log.debug { "Executing request concurrently $request" }
+
             async {
                 client.execute(
                     request.toProducer(),

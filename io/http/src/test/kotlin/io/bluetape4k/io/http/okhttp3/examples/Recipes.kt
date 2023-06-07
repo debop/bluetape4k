@@ -180,7 +180,7 @@ class Recipes: AbstractHttpTest() {
             .build()
 
         val request = Request.Builder()
-            .url("http://httpbin.org/delay/2")          // 2 초간 지연을 시킵니다.
+            .url("http://nghttp2.org/httpbin/delay/2")          // 2 초간 지연을 시킵니다.
             .build()
 
         // 동기 방식에서의 Timeout 발생
@@ -198,7 +198,7 @@ class Recipes: AbstractHttpTest() {
             .build()
 
         val request = Request.Builder()
-            .url("http://httpbin.org/delay/2")          // 2 초간 지연을 시킵니다.
+            .url("http://nghttp2.org/httpbin/delay/2")          // 2 초간 지연을 시킵니다.
             .build()
 
         assertFailsWith<CompletionException> {

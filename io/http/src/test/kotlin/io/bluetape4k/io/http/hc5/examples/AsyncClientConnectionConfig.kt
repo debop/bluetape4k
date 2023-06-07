@@ -64,8 +64,8 @@ class AsyncClientConnectionConfig: AbstractHc5Test() {
             URIScheme.values().forEach { uriSchme: URIScheme ->
                 val request = simpleHttpRequestOf(
                     method = Method.GET,
-                    host = HttpHost(uriSchme.id, "httpbin.org"),
-                    path = "/headers"
+                    host = HttpHost(uriSchme.id, "nghttp2.org"),
+                    path = "/httpbin/headers"
                 )
                 log.debug { "Executing request $request" }
 

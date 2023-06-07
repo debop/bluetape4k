@@ -55,7 +55,7 @@ class Hc5Examples: AbstractHc5Test() {
         val username = "user"
         val password = "passwd"
         val credentialsProvider = CredentialsProviderBuilder.create()
-            .add(HttpHost("httpbin.org", httpbinServer.port), username, password.toCharArray())
+            .add(HttpHost(httpbinServer.host, httpbinServer.port), username, password.toCharArray())
             .build()
 
         httpClient {

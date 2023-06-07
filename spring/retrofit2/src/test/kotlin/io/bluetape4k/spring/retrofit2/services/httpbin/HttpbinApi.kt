@@ -8,6 +8,7 @@ data class IpAddress(val origin: String): Serializable
 
 @Retrofit2Client(name = "httpbin", baseUrl = "\${bluetape4k.retrofit2.services.httpbin}")
 interface HttpbinApi {
-    @GET("/ip")
+
+    @GET("/httpbin/ip")
     suspend fun getLocalIpAddress(): IpAddress
 }

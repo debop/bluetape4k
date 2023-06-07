@@ -27,7 +27,7 @@ class AsyncClientCustomSSL: AbstractHc5Test() {
         val sslContext = sslContext {
             loadTrustMaterial { chain, authType ->
                 val cert: X509Certificate = chain[0]
-                "CN=httpbin.org".equals(cert.subjectX500Principal.name, ignoreCase = true)
+                "CN=nghttp2.org".equals(cert.subjectX500Principal.name, ignoreCase = true)
             }
         }
         val tlsStrategy = tlsStrategyOf(sslContext)
@@ -39,12 +39,12 @@ class AsyncClientCustomSSL: AbstractHc5Test() {
         httpAsyncClientOf(cm).use { client ->
             client.start()
 
-            val target = HttpHost("https", "httpbin.org")
+            val target = HttpHost("https", "nghttp2.org")
             val clientContext = HttpClientContext.create()
 
             val request = simpleHttpRequest(Method.GET) {
                 setHttpHost(target)
-                setPath("/")
+                setPath("/httpbin")
             }
 
             log.debug { "Executing request $request" }
