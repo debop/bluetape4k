@@ -33,6 +33,10 @@ dependencies {
     api(Libs.httpcore5_reactive)
     testImplementation(Libs.httpclient5_testing)
 
+    compileOnly(project(":bluetape4k-infra-cache"))
+    compileOnly(Libs.caffeine)
+    compileOnly(Libs.caffeine_jcache)
+
     // Vertx
     compileOnly(project(":bluetape4k-vertx-core"))
     compileOnly(Libs.vertx_core)
