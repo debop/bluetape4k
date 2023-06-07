@@ -6,6 +6,7 @@ import io.bluetape4k.io.feign.feignResponseBuilder
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.trace
+import io.bluetape4k.logging.warn
 import io.bluetape4k.support.isNullOrEmpty
 import io.vertx.core.http.HttpClient
 import io.vertx.core.http.HttpClientRequest
@@ -51,11 +52,9 @@ internal fun HttpClientResponse.convertToFeignResponse(
     responsePromise: CompletableFuture<feign.Response>,
 ) {
     val self = this
-    body { ar ->
-        if (ar.succeeded()) {
+    body()
+        .onSuccess { buffer ->
             log.trace { "Convert Vertx HttpClientResponse to Feign Response. " }
-            val buffer = ar.result()
-
             val headers = with(self.headers()) {
                 names().associateWith { getAll(it) }
             }.toMap()
@@ -69,10 +68,11 @@ internal fun HttpClientResponse.convertToFeignResponse(
                 body(buffer.bytes)
             }
             responsePromise.complete(builder.build())
-        } else {
-            responsePromise.completeExceptionally(ar.cause())
         }
-    }
+        .onFailure { error ->
+            log.warn(error) { "Fail to retrieve body." }
+            responsePromise.completeExceptionally(error)
+        }
 }
 
 /**
@@ -86,29 +86,29 @@ internal fun HttpClient.sendAsync(
     feignRequest: feign.Request,
     feignOptions: feign.Request.Options,
 ): CompletableFuture<feign.Response> {
-    val options = feignOptions.toVertxRequestOptions(feignRequest)
-    val promise = CompletableFuture<feign.Response>()
 
-    this.request(options) { ar ->
-        if (ar.succeeded()) {
-            log.trace { "Build vertx httpclient request ..." }
-            val vertxRequest = ar.result().apply { parseFromFeignRequest(feignRequest) }
+    val promise = CompletableFuture<feign.Response>()
+    val options = feignOptions.toVertxRequestOptions(feignRequest)
+
+    this.request(options)
+        .onSuccess { request ->
+            val vertxRequest = request.apply { parseFromFeignRequest(feignRequest) }
 
             log.trace { "Send vertx httpclient request ..." }
-            vertxRequest.send { ar2 ->
-                if (ar2.succeeded()) {
-                    log.trace { "Build feign response ..." }
-                    ar2.result().convertToFeignResponse(feignRequest, promise)
-                } else {
-                    log.error(ar2.cause()) { "Fail to send vertx httpclient request." }
-                    promise.completeExceptionally(ar2.cause())
+            vertxRequest.send()
+                .onSuccess { response ->
+                    log.trace { "Build feign response ... " }
+                    response.convertToFeignResponse(feignRequest, promise)
                 }
-            }
-        } else {
-            log.error(ar.cause()) { "Fail to build vertx httpclient request." }
-            promise.completeExceptionally(ar.cause())
+                .onFailure { error ->
+                    log.error(error) { "Fail to send vertx httpclient request." }
+                    promise.completeExceptionally(error)
+                }
         }
-    }
+        .onFailure { error ->
+            log.error(error) { "Fail to build vertx httpclient request." }
+            promise.completeExceptionally(error)
+        }
 
     return promise
 }

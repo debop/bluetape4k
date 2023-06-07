@@ -15,13 +15,9 @@ inline fun <T> RateLimiter.decorateVertxFuture(
 
     try {
         RateLimiter.waitForPermission(this, 1)
-        supplier.invoke().onComplete { ar ->
-            if (ar.failed()) {
-                promise.fail(ar.cause())
-            } else {
-                promise.complete(ar.result())
-            }
-        }
+        supplier.invoke()
+            .onSuccess { promise.complete(it) }
+            .onFailure { promise.fail(it) }
     } catch (e: Throwable) {
         promise.fail(e)
     }

@@ -1,10 +1,10 @@
 package io.bluetape4k.infra.kafka.spring
 
+import io.bluetape4k.coroutines.flow.async
 import io.bluetape4k.support.asDouble
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -15,7 +15,14 @@ import org.springframework.kafka.support.SendResult
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-
+/**
+ * Coroutines 환경 하에서 Kafka [Producer]를 이용하여 메시지를 전송합니다
+ *
+ * @param K Key type
+ * @param V Value type
+ * @param record 전송할 정보 [ProducerRecord]
+ * @return 발송 결과 정보 [SendResult]
+ */
 suspend inline fun <K, V> KafkaOperations2<K, V>.sendSuspending(
     record: ProducerRecord<K, V>,
 ): SendResult<K, V> {
@@ -43,8 +50,8 @@ suspend inline fun <K, V> KafkaOperations2<K, V>.sendFlowAsParallel(
     records: Flow<ProducerRecord<K, V>>,
 ): SendResult<K, V> = coroutineScope {
     records
-        .flatMapMerge {
-            flowOf(sendSuspending(it))
+        .async {
+            sendSuspending(it)
         }
         .onCompletion { flush() }
         .last()
@@ -58,16 +65,26 @@ suspend inline fun <K, V> KafkaOperations2<K, V>.sendFlowAsParallel(
 suspend inline fun <K, V> KafkaOperations2<K, V>.sendAndForget(
     records: Flow<ProducerRecord<K, V>>,
     needFlush: Boolean = false,
-) {
+) = coroutineScope {
     records
-        .flatMapMerge {
-            flowOf(sendSuspending(it))
+        .async {
+            sendSuspending(it)
         }
         .onCompletion {
             if (needFlush) flush()
         }
+        .collect()
 }
 
+/**
+ * Producer 의 metrics 측정 값을 조회합니다.
+ *
+ * ```
+ * val metric = producer.getMetric("record-send-total")
+ * ```
+ * @param metricName metric name to revrieve
+ * @return [Metric] 인스턴스 또는 null
+ */
 fun <K, V> KafkaOperations2<K, V>.getMetric(metricName: String): Metric? =
     metrics().entries.find { it.key.name() == metricName }?.value
 

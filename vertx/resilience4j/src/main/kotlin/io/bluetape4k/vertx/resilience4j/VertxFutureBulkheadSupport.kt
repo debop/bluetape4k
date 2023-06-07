@@ -20,10 +20,10 @@ inline fun <T> Bulkhead.decorateVertxFuture(
         try {
             supplier().onComplete { ar ->
                 onComplete()
-                if (ar.failed()) {
-                    promise.fail(ar.cause())
-                } else {
+                if (ar.succeeded()) {
                     promise.complete(ar.result())
+                } else {
+                    promise.fail(ar.cause())
                 }
             }
         } catch (e: Throwable) {

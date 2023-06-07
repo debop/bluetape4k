@@ -13,7 +13,7 @@ import feign.codec.Encoder
  * val feignBuilder = feignBuilder {
  *      client(VertxHttpClient())
  * }
- * val api = feignBuilder.target<HttpbinApi>("https://httpbin.org")
+ * val api = feignBuilder.target<HttpbinApi>("https://nghttp2.org/httpbin")
  * ```
  *
  * @param intializer [Feign.Builder]를 초기화하는 함수
@@ -31,7 +31,7 @@ inline fun feignBuilder(intializer: Feign.Builder.() -> Unit): Feign.Builder {
  *
  * ```
  * val feignBuilder = feignBuilderOf(client=VertxHttpClient())
- * val api = feignBuilder.target<HttpbinApi>("https://httpbin.org")
+ * val api = feignBuilder.target<HttpbinApi>("https://nghttp2.org/httpbin")
  * ```
  *
  * @param client  [feign.Client] 인스턴스

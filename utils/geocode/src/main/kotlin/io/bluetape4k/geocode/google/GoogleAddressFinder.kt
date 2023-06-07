@@ -12,7 +12,6 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.warn
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
-import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 /**
@@ -52,7 +51,7 @@ class GoogleAddressFinder private constructor(apiKey: String): GeocodeAddressFin
             request.setCallback(object: PendingResult.Callback<Array<out GeocodingResult>> {
                 override fun onResult(result: Array<out GeocodingResult>?) {
                     log.debug { "find address for geocode=$geocode, GeocodingResult=${result?.firstOrNull()}" }
-                    cont.resume(result?.firstOrNull()?.toAddress())
+                    cont.resume(result?.firstOrNull()?.toAddress(), onCancellation = { request.cancel() })
                 }
 
                 override fun onFailure(e: Throwable?) {

@@ -1,0 +1,22 @@
+{
+  "args": {}, 
+  "data": "", 
+  "files": {}, 
+  "form": {
+    "password": "secret", 
+    "username": "user"
+  }, 
+  "headers": {
+    "Accept-Encoding": "gzip, x-gzip, deflate", 
+    "Authorization": "Basic dXNlcjpwYXNzd2Q=", 
+    "Connection": "keep-alive", 
+    "Content-Length": "29", 
+    "Content-Type": "application/x-www-form-urlencoded; charset=ISO-8859-1", 
+    "Host": "localhost:32831", 
+    "User-Agent": "Apache-HttpClient/5.2.1 (Java/17.0.6)", 
+    "X-Custom-Header": "stuff"
+  }, 
+  "json": null, 
+  "origin": "172.17.0.1", 
+  "url": "http://localhost:32831/post"
+}

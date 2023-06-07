@@ -107,7 +107,7 @@ class RouteGuideClient private constructor(channel: ManagedChannel): AbstractGrp
             log.debug { "Visiting point ${feature.location.toStr()}" }
 
             emit(feature.location)
-            delay(random.nextLong(500L, 1500L))
+            delay(random.nextLong(100L, 300L))
         }
     }
 
@@ -138,7 +138,7 @@ class RouteGuideClient private constructor(channel: ManagedChannel): AbstractGrp
         notes.forEach { note ->
             log.debug { "Sending message '${note.message}' at ${note.location.toStr()}" }
             emit(note)
-            delay(500)
+            delay(100)
         }
     }
 }

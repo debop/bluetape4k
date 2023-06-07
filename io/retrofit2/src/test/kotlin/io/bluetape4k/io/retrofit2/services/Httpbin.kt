@@ -5,13 +5,13 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 /**
- * [httpbin](https://httpbin.org/) 에서 제공하는 API를 테스트하기 위한 서비스 클래스입니다.
+ * [nghttp2.org](https://nghttp2.org/httpbin) 에서 제공하는 API를 테스트하기 위한 서비스 클래스입니다.
  *
  * TODO: bluetape4k-testcontainers 의 HttpbinServer 를 이용하도록 변경하자 (https://httpbin.org 가 너무 느리다)
  */
 object Httpbin: KLogging() {
 
-    const val BASE_URL = "https://httpbin.org"
+    const val BASE_URL = "https://nghttp2.org/httpbin"
 
     interface HttpbinApi {
 

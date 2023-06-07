@@ -12,7 +12,9 @@ import org.testcontainers.utility.DockerImageName
 /**
  * Httpbin server
  *
- * [httpbin.org](https://httpbin.org/) 의 API 서버를 Docker를 이용하여 로컬 서버에서 제공합니다.
+ * 불안정한 [httpbin.org](https://httpbin.org/) 의 API 서버를 Docker를 이용하여 로컬 서버에서 제공합니다.
+ *
+ * 안정적인 [nghttp2.org](https://nghttp2.org/httpbin) 을 사용하는 것을 추천합니다.
  */
 class HttpbinServer private constructor(
     imageName: DockerImageName,

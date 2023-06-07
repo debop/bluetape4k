@@ -25,12 +25,12 @@ dependencies {
     compileOnly(Libs.okhttp3_mockwebserver)
 
     // Apache HttpCompoents HttpClient 5
-    compileOnly(Libs.httpclient5)
-    compileOnly(Libs.httpclient5_cache)
-    compileOnly(Libs.httpclient5_fluent)
-    compileOnly(Libs.httpcore5)
-    compileOnly(Libs.httpcore5_h2)
-    compileOnly(Libs.httpcore5_reactive)
+    api(Libs.httpclient5)
+    api(Libs.httpclient5_cache)
+    api(Libs.httpclient5_fluent)
+    api(Libs.httpcore5)
+    api(Libs.httpcore5_h2)
+    api(Libs.httpcore5_reactive)
     testImplementation(Libs.httpclient5_testing)
 
     // Vertx
@@ -50,4 +50,8 @@ dependencies {
     // Gson
     compileOnly(Libs.gson)
     compileOnly(Libs.gson_javatime_serializers)
+
+    // Reactor
+    testImplementation(Libs.reactor_core)
+    testImplementation(Libs.reactor_kotlin_extensions)
 }

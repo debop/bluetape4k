@@ -15,13 +15,11 @@ fun <T> Future<T>.recover(
 ): Future<T> {
     val promise = Promise.promise<T>()
 
-    this.onComplete { ar ->
-        if (ar.failed()) {
-            val throwable = ar.cause()
-            tryRecover(exceptionTypes, exceptionHandler, promise, throwable.cause ?: throwable)
-        } else {
-            promise.complete(ar.result())
-        }
+    onSuccess {
+        promise.complete(it)
+    }
+    onFailure { error ->
+        tryRecover(exceptionTypes, exceptionHandler, promise, error.cause ?: error)
     }
     return promise.future()
 }
@@ -33,14 +31,20 @@ fun <T> Future<T>.recover(
 ): Future<T> {
     val promise = Promise.promise<T>()
 
-    this.onComplete { ar ->
-        if (ar.failed()) {
-            val throwable = ar.cause()
-            tryRecover(exceptionType, exceptionHandler, promise, throwable.cause ?: throwable)
-        } else {
-            promise.complete(ar.result())
-        }
+    onSuccess {
+        promise.complete(it)
     }
+    onFailure { error ->
+        tryRecover(exceptionType, exceptionHandler, promise, error.cause ?: error)
+    }
+//    this.onComplete { ar ->
+//        if (ar.failed()) {
+//            val throwable = ar.cause()
+//            tryRecover(exceptionType, exceptionHandler, promise, throwable.cause ?: throwable)
+//        } else {
+//            promise.complete(ar.result())
+//        }
+//    }
     return promise.future()
 }
 

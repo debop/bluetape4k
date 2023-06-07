@@ -207,7 +207,7 @@ inline fun <V> CompletableFuture<V>.fallbackTo(
 
 inline fun <V> CompletableFuture<V>.onFailure(
     executor: Executor = ForkJoinExecutor,
-    crossinline errorHandler: (error: Throwable?) -> Unit,
+    crossinline errorHandler: (error: Throwable) -> Unit,
 ): CompletableFuture<V> =
     whenCompleteAsync(
         { _, error ->

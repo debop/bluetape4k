@@ -1,5 +1,7 @@
 package io.bluetape4k.examples.coroutines.guide
 
+import io.bluetape4k.concurrent.onFailure
+import io.bluetape4k.concurrent.onSuccess
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
@@ -34,17 +36,16 @@ class SuspendExamples {
         suspend fun executeWithDelay(delayMillis: Long): Int {
             return suspendCancellableCoroutine { cont ->
                 executeAsync(delayMillis)
-                    .whenComplete { result, error ->
-                        if (error != null) {
-                            log.trace { "cause error!!!" }
-                            cont.resumeWithException(error)
-                        } else {
-                            log.trace { "Completed result=$result" }
-                            cont.resume(result) { cancellation ->
-                                log.trace { "Cancel suspend" }
-                                cont.cancel(cancellation)
-                            }
+                    .onSuccess { result ->
+                        log.trace { "Completed result=$result" }
+                        cont.resume(result) { cancellation ->
+                            log.trace { "Cancel suspend" }
+                            cont.cancel(cancellation)
                         }
+                    }
+                    .onFailure { error ->
+                        log.trace { "cause error!!!" }
+                        cont.resumeWithException(error)
                     }
             }
         }

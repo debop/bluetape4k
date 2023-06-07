@@ -1,15 +1,19 @@
 package io.bluetape4k.io.http.okhttp3
 
 import io.bluetape4k.utils.Runtimex
+import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.CacheControl
+import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import java.io.IOException
 import java.io.InputStream
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resumeWithException
 
 fun okHttp3ConnectionPool(
     maxIdleConnections: Int = Runtimex.availableProcessors,
@@ -136,6 +140,26 @@ inline fun OkHttpClient.executeAsync(
 
     newCall(request).enqueue(callback)
     return promise
+}
+
+suspend inline fun OkHttpClient.executeSuspending(request: okhttp3.Request): Response {
+    return newCall(request).executeSuspending()
+}
+
+suspend inline fun Call.executeSuspending(): Response = suspendCancellableCoroutine { cont ->
+    cont.invokeOnCancellation {
+        this.cancel()
+    }
+
+    this.enqueue(object: Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            cont.resumeWithException(e)
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            cont.resume(value = response, onCancellation = { call.cancel() })
+        }
+    })
 }
 
 fun okhttp3.Response.print(no: Int = 1) {

@@ -89,9 +89,9 @@ class VertxCallFactory private constructor(
                 absoluteURI = okRequest.url.toString(),
             )
 
-            client.request(options) { ar ->
-                if (ar.succeeded()) {
-                    val request = ar.result().apply { parse(okRequest) }
+            client.request(options)
+                .onSuccess { clientRequest ->
+                    val request = clientRequest.apply { parse(okRequest) }
 
                     log.trace { "Send vertx request ... request=$request" }
                     request.send { ar2 ->
@@ -102,10 +102,10 @@ class VertxCallFactory private constructor(
                             responseCallback.onFailure(this@VertxCall, IOException(ar2.cause()))
                         }
                     }
-                } else {
-                    responseCallback.onFailure(this@VertxCall, IOException(ar.cause()))
                 }
-            }
+                .onFailure { error ->
+                    responseCallback.onFailure(this@VertxCall, IOException(error))
+                }
         }
 
         override fun isExecuted(): Boolean {
