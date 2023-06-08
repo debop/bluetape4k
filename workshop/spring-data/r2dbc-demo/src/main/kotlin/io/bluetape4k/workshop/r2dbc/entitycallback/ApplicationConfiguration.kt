@@ -1,5 +1,6 @@
 package io.bluetape4k.workshop.r2dbc.entitycallback
 
+import io.bluetape4k.data.r2dbc.connection.init.connectionFactoryInitializer
 import io.bluetape4k.support.toUtf8Bytes
 import io.r2dbc.spi.ConnectionFactory
 import io.r2dbc.spi.Row
@@ -58,8 +59,7 @@ class ApplicationConfiguration {
             );
         """.trimIndent()
 
-        return ConnectionFactoryInitializer().apply {
-            setConnectionFactory(connectionFactory)
+        return connectionFactoryInitializer(connectionFactory) {
             setDatabasePopulator(ResourceDatabasePopulator(ByteArrayResource(sql.toUtf8Bytes())))
         }
     }

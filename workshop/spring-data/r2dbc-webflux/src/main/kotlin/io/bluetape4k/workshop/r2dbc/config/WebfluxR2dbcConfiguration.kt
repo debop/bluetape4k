@@ -1,6 +1,6 @@
 package io.bluetape4k.workshop.r2dbc.config
 
-import io.bluetape4k.data.r2dbc.spring.resourceDatabasePopulatorOf
+import io.bluetape4k.data.r2dbc.connection.init.resourceDatabasePopulatorOf
 import io.bluetape4k.workshop.r2dbc.handler.UserHandler
 import io.r2dbc.spi.ConnectionFactory
 import org.springframework.context.annotation.Bean

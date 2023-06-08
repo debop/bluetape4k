@@ -1,4 +1,4 @@
-package io.bluetape4k.data.r2dbc.spring
+package io.bluetape4k.data.r2dbc.connection.init
 
 import org.springframework.core.io.Resource
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator

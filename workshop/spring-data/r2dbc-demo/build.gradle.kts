@@ -21,8 +21,11 @@ dependencies {
     implementation(Libs.reactor_kotlin_extensions)
     testImplementation(Libs.reactor_test)
 
+    // R2DBC
+    implementation(project(":bluetape4k-data-r2dbc"))
     implementation(Libs.springBootStarter("data-r2dbc"))
     implementation(Libs.r2dbc_h2)
+    implementation(Libs.r2dbc_pool)
 
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
