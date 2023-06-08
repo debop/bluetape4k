@@ -28,7 +28,10 @@ dependencies {
     implementation(Libs.r2dbc_h2)
     implementation(Libs.r2dbc_pool)
 
+    // Webflux
+    implementation(project(":bluetape4k-io-netty"))
     implementation(Libs.springBootStarter("webflux"))
+
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
