@@ -1,0 +1,5 @@
+###
+GET http://localhost:8080/resilience4j/circuit-breaker-open
+
+###
+GET http://localhost:8080/resilience4j/retry
