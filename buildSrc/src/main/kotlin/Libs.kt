@@ -103,7 +103,7 @@ object Versions {
     const val swagger = "1.6.2"
     const val springdoc_openapi = "1.7.0"
     const val springfox_swagger = "3.0.0"
-    const val problem = "0.27.1"
+    const val problem = "0.27.0"
 
     const val bucket4j = "7.6.0"
     const val resilience4j = "2.0.2"
