@@ -11,6 +11,7 @@ import com.esotericsoftware.kryo.util.Pool
 import io.bluetape4k.io.serializer.Kryox.release
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
+import kotlinx.coroutines.coroutineScope
 import org.objenesis.strategy.StdInstantiatorStrategy
 import java.util.concurrent.CompletableFuture
 
@@ -61,6 +62,24 @@ inline fun <T: Any> withKryoAsync(crossinline func: Kryo.() -> T?): CompletableF
         .whenCompleteAsync { _, _ ->
             kryo.release()
         }
+}
+
+/**
+ * Coroutines 환경 하에서 Kryo 작업을 수행합니다.
+ *
+ * @param T 결과 수형
+ * @param func [Kryo] 로 작업하는 함수
+ * @return 작업 결과
+ */
+suspend inline fun <T: Any> withKryoSuspending(
+    crossinline func: suspend Kryo.() -> T?,
+): T? = coroutineScope {
+    val kryo = Kryox.obtainKryo()
+    try {
+        func(kryo)
+    } finally {
+        kryo.release()
+    }
 }
 
 object Kryox: KLogging() {
