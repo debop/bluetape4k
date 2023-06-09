@@ -1,0 +1,17 @@
+###
+GET http://localhost:8080/tasks
+
+###
+GET http://localhost:8080/tasks/1
+
+###
+GET http://localhost:8080/tasks/9999
+
+###
+GET http://localhost:8080/tasks/abc
+
+###
+PUT http://localhost:8080/tasks/1
+
+###
+DELETE http://localhost:8080/tasks/1

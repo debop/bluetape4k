@@ -1,0 +1,6 @@
+spring:
+    application:
+        name: ProblemApplication
+    info:
+        build:
+            encoding: UTF-8
