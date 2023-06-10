@@ -79,7 +79,7 @@ internal class FlowGroupBy<T, K, V>(
         private var once = atomic(false)
 
         override suspend fun collectSafely(collector: FlowCollector<V>) {
-            if (!once.compareAndSet(false, true)) {
+            if (!once.compareAndSet(expect = false, update = true)) {
                 error("A GroupedFlow can only be collected at most once.")
             }
 

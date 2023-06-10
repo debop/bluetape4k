@@ -3,6 +3,7 @@ package io.bluetape4k.collections.eclipse.primitives
 import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet
 import io.bluetape4k.core.assertZeroOrPositiveNumber
+import org.eclipse.collections.api.CharIterable
 import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.list.mutable.primitive.CharArrayList
 import org.eclipse.collections.impl.set.mutable.UnifiedSet
@@ -31,23 +32,25 @@ inline fun charArrayList(size: Int, initializer: (Int) -> Char): CharArrayList {
 fun charArrayListOf(vararg elements: Char): CharArrayList = CharArrayList.newListWith(*elements)
 fun charArrayListOf(elements: Iterable<Char>): CharArrayList = elements.toCharArrayList()
 
-fun CharArrayList.asSequence(): Sequence<Char> = sequence {
+fun CharIterable.asSequence(): Sequence<Char> = sequence {
     val iter = charIterator()
     while (iter.hasNext()) {
         yield(iter.next())
     }
 }
 
-fun CharArrayList.asIterator(): Iterator<Char> = asSequence().iterator()
+fun CharIterable.asIterator(): Iterator<Char> = asSequence().iterator()
 
-fun CharArrayList.asIterable(): Iterable<Char> = Iterable { asIterator().iterator() }
-fun CharArrayList.asList(): List<Char> = asIterable().toList()
-fun CharArrayList.asMutableList(): MutableList<Char> = asIterable().toMutableList()
-fun CharArrayList.asSet(): Set<Char> = asIterable().toSet()
-fun CharArrayList.asMutableSet(): MutableSet<Char> = asIterable().toMutableSet()
+fun CharIterable.asIterable(): Iterable<Char> = Iterable { asIterator().iterator() }
+fun CharIterable.asList(): List<Char> = asIterable().toList()
+fun CharIterable.asMutableList(): MutableList<Char> = asIterable().toMutableList()
+fun CharIterable.asSet(): Set<Char> = asIterable().toSet()
+fun CharIterable.asMutableSet(): MutableSet<Char> = asIterable().toMutableSet()
 
-fun CharArrayList.asFastList(): FastList<Char> = asIterable().toFastList()
-fun CharArrayList.asUnifiedSet(): UnifiedSet<Char> = asIterable().toUnifiedSet()
+fun CharIterable.asFastList(): FastList<Char> = asIterable().toFastList()
+fun CharIterable.asUnifiedSet(): UnifiedSet<Char> = asIterable().toUnifiedSet()
 
-fun CharArrayList.maxOrNull(): Char? = if (isEmpty) null else max()
-fun CharArrayList.minOrNull(): Char? = if (isEmpty) null else min()
+fun CharIterable.maxOrNull(): Char? = if (isEmpty) null else max()
+fun CharIterable.minOrNull(): Char? = if (isEmpty) null else min()
+
+val CharIterable.lastIndex: Int get() = size() - 1

@@ -1,6 +1,6 @@
 package io.bluetape4k.examples.coroutines.flow
 
-import io.bluetape4k.coroutines.flow.toFastList
+import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.examples.coroutines.isEven
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.delay

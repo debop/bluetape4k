@@ -2,7 +2,7 @@ package io.bluetape4k.examples.coroutines.flow
 
 import app.cash.turbine.test
 import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
-import io.bluetape4k.coroutines.flow.asFlow
+import io.bluetape4k.coroutines.flow.eclipse.asFlow
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.atomicfu.atomic

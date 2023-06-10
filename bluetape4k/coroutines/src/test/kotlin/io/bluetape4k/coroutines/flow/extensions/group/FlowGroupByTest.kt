@@ -4,8 +4,8 @@ import io.bluetape4k.coroutines.flow.extensions.asFlow
 import io.bluetape4k.coroutines.flow.extensions.flowOfRange
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.coroutines.tests.assertResultSet
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapMerge
@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
@@ -24,7 +26,7 @@ class FlowGroupByTest {
     fun `group by with key`() = runTest {
         flowOfRange(1, 10)
             .groupBy { it % 2 }
-            .flatMapMerge { group -> group.asValuesFlow() }
+            .flatMapMerge { group -> group.toValues() }
             .assertResultSet(listOf(1, 3, 5, 7, 9), listOf(2, 4, 6, 8, 10))
     }
 
@@ -32,11 +34,11 @@ class FlowGroupByTest {
     fun `group by with key and values`() = runTest {
         flowOfRange(1, 10)
             .groupBy { it % 2 }
-            .flatMapMerge { group -> group.asKeyValuesFlow() }
-            .onEach { log.trace { "grouped item=$it" } }
+            .flatMapMerge { group -> group.toGroupItem() }
+            .onEach { log.debug { "grouped item=$it" } }
             .assertResultSet(
-                1 to listOf(1, 3, 5, 7, 9),
-                0 to listOf(2, 4, 6, 8, 10),
+                GroupItem(1, listOf(1, 3, 5, 7, 9)),
+                GroupItem(0, listOf(2, 4, 6, 8, 10)),
             )
     }
 
@@ -44,17 +46,17 @@ class FlowGroupByTest {
     fun `group by with value selector`() = runTest {
         flowOfRange(1, 10)
             .groupBy({ it % 2 }) { it + 1 }
-            .flatMapMerge { it.asValuesFlow() }
+            .flatMapMerge { it.toValues() }
             .assertResultSet(listOf(2, 4, 6, 8, 10), listOf(3, 5, 7, 9, 11))
     }
 
     @Test
-    fun `one of each`() = runSuspendTest {
+    fun `one of each`() = runTest {
         flowOfRange(1, 10)
             .groupBy { it % 2 }
             .flatMapMerge {
-                it.take(1).onEach {
-                    log.trace { "grouped item=$it" }
+                it.take(1).onEach { item ->
+                    log.debug { "grouped item=$item" }
                 }
             }
             .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -64,13 +66,13 @@ class FlowGroupByTest {
     fun `max groups`() = runTest {
         flowOfRange(1, 10)
             .groupBy { it % 3 }
-            .flatMapMerge { it.asValuesFlow() }
+            .flatMapMerge { it.toValues() }
             .assertResultSet(listOf(1, 4, 7, 10), listOf(2, 5, 8), listOf(3, 6, 9))
 
         flowOfRange(1, 10)
             .groupBy { it % 3 }
             .take(2)                    // list(3, 6, 9) 는 빠진다
-            .flatMapMerge { it.asValuesFlow() }
+            .flatMapMerge { it.toValues() }
             .assertResultSet(listOf(1, 4, 7, 10), listOf(2, 5, 8))
     }
 
@@ -116,5 +118,25 @@ class FlowGroupByTest {
                 .onEach { log.trace { it } }
                 .collect()
         }
+    }
+
+    @Test
+    fun `convert Group to Map`() = runTest {
+        val map = flowOfRange(1, 10)
+            .groupBy { it % 2 }
+            .toMap()
+        map shouldBeEqualTo mapOf(0 to listOf(2, 4, 6, 8, 10), 1 to listOf(1, 3, 5, 7, 9))
+    }
+
+    @Test
+    fun `convert Group to Multimap`() = runTest {
+        val mmap = flowOfRange(1, 10)
+            .groupBy { it % 2 }
+            .toMultiMap()
+
+        mmap.size() shouldBeEqualTo 10
+        mmap.keySet() shouldHaveSize 2
+        mmap[0] shouldBeEqualTo listOf(2, 4, 6, 8, 10)
+        mmap[1] shouldBeEqualTo listOf(1, 3, 5, 7, 9)
     }
 }

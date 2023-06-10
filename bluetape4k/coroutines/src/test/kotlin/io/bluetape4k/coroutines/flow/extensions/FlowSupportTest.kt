@@ -1,6 +1,7 @@
-package io.bluetape4k.coroutines.flow
+package io.bluetape4k.coroutines.flow.extensions
 
 import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging

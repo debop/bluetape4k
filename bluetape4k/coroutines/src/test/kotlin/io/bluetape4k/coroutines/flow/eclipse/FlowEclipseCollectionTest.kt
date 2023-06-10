@@ -1,4 +1,4 @@
-package io.bluetape4k.coroutines.flow
+package io.bluetape4k.coroutines.flow.eclipse
 
 import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet

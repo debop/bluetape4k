@@ -1,8 +1,8 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
 import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.coroutines.flow.extensions.flowOfRange
-import io.bluetape4k.coroutines.flow.toFastList
 import io.bluetape4k.coroutines.tests.withSingleThread
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.coroutineScope
