@@ -1,5 +1,6 @@
 package io.bluetape4k.coroutines.flow.extensions.group
 
+import io.bluetape4k.coroutines.flow.eclipse.toMultiMap
 import io.bluetape4k.coroutines.flow.extensions.asFlow
 import io.bluetape4k.coroutines.flow.extensions.flowOfRange
 import io.bluetape4k.coroutines.tests.assertResult

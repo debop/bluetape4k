@@ -1,3 +1,6 @@
+@file:JvmMultifileClass
+@file:JvmName("FlowExtensionsKt")
+
 package io.bluetape4k.coroutines.flow.extensions
 
 import io.bluetape4k.core.requireGe
@@ -40,7 +43,7 @@ fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> = flow {
     }.collect()
 
     while (counter.value > 0) {
-        emit(elements.take(step))
+        emit(elements.toList())
         elements = elements.drop(step).toMutableList()
         counter.addAndGet(-step)
     }

@@ -1,3 +1,6 @@
+@file:JvmMultifileClass
+@file:JvmName("FlowExtensionsKt")
+
 package io.bluetape4k.coroutines.flow.extensions
 
 import io.bluetape4k.core.assertPositiveNumber

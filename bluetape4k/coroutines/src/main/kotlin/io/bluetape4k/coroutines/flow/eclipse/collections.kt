@@ -1,18 +1,18 @@
+@file:JvmMultifileClass
+@file:JvmName("FlowEclipseCollectionKt")
+
 package io.bluetape4k.coroutines.flow.eclipse
 
 import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.primitives.asSequence
 import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.collections.eclipse.unifiedSetOf
+import io.bluetape4k.coroutines.flow.extensions.group.GroupedFlow
+import io.bluetape4k.coroutines.flow.extensions.group.toGroupItem
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import org.eclipse.collections.api.CharIterable
-import org.eclipse.collections.api.DoubleIterable
-import org.eclipse.collections.api.FloatIterable
-import org.eclipse.collections.api.IntIterable
-import org.eclipse.collections.api.LongIterable
-import org.eclipse.collections.api.RichIterable
-import org.eclipse.collections.api.ShortIterable
+import kotlinx.coroutines.flow.flatMapMerge
+import org.eclipse.collections.api.multimap.Multimap
+import org.eclipse.collections.api.multimap.MutableMultimap
+import org.eclipse.collections.impl.factory.Multimaps
 import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.map.mutable.UnifiedMap
 import org.eclipse.collections.impl.set.mutable.UnifiedSet
@@ -35,11 +35,12 @@ suspend fun <T, K> Flow<T>.toUnifiedMap(
     return destination
 }
 
-fun <T> RichIterable<T>.asFlow(): Flow<T> = asSequence().asFlow()
-
-fun CharIterable.asFlow(): Flow<Char> = asSequence().asFlow()
-fun ShortIterable.asFlow(): Flow<Short> = asSequence().asFlow()
-fun IntIterable.asFlow(): Flow<Int> = asSequence().asFlow()
-fun LongIterable.asFlow(): Flow<Long> = asSequence().asFlow()
-fun FloatIterable.asFlow(): Flow<Float> = asSequence().asFlow()
-fun DoubleIterable.asFlow(): Flow<Double> = asSequence().asFlow()
+suspend fun <K, V> Flow<GroupedFlow<K, V>>.toMultiMap(
+    destination: MutableMultimap<K, V> = Multimaps.mutable.list.of(),
+): Multimap<K, V> {
+    this.flatMapMerge { it.toGroupItem() }
+        .collect { groupItem ->
+            destination.putAll(groupItem.key, groupItem.values)
+        }
+    return destination
+}

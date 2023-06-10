@@ -1,7 +1,9 @@
+@file:JvmMultifileClass
+@file:JvmName("FlowExtensionsKt")
+
 package io.bluetape4k.coroutines.flow.extensions
 
 import io.bluetape4k.core.requireGt
-import io.bluetape4k.coroutines.RingBuffer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 
@@ -30,10 +32,20 @@ fun <T> Flow<T>.sliding(size: Int): Flow<List<T>> = windowed(size, 1)
  */
 fun <T> Flow<T>.bufferedSliding(size: Int): Flow<List<T>> = channelFlow {
     size.requireGt(1, "sliding size")
-    val ringBuffer = RingBuffer.boxing<T>(size)
+    val queue = ArrayDeque<T>()
 
     this@bufferedSliding.collect { element ->
-        ringBuffer.push(element)
-        send(ringBuffer.snapshot())
+        if (queue.size >= size) {
+            queue.removeFirst()
+        }
+        queue.addLast(element)
+        send(queue.toList())
+    }
+
+    while (queue.isNotEmpty()) {
+        queue.removeFirst()
+        if (queue.isNotEmpty()) {
+            send(queue.toList())
+        }
     }
 }

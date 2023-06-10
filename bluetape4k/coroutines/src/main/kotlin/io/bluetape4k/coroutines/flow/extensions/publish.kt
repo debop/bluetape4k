@@ -1,3 +1,6 @@
+@file:JvmMultifileClass
+@file:JvmName("FlowExtensionsKt")
+
 package io.bluetape4k.coroutines.flow.extensions
 
 import io.bluetape4k.coroutines.flow.extensions.internal.FlowMulticastFunction
@@ -38,10 +41,9 @@ fun <T, R> Flow<T>.publish(transform: suspend (Flow<T>) -> Flow<R>): Flow<R> =
 fun <T, R> Flow<T>.publish(
     expectedCollectors: Int = 3,
     transform: suspend (Flow<T>) -> Flow<R>,
-): Flow<R> {
-    return FlowMulticastFunction(
+): Flow<R> =
+    FlowMulticastFunction(
         this,
         { MulticastSubject(expectedCollectors.coerceAtLeast(1)) },
         transform
     )
-}

@@ -4,9 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
-import org.eclipse.collections.api.multimap.Multimap
-import org.eclipse.collections.api.multimap.MutableMultimap
-import org.eclipse.collections.impl.factory.Multimaps
 import java.io.Serializable
 
 fun <T, K> Flow<T>.groupBy(keySelector: (T) -> K): Flow<GroupedFlow<K, T>> =
@@ -40,16 +37,6 @@ suspend fun <K, V> Flow<GroupedFlow<K, V>>.toMap(destination: MutableMap<K, List
     this.flatMapMerge { it.toGroupItem() }
         .collect { groupItem ->
             destination[groupItem.key] = groupItem.values
-        }
-    return destination
-}
-
-suspend fun <K, V> Flow<GroupedFlow<K, V>>.toMultiMap(
-    destination: MutableMultimap<K, V> = Multimaps.mutable.list.of(),
-): Multimap<K, V> {
-    this.flatMapMerge { it.toGroupItem() }
-        .collect { groupItem ->
-            destination.putAll(groupItem.key, groupItem.values)
         }
     return destination
 }

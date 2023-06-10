@@ -1,6 +1,8 @@
+@file:JvmMultifileClass
+@file:JvmName("FlowExtensionsKt")
+
 package io.bluetape4k.coroutines.flow.extensions
 
-import io.bluetape4k.core.assertPositiveNumber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.DEFAULT_CONCURRENCY
 import kotlinx.coroutines.flow.Flow
@@ -20,10 +22,7 @@ inline fun <T, R> Flow<T>.mapParallel(
     coroutineContext: CoroutineContext = Dispatchers.Default,
     concurrency: Int = DEFAULT_CONCURRENCY,
     crossinline transform: suspend (value: T) -> R,
-): Flow<R> {
-    concurrency.assertPositiveNumber("concurrency")
-
-    return flatMapMerge(concurrency) { value ->
+): Flow<R> =
+    flatMapMerge(concurrency.coerceAtLeast(2)) { value ->
         flow { emit(transform(value)) }.flowOn(coroutineContext)
     }
-}
