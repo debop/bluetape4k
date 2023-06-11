@@ -4,7 +4,7 @@ import io.bluetape4k.coroutines.flow.extensions.concatArrayEager
 import io.bluetape4k.coroutines.flow.extensions.flowOfRange
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
+import io.bluetape4k.logging.debug
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
@@ -28,14 +28,14 @@ class FlowConcatArrayEagerTest {
                 delay(200)
                 state1.value = 1
             }.onEach {
-                log.trace { "flow1 item=$it" }
+                log.debug { "flow1 item=$it" }
             }
 
         val flow2 = flowOfRange(6, 5)
             .onStart {
                 state2.value = state1.value
             }.onEach {
-                log.trace { "flow2 item=$it" }
+                log.debug { "flow2 item=$it" }
             }
 
         concatArrayEager(flow1, flow2)

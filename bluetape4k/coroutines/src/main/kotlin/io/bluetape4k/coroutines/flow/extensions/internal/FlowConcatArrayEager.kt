@@ -20,12 +20,12 @@ class FlowConcatArrayEager<T>(private val sources: List<Flow<T>>): AbstractFlow<
     constructor(vararg sources: Flow<T>): this(sources.toList())
 
     override suspend fun collectSafely(collector: FlowCollector<T>) {
-        val size = sources.size
-        val queues = List(size) { ConcurrentLinkedQueue<T>() }
-        val dones = AtomicIntArray(sources.size)
-        val reader = Resumable()
-
         coroutineScope {
+            val size = sources.size
+            val queues = List(size) { ConcurrentLinkedQueue<T>() }
+            val dones = AtomicIntArray(sources.size)
+            val reader = Resumable()
+
             repeat(size) {
                 val f = sources[it]
                 val q = queues[it]

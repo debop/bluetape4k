@@ -9,9 +9,7 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
 
 
 /**
@@ -33,14 +31,14 @@ fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> = flow {
     var elements = mutableListOf<T>()
     val counter = atomic(0)
 
-    this@windowed.onEach { element ->
+    this@windowed.collect { element ->
         elements.add(element)
         if (counter.incrementAndGet() == size) {
             emit(elements.toList())
             elements = elements.drop(step).toMutableList()
             counter.addAndGet(-step)
         }
-    }.collect()
+    }
 
     while (counter.value > 0) {
         emit(elements.toList())

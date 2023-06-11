@@ -6,7 +6,9 @@ package io.bluetape4k.coroutines.flow.extensions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-fun flowOfRange(start: Int, count: Int): Flow<Int> =
+fun flowOfRange(start: Int, count: Int): Flow<Int> = flowOfIntRange(start, count)
+
+fun flowOfIntRange(start: Int, count: Int): Flow<Int> =
     (start until start + count).asFlow()
 
 fun flowOfLongRange(start: Long, count: Int): Flow<Long> =

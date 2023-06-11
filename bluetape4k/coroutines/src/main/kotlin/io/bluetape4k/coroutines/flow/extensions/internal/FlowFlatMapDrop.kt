@@ -4,6 +4,7 @@ import io.bluetape4k.coroutines.flow.extensions.Resumable
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.AbstractFlow
 import kotlinx.coroutines.flow.Flow
@@ -12,10 +13,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-
+@Deprecated("use flatMapFirst")
 class FlowFlatMapDrop<T, R>(
     private val source: Flow<T>,
-    private val mapper: suspend (T) -> Flow<R>,
+    private val mapper: suspend (value: T) -> Flow<R>,
 ): AbstractFlow<R>() {
 
     companion object: KLogging()
@@ -29,7 +30,7 @@ class FlowFlatMapDrop<T, R>(
             var done by atomic(false)
             var error by atomic<Throwable?>(null)
 
-            val job = launch {
+            val job = launch(start = CoroutineStart.UNDISPATCHED) {
                 try {
                     source.collect { item ->
                         log.trace { "source collecting ... $item" }

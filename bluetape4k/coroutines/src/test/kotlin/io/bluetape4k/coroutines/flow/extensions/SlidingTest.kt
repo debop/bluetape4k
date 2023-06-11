@@ -5,10 +5,15 @@ import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeLessOrEqualTo
@@ -78,5 +83,47 @@ class SlidingTest: AbstractFlowTest() {
         }
 
         sliding.toFastList() shouldHaveSize 7
+    }
+
+
+    @Test
+    fun `sliding with cancellation`() = runTest {
+        flowOfRange(0, 10)
+            .sliding(4)
+            .take(2)
+            .test {
+                awaitItem() shouldBeEqualTo listOf(0, 1, 2, 3)
+                awaitItem() shouldBeEqualTo listOf(1, 2, 3, 4)
+                awaitComplete()
+            }
+    }
+
+    @Test
+    fun `sliding with mutable shared flow`() = runTest {
+        val flow = MutableSharedFlow<Int>(extraBufferCapacity = 64)
+        val results = mutableListOf<List<Int>>()
+
+        val job1 = flow.sliding(3)
+            .onEach {
+                results += it
+                if (it == listOf(1, 2, 3)) {
+                    flow.tryEmit(4)
+                }
+            }.launchIn(this)
+
+        val job2 = launch {
+            flow.tryEmit(1)
+            flow.tryEmit(2)
+            flow.tryEmit(3)
+        }
+
+        advanceUntilIdle()
+        job1.cancel()
+        job2.cancel()
+
+        results shouldBeEqualTo listOf(
+            listOf(1, 2, 3),
+            listOf(2, 3, 4)
+        )
     }
 }
