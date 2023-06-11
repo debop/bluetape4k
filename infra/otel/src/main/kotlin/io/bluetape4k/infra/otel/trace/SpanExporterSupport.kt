@@ -2,15 +2,8 @@ package io.bluetape4k.infra.otel.trace
 
 import io.opentelemetry.exporter.logging.LoggingSpanExporter
 import io.opentelemetry.sdk.common.CompletableResultCode
-import io.opentelemetry.sdk.logs.export.InMemoryLogRecordExporter
 import io.opentelemetry.sdk.trace.data.SpanData
 import io.opentelemetry.sdk.trace.export.SpanExporter
-
-
-/**
- * [InMemoryLogRecordExporter]를 생성합니다.
- */
-fun inMemorySpanExporterOf(): InMemoryLogRecordExporter = InMemoryLogRecordExporter.create()
 
 /**
  * [LoggingSpanExporter]를 생성합니다.

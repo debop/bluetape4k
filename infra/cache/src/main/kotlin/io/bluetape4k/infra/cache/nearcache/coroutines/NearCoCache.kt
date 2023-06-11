@@ -1,6 +1,6 @@
 package io.bluetape4k.infra.cache.nearcache.coroutines
 
-import io.bluetape4k.coroutines.flow.chunked
+import io.bluetape4k.coroutines.flow.extensions.chunked
 import io.bluetape4k.infra.cache.jcache.coroutines.CoCache
 import io.bluetape4k.infra.cache.jcache.coroutines.CoCacheEntry
 import io.bluetape4k.logging.KLogging

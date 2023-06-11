@@ -2,7 +2,7 @@ package io.bluetape4k.infra.graphql.coroutines
 
 import com.netflix.graphql.dgs.context.DgsContext
 import graphql.schema.DataFetchingEnvironment
-import io.bluetape4k.coroutines.getOrCurrent
+import io.bluetape4k.coroutines.context.getOrCurrent
 import io.bluetape4k.infra.graphql.LoggingContextProvider
 import io.bluetape4k.infra.graphql.getCopyOfLoggingContextMapOrEmpty
 import kotlinx.coroutines.CoroutineScope

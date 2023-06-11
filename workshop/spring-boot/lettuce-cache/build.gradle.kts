@@ -1,7 +1,7 @@
 plugins {
     kotlin("plugin.spring")
     kotlin("kapt")
-    id(Plugins.spring_boot)
+    // id(Plugins.spring_boot)
 }
 
 configurations {
