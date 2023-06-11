@@ -17,4 +17,4 @@ fun <T> Iterable<Flow<T>>.race(): Flow<T> = amb()
  * cancelling the rest.
  * @param sources the array of [Flow]s
  */
-fun <T> raceFlowOf(vararg sources: Flow<T>): Flow<T> = ambFlowOf(*sources)
+fun <T> race(vararg sources: Flow<T>): Flow<T> = amb(*sources)

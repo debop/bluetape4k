@@ -1,7 +1,6 @@
 package io.bluetape4k.coroutines.flow.extensions.internal
 
 import io.bluetape4k.coroutines.flow.extensions.amb
-import io.bluetape4k.coroutines.flow.extensions.ambFlowOf
 import io.bluetape4k.coroutines.flow.extensions.flowOfRange
 import io.bluetape4k.coroutines.tests.assertResult
 import kotlinx.atomicfu.atomic
@@ -20,7 +19,7 @@ class FlowAmbIterableTest {
         val flow1 = flowOfRange(1, 5).onStart { delay(1000) }
         val flow2 = flowOfRange(6, 5).onStart { delay(100) }
 
-        ambFlowOf(flow1, flow2)
+        amb(flow1, flow2)
             .assertResult(6, 7, 8, 9, 10)
     }
 
@@ -29,7 +28,7 @@ class FlowAmbIterableTest {
         val flow1 = flowOfRange(1, 5).onStart { delay(100) }
         val flow2 = flowOfRange(6, 5).onStart { delay(1000) }
 
-        ambFlowOf(flow1, flow2)
+        amb(flow1, flow2)
             .assertResult(1, 2, 3, 4, 5)
     }
 

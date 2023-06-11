@@ -18,4 +18,4 @@ fun <T> Iterable<Flow<T>>.amb(): Flow<T> = FlowAmbIterable(this)
  * cancelling the rest.
  * @param sources the array of [Flow]s
  */
-fun <T> ambFlowOf(vararg sources: Flow<T>): Flow<T> = FlowAmbIterable(*sources)
+fun <T> amb(vararg sources: Flow<T>): Flow<T> = FlowAmbIterable(*sources)
