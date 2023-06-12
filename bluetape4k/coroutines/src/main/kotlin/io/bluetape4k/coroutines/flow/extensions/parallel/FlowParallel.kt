@@ -72,7 +72,7 @@ internal class FlowParallel<T>(
 
     class RailCollector<T>(private val resumeGenerator: Resumable): Resumable() {
 
-        private var consumerReady by atomic(false)
+        private val consumerReady = atomic(false)
 
         @Suppress("UNCHECKED_CAST")
         private var value: T = null as T
@@ -85,8 +85,8 @@ internal class FlowParallel<T>(
         private var done: Boolean = false
 
         fun next(value: T): Boolean {
-            if (consumerReady) {
-                consumerReady = false
+            if (consumerReady.value) {
+                consumerReady.value = false
                 this.value = value
                 this.hasValue = true
                 resume()
@@ -108,7 +108,7 @@ internal class FlowParallel<T>(
 
         suspend fun drain(collector: FlowCollector<T>) {
             while (true) {
-                consumerReady = true
+                consumerReady.value = true
                 resumeGenerator.resume()
 
                 await()

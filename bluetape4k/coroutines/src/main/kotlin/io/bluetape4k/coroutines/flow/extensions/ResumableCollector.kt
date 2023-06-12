@@ -21,28 +21,28 @@ class ResumableCollector<T>: Resumable() {
     var value: T = uninitialized()
     var error: Throwable? = null
 
-    private var done by atomic(false)
-    private var hasValue by atomic(false)
+    private val done = atomic(false)
+    private val hasValue = atomic(false)
 
     private val consumerReady = Resumable()
 
     suspend fun next(value: T) {
         whenConsumerReady {
             this.value = value
-            this.hasValue = true
+            this.hasValue.value = true
         }
     }
 
     suspend fun error(error: Throwable?) {
         whenConsumerReady {
             this.error = error
-            this.done = true
+            this.done.value = true
         }
     }
 
     suspend fun complete() {
         whenConsumerReady {
-            this.done = true
+            this.done.value = true
         }
     }
 
@@ -72,10 +72,10 @@ class ResumableCollector<T>: Resumable() {
             readyConsumer()
             awaitSignal()
 
-            if (hasValue) {
+            if (hasValue.value) {
                 val v = value
                 value = uninitialized()
-                hasValue = false
+                hasValue.value = false
 
                 try {
                     if (coroutineContext.isActive) {
@@ -91,7 +91,7 @@ class ResumableCollector<T>: Resumable() {
                 }
             }
 
-            if (done) {
+            if (done.value) {
                 error?.let { throw it }
                 break
             }

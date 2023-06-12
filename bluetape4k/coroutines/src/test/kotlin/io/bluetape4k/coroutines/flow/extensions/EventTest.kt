@@ -1,5 +1,6 @@
 package io.bluetape4k.coroutines.flow.extensions
 
+import io.bluetape4k.coroutines.flow.exception.FlowNoElementException
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
@@ -108,7 +109,7 @@ class EventTest: AbstractFlowTest() {
             Event.Error(RuntimeException("1")).valueOrThrow()
         }.message shouldBeEqualTo "1"
 
-        assertFailsWith<NoSuchElementException> {
+        assertFailsWith<FlowNoElementException> {
             Event.Complete.valueOrThrow()
         }.message shouldBeEqualTo "Event.Complete has no value!"
     }
@@ -134,13 +135,13 @@ class EventTest: AbstractFlowTest() {
     fun `errorOrThrow for Event`() {
         val ex = RuntimeException("Boom!")
 
-        assertFailsWith<NoSuchElementException> {
+        assertFailsWith<FlowNoElementException> {
             Event.Value(1).errorOrThrow()
         }.message shouldBeEqualTo "Event.Value(1) has no error!"
 
         Event.Error(ex).errorOrThrow() shouldBeEqualTo ex
 
-        assertFailsWith<NoSuchElementException> {
+        assertFailsWith<FlowNoElementException> {
             Event.Complete.errorOrThrow()
         }.message shouldBeEqualTo "Event.Complete has no error!"
     }

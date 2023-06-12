@@ -23,7 +23,7 @@ class FlowConcatMapEager<T, R>(
         coroutineScope {
             val resumeOutput = Resumable()
             val innerQueues = ConcurrentLinkedQueue<InnerQueue<R>>()
-            var innerDone by atomic(false)
+            val innerDone = atomic(false)
 
             launch {
                 try {
@@ -47,7 +47,7 @@ class FlowConcatMapEager<T, R>(
                         }
                     }
                 } finally {
-                    innerDone = true
+                    innerDone.value = true
                     resumeOutput.resume()
                 }
             }
@@ -55,7 +55,7 @@ class FlowConcatMapEager<T, R>(
             var innerQueue: InnerQueue<R>? = null
             while (isActive) {
                 if (innerQueue == null) {
-                    val done = innerDone
+                    val done = innerDone.value
                     innerQueue = innerQueues.poll()
 
                     if (done && innerQueue == null) {

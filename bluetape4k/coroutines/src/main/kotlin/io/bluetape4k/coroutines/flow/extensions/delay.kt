@@ -21,3 +21,10 @@ fun delayedFlow(delayMillis: Long): Flow<Long> = flow {
     delay(delayMillis.coerceAtLeast(0L))
     emit(0L)
 }
+
+fun <T> delayedFlow(value: T, duration: Duration): Flow<T> = delayedFlow(value, duration.toMillis())
+
+fun <T> delayedFlow(value: T, delayMillis: Long): Flow<T> = flow {
+    delay(delayMillis.coerceAtLeast(0))
+    emit(value)
+}

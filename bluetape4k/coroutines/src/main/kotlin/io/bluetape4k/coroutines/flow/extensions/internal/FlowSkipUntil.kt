@@ -2,6 +2,7 @@ package io.bluetape4k.coroutines.flow.extensions.internal
 
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.AbstractFlow
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +28,7 @@ internal class FlowSkipUntil<T, U>(
     override suspend fun collectSafely(collector: FlowCollector<T>) = coroutineScope {
         val gate = atomic(false)
 
-        val job = launch {
+        val job = launch(start = CoroutineStart.UNDISPATCHED) {
             try {
                 notifier.take(1).collect()
             } catch (e: CancellationException) {

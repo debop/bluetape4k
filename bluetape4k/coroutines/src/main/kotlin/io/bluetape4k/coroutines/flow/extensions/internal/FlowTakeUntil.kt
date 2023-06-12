@@ -2,6 +2,7 @@ package io.bluetape4k.coroutines.flow.extensions.internal
 
 import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.AbstractFlow
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +33,7 @@ internal class FlowTakeUntil<T, U>(
     override suspend fun collectSafely(collector: FlowCollector<T>) = coroutineScope {
         val gate = atomic(false)
 
-        val job = launch {
+        val job = launch(start = CoroutineStart.UNDISPATCHED) {
             try {
                 notifier.collect {
                     throw STOP

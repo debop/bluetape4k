@@ -28,25 +28,24 @@ class UnicastSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
     private val queue = ConcurrentLinkedQueue<T>()
     private var terminal by atomic<Throwable?>(null)
 
-    private val _current = atomic<FlowCollector<T>?>(null)
-    private val current by _current
+    private val current = atomic<FlowCollector<T>?>(null)
 
     val collectorCancelled: Boolean
-        get() = current == terminatedCollector
+        get() = current.value == terminatedCollector
 
     override val hasCollectors: Boolean
-        get() = current != null && current != terminatedCollector
+        get() = current.value != null && current.value != terminatedCollector
 
     override val collectorCount: Int
         get() = if (hasCollectors) 1 else 0
 
     override suspend fun collectSafely(collector: FlowCollector<T>) {
         while (true) {
-            val curr = current
+            val curr = current.value
             if (curr != null) {
                 error("Only one collector allowed.")
             }
-            if (_current.compareAndSet(curr, collector)) {
+            if (current.compareAndSet(curr, collector)) {
                 break
             }
         }
@@ -57,7 +56,7 @@ class UnicastSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
 
             // 종료되었거나 요소가 없을 때
             if (t != null && v == null) {
-                _current.getAndSet(terminatedCollector as FlowCollector<T>)
+                current.getAndSet(terminatedCollector as FlowCollector<T>)
                 if (t != terminated) {
                     throw t
                 }
@@ -67,7 +66,7 @@ class UnicastSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
                 try {
                     collector.emit(v)
                 } catch (e: Throwable) {
-                    _current.getAndSet(terminatedCollector as FlowCollector<T>)
+                    current.getAndSet(terminatedCollector as FlowCollector<T>)
                     queue.clear()
                     throw e
                 }
@@ -78,7 +77,7 @@ class UnicastSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
     }
 
     override suspend fun emit(value: T) {
-        if (current != terminatedCollector) {
+        if (current.value != terminatedCollector) {
             queue.offer(value)
             resumable.resume()
         } else {

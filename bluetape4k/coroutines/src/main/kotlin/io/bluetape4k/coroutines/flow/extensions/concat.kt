@@ -29,6 +29,12 @@ fun <T> Flow<T>.startWith(item: T, vararg items: T): Flow<T> =
         this
     )
 
+fun <T> Flow<T>.startWith(valueSupplier: suspend () -> T): Flow<T> =
+    concat(
+        flow { emit(valueSupplier()) },
+        this
+    )
+
 fun <T> Flow<T>.startWith(f1: Flow<T>, vararg fs: Flow<T>): Flow<T> = flow {
     emitAll(f1)
     fs.forEach { emitAll(it) }
@@ -36,7 +42,8 @@ fun <T> Flow<T>.startWith(f1: Flow<T>, vararg fs: Flow<T>): Flow<T> = flow {
 }
 
 fun <T> Flow<T>.endWith(item: T, vararg items: T): Flow<T> =
-    concat(this,
+    concat(
+        this,
         flow {
             emit(item)
             emitAll(items.asFlow())

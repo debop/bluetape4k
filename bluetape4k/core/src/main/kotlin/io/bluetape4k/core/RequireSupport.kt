@@ -119,10 +119,13 @@ fun <T> T.requireNegativeNumber(parameterName: String): T where T: Number, T: Co
     toDouble().requireLt(0.0, parameterName)
 }
 
-fun <T> Collection<T>?.requireNotEmpty(parameterName: String) = apply {
+fun <T> Array<T>?.requireNotEmpty(parameterName: String) = apply {
     require(!this.isNullOrEmpty()) { "$parameterName[$this] must not be null or empty." }
 }
 
+fun <T> Collection<T>?.requireNotEmpty(parameterName: String) = apply {
+    require(!this.isNullOrEmpty()) { "$parameterName[$this] must not be null or empty." }
+}
 
 fun <K, V> Map<K, V>?.requireNotEmpty(parameterName: String) = apply {
     require(!this.isNullOrEmpty()) { "$parameterName must not be null or empty." }

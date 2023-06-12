@@ -24,26 +24,26 @@ class FlowFlatMapDrop<T, R>(
     override suspend fun collectSafely(collector: FlowCollector<R>) {
         coroutineScope {
             val resume = Resumable()
-            var consumerReady by atomic(true)
-            var value by atomic<T?>(null)
-            var hasValue by atomic(false)
-            var done by atomic(false)
-            var error by atomic<Throwable?>(null)
+            val consumerReady = atomic(true)
+            val value = atomic<T?>(null)
+            val hasValue = atomic(false)
+            val done = atomic(false)
+            val error = atomic<Throwable?>(null)
 
             val job = launch(start = CoroutineStart.UNDISPATCHED) {
                 try {
                     source.collect { item ->
                         log.trace { "source collecting ... $item" }
-                        if (consumerReady) {
-                            consumerReady = false
-                            value = item
-                            hasValue = true
+                        if (consumerReady.value) {
+                            consumerReady.value = false
+                            value.value = item
+                            hasValue.value = true
                             resume.resume()
                         }
                     }
-                    done = true
+                    done.value = true
                 } catch (ex: Throwable) {
-                    error = ex
+                    error.value = ex
                 }
                 resume.resume()
             }
@@ -51,16 +51,16 @@ class FlowFlatMapDrop<T, R>(
             while (coroutineContext.isActive) {
                 resume.await()
 
-                error?.let { if (!hasValue) throw it }
+                error.value?.let { if (!hasValue.value) throw it }
 
-                if (done && !hasValue) {
+                if (done.value && !hasValue.value) {
                     break
                 }
 
-                if (hasValue) {
-                    val v = value!!
-                    value = null
-                    hasValue = false
+                if (hasValue.value) {
+                    val v = value.value!!
+                    value.value = null
+                    hasValue.value = false
 
                     try {
                         mapper(v)
@@ -72,7 +72,7 @@ class FlowFlatMapDrop<T, R>(
                     }
                 }
 
-                consumerReady = true
+                consumerReady.value = true
             }
         }
     }

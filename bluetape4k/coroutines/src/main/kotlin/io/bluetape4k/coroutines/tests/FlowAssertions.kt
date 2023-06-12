@@ -7,9 +7,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.toSet
+import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import kotlin.test.assertFailsWith
+
+suspend inline fun <T> Flow<T>.assertEmpty() {
+    toFastList().shouldBeEmpty()
+}
 
 suspend inline fun <T> Flow<T>.assertResult(vararg values: T) {
     toFastList() shouldBeEqualTo values.toFastList()

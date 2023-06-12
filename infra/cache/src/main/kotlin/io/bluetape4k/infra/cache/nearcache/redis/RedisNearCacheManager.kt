@@ -54,7 +54,7 @@ class RedisNearCacheManager(
     private val statBeans = ConcurrentHashMap<NearCache<*, *>, NearCacheStatisticsMXBean>()
     private val managementBeans = ConcurrentHashMap<NearCache<*, *>, NearCacheManagementMXBean>()
 
-    private var closed by atomic(false)
+    private val closed = atomic(false)
 
 //    @Volatile
 //    private var closed: Boolean = false
@@ -415,8 +415,8 @@ class RedisNearCacheManager(
 
     private fun getName(name: String, cache: NearCache<*, *>): String {
         return "javax.cache:type=NearCache$name" +
-            ",CacheManager=${cache.cacheManager.uri.toString().replace(",|:|=|\n", ".")}" +
-            ",Cache=${cache.name.replace(",|:|=|\n", ".")}"
+               ",CacheManager=${cache.cacheManager.uri.toString().replace(",|:|=|\n", ".")}" +
+               ",Cache=${cache.name.replace(",|:|=|\n", ".")}"
     }
 
     /**
@@ -450,6 +450,7 @@ class RedisNearCacheManager(
         log.info { "현재는 지원하지 않습니다." }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun unregisterStatisticsBean(cache: NearCache<*, *>) {
         log.info { "현재는 지원하지 않습니다." }
     }
@@ -504,7 +505,7 @@ class RedisNearCacheManager(
                 }
                 log.debug { "Shutdown redisson instance. redisson=$redisson" }
                 redisson?.shutdown()
-                closed = true
+                closed.value = true
             }
         }
     }
@@ -528,7 +529,7 @@ class RedisNearCacheManager(
      * @return true if this [CacheManager] instance is closed; false if it
      * is still open
      */
-    override fun isClosed(): Boolean = closed
+    override fun isClosed(): Boolean = closed.value
 
     /**
      * Provides a standard mechanism to access the underlying concrete caching

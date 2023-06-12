@@ -1,5 +1,7 @@
 package io.bluetape4k.coroutines.flow.extensions
 
+import io.bluetape4k.coroutines.flow.exception.FlowNoElementException
+
 /**
  * reactive signal types: value, error and complete 을 가진 signal 정보를 제공합니다.
  */
@@ -35,7 +37,7 @@ fun <T> Event<T>.valueOrNull(): T? = valueOrDefault(null)
 fun <T> Event<T>.valueOrDefault(defaultValue: T): T = valueOrElse { defaultValue }
 
 fun <T> Event<T>.valueOrThrow(): T =
-    valueOrElse { throw (it ?: NoSuchElementException("$this has no value!")) }
+    valueOrElse { throw (it ?: FlowNoElementException("$this has no value!")) }
 
 
 inline fun <T> Event<T>.valueOrElse(defaultValue: (Throwable?) -> T): T = when (this) {
@@ -51,4 +53,4 @@ fun <T> Event<T>.errorOrNull(): Throwable? = when (this) {
 }
 
 fun <T> Event<T>.errorOrThrow(): Throwable =
-    errorOrNull() ?: throw NoSuchElementException("$this has no error!")
+    errorOrNull() ?: throw FlowNoElementException("$this has no error!")

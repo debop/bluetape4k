@@ -21,13 +21,13 @@ class BufferedResumableCollector<T> private constructor(capacity: Int): Resumabl
 
     private val queue: SpscArrayQueue<T> = SpscArrayQueue(capacity)
 
-    private var done by atomic(false)
-    private var cancelled by atomic(false)
+    private val done = atomic(false)
+    private val cancelled = atomic(false)
 
+    @Volatile
     private var error: Throwable? = null
 
-    private var _available = atomic(0L)
-    private val available by _available
+    private val available = atomic(0L)
 
     private val valueReady = Resumable()
 
@@ -35,34 +35,34 @@ class BufferedResumableCollector<T> private constructor(capacity: Int): Resumabl
     private val limit: Int = capacity - (capacity shr 2)
 
     suspend fun next(value: T) {
-        while (!cancelled) {
+        while (!cancelled.value) {
             if (queue.offer(value)) {
-                if (_available.getAndIncrement() == 0L) {
+                if (available.getAndIncrement() == 0L) {
                     valueReady.resume()
                 }
                 break
             }
             await()
         }
-        if (cancelled) {
+        if (cancelled.value) {
             throw CancellationException("Cancel in next.")
         }
     }
 
     fun error(ex: Throwable?) {
         error = ex
-        done = true
+        done.value = true
         valueReady.resume()
     }
 
     fun complete() {
-        done = true
+        done.value = true
         valueReady.resume()
     }
 
     suspend fun drain(
         collector: FlowCollector<T>,
-        onCrash: ((BufferedResumableCollector<T>) -> Unit)? = null
+        onCrash: ((BufferedResumableCollector<T>) -> Unit)? = null,
     ) {
         var consumed = 0L
         val limit = this.limit.toLong()
@@ -70,7 +70,7 @@ class BufferedResumableCollector<T> private constructor(capacity: Int): Resumabl
         while (true) {
             val ne = !queue.poll(output)
 
-            if (done && ne) {
+            if (done.value && ne) {
                 error?.let { throw it }
                 break
             }
@@ -82,14 +82,14 @@ class BufferedResumableCollector<T> private constructor(capacity: Int): Resumabl
                     collector.emit(output[0] as T)
                 } catch (ex: Throwable) {
                     onCrash?.invoke(this)
-                    cancelled = true
+                    cancelled.value = true
                     resume()
 
                     throw ex
                 }
 
                 if (consumed++ == limit) {
-                    _available.addAndGet(-consumed)
+                    available.addAndGet(-consumed)
                     consumed = 0L
                     resume()
                 }
@@ -97,7 +97,7 @@ class BufferedResumableCollector<T> private constructor(capacity: Int): Resumabl
                 continue
             }
 
-            if (_available.addAndGet(-consumed) == 0L) {
+            if (available.addAndGet(-consumed) == 0L) {
                 resume()
                 valueReady.await()
             }
