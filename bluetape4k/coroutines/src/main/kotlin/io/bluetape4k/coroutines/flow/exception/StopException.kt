@@ -1,4 +1,4 @@
-package io.bluetape4k.coroutines.flow.extensions.internal
+package io.bluetape4k.coroutines.flow.exception
 
 import kotlinx.coroutines.flow.FlowCollector
 import kotlin.coroutines.cancellation.CancellationException

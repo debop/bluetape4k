@@ -12,7 +12,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentLinkedQueue
 
-
+@Deprecated("use concatArrayEagerInternal")
 class FlowConcatArrayEager<T>(private val sources: List<Flow<T>>): AbstractFlow<T>() {
 
     companion object: KLogging()

@@ -12,21 +12,21 @@ import kotlinx.coroutines.flow.channelFlow
  *
  * 참고: [Spring R2DBC OneToMany RowMapping](https://heesutory.tistory.com/33)
  */
-fun <T, V: Any> Flow<T>.bufferUntilChanged(groupSelector: (T) -> V): Flow<List<T>> = channelFlow {
+fun <T, K> Flow<T>.bufferUntilChanged(groupSelector: (T) -> K): Flow<List<T>> = channelFlow {
     // HINT: groupBy 를 사용할 수도 있다
     //    return this@bufferUntilChanged
     //        .groupBy { groupSelector(it) }
     //        .flatMapMerge { it.toList() }
 
 
+    val self = this@bufferUntilChanged
     val elements = mutableListOf<T>()
-    var prevGroup: V? = null
+    var prevGroup: K? = null
 
-    this@bufferUntilChanged.collect { element ->
+    self.collect { element ->
         val currentGroup = groupSelector(element)
-        if (prevGroup == null) {
-            prevGroup = currentGroup
-        }
+        prevGroup = prevGroup ?: currentGroup
+
         if (prevGroup == currentGroup) {
             elements.add(element)
         } else {
@@ -37,6 +37,7 @@ fun <T, V: Any> Flow<T>.bufferUntilChanged(groupSelector: (T) -> V): Flow<List<T
         }
     }
     if (elements.isNotEmpty()) {
-        send(elements)
+        send(elements.toList())
+        elements.clear()
     }
 }

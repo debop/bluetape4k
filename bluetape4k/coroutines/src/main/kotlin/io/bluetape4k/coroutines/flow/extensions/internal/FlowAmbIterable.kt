@@ -16,6 +16,7 @@ import kotlinx.coroutines.yield
  * cancelling the rest.
  * @param sources the array of [Flow]s
  */
+@Deprecated("use ambInternal")
 internal class FlowAmbIterable<T>(private val sources: Iterable<Flow<T>>): Flow<T> {
 
     companion object: KLogging() {

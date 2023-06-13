@@ -19,6 +19,7 @@ import kotlin.coroutines.cancellation.CancellationException
  * @property source main source
  * @property notifier  notifier source
  */
+@Deprecated("user takeUntilInternal")
 internal class FlowTakeUntil<T, U>(
     private val source: Flow<T>,
     private val notifier: Flow<U>,

@@ -1,3 +1,6 @@
+@file:JvmMultifileClass
+@file:JvmName("FlowExtensionsKt")
+
 package io.bluetape4k.coroutines.flow.extensions
 
 import kotlinx.coroutines.flow.Flow
@@ -5,6 +8,9 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 
+/**
+ * [f1], [f2], [fs] 순서대로 collect 합니다.
+ */
 fun <T> concat(f1: Flow<T>, f2: Flow<T>, vararg fs: Flow<T>): Flow<T> = flow {
     emitAll(f1)
     emitAll(f2)
@@ -13,6 +19,9 @@ fun <T> concat(f1: Flow<T>, f2: Flow<T>, vararg fs: Flow<T>): Flow<T> = flow {
     }
 }
 
+/**
+ * source flow 를 모두 collect 하고난 후, [f1], [fs] 를 collect 합니다.
+ */
 fun <T> Flow<T>.concatWith(f1: Flow<T>, vararg fs: Flow<T>): Flow<T> =
     concat(this, f1, *fs)
 

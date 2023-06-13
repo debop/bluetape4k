@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
+@Deprecated("user multicastInternal")
 internal class FlowMulticastFunction<T, R>(
     private val source: Flow<T>,
     private val subjectSupplier: () -> SubjectApi<T>,

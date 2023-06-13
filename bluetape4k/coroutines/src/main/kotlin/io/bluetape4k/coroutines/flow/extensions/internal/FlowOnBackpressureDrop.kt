@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.launch
 
-
+@Deprecated("use onBackpressureDropInternal")
 internal class FlowOnBackpressureDrop<T>(private val source: Flow<T>): AbstractFlow<T>() {
 
     companion object: KLogging()

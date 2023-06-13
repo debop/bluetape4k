@@ -3,7 +3,6 @@
 
 package io.bluetape4k.coroutines.flow.extensions
 
-import io.bluetape4k.coroutines.flow.extensions.internal.FlowMulticastFunction
 import io.bluetape4k.coroutines.flow.extensions.subject.ReplaySubject
 import kotlinx.coroutines.flow.Flow
 import java.time.Duration
@@ -39,4 +38,5 @@ fun <T, R> Flow<T>.replay(
     replaySubjectSupplier: () -> ReplaySubject<T>,
     transform: suspend (Flow<T>) -> Flow<R>,
 ): Flow<R> =
-    FlowMulticastFunction(this, replaySubjectSupplier, transform)
+    multicastInternal(this, replaySubjectSupplier, transform)
+// FlowMulticastFunction(this, replaySubjectSupplier, transform)

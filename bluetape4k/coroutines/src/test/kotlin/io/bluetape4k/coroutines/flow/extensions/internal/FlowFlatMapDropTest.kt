@@ -13,6 +13,7 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
+@Deprecated("move to FlatMapDropTest")
 class FlowFlatMapDropTest {
 
     companion object: KLogging()

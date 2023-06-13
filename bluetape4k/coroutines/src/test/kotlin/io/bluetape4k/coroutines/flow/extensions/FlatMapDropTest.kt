@@ -5,42 +5,25 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
-class FlatMapFirstTest: AbstractFlowTest() {
+class FlatMapDropTest: AbstractFlowTest() {
 
     companion object: KLogging()
 
     @Test
-    fun `flatMapFirst for simple flow`() = runTest {
-        flowOf("one", "two")
-            .flatMapFirst { v ->
-                log.trace { "source item=$v" }
-                flow {
-                    delay(10L)
-                    emit(v)
-                }
-            }
-            .onEach { log.trace { "item=$it" } }
-            .assertResult("one")
-    }
-
-    @Test
-    fun `flatMapFirst for range`() = runTest {
+    fun `flat map drop`() = runTest {
         range(1, 10)
             .onEach { delay(100) }
-            .flatMapFirst {
+            .flatMapDrop {
                 log.trace { "source item=$it" }
                 range(it * 100, 5)
                     .onEach { delay(20) }
             }
-            .onEach { log.trace { "item=$it" } }
             .assertResult(
                 100, 101, 102, 103, 104,
                 300, 301, 302, 303, 304,
@@ -51,18 +34,17 @@ class FlatMapFirstTest: AbstractFlowTest() {
     }
 
     @Test
-    fun `flat map first with take`() = runTest {
+    fun `flat map drop with take`() = runTest {
         val item = atomic(0)
 
         range(1, 10)
             .onEach { delay(100) }
-            .flatMapFirst {
+            .flatMapDrop {
                 log.trace { "source item=$it" }
                 item.value = it
                 range(it * 100, 5)
                     .onEach { delay(30) }
             }
-            .onEach { log.trace { "item=$it" } }
             .take(7)
             .assertResult(
                 100, 101, 102, 103, 104,

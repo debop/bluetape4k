@@ -3,9 +3,7 @@ package io.bluetape4k.coroutines.flow.extensions
 import app.cash.turbine.test
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
@@ -26,16 +24,14 @@ class ChunkedTest: AbstractFlowTest() {
 
     @Test
     fun `chunk flow`() = runTest {
-        val chunkCounter = atomic(0)
-        val chunkCount by chunkCounter
+        var chunkCount = 0
         val chunkSize = 5
 
-        val chunks = (1..20).asFlow()
-            .chunked(chunkSize)
+        val chunks = range(1, 20).chunked(chunkSize)
             .onEach { chunked ->
                 log.trace { "chunked=$chunked" }
                 chunked.size shouldBeEqualTo chunkSize
-                chunkCounter.incrementAndGet()
+                chunkCount++
             }
             .toList()
 
@@ -46,16 +42,14 @@ class ChunkedTest: AbstractFlowTest() {
 
     @Test
     fun `chunk flow with remaining`() = runTest {
-        val chunkCounter = atomic(0)
-        val chunkCount by chunkCounter
+        var chunkCount = 0
         val chunkSize = 3
 
-        val chunks = (1..20).asFlow()
-            .chunked(chunkSize)
+        val chunks = range(1, 20).chunked(chunkSize)
             .onEach { chunked ->
                 log.trace { "chunked=$chunked" }
                 chunked.size shouldBeLessOrEqualTo chunkSize
-                chunkCounter.incrementAndGet()
+                chunkCount++
             }
             .toList()
 
@@ -66,7 +60,7 @@ class ChunkedTest: AbstractFlowTest() {
 
     @Test
     fun `chunked flow - check with turbine`() = runTest {
-        flowOfRange(0, 10)
+        range(0, 10)
             .chunked(3)
             .test {
                 awaitItem() shouldBeEqualTo listOf(0, 1, 2)
@@ -88,7 +82,7 @@ class ChunkedTest: AbstractFlowTest() {
 
     @Test
     fun `chunked with cancellation`() = runTest {
-        val chunked = flowOfRange(0, 10)
+        range(0, 10)
             .chunked(4)
             .take(2)
             .test {
@@ -96,12 +90,6 @@ class ChunkedTest: AbstractFlowTest() {
                 awaitItem() shouldBeEqualTo listOf(4, 5, 6, 7)
                 awaitComplete()
             }
-//            .toList()
-//
-//        chunked shouldBeEqualTo listOf(
-//            listOf(0, 1, 2, 3),
-//            listOf(4, 5, 6, 7)
-//        )
     }
 
     @Test
@@ -129,9 +117,6 @@ class ChunkedTest: AbstractFlowTest() {
         job1.cancel()
         job2.cancel()
 
-        results shouldBeEqualTo listOf(
-            listOf(1, 2, 3),
-            listOf(4, 5, 6)
-        )
+        results shouldBeEqualTo listOf(listOf(1, 2, 3), listOf(4, 5, 6))
     }
 }

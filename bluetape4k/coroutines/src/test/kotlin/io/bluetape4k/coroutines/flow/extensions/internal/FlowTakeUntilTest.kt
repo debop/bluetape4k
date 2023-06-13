@@ -9,6 +9,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
+@Deprecated("move TakeUntilTest")
 class FlowTakeUntilTest {
 
     @Test

@@ -1,10 +1,9 @@
 package io.bluetape4k.coroutines.flow.extensions
 
+import io.bluetape4k.coroutines.flow.exception.StopFlowException
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import io.bluetape4k.support.uninitialized
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.isActive
 import kotlin.coroutines.coroutineContext
@@ -80,9 +79,9 @@ class ResumableCollector<T>: Resumable() {
                 try {
                     if (coroutineContext.isActive) {
                         collector.emit(v)
-                        log.trace { "drain value. v=$v" }
+                        // log.trace { "drain value. v=$v" }
                     } else {
-                        throw CancellationException("current coroutine is not active")
+                        throw StopFlowException("current coroutine is not active")
                     }
                 } catch (ex: Throwable) {
                     onComplete?.invoke(this)

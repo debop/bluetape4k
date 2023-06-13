@@ -3,8 +3,8 @@
 
 package io.bluetape4k.coroutines.flow.extensions
 
-import io.bluetape4k.coroutines.flow.extensions.internal.StopException
-import io.bluetape4k.coroutines.flow.extensions.internal.checkOwnership
+import io.bluetape4k.coroutines.flow.exception.StopException
+import io.bluetape4k.coroutines.flow.exception.checkOwnership
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

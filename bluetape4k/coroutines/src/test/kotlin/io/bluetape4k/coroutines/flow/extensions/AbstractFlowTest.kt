@@ -24,7 +24,14 @@ abstract class AbstractFlowTest {
     data class Order(
         val id: Int,
         val items: List<OrderItem>,
-    )
+    ) {
+        fun prettyString(): String = buildString {
+            appendLine("Order[$id]")
+            items.forEachIndexed { index, item ->
+                appendLine("item[$index]=$item")
+            }
+        }
+    }
 
     data class OrderItem(
         val id: Int,

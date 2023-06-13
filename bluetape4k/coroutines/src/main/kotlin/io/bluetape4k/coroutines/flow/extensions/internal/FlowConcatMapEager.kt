@@ -12,6 +12,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentLinkedQueue
 
+@Deprecated("use concatMapEagerInternal")
 class FlowConcatMapEager<T, R>(
     private val source: Flow<T>,
     private val mapper: suspend (t: T) -> Flow<R>,

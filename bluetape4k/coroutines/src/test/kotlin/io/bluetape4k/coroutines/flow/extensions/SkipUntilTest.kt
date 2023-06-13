@@ -1,8 +1,8 @@
 package io.bluetape4k.coroutines.flow.extensions
 
+import io.bluetape4k.coroutines.tests.assertFailure
 import io.bluetape4k.coroutines.tests.assertResult
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFailsWith
 
 class SkipUntilTest: AbstractFlowTest() {
 
@@ -56,17 +55,14 @@ class SkipUntilTest: AbstractFlowTest() {
             emit(2)
             throw RuntimeException("Boom!")
         }
-        val notifier = flowOf(100).onEach {
-            delay(10)
-        }
 
-        assertFailsWith<RuntimeException> {
-            source
-                .skipUntil(notifier)
-                .onEach {
-                    it shouldBeEqualTo 2
-                }
-                .collect()
-        }
+        val notifier = flowOf(100).onEach { delay(10) }
+
+        source
+            .skipUntil(notifier)
+            .onEach {
+                it shouldBeEqualTo 2
+            }
+            .assertFailure<Int, RuntimeException>(2)
     }
 }

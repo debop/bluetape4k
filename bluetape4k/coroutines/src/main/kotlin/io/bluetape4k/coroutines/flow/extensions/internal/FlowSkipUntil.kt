@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
  * @property source main source
  * @property notifier  notifier source
  */
+@Deprecated("use skipUntilInternal")
 internal class FlowSkipUntil<T, U>(
     private val source: Flow<T>,
     private val notifier: Flow<U>,

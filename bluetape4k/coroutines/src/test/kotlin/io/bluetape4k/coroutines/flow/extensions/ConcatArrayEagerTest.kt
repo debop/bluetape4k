@@ -1,7 +1,5 @@
-package io.bluetape4k.coroutines.flow.extensions.internal
+package io.bluetape4k.coroutines.flow.extensions
 
-import io.bluetape4k.coroutines.flow.extensions.concatArrayEager
-import io.bluetape4k.coroutines.flow.extensions.flowOfRange
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -14,8 +12,7 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
-@Deprecated("move to ConcatArrayEagerTest")
-class FlowConcatArrayEagerTest {
+class ConcatArrayEagerTest: AbstractFlowTest() {
 
     companion object: KLogging()
 
@@ -24,7 +21,7 @@ class FlowConcatArrayEagerTest {
         val state1 = atomic(0)
         val state2 = atomic(0)
 
-        val flow1 = flowOfRange(1, 5)
+        val flow1 = range(1, 5)
             .onStart {
                 delay(200)
                 state1.value = 1
@@ -32,7 +29,7 @@ class FlowConcatArrayEagerTest {
                 log.debug { "flow1 item=$it" }
             }
 
-        val flow2 = flowOfRange(6, 5)
+        val flow2 = range(6, 5)
             .onStart {
                 state2.value = state1.value
             }.onEach {
@@ -48,15 +45,15 @@ class FlowConcatArrayEagerTest {
 
     @Test
     fun `concat one flow`() = runTest {
-        concatArrayEager(flowOfRange(1, 5))
+        concatArrayEager(range(1, 5))
             .assertResult(1, 2, 3, 4, 5)
     }
 
     @Test
     fun `concat with take`() = runTest {
         concatArrayEager(
-            flowOfRange(1, 5).onStart { delay(100) },
-            flowOfRange(6, 5)
+            range(1, 5).onStart { delay(100) },
+            range(6, 5)
         )
             .take(6)
             .assertResult(1, 2, 3, 4, 5, 6)
@@ -64,18 +61,17 @@ class FlowConcatArrayEagerTest {
 
     @Test
     fun `cancel concat`() = runTest {
-        val counter = atomic(0)
+        var counter = 0
 
         concatArrayEager(
-            flowOfRange(1, 5).onEach {
+            range(1, 5).onEach {
                 delay(200)
-                counter.incrementAndGet()
+                counter++
             }
         )
             .take(3)
             .assertResult(1, 2, 3)
 
-        delay(1200)
-        counter.value shouldBeEqualTo 3
+        counter shouldBeEqualTo 3
     }
 }

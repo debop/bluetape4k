@@ -1,7 +1,5 @@
-package io.bluetape4k.coroutines.flow.extensions.internal
+package io.bluetape4k.coroutines.flow.extensions
 
-import io.bluetape4k.coroutines.flow.extensions.flowOfRange
-import io.bluetape4k.coroutines.flow.extensions.onBackpressureDrop
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
@@ -11,14 +9,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
-@Deprecated("move to OnBackpressureDropTest")
-class FlowOnBackpressureDropTest {
+class OnBackpressureDropTest: AbstractFlowTest() {
 
     companion object: KLogging()
 
     @Test
     fun `drop backpressure items`() = runTest {
-        flowOfRange(0, 10)
+        range(0, 10)
             .onEach {
                 log.trace { "source=$it" }
                 delay(100L)

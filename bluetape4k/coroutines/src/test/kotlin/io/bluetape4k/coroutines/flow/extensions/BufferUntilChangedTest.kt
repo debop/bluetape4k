@@ -31,7 +31,7 @@ class BufferUntilChangedTest: AbstractFlowTest() {
         orders shouldHaveSize orderCount
         orders.all { it.items.size == itemCount }.shouldBeTrue()
         orders.forEach { order ->
-            log.trace { "order=$order" }
+            log.trace { "order=${order.prettyString()}" }
         }
     }
 
