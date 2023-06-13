@@ -21,7 +21,7 @@ class RangeTest: AbstractFlowTest() {
 
     @Test
     fun `range of int`() = runTest {
-        range(0, 3)
+        rangeInt(0, 3).log("rangeInt")
             .test {
                 awaitItem() shouldBeEqualTo 0
                 awaitItem() shouldBeEqualTo 1
@@ -32,7 +32,7 @@ class RangeTest: AbstractFlowTest() {
 
     @Test
     fun `range of long`() = runTest {
-        range(0L, 3)
+        rangeLong(0L, 3).log("rangeLong")
             .test {
                 awaitItem() shouldBeEqualTo 0L
                 awaitItem() shouldBeEqualTo 1L

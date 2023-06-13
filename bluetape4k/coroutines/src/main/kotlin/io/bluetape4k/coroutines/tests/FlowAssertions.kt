@@ -17,6 +17,10 @@ suspend inline fun <T> Flow<T>.assertEmpty() {
     toFastList().shouldBeEmpty()
 }
 
+suspend inline fun <T> Flow<T>.assertResult(expected: Flow<T>) {
+    toFastList() shouldBeEqualTo expected.toFastList()
+}
+
 suspend inline fun <T> Flow<T>.assertResult(vararg values: T) {
     toFastList() shouldBeEqualTo values.toFastList()
 }
@@ -24,6 +28,11 @@ suspend inline fun <T> Flow<T>.assertResult(vararg values: T) {
 suspend inline fun <T> Flow<T>.assertResultSet(vararg values: T) {
     toUnifiedSet() shouldBeEqualTo values.toUnifiedSet()
 }
+
+suspend inline fun <T> Flow<T>.assertResultSet(values: Iterable<T>) {
+    toUnifiedSet() shouldBeEqualTo values.toUnifiedSet()
+}
+
 
 suspend inline fun <T, reified E: Throwable> Flow<T>.assertFailure(vararg values: T) {
     val list = fastListOf<T>()

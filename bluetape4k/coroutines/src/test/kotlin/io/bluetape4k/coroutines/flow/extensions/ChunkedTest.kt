@@ -1,22 +1,18 @@
 package io.bluetape4k.coroutines.flow.extensions
 
 import app.cash.turbine.test
+import io.bluetape4k.coroutines.tests.assertError
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeLessOrEqualTo
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFailsWith
 
 class ChunkedTest: AbstractFlowTest() {
 
@@ -27,41 +23,37 @@ class ChunkedTest: AbstractFlowTest() {
         var chunkCount = 0
         val chunkSize = 5
 
-        val chunks = range(1, 20).chunked(chunkSize)
-            .onEach { chunked ->
-                log.trace { "chunked=$chunked" }
-                chunked.size shouldBeEqualTo chunkSize
-                chunkCount++
+        range(1, 20).log("source")
+            .chunked(chunkSize).log("chunked")
+            .onEach { chunkCount++ }
+            .test {
+                awaitItem() shouldBeEqualTo listOf(1, 2, 3, 4, 5)
+                awaitItem() shouldBeEqualTo listOf(6, 7, 8, 9, 10)
+                awaitItem() shouldBeEqualTo listOf(11, 12, 13, 14, 15)
+                awaitItem() shouldBeEqualTo listOf(16, 17, 18, 19, 20)
+                awaitComplete()
             }
-            .toList()
 
         chunkCount shouldBeEqualTo 4
-        chunks.size shouldBeEqualTo 4
-        chunks.last() shouldBeEqualTo listOf(16, 17, 18, 19, 20)
     }
 
     @Test
     fun `chunk flow with remaining`() = runTest {
-        var chunkCount = 0
-        val chunkSize = 3
-
-        val chunks = range(1, 20).chunked(chunkSize)
-            .onEach { chunked ->
-                log.trace { "chunked=$chunked" }
-                chunked.size shouldBeLessOrEqualTo chunkSize
-                chunkCount++
+        range(1, 10).log("source")
+            .chunked(3).log("chunked")
+            .test {
+                awaitItem() shouldBeEqualTo listOf(1, 2, 3)
+                awaitItem() shouldBeEqualTo listOf(4, 5, 6)
+                awaitItem() shouldBeEqualTo listOf(7, 8, 9)
+                awaitItem() shouldBeEqualTo listOf(10)
+                awaitComplete()
             }
-            .toList()
-
-        chunkCount shouldBeEqualTo 7
-        chunks.size shouldBeEqualTo 7
-        chunks.last() shouldBeEqualTo listOf(19, 20)
     }
 
     @Test
     fun `chunked flow - check with turbine`() = runTest {
-        range(0, 10)
-            .chunked(3)
+        range(0, 10).log("source")
+            .chunked(3).log("chunked")
             .test {
                 awaitItem() shouldBeEqualTo listOf(0, 1, 2)
                 awaitItem() shouldBeEqualTo listOf(3, 4, 5)
@@ -73,17 +65,15 @@ class ChunkedTest: AbstractFlowTest() {
 
     @Test
     fun `flow 에 예외가 있으면 예외가 발생합니다`() = runTest {
-        assertFailsWith<RuntimeException> {
-            flow<Int> { throw RuntimeException("Boom!") }
-                .chunked(3)
-                .collect()
-        }
+        flow<Int> { throw RuntimeException("Boom!") }.log("source")
+            .chunked(3).log("chunked")
+            .assertError<RuntimeException>()
     }
 
     @Test
     fun `chunked with cancellation`() = runTest {
-        range(0, 10)
-            .chunked(4)
+        range(0, 10).log("source")
+            .chunked(4).log("chunked")
             .take(2)
             .test {
                 awaitItem() shouldBeEqualTo listOf(0, 1, 2, 3)

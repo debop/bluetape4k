@@ -2,7 +2,6 @@ package io.bluetape4k.coroutines.flow.extensions
 
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
@@ -21,20 +20,14 @@ class ConcatArrayEagerTest: AbstractFlowTest() {
         val state1 = atomic(0)
         val state2 = atomic(0)
 
-        val flow1 = range(1, 5)
+        val flow1 = range(1, 5).log("flow1")
             .onStart {
                 delay(200)
                 state1.value = 1
-            }.onEach {
-                log.debug { "flow1 item=$it" }
             }
 
-        val flow2 = range(6, 5)
-            .onStart {
-                state2.value = state1.value
-            }.onEach {
-                log.debug { "flow2 item=$it" }
-            }
+        val flow2 = range(6, 5).log("flow2")
+            .onStart { state2.value = state1.value }
 
         concatArrayEager(flow1, flow2)
             .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -45,15 +38,15 @@ class ConcatArrayEagerTest: AbstractFlowTest() {
 
     @Test
     fun `concat one flow`() = runTest {
-        concatArrayEager(range(1, 5))
+        concatArrayEager(range(1, 5).log("1"))
             .assertResult(1, 2, 3, 4, 5)
     }
 
     @Test
     fun `concat with take`() = runTest {
         concatArrayEager(
-            range(1, 5).onStart { delay(100) },
-            range(6, 5)
+            range(1, 5).onStart { delay(100) }.log(1),
+            range(6, 5).log(2),
         )
             .take(6)
             .assertResult(1, 2, 3, 4, 5, 6)
@@ -64,10 +57,11 @@ class ConcatArrayEagerTest: AbstractFlowTest() {
         var counter = 0
 
         concatArrayEager(
-            range(1, 5).onEach {
-                delay(200)
-                counter++
-            }
+            range(1, 5).log(1)
+                .onEach {
+                    delay(200)
+                    counter++
+                }
         )
             .take(3)
             .assertResult(1, 2, 3)

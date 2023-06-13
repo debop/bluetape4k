@@ -1,6 +1,5 @@
 package io.bluetape4k.coroutines.flow.extensions
 
-import app.cash.turbine.test
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
@@ -21,10 +20,7 @@ class DelayTest: AbstractFlowTest() {
     @Test
     fun `delayed flow`() = runTest {
         delayedFlow(1, Duration.ofSeconds(1))
-            .test {
-                awaitItem() shouldBeEqualTo 1
-                awaitComplete()
-            }
+            .assertResult(1)
 
         delayedFlow(2, 1_000L)
             .assertResult(2)

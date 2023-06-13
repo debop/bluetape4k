@@ -1,6 +1,7 @@
 package io.bluetape4k.coroutines.flow.extensions.group
 
 import io.bluetape4k.collections.tryForEach
+import io.bluetape4k.coroutines.flow.extensions.GroupedFlow
 import io.bluetape4k.coroutines.flow.extensions.Resumable
 import io.bluetape4k.support.uninitialized
 import kotlinx.atomicfu.atomic
@@ -14,6 +15,7 @@ import kotlin.coroutines.cancellation.CancellationException
 /**
  * Groups transformed values of the source flow based on a key selector function.
  */
+@Deprecated("use groupByInternal")
 @PublishedApi
 internal class FlowGroupBy<T, K, V>(
     val source: Flow<T>,

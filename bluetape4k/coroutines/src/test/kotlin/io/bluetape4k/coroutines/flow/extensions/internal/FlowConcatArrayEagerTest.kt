@@ -1,7 +1,7 @@
 package io.bluetape4k.coroutines.flow.extensions.internal
 
 import io.bluetape4k.coroutines.flow.extensions.concatArrayEager
-import io.bluetape4k.coroutines.flow.extensions.flowOfRange
+import io.bluetape4k.coroutines.flow.extensions.range
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -24,7 +24,7 @@ class FlowConcatArrayEagerTest {
         val state1 = atomic(0)
         val state2 = atomic(0)
 
-        val flow1 = flowOfRange(1, 5)
+        val flow1 = range(1, 5)
             .onStart {
                 delay(200)
                 state1.value = 1
@@ -32,7 +32,7 @@ class FlowConcatArrayEagerTest {
                 log.debug { "flow1 item=$it" }
             }
 
-        val flow2 = flowOfRange(6, 5)
+        val flow2 = range(6, 5)
             .onStart {
                 state2.value = state1.value
             }.onEach {
@@ -48,15 +48,15 @@ class FlowConcatArrayEagerTest {
 
     @Test
     fun `concat one flow`() = runTest {
-        concatArrayEager(flowOfRange(1, 5))
+        concatArrayEager(range(1, 5))
             .assertResult(1, 2, 3, 4, 5)
     }
 
     @Test
     fun `concat with take`() = runTest {
         concatArrayEager(
-            flowOfRange(1, 5).onStart { delay(100) },
-            flowOfRange(6, 5)
+            range(1, 5).onStart { delay(100) },
+            range(6, 5)
         )
             .take(6)
             .assertResult(1, 2, 3, 4, 5, 6)
@@ -67,7 +67,7 @@ class FlowConcatArrayEagerTest {
         val counter = atomic(0)
 
         concatArrayEager(
-            flowOfRange(1, 5).onEach {
+            range(1, 5).onEach {
                 delay(200)
                 counter.incrementAndGet()
             }

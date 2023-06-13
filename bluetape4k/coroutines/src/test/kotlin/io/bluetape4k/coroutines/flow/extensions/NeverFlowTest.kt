@@ -30,17 +30,22 @@ class NeverFlowTest: AbstractFlowTest() {
 
     @Test
     fun `neverFlow example`() = runTest(timeout = 2.seconds) {
+        val itemSize = 1_000
         val list = mutableListOf<Any?>()
 
-        val job = launch(start = CoroutineStart.UNDISPATCHED) { neverFlow().toList(list) }
+        val job = launch(start = CoroutineStart.UNDISPATCHED) {
+            neverFlow().toList(list)
+        }
+
         val intervalJob = intervalFlowOf(Duration.ZERO, Duration.ofMillis(100))
-            .take(1_000)
+            .log("interval")
+            .take(itemSize)
             .launchIn(this)
 
         runCurrent()
 
-        repeat(1_000) {
-            advanceTimeBy(100L)
+        repeat(itemSize) {
+            advanceTimeBy(itemSize / 10L)
             runCurrent()
             list.shouldBeEmpty()
         }

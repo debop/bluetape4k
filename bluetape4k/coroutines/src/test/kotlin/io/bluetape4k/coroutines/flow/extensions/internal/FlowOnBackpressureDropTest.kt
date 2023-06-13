@@ -1,10 +1,10 @@
 package io.bluetape4k.coroutines.flow.extensions.internal
 
-import io.bluetape4k.coroutines.flow.extensions.flowOfRange
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.coroutines.flow.extensions.onBackpressureDrop
+import io.bluetape4k.coroutines.flow.extensions.range
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.onEach
@@ -18,18 +18,14 @@ class FlowOnBackpressureDropTest {
 
     @Test
     fun `drop backpressure items`() = runTest {
-        flowOfRange(0, 10)
-            .onEach {
-                log.trace { "source=$it" }
-                delay(100L)
-            }
+        range(0, 10)
+            .onEach { delay(100L) }
+            .log("source")
             .buffer()
             .onBackpressureDrop()
             // .buffer(2) // buffering 하면 drop을 하지 않습니다.
-            .onEach {
-                log.trace { "backpressed=$it" }
-                delay(130L)
-            }
+            .onEach { delay(130L) }
+            .log("backpressed")
             .assertResult(0, 2, 4, 6, 8)
     }
 }

@@ -91,9 +91,11 @@ class SelectorsTest: AbstractFlowTest() {
 
     @Test
     fun `select 1`() = runTest {
-        val flow = (0..1_000 step 10)
-            .asFlow()
+        val progression = 0..1_000 step 10
+        val flow = progression.asFlow()
+            .log("flow")
             .select { it.toString().length }   // 숫자의 자릿수가 변할 때문 emit 된다.
+            .log("selected")
 
         flow.test {
             awaitItem() shouldBeEqualTo 1
@@ -113,8 +115,9 @@ class SelectorsTest: AbstractFlowTest() {
         val flow = range(0, 6)
             .flowOnStandardTestDispatcher(this)
             .onEach { delay(100) }
-            .onEach { log.trace { "state=$it" } }
+            .log("source")
             .scanSkipFirst(State.INITIAL, reducer)
+            .log("skipFirst")
             .select(
                 selector1 = {
                     log.trace { "select1. searchTerm=${it.searchTerm}" }
@@ -132,6 +135,7 @@ class SelectorsTest: AbstractFlowTest() {
                     items.filter { it.contains(searchTerm ?: "") }
                 }
             )
+            .log("selected")
 
         flow.test {
             awaitItem() shouldBeEqualTo zeroToTen       // 0 - items
@@ -154,8 +158,9 @@ class SelectorsTest: AbstractFlowTest() {
         val flow = range(0, 8)
             .flowOnStandardTestDispatcher(this)
             .onEach { delay(100) }
-            .onEach { log.trace { "state=$it" } }
+            .log("source")
             .scanSkipFirst(State.INITIAL, reducer)
+            .log("skipFirst")
             .select(
                 selector1 = {
                     log.trace { "select1. searchTerm=${it.searchTerm}" }
@@ -180,6 +185,7 @@ class SelectorsTest: AbstractFlowTest() {
                         .map { "$it # $title" }
                 }
             )
+            .log("selected")
 
         flow.test {
             awaitItem() shouldBeEqualTo zeroToTen.map { "$it # Loading..." }       // 0 - items
@@ -205,8 +211,9 @@ class SelectorsTest: AbstractFlowTest() {
         val flow = range(0, 11)
             .flowOnStandardTestDispatcher(this)
             .onEach { delay(100) }
-            .onEach { log.trace { "state=$it" } }
+            .log("source")
             .scanSkipFirst(State.INITIAL, reducer)
+            .log("skipFirst")
             .select(
                 selector1 = {
                     log.trace { "select1. searchTerm=${it.searchTerm}" }
@@ -236,6 +243,7 @@ class SelectorsTest: AbstractFlowTest() {
                         .map { "$it # $title ~ $subtitle" }
                 }
             )
+            .log("selected")
 
         flow.test {
             awaitItem() shouldBeEqualTo zeroToTen.map { "$it # Loading... ~ Loading..." }       // 0 - items
@@ -265,8 +273,9 @@ class SelectorsTest: AbstractFlowTest() {
         val flow = range(0, 16)
             .flowOnStandardTestDispatcher(this)
             .onEach { delay(100) }
-            .onEach { log.trace { "state=$it" } }
+            .log("source")
             .scanSkipFirst(State.INITIAL, reducer)
+            .log("skipFirst")
             .select(
                 selector1 = {
                     log.trace { "select1. searchTerm=${it.searchTerm}" }
@@ -301,6 +310,7 @@ class SelectorsTest: AbstractFlowTest() {
                         .map { "$it # $title ~ $subtitle # $unreadCount" }
                 }
             )
+            .log("selected")
 
         flow.test {
             awaitItem() shouldBeEqualTo zeroToTen.map { "$it # Loading... ~ Loading... # 0" }       // 0 - items

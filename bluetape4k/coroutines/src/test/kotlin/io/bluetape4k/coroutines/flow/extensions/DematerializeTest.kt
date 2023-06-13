@@ -1,15 +1,16 @@
 package io.bluetape4k.coroutines.flow.extensions
 
 import app.cash.turbine.test
+import io.bluetape4k.coroutines.flow.exception.FlowException
+import io.bluetape4k.coroutines.tests.assertError
+import io.bluetape4k.coroutines.tests.assertFailure
+import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFailsWith
 
 class DematerializeTest: AbstractFlowTest() {
 
@@ -17,15 +18,10 @@ class DematerializeTest: AbstractFlowTest() {
 
     @Test
     fun `dematerialize flow`() = runTest {
-        flowOf(1, 2, 3)
-            .materialize()
-            .dematerialize()
-            .test {
-                awaitItem() shouldBeEqualTo 1
-                awaitItem() shouldBeEqualTo 2
-                awaitItem() shouldBeEqualTo 3
-                awaitComplete()
-            }
+        flowOf(1, 2, 3).log("source")
+            .materialize().log("materialized")
+            .dematerialize().log("dematerliazed")
+            .assertResult(1, 2, 3)
 
         flowOf(
             Event.Value(1),
@@ -33,12 +29,7 @@ class DematerializeTest: AbstractFlowTest() {
             Event.Value(3),
         )
             .dematerialize()
-            .test {
-                awaitItem() shouldBeEqualTo 1
-                awaitItem() shouldBeEqualTo 2
-                awaitItem() shouldBeEqualTo 3
-                awaitComplete()
-            }
+            .assertResult(1, 2, 3)
 
         flowOf(
             Event.Value(1),
@@ -48,14 +39,9 @@ class DematerializeTest: AbstractFlowTest() {
             Event.Value(4),
             Event.Value(5),
             Event.Value(6),
-        )
-            .dematerialize()
-            .test {
-                awaitItem() shouldBeEqualTo 1
-                awaitItem() shouldBeEqualTo 2
-                awaitItem() shouldBeEqualTo 3
-                awaitComplete()
-            }
+        ).log("source")
+            .dematerialize().log("dematerialized")
+            .assertResult(1, 2, 3)
     }
 
     @Test
@@ -80,53 +66,39 @@ class DematerializeTest: AbstractFlowTest() {
             .concatWith(flow { throw ex })
             .materialize()
             .dematerialize()
-            .test {
-                awaitItem() shouldBeEqualTo 1
-                awaitItem() shouldBeEqualTo 2
-                awaitItem() shouldBeEqualTo 3
-                awaitError() shouldBeEqualTo ex
-            }
+            .assertFailure<Int, RuntimeException>(1, 2, 3)
 
         flowOf(1, 2, 3)
             .startWith(flow { throw ex })
             .materialize()
             .dematerialize()
-            .test {
-                awaitError() shouldBeEqualTo ex
-            }
+            .assertFailure<Int, RuntimeException>()
+//            .test {
+//                awaitError() shouldBeEqualTo ex
+//            }
 
         flowOf(1, 2, 3)
             .concatWith(flow { throw ex }, flowOf(4, 5, 6))
             .materialize()
             .dematerialize()
-            .test {
-                awaitItem() shouldBeEqualTo 1
-                awaitItem() shouldBeEqualTo 2
-                awaitItem() shouldBeEqualTo 3
-                awaitError() shouldBeEqualTo ex
-            }
+            .assertFailure<Int, RuntimeException>(1, 2, 3)
     }
 
     @Test
     fun `dematerialize first item is Event Error`() = runTest {
-        val ex = RuntimeException("Boom!")
+        val ex = FlowException("Boom!")
 
-        assertFailsWith<RuntimeException> {
-            flowOf(Event.Error(ex)).dematerialize().collect()
-        }
+        flowOf(Event.Error(ex))
+            .dematerialize()
+            .assertError<FlowException>()
 
 
         flowOf(Event.Error(ex), Event.Value(1))
             .dematerialize()
-            .test {
-                awaitError() shouldBeEqualTo ex
-            }
+            .assertError<FlowException>()
 
         flowOf(Event.Error(ex), Event.Complete)
             .dematerialize()
-            .test {
-                awaitError() shouldBeEqualTo ex
-            }
-
+            .assertError<FlowException>()
     }
 }

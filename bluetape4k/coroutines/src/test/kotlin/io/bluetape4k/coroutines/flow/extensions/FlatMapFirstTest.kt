@@ -19,28 +19,27 @@ class FlatMapFirstTest: AbstractFlowTest() {
 
     @Test
     fun `flatMapFirst for simple flow`() = runTest {
-        flowOf("one", "two")
+        flowOf("one", "two").log("source")
             .flatMapFirst { v ->
-                log.trace { "source item=$v" }
                 flow {
                     delay(10L)
                     emit(v)
-                }
+                }.log("transform")
             }
-            .onEach { log.trace { "item=$it" } }
+            .log("flatMapFirst")
             .assertResult("one")
     }
 
     @Test
     fun `flatMapFirst for range`() = runTest {
         range(1, 10)
-            .onEach { delay(100) }
+            .onEach { delay(100) }.log("source")
             .flatMapFirst {
                 log.trace { "source item=$it" }
                 range(it * 100, 5)
-                    .onEach { delay(20) }
+                    .onEach { delay(20) }.log("transform")
             }
-            .onEach { log.trace { "item=$it" } }
+            .log("flatMapFirst")
             .assertResult(
                 100, 101, 102, 103, 104,
                 300, 301, 302, 303, 304,
@@ -55,15 +54,13 @@ class FlatMapFirstTest: AbstractFlowTest() {
         val item = atomic(0)
 
         range(1, 10)
-            .onEach { delay(100) }
+            .onEach { delay(100) }.log("source")
             .flatMapFirst {
-                log.trace { "source item=$it" }
                 item.value = it
                 range(it * 100, 5)
-                    .onEach { delay(30) }
+                    .onEach { delay(30) }.log("iner")
             }
-            .onEach { log.trace { "item=$it" } }
-            .take(7)
+            .take(7).log("take")
             .assertResult(
                 100, 101, 102, 103, 104,
                 300, 301,

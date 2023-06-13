@@ -50,7 +50,8 @@ fun <T> Flow<T>.startWith(f1: Flow<T>, vararg fs: Flow<T>): Flow<T> = flow {
     emitAll(this@startWith)
 }
 
-fun <T> Flow<T>.endWith(item: T, vararg items: T): Flow<T> =
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T> Flow<T>.endWith(item: T, vararg items: T): Flow<T> =
     concat(
         this,
         flow {
@@ -58,8 +59,9 @@ fun <T> Flow<T>.endWith(item: T, vararg items: T): Flow<T> =
             emitAll(items.asFlow())
         })
 
-fun <T> Flow<T>.endWith(f1: Flow<T>, vararg fs: Flow<T>): Flow<T> = flow {
-    emitAll(this@endWith)
-    emitAll(f1)
-    fs.forEach { emitAll(it) }
-}
+/**
+ * source [Flow]가 emit 하고, 순차적으로 [f1], [fs]들을 emit 한다
+ * [concatWith] 와 같다
+ */
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T> Flow<T>.endWith(f1: Flow<T>, vararg fs: Flow<T>): Flow<T> = concatWith(f1, *fs)

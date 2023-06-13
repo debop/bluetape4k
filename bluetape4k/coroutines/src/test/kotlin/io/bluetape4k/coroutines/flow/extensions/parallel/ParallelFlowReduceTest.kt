@@ -1,5 +1,6 @@
 package io.bluetape4k.coroutines.flow.extensions.parallel
 
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.coroutines.flow.extensions.range
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.coroutines.tests.withParallels
@@ -19,10 +20,10 @@ class ParallelFlowReduceTest {
     fun basic() = runTest {
         withParallels(1) { execs ->
             execs shouldHaveSize 1
-            range(1, 5)
+            range(1, 5).log("source")
                 .parallel(execs.size) { execs[it] }
                 .reduce({ 0 }, { a, b -> a + b })
-                .sequential()
+                .sequential().log("sequential")
                 .assertResult(15)
         }
     }
@@ -69,12 +70,13 @@ class ParallelFlowReduceTest {
         withParallels(2) { execs ->
             execs shouldHaveSize 2
 
-            range(1, 5)
+            range(1, 5).log("source")
                 .parallel(execs.size) { execs[it] }
                 .reduce { a, b ->
                     log.trace { "a=$a, b=$b" }
                     a + b
                 }
+                .log("reduce")
                 .assertResult(15)
         }
     }

@@ -13,8 +13,8 @@ class AmbTest: AbstractFlowTest() {
 
     @Test
     fun `amb with two flows`() = runTest {
-        val flow1 = range(1, 5).onStart { delay(1000) }
-        val flow2 = range(6, 5).onStart { delay(100) }
+        val flow1 = range(1, 5).onStart { delay(1000) }.log("flow1")
+        val flow2 = range(6, 5).onStart { delay(100) }.log("flow2")
 
         amb(flow1, flow2)
             .assertResult(6, 7, 8, 9, 10)
@@ -22,8 +22,8 @@ class AmbTest: AbstractFlowTest() {
 
     @Test
     fun `amb with two flows 2`() = runTest {
-        val flow1 = range(1, 5).onStart { delay(100) }
-        val flow2 = range(6, 5).onStart { delay(1000) }
+        val flow1 = range(1, 5).onStart { delay(100) }.log("flow1")
+        val flow2 = range(6, 5).onStart { delay(1000) }.log("flow2")
 
         amb(flow1, flow2)
             .assertResult(1, 2, 3, 4, 5)
@@ -33,12 +33,13 @@ class AmbTest: AbstractFlowTest() {
     fun `amb with take`() = runTest {
         var counter = 0
 
-        val flow1 = range(1, 5).onEach { delay(100) }
+        val flow1 = range(1, 5).onEach { delay(100) }.log("flow1")
         val flow2 = range(6, 5)
             .onEach {
                 delay(200)
                 counter++
             }
+            .log("flow2")
 
         listOf(flow1, flow2)
             .amb()

@@ -6,8 +6,8 @@ package io.bluetape4k.coroutines.flow.eclipse
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.collections.eclipse.unifiedSetOf
-import io.bluetape4k.coroutines.flow.extensions.group.GroupedFlow
-import io.bluetape4k.coroutines.flow.extensions.group.toGroupItem
+import io.bluetape4k.coroutines.flow.extensions.GroupedFlow
+import io.bluetape4k.coroutines.flow.extensions.toGroupItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapMerge
 import org.eclipse.collections.api.multimap.Multimap
@@ -38,7 +38,7 @@ suspend fun <T, K> Flow<T>.toUnifiedMap(
 suspend fun <K, V> Flow<GroupedFlow<K, V>>.toMultiMap(
     destination: MutableMultimap<K, V> = Multimaps.mutable.list.of(),
 ): Multimap<K, V> {
-    this.flatMapMerge { it.toGroupItem() }
+    this.flatMapMerge { it.toGroupItems() }
         .collect { groupItem ->
             destination.putAll(groupItem.key, groupItem.values)
         }

@@ -3,7 +3,6 @@ package io.bluetape4k.coroutines.flow.extensions
 import app.cash.turbine.test
 import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asFlow
@@ -17,6 +16,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeLessOrEqualTo
+import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Test
 
@@ -30,14 +30,14 @@ class SlidingTest: AbstractFlowTest() {
         val slidingCount by slidingCounter
         val slidingSize = 5
 
-        val sliding = (1..20).asFlow()
+        val sliding = range(1, 20)
             .sliding(slidingSize)
+            .log("sliding")
             .onEach { slide ->
-                log.trace { "slide=$slide" }
                 slide.size shouldBeLessOrEqualTo slidingSize
                 slidingCounter.incrementAndGet()
             }
-            .toList()
+            .toFastList()
 
         slidingCount shouldBeEqualTo 20
         sliding shouldHaveSize 20
@@ -50,9 +50,8 @@ class SlidingTest: AbstractFlowTest() {
         val slidingSize = 3
 
         val sliding = (1..20).asFlow()
-            .sliding(slidingSize)
+            .sliding(slidingSize).log("sliding")
             .onEach { slide ->
-                log.trace { "slide=$slide" }
                 slide.size shouldBeLessOrEqualTo slidingSize
                 slidingCounter.incrementAndGet()
             }
@@ -68,8 +67,7 @@ class SlidingTest: AbstractFlowTest() {
         val flow = flowOf(1, 2, 3, 4, 5)
 
         val sliding = flow
-            .bufferedSliding(3)
-            .onEach { log.trace { it } }
+            .bufferedSliding(3).log("buffered sliding")
 
         sliding.test {
             awaitItem() shouldBeEqualTo listOf(1)
@@ -81,15 +79,12 @@ class SlidingTest: AbstractFlowTest() {
             awaitItem() shouldBeEqualTo listOf(5)
             awaitComplete()
         }
-
-        sliding.toFastList() shouldHaveSize 7
     }
-
 
     @Test
     fun `sliding with cancellation`() = runTest {
-        flowOfRange(0, 10)
-            .sliding(4)
+        range(0, 10)
+            .sliding(4).log("sliding")
             .take(2)
             .test {
                 awaitItem() shouldBeEqualTo listOf(0, 1, 2, 3)
@@ -103,18 +98,18 @@ class SlidingTest: AbstractFlowTest() {
         val flow = MutableSharedFlow<Int>(extraBufferCapacity = 64)
         val results = mutableListOf<List<Int>>()
 
-        val job1 = flow.sliding(3)
+        val job1 = flow.sliding(3).log("job1")
             .onEach {
                 results += it
                 if (it == listOf(1, 2, 3)) {
-                    flow.tryEmit(4)
+                    flow.tryEmit(4).shouldBeTrue()
                 }
             }.launchIn(this)
 
         val job2 = launch {
-            flow.tryEmit(1)
-            flow.tryEmit(2)
-            flow.tryEmit(3)
+            flow.tryEmit(1).shouldBeTrue()
+            flow.tryEmit(2).shouldBeTrue()
+            flow.tryEmit(3).shouldBeTrue()
         }
 
         advanceUntilIdle()

@@ -1,6 +1,7 @@
 package io.bluetape4k.coroutines.flow.extensions
 
 import app.cash.turbine.test
+import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +16,9 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import kotlin.coroutines.cancellation.CancellationException
 
+/**
+ * 참고: [race] 는 [amb] 와 같습니다.
+ */
 class RaceTest: AbstractFlowTest() {
 
     companion object: KLogging()
@@ -29,12 +33,7 @@ class RaceTest: AbstractFlowTest() {
     fun `race single flow`() = runTest {
         listOf(flowOf(1, 2, 3))
             .race()
-            .test {
-                awaitItem() shouldBeEqualTo 1
-                awaitItem() shouldBeEqualTo 2
-                awaitItem() shouldBeEqualTo 3
-                awaitComplete()
-            }
+            .assertResult(1, 2, 3)
     }
 
     @Test
@@ -42,11 +41,7 @@ class RaceTest: AbstractFlowTest() {
         race(
             flowOf(1, 2).log(1),
             flowOf(3, 4).log(2)
-        ).test {
-            awaitItem() shouldBeEqualTo 1
-            awaitItem() shouldBeEqualTo 2
-            awaitComplete()
-        }
+        ).assertResult(1, 2)
     }
 
     @Test
@@ -179,13 +174,13 @@ class RaceTest: AbstractFlowTest() {
                 delay(50)
                 emit(1)
                 throw CancellationException(message)
-            }.log(1),
+            }.log("flow1"),
 
             flow {
                 delay(100)
                 emit(2)
                 emit(3)
-            }.log(2)
+            }.log("flow2")
         )
             .race()
             .test {

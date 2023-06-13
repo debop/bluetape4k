@@ -1,6 +1,7 @@
 package io.bluetape4k.coroutines.flow.extensions
 
 import app.cash.turbine.test
+import io.bluetape4k.coroutines.tests.assertError
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.flow.flow
@@ -19,7 +20,12 @@ class MapIndexedTest: AbstractFlowTest() {
     fun `mapIndexed simple usecase`() = runTest {
         flowOf(1, 2, 3, 4)
             .mapIndexed { index, value -> index to value }
-            .assertResult(0 to 1, 1 to 2, 2 to 3, 3 to 4)
+            .assertResult(
+                0 to 1,
+                1 to 2,
+                2 to 3,
+                3 to 4
+            )
     }
 
     @Test
@@ -28,9 +34,7 @@ class MapIndexedTest: AbstractFlowTest() {
 
         flow<Int> { throw ex }
             .mapIndexed { index, value -> index to value }
-            .test {
-                awaitError()
-            }
+            .assertError<RuntimeException>()
 
         flowOf(1, 2)
             .concatWith(flow { throw ex })

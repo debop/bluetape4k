@@ -21,8 +21,8 @@ class BufferUntilChangedTest: AbstractFlowTest() {
     fun `master id 가 같은 경우끼리 하나의 List로 묶습니다`() = runTest {
         val orderCount = Random.nextInt(3, 6)
         val itemCount = Random.nextInt(2, 9)
-        val orders = getOrderRows(orderCount, itemCount)
-            .bufferUntilChanged { it.orderId }
+        val orders = getOrderRows(orderCount, itemCount).log("source")
+            .bufferUntilChanged { it.orderId }.log("buffer")
             .map { rows ->
                 Order(rows[0].orderId, rows.map { OrderItem(it.itemId, it.itemName, it.itemQuantity) })
             }

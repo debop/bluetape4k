@@ -1,6 +1,7 @@
 package io.bluetape4k.coroutines.flow.extensions
 
 import app.cash.turbine.test
+import io.bluetape4k.coroutines.tests.assertError
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.flow.flow
@@ -33,9 +34,7 @@ class MapToTest: AbstractFlowTest() {
 
         flow<Nothing> { throw error }
             .mapTo(2)
-            .test {
-                awaitError()
-            }
+            .assertError<RuntimeException>()
 
         flowOf(1, 2)
             .concatWith(flow { throw error })
@@ -53,9 +52,7 @@ class MapToTest: AbstractFlowTest() {
 
         flow<Nothing> { throw error }
             .mapToUnit()
-            .test {
-                awaitError()
-            }
+            .assertError<RuntimeException>()
 
         flowOf(1, 2)
             .concatWith(flow { throw error })

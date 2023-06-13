@@ -6,6 +6,7 @@ package io.bluetape4k.coroutines.flow.extensions
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -32,7 +33,7 @@ internal fun <T, R> Flow<T>.concatMapEagerInternal(transform: suspend (T) -> Flo
         val innerQueues = ConcurrentLinkedQueue<ConcatMapEagerInnerQueue<R>>()
         val innerDone = atomic(false)
 
-        launch {
+        launch(start = CoroutineStart.UNDISPATCHED) {
             try {
                 collect { item ->
                     log.trace { "source item=$item" }
@@ -88,7 +89,7 @@ internal fun <T, R> Flow<T>.concatMapEagerInternal(transform: suspend (T) -> Flo
     }
 }
 
-class ConcatMapEagerInnerQueue<R> {
+private class ConcatMapEagerInnerQueue<R> {
     val queue = ConcurrentLinkedQueue<R>()
     val done = atomic(false)
 }

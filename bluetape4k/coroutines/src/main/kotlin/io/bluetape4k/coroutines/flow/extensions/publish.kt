@@ -3,11 +3,9 @@
 
 package io.bluetape4k.coroutines.flow.extensions
 
-import io.bluetape4k.coroutines.flow.extensions.internal.FlowMulticastFunction
 import io.bluetape4k.coroutines.flow.extensions.subject.MulticastSubject
 import io.bluetape4k.coroutines.flow.extensions.subject.PublishSubject
 import kotlinx.coroutines.flow.Flow
-
 
 /**
  * Shares a single collector towards the upstream source and multicasts
@@ -21,7 +19,7 @@ import kotlinx.coroutines.flow.Flow
  * `publish(expectedCollectors)` overload.
  */
 fun <T, R> Flow<T>.publish(transform: suspend (Flow<T>) -> Flow<R>): Flow<R> =
-    FlowMulticastFunction(this, { PublishSubject() }, transform)
+    multicastInternal(this, { PublishSubject() }, transform)
 
 /**
  * Shares a single collector towards the upstream source and multicasts
@@ -42,7 +40,7 @@ fun <T, R> Flow<T>.publish(
     expectedCollectors: Int = 3,
     transform: suspend (Flow<T>) -> Flow<R>,
 ): Flow<R> =
-    FlowMulticastFunction(
+    multicastInternal(
         this,
         { MulticastSubject(expectedCollectors.coerceAtLeast(1)) },
         transform

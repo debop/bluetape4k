@@ -2,9 +2,7 @@ package io.bluetape4k.coroutines.flow.extensions
 
 import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
@@ -27,10 +25,9 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 1
 
-            val windowed = (1..20).asFlow()
-                .windowed(windowedSize, windowedStep)
+            val windowed = range(1, 20).log("source")
+                .windowed(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
-                    log.trace { "windowed=$windowed" }
                     windowed.size shouldBeLessOrEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }
@@ -48,10 +45,9 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 4
 
-            val windowed = (1..20).asFlow()
-                .windowed(windowedSize, windowedStep)
+            val windowed = range(1, 20).log("source")
+                .windowed(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
-                    log.trace { "windowed=$windowed" }
                     windowed.size shouldBeLessOrEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }
@@ -69,10 +65,9 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 5
 
-            val windowed = (1..20).asFlow()
-                .windowed(windowedSize, windowedStep)
+            val windowed = range(1, 20).log("source")
+                .windowed(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
-                    log.trace { "windowed=$windowed" }
                     windowed.size shouldBeEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }
@@ -93,11 +88,10 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 1
 
-            val windowed = (1..20).asFlow()
-                .windowedFlow(windowedSize, windowedStep)
+            val windowed = range(1, 20).log("source")
+                .windowedFlow(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
                     val items = windowed.toList()
-                    log.trace { "windowed items=$items" }
                     items.size shouldBeLessOrEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }
@@ -115,11 +109,10 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 4
 
-            val windowed = (1..20).asFlow()
-                .windowedFlow(windowedSize, windowedStep)
+            val windowed = range(1, 20).log("source")
+                .windowedFlow(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
                     val items = windowed.toList()
-                    log.trace { "windowed items=$items" }
                     items.size shouldBeLessOrEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }
@@ -137,11 +130,10 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 5
 
-            val windowed = (1..20).asFlow()
-                .windowedFlow(windowedSize, windowedStep)
+            val windowed = range(1, 20).log("source")
+                .windowedFlow(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
                     val items = windowed.toList()
-                    log.trace { "windowed items=$items" }
                     items.size shouldBeEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }

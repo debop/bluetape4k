@@ -1,5 +1,6 @@
 package io.bluetape4k.coroutines.flow.extensions.parallel
 
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.coroutines.flow.extensions.range
 import io.bluetape4k.coroutines.tests.assertError
 import io.bluetape4k.coroutines.tests.assertFailure
@@ -23,13 +24,13 @@ class ParallelFlowConcatMapTest {
         withParallels(1) { execs ->
             execs shouldHaveSize 1
 
-            range(1, 5)
+            range(1, 5).log("source")
                 .parallel(execs.size) { execs[it] }
                 .concatMap {
                     log.trace { "item=$it" }
                     flowOf(it + 1)
                 }
-                .sequential()
+                .sequential().log("sequential")
                 .assertResult(2, 3, 4, 5, 6)
         }
     }
@@ -39,13 +40,13 @@ class ParallelFlowConcatMapTest {
         withParallels(2) { execs ->
             execs shouldHaveSize 2
 
-            range(1, 5)
+            range(1, 5).log("source")
                 .parallel(execs.size) { execs[it] }
                 .concatMap {
                     log.trace { "item=$it" }
                     flowOf(it + 1)
                 }
-                .sequential()
+                .sequential().log("sequential")
                 .assertResultSet(2, 3, 4, 5, 6)
         }
     }
@@ -55,13 +56,13 @@ class ParallelFlowConcatMapTest {
         withParallels(1) { execs ->
             execs shouldHaveSize 1
 
-            flowOf(1, 0)
+            flowOf(1, 0).log("source")
                 .parallel(execs.size) { execs[it] }
                 .concatMap {
                     log.trace { "item=$it" }
                     flowOf(it).map { v -> 1 / v }
                 }
-                .sequential()
+                .sequential().log("sequential")
                 .assertFailure<Int, ArithmeticException>(1)
         }
     }
@@ -71,13 +72,13 @@ class ParallelFlowConcatMapTest {
         withParallels(2) { execs ->
             execs shouldHaveSize 2
 
-            flowOf(1, 2, 0, 3, 4, 0)
+            flowOf(1, 2, 0, 3, 4, 0).log("source")
                 .parallel(execs.size) { execs[it] }
                 .concatMap {
                     log.trace { "item=$it" }
                     flowOf(it).map { v -> 1 / v }
                 }
-                .sequential()
+                .sequential().log("sequential")
                 .assertError<ArithmeticException>()
         }
     }

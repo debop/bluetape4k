@@ -1,8 +1,8 @@
 package io.bluetape4k.coroutines.flow.extensions
 
 import app.cash.turbine.test
+import io.bluetape4k.coroutines.tests.assertError
 import io.bluetape4k.logging.KLogging
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFailsWith
 
 class PairwiseTest: AbstractFlowTest() {
 
@@ -20,7 +19,7 @@ class PairwiseTest: AbstractFlowTest() {
 
     @Test
     fun `pairwise basic`() = runTest {
-        flowOfRange(0, 4)
+        range(0, 4)
             .pairwise()
             .test {
                 awaitItem() shouldBeEqualTo Pair(0, 1)
@@ -29,7 +28,7 @@ class PairwiseTest: AbstractFlowTest() {
                 awaitComplete()
             }
 
-        flowOfRange(0, 4)
+        range(0, 4)
             .sliding(2)
             .mapNotNull {
                 if (it.size < 2) null
@@ -46,7 +45,7 @@ class PairwiseTest: AbstractFlowTest() {
     @Test
     fun `pairwise nullable`() = runTest {
         // 0 - null - 2 - null
-        flowOfRange(0, 4)
+        range(0, 4)
             .map { it.takeIf { it % 2 == 0 } }
             .pairwise()
             .test {
@@ -77,16 +76,14 @@ class PairwiseTest: AbstractFlowTest() {
 
     @Test
     fun `pairwise with failure upstream`() = runTest {
-        assertFailsWith<RuntimeException> {
-            flow<Int> { throw RuntimeException("Boom!") }
-                .pairwise()
-                .collect()
-        }
+        flow<Int> { throw RuntimeException("Boom!") }
+            .pairwise()
+            .assertError<RuntimeException>()
     }
 
     @Test
     fun `pairwise with cancellation`() = runTest {
-        flowOfRange(1, 100)
+        range(1, 100)
             .pairwise()
             .take(2)
             .test {

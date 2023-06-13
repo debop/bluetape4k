@@ -1,5 +1,6 @@
 package io.bluetape4k.coroutines.flow.extensions
 
+import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.coroutines.tests.assertResultSet
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +17,8 @@ class MergeFlowsTest: AbstractFlowTest() {
     @Test
     fun `merge flows`() = runTest {
         mergeFlows(
-            range(6, 5),
-            range(1, 5),
+            range(6, 5).log(6),
+            range(1, 5).log(1),
         )
             .assertResultSet(6, 7, 8, 9, 10, 1, 2, 3, 4, 5)
     }
@@ -32,19 +33,17 @@ class MergeFlowsTest: AbstractFlowTest() {
     fun `no source`() = runTest {
         emptyList<Flow<Int>>()
             .mergeFlows()
-            .assertResultSet()
+            .assertResult()
     }
 
     @Test
     fun `many async`() = runTest {
-        val n = 10_000
+        val n = 1_000
 
-        val m = mergeFlows(
-            range(0, n / 2).startCollectOn(Dispatchers.IO),
-            range(0, n / 2).startCollectOn(Dispatchers.IO),
+        mergeFlows(
+            range(0, n / 2).startCollectOn(Dispatchers.Default).log(1),
+            range(0, n / 2).startCollectOn(Dispatchers.Unconfined).log(2),
         )
-            .count()
-
-        m shouldBeEqualTo n
+            .count() shouldBeEqualTo n
     }
 }

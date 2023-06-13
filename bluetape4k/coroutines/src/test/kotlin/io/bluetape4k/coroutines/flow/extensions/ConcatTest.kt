@@ -5,15 +5,16 @@ import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 
 class ConcatTest: AbstractFlowTest() {
 
     companion object: KLogging()
 
-    val flow1 = flowOf(1, 2)
-    val flow2 = flowOf(3, 4)
-    val flow3 = flowOf(5, 6)
+    val flow1 = flowOf(1, 2).log(1)
+    val flow2 = flowOf(3, 4).log(2)
+    val flow3 = flowOf(5, 6).log(3)
 
     @Test
     fun `concat multiple flows`() = runTest {
@@ -56,14 +57,18 @@ class ConcatTest: AbstractFlowTest() {
     fun `startWith with valueSupplier`() = runTest {
         var i = 1
         var called = false
-        val flow = flowOf(2).startWith {
-            called = true
-            i++
-        }
+        val flow = flowOf(2)
+            .startWith {
+                called = true
+                i++
+            }
 
+        // flow 정의만 했지 Consume 하지는 않았다.
         called.shouldBeFalse()
 
         flow.assertResult(1, 2)
+        called.shouldBeTrue()
+
         flow.assertResult(2, 2)
         flow.assertResult(3, 2)
     }
@@ -85,6 +90,7 @@ class ConcatTest: AbstractFlowTest() {
 
     @Test
     fun `endWith flows`() = runTest {
+        // concatWith 와 같다
         flow1.endWith(flow2)
             .assertResult(1, 2, 3, 4)
 

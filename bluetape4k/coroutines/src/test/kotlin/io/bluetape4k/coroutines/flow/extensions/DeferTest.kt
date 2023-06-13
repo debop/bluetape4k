@@ -1,14 +1,14 @@
 package io.bluetape4k.coroutines.flow.extensions
 
+import io.bluetape4k.coroutines.flow.exception.FlowException
+import io.bluetape4k.coroutines.tests.assertError
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFailsWith
 
 class DeferTest: AbstractFlowTest() {
 
@@ -20,7 +20,7 @@ class DeferTest: AbstractFlowTest() {
         val flow = defer {
             delay(count)
             flowOf(count)
-        }
+        }.log("source")
 
         flow.assertResult(0L)
 
@@ -33,25 +33,21 @@ class DeferTest: AbstractFlowTest() {
 
     @Test
     fun `defer with exception`() = runTest {
-        val exception = RuntimeException("Boom!")
+        val exception = FlowException("Boom!")
 
-        assertFailsWith<RuntimeException> {
-            defer<Int> {
-                flow { throw exception }
-            }.collect()
-        }
+        defer { flow<Int> { throw exception }.log(1) }
+            .assertError<FlowException>()
 
-        defer<Int> {
-            flow { throw exception }
-        }.materialize().assertResult(Event.Error(exception))
+        defer { flow<Int> { throw exception }.log(2) }
+            .materialize()
+            .assertResult(Event.Error(exception))
     }
 
     @Test
     fun `defer with value supplier raise exception`() = runTest {
-        val exception = RuntimeException("Boom!")
+        val exception = FlowException("Boom!")
 
-        assertFailsWith<RuntimeException> {
-            defer<Int> { throw exception }.collect()
-        }
+        defer<Int> { throw exception }
+            .assertError<FlowException>()
     }
 }

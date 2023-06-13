@@ -4,6 +4,7 @@ import io.bluetape4k.coroutines.flow.extensions.ResumableCollector
 import io.bluetape4k.coroutines.flow.extensions.subject.SubjectApi
 import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.AbstractFlow
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +31,7 @@ internal class FlowMulticastFunction<T, R>(
             val inner = ResumableCollector<R>()
 
             // publish
-            launch {
+            launch(start = CoroutineStart.UNDISPATCHED) {
                 try {
                     result.onCompletion { cancelled.value = true }
                         .collect {
@@ -43,7 +44,7 @@ internal class FlowMulticastFunction<T, R>(
             }
 
             // subject
-            launch {
+            launch(start = CoroutineStart.UNDISPATCHED) {
                 try {
                     source.collect {
                         if (cancelled.value) {
