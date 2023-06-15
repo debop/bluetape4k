@@ -4,6 +4,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -18,12 +19,10 @@ class FlowBasicExamples {
     companion object: KLogging()
 
     private val sequencer = atomic(0L)
-    private val sequence by sequencer
 
     private suspend fun computeNextValue(): Long {
         delay(10)
-        sequencer.incrementAndGet()
-        return sequence
+        return sequencer.incrementAndGet()
     }
 
     @BeforeEach
@@ -36,7 +35,7 @@ class FlowBasicExamples {
      */
     @Test
     fun `hot channel vs cold flow - channel`() = runTest {
-        val channel = produce(capacity = Channel.UNLIMITED) {
+        val channel: ReceiveChannel<Long> = produce(capacity = Channel.UNLIMITED) {
             repeat(10) {
                 val x = computeNextValue()
                 log.debug { "send $x" }
@@ -84,12 +83,16 @@ class FlowBasicExamples {
         val flow = makeFlow()
 
         delay(1000)
-        log.debug { "Calling flow ... " }
-        flow.collect { value -> log.debug { "collect $value" } }
+        log.debug { "Collect flow ... " }
+        flow.collect { value ->
+            log.debug { "collect $value" }
+        }
 
         delay(1000)
-        log.debug { "Consume again ..." }
-        flow.collect { value -> log.debug { "consume $value" } }
+        log.debug { "Collect again ..." }
+        flow.collect { value ->
+            log.debug { "consume $value" }
+        }
     }
 
     /**
@@ -100,10 +103,14 @@ class FlowBasicExamples {
         coroutineScope {
             val flow = makeFlow()
             launch {
-                flow.collect { value -> log.debug { "collect $value" } }
+                flow.collect { value ->
+                    log.debug { "collect $value" }
+                }
             }
             launch {
-                flow.collect { value -> log.debug { "consume $value" } }
+                flow.collect { value ->
+                    log.debug { "consume $value" }
+                }
             }
         }
     }

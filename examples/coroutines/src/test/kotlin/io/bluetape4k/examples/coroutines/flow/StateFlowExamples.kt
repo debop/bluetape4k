@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.coroutines.flow
 
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
 import kotlinx.atomicfu.atomic
@@ -25,20 +26,18 @@ class StateFlowExamples {
         val changeCounter2 = atomic(0)
 
         launch {
-            state.collect {
-                log.info { "Value changed to $it" }
-                changeCounter1.incrementAndGet()
-            }
+            state
+                .log("#1")
+                .collect { changeCounter1.incrementAndGet() }
         }
         delay(10)
         state.value = 2
 
         delay(10)
         launch {
-            state.collect {
-                log.info { "and now it is $it" }
-                changeCounter2.incrementAndGet()
-            }
+            state
+                .log("#2")
+                .collect { changeCounter2.incrementAndGet() }
         }
         delay(10)
         state.value = 3
@@ -54,11 +53,8 @@ class StateFlowExamples {
     @Test
     fun `stateIn - 일반 flow 를 StateFlow로 변환하기`() = runTest {
         val flow = flowOf("A", "B", "C")
-            .onEach {
-                delay(100)
-                log.info { "delay 100" }
-            }
-            .onEach { log.info { "Produced $it" } }
+            .onEach { delay(100) }
+            .log("source")
 
         val stateFlow = flow.stateIn(this)
 
@@ -68,10 +64,9 @@ class StateFlowExamples {
         val receivedCounter = atomic(0)
 
         launch {
-            stateFlow.collect {
-                log.info { "Received $it" }
-                receivedCounter.incrementAndGet()
-            }
+            stateFlow
+                .log("#1")
+                .collect { receivedCounter.incrementAndGet() }
         }
         delay(500)
         log.info { "State=${stateFlow.value}" }

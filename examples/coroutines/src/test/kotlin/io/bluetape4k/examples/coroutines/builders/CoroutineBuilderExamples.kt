@@ -9,6 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
@@ -25,15 +26,15 @@ class CoroutineBuilderExamples {
             log.debug { "Start" }
 
             launch {
-                delay(1000)
+                delay(100)
                 log.debug { "World 1" }
             }
             launch {
-                delay(1000)
+                delay(100)
                 log.debug { "World 2" }
             }
             log.debug { "Hello, " }
-            delay(1000)
+            yield()
             advanceUntilIdle()
             log.debug { "Finish." }
         }
@@ -45,8 +46,8 @@ class CoroutineBuilderExamples {
         @Test
         fun `async builder example`() = runTest {
             val resultDeferred = async {
-                delay(1000L)
-                log.debug { "Return result." }
+                delay(100L)
+                log.debug { "Return result=42" }
                 42
             }
             log.debug { "Build async and await ..." }
@@ -60,7 +61,7 @@ class CoroutineBuilderExamples {
         fun `await returns`() = runTest {
             val results = fastList(10) {
                 async {
-                    delay(Random.nextLong(500, 1000))
+                    delay(Random.nextLong(50, 100))
                     log.debug { "Return $it" }
                     "Result $it"
                 }

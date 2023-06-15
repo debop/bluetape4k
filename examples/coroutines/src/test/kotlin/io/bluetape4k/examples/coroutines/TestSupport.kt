@@ -1,12 +1,10 @@
 package io.bluetape4k.examples.coroutines
 
-import io.bluetape4k.core.requirePositiveNumber
+import io.bluetape4k.coroutines.context.getOrCurrent
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 
 fun Int.isEven(): Boolean = this % 2 == 0
@@ -26,17 +24,13 @@ suspend fun massiveRun(
     times: Int = 1000,
     action: suspend () -> Unit,
 ) {
-    times.requirePositiveNumber("times")
-    val ctx = when {
-        coroutineContext != EmptyCoroutineContext -> coroutineContext
-        else                                      -> currentCoroutineContext()
-    }
+    val repeatSize = times.coerceAtLeast(1)
 
     // withContext 이므로 내부의 Job을 완료한 후 반환합니다
-    withContext(ctx) {
-        repeat(times) {
+    withContext(coroutineContext.getOrCurrent()) {
+        repeat(repeatSize) {
             launch {
-                repeat(times) {
+                repeat(repeatSize) {
                     action()
                 }
             }

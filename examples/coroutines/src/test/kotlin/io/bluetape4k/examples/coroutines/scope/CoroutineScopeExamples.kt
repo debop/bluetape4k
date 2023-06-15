@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.coroutines.scope
 
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
@@ -90,7 +91,7 @@ class CoroutineScopeExamples {
 
         val job = launch(CoroutineName("Parent")) {
             longTask(taskStatus)
-        }
+        }.log("Parent")
 
         // Task 1만 실행되고, Task 2는 Cancel 됩니다.
         delay(150)

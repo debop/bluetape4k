@@ -1,8 +1,9 @@
 package io.bluetape4k.examples.coroutines.tests
 
 import app.cash.turbine.test
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
+import io.bluetape4k.logging.debug
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
@@ -22,11 +23,13 @@ class TurbineExamples {
 
     @Test
     fun `turbine을 이용하여 flow를 테스트`() = runTest {
-        flowOf("one", "two").test {
-            awaitItem() shouldBeEqualTo "one"
-            awaitItem() shouldBeEqualTo "two"
-            awaitComplete()
-        }
+        flowOf("one", "two")
+            .log("#1")
+            .test {
+                awaitItem() shouldBeEqualTo "one"
+                awaitItem() shouldBeEqualTo "two"
+                awaitComplete()
+            }
     }
 
     @Test
@@ -35,9 +38,11 @@ class TurbineExamples {
         assertFailsWith<AssertionError> {
             flow<Int> {
                 throw RuntimeException("Boom!")
-            }.test {
-                // Nothing to do
             }
+                .log("#1")
+                .test {
+                    // Nothing to do
+                }
         }.cause shouldBeInstanceOf RuntimeException::class
     }
 
@@ -48,10 +53,12 @@ class TurbineExamples {
                 Thread.sleep(10)
                 send("item")
             }
-        }.test {
-            awaitItem() shouldBeEqualTo "item"
-            awaitComplete()
         }
+            .log("channel")
+            .test {
+                awaitItem() shouldBeEqualTo "item"
+                awaitComplete()
+            }
     }
 
     @Test
@@ -59,10 +66,12 @@ class TurbineExamples {
         channelFlow {
             delay(10)
             send("item")
-        }.test {
-            awaitItem() shouldBeEqualTo "item"
-            awaitComplete()
         }
+            .log("channel")
+            .test {
+                awaitItem() shouldBeEqualTo "item"
+                awaitComplete()
+            }
     }
 
     @Test
@@ -72,10 +81,12 @@ class TurbineExamples {
                 Thread.sleep(10)
                 send("item")
             }
-        }.test {
-            awaitItem() shouldBeEqualTo "item"
-            awaitComplete()
         }
+            .log("channel")
+            .test {
+                awaitItem() shouldBeEqualTo "item"
+                awaitComplete()
+            }
     }
 
     @Test
@@ -85,16 +96,19 @@ class TurbineExamples {
             withContext(Dispatchers.IO) {
                 repeat(10) {
                     Thread.sleep(100)
-                    log.trace { "Sending item $it" }
+                    log.debug { "Sending item $it" }
                     send("item $it")
                 }
             }
-        }.test {
-            awaitItem() shouldBeEqualTo "item 0"
-            awaitItem() shouldBeEqualTo "item 1"
-            awaitItem() shouldBeEqualTo "item 2"
-            cancel()
         }
+            .log("channel")
+            .test {
+                awaitItem() shouldBeEqualTo "item 0"
+                awaitItem() shouldBeEqualTo "item 1"
+                awaitItem() shouldBeEqualTo "item 2"
+                cancelAndIgnoreRemainingEvents()
+                // cancel()
+            }
     }
 
     @Test
@@ -102,15 +116,18 @@ class TurbineExamples {
         channelFlow {
             // 3개만 send하고, 더 이상 send 하지 않습니다.
             repeat(10) {
-                delay(100)
-                log.trace { "Sending item $it" }
+                delay(10)
+                log.debug { "Sending item $it" }
                 send("item $it")
             }
-        }.test {
-            awaitItem() shouldBeEqualTo "item 0"
-            awaitItem() shouldBeEqualTo "item 1"
-            awaitItem() shouldBeEqualTo "item 2"
-            cancel()
         }
+            .log("channel")
+            .test {
+                awaitItem() shouldBeEqualTo "item 0"
+                awaitItem() shouldBeEqualTo "item 1"
+                awaitItem() shouldBeEqualTo "item 2"
+                // cancelAndIgnoreRemainingEvents()  // flow collect 를 중단하고, 남아있는 events 를 무시한다
+                cancel()
+            }
     }
 }

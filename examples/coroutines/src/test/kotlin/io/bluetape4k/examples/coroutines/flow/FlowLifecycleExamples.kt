@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.coroutines.flow
 
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.CoroutineName
@@ -30,16 +31,15 @@ class FlowLifecycleExamples {
     @Test
     fun `onEach - react on flowing value`() = runTest {
         var sum = 0
-        flowOf(1, 2, 3, 4)
+        flowOf(1, 2, 3, 4).log(1)
             .onEach { sum += it }
             .collect()
 
         sum shouldBeEqualTo 10
 
-        flowOf(1, 2)
+        flowOf(1, 2).log(2)
             .onEach {
                 delay(1000)
-                log.debug { "delay ..." }
             }
             .collect {
                 log.debug { "collect $it" }
@@ -148,7 +148,7 @@ class FlowLifecycleExamples {
      * `launchIn` 은 지정된 coroutine context에서 `collect` 를 수행하게 합니다.
      */
     @Test
-    fun `launchIn - lauch to start flow processing on another coroutine`() = runTest {
+    fun `launchIn - lauch to start flow processing on another coroutine`() = runTest(CoroutineName("test")) {
         flowOf("User1", "User2")
             .onStart { log.debug { "Users:" } }
             .flowOn(CoroutineName("users"))

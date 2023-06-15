@@ -1,5 +1,6 @@
 package io.bluetape4k.coroutines.context
 
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -39,14 +40,16 @@ class PropertyCoroutineContextTest {
             val propCtx = coroutineContext[PropertyCoroutineContext]!!
             propCtx["key1"] shouldBeEqualTo 1
             propCtx["key2"] shouldBeEqualTo "two"
-        }
+        }.log("#1")
+        yield()
 
         // Scope를 생성할 때 전달한 CoroutineContext를 사용한다.
         val job2 = launch(scope.coroutineContext) {
             val propCtx = coroutineContext[PropertyCoroutineContext]!!
             propCtx["key1"] shouldBeEqualTo 1
             propCtx["key2"] shouldBeEqualTo "two"
-        }
+        }.log("#2")
+
         yield()
 
         job1.join()
