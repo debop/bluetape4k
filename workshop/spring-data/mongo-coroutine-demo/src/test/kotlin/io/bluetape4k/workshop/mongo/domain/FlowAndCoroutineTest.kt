@@ -1,6 +1,6 @@
 package io.bluetape4k.workshop.mongo.domain
 
-import io.bluetape4k.coroutines.flow.toFastList
+import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.workshop.mongo.AbstractMongoTest
 import kotlinx.coroutines.reactive.asFlow

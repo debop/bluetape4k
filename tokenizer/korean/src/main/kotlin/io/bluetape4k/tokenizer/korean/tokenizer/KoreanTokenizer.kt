@@ -148,20 +148,22 @@ object KoreanTokenizer: KLogging(), Serializable {
         return findTopCandidates(chunk, profile).take(topN)
     }
 
-    private suspend fun findTopCandidates(chunk: KoreanToken, profile: TokenizerProfile): List<List<KoreanToken>> =
-        coroutineScope {
-            // val directMatch: List<List<KoreanToken>> = findDirectMatch(chunk)
-            val directMatch = async { findDirectMatch(chunk) }
+    private suspend fun findTopCandidates(
+        chunk: KoreanToken,
+        profile: TokenizerProfile,
+    ): List<List<KoreanToken>> = coroutineScope {
+        // val directMatch: List<List<KoreanToken>> = findDirectMatch(chunk)
+        val directMatch = async { findDirectMatch(chunk) }
 
-            // Buffer for solution
-            val solutions = unifiedMapOf<Int, List<CandidateParse>>()
-                .apply {
-                    val candidateParse = CandidateParse(
-                        parse = ParsedChunk(fastListOf<KoreanToken>(), 1, profile),
-                        curTrie = koreanPosTrie,
-                        ending = null
-                    )
-                    put(0, listOf(candidateParse))
+        // Buffer for solution
+        val solutions = unifiedMapOf<Int, List<CandidateParse>>()
+            .apply {
+                val candidateParse = CandidateParse(
+                    parse = ParsedChunk(fastListOf<KoreanToken>(), 1, profile),
+                    curTrie = koreanPosTrie,
+                    ending = null
+                )
+                put(0, listOf(candidateParse))
             }
 
         // Find N best parses per state
@@ -174,16 +176,21 @@ object KoreanTokenizer: KLogging(), Serializable {
                 val candidates: List<CandidateParse> = curSolutions.flatMap { candateParse: CandidateParse ->
 
                     val possiblePoses: List<PossibleTrie> = candateParse.ending
-                        ?.let {
-                            candateParse.curTrie.map { PossibleTrie(it, 0) } +
-                                koreanPosTrie.map { PossibleTrie(it, 1) }
-                        }
-                        ?: candateParse.curTrie.map { PossibleTrie(it, 0) }
+                                                                ?.let {
+                                                                    candateParse.curTrie.map {
+                                                                        PossibleTrie(
+                                                                            it,
+                                                                            0
+                                                                        )
+                                                                    } +
+                                                                    koreanPosTrie.map { PossibleTrie(it, 1) }
+                                                                }
+                                                            ?: candateParse.curTrie.map { PossibleTrie(it, 0) }
 
                     possiblePoses
                         .filter {
                             it.curTrie.curPos == Noun ||
-                                (koreanDictionary[it.curTrie.curPos]?.contains(word.toCharArray()) ?: false)
+                            (koreanDictionary[it.curTrie.curPos]?.contains(word.toCharArray()) ?: false)
                         }
                         .map { t: PossibleTrie ->
 
@@ -225,7 +232,7 @@ object KoreanTokenizer: KLogging(), Serializable {
                             val nextTrie =
                                 t.curTrie.nextTrie?.map { if (it == KoreanPosx.SelfNode) t.curTrie else it }
                                     ?.toFastList()
-                                    ?: emptyFastList()
+                                ?: emptyFastList()
 
                             CandidateParse(candateParse.parse + candidateToAdd, nextTrie, t.curTrie.ending)
                         }
@@ -240,15 +247,15 @@ object KoreanTokenizer: KLogging(), Serializable {
             }
         }
 
-            val topCandidates = async {
-                if (solutions[chunk.length]!!.isEmpty()) {
-                    fastListOf(fastListOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
-                } else {
-                    solutions[chunk.length]!!.sortedBy { it.parse.score }.map { it.parse.posNodes }.toFastList()
-                }
+        val topCandidates = async {
+            if (solutions[chunk.length]!!.isEmpty()) {
+                fastListOf(fastListOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
+            } else {
+                solutions[chunk.length]!!.sortedBy { it.parse.score }.map { it.parse.posNodes }.toFastList()
             }
+        }
 
-            (directMatch.await() + topCandidates.await()).distinct()
+        (directMatch.await() + topCandidates.await()).distinct()
     }
 
     private fun findDirectMatch(chunk: KoreanToken): FastList<FastList<KoreanToken>> {

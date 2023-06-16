@@ -65,3 +65,5 @@ fun ByteArrayList.asUnifiedSet(): UnifiedSet<Byte> = asIterable().toUnifiedSet()
 
 fun ByteArrayList.maxOrNull(): Byte? = if (isEmpty) null else max()
 fun ByteArrayList.minOrNull(): Byte? = if (isEmpty) null else min()
+
+val ByteIterable.lastIndex: Int get() = size() - 1

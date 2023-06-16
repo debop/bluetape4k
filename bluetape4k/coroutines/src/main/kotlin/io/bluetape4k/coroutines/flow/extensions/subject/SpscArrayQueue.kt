@@ -32,20 +32,20 @@ internal class SpscArrayQueue<T> private constructor(capacity: Int) {
             }
         }
 
-    private var consumerIndex by atomic(0)
-    private var producerIndex by atomic(0)
+    private val consumerIndex = atomic(0)
+    private val producerIndex = atomic(0)
 
-    val isEmpty: Boolean get() = consumerIndex == producerIndex
+    val isEmpty: Boolean get() = consumerIndex.value == producerIndex.value
 
     fun offer(value: T): Boolean {
         val mask = referenceArray.size - 1
-        val pi = producerIndex
+        val pi = producerIndex.value
 
         val offset = pi and mask
 
         if (referenceArray[offset].value == EMPTY) {
             referenceArray[offset].lazySet(value)
-            producerIndex = pi + 1
+            producerIndex.value = pi + 1
             return true
         }
         return false
@@ -53,7 +53,7 @@ internal class SpscArrayQueue<T> private constructor(capacity: Int) {
 
     fun poll(out: Array<Any?>): Boolean {
         val mask = referenceArray.size - 1
-        val ci = consumerIndex
+        val ci = consumerIndex.value
         val offset = ci and mask
 
         if (referenceArray[offset].value == EMPTY) {
@@ -61,13 +61,13 @@ internal class SpscArrayQueue<T> private constructor(capacity: Int) {
         }
         out[0] = referenceArray[offset].value
         referenceArray[offset].lazySet(EMPTY)
-        consumerIndex = ci + 1
+        consumerIndex.value = ci + 1
         return true
     }
 
     fun clear() {
         val mask = referenceArray.size - 1
-        var ci = consumerIndex
+        var ci = consumerIndex.value
 
         while (true) {
             val offset = ci and mask
@@ -77,6 +77,6 @@ internal class SpscArrayQueue<T> private constructor(capacity: Int) {
             referenceArray[offset].lazySet(EMPTY)
             ci++
         }
-        consumerIndex = ci
+        consumerIndex.value = ci
     }
 }

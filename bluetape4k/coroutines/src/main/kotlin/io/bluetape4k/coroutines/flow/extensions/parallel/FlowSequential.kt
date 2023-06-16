@@ -19,24 +19,24 @@ internal class FlowSequential<T>(private val source: ParallelFlow<T>): AbstractF
             val resumeCollector = Resumable()
             val collectors = Array(n) { RailCollector<T>(resumeCollector) }
 
-            var done by atomic(false)
-            var error by atomic<Throwable?>(null)
+            val done = atomic(false)
+            val error = atomic<Throwable?>(null)
 
             launch {
                 try {
                     source.collect(*collectors)
 
-                    done = true
+                    done.value = true
                     resumeCollector.resume()
                 } catch (ex: Throwable) {
-                    error = ex
-                    done = true
+                    error.value = ex
+                    done.value = true
                     resumeCollector.resume()
                 }
             }
 
             while (true) {
-                val d = done
+                val d = done.value
                 var empty = true
 
                 for (rail in collectors) {
@@ -63,7 +63,7 @@ internal class FlowSequential<T>(private val source: ParallelFlow<T>): AbstractF
                 }
 
                 if (d && empty) {
-                    val ex = error
+                    val ex = error.value
                     if (ex != null) {
                         throw ex
                     }

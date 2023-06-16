@@ -2,19 +2,23 @@ package io.bluetape4k.examples.coroutines.guide
 
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.coroutines.flow.extensions.log
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
@@ -73,42 +77,43 @@ class SharedFlowExamples {
         val totalConsumed = atomic(0L)
 
         val eventBus = BroadcastEventBus()
-        val jobs = fastListOf<Job>()
+        val producers = fastListOf<Job>()
+        val consumers = fastListOf<Job>()
 
         // 5개의 Producer 가 [Created, Deleted] 를 번갈아가며 발송합니다.
-        jobs += fastList(5) { producerId ->
+        producers += fastList(5) { producerId ->
             launch(producerDispatcher) {
                 while (isActive) {
-                    log.trace { "Producer[$producerId] emit event ... ${Event.Created}" }
+                    log.debug { "Producer[$producerId] emit event ... ${Event.Created}" }
                     eventBus.postEvent(Event.Created)
                     totalProduced.incrementAndGet()
                     yield()
 
-                    log.trace { "Producer[$producerId] emit event ... ${Event.Deleted}" }
+                    log.debug { "Producer[$producerId] emit event ... ${Event.Deleted}" }
                     eventBus.postEvent(Event.Deleted)
                     totalProduced.incrementAndGet()
                     yield()
                 }
-            }
+            }.log("P #$producerId")
         }
         yield()
 
         // 3개의 Consumer가 event를 수신합니다.
-        jobs += fastList(3) { consumerId ->
+        consumers += fastList(3) { consumerId ->
             launch(consumerDispatcher) {
-                eventBus.events.collect { event ->
-                    log.trace { "Consumer[$consumerId] received event ... $event" }
-                    totalConsumed.incrementAndGet()
-                    yield()
-                }
-            }
+                eventBus.events
+                    .log("consumer")
+                    .onEach { totalConsumed.incrementAndGet() }
+                    .collect()
+            }.log("C #$consumerId")
         }
-
         yield()
-        await atMost Duration.ofSeconds(5) until { totalConsumed.value > 0L }
 
-        jobs.forEach { it.cancelAndJoin() }
-        // jobs.joinAll()
+        await atMost Duration.ofSeconds(5) until { totalConsumed.value > 0L }
+        delay(10)
+        producers.forEach { it.cancelAndJoin() }
+        delay(100)
+        consumers.forEach { it.cancelAndJoin() }
 
         log.debug { "produced=${totalProduced.value}, consumed=${totalConsumed.value}" }
         totalProduced.value shouldBeGreaterThan 0L

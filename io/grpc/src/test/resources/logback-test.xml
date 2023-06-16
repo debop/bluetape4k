@@ -13,6 +13,7 @@
     </appender>
 
     <logger name="io.bluetape4k.io.grpc" level="DEBUG"/>
+    <logger name="io.bluetape4k.coroutines" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="Console"/>

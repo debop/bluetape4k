@@ -1,5 +1,7 @@
 package io.bluetape4k.examples.coroutines.flow
 
+import io.bluetape4k.coroutines.flow.extensions.log
+import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.delay
@@ -7,11 +9,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
 class CallbackFlowExamples {
@@ -33,16 +34,15 @@ class CallbackFlowExamples {
         override suspend fun produce(message: Message, callback: suspend (Result) -> Unit) {
             delay(100)
             val result = Result(message.id)
+            log.debug { "Create result. message=$message, result=$result" }
             callback(result)
         }
     }
 
     // Kafka Producing 에 쓸 수 있다
     private fun flowFrom(api: ProduceApi, message: Flow<Message>): Flow<Result> = callbackFlow {
-        val callback = { result: Result ->
-            log.debug { "produced result: $result" }
+        val callback: (Result) -> Unit = { result: Result ->
             trySend(result)
-            Unit
         }
         message
             .onEach { message -> api.produce(message, callback) }
@@ -58,15 +58,12 @@ class CallbackFlowExamples {
             Message(1, "Message 1"),
             Message(2, "Message 2"),
             Message(3, "Message 3"),
-        )
+        ).log("messaage")
 
-        val results = flowFrom(api, messages)
+        val results = flowFrom(api, messages).log("results")
 
-        val resultIds = results
-            .onEach { log.debug { "Callback result: $it" } }
-            .toList()
+        results
             .map { it.id }
-
-        resultIds shouldBeEqualTo listOf(1, 2, 3)
+            .assertResult(1, 2, 3)
     }
 }

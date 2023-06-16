@@ -1,9 +1,12 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
+import io.bluetape4k.coroutines.flow.extensions.log
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.logging.trace
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeTrue
@@ -22,17 +25,12 @@ class ReplaySubjectTest {
         withSingleThread { dispatcher ->
 
             val job1 = launch(dispatcher) {
-                subject.collect {
-                    log.trace { "Subject1 collect: $it" }
-                }
-                log.debug { "Subject1 Done." }
-            }
+                subject.log("#1").collect()
+            }.log("job1")
+
             val job2 = launch(dispatcher) {
-                subject.collect {
-                    log.trace { "Subject2 collect: $it" }
-                }
-                log.debug { "Subject2 Done." }
-            }
+                subject.log("#2").collect()
+            }.log("job2")
 
             subject.emit(1)
             subject.emit(2)
@@ -42,15 +40,16 @@ class ReplaySubjectTest {
             job1.join()
             job2.join()
 
-            // replaySubject가 complete 되었습니다만, 모든 emit 된 내용을 replay 합니다.
-            subject.collect {
-                replay1 = true
-                log.debug { "Collect after complete replaySubject. collect: $it" }
-            }
-            subject.collect {
-                replay2 = true
-                log.debug { "Collect after complete replaySubject. collect: $it" }
-            }
+            // replaySubject가 complete 되었습니다만, 모든 emit 된 요소 중 버퍼링된 요소를 replay 합니다.
+            subject
+                .onStart { replay1 = true }
+                .log("#3")
+                .collect()
+            subject
+                .onStart { replay2 = true }
+                .log("#4")
+                .collect()
+
             log.debug { "All Done." }
             replay1.shouldBeTrue()
             replay2.shouldBeTrue()

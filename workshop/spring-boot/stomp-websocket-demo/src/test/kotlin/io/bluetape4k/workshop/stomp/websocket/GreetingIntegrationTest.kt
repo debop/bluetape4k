@@ -2,6 +2,7 @@ package io.bluetape4k.workshop.stomp.websocket
 
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.junit5.awaitility.untilSuspending
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -93,7 +94,7 @@ class GreetingIntegrationTest(
             failure.value = e
         }
 
-        await until { received.value != null || failure.value != null }
+        await untilSuspending { received.value != null || failure.value != null }
 
         if (failure.value == null) {
             received.value!!.content shouldBeEqualTo "Hello, Spring!"

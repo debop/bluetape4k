@@ -4,7 +4,7 @@ import io.bluetape4k.aws.dynamodb.DynamoDb
 import io.bluetape4k.aws.dynamodb.model.batchWriteItemEnhancedRequest
 import io.bluetape4k.aws.dynamodb.model.writeBatchOf
 import io.bluetape4k.core.requireNotBlank
-import io.bluetape4k.coroutines.flow.chunked
+import io.bluetape4k.coroutines.flow.extensions.chunked
 import io.bluetape4k.support.coerce
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope

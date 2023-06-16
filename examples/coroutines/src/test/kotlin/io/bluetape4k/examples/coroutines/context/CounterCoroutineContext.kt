@@ -1,5 +1,7 @@
 package io.bluetape4k.examples.coroutines.context
 
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import kotlinx.atomicfu.atomic
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
@@ -12,14 +14,14 @@ import kotlin.coroutines.coroutineContext
  */
 class CounterCoroutineContext(private val name: String): AbstractCoroutineContextElement(Key) {
 
-    companion object Key: CoroutineContext.Key<CounterCoroutineContext>
+    companion object Key: CoroutineContext.Key<CounterCoroutineContext>, KLogging()
 
     private val nextNumber = atomic(0L)
 
     val number: Long get() = nextNumber.value
 
     fun printNextCount() {
-        println(this)
+        log.debug { this }
         nextNumber.incrementAndGet()
     }
 
@@ -31,6 +33,6 @@ class CounterCoroutineContext(private val name: String): AbstractCoroutineContex
 /**
  * Current CoroutineScope 에서 [CounterCoroutineContext]를 찾아서 [CounterCoroutineContext.number]를 출력합니다.
  */
-suspend fun printNextCount() {
+internal suspend fun printNextCount() {
     coroutineContext[CounterCoroutineContext]?.printNextCount()
 }

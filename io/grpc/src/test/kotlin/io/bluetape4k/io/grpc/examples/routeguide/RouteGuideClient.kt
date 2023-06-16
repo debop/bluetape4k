@@ -1,5 +1,6 @@
 package io.bluetape4k.io.grpc.examples.routeguide
 
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.io.grpc.AbstractGrpcClient
 import io.bluetape4k.io.grpc.managedChannel
 import io.bluetape4k.logging.KLogging
@@ -78,6 +79,7 @@ class RouteGuideClient private constructor(channel: ManagedChannel): AbstractGrp
         var i = 1
         stub.listFeatures(rectangle)
             .buffer()
+            .log("feature")
             .collect { feature ->
                 log.debug { "Result #${i++}: $feature" }
             }
@@ -117,7 +119,7 @@ class RouteGuideClient private constructor(channel: ManagedChannel): AbstractGrp
             val routeNotes = generateOutgoingNotes()
 
             stub.routeChat(routeNotes)
-                .buffer()
+                .log("note")
                 .collect { note ->
                     log.debug { "Got message '${note.message}' at ${note.location.toStr()}" }
                 }

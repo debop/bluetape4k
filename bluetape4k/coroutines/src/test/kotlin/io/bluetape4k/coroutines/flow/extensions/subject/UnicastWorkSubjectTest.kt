@@ -1,8 +1,11 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.coroutines.flow.extensions.flowOfRange
-import io.bluetape4k.coroutines.flow.toFastList
+import io.bluetape4k.coroutines.flow.eclipse.toFastList
+import io.bluetape4k.coroutines.flow.extensions.log
+import io.bluetape4k.coroutines.flow.extensions.range
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.coroutineScope
@@ -23,7 +26,7 @@ class UnicastWorkSubjectTest {
     }
 
     private suspend fun generateInts(uws: UnicastWorkSubject<Int>, start: Int, count: Int) {
-        flowOfRange(start, count).collect { uws.emit(it) }
+        range(start, count).collect { uws.emit(it) }
         uws.complete()
     }
 
@@ -34,16 +37,16 @@ class UnicastWorkSubjectTest {
         coroutineScope {
             generateInts(subject, 1, 15)
 
-            // print lines 1..5
-            val result1 = subject.take(5).toFastList()
+            // emit 1..5
+            val result1 = subject.take(5).log("#1").toFastList()
             result1 shouldBeEqualTo listOf(1, 2, 3, 4, 5)
 
-            // print lines 6..10
-            val result2 = subject.take(5).toFastList()
+            // emit 6..10
+            val result2 = subject.take(5).log("#2").toFastList()
             result2 shouldBeEqualTo listOf(6, 7, 8, 9, 10)
 
-            // print lines 11..15
-            val result3 = subject.take(5).toFastList()
+            // emit 11..15
+            val result3 = subject.take(5).log("#3").toFastList()
             result3 shouldBeEqualTo listOf(11, 12, 13, 14, 15)
         }
     }
@@ -55,7 +58,7 @@ class UnicastWorkSubjectTest {
             us.emit(it)
         }
         us.complete()
-        us.toFastList() shouldBeEqualTo expectedList
+        us.log("#1").toFastList() shouldBeEqualTo expectedList
     }
 
     @Test
@@ -64,10 +67,13 @@ class UnicastWorkSubjectTest {
         repeat(5) {
             us.emit(it)
         }
-        us.emitError(RuntimeException())
+        us.emitError(RuntimeException("Boom!"))
         us.emit(6)
 
-        val result = us.catch { it shouldBeInstanceOf RuntimeException::class }.toFastList()
+        val result = us
+            .catch { it shouldBeInstanceOf RuntimeException::class }
+            .log("#1")
+            .toFastList()
         result shouldBeEqualTo listOf(0, 1, 2, 3, 4, 6)
     }
 
@@ -79,11 +85,11 @@ class UnicastWorkSubjectTest {
         }
         us.complete()
 
-        val result = us.take(3).toFastList()
-        result shouldBeEqualTo expectedList.take(3)
+        val result = us.take(3).log("#1").toFastList()
+        result shouldBeEqualTo fastListOf(0, 1, 2)
 
-        val result2 = us.toFastList()
-        result2 shouldBeEqualTo expectedList.drop(3)
+        val result2 = us.log("#2").toFastList()
+        result2 shouldBeEqualTo fastListOf(3, 4)
     }
 
     @Test
@@ -94,7 +100,7 @@ class UnicastWorkSubjectTest {
         }
         us.complete()
 
-        val result = us.take(3).toFastList()
+        val result = us.take(3).log("#1").toFastList()
         result shouldBeEqualTo listOf(0, 1, 2)
     }
 
@@ -110,10 +116,10 @@ class UnicastWorkSubjectTest {
                     us.emit(it)
                 }
                 us.complete()
-            }
+            }.log("job")
             yield()
 
-            val result = us.toFastList()
+            val result = us.log("#1").toFastList()
             result shouldBeEqualTo expectedList
         }
     }
@@ -131,11 +137,9 @@ class UnicastWorkSubjectTest {
                 }
                 us.complete()
             }
-            yield()
 
             var result = 0
             us.collect { result++ }
-
             result shouldBeEqualTo BUFFER_SIZE
         }
     }
@@ -153,11 +157,9 @@ class UnicastWorkSubjectTest {
                 }
                 us.complete()
             }
-            yield()
 
             var result = 0
             us.take(BUFFER_SIZE / 2).collect { result++ }
-
             result shouldBeEqualTo BUFFER_SIZE / 2
         }
     }
@@ -175,13 +177,11 @@ class UnicastWorkSubjectTest {
                 }
                 us.complete()
             }
-            yield()
 
             var result = 0
             while (result < BUFFER_SIZE) {
                 us.take(500).collect { result++ }
             }
-
             result shouldBeEqualTo BUFFER_SIZE
         }
     }

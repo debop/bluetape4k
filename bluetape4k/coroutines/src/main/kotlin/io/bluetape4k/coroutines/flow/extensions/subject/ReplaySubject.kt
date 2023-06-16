@@ -13,7 +13,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
 
 /**
- * Caches and replays some or all items to collectors.
+ * Producer 가 emit 한 item 들을 캐시하고, collector 가 소비할 때 replay 방식으로 요소를 제공한다
  *
  * NOTE: [kotlinx.coroutines.flow.SharedFlow] 를 사용하는 걸 추천합니다.
  *
@@ -32,7 +32,7 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
     private val collectorsRef = atomic(EMPTY as Array<InnerCollector<T>>)
     private val collectors by collectorsRef
 
-    private var done: Boolean by atomic(false)
+    private val done = atomic(false)
 
     constructor() {
         buffer = UnboundedReplayBuffer()
@@ -65,7 +65,7 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
     }
 
     override suspend fun emit(value: T) {
-        if (done) {
+        if (done.value) {
             return
         }
         buffer.emit(value)
@@ -76,26 +76,30 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
 
     @Suppress("UNCHECKED_CAST")
     override suspend fun emitError(ex: Throwable?) {
-        if (done) {
+        if (done.value) {
             return
         }
-        done = true
+        done.value = true
         buffer.error(ex)
-        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>).forEach { collector ->
-            collector.resume()
-        }
+
+        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>)
+            .forEach { collector ->
+                collector.resume()
+            }
     }
 
     @Suppress("UNCHECKED_CAST")
     override suspend fun complete() {
-        if (done) {
+        if (done.value) {
             return
         }
-        done = true
+        done.value = true
         buffer.complete()
-        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>).forEach { collector ->
-            collector.resume()
-        }
+
+        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>)
+            .forEach { collector ->
+                collector.resume()
+            }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -162,8 +166,8 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
 
         private val list = ArrayDeque<T>()
 
-        private var done by atomic(false)
-        private var error by atomic<Throwable?>(null)
+        private val done = atomic(false)
+        private val error = atomic<Throwable?>(null)
 
         override fun emit(value: T) {
             list.add(value)
@@ -171,22 +175,22 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
         }
 
         override fun error(e: Throwable?) {
-            error = e
-            done = true
+            error.value = e
+            done.value = true
         }
 
         override fun complete() {
-            done = true
+            done.value = true
         }
 
         override suspend fun replay(consumer: InnerCollector<T>) {
             log.debug { "Replay emit ..." }
 
             while (true) {
-                val d = done
+                val d = done.value
                 val empty = consumer.index == size
                 if (d && empty) {
-                    error?.let { throw it }
+                    error.value?.let { throw it }
                     return
                 }
                 if (!empty) {
@@ -212,8 +216,8 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
 
         private var size: Int = 0
 
-        private var done by atomic(false)
-        private var error by atomic<Throwable?>(null)
+        private val done = atomic(false)
+        private val error = atomic<Throwable?>(null)
 
         @Volatile
         private var head: Node<T>
@@ -240,18 +244,18 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
         }
 
         override fun error(e: Throwable?) {
-            error = e
-            done = true
+            error.value = e
+            done.value = true
         }
 
         override fun complete() {
-            done = true
+            done.value = true
         }
 
         @Suppress("UNCHECKED_CAST")
         override suspend fun replay(consumer: InnerCollector<T>) {
             while (true) {
-                val d = done
+                val d = done.value
                 var index = consumer.node as? Node<T>
                 if (index == null) {
                     index = head
@@ -261,7 +265,7 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
                 val empty = next == null
 
                 if (d && empty) {
-                    error?.let { throw it }
+                    error.value?.let { throw it }
                     return
                 }
                 if (!empty) {
@@ -293,7 +297,7 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
     ): Buffer<T> {
         private var size: Int = 0
 
-        private var done: Boolean by atomic(false)
+        private val done = atomic(false)
 
         @Volatile
         private var error: Throwable? = null
@@ -342,11 +346,11 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
 
         override fun error(e: Throwable?) {
             error = e
-            done = true
+            done.value = true
         }
 
         override fun complete() {
-            done = true
+            done.value = true
         }
 
         fun findHead(): Node<T> {
@@ -367,7 +371,7 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
         @Suppress("UNCHECKED_CAST")
         override suspend fun replay(consumer: InnerCollector<T>) {
             while (true) {
-                val d = done
+                val d = done.value
                 var index = consumer.node as? Node<T>
                 if (index == null) {
                     index = findHead()

@@ -7,6 +7,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.RepeatedTest
 import java.util.concurrent.CountDownLatch
@@ -16,13 +17,21 @@ class CoroutineExamples {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 2
-        private const val ITEM_SIZE = 100_000
+        private const val ITEM_SIZE = 10_000
         private const val DELAY_TIME = 10L
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `run tasks in coroutine scope`() = runTest {
+        // coroutineScope 내부의 비동기 함수는 모두 완료되도록 대기한다 
         coroutineScope {
+            fastList(ITEM_SIZE) {
+                launch(Dispatchers.IO) {
+                    delay(DELAY_TIME)
+                }
+            }
+            yield()
+
             fastList(ITEM_SIZE) {
                 launch(Dispatchers.IO) {
                     delay(DELAY_TIME)

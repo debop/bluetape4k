@@ -2,14 +2,16 @@ package io.bluetape4k.coroutines.flow.extensions.subject
 
 import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
 import io.bluetape4k.collections.eclipse.primitives.toIntArrayList
+import io.bluetape4k.coroutines.flow.extensions.log
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
+import io.bluetape4k.junit5.awaitility.untilSuspending
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.info
 import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
@@ -17,6 +19,7 @@ import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeTrue
+import org.awaitility.kotlin.await
 import org.junit.jupiter.api.Test
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.assertFailsWith
@@ -33,22 +36,18 @@ class PublishSubjectTest {
         val result2 = intArrayListOf()
 
         coroutineScope {
+            launch {
+                subject
+                    .log("#1")
+                    .collect { result1.add(it) }
+            }.log("job1")
+            yield()
 
-            launch(Dispatchers.IO) {
-                subject.collect {
-                    log.trace { "Subject1 collect: $it" }
-                    result1.add(it)
-                }
-                log.info { "Done Job1" }
-            }
-            launch(Dispatchers.IO) {
-                subject.collect {
-                    log.trace { "Subject2 collect: $it" }
-                    result2.add(it)
-                }
-                log.info { "Done Job2" }
-            } // subject1 만 시작해도 다음으로 넘어간다 (subject2가 시작 안했을 수 있다)
-
+            launch {
+                subject
+                    .log("#2")
+                    .collect { result2.add(it) }
+            }.log("job2") // job1의 collector 만 시작해도 다음으로 넘어간다 (job2는 시작 안했을 수 있다)
             yield()
 
             // collector가 실행될 때까지 대기합니다.
@@ -59,11 +58,8 @@ class PublishSubjectTest {
                 subject.emit(it + 1)
             }
             subject.complete()
-
-            // HINT: coroutineScope {} 를 쓰면 children 이 끝날 때까지 대기하므로 job join은 필요없다
-            //        job1.join()
-            //        job2.join()
         }
+
         val expected = (1..10).toIntArrayList()
         result1 shouldBeEqualTo expected
         result2 shouldBeEqualTo expected
@@ -78,18 +74,17 @@ class PublishSubjectTest {
             val subject = PublishSubject<Int>()
 
             val job1 = launch(dispatcher) {
-                subject.collect {
-                    delay(100)
-                    log.trace { "collect1: $it" }
-                    result1.add(it)
-                }
-            }
+                subject
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result1.add(it) }
+            }.log("job1")
+
             val job2 = launch(dispatcher) {
-                subject.collect {
-                    delay(100)
-                    log.trace { "collect2: $it" }
-                    result2.add(it)
-                }
+                subject
+                    .onEach { delay(20) }
+                    .log("#2")
+                    .collect { result2.add(it) }
             }
 
             subject.awaitCollectors(2)
@@ -104,8 +99,9 @@ class PublishSubjectTest {
             job1.join()
             job2.join()
         }
-        result1 shouldBeEqualTo intArrayListOf(1, 2, 3, 4, 5)
-        result2 shouldBeEqualTo intArrayListOf(1, 2, 3, 4, 5)
+        val expected = intArrayListOf(1, 2, 3, 4, 5)
+        result1 shouldBeEqualTo expected
+        result2 shouldBeEqualTo expected
     }
 
     @Test
@@ -144,17 +140,15 @@ class PublishSubjectTest {
 
             val job = launch(dispatcher) {
                 try {
-                    subject.collect {
-                        counter.incrementAndGet()
-                    }
+                    subject
+                        .log("#1")
+                        .collect { counter.incrementAndGet() }
                 } catch (e: Throwable) {
                     error.value = e
                 }
-            }
+            }.log("job")
 
-            while (!subject.hasCollectors) {
-                delay(1)
-            }
+            subject.awaitCollectors(1)
 
             subject.emitError(RuntimeException("Boom!"))
             subject.complete()
@@ -167,7 +161,7 @@ class PublishSubjectTest {
     }
 
     @Test
-    fun `multiple consumer`() = runTest {
+    fun `multiple collectors`() = runTest {
         val subject = PublishSubject<Int>()
         val n = 10_000
         val counter1 = atomic(0)
@@ -178,12 +172,13 @@ class PublishSubjectTest {
                 subject.collect {
                     counter1.incrementAndGet()
                 }
-            }
+            }.log("job1")
+
             val job2 = launch(dispatcher) {
                 subject.collect {
                     counter2.incrementAndGet()
                 }
-            }
+            }.log("job2")
 
             subject.awaitCollectors(2)
 
@@ -201,25 +196,27 @@ class PublishSubjectTest {
 
     @Test
     fun `multiple consumer with different delay`() = runTest {
+        val subject = PublishSubject<Int>()
+        val n = 10
+
+        val counter1 = atomic(0)
+        val counter2 = atomic(0)
+
         coroutineScope {
-            val subject = PublishSubject<Int>()
-            val n = 100
+            launch {
+                subject
+                    .onEach { delay(1) }
+                    .log("#1")
+                    .collect { counter1.incrementAndGet() }
+            }.log("job1")
 
-            val counter1 = atomic(0)
-            val counter2 = atomic(0)
+            launch {
+                subject
+                    .onEach { delay(3) }
+                    .log("#2")
+                    .collect { counter2.incrementAndGet() }
 
-            val job1 = launch {
-                subject.collect {
-                    delay(1)
-                    counter1.incrementAndGet()
-                }
-            }
-            val job2 = launch {
-                subject.collect {
-                    delay(2)
-                    counter2.incrementAndGet()
-                }
-            }
+            }.log("job2")
 
             subject.awaitCollectors(2)
 
@@ -227,36 +224,34 @@ class PublishSubjectTest {
                 subject.emit(it)
             }
             subject.complete()
-
-            // coroutineScope 내에서는 굳이 join 으로 대기할 필요 없다
-            job1.join()
-            job2.join()
-
-            counter1.value shouldBeEqualTo n
-            counter2.value shouldBeEqualTo n
         }
+
+        counter1.value shouldBeEqualTo n
+        counter2.value shouldBeEqualTo n
     }
 
     @Test
     fun `multiple consumer with take operation`() = runTest {
+        val subject = PublishSubject<Int>()
+        val n = 100
+
+        val counter1 = atomic(0)
+        val counter2 = atomic(0)
+
         coroutineScope {
-            val subject = PublishSubject<Int>()
-            val n = 100
-
-            val counter1 = atomic(0)
-            val counter2 = atomic(0)
+            launch {
+                subject
+                    .onEach { delay(1) }
+                    .log("#1")
+                    .collect { counter1.incrementAndGet() }
+            }.log("job1")
 
             launch {
-                subject.collect {
-                    delay(1)
-                    counter1.incrementAndGet()
-                }
-            }
-            launch {
-                subject.take(n / 2).collect {
-                    counter2.incrementAndGet()
-                }
-            }
+                subject.take(n / 2)
+                    .onEach { delay(2) }
+                    .log("#2")
+                    .collect { counter2.incrementAndGet() }
+            }.log("job2")
 
             subject.awaitCollectors(2)
 
@@ -264,10 +259,10 @@ class PublishSubjectTest {
                 subject.emit(it)
             }
             subject.complete()
-
-            counter1.value shouldBeEqualTo n
-            counter2.value shouldBeEqualTo n / 2
         }
+
+        counter1.value shouldBeEqualTo n
+        counter2.value shouldBeEqualTo n / 2
     }
 
     @Test
@@ -278,9 +273,10 @@ class PublishSubjectTest {
         val counter = atomic(0)
 
         // subject가 이미 completed 되었으므로, collect 를 수행하지 않습니다.
-        subject.collect {
-            counter.incrementAndGet()
-        } // completed 이후에는 collect 가 동작하지 않는다
+        subject
+            .log("#1")
+            .collect { counter.incrementAndGet() } // completed 이후에는 collect 가 동작하지 않는다
+
         counter.value shouldBeEqualTo 0
     }
 
@@ -293,9 +289,9 @@ class PublishSubjectTest {
 
         // subject 에서 예외를 emit 했으므로, collect 시에 emit된 예외가 발생합니다.
         assertFailsWith<RuntimeException> {
-            subject.collect {
-                counter.incrementAndGet()
-            }
+            subject
+                .log("#1")
+                .collect { counter.incrementAndGet() }
         } // completed 이후에는 collect 가 동작하지 않는다
         counter.value shouldBeEqualTo 0
     }
@@ -309,33 +305,28 @@ class PublishSubjectTest {
 
             val counter1 = atomic(0)
 
-            val job = launch(Dispatchers.IO) {
-                subject.collect {
-                    if (counter1.incrementAndGet() == expected) {
-                        throw CancellationException()
+            val job = launch {
+                subject
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect {
+                        if (counter1.incrementAndGet() == expected) {
+                            throw CancellationException()
+                        }
                     }
-                }
-            }
+            }.log("job1")
 
-            while (!subject.hasCollectors) {
-                delay(1)
-            }
+            subject.awaitCollector()
 
             repeat(n) {
                 subject.emit(it)
             }
             subject.complete()
 
-            for (i in 1..1000) {
-                if (job.isCancelled && subject.collectorCount == 0) {
-                    break
-                }
-                delay(1)
-            }
+            await untilSuspending { job.isCancelled }
 
             job.isCancelled.shouldBeTrue()
             subject.collectorCount shouldBeEqualTo 0
-
             counter1.value shouldBeEqualTo expected
         }
     }

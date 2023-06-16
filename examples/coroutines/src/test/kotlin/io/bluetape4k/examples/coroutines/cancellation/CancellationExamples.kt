@@ -1,5 +1,7 @@
 package io.bluetape4k.examples.coroutines.cancellation
 
+import io.bluetape4k.coroutines.support.log
+import io.bluetape4k.coroutines.support.logging
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
@@ -35,9 +37,10 @@ class CancellationExamples {
             repeat(1000) { i ->
                 delay(200)
                 counter.incrementAndGet()
-                log.debug { "Printing $i" }
+                log.debug { "[#1] Printing $i" }
             }
-        }
+        }.log("#1")
+
         delay(1100)
         job.cancel()
         job.join()
@@ -58,7 +61,7 @@ class CancellationExamples {
                 log.error(e) { "Job이 취소되었습니다" }
                 throw e
             }
-        }
+        }.log("job")
         delay(1100)
         job.cancelAndJoin()
         log.debug { "Cancelled successfully" }
@@ -83,10 +86,10 @@ class CancellationExamples {
                 withContext(NonCancellable) {
                     delay(1000)
                     cleanup = true
-                    log.debug { "Cleanup done" }
+                    log.debug { "Cleanup done with NonCancellation." }
                 }
             }
-        }
+        }.log("job")
 
         delay(100)
         job.cancelAndJoin()
@@ -99,10 +102,10 @@ class CancellationExamples {
     @Test
     fun `invokeOnCompletion event listener 로 취소 시 작업 수행`() = runTest {
         val canceled = atomic(false)
-        val job = launch { delay(1000) }
+        val job = launch { delay(1000) }.log("delayed")
 
         // invoeOnCompletion Handler를 사용하여, Cancel 에 대한 처리를 수행할 수 있습니다.
-        job.invokeOnCompletion { cause: Throwable? ->
+        job.invokeOnCompletion(onCancelling = true) { cause: Throwable? ->
             if (cause is CancellationException) {
                 canceled.value = true
                 log.info { "Cancelled" }
@@ -120,19 +123,19 @@ class CancellationExamples {
     @Test
     fun `Job isActive 를 활용하여 suspend point 잡기`() = runTest {
         val counter = atomic(0)
-        val count by counter
         val job = Job()
         launch(job) {
             while (isActive) {
                 delay(100)         // delay 나 yield 로 suspend point 를 줘야 `isActive` 를 조회할 수 있다
                 counter.incrementAndGet()
-                log.debug { "Printing" }
+                logging { "[#1] Printing. count=${counter.value}" }
             }
-        }
-        delay(550)
+        }.log("#1")
 
+        delay(550)
         job.cancelAndJoin()
-        count shouldBeGreaterOrEqualTo 5
+
+        counter.value shouldBeGreaterOrEqualTo 5
         log.info { "Cancelled successfully." }
     }
 }

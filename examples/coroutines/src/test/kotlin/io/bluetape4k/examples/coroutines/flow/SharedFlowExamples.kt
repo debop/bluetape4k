@@ -1,9 +1,8 @@
 package io.bluetape4k.examples.coroutines.flow
 
 import app.cash.turbine.test
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
-import io.bluetape4k.logging.info
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.coroutineScope
@@ -35,17 +34,19 @@ class SharedFlowExamples {
             val collected2 = atomic(0)
 
             launch {
-                mutableSharedFlow.collect {
-                    log.info { "#1 received $it" }
-                    collected1.incrementAndGet()
-                }
+                mutableSharedFlow
+                    .log("#1")
+                    .collect {
+                        collected1.incrementAndGet()
+                    }
             }
 
             launch {
-                mutableSharedFlow.collect {
-                    log.info { "#2 received $it" }
-                    collected2.incrementAndGet()
-                }
+                mutableSharedFlow
+                    .log("#2")
+                    .collect {
+                        collected2.incrementAndGet()
+                    }
             }
 
             yield()
@@ -53,6 +54,7 @@ class SharedFlowExamples {
             launch {
                 // 2 개의 메시지를 보낸다
                 mutableSharedFlow.emit("Message1")
+                yield()
                 mutableSharedFlow.emit("Message2")
                 yield()
 
@@ -88,28 +90,31 @@ class SharedFlowExamples {
             sharedFlow.replayCache shouldBeEqualTo listOf("Message2", "Message3")
 
             launch {
-                sharedFlow.collect {
-                    log.info { "#1 received $it" }  // Message 2, Message 3
-                    collectCounter1.incrementAndGet()
-                }
+                sharedFlow
+                    .log("#1")      // Message 2, Message 3
+                    .collect {
+                        collectCounter1.incrementAndGet()
+                    }
             }
+            yield()
             launch {
-                sharedFlow.collect {
-                    log.info { "#2 received $it" }  // Message 2, Message 3
-                    collectCounter2.incrementAndGet()
-                }
+                sharedFlow
+                    .log("#2")      // Message 2, Message 3
+                    .collect {
+                        collectCounter2.incrementAndGet()
+                    }
             }
-            delay(10)
+            yield()
 
             launch {
                 sharedFlow.test {
-                    sharedFlow.resetReplayCache() // 캐시를 초기화
+                    sharedFlow.resetReplayCache()           // 캐시를 초기화
                     sharedFlow.replayCache.shouldBeEmpty()
                     cancelAndConsumeRemainingEvents()
                 }
             }
 
-            delay(100)
+            delay(10)
             collectCounter1.value shouldBeEqualTo 2
             collectCounter2.value shouldBeEqualTo 2
 
@@ -120,7 +125,7 @@ class SharedFlowExamples {
     /**
      * 일반 flow 를 shared flow 로 변경하여, 복수의 collector 를 붙일 수 있다 (shareIn)
      *
-     * - started: SharingStarted.Eagerly: flow 가 시작되면, collector 가 붙을 때까지 기다리지 않고, 바로 시작
+     * - started: SharingStarted.Eagerly: flow 가 시작되면, collector 가 붙을 때까지 기다리지 않고, 바로 시작 - Hot Stream
      * - replay: 0: 캐시를 사용하지 않음
      *
      * 결과
@@ -140,10 +145,8 @@ class SharedFlowExamples {
     @Test
     fun `shareIn - change flow to shared flow`() = runTest {
         val flow = flowOf("A", "B", "C")
-            .onEach {
-                delay(1000)
-                log.debug { "(1 sec)" }
-            }
+            .onEach { delay(1000) }
+            .log("source")
 
         val sharedFlow = flow.shareIn(this, started = SharingStarted.Eagerly, replay = 0)
 
@@ -153,26 +156,20 @@ class SharedFlowExamples {
 
         delay(500)
         launch {
-            sharedFlow.collect {
-                log.info { "#1 $it" }
-                counter1.incrementAndGet()
-            }
+            sharedFlow.log("#1")
+                .collect { counter1.incrementAndGet() }
         }
 
         delay(1000)
         launch {
-            sharedFlow.collect {
-                log.info { "#2 $it" }
-                counter2.incrementAndGet()
-            }
+            sharedFlow.log("#2")
+                .collect { counter2.incrementAndGet() }
         }
 
         delay(1000)
         launch {
-            sharedFlow.collect {
-                log.info { "#3 $it" }
-                counter3.incrementAndGet()
-            }
+            sharedFlow.log("#3")
+                .collect { counter3.incrementAndGet() }
         }
 
         delay(5000)

@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
+@Deprecated("use startCollectOnInternal")
 internal class FlowStartCollectOn<T>(
     val source: Flow<T>,
     private val coroutineDispatcher: CoroutineContext,

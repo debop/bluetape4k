@@ -7,14 +7,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 
 /**
- * [DeferredValue] 인스턴스를 생성합니다.
- *
- * @param factory 값을 생성하는 suspend 함수
- * @return [DeferredValue] 인스턴스
- */
-fun <T> deferredValueOf(factory: suspend () -> T): DeferredValue<T> = DeferredValue(factory)
-
-/**
  * 값 계산을 지연해서 수행하는 클래스입니다.
  *
  * @property factory 값 계산을 수행하는 함수
@@ -42,10 +34,18 @@ data class DeferredValue<T>(internal inline val factory: suspend () -> T): Defau
             .add("value", value)
             .toString()
     }
-
-    inline fun <S> map(crossinline mapper: suspend (T) -> S): DeferredValue<S> =
-        DeferredValue { mapper(await()) }
-
-    inline fun <S> flatMap(crossinline flatter: (T) -> DeferredValue<S>): DeferredValue<S> =
-        DeferredValue { flatter(await()).await() }
 }
+
+/**
+ * [DeferredValue] 인스턴스를 생성합니다.
+ *
+ * @param valueSupplier 값을 생성하는 suspend 함수
+ * @return [DeferredValue] 인스턴스
+ */
+fun <T> deferredValueOf(valueSupplier: suspend () -> T): DeferredValue<T> = DeferredValue(valueSupplier)
+
+inline fun <T, S> DeferredValue<T>.map(crossinline transform: suspend (T) -> S): DeferredValue<S> =
+    DeferredValue { transform(await()) }
+
+inline fun <T, S> DeferredValue<T>.flatMap(crossinline flatter: (T) -> DeferredValue<S>): DeferredValue<S> =
+    DeferredValue { flatter(await()).await() }

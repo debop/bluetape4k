@@ -1,6 +1,6 @@
 package io.bluetape4k.coroutines.flow.extensions.internal
 
-import io.bluetape4k.coroutines.flow.extensions.concatWithEx
+import io.bluetape4k.coroutines.flow.extensions.concatWith
 import io.bluetape4k.coroutines.flow.extensions.mergeFlows
 import io.bluetape4k.coroutines.flow.extensions.publish
 import io.bluetape4k.coroutines.flow.extensions.replay
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
+@Deprecated("move to MulticastTest")
 class FlowMulticastFunctionTest {
 
     @Test
@@ -77,7 +78,7 @@ class FlowMulticastFunctionTest {
     fun `replay size bound`() = runTest {
         intArrayOf(1, 2, 3, 4, 5).asFlow()
             .replay(2) { shared ->
-                shared.filter { it % 2 == 0 }.concatWithEx(shared)
+                shared.filter { it % 2 == 0 }.concatWith(shared)
             }
             .assertResult(2, 4, 4, 5)    // filter: 2, 4   || concatWith : 4, 5
     }
@@ -89,7 +90,7 @@ class FlowMulticastFunctionTest {
         intArrayOf(1, 2, 3, 4, 5).asFlow()
             .onEach { delay(100) }
             .replay(timeout) { shared ->
-                shared.filter { it % 2 == 0 }.concatWithEx(shared)
+                shared.filter { it % 2 == 0 }.concatWith(shared)
             }
             .assertResult(2, 4, 1, 2, 3, 4, 5) // filter : 2, 4 || concatWith : 1,2,3,4,5
     }
@@ -100,7 +101,7 @@ class FlowMulticastFunctionTest {
 
         intArrayOf(1, 2, 3, 4, 5).asFlow()
             .replay(2, timeout) { shared ->
-                shared.filter { it % 2 == 0 }.concatWithEx(shared)
+                shared.filter { it % 2 == 0 }.concatWith(shared)
             }
             .assertResult(2, 4, 4, 5)    // filter: 2, 4   || concatWith : 4, 5
     }
@@ -113,7 +114,7 @@ class FlowMulticastFunctionTest {
 
         intArrayOf(1, 2, 3, 4, 5).asFlow()
             .replay(2, timeout, timeSource) { shared ->
-                shared.filter { it % 2 == 0 }.concatWithEx(shared)
+                shared.filter { it % 2 == 0 }.concatWith(shared)
             }
             .assertResult(2, 4, 4, 5)    // filter: 2, 4   || concatWith : 4, 5
     }

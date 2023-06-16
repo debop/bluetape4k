@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.launch
 
-
+@Deprecated("use onBackpressureDropInternal")
 internal class FlowOnBackpressureDrop<T>(private val source: Flow<T>): AbstractFlow<T>() {
 
     companion object: KLogging()
@@ -18,34 +18,34 @@ internal class FlowOnBackpressureDrop<T>(private val source: Flow<T>): AbstractF
     override suspend fun collectSafely(collector: FlowCollector<T>) {
         coroutineScope {
             val producerReady = Resumable()
-            var consumerReady by atomic(false)
+            val consumerReady = atomic(false)
             val value = atomic<T>(uninitialized())
-            var done by atomic(false)
-            var error by atomic<Throwable?>(null)
+            val done = atomic(false)
+            val error = atomic<Throwable?>(null)
 
             launch {
                 try {
                     source.collect { item ->
-                        if (consumerReady) {
+                        if (consumerReady.value) {
                             value.lazySet(item)
-                            consumerReady = false
+                            consumerReady.value = false
                             producerReady.resume()
                         }
                     }
-                    done = true
+                    done.value = true
                 } catch (e: Throwable) {
-                    error = e
+                    error.value = e
                 }
                 producerReady.resume()
             }
 
             while (true) {
-                consumerReady = true
+                consumerReady.value = true
                 producerReady.await()
 
-                error?.let { throw it }
+                error.value?.let { throw it }
 
-                if (done) {
+                if (done.value) {
                     break
                 }
 

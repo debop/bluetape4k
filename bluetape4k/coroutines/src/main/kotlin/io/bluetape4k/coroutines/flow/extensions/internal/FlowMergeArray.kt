@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 /**
  * Merges an array of Flow instances in an unbounded manner.
  */
+@Deprecated("use mergeFlows")
 class FlowMergeArray<T>(private val sources: List<Flow<T>>): AbstractFlow<T>() {
 
     companion object: KLogging()

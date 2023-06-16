@@ -21,7 +21,7 @@ class UnicastWorkSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
     val resumable = Resumable()
     private val queue = ConcurrentLinkedQueue<T>()
 
-    private var terminal by atomic<Throwable?>(null)
+    private val terminal = atomic<Throwable?>(null)
     private val currentRef = atomic<FlowCollector<T>?>(null)
     private val current by currentRef
 
@@ -43,7 +43,7 @@ class UnicastWorkSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
         }
 
         while (true) {
-            val t = terminal
+            val t = terminal.value
             val v = queue.poll()
 
             // 종료되었거나 요소가 없을 때
@@ -74,12 +74,12 @@ class UnicastWorkSubject<T>: AbstractFlow<T>(), SubjectApi<T> {
 
 
     override suspend fun emitError(ex: Throwable?) {
-        terminal = ex
+        terminal.value = ex
         resumable.resume()
     }
 
     override suspend fun complete() {
-        terminal = terminated
+        terminal.value = terminated
         resumable.resume()
     }
 }

@@ -1,6 +1,8 @@
 package io.bluetape4k.examples.coroutines.context
 
 import io.bluetape4k.coroutines.context.PropertyCoroutineContext
+import io.bluetape4k.coroutines.support.log
+import io.bluetape4k.coroutines.support.logging
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.CoroutineName
@@ -18,6 +20,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
 class CoroutineContextExamples {
+
     companion object: KLogging()
 
     @Test
@@ -60,13 +63,13 @@ class CoroutineContextExamples {
 
         // ctx의 모든 element 들을 누적한다
         val str = ctx.fold("") { acc, element -> "$acc $element" }
-        log.debug { "ctx=$str" }
+        logging { "ctx=$str" }
         str shouldContain "key1=1, key2=two" shouldContain "JobImpl{Active}"
 
         val empty = emptyList<CoroutineContext>()
         val ctxs: List<CoroutineContext> = ctx.fold(empty) { acc, element -> acc + element }
         val strs = ctxs.joinToString()
-        log.debug { "ctxs=$strs" }
+        logging { "ctxs=$strs" }
         strs shouldContain "key1=1, key2=two" shouldContain "JobImpl{Active}"
     }
 
@@ -81,7 +84,9 @@ class CoroutineContextExamples {
                 launch(Dispatchers.Default) {
                     coroutineContext[CounterCoroutineContext]?.number shouldBeEqualTo 2L
                     printNextCount()  // Outer 2
-                }.join()
+                }
+                    .log("outer2")
+                    .join()
 
                 // 새로운 Counter 를 가진 CoroutineContext 를 만들어서 launch 한다
                 launch(CounterCoroutineContext("Inner")) {
@@ -95,8 +100,13 @@ class CoroutineContextExamples {
                         coroutineContext[CounterCoroutineContext]?.number shouldBeEqualTo 2L
                         printNextCount()  // Inner 2
                     }
-                }.join()
-            }.join()
+                        .log("inner2")
+                }
+                    .log("inner")
+                    .join()
+            }
+                .log("outer")
+                .join()
 
             coroutineContext[CounterCoroutineContext]?.number shouldBeEqualTo 3L
             printNextCount()  // Outer 3

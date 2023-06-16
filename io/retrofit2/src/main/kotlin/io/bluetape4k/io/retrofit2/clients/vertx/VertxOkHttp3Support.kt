@@ -3,7 +3,6 @@ package io.bluetape4k.io.retrofit2.clients.vertx
 import io.bluetape4k.io.http.okhttp3.okhttp3Response
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.trace
-import io.vertx.core.AsyncResult
 import io.vertx.core.http.HttpClientRequest
 import io.vertx.core.http.HttpClientResponse
 import io.vertx.core.http.HttpMethod
@@ -52,31 +51,28 @@ internal fun HttpClientResponse.toOkhttp3Response(
     callback: okhttp3.Callback,
 ) {
     val self: HttpClientResponse = this
-    body { ar: AsyncResult<io.vertx.core.buffer.Buffer> ->
-        when {
-            ar.succeeded() -> {
-                log.trace { "Convert Vertx HttpClientResponse to okhttp3.Response." }
+    body()
+        .onSuccess { buffer ->
+            log.trace { "Convert Vertx HttpClientResponse to okhttp3.Response." }
 
-                val response = okhttp3Response {
-                    protocol(Protocol.valueOf(self.version().name))
-                    request(okRequest)
-                    code(self.statusCode())
-                    message(self.statusMessage())
+            val response = okhttp3Response {
+                protocol(Protocol.valueOf(self.version().name))
+                request(okRequest)
+                code(self.statusCode())
+                message(self.statusMessage())
 
-                    self.headers().forEach { (key, value) ->
-                        log.trace { "Response header key=$key, value=$value" }
-                        addHeader(key, value)
-                    }
-                    val contentTypeHeader = self.getHeader("content-type")
-                    val contentType = contentTypeHeader?.toMediaTypeOrNull()
-
-                    val buffer = ar.result()
-                    body(buffer.bytes.toResponseBody(contentType))
+                self.headers().forEach { (key, value) ->
+                    log.trace { "Response header key=$key, value=$value" }
+                    addHeader(key, value)
                 }
-                callback.onResponse(call, response)
-            }
+                val contentTypeHeader = self.getHeader("content-type")
+                val contentType = contentTypeHeader?.toMediaTypeOrNull()
 
-            else           -> callback.onFailure(call, IOException(ar.cause()))
+                body(buffer.bytes.toResponseBody(contentType))
+            }
+            callback.onResponse(call, response)
         }
-    }
+        .onFailure {
+            callback.onFailure(call, IOException(it))
+        }
 }

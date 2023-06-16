@@ -1,7 +1,7 @@
 package io.bluetape4k.workshop.redis.examples.commands
 
 import io.bluetape4k.collections.stream.toFastList
-import io.bluetape4k.coroutines.flow.toFastList
+import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.coroutines.support.asFlow
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.faker.Fakers

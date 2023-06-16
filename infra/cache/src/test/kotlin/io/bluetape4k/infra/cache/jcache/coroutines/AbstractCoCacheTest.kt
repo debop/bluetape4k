@@ -3,7 +3,7 @@ package io.bluetape4k.infra.cache.jcache.coroutines
 import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.toUnifiedMap
-import io.bluetape4k.coroutines.flow.toFastList
+import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging

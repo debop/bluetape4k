@@ -48,6 +48,8 @@ fun ShortIterable.asMutableSet(): MutableSet<Short> = asIterable().toMutableSet(
 fun ShortIterable.asFastList(): FastList<Short> = asIterable().toFastList()
 fun ShortIterable.asUnifiedSet(): UnifiedSet<Short> = asIterable().toUnifiedSet()
 
+val ShortIterable.lastIndex: Int get() = size() - 1
+
 fun ShortIterable.maxOrNull(): Short? = if (isEmpty) null else max()
 fun ShortIterable.minOrNull(): Short? = if (isEmpty) null else min()
 

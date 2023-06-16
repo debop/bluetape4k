@@ -1,52 +1,45 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
+import io.bluetape4k.coroutines.flow.extensions.log
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import java.util.concurrent.CopyOnWriteArrayList
 
-
-/**
- * [MulticastSubject]
- *
- * A subject implementation that awaits a certain number of collectors
- * to start consuming, then allows the producer side to deliver items
- * to them.
- */
 class MulticastSubjectTest {
 
     companion object: KLogging()
 
     @Test
-    fun `multicast subject`() = runTest {
+    fun `1개의 collector 가 등록될 때까지 producer가 대기합니다`() = runTest {
         val subject = MulticastSubject<Int>(1)
         val result = CopyOnWriteArrayList<Int>()
 
         withSingleThread { dispatcher ->
             val job = launch(dispatcher) {
-                subject.collect {
-                    log.trace { "collect: $it" }
-                    delay(10)
-                    result.add(it)
-                }
-            }
+                subject
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result.add(it) }
+            }.log("job")
+
             // collector가 등록되어 실행될 때까지 대기합니다.
             subject.awaitCollector()
 
             repeat(10) {
-                log.trace { "emit: ${it + 1}" }
-                subject.emit(it + 1)
+                subject.emit(it)
             }
             subject.complete()
             job.join()
         }
-        result shouldBeEqualTo List(10) { it + 1 }
+        result shouldBeEqualTo List(10) { it }
     }
 
     @Test
@@ -60,11 +53,12 @@ class MulticastSubjectTest {
                 subject.collect {
                     counter.incrementAndGet()
                 }
-            }
+            }.log("job1")
+
             subject.awaitCollector()
 
             repeat(n) {
-                subject.emit(it + 1)
+                subject.emit(it)
             }
             subject.complete()
             job.join()
@@ -73,8 +67,8 @@ class MulticastSubjectTest {
     }
 
     @Test
-    fun `lot of items with multiple consumers`() = runTest {
-        val subject = MulticastSubject<Int>(1)
+    fun `2개의 collector 가 등록될 때까지 producer는 대기합니다`() = runTest {
+        val subject = MulticastSubject<Int>(2)
         val n = 1_000
         val counter1 = atomic(0)
         val counter2 = atomic(0)
@@ -84,16 +78,18 @@ class MulticastSubjectTest {
                 subject.collect {
                     counter1.incrementAndGet()
                 }
-            }
+            }.log("job1")
+
             val job2 = launch(dispatcher) {
                 subject.collect {
                     counter2.incrementAndGet()
                 }
-            }
+            }.log("job2")
+
             subject.awaitCollectors(2)
 
             repeat(n) {
-                subject.emit(it + 1)
+                subject.emit(it)
             }
 
             subject.complete()

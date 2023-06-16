@@ -3,6 +3,7 @@ package io.bluetape4k.coroutines.flow
 import io.bluetape4k.collections.eclipse.primitives.intArrayList
 import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
 import io.bluetape4k.collections.eclipse.primitives.lastOrNull
+import io.bluetape4k.coroutines.flow.eclipse.asFlow
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace

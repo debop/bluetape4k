@@ -1,6 +1,8 @@
 package io.bluetape4k.examples.coroutines.guide
 
 import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.coroutines.support.log
+import io.bluetape4k.coroutines.support.logging
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.CoroutineName
@@ -15,7 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import kotlin.coroutines.cancellation.CancellationException
 import kotlin.random.Random
 
 class CoroutineContextExamples {
@@ -39,11 +40,7 @@ class CoroutineContextExamples {
                 launch {
                     delay((it + 1) * 100L)
                     log.debug { "Job $it is done." }
-                }.invokeOnCompletion(onCancelling = true, invokeImmediately = true) { error ->
-                    if (error is CancellationException) {
-                        log.debug { "Job is cancelled." }
-                    }
-                }
+                }.log("Job $it")
             }
         }
     }
@@ -52,14 +49,14 @@ class CoroutineContextExamples {
     inner class Context10 {
 
         @Test
-        fun `CoroutineScope 상속하기`() = runTest {
+        fun `CoroutineScope 상속하기`() = runTest(CoroutineName("test")) {
             val activity = Activity()
 
-            log.debug { "Launched coroutines ..." }
+            logging { "Launched coroutines ..." }
             activity.doSomething()
             delay(10)
 
-            log.debug { "Destroying activity." }
+            logging { "Destroying activity..." }
             activity.destroy()      // cancel all child coroutines
         }
     }
@@ -68,34 +65,36 @@ class CoroutineContextExamples {
     inner class Context8 {
         @Test
         fun `run two coroutines with name`() = runTest(CoroutineName("main")) {
-            log.debug { "Started main coroutine" }
+            logging { "Started main coroutine" }
 
-            val v1 = async(CoroutineName("v1coroutine")) {
-                log.debug { "Starting v1" }
+            val v1 = async(CoroutineName("v1")) {
+                logging { "Starting v1" }
                 delay(Random.nextLong(10))
-                log.debug { "Computing v1" }
+                logging { "Computing v1" }
                 252
-            }
+            }.log("async 1")
 
-            val v2 = async(CoroutineName("v2coroutine")) {
-                log.debug { "Starting v2" }
+            val v2 = async(CoroutineName("v2")) {
+                logging { "Starting v2" }
                 delay(Random.nextLong(20))
-                log.debug { "Computing v2" }
+                logging { "Computing v2" }
                 6
-            }
+            }.log("async 2")
 
             val result = v1.await() / v2.await()
-            log.debug { "The answer for v1 / v2 = $result" }
+            logging { "The answer for v1 / v2 = $result" }
         }
     }
 
     // @Disabled("발표용 코드입니다")
     @Nested
     inner class Basic {
+        private val jobSize = 10_000
+
         @Test
         fun `run many coroutines`() = runTest {
-            val jobs = fastList(100_000) {
-                launch(Dispatchers.Default) {
+            val jobs = fastList(jobSize) {
+                launch(Dispatchers.IO) {
                     delay(1000)
                     print(".")
                 }
@@ -106,8 +105,8 @@ class CoroutineContextExamples {
         @Test
         fun `run many coroutines with coroutineScope`() = runTest {
             coroutineScope {
-                val jobs = fastList(100_000) {
-                    launch(Dispatchers.Default) {
+                val jobs = fastList(jobSize) {
+                    launch(Dispatchers.IO) {
                         delay(1000)
                         print(".")
                     }

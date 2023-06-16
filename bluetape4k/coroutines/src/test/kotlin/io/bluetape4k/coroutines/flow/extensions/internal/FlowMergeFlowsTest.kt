@@ -1,7 +1,7 @@
 package io.bluetape4k.coroutines.flow.extensions.internal
 
-import io.bluetape4k.coroutines.flow.extensions.flowOfRange
 import io.bluetape4k.coroutines.flow.extensions.mergeFlows
+import io.bluetape4k.coroutines.flow.extensions.range
 import io.bluetape4k.coroutines.flow.extensions.startCollectOn
 import io.bluetape4k.coroutines.tests.assertResultSet
 import io.bluetape4k.logging.KLogging
@@ -12,6 +12,7 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
+@Deprecated("move to MergeFlowsTest")
 class FlowMergeFlowsTest {
 
     companion object: KLogging()
@@ -19,15 +20,15 @@ class FlowMergeFlowsTest {
     @Test
     fun `merge flows`() = runTest {
         mergeFlows(
-            flowOfRange(6, 5),
-            flowOfRange(1, 5),
+            range(6, 5),
+            range(1, 5),
         )
             .assertResultSet(6, 7, 8, 9, 10, 1, 2, 3, 4, 5)
     }
 
     @Test
     fun `one source`() = runTest {
-        mergeFlows(flowOfRange(1, 5))
+        mergeFlows(range(1, 5))
             .assertResultSet(1, 2, 3, 4, 5)
     }
 
@@ -40,11 +41,11 @@ class FlowMergeFlowsTest {
 
     @Test
     fun `many async`() = runTest {
-        val n = 10_000
+        val n = 1_000
 
         val m = mergeFlows(
-            flowOfRange(0, n / 2).startCollectOn(Dispatchers.IO),
-            flowOfRange(0, n / 2).startCollectOn(Dispatchers.IO),
+            range(0, n / 2).startCollectOn(Dispatchers.IO),
+            range(0, n / 2).startCollectOn(Dispatchers.IO),
         )
             .count()
 

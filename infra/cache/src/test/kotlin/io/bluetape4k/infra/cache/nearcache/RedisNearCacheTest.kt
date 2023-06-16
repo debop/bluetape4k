@@ -108,8 +108,8 @@ class RedisNearCacheTest: AbstractNearCacheTest() {
 
         // NOTE: back cache 의 모든 item 들이 expired 될 때까지 대기합니다.
         await
-            .atMost(java.time.Duration.ofMinutes(5))
-            .pollDelay(java.time.Duration.ofSeconds(5))
+            .atMost(java.time.Duration.ofMinutes(1))
+            .pollDelay(java.time.Duration.ofSeconds(1))
             .until {
                 val count = nearCache1.count()
                 log.debug { "nearCache1 size=$count" }

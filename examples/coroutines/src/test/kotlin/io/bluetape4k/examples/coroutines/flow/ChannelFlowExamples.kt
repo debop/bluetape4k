@@ -1,8 +1,8 @@
 package io.bluetape4k.examples.coroutines.flow
 
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.logging.trace
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -43,7 +43,7 @@ class ChannelFlowExamples {
     private fun allUsersByFlow(api: UserApi): Flow<User> = flow {
         var page = 0
         do {
-            log.trace { "Fetching page $page" }
+            log.debug { "Fetching page $page" }
             val users = api.takePage(page++)
             emitAll(users)
         } while (users.toList().isNotEmpty())
@@ -55,14 +55,14 @@ class ChannelFlowExamples {
     @Test
     fun `get users by flow`() = runTest {
         val api = FakeUserApi()
-        val users = allUsersByFlow(api)
+        val users = allUsersByFlow(api).log("flow")
 
         val user = users
             .firstOrNull {
-                log.trace { "Checking $it" }
                 delay(100)
                 it.name == "User3"
             }
+
 
         user.shouldNotBeNull()
         user.name shouldBeEqualTo "User3"
@@ -72,9 +72,9 @@ class ChannelFlowExamples {
     private fun allUsersByCannelFlow(api: UserApi): Flow<User> = channelFlow {
         var page = 0
         do {
-            log.trace { "Fetching page $page" }
-            val users = api.takePage(page++)
+            log.debug { "Fetching page $page" }
             var sent = 0
+            val users = api.takePage(page++)
             users.collect {
                 send(it)
                 sent++
@@ -88,11 +88,10 @@ class ChannelFlowExamples {
     @Test
     fun `get users by cannel flow`() = runTest {
         val api = FakeUserApi()
-        val users = allUsersByCannelFlow(api)
+        val users = allUsersByCannelFlow(api).log("channel")
 
         val user = users
             .firstOrNull {
-                log.debug { "Checking $it" }
                 delay(100)
                 it.name == "User3"
             }

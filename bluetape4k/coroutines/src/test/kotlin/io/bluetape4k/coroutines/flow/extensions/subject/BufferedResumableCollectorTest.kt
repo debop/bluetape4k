@@ -1,12 +1,13 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
@@ -15,30 +16,29 @@ class BufferedResumableCollectorTest {
     companion object: KLogging()
 
     @Test
-    fun `basic long operations with 32 capacity`() = runTest {
+    fun `capacity 만큼 버퍼링을 합니다`() = runTest {
         val bc = BufferedResumableCollector<Int>(32)
         val n = 10_000
         val counter = atomic(0)
-        val count by counter
 
         withSingleThread { dispatcher ->
             val job = launch(dispatcher) {
                 repeat(n) {
-                    log.trace { "next: $it" }
                     bc.next(it)
                 }
                 bc.complete()
-            }
+            }.log("job")
+
+            yield()
 
             val collector = FlowCollector<Int> {
-                log.trace { "drain: $it" }
                 counter.incrementAndGet()
             }
 
             bc.drain(collector)
             job.join()
         }
-        count shouldBeEqualTo n
+        counter.value shouldBeEqualTo n
     }
 
     @Test
@@ -51,13 +51,13 @@ class BufferedResumableCollectorTest {
         withSingleThread { dispatcher ->
             val job = launch(dispatcher) {
                 repeat(n) {
-                    log.trace { "next: $it" }
                     bc.next(it)
                 }
                 bc.complete()
-            }
+            }.log("job")
+            yield()
+
             val collector = FlowCollector<Int> {
-                log.trace { "drain: $it" }
                 counter.incrementAndGet()
             }
 
@@ -80,7 +80,8 @@ class BufferedResumableCollectorTest {
                     bc.next(it)
                 }
                 bc.complete()
-            }
+            }.log("job")
+            yield()
 
             val collector = FlowCollector<Int> { counter.incrementAndGet() }
             bc.drain(collector)
@@ -103,7 +104,8 @@ class BufferedResumableCollectorTest {
                     bc.next(it)
                 }
                 bc.complete()
-            }
+            }.log("job")
+            yield()
 
             val collector = FlowCollector<Int> { counter.incrementAndGet() }
             bc.drain(collector)

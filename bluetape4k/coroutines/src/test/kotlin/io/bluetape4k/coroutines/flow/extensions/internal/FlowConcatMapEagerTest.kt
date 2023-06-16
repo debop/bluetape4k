@@ -1,7 +1,7 @@
 package io.bluetape4k.coroutines.flow.extensions.internal
 
 import io.bluetape4k.coroutines.flow.extensions.concatMapEager
-import io.bluetape4k.coroutines.flow.extensions.flowOfRange
+import io.bluetape4k.coroutines.flow.extensions.range
 import io.bluetape4k.coroutines.tests.assertFailure
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
@@ -12,15 +12,16 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
+@Deprecated("move to ConcatMapEagerTest")
 class FlowConcatMapEagerTest {
 
     companion object: KLogging()
 
     @Test
     fun `concat map eagerly`() = runTest {
-        flowOfRange(1, 5)
+        range(1, 5)
             .concatMapEager {
-                flowOfRange(it * 10, 5).onEach { delay(100) }
+                range(it * 10, 5).onEach { delay(100) }
             }
             .assertResult(
                 10, 11, 12, 13, 14,
@@ -33,9 +34,9 @@ class FlowConcatMapEagerTest {
 
     @Test
     fun `concat map with take`() = runTest {
-        flowOfRange(1, 5)
+        range(1, 5)
             .concatMapEager {
-                flowOfRange(it * 10, 5).onEach { delay(100) }
+                range(it * 10, 5).onEach { delay(100) }
             }
             .take(7)
             .assertResult(
@@ -46,7 +47,7 @@ class FlowConcatMapEagerTest {
 
     @Test
     fun `concat map with crash mapper`() = runTest {
-        flowOfRange(1, 5)
+        range(1, 5)
             .concatMapEager<Int, Int> {
                 throw RuntimeException("Boom!")
             }
@@ -55,7 +56,7 @@ class FlowConcatMapEagerTest {
 
     @Test
     fun `concat map with crash in flow`() = runTest {
-        flowOfRange(1, 5)
+        range(1, 5)
             .concatMapEager<Int, Int> {
                 flow {
                     throw RuntimeException("Boom!")

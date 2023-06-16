@@ -4,6 +4,7 @@ import io.bluetape4k.coroutines.flow.exception.FlowException
 import io.bluetape4k.coroutines.flow.extensions.Resumable
 import io.bluetape4k.coroutines.flow.extensions.ResumableCollector
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.AbstractFlow
 import kotlinx.coroutines.flow.Flow
@@ -11,15 +12,13 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
- * A subject implementation that awaits a certain number of collectors
- * to start consuming, then allows the producer side to deliver items
- * to them.
+ * 특정 수의 `collectors` 가 consume 을 시작할 때까지 producer는 대기합니다.
  *
  * @param <T> the element type of the [Flow]
- * @param expectedCollectors the number of items to buffer until consumers arrive
+ * @param expectedCollectorSize 기대하는 collector 수. 이 수만큼 collector가 등록되어야 producer가 작동합니다.
  */
 class MulticastSubject<T> private constructor(
-    expectedCollectors: Int,
+    expectedCollectorSize: Int,
 ): AbstractFlow<T>(), SubjectApi<T> {
 
     companion object: KLogging() {
@@ -27,8 +26,8 @@ class MulticastSubject<T> private constructor(
         private val TERMINATED = arrayOf<ResumableCollector<Any>>()
         private val DONE = FlowException("Subject completed")
 
-        operator fun <T> invoke(expectedCollectors: Int): MulticastSubject<T> {
-            return MulticastSubject(expectedCollectors.coerceAtLeast(1))
+        operator fun <T> invoke(expectedCollectorSize: Int): MulticastSubject<T> {
+            return MulticastSubject(expectedCollectorSize.coerceAtLeast(1))
         }
     }
 
@@ -38,8 +37,7 @@ class MulticastSubject<T> private constructor(
 
     private val producer = Resumable()
 
-    private val _remainingCollectors = atomic(expectedCollectors)
-    private val remainingCollectors by _remainingCollectors
+    private val remainingCollectors = atomic(expectedCollectorSize)
 
     private var terminated: Throwable? = null
 
@@ -75,24 +73,25 @@ class MulticastSubject<T> private constructor(
     @Suppress("UNCHECKED_CAST")
     override suspend fun complete() {
         terminated = DONE
-        collectorsRef.getAndSet(TERMINATED as Array<ResumableCollector<T>>).forEach { collector ->
-            try {
-                collector.complete()
-            } catch (_: CancellationException) {
-                // ignored at this point
+        collectorsRef.getAndSet(TERMINATED as Array<ResumableCollector<T>>)
+            .forEach { collector ->
+                try {
+                    collector.complete()
+                } catch (_: CancellationException) {
+                    log.debug { "$collector is cancelled." }
+                }
             }
-        }
     }
 
     override suspend fun collectSafely(collector: FlowCollector<T>) {
         val rc = ResumableCollector<T>()
         if (add(rc)) {
             while (true) {
-                val a = remainingCollectors
+                val a = remainingCollectors.value
                 if (a == 0) {
                     break
                 }
-                if (_remainingCollectors.compareAndSet(a, a - 1)) {
+                if (remainingCollectors.compareAndSet(a, a - 1)) {
                     if (a == 1) {
                         producer.resume()
                     }
@@ -109,7 +108,7 @@ class MulticastSubject<T> private constructor(
     }
 
     private suspend fun awaitCollectors() {
-        if (remainingCollectors > 0) {
+        if (remainingCollectors.value > 0) {
             producer.await()
         }
     }

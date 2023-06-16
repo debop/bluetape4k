@@ -1,7 +1,7 @@
 package io.bluetape4k.workshop.mongo.reactive
 
 import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.coroutines.flow.toFastList
+import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.workshop.mongo.AbstractMongoTest
 import io.bluetape4k.workshop.mongo.domain.Person

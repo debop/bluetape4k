@@ -4,6 +4,7 @@ import io.bluetape4k.coroutines.flow.extensions.ResumableCollector
 import io.bluetape4k.coroutines.flow.extensions.subject.SubjectApi
 import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.AbstractFlow
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
-
+@Deprecated("user multicastInternal")
 internal class FlowMulticastFunction<T, R>(
     private val source: Flow<T>,
     private val subjectSupplier: () -> SubjectApi<T>,
@@ -23,16 +24,16 @@ internal class FlowMulticastFunction<T, R>(
 
     override suspend fun collectSafely(collector: FlowCollector<R>) {
         coroutineScope {
-            var cancelled by atomic(false)
+            val cancelled = atomic(false)
             val subject = subjectSupplier()
             val result = transform(subject)
 
             val inner = ResumableCollector<R>()
 
             // publish
-            launch {
+            launch(start = CoroutineStart.UNDISPATCHED) {
                 try {
-                    result.onCompletion { cancelled = true }
+                    result.onCompletion { cancelled.value = true }
                         .collect {
                             inner.next(it)
                         }
@@ -43,14 +44,14 @@ internal class FlowMulticastFunction<T, R>(
             }
 
             // subject
-            launch {
+            launch(start = CoroutineStart.UNDISPATCHED) {
                 try {
                     source.collect {
-                        if (cancelled) {
+                        if (cancelled.value) {
                             throw CancellationException()
                         }
                         subject.emit(it)
-                        if (cancelled) {
+                        if (cancelled.value) {
                             throw CancellationException()
                         }
                     }

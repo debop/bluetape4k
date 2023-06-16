@@ -1,19 +1,24 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
 import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
+import io.bluetape4k.coroutines.flow.extensions.log
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
+import io.bluetape4k.junit5.awaitility.untilSuspending
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeTrue
+import org.awaitility.kotlin.await
 import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit
 
@@ -32,11 +37,12 @@ class ReplaySubjectSizeAndTimeBoundTest {
             val result = intArrayListOf()
 
             val job = launch {
-                replay.collect {
-                    delay(10)
-                    result.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result.add(it) }
+            }.log("job")
+
             replay.awaitCollector()
 
             repeat(5) {
@@ -50,7 +56,7 @@ class ReplaySubjectSizeAndTimeBoundTest {
     }
 
     @Test
-    fun `basic offline`() = runSuspendTest {
+    fun `basic offline - collector 가 등록되지 않은 상태에서 emit 한 것은 버퍼링한다`() = runSuspendTest {
         val replay = ReplaySubject<Int>(10, 1L, TimeUnit.MINUTES)
 
         repeat(5) {
@@ -60,10 +66,10 @@ class ReplaySubjectSizeAndTimeBoundTest {
 
 
         val result = intArrayListOf()
-        replay.collect {
-            delay(10)
-            result.add(it)
-        }
+        replay
+            .onEach { delay(10) }
+            .log("#1")
+            .collect { result.add(it) }
 
         result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
     }
@@ -75,10 +81,10 @@ class ReplaySubjectSizeAndTimeBoundTest {
             val result = intArrayListOf()
 
             val job = launch {
-                replay.collect {
-                    delay(10)
-                    result.add(it)
-                }
+                replay
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result.add(it) }
             }
             replay.awaitCollector()
 
@@ -86,7 +92,6 @@ class ReplaySubjectSizeAndTimeBoundTest {
                 replay.emit(it)
             }
             replay.complete()
-
             job.join()
 
             result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
@@ -97,17 +102,45 @@ class ReplaySubjectSizeAndTimeBoundTest {
     fun `timed offline`() = runSuspendTest {
         val replay = ReplaySubject<Int>(1L, TimeUnit.MINUTES)
 
+        // collector 가 등록되지 않은 상태에서 완료된다.
         repeat(5) {
             replay.emit(it)
         }
         replay.complete()
 
+        val result = intArrayListOf()
+        replay
+            .onEach { delay(10) }
+            .log("#1")
+            .collect { result.add(it) }
+
+        result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+    }
+
+    @Test
+    fun `timed offline with multiple collector`() = runSuspendTest {
+        val replay = ReplaySubject<Int>(1L, TimeUnit.MINUTES)
+
+        // collector 가 등록되지 않은 상태에서 완료된다.
+        repeat(5) {
+            replay.emit(it)
+        }
+        replay.complete()
 
         val result = intArrayListOf()
-        replay.collect {
-            delay(10)
-            result.add(it)
-        }
+        replay
+            .onEach { delay(10) }
+            .log("#1")
+            .collect { result.add(it) }
+
+        result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+
+        // Cold stream 처럼 collect 반복해도 같은 값을 emit 해준다 
+        val result2 = intArrayListOf()
+        replay
+            .onEach { delay(10) }
+            .log("#1")
+            .collect { result2.add(it) }
 
         result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
     }
@@ -120,21 +153,26 @@ class ReplaySubjectSizeAndTimeBoundTest {
             val exc = atomic<Throwable?>(null)
 
             val job = launch {
+                // 예외가 emit 되면, collect 가 중단된다
                 try {
-                    replay.collect {
-                        delay(10)
-                        result.add(it)
-                    }
+                    replay
+                        .onEach { delay(10) }
+                        .log("#1")
+                        .collect { result.add(it) }
                 } catch (ex: Throwable) {
                     exc.value = ex
                 }
-            }
+            }.log("job")
             replay.awaitCollector()
 
             repeat(5) {
                 replay.emit(it)
             }
-            replay.emitError(RuntimeException())
+            replay.emitError(RuntimeException("Boom!"))
+
+            // 예외 이후에는 emit 된 요소는 consume 되지 않는다
+            replay.emit(5)
+            replay.emit(6)
 
             job.join()
 
@@ -151,15 +189,17 @@ class ReplaySubjectSizeAndTimeBoundTest {
         repeat(5) {
             replay.emit(it)
         }
-        replay.emitError(RuntimeException())
+        replay.emitError(RuntimeException("Boom!"))
+        replay.emit(5)
+        replay.emit(6)
 
-
+        // 예외 이후에는 emit 된 요소는 consume 되지 않는다
         val result = mutableListOf<Int>()
         try {
-            replay.collect {
-                delay(10)
-                result.add(it)
-            }
+            replay
+                .onEach { delay(10) }
+                .log("#1")
+                .collect { result.add(it) }
         } catch (ex: Throwable) {
             exc.value = ex
         }
@@ -175,11 +215,11 @@ class ReplaySubjectSizeAndTimeBoundTest {
             val result = intArrayListOf()
 
             val job = launch {
-                replay.take(3).collect {
-                    delay(10)
-                    result.add(it)
-                }
-            }
+                replay.take(3)
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result.add(it) }
+            }.log("job")
             replay.awaitCollector()
 
             repeat(5) {
@@ -201,12 +241,11 @@ class ReplaySubjectSizeAndTimeBoundTest {
         }
         replay.complete()
 
-
         val result = intArrayListOf()
-        replay.take(3).collect {
-            delay(10)
-            result.add(it)
-        }
+        replay.take(3)
+            .onEach { delay(10) }
+            .log("#1")
+            .collect { result.add(it) }
 
         result shouldBeEqualTo intArrayListOf(0, 1, 2)
     }
@@ -214,30 +253,31 @@ class ReplaySubjectSizeAndTimeBoundTest {
     @Test
     fun `bounded online`() = runSuspendTest {
         withSingleThread {
+            // 2개만 버퍼링 합니다.
             val replay = ReplaySubject<Int>(2, 1L, TimeUnit.MINUTES)
             val result = intArrayListOf()
 
             val job = launch {
-                replay.collect {
-                    delay(10)
-                    result.add(it)
-                }
-            }
-            replay.awaitCollector()
+                replay
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result.add(it) }
+            }.log("job")
 
+            replay.awaitCollector()
             repeat(5) {
                 replay.emit(it)
             }
             replay.complete()
-
             job.join()
 
             result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
 
+            // cold-stream과 같이 consumer를 다시 수행한다면 버퍼링된 2개만 제공된다
             result.clear()
-            replay.collect {
-                result.add(it)
-            }
+            replay
+                .log("#2")
+                .collect { result.add(it) }
             result shouldBeEqualTo intArrayListOf(3, 4)
         }
     }
@@ -246,24 +286,24 @@ class ReplaySubjectSizeAndTimeBoundTest {
     fun `bounded offline`() = runSuspendTest {
         val replay = ReplaySubject<Int>(2, 1L, TimeUnit.MINUTES)
 
+        // 5개를 emit 하지만, 버퍼링이 maxSize=2 까지만 됩니다.
         repeat(5) {
             replay.emit(it)
         }
         replay.complete()
 
-
         val result = intArrayListOf()
-        replay.collect {
-            delay(10)
-            result.add(it)
-        }
+        replay
+            .onEach { delay(10) }
+            .log("#1")
+            .collect { result.add(it) }
 
         result shouldBeEqualTo intArrayListOf(3, 4)
     }
 
-    // timeout 이 지난 후에는 남기지 않는다.
     @Test
     fun `timed offline 1`() = runSuspendTest {
+        // timeout 이 지난 후에는 남기지 않는다.
         val replay = ReplaySubject<Int>(10, 100, TimeUnit.MILLISECONDS)
 
         repeat(5) {
@@ -274,14 +314,13 @@ class ReplaySubjectSizeAndTimeBoundTest {
         delay(300)
 
         val result = intArrayListOf()
-        replay.collect {
-            result.add(it)
-        }
+        replay
+            .log("#1")
+            .collect { result.add(it) }
 
         result.isEmpty.shouldBeTrue()
     }
 
-    // timeout 이 지난 후에는 남기지 않는다.
     @Test
     fun `timed offline 2`() = runSuspendTest {
         val replay = ReplaySubject<Int>(10, 100, TimeUnit.MILLISECONDS)
@@ -289,16 +328,19 @@ class ReplaySubjectSizeAndTimeBoundTest {
         repeat(3) {
             replay.emit(it)
         }
+        // timeout 이 지난 후에는 버퍼링된 요소를 제거합니다.
         delay(300)
 
+        // 새롭게 emit 된 놈들은 버퍼링된다
         replay.emit(3)
         replay.emit(4)
         replay.complete()
 
         val result = intArrayListOf()
-        replay.collect {
-            result.add(it)
-        }
+        replay
+            .onEach { delay(10) }
+            .log("#1")
+            .collect { result.add(it) }
 
         result shouldBeEqualTo intArrayListOf(3, 4)
     }
@@ -310,21 +352,19 @@ class ReplaySubjectSizeAndTimeBoundTest {
 
             val result1 = intArrayListOf()
             val job1 = launch {
-                replay.collect {
-                    delay(50)
-                    log.trace { "collect in job1: $it" }
-                    result1.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(50) }
+                    .log("#1")
+                    .collect { result1.add(it) }
+            }.log("job1")
 
             val result2 = intArrayListOf()
             val job2 = launch {
-                replay.collect {
-                    delay(100)
-                    log.trace { "collect in job2: $it" }
-                    result2.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(100) }
+                    .log("#2")
+                    .collect { result2.add(it) }
+            }.log("job2")
 
             replay.awaitCollector()
 
@@ -336,8 +376,9 @@ class ReplaySubjectSizeAndTimeBoundTest {
             job1.join()
             job2.join()
 
-            result1 shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
-            result2 shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+            val expected = intArrayListOf(0, 1, 2, 3, 4)
+            result1 shouldBeEqualTo expected
+            result2 shouldBeEqualTo expected
         }
     }
 
@@ -348,21 +389,19 @@ class ReplaySubjectSizeAndTimeBoundTest {
 
             val result1 = intArrayListOf()
             val job1 = launch {
-                replay.collect {
-                    delay(50)
-                    log.trace { "collect in job1: $it" }
-                    result1.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(50) }
+                    .log("#1")
+                    .collect { result1.add(it) }
+            }.log("job1")
 
             val result2 = intArrayListOf()
             val job2 = launch {
-                replay.take(3).collect {
-                    delay(50)
-                    log.trace { "collect in job2: $it" }
-                    result2.add(it)
-                }
-            }
+                replay.take(3)
+                    .onEach { delay(50) }
+                    .log("#2")
+                    .collect { result2.add(it) }
+            }.log("job2")
 
             replay.awaitCollector()
 
@@ -389,26 +428,25 @@ class ReplaySubjectSizeAndTimeBoundTest {
             val counter1 = atomic(0)
 
             val job1 = launch {
-                replay.collect {
-                    log.trace { "collect in job1: $it" }
-                    if (counter1.incrementAndGet() == expected) {
-                        this.cancel()
+                replay
+                    .log("#1")
+                    .collect {
+                        if (counter1.incrementAndGet() == expected) {
+                            this.cancel()
+                        }
                     }
-                }
-            }
+            }.log("job1")
 
             replay.awaitCollector()
 
             repeat(n) {
                 replay.emit(it)
             }
+            replay.complete()
+            yield()
 
-            repeat(1000) {
-                if (job1.isCancelled && replay.collectorCount == 0) {
-                    return@repeat
-                }
-                delay(10)
-            }
+            // job1 이 취소되고, replay의 collector가 모두 제거될 때까지 대기
+            await untilSuspending { job1.isCancelled && replay.collectorCount == 0 }
 
             job1.isCancelled.shouldBeTrue()
             counter1.value shouldBeEqualTo expected
@@ -417,7 +455,7 @@ class ReplaySubjectSizeAndTimeBoundTest {
     }
 
     @Test
-    fun `cancelled one collector second completes`() = runSuspendTest {
+    fun `cancelled one collector and second completes`() = runSuspendTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(20, 1L, TimeUnit.MINUTES)
 
@@ -428,24 +466,28 @@ class ReplaySubjectSizeAndTimeBoundTest {
             val counter2 = atomic(0)
 
             val job1 = launch {
-                replay.collect {
-                    log.trace { "collect in job1: $it" }
-                    if (counter1.incrementAndGet() == expected) {
-                        this.cancel()
+                replay
+                    .log("#1")
+                    .collect {
+                        if (counter1.incrementAndGet() == expected) {
+                            this.cancel()
+                        }
                     }
-                }
-            }
+            }.log("job1")
+
             val job2 = launch {
-                replay.collect { counter2.incrementAndGet() }
-            }
+                replay
+                    .log("#2")
+                    .collect { counter2.incrementAndGet() }
+            }.log("job2")
 
             replay.awaitCollector()
 
             repeat(n) {
                 replay.emit(it)
             }
-
             replay.complete()
+            job1.join()
             job2.join()
 
             job1.isCancelled.shouldBeTrue()

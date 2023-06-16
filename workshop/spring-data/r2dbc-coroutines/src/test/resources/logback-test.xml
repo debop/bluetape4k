@@ -22,6 +22,7 @@
     <!-- formatter:on -->
 
     <logger name="io.bluetape4k.workshop" level="DEBUG"/>
+    <logger name="io.bluetape4k.coroutines" level="DEBUG"/>
     
     <logger name="org.springframework.transaction" level="TRACE"/>
     <logger name="org.springframework.data.r2dbc.connectionfactory" level="DEBUG"/>

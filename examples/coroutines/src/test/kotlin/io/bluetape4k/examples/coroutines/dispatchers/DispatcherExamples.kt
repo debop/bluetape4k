@@ -1,8 +1,9 @@
 package io.bluetape4k.examples.coroutines.dispatchers
 
 import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.coroutines.support.log
+import io.bluetape4k.coroutines.support.logging
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +42,7 @@ class DispatcherExamples {
                 // thread 는 cpu core 수 만큼 사용한다 
                 // thread name 에 @coroutine#number 가 붙는다 
                 val threadName = Thread.currentThread().name
-                log.trace { "Running on thread $threadName" }
+                logging { "Running on thread $threadName" }
             }
         }.joinAll()
     }
@@ -56,9 +57,9 @@ class DispatcherExamples {
                 // Dispatchers.IO 를 지정하면 DefaultDispatcher-worker-1 @coroutine#2 형태로 나타납니다.
                 launch(Dispatchers.IO) {
                     val threadName = Thread.currentThread().name
-                    log.trace { "thread name=$threadName" }
+                    logging { "thread name=$threadName" }
                     threadName shouldContain "DefaultDispatcher-worker"
-                }
+                }.log("IO")
             } finally {
                 Dispatchers.resetMain()
             }
@@ -77,15 +78,15 @@ class DispatcherExamples {
     @Test
     fun `io dispatcher 사용 예`() = runTest {
         val jobs = fastList(REPEAT_SIZE) {
+            // Dispatchers.IO.limitedParallelism(128)
             launch(Dispatchers.IO) {
                 delay(200)
 
                 val threadName = Thread.currentThread().name
-                log.trace { "Running on thread $threadName" }
+                logging { "Running on thread $threadName" }
             }
         }
         jobs.joinAll()
-
     }
 
     @Test
@@ -95,9 +96,8 @@ class DispatcherExamples {
             fastList(REPEAT_SIZE) {
                 launch(parallel) {
                     delay(200)
-
                     val threadName = Thread.currentThread().name
-                    log.trace { "Running on thread $threadName" }
+                    logging { "Running on thread $threadName" }
                 }
             }.joinAll()
         }
@@ -110,16 +110,15 @@ class DispatcherExamples {
     fun `dispatcher with single thread`() = runTest {
         newSingleThreadContext("single").use { dispatcher ->
             val counter = atomic(0)
-            val count by counter
 
             val jobs = fastList(REPEAT_SIZE) {
                 launch(dispatcher) {
                     counter.incrementAndGet()
-                    log.trace { "count=$count" }
+                    logging { "count=${counter.value}, thread=${Thread.currentThread().name}" }
                 }
             }
             jobs.joinAll()
-            count shouldBeEqualTo REPEAT_SIZE
+            counter.value shouldBeEqualTo REPEAT_SIZE
         }
     }
 
@@ -133,30 +132,32 @@ class DispatcherExamples {
             var continuation: Continuation<Unit>? = null
 
             val job2 = launch(newSingleThreadContext("Name2")) {
-                delay(100)
+                delay(200)
                 continuation?.resume(Unit)
-            }
+            }.log("job2")
+
             yield()
 
             // `Dispatchers.Unconfined` 를 사용하면 suspend 후 다른 Thread에서 실행됩니다.
             launch(Dispatchers.Unconfined) {
-                log.trace { Thread.currentThread().name }   // Name 1
+                logging { "thread=" + Thread.currentThread().name }   // Name 1
                 Thread.currentThread().name shouldContain "Name1"
 
                 suspendCoroutine { cont ->
                     continuation = cont
                 }
 
-                log.trace { Thread.currentThread().name }   // Name 2
+                logging { "thread=" + Thread.currentThread().name }   // Name 2
                 Thread.currentThread().name shouldContain "Name2"
 
                 // Name2 job 종료
                 delay(100)
                 job2.join()
 
-                log.trace { Thread.currentThread().name }   // DefaultExecutor
+                logging { "thread=" + Thread.currentThread().name }   // DefaultExecutor
                 Thread.currentThread().name shouldContain "DefaultExecutor"
-            }.join()
+            }.log("Unconfined")
+                .join()
         }
     }
 }

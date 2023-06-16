@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.FlowCollector
  */
 internal class FlowParallelReduceSequential<T>(
     private val source: ParallelFlow<T>,
-    private val combine: suspend (T, T) -> T
+    private val combine: suspend (T, T) -> T,
 ): AbstractFlow<T>() {
 
     override suspend fun collectSafely(collector: FlowCollector<T>) {
@@ -21,11 +21,12 @@ internal class FlowParallelReduceSequential<T>(
 
         var accumulator: T = uninitialized()
         var hasValue = false
+
         rails.forEach { rail ->
-            if (!hasValue && rail.hasValue) {
+            if (!hasValue && rail.hasValue.value) {
                 accumulator = rail.accumulator
                 hasValue = true
-            } else if (hasValue && rail.hasValue) {
+            } else if (hasValue && rail.hasValue.value) {
                 accumulator = combine(accumulator, rail.accumulator)
             }
         }
@@ -37,15 +38,13 @@ internal class FlowParallelReduceSequential<T>(
 
     class ReducerCollector<T>(private val combine: suspend (T, T) -> T): FlowCollector<T> {
         var accumulator: T = uninitialized()
-
-        var hasValue: Boolean by atomic(false)
-            private set
+        val hasValue = atomic(false)
 
         override suspend fun emit(value: T) {
-            if (hasValue) {
+            if (hasValue.value) {
                 accumulator = combine(accumulator, value)
             } else {
-                hasValue = true
+                hasValue.value = true
                 accumulator = value
             }
         }

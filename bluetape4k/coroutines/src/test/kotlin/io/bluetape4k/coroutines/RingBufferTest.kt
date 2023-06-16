@@ -1,6 +1,6 @@
 package io.bluetape4k.coroutines
 
-import io.bluetape4k.coroutines.flow.bufferedSliding
+import io.bluetape4k.coroutines.flow.extensions.bufferedSliding
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.flow.flow

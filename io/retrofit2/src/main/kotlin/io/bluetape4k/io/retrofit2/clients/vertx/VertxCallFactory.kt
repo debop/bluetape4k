@@ -94,14 +94,13 @@ class VertxCallFactory private constructor(
                     val request = clientRequest.apply { parse(okRequest) }
 
                     log.trace { "Send vertx request ... request=$request" }
-                    request.send { ar2 ->
-                        if (ar2.succeeded()) {
-                            val response = ar2.result()
+                    request.send()
+                        .onSuccess { response ->
                             response.toOkhttp3Response(this@VertxCall, okRequest, responseCallback)
-                        } else {
-                            responseCallback.onFailure(this@VertxCall, IOException(ar2.cause()))
                         }
-                    }
+                        .onFailure { error ->
+                            responseCallback.onFailure(this@VertxCall, IOException(error))
+                        }
                 }
                 .onFailure { error ->
                     responseCallback.onFailure(this@VertxCall, IOException(error))

@@ -1,5 +1,6 @@
 package io.bluetape4k.examples.coroutines.channels
 
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.examples.coroutines.massiveRun
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -31,6 +32,10 @@ class ActorExamples {
                     is GetCounter -> msg.response.complete(counter)
                 }
             }
+        }.log("receive job")
+
+        channel.invokeOnClose {
+            log.debug(it) { "channel close." }
         }
         return channel
     }

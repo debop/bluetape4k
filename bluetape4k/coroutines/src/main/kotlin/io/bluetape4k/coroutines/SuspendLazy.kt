@@ -45,7 +45,7 @@ internal class SuspendLazySuspendingImpl<out T>(
 }
 
 /**
- * [Lazy]와 같이 값 계산을 지연해서 수형하는데, 값 계산을 Coroutines 환경 하에서 수행하게 된다.
+ * [Lazy]와 같이 값 계산을 지연해서 수형합니다.
  * 값을 조회할 때, Coroutine Scope 에서 수행해야 한다.
  *
  * ```
@@ -69,7 +69,7 @@ fun <T> suspendBlockingLazy(
     SuspendLazyBlockImpl(dispatcher, initializer)
 
 /**
- * [Lazy]와 같이 값 계산을 지연해서 수형하는데, 값 계산을 [Dispatchers.IO] 환경 하에서 함수에서 수행하게 된다.
+ * [Lazy]와 같이 값 계산을 지연해서 수형하는데, 값 계산을 [Dispatchers.IO] 환경 하에서 Blocking 하게 수행합니다.
  * 값을 조회할 때, Coroutine Scope 에서 수행해야 한다.
  *
  * ```

@@ -1,20 +1,22 @@
 package io.bluetape4k.coroutines.flow.extensions.internal
 
 import io.bluetape4k.logging.KLogging
-import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.onFailure
+import kotlinx.coroutines.channels.onSuccess
+import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.launch
-import java.util.concurrent.ConcurrentHashMap
-import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.yield
 
 /**
  * Starts collecting all source [Flow]s and relays the items of the first one to emit an item,
  * cancelling the rest.
  * @param sources the array of [Flow]s
  */
+@Deprecated("use ambInternal")
 internal class FlowAmbIterable<T>(private val sources: Iterable<Flow<T>>): Flow<T> {
 
     companion object: KLogging() {
@@ -30,36 +32,45 @@ internal class FlowAmbIterable<T>(private val sources: Iterable<Flow<T>>): Flow<
     }
 
     override suspend fun collect(collector: FlowCollector<T>) = coroutineScope {
-        val winner = atomic(0)
-        val jobs = ConcurrentHashMap<Job, Int>()
-
-        var i = 1
-        sources.forEach { source ->
-            val idx = i
-            val job = launch {
-                source.collect {
-                    if (winner.value == idx) {
-                        collector.emit(it)
-                    } else if (winner.value == 0 && winner.compareAndSet(0, idx)) {
-                        jobs.forEach { (job, j) ->
-                            if (j != idx) {
-                                job.cancel()
-                            }
-                        }
-                        collector.emit(it)
-                    } else {
-                        throw CancellationException()
-                    }
+        val channels = sources.map { flow ->
+            // Produce the values using the default (rendezvous) channel
+            produce {
+                flow.collect {
+                    send(it)
+                    yield() // Emulate fairness, giving each flow chance to emit
                 }
             }
+        }
 
-            jobs[job] = i
-            if (winner.value != 0 && winner.value != i) {
-                jobs.remove(job)
-                job.cancel()
-            } else {
-                i++
+        if (channels.isEmpty()) {
+            return@coroutineScope
+        }
+
+        channels
+            .singleOrNull()
+            ?.let { return@coroutineScope collector.emitAll(it) }
+
+        val (winnerIndex, winnerResult) = select {
+            channels.forEachIndexed { index, channel ->
+                channel.onReceiveCatching {
+                    index to it
+                }
             }
         }
+
+        channels.forEachIndexed { index, channel ->
+            if (index != winnerIndex) {
+                channel.cancel()
+            }
+        }
+
+        winnerResult
+            .onSuccess {
+                collector.emit(it)
+                collector.emitAll(channels[winnerIndex])
+            }
+            .onFailure {
+                it?.let { throw it }
+            }
     }
 }

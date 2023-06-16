@@ -21,13 +21,14 @@ class AsyncRedissonMemorizerTest: AbstractRedissonTest() {
     }
 
     val heavyFunc: (Int) -> CompletableFuture<Int> = heavyMap.asyncMemorizer { x ->
-        Thread.sleep(100)
-        CompletableFuture.completedFuture(x * x)
+        CompletableFuture.supplyAsync {
+            Thread.sleep(100)
+            x * x
+        }
     }
 
     private val factorial: AsyncFactorialProvider by lazy { RedissonAsyncFactorialProvider(redisson) }
     private val fibonacci: AsyncFibonacciProvider by lazy { RedissonAsyncFibonacciProvider(redisson) }
-
 
     @Test
     fun `run heavy function`() {
