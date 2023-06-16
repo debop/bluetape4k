@@ -1,5 +1,6 @@
 package io.bluetape4k.data.redis.redisson.leader.coroutines
 
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.data.redis.redisson.AbstractRedissonTest
 import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
@@ -25,17 +26,18 @@ class RedissonCoLeaderElectionTest: AbstractRedissonTest() {
             launch {
                 leaderElection.runIfLeader(lockName) {
                     log.debug { "작업 1 을 시작합니다." }
-                    delay(100)
+                    delay(10)
                     log.debug { "작업 1 을 종료합니다." }
                 }
-            }
+            }.log("job1")
+
             launch {
                 leaderElection.runIfLeader(lockName) {
                     log.debug { "작업 2 을 시작합니다." }
-                    delay(100)
+                    delay(10)
                     log.debug { "작업 2 을 종료합니다." }
                 }
-            }
+            }.log("job2")
         }
     }
 
@@ -53,7 +55,7 @@ class RedissonCoLeaderElectionTest: AbstractRedissonTest() {
             .add {
                 leaderElection.runIfLeader(lockName) {
                     log.debug { "작업 1 을 시작합니다." }
-                    delay(100)
+                    delay(10)
                     task1.incrementAndGet()
                     log.debug { "작업 1 을 종료합니다." }
                 }
@@ -61,7 +63,7 @@ class RedissonCoLeaderElectionTest: AbstractRedissonTest() {
             .add {
                 leaderElection.runIfLeader(lockName) {
                     log.debug { "작업 2 을 시작합니다." }
-                    delay(100)
+                    delay(10)
                     task2.incrementAndGet()
                     log.debug { "작업 2 을 종료합니다." }
                 }

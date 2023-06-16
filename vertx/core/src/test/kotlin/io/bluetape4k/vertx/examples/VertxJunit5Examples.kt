@@ -51,7 +51,7 @@ class VertxJunit5Examples {
                 req.response().end("Plop")
             }
             .listen(8888)
-            .onComplete(testContext.succeeding {
+            .onSuccess {
                 val client = vertx.createHttpClient()
 
                 // GET http://localhost:8080/ 에 요청하면 "Plop" 이 반환되는지 여부를 확인하는 코드입니다.
@@ -65,7 +65,7 @@ class VertxJunit5Examples {
                             testContext.completeNow()
                         }
                     })
-            })
+            }
     }
 
 
@@ -84,7 +84,7 @@ class VertxJunit5Examples {
                 requestesServed.flag()
             }
             .listen(8888)
-            .onComplete(testContext.succeeding {
+            .onSuccess {
                 serverStarted.flag()
 
                 val client = vertx.createHttpClient()
@@ -100,7 +100,7 @@ class VertxJunit5Examples {
                             }
                         })
                 }
-            })
+            }
     }
 
     /**

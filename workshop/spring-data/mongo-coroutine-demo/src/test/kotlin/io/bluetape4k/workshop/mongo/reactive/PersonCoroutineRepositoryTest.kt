@@ -1,6 +1,8 @@
 package io.bluetape4k.workshop.mongo.reactive
 
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.coroutines.flow.extensions.subject.PublishSubject
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.junit5.awaitility.untilSuspending
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.workshop.mongo.domain.Person
@@ -36,7 +38,7 @@ class PersonCoroutineRepositoryTest @Autowired constructor(
         println("prevCount=$prevCount")
 
         // 신규 Person 2명 추가 
-        repository.saveAll(flowOf(newPerson(), newPerson())).collect()
+        repository.saveAll(flowOf(newPerson(), newPerson())).log("save").collect()
 
         val saveAndCount = repository.count()
         println(saveAndCount)
@@ -46,7 +48,7 @@ class PersonCoroutineRepositoryTest @Autowired constructor(
 
     @Test
     fun `perform conversion before result processing`() = runTest {
-        repository.findAll().count() shouldBeEqualTo 4
+        repository.findAll().log("#1").count() shouldBeEqualTo 4
     }
 
     @Test
@@ -92,11 +94,12 @@ class PersonCoroutineRepositoryTest @Autowired constructor(
 
         // subject 를 collect 하여 queue 에 추가합니다.
         val job = launch(Dispatchers.IO) {
-            subject.collect {
-                println("new added person: $it")
-                queue.add(it)
-            }
-        }
+            subject
+                .log("#1")
+                .collect {
+                    queue.add(it)
+                }
+        }.log("job")
 
         // tailable cursor 를 이용하여 새로 추가되는 Person 을 subject 에 emit 합니다.
         repository.findWithTailableCursorBy()
@@ -126,7 +129,7 @@ class PersonCoroutineRepositoryTest @Autowired constructor(
 
     @Test
     fun `query data with query derivation`() = runTest {
-        val people = repository.findByLastname("White")
+        val people = repository.findByLastname("White").log("person")
         people.count() shouldBeEqualTo 2
     }
 
@@ -138,7 +141,7 @@ class PersonCoroutineRepositoryTest @Autowired constructor(
 
     @Test
     fun `query data with deferred query deviation`() = runTest {
-        val people = repository.findByLastname(mono { "White" })
+        val people = repository.findByLastname(mono { "White" }).log("person")
         people.count() shouldBeEqualTo 2
     }
 

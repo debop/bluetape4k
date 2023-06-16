@@ -1,5 +1,6 @@
 package io.bluetape4k.data.redis.redisson.leader.coroutines
 
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.data.redis.redisson.AbstractRedissonTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
@@ -21,17 +22,18 @@ class RedissonCoLeaderElectionSupportTest: AbstractRedissonTest() {
             launch {
                 redissonClient.runIfLeaderSuspending(jobName) {
                     log.debug { "작업 1 을 시작합니다." }
-                    delay(100)
+                    delay(10)
                     log.debug { "작업 1 을 종료합니다." }
                 }
-            }
+            }.log("job1")
+
             launch {
                 redissonClient.runIfLeaderSuspending(jobName) {
                     log.debug { "작업 2 을 시작합니다." }
-                    delay(100)
+                    delay(10)
                     log.debug { "작업 2 을 종료합니다." }
                 }
-            }
+            }.log("job2")
         }
     }
 }

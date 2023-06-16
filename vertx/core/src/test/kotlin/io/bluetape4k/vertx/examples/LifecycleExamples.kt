@@ -52,13 +52,14 @@ class LifecycleExample {
         vertx.deployVerticle(SampleVerticle(), testContext.succeeding {
             webClient.get(11981, "localhost", "/yo")
                 .`as`(BodyCodec.string())
-                .send(testContext.succeeding { resp ->
+                .send()
+                .onSuccess { resp ->
                     testContext.verify {
                         resp.statusCode() shouldBeEqualTo 200
                         resp.body() shouldContain "Yo!"
                         testContext.completeNow()
                     }
-                })
+                }
         })
     }
 

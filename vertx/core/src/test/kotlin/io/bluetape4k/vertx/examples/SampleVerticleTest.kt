@@ -48,24 +48,25 @@ class SampleVerticleTest {
         val deploymentCheckpoint = testContext.checkpoint()
         val requestCheckpoint = testContext.checkpoint(REPEAT_SIZE)
 
-        vertx.deployVerticle(SampleVerticle(), testContext.succeeding {
-            deploymentCheckpoint.flag()
+        vertx
+            .deployVerticle(SampleVerticle())
+            .onSuccess {
+                deploymentCheckpoint.flag()
 
-            repeat(REPEAT_SIZE) {
-                webClient.get(11981, "localhost", "/")
-                    .`as`(BodyCodec.string())
-                    .send(
-                        testContext.succeeding { resp ->
+                repeat(REPEAT_SIZE) {
+                    log.debug { "Request $it" }
+                    webClient.get(11981, "localhost", "/")
+                        .`as`(BodyCodec.string())
+                        .send()
+                        .onSuccess { resp ->
                             testContext.verify {
-                                log.debug { "Response $resp" }
                                 resp.statusCode() shouldBeEqualTo 200
                                 resp.body() shouldContain "Yo!"
                                 requestCheckpoint.flag()
                             }
                         }
-                    )
+                }
             }
-        })
     }
 
     @Test

@@ -14,7 +14,6 @@ class RedisFutureSupportTest: AbstractLettuceTest() {
         private const val ITEM_SIZE = 500
     }
 
-
     @RepeatedTest(REPEAT_SIZE)
     fun `bulk put asynchroneously`() = runSuspendWithIO {
         val keyName = randomName()
@@ -26,7 +25,6 @@ class RedisFutureSupportTest: AbstractLettuceTest() {
         list shouldHaveSize ITEM_SIZE
 
         asyncCommands.hlen(keyName).await().toInt() shouldBeEqualTo ITEM_SIZE
-
         asyncCommands.del(keyName).await() shouldBeEqualTo 1L
     }
 

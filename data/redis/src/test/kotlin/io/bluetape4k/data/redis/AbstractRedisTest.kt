@@ -17,7 +17,7 @@ abstract class AbstractRedisTest {
 
         @JvmStatic
         protected fun randomName(): String =
-            "bluetape4k:${faker.name().username()}:${Snowfloker.Default.nextId()}"
+            "bluetape4k:${faker.name().username()}:${Snowfloker.Global.nextId()}"
 
         @JvmStatic
         protected fun randomString(size: Int = 2048): String =
