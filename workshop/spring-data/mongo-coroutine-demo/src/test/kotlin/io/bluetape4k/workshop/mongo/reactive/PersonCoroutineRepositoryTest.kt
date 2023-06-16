@@ -1,6 +1,7 @@
 package io.bluetape4k.workshop.mongo.reactive
 
 import io.bluetape4k.coroutines.flow.extensions.subject.PublishSubject
+import io.bluetape4k.junit5.awaitility.untilSuspending
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.workshop.mongo.domain.Person
 import io.bluetape4k.workshop.mongo.domain.PersonCoroutineRepository
@@ -16,7 +17,6 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
 import org.awaitility.kotlin.await
-import org.awaitility.kotlin.until
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.ReactiveMongoOperations
@@ -62,13 +62,13 @@ class PersonCoroutineRepositoryTest @Autowired constructor(
             .doOnTerminate { println("Terminated") }
             .subscribe()
 
-        await until { queue.size >= prevCount }
+        await untilSuspending { queue.size >= prevCount }
 
         repository.save(newPerson())
-        await until { queue.size >= prevCount + 1 }
+        await untilSuspending { queue.size >= prevCount + 1 }
 
         repository.save(newPerson())
-        await until { queue.size >= prevCount + 2 }
+        await untilSuspending { queue.size >= prevCount + 2 }
 
         // flux가 dispose 되면 doOnNext 를 실행하지 않습니다.
         flux.dispose()
@@ -105,13 +105,13 @@ class PersonCoroutineRepositoryTest @Autowired constructor(
             .doOnTerminate { println("Terminated") }
             .subscribe()
 
-        await until { queue.size >= prevCount }
+        await untilSuspending { queue.size >= prevCount }
 
         repository.save(newPerson())
-        await until { queue.size >= prevCount + 1 }
+        await untilSuspending { queue.size >= prevCount + 1 }
 
         repository.save(newPerson())
-        await until { queue.size >= prevCount + 2 }
+        await untilSuspending { queue.size >= prevCount + 2 }
 
         // subject 의 complete 가 호출되면 collect 가 종료됩니다.
         subject.complete()

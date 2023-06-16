@@ -1,16 +1,18 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
 import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
+import io.bluetape4k.coroutines.flow.extensions.log
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
 import io.bluetape4k.junit5.awaitility.untilSuspending
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeTrue
@@ -22,24 +24,24 @@ class ReplaySubjectSizeBoundTest {
     companion object: KLogging()
 
     @Test
-    fun `basic online`() = runSuspendTest {
+    fun `basic online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(10)
             val result = intArrayListOf()
 
             val job = launch {
-                replay.collect {
-                    delay(10)
-                    result.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result.add(it) }
+            }.log("job1")
+
             replay.awaitCollector()
 
             repeat(5) {
                 replay.emit(it)
             }
             replay.complete()
-
             job.join()
 
             result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
@@ -47,7 +49,7 @@ class ReplaySubjectSizeBoundTest {
     }
 
     @Test
-    fun `basic offline`() = runSuspendTest {
+    fun `basic offline`() = runTest {
         val replay = ReplaySubject<Int>(10)
 
         repeat(5) {
@@ -55,18 +57,17 @@ class ReplaySubjectSizeBoundTest {
         }
         replay.complete()
 
-
         val result = intArrayListOf()
-        replay.collect {
-            delay(10)
-            result.add(it)
-        }
+        replay
+            .onEach { delay(10) }
+            .log("#1")
+            .collect { result.add(it) }
 
         result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
     }
 
     @Test
-    fun `error online`() = runSuspendTest {
+    fun `error online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(10)
 
@@ -75,20 +76,23 @@ class ReplaySubjectSizeBoundTest {
 
             val job = launch {
                 try {
-                    replay.collect {
-                        delay(10)
-                        result.add(it)
-                    }
+                    replay
+                        .onEach { delay(10) }
+                        .log("#1")
+                        .collect { result.add(it) }
                 } catch (e: Throwable) {
                     exc.value = e
                 }
-            }
+            }.log("job")
+
             replay.awaitCollector()
 
             repeat(5) {
                 replay.emit(it)
             }
-            replay.emitError(RuntimeException())
+            replay.emitError(RuntimeException("Boom!"))
+            replay.emit(10) // 예외 발생 이후는 emit 하지 않습니다.
+            replay.emit(11)
 
             job.join()
 
@@ -98,7 +102,7 @@ class ReplaySubjectSizeBoundTest {
     }
 
     @Test
-    fun `error offline`() = runSuspendTest {
+    fun `error offline`() = runTest {
         val replay = ReplaySubject<Int>(10)
 
         val result = intArrayListOf()
@@ -107,12 +111,14 @@ class ReplaySubjectSizeBoundTest {
         repeat(5) {
             replay.emit(it)
         }
-        replay.emitError(RuntimeException())
+        replay.emitError(RuntimeException("Boom!"))
+        replay.emit(10)  // 예외 발생 이후는 emit 하지 않습니다.
+        replay.emit(11)
 
         try {
-            replay.collect {
-                result.add(it)
-            }
+            replay
+                .log("#1")
+                .collect { result.add(it) }
         } catch (e: Throwable) {
             exc.value = e
         }
@@ -122,17 +128,17 @@ class ReplaySubjectSizeBoundTest {
     }
 
     @Test
-    fun `take online`() = runSuspendTest {
+    fun `take online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(10)
             val result = intArrayListOf()
 
             val job = launch {
-                replay.take(3).collect {
-                    delay(10)
-                    result.add(it)
-                }
-            }
+                replay.take(3)
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result.add(it) }
+            }.log("job")
             replay.awaitCollector()
 
             repeat(5) {
@@ -146,7 +152,7 @@ class ReplaySubjectSizeBoundTest {
     }
 
     @Test
-    fun `take offline`() = runSuspendTest {
+    fun `take offline`() = runTest {
         val replay = ReplaySubject<Int>(10)
 
         repeat(5) {
@@ -154,49 +160,55 @@ class ReplaySubjectSizeBoundTest {
         }
         replay.complete()
 
-
         val result = intArrayListOf()
-        replay.take(3).collect {
-            result.add(it)
-        }
+        replay.take(3)
+            .log("#1")
+            .collect {
+                result.add(it)
+            }
 
         result shouldBeEqualTo intArrayListOf(0, 1, 2)
     }
 
     @Test
-    fun `bounded online`() = runSuspendTest {
+    fun `bounded online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(2)
             val result = intArrayListOf()
 
             val job = launch {
-                replay.collect {
-                    delay(10)
-                    result.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result.add(it) }
+            }.log("job")
+
             replay.awaitCollector()
 
             repeat(5) {
                 replay.emit(it)
             }
             replay.complete()
-
             job.join()
 
             result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
 
+            // replay -------------------------
+
             result.clear()
 
-            replay.collect {
-                result.add(it)
-            }
+            replay
+                .log("#2")
+                .collect {
+                    result.add(it)
+                }
             result shouldBeEqualTo intArrayListOf(3, 4)
         }
     }
 
     @Test
-    fun `bounded offline`() = runSuspendTest {
+    fun `bounded offline`() = runTest {
+        // 마지막 2개를 버퍼링한다 
         val replay = ReplaySubject<Int>(2)
 
         repeat(5) {
@@ -204,36 +216,36 @@ class ReplaySubjectSizeBoundTest {
         }
         replay.complete()
 
-
         val result = intArrayListOf()
-        replay.collect {
-            delay(10)
-            result.add(it)
-        }
+        replay
+            .onEach { delay(10) }
+            .log("#1")
+            .collect { result.add(it) }
 
         result shouldBeEqualTo intArrayListOf(3, 4)
     }
 
     @Test
-    fun `multiple online`() = runSuspendTest {
+    fun `multiple online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(10)
 
             val result1 = intArrayListOf()
-            val job1 = launch {
-                replay.collect {
-                    delay(50)
-                    result1.add(it)
-                }
-            }
-
             val result2 = intArrayListOf()
+
+            val job1 = launch {
+                replay
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result1.add(it) }
+            }.log("job1")
+
             val job2 = launch {
-                replay.collect {
-                    delay(100)
-                    result2.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(20) }
+                    .log("#2")
+                    .collect { result2.add(it) }
+            }.log("jbo2")
 
             replay.awaitCollector()
 
@@ -251,25 +263,25 @@ class ReplaySubjectSizeBoundTest {
     }
 
     @Test
-    fun `multiple with take online`() = runSuspendTest {
+    fun `multiple with take online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(10)
 
             val result1 = intArrayListOf()
             val job1 = launch {
-                replay.collect {
-                    delay(50)
-                    result1.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result1.add(it) }
+            }.log("job1")
 
             val result2 = intArrayListOf()
             val job2 = launch {
-                replay.take(3).collect {
-                    delay(100)
-                    result2.add(it)
-                }
-            }
+                replay.take(3)
+                    .onEach { delay(20) }
+                    .log("#2")
+                    .collect { result2.add(it) }
+            }.log("job2")
 
             replay.awaitCollector()
 
@@ -287,7 +299,7 @@ class ReplaySubjectSizeBoundTest {
     }
 
     @Test
-    fun `cancelled consumer`() = runSuspendTest {
+    fun `cancelled consumer`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(20)
 
@@ -296,12 +308,13 @@ class ReplaySubjectSizeBoundTest {
             val counter1 = atomic(0)
 
             val job1 = launch {
-                replay.collect {
-                    log.trace { "collect in job1: $it" }
-                    if (counter1.incrementAndGet() == expected) {
-                        this.cancel()
+                replay
+                    .log("#1")
+                    .collect {
+                        if (counter1.incrementAndGet() == expected) {
+                            this.cancel()
+                        }
                     }
-                }
             }
 
             replay.awaitCollector()
@@ -319,7 +332,7 @@ class ReplaySubjectSizeBoundTest {
     }
 
     @Test
-    fun `cancelled one collector second completes`() = runSuspendTest {
+    fun `cancelled one collector second completes`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(20)
 
@@ -330,16 +343,22 @@ class ReplaySubjectSizeBoundTest {
             val counter2 = atomic(0)
 
             val job1 = launch {
-                replay.collect {
-                    log.trace { "collect in job1: $it" }
-                    if (counter1.incrementAndGet() == expected) {
-                        this.cancel()
+                replay
+                    .onEach { delay(1) }
+                    .log("#1")
+                    .collect {
+                        if (counter1.incrementAndGet() == expected) {
+                            this.cancel()
+                        }
                     }
-                }
-            }
+            }.log("job1")
+
             val job2 = launch {
-                replay.collect { counter2.incrementAndGet() }
-            }
+                replay
+                    .onEach { delay(1) }
+                    .log("#2")
+                    .collect { counter2.incrementAndGet() }
+            }.log("job2")
 
             replay.awaitCollector()
 
@@ -348,7 +367,7 @@ class ReplaySubjectSizeBoundTest {
             }
 
             replay.complete()
-            job2.join()
+            await untilSuspending { job1.isCancelled && job2.isCompleted && replay.collectorCount == 0 }
 
             job1.isCancelled.shouldBeTrue()
             job2.isCompleted.shouldBeTrue()

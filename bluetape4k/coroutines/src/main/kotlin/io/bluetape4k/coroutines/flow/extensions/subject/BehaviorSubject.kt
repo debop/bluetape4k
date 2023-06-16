@@ -2,6 +2,7 @@ package io.bluetape4k.coroutines.flow.extensions.subject
 
 import io.bluetape4k.coroutines.flow.extensions.Resumable
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.error
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.AbstractFlow
 import kotlinx.coroutines.flow.FlowCollector
@@ -11,10 +12,10 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
 
 /**
- * 하나의 Item을 캐시했다가 새로운 collectors 에게 replay 합니다.
+ * 컬렉터가 없을 때에도 최근의 Item 한 개를 캐시했다가 새로운 collectors 에게 replay 합니다.
  */
 class BehaviorSubject<T> private constructor(
-    @Volatile private var current: Node<T>
+    @Volatile private var current: Node<T>,
 ): AbstractFlow<T>(), SubjectApi<T> {
 
     companion object: KLogging() {
@@ -90,6 +91,8 @@ class BehaviorSubject<T> private constructor(
             runCatching {
                 innerCollector.consumeReady.await()
                 innerCollector.resume()
+            }.onFailure {
+                log.error(it) { "Fail to complete. innerCollector=$innerCollector" }
             }
         }
     }

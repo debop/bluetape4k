@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.toList
 
 internal val logger = KotlinLogging.logger {}
 
+@Suppress("IMPLICIT_CAST_TO_ANY")
 fun <T> Flow<T>.log(tag: Any): Flow<T> =
     onStart { logger.debug { "[$tag] Start " } }
         .onEach {
@@ -22,7 +23,7 @@ fun <T> Flow<T>.log(tag: Any): Flow<T> =
                 is Flow<*> -> it.toList()
                 else       -> it
             }
-            logger.debug { "[$tag] Emit $item" }
+            logger.debug { "[$tag] emit $item" }
         }
         .onCompletion {
             if (it == null) {
@@ -34,8 +35,7 @@ fun <T> Flow<T>.log(tag: Any): Flow<T> =
                 }
             }
         }
-        .onEmpty { logger.debug { "[$tag] empty" } }
-
+        .onEmpty { logger.debug { "[$tag] Flow is empty" } }
 
 // FIXME: 이 방식은 `unsafeFlow` 때문에 예외가 발생한다.
 //@Suppress("UNCHECKED_CAST")

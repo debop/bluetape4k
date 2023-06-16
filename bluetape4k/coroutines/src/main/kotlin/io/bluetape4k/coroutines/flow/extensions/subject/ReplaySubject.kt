@@ -13,7 +13,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
 
 /**
- * Caches and replays some or all items to collectors.
+ * Producer 가 emit 한 item 들을 캐시하고, collector 가 소비할 때 replay 방식으로 요소를 제공한다
  *
  * NOTE: [kotlinx.coroutines.flow.SharedFlow] 를 사용하는 걸 추천합니다.
  *
@@ -81,9 +81,11 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
         }
         done.value = true
         buffer.error(ex)
-        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>).forEach { collector ->
-            collector.resume()
-        }
+
+        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>)
+            .forEach { collector ->
+                collector.resume()
+            }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -93,9 +95,11 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
         }
         done.value = true
         buffer.complete()
-        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>).forEach { collector ->
-            collector.resume()
-        }
+
+        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>)
+            .forEach { collector ->
+                collector.resume()
+            }
     }
 
     @Suppress("UNCHECKED_CAST")

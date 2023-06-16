@@ -1,13 +1,15 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
 import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
+import io.bluetape4k.coroutines.flow.extensions.log
+import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
 import io.bluetape4k.junit5.awaitility.untilSuspending
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
@@ -28,18 +30,18 @@ class ReplaySubjectUnboundedTest {
             val result = intArrayListOf()
 
             val job = launch {
-                replay.collect {
-                    delay(10)
-                    result.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(10) }
+                    .log("#1")
+                    .collect { result.add(it) }
+            }.log("job1")
+
             replay.awaitCollector()
 
             repeat(5) {
                 replay.emit(it)
             }
             replay.complete()
-
             job.join()
 
             result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
@@ -57,10 +59,10 @@ class ReplaySubjectUnboundedTest {
 
 
         val result = intArrayListOf()
-        replay.collect {
-            delay(10)
-            result.add(it)
-        }
+        replay
+            .onEach { delay(10) }
+            .log("#1")
+            .collect { result.add(it) }
 
         result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
     }
@@ -75,14 +77,14 @@ class ReplaySubjectUnboundedTest {
 
             val job = launch {
                 try {
-                    replay.collect {
-                        delay(10)
-                        result.add(it)
-                    }
+                    replay
+                        .onEach { delay(10) }
+                        .log("#1")
+                        .collect { result.add(it) }
                 } catch (e: Throwable) {
                     exc.value = e
                 }
-            }
+            }.log("job")
             replay.awaitCollector()
 
             repeat(5) {
@@ -110,9 +112,9 @@ class ReplaySubjectUnboundedTest {
         replay.emitError(RuntimeException())
 
         try {
-            replay.collect {
-                result.add(it)
-            }
+            replay
+                .log("#1")
+                .collect { result.add(it) }
         } catch (e: Throwable) {
             exc.value = e
         }
@@ -128,10 +130,11 @@ class ReplaySubjectUnboundedTest {
             val result = intArrayListOf()
 
             val job = launch {
-                replay.take(3).collect {
-                    delay(10)
-                    result.add(it)
-                }
+                replay
+                    .onEach { delay(10) }
+                    .take(3)
+                    .log("#1")
+                    .collect { result.add(it) }
             }
             replay.awaitCollector()
 
@@ -154,11 +157,11 @@ class ReplaySubjectUnboundedTest {
         }
         replay.complete()
 
-
         val result = intArrayListOf()
-        replay.take(3).collect {
-            result.add(it)
-        }
+        replay
+            .take(3)
+            .log("#1")
+            .collect { result.add(it) }
 
         result shouldBeEqualTo intArrayListOf(0, 1, 2)
     }
@@ -170,19 +173,19 @@ class ReplaySubjectUnboundedTest {
 
             val result1 = intArrayListOf()
             val job1 = launch {
-                replay.collect {
-                    delay(50)
-                    result1.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(50) }
+                    .log("#1")
+                    .collect { result1.add(it) }
+            }.log("job1")
 
             val result2 = intArrayListOf()
             val job2 = launch {
-                replay.collect {
-                    delay(100)
-                    result2.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(100) }
+                    .log("#2")
+                    .collect { result2.add(it) }
+            }.log("job2")
 
             replay.awaitCollector()
 
@@ -206,18 +209,19 @@ class ReplaySubjectUnboundedTest {
 
             val result1 = intArrayListOf()
             val job1 = launch {
-                replay.collect {
-                    delay(50)
-                    result1.add(it)
-                }
-            }
+                replay
+                    .onEach { delay(50) }
+                    .log("#1")
+                    .collect { result1.add(it) }
+            }.log("job1")
 
             val result2 = intArrayListOf()
             val job2 = launch {
-                replay.take(3).collect {
-                    delay(100)
-                    result2.add(it)
-                }
+                replay
+                    .onEach { delay(100) }
+                    .take(3)
+                    .log("#2")
+                    .collect { result2.add(it) }
             }
 
             replay.awaitCollector()
@@ -245,13 +249,15 @@ class ReplaySubjectUnboundedTest {
             val counter1 = atomic(0)
 
             val job1 = launch {
-                replay.collect {
-                    log.trace { "collect in job1: $it" }
-                    if (counter1.incrementAndGet() == expected) {
-                        this.cancel()
+                replay
+                    .log("#1")
+                    .collect {
+                        if (counter1.incrementAndGet() == expected) {
+                            this.cancel()
+                        }
                     }
-                }
-            }
+            }.log("job1")
+
             replay.awaitCollector()
 
             repeat(n) {
@@ -278,16 +284,22 @@ class ReplaySubjectUnboundedTest {
             val counter2 = atomic(0)
 
             val job1 = launch {
-                replay.collect {
-                    log.trace { "collect in job1: $it" }
-                    if (counter1.incrementAndGet() == expected) {
-                        this.cancel()
+                replay
+                    .onEach { delay(1) }
+                    .log("#1")
+                    .collect {
+                        if (counter1.incrementAndGet() == expected) {
+                            this.cancel()
+                        }
                     }
-                }
-            }
+            }.log("job1")
+
             val job2 = launch {
-                replay.collect { counter2.incrementAndGet() }
-            }
+                replay
+                    .onEach { delay(1) }
+                    .log("#2")
+                    .collect { counter2.incrementAndGet() }
+            }.log("job2")
 
             replay.awaitCollector()
 
