@@ -1106,9 +1106,9 @@ object Libs {
     val r2dbc_spi = r2dbc("spi")
 
     // 참고 : https://github.com/asyncer-io/r2dbc-mysql
-    // NOTE: Spring Boot 2.6 에서는 miku 것을 사용
+    // NOTE: Spring Boot 3.0+ 에서는 asyncer 1.0.2 를 사용
     // NOTE: Spring Boot 2.7 에서는 asyncer 0.9+ 를 사용
-    // NOTE: Spring Boot 3.0+ 에서는 asyncer 1.0.2 를 사용 
+    // NOTE: Spring Boot 2.6 에서는 miku 것을 사용
     // https://github.com/mirromutth/r2dbc-mysql
     // https://github.com/asyncer-io/r2dbc-mysql
     val r2dbc_mysql_0_9 = "io.asyncer:r2dbc-mysql:0.9.3"

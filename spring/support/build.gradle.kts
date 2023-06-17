@@ -9,10 +9,15 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
+    api(project(":bluetape4k-io-json"))
     testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.spring("context-support"))
     compileOnly(Libs.springData("commons"))
+
+    compileOnly(Libs.spring("web"))
+    compileOnly(Libs.springBoot("autoconfigure"))
+
 
     api(Libs.javax_annotation_api)
     compileOnly(Libs.findbugs)
