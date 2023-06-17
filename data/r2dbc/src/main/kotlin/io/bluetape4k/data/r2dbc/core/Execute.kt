@@ -12,18 +12,37 @@ import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.RowsFetchSpec
 import kotlin.reflect.KClass
 
+/**
+ * 지정한 [sql] 을 수행할 [DatabaseClient.GenericExecuteSpec] 을 생성합니다.
+ *
+ * @param sql 수행할 SQL 구문
+ * @return [DatabaseClient.GenericExecuteSpec] 인스턴스
+ */
+fun R2dbcClient.execute(sql: String): DatabaseClient.GenericExecuteSpec = this.databaseClient.sql(sql)
 
-fun R2dbcClient.execute(sql: String) = this.databaseClient.sql(sql)
-
+/**
+ * 지정한 [sql] 을 수행할 [DatabaseClient.GenericExecuteSpec] 을 생성합니다.
+ *
+ * @param sql 수행할 SQL 구문
+ * @param parameters Binding 할 parameters
+ * @return [DatabaseClient.GenericExecuteSpec] 인스턴스
+ */
 fun R2dbcClient.execute(sql: String, parameters: Map<String, Any?>): DatabaseClient.GenericExecuteSpec =
     databaseClient.sql(sql).bindMap(parameters)
 
+/**
+ * 지정한 [query]로부터 SQL 문과 Parameters 정보를 이용하여 [DatabaseClient.GenericExecuteSpec]를 생성합니다.
+ *
+ * @param query [io.bluetape4k.data.r2dbc.query.QueryBuilder]로부터 생성한 [Query]
+ * @return [DatabaseClient.GenericExecuteSpec] 인스턴스
+ *
+ * @see [io.bluetape4k.data.r2dbc.query.QueryBuilder]
+ */
 fun R2dbcClient.execute(query: Query): DatabaseClient.GenericExecuteSpec =
     execute(query.sql, query.parameters)
 
-inline fun <reified T: Any> R2dbcClient.execute(sql: String): BindSpec<T> {
-    return BindSpecImpl(this, sql, T::class)
-}
+inline fun <reified T: Any> R2dbcClient.execute(sql: String): BindSpec<T> =
+    BindSpecImpl(this, sql, T::class)
 
 interface BindSpec<T: Any> {
     fun bind(index: Int, value: Any): BindSpec<T>
