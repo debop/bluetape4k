@@ -32,7 +32,4 @@ dependencies {
     api(Libs.avro_kotlin)
     api(Libs.snappy_java)
     compileOnly(Libs.zstd_jni)
-
-    implementation(Libs.jackson_databind)
-    implementation(Libs.jackson_module_kotlin)
 }

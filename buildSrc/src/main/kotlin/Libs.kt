@@ -134,7 +134,7 @@ object Versions {
     const val okhttp3 = "4.11.0"
     const val asynchttpclient = "2.12.3"
 
-    const val jackson = "2.15.0"
+    const val jackson = "2.15.2"
     const val jjwt = "0.11.5"
 
     const val mapstruct = "1.5.5.Final"

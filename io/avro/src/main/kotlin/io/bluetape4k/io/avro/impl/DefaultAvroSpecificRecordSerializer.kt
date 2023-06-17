@@ -4,6 +4,7 @@ import io.bluetape4k.io.avro.AvroSpecificRecordSerializer
 import io.bluetape4k.io.avro.DEFAULT_CODEC_FACTORY
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
+import io.bluetape4k.support.isNullOrEmpty
 import org.apache.avro.file.CodecFactory
 import org.apache.avro.file.DataFileReader
 import org.apache.avro.file.DataFileWriter
@@ -60,6 +61,35 @@ class DefaultAvroSpecificRecordSerializer private constructor(
     }
 
     /**
+     * Avro [SpecificRecord] 인스턴스의 컬렉션을 직렬화하여 [ByteArray]로 반환합니다.
+     *
+     * @param T 컬렉션 요소의 수형
+     * @param collection Avro로 인코딩할 컬렉션
+     * @return  [ByteArray] 인스턴스
+     */
+    override fun <T: SpecificRecord> serializeList(collection: List<T>?): ByteArray? {
+        if (collection.isNullOrEmpty()) {
+            return null
+        }
+        return try {
+            val schema = collection.first().schema
+            val sdw = SpecificDatumWriter<T>(schema)
+            DataFileWriter(sdw).setCodec(codecFactory).use { dfw ->
+                ByteArrayOutputStream().use { bos ->
+                    dfw.create(schema, bos)
+                    collection.forEach { dfw.append(it) }
+                    dfw.flush()
+
+                    bos.toByteArray()
+                }
+            }
+        } catch (e: Throwable) {
+            log.error(e) { "Fail to serialize avro. collection=$collection" }
+            null
+        }
+    }
+
+    /**
      * Avro [SpecificRecord]의 직렬화된 정보를 역직렬화하여 [class] 형식의 인스턴스를 빌드합니다.
      *
      * @param avroBytes [SpecificRecord]의 직렬화된 정보
@@ -82,6 +112,35 @@ class DefaultAvroSpecificRecordSerializer private constructor(
         } catch (e: Throwable) {
             log.error(e) { "Fail to deserialize avro instance. clazz=$clazz," }
             null
+        }
+    }
+
+    /**
+     * Avro [SpecificRecord] 컬렉션의 직렬화된 정보를 역직렬화하여 [clazz] 컬렉션 형식의 인스턴스를 빌드합니다.
+     *
+     * @param T 컬렉션 요소의 수형
+     * @param avroBytes Avro 직렬화된 정보
+     * @param clazz  컬렉션 요소의 수형
+     * @return [List<T>] 인스턴스
+     */
+    override fun <T: SpecificRecord> deserializeList(avroBytes: ByteArray?, clazz: Class<T>): List<T> {
+        if (avroBytes.isNullOrEmpty()) {
+            return emptyList()
+        }
+        return try {
+            val result = mutableListOf<T>()
+            SeekableByteArrayInput(avroBytes).use { sin ->
+                val sdr = SpecificDatumReader(clazz)
+                DataFileReader(sin, sdr).use { dfr ->
+                    while (dfr.hasNext()) {
+                        result.add(dfr.next())
+                    }
+                }
+            }
+            result
+        } catch (e: Throwable) {
+            log.error(e) { "Fail to deserialize avro collection. clazz=$clazz" }
+            emptyList()
         }
     }
 }

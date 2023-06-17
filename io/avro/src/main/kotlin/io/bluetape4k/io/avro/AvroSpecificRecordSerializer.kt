@@ -48,6 +48,25 @@ interface AvroSpecificRecordSerializer {
     fun <T: SpecificRecord> deserializeFromString(avroText: String?, clazz: Class<T>): T? {
         return avroText?.run { deserialize(this.decodeBase64ByteArray(), clazz) }
     }
+
+    /**
+     * Avro [SpecificRecord] 인스턴스의 컬렉션을 직렬화하여 [ByteArray]로 반환합니다.
+     *
+     * @param T 컬렉션 요소의 수형
+     * @param collection Avro로 인코딩할 컬렉션
+     * @return  [ByteArray] 인스턴스
+     */
+    fun <T: SpecificRecord> serializeList(collection: List<T>?): ByteArray?
+
+    /**
+     * Avro [SpecificRecord] 컬렉션의 직렬화된 정보를 역직렬화하여 [clazz] 컬렉션 형식의 인스턴스를 빌드합니다.
+     *
+     * @param T 컬렉션 요소의 수형
+     * @param avroBytes Avro 직렬화된 정보
+     * @param clazz  컬렉션 요소의 수형
+     * @return [List<T>] 인스턴스
+     */
+    fun <T: SpecificRecord> deserializeList(avroBytes: ByteArray?, clazz: Class<T>): List<T>
 }
 
 /**
