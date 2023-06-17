@@ -1,3 +1,7 @@
+plugins {
+    kotlin("plugin.serialization")
+}
+
 dependencyManagement {
     imports {
         mavenBom(Libs.jackson_bom)
@@ -29,6 +33,8 @@ dependencies {
 
     compileOnly(Libs.jackson_dataformat_properties)
     compileOnly(Libs.jackson_dataformat_yaml)
+
+    compileOnly(Libs.kotlinx_serialization_json_jvm)
 
     // Gson
     compileOnly(Libs.gson)

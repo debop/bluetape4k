@@ -6,6 +6,7 @@ import io.bluetape4k.io.cryptography.encrypt.RC4
 import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.io.json.jackson.prettyWriteAsString
 import io.bluetape4k.io.json.jackson.writeAsString
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
@@ -20,6 +21,7 @@ class JsonEncryptTest {
 
     companion object: KLogging() {
         private const val REPEAT_COUNT = 5
+        private val faker = Fakers.faker
     }
 
     data class User(
@@ -36,7 +38,7 @@ class JsonEncryptTest {
 
     @Test
     fun `encrypt string property`() {
-        val user = User("debop", "mypassword", "010-8955-0581")
+        val user = User(faker.name().username(), "mypassword", "010-8955-0581")
         log.debug { mapper.prettyWriteAsString(user) }
 
         val encrypted = mapper.writeAsString(user)!!

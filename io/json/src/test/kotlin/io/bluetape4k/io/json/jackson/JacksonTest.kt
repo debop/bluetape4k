@@ -2,14 +2,12 @@ package io.bluetape4k.io.json.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.bluetape4k.io.json.jackson.uuid.JsonUuidModule
-import io.bluetape4k.junit5.output.CaptureOutput
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldContainAll
 import org.junit.jupiter.api.Test
 
-@CaptureOutput
 class JacksonTest {
     companion object: KLogging()
 

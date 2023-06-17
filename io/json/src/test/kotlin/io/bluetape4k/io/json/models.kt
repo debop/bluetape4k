@@ -1,6 +1,5 @@
 package io.bluetape4k.io.json
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.core.AbstractValueObject
@@ -19,7 +18,7 @@ enum class Generation {
 
 // DefaultObjectMapper를 사용해도 @JsonTypeInfo 를 지정하면 JSON에 class 정보를 포함시켜줍니다.
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
-data class Address @JsonCreator constructor(
+data class Address(
     var street: String? = null,
     var phone: String? = null,
     val props: MutableList<String> = fastListOf(),
@@ -31,26 +30,26 @@ interface Person {
     val age: Int
 }
 
-data class Professor @JsonCreator constructor(
+data class Professor(
     override val name: String,
     override val age: Int,
     val spec: String? = null,
 ): Person
 
-data class Student @JsonCreator constructor(
+data class Student(
     override val name: String,
     override val age: Int,
     val degree: String? = null,
 ): Person
 
-data class OptionalData @JsonCreator constructor(
+data class OptionalData(
     override val name: String,
     override val age: Int,
     val spec: Optional<String>,
 ): Person
 
 
-data class OptionalCollection @JsonCreator constructor(
+data class OptionalCollection(
     override val name: String,
     override val age: Int,
     val spec: Optional<String>,
@@ -58,6 +57,7 @@ data class OptionalCollection @JsonCreator constructor(
 ): Person
 
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 open class User: AbstractValueObject(), Comparable<User> {
 
     lateinit var firstname: String
@@ -86,8 +86,10 @@ open class User: AbstractValueObject(), Comparable<User> {
 
     override fun equalProperties(other: Any): Boolean =
         other is User &&
-            firstname == other.firstname &&
-            lastname == other.lastname
+        firstname == other.firstname &&
+        lastname == other.lastname
+
+    override fun equals(other: Any?): Boolean = other != null && super.equals(other)
 
     override fun hashCode(): Int = hashOf(firstname, lastname)
 
