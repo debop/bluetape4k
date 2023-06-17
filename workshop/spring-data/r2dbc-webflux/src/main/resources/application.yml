@@ -1,0 +1,8 @@
+spring:
+    r2dbc:
+        pool:
+            initial-size: 16
+            max-size: 16
+        url: r2dbc:h2:mem:///pocdb?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+        username: sa
+        password:

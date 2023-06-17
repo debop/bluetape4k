@@ -70,6 +70,29 @@ class ExecuteTest(): AbstractR2dbcTest() {
         smiths2 shouldHaveSize 1
     }
 
+    /**
+     * Select values with indexed parameters
+     *
+     * @see [org.springframework.r2dbc.core.binding.BindMarkersFactoryResolver.BuiltInBindMarkersFactoryProvider]
+     */
+    @Test
+    fun `select values with indexed parameters`() = runSuspendWithIO {
+        val smiths = client.execute<User>("SELECT * FROM users WHERE username = :username")
+            .bind(0, "jsmith")
+            .fetch().flow().toList()
+        smiths shouldHaveSize 1
+
+        val smiths2 = client.execute<User>("SELECT * FROM users WHERE username = $1")
+            .bind(0, "jsmith")
+            .fetch().flow().toList()
+        smiths2 shouldHaveSize 1
+
+        val smiths3 = client.execute<User>("SELECT * FROM users WHERE username = $1")
+            .bind("$1", "jsmith")
+            .fetch().flow().toList()
+        smiths3 shouldHaveSize 1
+    }
+
     @Test
     fun `select values using query builder`() = runSuspendWithIO {
         val query = query {

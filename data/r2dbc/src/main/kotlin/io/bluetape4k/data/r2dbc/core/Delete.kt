@@ -10,8 +10,16 @@ import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.FetchSpec
 import reactor.core.publisher.Mono
 
+/**
+ * 삭제를 수행하는 [DeleteTableSpec] 을 생성합니다.
+ *
+ * @return [DeleteTableSpec] 인스턴스
+ */
 fun R2dbcClient.delete(): DeleteTableSpec = DeleteTableSpecImpl(this)
 
+/**
+ * 데이트를 삭제하기 위한 SQL 구문을 생성합니다
+ */
 interface DeleteTableSpec {
     fun from(table: String): DeleteValueSpec
     fun <T> from(type: Class<T>): ReactiveDeleteOperation.ReactiveDelete
@@ -28,13 +36,37 @@ private class DeleteTableSpecImpl(private val client: R2dbcClient): DeleteTableS
         client.entityTemplate.delete(type)
 }
 
+/**
+ * 삭제를 위한 SQL 구문을 생성합니다.
+ */
 interface DeleteValueSpec {
-
+    /**
+     * 삭제를 위한 SQL 구문을 생성합니다.
+     *
+     * ```
+     * val client: R2dbcClient = ...
+     *
+     * client.delete()
+     *      .from("Posts")
+     *      .matching("id", mapOf("id", 1L))
+     *      .fetch()
+     *      .awaitSingleOrNull()
+     * ```
+     * @param where
+     * @param whereParameters
+     * @return
+     */
     fun matching(
         where: String? = null,
         whereParameters: Map<String, Any?>? = null,
     ): DatabaseClient.GenericExecuteSpec
 
+    /**
+     * 삭제를 위한 SQL 구문을 생성합니다.
+     *
+     * @param query 삭제 조건에 해당하는 [Query]
+     * @return [DatabaseClient.GenericExecuteSpec] 인스턴스
+     */
     fun matching(query: Query): DatabaseClient.GenericExecuteSpec =
         matching(query.sql, query.parameters)
 
@@ -54,11 +86,11 @@ private class DeleteValueSpecImpl(
         whereParameters: Map<String, Any?>?,
     ): DatabaseClient.GenericExecuteSpec {
         val sql = "DELETE FROM $table"
-        val sqlToExecute = when (where) {
+        val sqlToDelete = when (where) {
             null -> sql
             else -> "$sql WHERE $where"
         }
-        log.debug { "Delete SQL=$sqlToExecute" }
-        return client.databaseClient.sql(sqlToExecute).bindMap(whereParameters ?: emptyMap())
+        log.debug { "Delete SQL=$sqlToDelete" }
+        return client.databaseClient.sql(sqlToDelete).bindMap(whereParameters ?: emptyMap())
     }
 }

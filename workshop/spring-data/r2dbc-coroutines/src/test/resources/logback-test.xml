@@ -26,6 +26,7 @@
     
     <logger name="org.springframework.transaction" level="TRACE"/>
     <logger name="org.springframework.data.r2dbc.connectionfactory" level="DEBUG"/>
+    <logger name="org.springframework.r2dbc.core.DefaultDatabaseClient" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref  ref="console"/>

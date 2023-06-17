@@ -6,6 +6,22 @@ import org.springframework.r2dbc.core.DatabaseClient
 
 private val log = KotlinLogging.logger { }
 
+/**
+ * Query의 parameter 정보를 매핑합니다.
+ *
+ * ```
+ * val sql = "SELECT * FROM Persons where username = :username"
+ * val parameters = mapOf("username", "Scott")
+ *
+ * val rows = return databaseClient
+ *     .sql(sql)
+ *     .bindMap(parameters)
+ *     .map { row, rowMetadata ->
+ *         mappingConverter.read(T::class.java, row, rowMetadata)
+ * ```
+ *
+ * @param parameters named query parameters
+ */
 fun DatabaseClient.GenericExecuteSpec.bindMap(parameters: Map<String, Any?>): DatabaseClient.GenericExecuteSpec {
     return parameters.entries.fold(this) { spec, entry ->
         log.debug { "bind map. name=${entry.key}, value=${entry.value}" }
@@ -17,6 +33,22 @@ fun DatabaseClient.GenericExecuteSpec.bindMap(parameters: Map<String, Any?>): Da
     }
 }
 
+/**
+ * Query의 parameter 정보를 매핑합니다.
+ *
+ * ```
+ * val sql = "SELECT * FROM Persons where username = ?1"
+ * val parameters = mapOf(1, "Scott")
+ *
+ * val rows = return databaseClient
+ *     .sql(sql)
+ *     .bindIndexedMap(parameters)
+ *     .map { row, rowMetadata ->
+ *         mappingConverter.read(T::class.java, row, rowMetadata)
+ * ```
+ *
+ * @param parameters named query parameters
+ */
 fun DatabaseClient.GenericExecuteSpec.bindIndexedMap(parameters: Map<Int, Any?>): DatabaseClient.GenericExecuteSpec {
     return parameters.entries.fold(this) { spec, entry ->
         log.debug { "bind map. index=${entry.key}, value=${entry.value}" }

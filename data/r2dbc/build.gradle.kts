@@ -26,6 +26,8 @@ dependencies {
     compileOnly(Libs.springBootStarter("data-r2dbc"))
     compileOnly(Libs.r2dbc_h2)
     compileOnly(Libs.r2dbc_pool)
+    compileOnly(Libs.r2dbc_mysql_0_9)
+    compileOnly(Libs.r2dbc_postgresql)
 
     // Spring Boot
     compileOnly(Libs.springBoot("autoconfigure"))
