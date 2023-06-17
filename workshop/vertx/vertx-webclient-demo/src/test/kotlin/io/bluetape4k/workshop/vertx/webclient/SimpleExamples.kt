@@ -31,14 +31,14 @@ class SimpleExamples {
                 .requestHandler { req ->
                     req.response().end("Hello World!")
                 }
-                .listen(port) { listenResult ->
-                    if (listenResult.succeeded()) {
-                        log.info { "Server started on port 8080" }
-                        promise.complete()
-                    } else {
-                        log.error(listenResult.cause()) { "Server failed to start" }
-                        promise.fail(listenResult.cause())
-                    }
+                .listen(port)
+                .onSuccess {
+                    log.info { "Server started on port 8080" }
+                    promise.complete()
+                }
+                .onFailure { error ->
+                    log.error(error) { "Server failed to start" }
+                    promise.fail(error)
                 }
         }
     }
