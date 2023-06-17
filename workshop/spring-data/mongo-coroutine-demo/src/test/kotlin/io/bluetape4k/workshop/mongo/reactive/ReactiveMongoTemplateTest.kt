@@ -1,5 +1,6 @@
 package io.bluetape4k.workshop.mongo.reactive
 
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.workshop.mongo.domain.Person
 import kotlinx.coroutines.flow.toList
@@ -44,8 +45,9 @@ class ReactiveMongoTemplateTest(
 
     @Test
     fun `find by query`() = runTest {
-        val query = Query.query(Criteria.where("lastname").`is`("White"))
-        val persons = operations.find<Person>(query).asFlow().toList()
+        val query = Query.query(Criteria.where(Person::lastname.name).`is`("White"))
+        val persons = operations.find<Person>(query).asFlow().log("persons").toList()
+
         persons shouldHaveSize 2
     }
 }

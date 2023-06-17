@@ -1,13 +1,15 @@
 package io.bluetape4k.workshop.mongo.domain
 
+import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.coroutines.flow.eclipse.toFastList
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.workshop.mongo.AbstractMongoTest
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,10 +28,8 @@ class FlowAndCoroutineTest(
 ): AbstractMongoTest() {
 
     @BeforeEach
-    fun beforeEach() {
-        runBlocking {
-            operations.dropCollection<Person>().awaitSingleOrNull()
-        }
+    fun beforeEach() = runTest {
+        operations.dropCollection<Person>().awaitSingleOrNull()
     }
 
     @Test
@@ -46,7 +46,8 @@ class FlowAndCoroutineTest(
         val person1 = operations.insert<Person>().one(newPerson()).awaitSingle()
         val person2 = operations.insert<Person>().one(newPerson()).awaitSingle()
 
-        val persons = operations.findAll<Person>().asFlow().toFastList()
-        persons shouldBeEqualTo listOf(person1, person2)
+        val persons = operations.findAll<Person>().asFlow().log("persons").toFastList()
+
+        persons shouldBeEqualTo fastListOf(person1, person2)
     }
 }
