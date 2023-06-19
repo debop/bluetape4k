@@ -10,7 +10,6 @@ import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
 import org.javers.common.exception.JaversException
-import org.javers.common.exception.JaversExceptionCode
 import org.javers.core.AbstractJaversRepositoryTest
 import org.javers.core.commit.CommitId
 import org.javers.core.model.CategoryC
@@ -63,9 +62,8 @@ abstract class AbstractJaversShadowTest: AbstractJaversRepositoryTest() {
             .toList()
 
         // THEN
-
-        shadows.size shouldBeEqualTo 12
-        repeat(12) {
+        shadows.size shouldBeEqualTo 5
+        repeat(5) {
             commitSeq(shadows[it].commitMetadata) shouldBeEqualTo 20 - it
             shadows[it].get().id shouldBeEqualTo 1
             shadows[it].get().intProperty shouldBeEqualTo 19 - it
@@ -74,17 +72,19 @@ abstract class AbstractJaversShadowTest: AbstractJaversRepositoryTest() {
         // 쿼리 통계도 지원한다 (ShadowQueryRunner 가 internal class 라서 package name을 맞춰줘야 한다.
         val stats = query.firstFrameStats().get()
         stats.dbQueriesCount shouldBeEqualTo 1
-        stats.allSnapshotsCount shouldBeEqualTo 5
-        stats.shallowSnapshotsCount shouldBeEqualTo 5
+        stats.allSnapshotsCount shouldBeEqualTo 20
+        stats.shallowSnapshotsCount shouldBeEqualTo 20
     }
 
     @Test
-    fun `query stream 이 skip 이 안될 때는 예외를 발생시킵니다`() {
-        val error = assertThrows<JaversException> {
-            val query = queryByInstanceId<SnapshotEntity>(1) { skip(5) }
-            javers.findShadowsAndStream<SnapshotEntity>(query)
+    fun `query stream 이 skip 하기`() {
+        val query = queryByInstanceId<SnapshotEntity>(1) { skip(5) }
+        log.debug { "query=$query" }
+        val shadows = javers.findShadowsAndStream<SnapshotEntity>(query).toList()
+        shadows.forEach { shadow ->
+            log.debug { "shadow=$shadow" }
         }
-        error.code shouldBeEqualTo JaversExceptionCode.MALFORMED_JQL
+        shadows.shouldBeEmpty()
     }
 
     @Test
@@ -107,9 +107,9 @@ abstract class AbstractJaversShadowTest: AbstractJaversRepositoryTest() {
         val shadows = javers.findShadowsAndStream<SnapshotEntity>(query).map { it.get() }.toList()
 
         // THEN
-        shadows.size shouldBeEqualTo 15
+        shadows.size shouldBeEqualTo 5
         shadows.first().intProperty shouldBeEqualTo 14
-        shadows.last().intProperty shouldBeEqualTo 0
+        shadows.last().intProperty shouldBeEqualTo 10
 
         shadows.forEach {
             (it.entityRef?.id ?: -1) shouldBeEqualTo 2

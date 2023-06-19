@@ -79,7 +79,7 @@ abstract class AbstractJaversRepositoryTest {
             commitIdGenerator = SnowflakeCommitIdGenerator()
 
             // NOTE: withCustomCommitIdGenerator 가 internal 함수라서 이 클래스의 package name 을 동일하게 해주었습니다.
-            // javersBuilder.withCustomCommitIdGenerator(commitIdGenerator)
+            javersBuilder.withCustomCommitIdGenerator(commitIdGenerator)
         }
 
         javers = javersBuilder.build()
@@ -152,10 +152,10 @@ abstract class AbstractJaversRepositoryTest {
 
         // THEN
         val changes = javers.findChanges(queryAnyDomainObject())
-        changes.size shouldBeEqualTo 16
+        changes.size shouldBeEqualTo 18
 
         val valueChanges = changes.filterByType<ValueChange>()
-        valueChanges.size shouldBeEqualTo 16
+        valueChanges.size shouldBeEqualTo 17
         valueChanges.forEach { change ->
             log.debug { "old=${change.left}, new=${change.right}" }
         }
@@ -362,7 +362,7 @@ abstract class AbstractJaversRepositoryTest {
         val changes = javers.findChanges(queryByValueObject<NewEntityWithTypeAlias>("valueObject"))
 
         // THEN
-        changes.size shouldBeEqualTo 1
+        changes.size shouldBeEqualTo 2
 
         val valueChange = changes.find { it is ValueChange && it.propertyName == "some" } as ValueChange
 

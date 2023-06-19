@@ -49,15 +49,15 @@ class JaversTestBuilder(val builder: JaversBuilder = JaversBuilder()) {
 
 //    inline fun <reified T> getManagedType(): ManagedType =
 //        typeMapper.getJaversManagedType(T::class.java)
-
+//
 //    inline fun <reified T> getProperty(propertyName: String): Property =
 //        getManagedType<T>().getProperty(propertyName)
 //
 //    fun getProperty(type: KClass<*>, propertyName: String): Property =
 //        typeMapper.getJaversManagedType(type.java).getProperty(propertyName)
-//
+
 //    fun getJsonConvertBuilder(): JsonConverterBuilder = getComponent<JsonConverterBuilder>()
-//
+
 //    fun hash(obj: Any): String {
 //        val jsonState = jsonConverter.toJson(javers().commit("", obj).snapshots.first().state)
 //        return ShaDigest.longDigest(jsonState)

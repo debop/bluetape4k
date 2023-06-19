@@ -42,7 +42,7 @@ import kotlin.jvm.optionals.getOrNull
 abstract class AbstractCdoRepository<T: Any>(
     protected val codec: CdoSnapshotCodec<T>,
     protected val commitIdSupplier: Snowflake = Snowflakers.Global,
-): CdoRepository<T> {
+): CdoRepository {
 
     companion object: KLogging() {
         @JvmStatic

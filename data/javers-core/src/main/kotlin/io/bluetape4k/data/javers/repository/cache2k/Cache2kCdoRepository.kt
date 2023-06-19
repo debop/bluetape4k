@@ -2,6 +2,7 @@ package io.bluetape4k.data.javers.repository.cache2k
 
 import com.google.gson.JsonObject
 import io.bluetape4k.data.javers.codecs.CdoSnapshotCodec
+import io.bluetape4k.data.javers.codecs.JacksonCdoShapshotCodec
 import io.bluetape4k.data.javers.repository.AbstractCdoRepository
 import io.bluetape4k.infra.cache.cache2k.cache2k
 import org.cache2k.Cache
@@ -9,11 +10,11 @@ import org.javers.core.commit.CommitId
 import org.javers.core.metamodel.`object`.CdoSnapshot
 
 class Cache2kCdoRepository(
-    codec: CdoSnapshotCodec<ByteArray> = DEFAULT_CODEC,
-): AbstractCdoRepository<ByteArray>(codec) {
+    codec: CdoSnapshotCodec<String> = JacksonCdoShapshotCodec(),
+): AbstractCdoRepository<String>(codec) {
 
-    private val snapshotCache: Cache<String, MutableList<ByteArray>> =
-        cache2k<String, MutableList<ByteArray>> {
+    private val snapshotCache: Cache<String, MutableList<String>> =
+        cache2k<String, MutableList<String>> {
             this.entryCapacity(100_000)
             this.storeByReference(true)
             this.eternal(true)
@@ -54,11 +55,11 @@ class Cache2kCdoRepository(
         return snapshotCache[globalIdValue]?.mapNotNull { decode(it) } ?: emptyList()
     }
 
-    override fun doEncode(jsonObject: JsonObject): ByteArray {
+    override fun doEncode(jsonObject: JsonObject): String {
         return codec.encode(jsonObject)
     }
 
-    override fun doDecode(data: ByteArray): JsonObject? {
+    override fun doDecode(data: String): JsonObject? {
         return codec.decode(data)
     }
 

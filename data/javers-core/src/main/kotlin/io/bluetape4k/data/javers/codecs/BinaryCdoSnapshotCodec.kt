@@ -7,25 +7,21 @@ import io.bluetape4k.logging.debug
 
 class BinaryCdoSnapshotCodec(
     private val serializer: BinarySerializer,
-): AbstractCdoSnapshotCodec<ByteArray>() {
+): CdoSnapshotCodec<ByteArray> {
 
     companion object: KLogging()
 
     override fun encode(jsonElement: JsonObject): ByteArray {
-        val map = toMap(jsonElement)
-        log.debug {
-            map.toList().joinToString("\n")
-        }
+        val map = GsonElementConverter.fromJsonObject(jsonElement)
+        log.debug { map.toList().joinToString("\n") }
         return serializer.serialize(map)
     }
 
     override fun decode(encodedData: ByteArray): JsonObject? {
         val map = serializer.deserialize<Map<String, Any?>>(encodedData)
         return map?.let {
-            log.debug {
-                it.toList().joinToString("\n")
-            }
-            fromMap(it)
+            log.debug { it.toList().joinToString("\n") }
+            GsonElementConverter.toJsonObject(it)
         }
     }
 }

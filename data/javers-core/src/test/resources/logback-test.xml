@@ -12,10 +12,11 @@
 
     <logger name="io.bluetape4k.data.javers" level="TRACE"/>
     <logger name="org.javers.core" level="DEBUG"/>
+    <logger name="org.javers.repository" level="DEBUG"/>
     <logger name="org.javers.JQL" level="DEBUG"/>
     <logger name="org.javers.TypeMapper" level="DEBUG"/>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="Console"/>
     </root>
 </configuration>
