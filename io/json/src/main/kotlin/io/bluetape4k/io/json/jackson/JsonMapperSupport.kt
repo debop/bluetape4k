@@ -15,7 +15,7 @@ import java.net.URL
 
 private val log = KotlinLogging.logger {}
 
-fun jsonMapper(initializer: JsonMapper.Builder.() -> Unit): JsonMapper {
+inline fun jsonMapper(initializer: JsonMapper.Builder.() -> Unit): JsonMapper {
     return JsonMapper.builder().apply(initializer).build()
 }
 

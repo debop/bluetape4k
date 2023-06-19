@@ -1,0 +1,206 @@
+package io.bluetape4k.data.javers.repository
+
+import com.google.gson.JsonObject
+import io.bluetape4k.data.javers.codecs.CdoSnapshotCodec
+import io.bluetape4k.data.javers.codecs.CdoSnapshotCodecs
+import io.bluetape4k.data.javers.filterByAuthor
+import io.bluetape4k.data.javers.filterByChangedPropertyNames
+import io.bluetape4k.data.javers.filterByCommitDate
+import io.bluetape4k.data.javers.filterByCommitIds
+import io.bluetape4k.data.javers.filterByCommitProperties
+import io.bluetape4k.data.javers.filterByToCommitId
+import io.bluetape4k.data.javers.filterByType
+import io.bluetape4k.data.javers.filterByVersion
+import io.bluetape4k.data.javers.metamodel.isChild
+import io.bluetape4k.data.javers.metamodel.isParent
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.trace
+import io.bluetape4k.support.toOptional
+import io.bluetape4k.utils.idgenerators.snowflake.Snowflake
+import io.bluetape4k.utils.idgenerators.snowflake.Snowflakers
+import org.javers.core.commit.Commit
+import org.javers.core.commit.CommitId
+import org.javers.core.json.JsonConverter
+import org.javers.core.metamodel.`object`.CdoSnapshot
+import org.javers.core.metamodel.`object`.GlobalId
+import org.javers.core.metamodel.`object`.ValueObjectId
+import org.javers.core.metamodel.type.EntityType
+import org.javers.core.metamodel.type.ManagedType
+import org.javers.repository.api.QueryParams
+import org.javers.repository.api.SnapshotIdentifier
+import java.util.*
+import kotlin.jvm.optionals.getOrNull
+
+/**
+ * [CdoRepository] 를 구현한 최상위 추상화 클래스입니다.
+ * [CdoSnapshot] 을 저장소에 저장하고, 로드하는 역할을 수행합니다.
+ *
+ * @param T
+ * @property codec 저장소에 저장할 때 [CdoSnapshot] 을 인코딩할 codec
+ * @property commitIdSupplier snapshot.commitMetadata.id 값을 제공하는 [Snowflake]
+ */
+abstract class AbstractCdoRepository<T: Any>(
+    protected val codec: CdoSnapshotCodec<T>,
+    protected val commitIdSupplier: Snowflake = Snowflakers.Global,
+): CdoRepository<T> {
+
+    companion object: KLogging() {
+        @JvmStatic
+        val DEFAULT_CODEC: CdoSnapshotCodec<ByteArray> = CdoSnapshotCodecs.LZ4Kryo
+    }
+
+    private var jsonConverter: JsonConverter? = null
+
+    fun getJsonConverter(): JsonConverter? = jsonConverter
+
+    override fun setJsonConverter(jsonConverter: JsonConverter?) {
+        this.jsonConverter = jsonConverter
+    }
+
+    protected abstract fun getKeys(): List<String>
+    protected abstract fun contains(globalIdValue: String): Boolean
+    protected fun contains(globalId: GlobalId): Boolean = contains(globalId.value())
+
+    protected abstract fun getSeq(commitId: CommitId): Long
+    protected abstract fun updateCommitId(commitId: CommitId, sequence: Long)
+
+    protected abstract fun getSnapshotSize(globalIdValue: String): Int
+    protected fun getSnapshotSize(globalId: GlobalId): Int = getSnapshotSize(globalId.value())
+
+    protected var head: CommitId? = null
+
+    protected fun getAll(): Sequence<CdoSnapshot> {
+        return getKeys().asSequence()
+            .flatMap {
+                loadSnapshots(it)
+            }.sortedByDescending { getSeq(it.commitMetadata.id) }
+    }
+
+    protected fun encode(snapshot: CdoSnapshot): T {
+        val jsonObject = jsonConverter?.toJsonElement(snapshot) as JsonObject
+        return doEncode(jsonObject)
+    }
+
+    protected fun decode(data: T): CdoSnapshot? {
+        val jsonObject = doDecode(data)
+        return jsonObject?.let { jsonConverter?.fromJson(it, CdoSnapshot::class.java) }
+    }
+
+    protected abstract fun doEncode(jsonObject: JsonObject): T
+    protected abstract fun doDecode(data: T): JsonObject?
+
+    override fun ensureSchema() {
+        // Nothing to do.
+    }
+
+    override fun getLatest(globalId: GlobalId): Optional<CdoSnapshot> = when {
+        contains(globalId) -> loadSnapshots(globalId).firstOrNull().toOptional()
+        else               -> Optional.empty()
+    }
+
+    override fun getLatest(globalIds: MutableCollection<GlobalId>): MutableList<CdoSnapshot> {
+        return globalIds.mapNotNull { getLatest(it).getOrNull() }.toMutableList()
+    }
+
+    override fun getStateHistory(globalId: GlobalId, queryParams: QueryParams): MutableList<CdoSnapshot> {
+        return getSnapshots(queryParams)
+            .filter { it.globalId == globalId || (queryParams.isAggregate && globalId.isParent(it.globalId)) }
+            .toMutableList()
+    }
+
+    override fun getStateHistory(
+        givenClasses: MutableSet<ManagedType>,
+        queryParams: QueryParams,
+    ): MutableList<CdoSnapshot> {
+        return getSnapshots(queryParams)
+            .filter { snapshot ->
+                givenClasses.any { givenClass ->
+                    snapshot.globalId.isTypeOf(givenClass) ||
+                    queryParams.isAggregate && snapshot.globalId.isChild(givenClass)
+                }
+            }
+            .toMutableList()
+    }
+
+    override fun getValueObjectStateHistory(
+        ownerEntity: EntityType,
+        path: String,
+        queryParams: QueryParams,
+    ): MutableList<CdoSnapshot> {
+        return getSnapshots(queryParams)
+            .filter { snapshot ->
+                val id = snapshot.globalId
+                when (id) {
+                    is ValueObjectId -> id.hasOwnerOfType(ownerEntity) && id.fragment == path
+                    else             -> false
+                }
+            }
+            .toMutableList()
+    }
+
+    override fun getSnapshots(queryParams: QueryParams): MutableList<CdoSnapshot> {
+        return applyQueryParams(getAll(), queryParams)
+    }
+
+    override fun getSnapshots(snapshotIdentifiers: MutableCollection<SnapshotIdentifier>): List<CdoSnapshot> {
+        log.trace { "get snapshots by identifiers. $snapshotIdentifiers" }
+        return getPersistedIdentifiers(snapshotIdentifiers)
+            .map { snapshot ->
+                val objectSnapshots = loadSnapshots(snapshot.globalId)
+                objectSnapshots[objectSnapshots.size - snapshot.version.toInt()]
+            }
+    }
+
+    override fun persist(commit: Commit?) {
+        if (commit == null) {
+            return
+        }
+        synchronized(this) {
+            commit.snapshots.forEach {
+                saveSnapshot(it)
+            }
+            head = commit.id
+            head?.run {
+                updateCommitId(this, commitIdSupplier.nextId())
+            }
+        }
+    }
+
+    override fun getHeadId(): CommitId? = head
+
+    private fun applyQueryParams(snapshots: Sequence<CdoSnapshot>, queryParams: QueryParams): MutableList<CdoSnapshot> {
+        var results = snapshots
+        if (queryParams.commitIds().isNotEmpty()) {
+            results = results.filterByCommitIds(queryParams.commitIds())
+        }
+        if (queryParams.toCommitId().isPresent) {
+            results = results.filterByToCommitId(queryParams.toCommitId().get())
+        }
+        if (queryParams.version().isPresent) {
+            results = results.filterByVersion(queryParams.version().get())
+        }
+        if (queryParams.author().isPresent) {
+            results = results.filterByAuthor(queryParams.author().get())
+        }
+        if (queryParams.from().isPresent || queryParams.to().isPresent) {
+            results = results.filterByCommitDate(queryParams)
+        }
+        if (queryParams.changedProperties().isNotEmpty()) {
+            results = results.filterByChangedPropertyNames(queryParams.changedProperties())
+        }
+        if (queryParams.snapshotType().isPresent) {
+            results = results.filterByType(queryParams.snapshotType().get())
+        }
+
+        results = results.filterByCommitProperties(queryParams.commitProperties())
+
+        return results.drop(queryParams.skip()).take(queryParams.limit()).toMutableList()
+    }
+
+    private fun getPersistedIdentifiers(snapshotIdentifiers: Collection<SnapshotIdentifier>): List<SnapshotIdentifier> {
+        return snapshotIdentifiers
+            .filter {
+                contains(it.globalId) && it.version <= getSnapshotSize(it.globalId)
+            }
+    }
+}
