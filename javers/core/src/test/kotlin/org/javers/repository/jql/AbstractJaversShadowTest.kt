@@ -1,7 +1,7 @@
 package org.javers.repository.jql
 
-import io.bluetape4k.data.javers.repository.jql.queryByInstance
-import io.bluetape4k.data.javers.repository.jql.queryByInstanceId
+import io.bluetape4k.javers.repository.jql.queryByInstance
+import io.bluetape4k.javers.repository.jql.queryByInstanceId
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEmpty

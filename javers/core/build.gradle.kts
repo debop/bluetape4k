@@ -1,5 +1,17 @@
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
+    create("testJar")
+}
+
+// 테스트 코드를 Jar로 만들어서 다른 프로젝트에서 참조할 수 있도록 합니다.
+tasks.register<Jar>("testJar") {
+    dependsOn(tasks.testClasses)
+    archiveClassifier.set("test")
+    from(sourceSets.test.get().output)
+}
+
+artifacts {
+    add("testJar", tasks["testJar"])
 }
 
 dependencies {
@@ -20,10 +32,6 @@ dependencies {
     // Cache for Javers repository
     compileOnly(Libs.caffeine)
     compileOnly(Libs.cache2k_core)
-
-    // Redis
-    compileOnly(Libs.lettuce_core)
-    compileOnly(Libs.redisson)
 
     // Mongo
     compileOnly(Libs.mongo_bson)

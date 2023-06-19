@@ -1,13 +1,13 @@
 package org.javers.core
 
-import io.bluetape4k.data.javers.commit.SnowflakeCommitIdGenerator
-import io.bluetape4k.data.javers.diff.filterByType
-import io.bluetape4k.data.javers.latestSnapshotOrNull
-import io.bluetape4k.data.javers.repository.jql.queryAnyDomainObject
-import io.bluetape4k.data.javers.repository.jql.queryByClass
-import io.bluetape4k.data.javers.repository.jql.queryByInstance
-import io.bluetape4k.data.javers.repository.jql.queryByInstanceId
-import io.bluetape4k.data.javers.repository.jql.queryByValueObject
+import io.bluetape4k.javers.commit.SnowflakeCommitIdGenerator
+import io.bluetape4k.javers.diff.filterByType
+import io.bluetape4k.javers.latestSnapshotOrNull
+import io.bluetape4k.javers.repository.jql.queryAnyDomainObject
+import io.bluetape4k.javers.repository.jql.queryByClass
+import io.bluetape4k.javers.repository.jql.queryByInstance
+import io.bluetape4k.javers.repository.jql.queryByInstanceId
+import io.bluetape4k.javers.repository.jql.queryByValueObject
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
@@ -317,6 +317,7 @@ abstract class AbstractJaversRepositoryTest {
         (1..25).forEach {
             cdo.intProperty = it
             javers.commit("login", cdo)
+
             val snapshot = javers.findSnapshots(queryByInstanceId<SnapshotEntity>(1)).first()
             snapshot.getPropertyValue("intProperty") shouldBeEqualTo it
         }

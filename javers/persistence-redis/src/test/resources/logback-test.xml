@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
-
         <immediateFlush>true</immediateFlush>
         <encoder>
             <!-- @formatter:off -->
@@ -12,13 +10,14 @@
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.data.redis" level="DEBUG"/>
+    <logger name="io.bluetape4k.javers" level="TRACE"/>
 
-    <logger name="io.lettuce.core" level="DEBUG"/>
-    <logger name="org.redisson" level="DEBUG"/>
+    <logger name="org.javers.core" level="DEBUG"/>
+    <logger name="org.javers.repository" level="DEBUG"/>
+    <logger name="org.javers.JQL" level="DEBUG"/>
+    <logger name="org.javers.TypeMapper" level="DEBUG"/>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="Console"/>
     </root>
-
 </configuration>
