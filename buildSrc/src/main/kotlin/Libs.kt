@@ -196,6 +196,7 @@ object Versions {
     const val elasticsearch = "8.7.0"
 
     const val kafka = "3.4.1"
+    const val spring_kafka = "2.9.9"
 
     const val eclipse_collections = "11.1.0"
     const val jctools = "3.3.0"
@@ -1064,7 +1065,8 @@ object Libs {
     val kafka_streams_test_utils = kafka("kafka-streams-test-utils")
 
     // Spring Kafka
-    const val spring_kafka = "org.springframework.kafka:spring-kafka:2.9.9"
+    const val spring_kafka = "org.springframework.kafka:spring-kafka:${Versions.spring_kafka}"
+    const val spring_kafka_test = "org.springframework.kafka:spring-kafka-test:${Versions.spring_kafka}"
 
     // Pulsar
     const val pulsar_client = "org.apache.pulsar:pulsar-client:3.0.0"
