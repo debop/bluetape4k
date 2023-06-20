@@ -1,7 +1,7 @@
 package io.bluetape4k.javers.repository
 
 import com.google.gson.JsonObject
-import io.bluetape4k.javers.codecs.CdoSnapshotCodec
+import io.bluetape4k.javers.codecs.GsonCodec
 import io.bluetape4k.javers.filterByAuthor
 import io.bluetape4k.javers.filterByChangedPropertyNames
 import io.bluetape4k.javers.filterByCommitDate
@@ -32,17 +32,17 @@ import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * [CdoRepository] 를 구현한 최상위 추상화 클래스입니다.
+ * [CdoSnapshotRepository] 를 구현한 최상위 추상화 클래스입니다.
  * [CdoSnapshot] 을 저장소에 저장하고, 로드하는 역할을 수행합니다.
  *
  * @param T
  * @property codec 저장소에 저장할 때 [CdoSnapshot] 을 인코딩할 codec
  * @property commitIdSupplier snapshot.commitMetadata.id 값을 제공하는 [Snowflake]
  */
-abstract class AbstractCdoRepository<T: Any>(
-    protected val codec: CdoSnapshotCodec<T>,
+abstract class AbstractCdoSnapshotRepository<T: Any>(
+    protected val codec: GsonCodec<T>,
     protected val commitIdSupplier: Snowflake = Snowflakers.Global,
-): CdoRepository {
+): CdoSnapshotRepository {
 
     companion object: KLogging()
 

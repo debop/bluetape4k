@@ -31,6 +31,7 @@ dependencies {
 
     // Cache for Javers repository
     compileOnly(Libs.caffeine)
+    compileOnly(Libs.caffeine_jcache)
     compileOnly(Libs.cache2k_core)
 
     // Mongo

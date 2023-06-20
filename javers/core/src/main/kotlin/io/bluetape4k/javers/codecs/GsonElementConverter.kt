@@ -7,7 +7,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import java.math.BigDecimal
 
-object GsonElementConverter {
+internal object GsonElementConverter {
 
     fun fromJsonObject(jsonObject: JsonObject): Map<String, Any?> {
         val map = mutableMapOf<String, Any?>()

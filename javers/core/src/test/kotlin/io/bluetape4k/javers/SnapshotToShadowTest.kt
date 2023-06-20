@@ -1,6 +1,6 @@
 package io.bluetape4k.javers
 
-import io.bluetape4k.javers.repository.caffeine.CaffeineCdoRepository
+import io.bluetape4k.javers.repository.caffeine.CaffeineCdoSnapshotRepository
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
 import org.javers.core.Javers
@@ -13,7 +13,7 @@ class SnapshotToShadowTest: AbstractJaversCommitTest() {
 
     override fun newJavers(): Javers =
         JaversBuilder.javers()
-            .registerJaversRepository(CaffeineCdoRepository())
+            .registerJaversRepository(CaffeineCdoSnapshotRepository())
             .build()
 
     val javers by lazy { newJavers() }

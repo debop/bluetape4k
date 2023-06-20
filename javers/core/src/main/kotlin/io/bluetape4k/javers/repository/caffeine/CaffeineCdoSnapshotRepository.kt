@@ -2,20 +2,25 @@ package io.bluetape4k.javers.repository.caffeine
 
 import com.github.benmanes.caffeine.cache.Cache
 import io.bluetape4k.infra.cache.caffeine.caffeine
-import io.bluetape4k.javers.codecs.CdoSnapshotCodec
-import io.bluetape4k.javers.codecs.CdoSnapshotCodecs
-import io.bluetape4k.javers.repository.AbstractCdoRepository
+import io.bluetape4k.javers.codecs.GsonCodec
+import io.bluetape4k.javers.codecs.GsonCodecs
+import io.bluetape4k.javers.repository.AbstractCdoSnapshotRepository
 import org.javers.core.commit.CommitId
 import org.javers.core.metamodel.`object`.CdoSnapshot
 
-class CaffeineCdoRepository(
-    codec: CdoSnapshotCodec<ByteArray> = CdoSnapshotCodecs.Default,
-): AbstractCdoRepository<ByteArray>(codec) {
+/**
+ * [CdoSnapshot] 저장소로 [com.github.benmanes.caffeine.cache.Cache] 를 사용하는 Repository 입니다.
+ *
+ * @param codec [CdoSnapshot] 변환을 위한 [GsonCodec] 인스턴스
+ */
+class CaffeineCdoSnapshotRepository(
+    codec: GsonCodec<String> = GsonCodecs.LZ4String,
+): AbstractCdoSnapshotRepository<String>(codec) {
 
     /**
      * [CdoSnapshot] 컬렉션을 저장하는 Cache (key=globalId, value=collection of encoded snapshot)
      */
-    private val snapshotCache: Cache<String, MutableList<ByteArray>> by lazy {
+    private val snapshotCache: Cache<String, MutableList<String>> by lazy {
         caffeine {
             initialCapacity(1_000)
         }.build()
@@ -38,9 +43,7 @@ class CaffeineCdoRepository(
         return snapshotCache.getIfPresent(globalIdValue) != null
     }
 
-    override fun getSeq(commitId: CommitId): Long {
-        return commitSeqCache.getIfPresent(commitId)!!
-    }
+    override fun getSeq(commitId: CommitId): Long = commitSeqCache.getIfPresent(commitId) ?: 0L
 
     override fun updateCommitId(commitId: CommitId, sequence: Long) {
         commitSeqCache.put(commitId, sequence)
@@ -51,10 +54,12 @@ class CaffeineCdoRepository(
     }
 
     override fun saveSnapshot(snapshot: CdoSnapshot) {
-        val globalIdValue = snapshot.globalId.value()
-        val snapshots = snapshotCache.get(globalIdValue) { key -> mutableListOf() }
-        val encoded = encode(snapshot)
-        snapshots.add(0, encoded)
+        synchronized(this) {
+            val globalIdValue = snapshot.globalId.value()
+            val snapshots = snapshotCache.get(globalIdValue) { key -> mutableListOf() }
+            val encoded = encode(snapshot)
+            snapshots.add(0, encoded)
+        }
     }
 
     override fun loadSnapshots(globalIdValue: String): List<CdoSnapshot> {
