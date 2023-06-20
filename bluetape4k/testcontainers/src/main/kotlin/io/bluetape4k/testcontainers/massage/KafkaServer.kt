@@ -183,7 +183,7 @@ class KafkaServer private constructor(
             fun <K, V> getProducerFactory(
                 keySerializer: Serializer<K>,
                 valueSerializer: Serializer<V>,
-                properties: Map<String, Any?> = getProducerProperties(kafka),
+                properties: MutableMap<String, Any?> = getProducerProperties(kafka),
             ): ProducerFactory<K, V> {
                 return DefaultKafkaProducerFactory(properties, keySerializer, valueSerializer)
             }
@@ -191,8 +191,10 @@ class KafkaServer private constructor(
             fun <K, V> getConsumerFactory(
                 keyDeserializer: Deserializer<K>,
                 valueDeserializer: Deserializer<V>,
-                properties: Map<String, Any?> = getConsumerProperties(kafka),
+                properties: MutableMap<String, Any?> = getConsumerProperties(kafka),
             ): ConsumerFactory<K, V> {
+                // NOTE: Spring Kafka 의 Acknowledgement 를 사용하기 위해 auto commit 은 false로 한다
+                properties[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = "false"
                 return DefaultKafkaConsumerFactory(properties, keyDeserializer, valueDeserializer)
             }
 

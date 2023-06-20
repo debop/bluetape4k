@@ -10,6 +10,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull
+import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,9 +18,14 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.annotation.EnableKafka
+import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.config.KafkaListenerContainerFactory
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer
+import org.springframework.kafka.support.Acknowledgment
+import org.springframework.kafka.support.KafkaHeaders
+import org.springframework.messaging.handler.annotation.Header
+import org.springframework.messaging.handler.annotation.Payload
 
 @SpringBootTest
 class SimpleKafkaExamples {
@@ -102,4 +108,43 @@ class SimpleKafkaExamples {
         result2.recordMetadata.partition() shouldBeEqualTo result.recordMetadata.partition()
         result2.recordMetadata.offset() shouldBeGreaterThan result.recordMetadata.offset()
     }
+
+    @KafkaListener(
+        topics = [STRING_TOPIC_NAME],
+        groupId = "simple-group",
+        containerFactory = "kafkaManualAckListenerContainerFactory"
+    )
+    private fun listen(message: String, ack: Acknowledgment) {
+        log.debug { "Receive Message in group simple-group: $message" }
+        ack.acknowledge()
+    }
+
+    @KafkaListener(
+        topics = [STRING_TOPIC_NAME],
+        groupId = "with-header",
+        containerFactory = "kafkaManualAckListenerContainerFactory"
+    )
+    private fun listenWithHeaders(
+        @Payload message: String,
+        @Header(KafkaHeaders.RECEIVED_PARTITION) partition: Int,
+        @Header(KafkaHeaders.OFFSET) offset: Long,
+        ack: Acknowledgment,
+    ) {
+        log.debug { "Received message: [$message], partition=$partition, offset=$offset" }
+        ack.acknowledge()
+    }
+
+    @KafkaListener(
+        topics = [STRING_TOPIC_NAME],
+        groupId = "with-record",
+        containerFactory = "kafkaManualAckListenerContainerFactory"
+    )
+    private fun listenWithHeaders(
+        record: ConsumerRecord<String, String>,
+        ack: Acknowledgment,
+    ) {
+        log.debug { "Received message: record=$record" }
+        ack.acknowledge()
+    }
+
 }
