@@ -11,7 +11,12 @@ dependencies {
 
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-testcontainers"))
+    testImplementation(Libs.testcontainers_kafka)
 
+    // Javers
+    api(project(":bluetape4k-javers-core"))
+    // bluetape4k-javers-core 의 테스트 코드를 재활용하기 위해 참조합니다.
+    testImplementation(project(path = ":bluetape4k-javers-core", configuration = "testJar"))
     api(Libs.javers_core)
     testImplementation(Libs.guava)
 
