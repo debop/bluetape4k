@@ -12,6 +12,11 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
+import org.springframework.kafka.core.ConsumerFactory
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory
+import org.springframework.kafka.core.DefaultKafkaProducerFactory
+import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.core.ProducerFactory
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.utility.DockerImageName
 import java.util.*
@@ -103,19 +108,18 @@ class KafkaServer private constructor(
         private val stringSerializer = StringSerializer()
         private val stringDeserializer = StringDeserializer()
 
-        fun createStringProducer(kafkaServer: KafkaServer = kafka): KafkaProducer<String, String> {
-            val map = mapOf(
+        fun getProducerProperties(kafkaServer: KafkaServer = kafka): MutableMap<String, Any?> {
+            return mutableMapOf(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to kafkaServer.bootstrapServers,
                 ProducerConfig.CLIENT_ID_CONFIG to UUID.randomUUID().encodeBase62(),
                 ProducerConfig.COMPRESSION_TYPE_CONFIG to "lz4",
                 ProducerConfig.LINGER_MS_CONFIG to "0",
                 ProducerConfig.BATCH_SIZE_CONFIG to "1"
             )
-            return KafkaProducer(map, stringSerializer, stringSerializer)
         }
 
-        fun createStringConsumer(kafkaServer: KafkaServer = kafka): KafkaConsumer<String, String> {
-            val map = mapOf(
+        fun getConsumerProperties(kafkaServer: KafkaServer = kafka): MutableMap<String, Any?> {
+            return mutableMapOf(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to kafkaServer.bootstrapServers,
                 ConsumerConfig.GROUP_ID_CONFIG to UUID.randomUUID().encodeBase62(),
                 ConsumerConfig.CLIENT_ID_CONFIG to UUID.randomUUID().encodeBase62(),
@@ -123,7 +127,41 @@ class KafkaServer private constructor(
                 ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to "true",
                 ConsumerConfig.RETRY_BACKOFF_MS_CONFIG to 100
             )
-            return KafkaConsumer(map, stringDeserializer, stringDeserializer)
+        }
+
+        fun createStringProducer(kafkaServer: KafkaServer = kafka): KafkaProducer<String, String> {
+            val props = getProducerProperties(kafkaServer)
+            return KafkaProducer(props, stringSerializer, stringSerializer)
+        }
+
+        fun createStringConsumer(kafkaServer: KafkaServer = kafka): KafkaConsumer<String, String> {
+            val props = getConsumerProperties(kafkaServer)
+            return KafkaConsumer(props, stringDeserializer, stringDeserializer)
+        }
+
+        object Spring {
+
+            fun createProducerFactory(kafkaServer: KafkaServer = kafka): ProducerFactory<String, String> {
+                val props = getProducerProperties(kafkaServer)
+                return DefaultKafkaProducerFactory(props, stringSerializer, stringSerializer)
+            }
+
+            fun createConsumerFactory(kafkaServer: KafkaServer = kafka): ConsumerFactory<String, String> {
+                val props = getConsumerProperties(kafkaServer)
+                return DefaultKafkaConsumerFactory(props, stringDeserializer, stringDeserializer)
+            }
+
+            fun createKafkaTemplate(
+                kafkaServer: KafkaServer = kafka,
+                defaultTopic: String = "bluetape4k.test-topic.1",
+            ): KafkaTemplate<String, String> {
+                val producerFactory: ProducerFactory<String, String> = createProducerFactory(kafkaServer)
+                val consumerFactory: ConsumerFactory<String, String> = createConsumerFactory(kafkaServer)
+                return KafkaTemplate(producerFactory, true).apply {
+                    setConsumerFactory(consumerFactory)
+                    this.defaultTopic = defaultTopic
+                }
+            }
         }
     }
 }
