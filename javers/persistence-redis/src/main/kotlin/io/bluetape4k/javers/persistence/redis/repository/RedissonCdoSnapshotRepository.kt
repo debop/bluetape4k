@@ -1,8 +1,8 @@
 package io.bluetape4k.javers.persistence.redis.repository
 
-import io.bluetape4k.javers.codecs.CdoSnapshotCodec
-import io.bluetape4k.javers.codecs.CdoSnapshotCodecs
-import io.bluetape4k.javers.repository.AbstractCdoRepository
+import io.bluetape4k.javers.codecs.GsonCodec
+import io.bluetape4k.javers.codecs.GsonCodecs
+import io.bluetape4k.javers.repository.AbstractCdoSnapshotRepository
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
@@ -18,17 +18,17 @@ import org.redisson.codec.CompositeCodec
 
 /**
  * JaVers [CdoSnapshot] 을 Redisson Library를 이용하여
- * Redis Server에 저장, 로드하는 기능을 제공하는 [AbstractCdoRepository] 구현체입니다.
+ * Redis Server에 저장, 로드하는 기능을 제공하는 [AbstractCdoSnapshotRepository] 구현체입니다.
  *
  * @param name repository name
  * @param redisson [RedissonClient] 인스턴스
- * @param codec [CdoSnapshot]을 encode/decode 할 [CdoSnapshotCodec] 인스턴스
+ * @param codec [CdoSnapshot]을 encode/decode 할 [GsonCodec] 인스턴스
  */
-class RedissonCdoRepository(
+class RedissonCdoSnapshotRepository(
     val name: String,
     private val redisson: RedissonClient,
-    codec: CdoSnapshotCodec<ByteArray> = CdoSnapshotCodecs.Default,
-): AbstractCdoRepository<ByteArray>(codec) {
+    codec: GsonCodec<ByteArray> = GsonCodecs.LZ4Kryo,
+): AbstractCdoSnapshotRepository<ByteArray>(codec) {
 
     companion object: KLogging() {
         private const val SEQUENCE_SUFFIX = "sequence"
