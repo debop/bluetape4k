@@ -12,7 +12,8 @@ import org.javers.core.repository.AbstractJaversCommitTest
 import org.junit.jupiter.api.Test
 
 /**
- * NOTE: Redis나 MongoDB와 같이 테스트는 할 수 없고, snapshot 저장을 수행하는 테스트만 해야 한다
+ * NOTE: **Redis나 MongoDB와 같이 테스트는 할 수 없고, snapshot 저장을 수행하는 테스트만 해야 한다**
+ * Consumer 를 통한 검증을 수행해야 하는데, 귀찮아서 로그보고 확인했습니다. ㅋㅋ
  */
 class KafkaCdoSnapshotRepositoryTest: AbstractJaversCommitTest() {
 
