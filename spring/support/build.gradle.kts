@@ -13,11 +13,12 @@ dependencies {
     testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.spring("context-support"))
+    compileOnly(Libs.spring("messaging"))
+    compileOnly(Libs.spring("web"))
+
     compileOnly(Libs.springData("commons"))
 
-    compileOnly(Libs.spring("web"))
     compileOnly(Libs.springBoot("autoconfigure"))
-
 
     api(Libs.javax_annotation_api)
     compileOnly(Libs.findbugs)

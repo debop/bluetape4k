@@ -1060,9 +1060,14 @@ object Libs {
     fun kafka(module: String) = "org.apache.kafka:$module:${Versions.kafka}"
     val kafka_clients = kafka("kafka-clients")
     val kafka_generator = kafka("generator")
+    val kafka_metadata = kafka("kafka-metadata")
+    val kafka_raft = kafka("kafka-raft")
     val kafka_server_common = kafka("kafka-server-common")
+    val kafka_storage = kafka("kafka-storage")
+    val kafka_storage_api = kafka("kafka-storage-api")
     val kafka_streams = kafka("kafka-streams")
     val kafka_streams_test_utils = kafka("kafka-streams-test-utils")
+    val kafka_2_13 = kafka("kafka_2.13")
 
     // Spring Kafka
     const val spring_kafka = "org.springframework.kafka:spring-kafka:${Versions.spring_kafka}"

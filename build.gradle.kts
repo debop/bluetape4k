@@ -398,6 +398,18 @@ subprojects {
             dependency(Libs.mongodb_driver_core)
             dependency(Libs.mongodb_driver_reactivestreams)
 
+            // Kafka
+            dependency(Libs.kafka_clients)
+            dependency(Libs.kafka_generator)
+            dependency(Libs.kafka_metadata)
+            dependency(Libs.kafka_raft)
+            dependency(Libs.kafka_server_common)
+            dependency(Libs.kafka_storage)
+            dependency(Libs.kafka_storage_api)
+            dependency(Libs.kafka_streams)
+            dependency(Libs.kafka_streams_test_utils)
+            dependency(Libs.kafka_2_13)
+
             // Hibernate
             dependency(Libs.hibernate_core)
             dependency(Libs.hibernate_jcache)

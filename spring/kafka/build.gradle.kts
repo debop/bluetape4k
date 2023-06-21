@@ -9,8 +9,12 @@ configurations {
 
 dependencies {
     // Kafka
+    api(Libs.kafka_clients)
+    compileOnly(Libs.kafka_metadata)
+    compileOnly(Libs.kafka_streams)
     api(Libs.spring_kafka)
     testImplementation(Libs.spring_kafka_test)
+    compileOnly(Libs.springData("commons"))
 
     api(project(":bluetape4k-infra-kafka"))
     api(project(":bluetape4k-io-json"))
@@ -24,6 +28,11 @@ dependencies {
     compileOnly(Libs.kotlinx_coroutines_core)
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
+
+    // Reactor
+    compileOnly(Libs.reactor_kafka)
+    compileOnly(Libs.reactor_kotlin_extensions)
+    testImplementation(Libs.reactor_test)
 
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
