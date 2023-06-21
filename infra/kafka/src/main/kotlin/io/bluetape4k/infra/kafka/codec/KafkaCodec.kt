@@ -17,7 +17,7 @@ import java.io.Closeable
  *
  * @param T 메시지 Value 의 수형
  */
-interface KafkaCodec<T: Any>: Serializer<T>, Deserializer<T>, Closeable {
+interface KafkaCodec<T>: Serializer<T>, Deserializer<T>, Closeable {
 
     override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {
         // Nothing to do
@@ -36,13 +36,13 @@ interface KafkaCodec<T: Any>: Serializer<T>, Deserializer<T>, Closeable {
     }
 }
 
-abstract class AbstractKafkaCodec<T: Any>: KafkaCodec<T> {
+abstract class AbstractKafkaCodec<T>: KafkaCodec<T> {
 
     companion object: KLogging() {
         const val VALUE_TYPE_KEY = "$LibraryName.kafka.codec.value.type"
 
         @JvmStatic
-        fun <T: Any> defaultCodec(): KafkaCodec<T> = JacksonKafkaCodec()
+        fun defaultCodec(): KafkaCodec<Any?> = JacksonKafkaCodec()
     }
 
     protected abstract fun doSerialize(topic: String?, headers: Headers?, graph: T): ByteArray
@@ -50,7 +50,7 @@ abstract class AbstractKafkaCodec<T: Any>: KafkaCodec<T> {
 
     override fun serialize(topic: String?, headers: Headers?, data: T?): ByteArray? {
         return data?.run {
-            setValueType(headers, this.javaClass)
+            setValueType(headers, data.javaClass)
             doSerialize(topic, headers, this)
         }
     }
@@ -64,13 +64,13 @@ abstract class AbstractKafkaCodec<T: Any>: KafkaCodec<T> {
         }
     }
 
-    protected fun setValueType(headers: Headers?, valueType: Class<T>) {
+    protected fun setValueType(headers: Headers?, valueType: Class<T & Any>) {
         headers?.add(VALUE_TYPE_KEY, valueType.name.toUtf8Bytes())
     }
 
     protected fun getValueType(headers: Headers?): Class<*> {
         val clazzName = headers?.lastHeader(VALUE_TYPE_KEY)?.value()?.toUtf8String()
-            ?: return Any::class.java
+                        ?: return Any::class.java
 
         return try {
             when {

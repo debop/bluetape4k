@@ -5,13 +5,16 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.spring.coroutines.await
 import io.bluetape4k.support.uninitialized
 import io.bluetape4k.testcontainers.massage.KafkaServer
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull
 import org.apache.kafka.clients.consumer.ConsumerRecord
-import org.junit.jupiter.api.AfterEach
+import org.awaitility.kotlin.await
+import org.awaitility.kotlin.until
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -49,13 +52,13 @@ class SimpleKafkaExamples {
             consumerFactory: ConsumerFactory<String, String>,
         ): KafkaTemplate<String, String> {
             return KafkaTemplate(producerFactory, true).apply {
-                defaultTopic = STRING_TOPIC_NAME
+                defaultTopic = SIMPLE_TOPIC_NAME
                 setConsumerFactory(consumerFactory)
             }
         }
 
         @Bean
-        fun kafkaListenerConainerFactory(
+        fun kafkaListenerContainerFactory(
             consumerFactory: ConsumerFactory<String, String>,
         ): ConcurrentKafkaListenerContainerFactory<String, String> {
             return KafkaServer.Launcher.Spring.getConcurrentKafkaListenerContainerFactory(consumerFactory)
@@ -71,15 +74,17 @@ class SimpleKafkaExamples {
     }
 
     companion object: KLogging() {
-        const val STRING_TOPIC_NAME = "simple.kafka.string-topic.1"
+        const val SIMPLE_TOPIC_NAME = "simple.kafka.string-topic.1"
     }
 
     @Autowired
     private val kafkaTemplate: KafkaTemplate<String, String> = uninitialized()
 
-    @AfterEach
-    fun afterEach() {
-        Thread.sleep(100)
+    private val consumed = atomic(0)
+
+    @BeforeEach
+    fun beforeEach() {
+        consumed.value = 0
     }
 
     @Test
@@ -92,13 +97,13 @@ class SimpleKafkaExamples {
         val key = "simple key"
         val message = "simple message"
 
-        val result = kafkaTemplate.send(STRING_TOPIC_NAME, key, message).await()
+        val result = kafkaTemplate.send(SIMPLE_TOPIC_NAME, key, message).await()
         log.debug { "produceRecord=${result.producerRecord}" }
         log.debug { "recordMetadata=${result.recordMetadata}" }
         result.recordMetadata.hasTimestamp().shouldBeTrue()
         result.recordMetadata.hasOffset().shouldBeTrue()
 
-        val result2 = kafkaTemplate.send(STRING_TOPIC_NAME, key, message).await()
+        val result2 = kafkaTemplate.send(SIMPLE_TOPIC_NAME, key, message).await()
         log.debug { "produceRecord=${result2.producerRecord}" }
         log.debug { "recordMetadata=${result2.recordMetadata}" }
         result2.recordMetadata.hasTimestamp().shouldBeTrue()
@@ -107,20 +112,24 @@ class SimpleKafkaExamples {
         // 테스트용 Kafka 라서 partition 은 1만 갖도록 한다 
         result2.recordMetadata.partition() shouldBeEqualTo result.recordMetadata.partition()
         result2.recordMetadata.offset() shouldBeGreaterThan result.recordMetadata.offset()
+
+        await until { consumed.value < 2 * 3 }
+        log.debug { "all consumer has been consumed." }
     }
 
     @KafkaListener(
-        topics = [STRING_TOPIC_NAME],
+        topics = [SIMPLE_TOPIC_NAME],
         groupId = "simple-group",
         containerFactory = "kafkaManualAckListenerContainerFactory"
     )
     private fun listen(message: String, ack: Acknowledgment) {
         log.debug { "Receive Message in group simple-group: $message" }
-        ack.acknowledge()
+        consumed.incrementAndGet()
+        runCatching { ack.acknowledge() }
     }
 
     @KafkaListener(
-        topics = [STRING_TOPIC_NAME],
+        topics = [SIMPLE_TOPIC_NAME],
         groupId = "with-header",
         containerFactory = "kafkaManualAckListenerContainerFactory"
     )
@@ -131,11 +140,12 @@ class SimpleKafkaExamples {
         ack: Acknowledgment,
     ) {
         log.debug { "Received message: [$message], partition=$partition, offset=$offset" }
-        ack.acknowledge()
+        consumed.incrementAndGet()
+        runCatching { ack.acknowledge() }
     }
 
     @KafkaListener(
-        topics = [STRING_TOPIC_NAME],
+        topics = [SIMPLE_TOPIC_NAME],
         groupId = "with-record",
         containerFactory = "kafkaManualAckListenerContainerFactory"
     )
@@ -144,7 +154,7 @@ class SimpleKafkaExamples {
         ack: Acknowledgment,
     ) {
         log.debug { "Received message: record=$record" }
-        ack.acknowledge()
+        consumed.incrementAndGet()
+        runCatching { ack.acknowledge() }
     }
-
 }

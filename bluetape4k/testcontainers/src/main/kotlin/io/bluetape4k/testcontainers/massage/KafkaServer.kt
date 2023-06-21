@@ -133,8 +133,8 @@ class KafkaServer private constructor(
                 ConsumerConfig.GROUP_ID_CONFIG to UUID.randomUUID().encodeBase62(),
                 ConsumerConfig.CLIENT_ID_CONFIG to UUID.randomUUID().encodeBase62(),
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
-                ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to "true",
-                ConsumerConfig.RETRY_BACKOFF_MS_CONFIG to 100
+                // ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to "true",
+                // ConsumerConfig.RETRY_BACKOFF_MS_CONFIG to 100
             )
         }
 
@@ -151,33 +151,53 @@ class KafkaServer private constructor(
         object Spring {
 
             fun getStringProducerFactory(kafkaServer: KafkaServer = kafka): ProducerFactory<String, String> {
-                return getProducerFactory(
-                    stringSerializer,
-                    stringSerializer,
-                    getProducerProperties(kafkaServer)
-                )
+                return getStringProducerFactory(getProducerProperties(kafkaServer))
             }
 
+            fun getStringProducerFactory(properties: MutableMap<String, Any?>): ProducerFactory<String, String> {
+                return getProducerFactory(properties.apply {
+                    this[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+                    this[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+                })
+            }
+
+
             fun getStringConsumerFactory(kafkaServer: KafkaServer = kafka): ConsumerFactory<String, String> {
-                return getConsumerFactory(
-                    stringDeserializer,
-                    stringDeserializer,
-                    getConsumerProperties(kafkaServer)
-                )
+                return getStringConsumerFactory(getConsumerProperties(kafkaServer))
+            }
+
+            fun getStringConsumerFactory(properties: MutableMap<String, Any?>): ConsumerFactory<String, String> {
+                return getConsumerFactory(properties.apply {
+                    this[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+                    this[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+                })
             }
 
             fun getStringKafkaTemplate(
                 kafkaServer: KafkaServer = kafka,
                 defaultTopic: String = DEFAULT_TOPIC,
             ): KafkaTemplate<String, String> {
-                return getKafkaTemplate(
-                    stringSerializer,
-                    stringSerializer,
-                    stringDeserializer,
-                    stringDeserializer,
-                    kafkaServer,
-                    defaultTopic
+                return getStringKafkaTemplate(
+                    getStringProducerFactory(kafkaServer),
+                    true,
+                    getStringConsumerFactory(kafkaServer)
                 )
+            }
+
+            fun getStringKafkaTemplate(
+                producerFactory: ProducerFactory<String, String>,
+                autoFlush: Boolean = true,
+                consumerFactory: ConsumerFactory<String, String>? = null,
+            ): KafkaTemplate<String, String> {
+                return KafkaTemplate(producerFactory, autoFlush).apply {
+                    consumerFactory?.let { setConsumerFactory(it) }
+                }
+            }
+
+            fun <K, V> getProducerFactory(
+                properties: MutableMap<String, Any?> = getProducerProperties(kafka),
+            ): ProducerFactory<K, V> {
+                return DefaultKafkaProducerFactory(properties)
             }
 
             fun <K, V> getProducerFactory(
@@ -189,12 +209,16 @@ class KafkaServer private constructor(
             }
 
             fun <K, V> getConsumerFactory(
+                properties: MutableMap<String, Any?> = getConsumerProperties(kafka),
+            ): ConsumerFactory<K, V> {
+                return DefaultKafkaConsumerFactory(properties)
+            }
+
+            fun <K, V> getConsumerFactory(
                 keyDeserializer: Deserializer<K>,
                 valueDeserializer: Deserializer<V>,
                 properties: MutableMap<String, Any?> = getConsumerProperties(kafka),
             ): ConsumerFactory<K, V> {
-                // NOTE: Spring Kafka 의 Acknowledgement 를 사용하기 위해 auto commit 은 false로 한다
-                properties[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = "false"
                 return DefaultKafkaConsumerFactory(properties, keyDeserializer, valueDeserializer)
             }
 
@@ -239,7 +263,7 @@ class KafkaServer private constructor(
                     this.containerProperties.apply {
                         this.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
                         this.idleEventInterval = 100L
-                        this.pollTimeout = 10L
+                        this.pollTimeout = 50L
                     }
 
                     this.setAckDiscarded(true)

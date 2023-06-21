@@ -13,6 +13,7 @@ dependencies {
     testImplementation(Libs.spring_kafka_test)
 
     api(project(":bluetape4k-infra-kafka"))
+    api(project(":bluetape4k-io-json"))
     testImplementation(project(":bluetape4k-testcontainers"))
     testImplementation(Libs.testcontainers_kafka)
 
