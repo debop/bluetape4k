@@ -12,8 +12,9 @@ dependencies {
     api(Libs.kafka_clients)
     compileOnly(Libs.kafka_metadata)
     compileOnly(Libs.kafka_streams)
+
     api(Libs.spring_kafka)
-    testImplementation(Libs.spring_kafka_test)
+    compileOnly(Libs.spring_kafka_test)
     compileOnly(Libs.springData("commons"))
 
     api(project(":bluetape4k-infra-kafka"))
