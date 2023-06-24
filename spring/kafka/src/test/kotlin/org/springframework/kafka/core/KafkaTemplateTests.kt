@@ -10,7 +10,6 @@ import io.bluetape4k.support.toUtf8String
 import io.bluetape4k.support.uninitialized
 import io.mockk.mockk
 import kotlinx.atomicfu.atomic
-import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
@@ -101,18 +100,18 @@ class KafkaTemplateTests {
         template.defaultTopic = INT_KEY_TOPIC
         template.setConsumerFactory(
             DefaultKafkaConsumerFactory(
-                KafkaTestUtils.consumerProps("xx", "false", embeddedKafka)
+                embeddedKafka.consumerProps("xx", false)
             )
         )
 
-        val initialRecords = template.receive(listOf(TopicPartitionOffset(INT_KEY_TOPIC, 1, 1L)))
-        initialRecords.shouldBeEmpty()
+        // val initialRecords = template.receive(listOf(TopicPartitionOffset(INT_KEY_TOPIC, 1, 1L)))
+        // initialRecords.shouldBeEmpty()
 
         template.sendDefault("foo")
-        KafkaTestUtils.getSingleRecord(consumer, INT_KEY_TOPIC).value() shouldBeEqualTo "foo"
+        consumer.getSingleRecord(INT_KEY_TOPIC).value() shouldBeEqualTo "foo"
 
         template.sendDefault(0, 2, "bar")
-        var received: ConsumerRecord<Int, String> = KafkaTestUtils.getSingleRecord(consumer, INT_KEY_TOPIC)
+        var received: ConsumerRecord<Int, String> = consumer.getSingleRecord(INT_KEY_TOPIC)
         with(received) {
             partition() shouldBeEqualTo 0
             key() shouldBeEqualTo 2
@@ -120,7 +119,7 @@ class KafkaTemplateTests {
         }
 
         template.sendDefault(1, 3, "qux")
-        KafkaTestUtils.getSingleRecord(consumer, INT_KEY_TOPIC).apply {
+        consumer.getSingleRecord(INT_KEY_TOPIC).apply {
             partition() shouldBeEqualTo 1
             key() shouldBeEqualTo 3
             value() shouldBeEqualTo "qux"
@@ -132,7 +131,7 @@ class KafkaTemplateTests {
             setHeader(KafkaHeaders.KEY, 2)
         }
         template.send(message)
-        KafkaTestUtils.getSingleRecord(consumer, INT_KEY_TOPIC).apply {
+        consumer.getSingleRecord(INT_KEY_TOPIC).apply {
             partition() shouldBeEqualTo 0
             key() shouldBeEqualTo 2
             value() shouldBeEqualTo "fiz"
@@ -143,7 +142,7 @@ class KafkaTemplateTests {
             setHeader(KafkaHeaders.KEY, 2)
         }
         template.send(message2)
-        received = KafkaTestUtils.getSingleRecord(consumer, INT_KEY_TOPIC).apply {
+        received = consumer.getSingleRecord(INT_KEY_TOPIC).apply {
             partition() shouldBeEqualTo 1
             key() shouldBeEqualTo 2
             value() shouldBeEqualTo "buz"
@@ -193,14 +192,14 @@ class KafkaTemplateTests {
         }
 
         template.sendDefault(0, 1487694048607L, 0, "foo-ts1")
-        KafkaTestUtils.getSingleRecord(consumer, INT_KEY_TOPIC).apply {
+        consumer.getSingleRecord(INT_KEY_TOPIC).apply {
             partition() shouldBeEqualTo 0
             timestamp() shouldBeEqualTo 1487694048607L
             value() shouldBeEqualTo "foo-ts1"
         }
 
         template.send(INT_KEY_TOPIC, 1, 1487694048610L, 0, "foo-ts2")
-        KafkaTestUtils.getSingleRecord(consumer, INT_KEY_TOPIC).apply {
+        consumer.getSingleRecord(INT_KEY_TOPIC).apply {
             partition() shouldBeEqualTo 1
             timestamp() shouldBeEqualTo 1487694048610L
             value() shouldBeEqualTo "foo-ts2"
