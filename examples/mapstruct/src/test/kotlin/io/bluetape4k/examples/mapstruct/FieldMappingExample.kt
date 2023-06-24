@@ -16,41 +16,6 @@ class FieldMappingExample: AbstractMapstructTest() {
         private const val REPEAT_SIZE = 5
     }
 
-    data class Customer(var id: Long?, var name: String?, var orderItems: List<OrderItem>?)
-    data class OrderItem(var name: String?, var quantity: Long?)
-
-    data class CustomerDto(var customerId: Long?, var customerName: String?, var orders: Set<OrderItemDto>?)
-    data class OrderItemDto(var name: String?, var quantity: Long?)
-
-    @Mapper(uses = [OrderItemMapper::class])
-    interface CustomerMapper {
-        companion object {
-            val MAPPER: CustomerMapper = mapper<CustomerMapper>()
-        }
-
-        @Mappings(
-            Mapping(source = "orders", target = "orderItems"),
-            Mapping(source = "customerName", target = "name"),
-            Mapping(source = "customerId", target = "id")
-        )
-        fun toCustomer(customerDto: CustomerDto): Customer
-
-        @InheritInverseConfiguration
-        fun fromCustomer(customer: Customer): CustomerDto
-    }
-
-    @Mapper
-    interface OrderItemMapper {
-        companion object {
-            val MAPPER = mapper<OrderItemMapper>()
-        }
-
-        fun toOrderItem(orderItemDto: OrderItemDto): OrderItem
-
-        @InheritInverseConfiguration
-        fun fromOrderItem(orderItem: OrderItem): OrderItemDto
-    }
-
     @RepeatedTest(REPEAT_SIZE)
     fun `entity의 컬렉션 속성을 DTO로 변환`() {
         val customer = Customer(
@@ -102,4 +67,39 @@ class FieldMappingExample: AbstractMapstructTest() {
         val actual: CustomerDto = CustomerMapper.MAPPER.fromCustomer(customer)
         actual shouldBeEqualTo customerDto
     }
+}
+
+data class Customer(var id: Long?, var name: String?, var orderItems: List<OrderItem>?)
+data class OrderItem(var name: String?, var quantity: Long?)
+
+data class CustomerDto(var customerId: Long?, var customerName: String?, var orders: Set<OrderItemDto>?)
+data class OrderItemDto(var name: String?, var quantity: Long?)
+
+@Mapper(uses = [OrderItemMapper::class])
+interface CustomerMapper {
+    companion object {
+        val MAPPER: CustomerMapper = mapper<CustomerMapper>()
+    }
+
+    @Mappings(
+        Mapping(source = "orders", target = "orderItems"),
+        Mapping(source = "customerName", target = "name"),
+        Mapping(source = "customerId", target = "id")
+    )
+    fun toCustomer(customerDto: CustomerDto): Customer
+
+    @InheritInverseConfiguration
+    fun fromCustomer(customer: Customer): CustomerDto
+}
+
+@Mapper
+interface OrderItemMapper {
+    companion object {
+        val MAPPER = mapper<OrderItemMapper>()
+    }
+
+    fun toOrderItem(orderItemDto: OrderItemDto): OrderItem
+
+    @InheritInverseConfiguration
+    fun fromOrderItem(orderItem: OrderItem): OrderItemDto
 }

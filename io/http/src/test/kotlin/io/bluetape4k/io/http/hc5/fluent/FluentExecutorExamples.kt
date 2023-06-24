@@ -2,6 +2,8 @@ package io.bluetape4k.io.http.hc5.fluent
 
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
 import io.bluetape4k.io.http.hc5.http.httpHostOf
+import io.bluetape4k.junit5.folder.TempFolder
+import io.bluetape4k.junit5.folder.TempFolderTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.toUtf8String
@@ -11,7 +13,6 @@ import org.apache.hc.core5.http.ContentType
 import org.apache.hc.core5.http.HttpVersion
 import org.apache.hc.core5.util.Timeout
 import org.junit.jupiter.api.Test
-import java.io.File
 
 /**
  * This example demonstrates how the he HttpClient fluent API can be used to execute multiple
@@ -19,6 +20,7 @@ import java.io.File
  * by all requests executed with it. The Executor is thread-safe and can be used to execute
  * requests concurrently from multiple threads of execution.
  */
+@TempFolderTest
 class FluentExecutorExamples: AbstractHc5Test() {
 
     companion object: KLogging()
@@ -60,10 +62,11 @@ class FluentExecutorExamples: AbstractHc5Test() {
     }
 
     @Test
-    fun `post multi-part form data`() {
+    fun `post multi-part form data`(tempFolder: TempFolder) {
         // Execute a POST with a custom header through the proxy containing a request body
         // as an HTML form and save the result to the file
         // @see hc5/examples/ClientMultipartFormPost
+        val path = tempFolder.createFile()
         executor
             .execute(
                 requestPost("$httpbinBaseUrl/post")
@@ -75,6 +78,6 @@ class FluentExecutorExamples: AbstractHc5Test() {
                             .build()
                     )
             )
-            .saveContent(File("src/test/resources/files/cafe.jpg"))
+            .saveContent(path)
     }
 }

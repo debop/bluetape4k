@@ -3,6 +3,8 @@ package io.bluetape4k.io.http.hc5.examples
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
 import io.bluetape4k.io.http.hc5.entity.mime.multipartEntity
 import io.bluetape4k.io.http.hc5.http.ContentTypes
+import io.bluetape4k.junit5.folder.TempFolder
+import io.bluetape4k.junit5.folder.TempFolderTest
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -17,10 +19,11 @@ import java.io.File
 /**
  * Example how to use multipart/form encoded POST request.
  */
+@TempFolderTest
 class ClientMultipartFormPost: AbstractHc5Test() {
 
     @Test
-    fun `use multipart form encoded post request`() = runTest {
+    fun `use multipart form encoded post request`(tempFolder: TempFolder) = runTest {
         val httpclient = HttpClients.createDefault()
 
         httpclient.use {
