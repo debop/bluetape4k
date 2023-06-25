@@ -2,7 +2,6 @@ package io.bluetape4k.infra.kafka.spring
 
 import io.bluetape4k.coroutines.flow.async
 import io.bluetape4k.support.asDouble
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.last
@@ -25,19 +24,17 @@ import kotlin.coroutines.resumeWithException
  */
 suspend inline fun <K, V> KafkaOperations2<K, V>.sendSuspending(
     record: ProducerRecord<K, V>,
-): SendResult<K, V> {
-    return suspendCancellableCoroutine { cont ->
-        val result = execute { producer ->
-            producer.send(record) { metadata, exception ->
-                if (exception != null) {
-                    cont.resumeWithException(exception)
-                } else {
-                    cont.resume(SendResult(record, metadata))
-                }
+): SendResult<K, V> = suspendCancellableCoroutine { cont ->
+    val result = execute { producer ->
+        producer.send(record) { metadata, exception ->
+            if (exception != null) {
+                cont.resumeWithException(exception)
+            } else {
+                cont.resume(SendResult(record, metadata))
             }
         }
-        cont.invokeOnCancellation { result?.cancel(true) }
     }
+    cont.invokeOnCancellation { result?.cancel(true) }
 }
 
 /**
@@ -48,8 +45,8 @@ suspend inline fun <K, V> KafkaOperations2<K, V>.sendSuspending(
  */
 suspend inline fun <K, V> KafkaOperations2<K, V>.sendFlowAsParallel(
     records: Flow<ProducerRecord<K, V>>,
-): SendResult<K, V> = coroutineScope {
-    records
+): SendResult<K, V> {
+    return records
         .async {
             sendSuspending(it)
         }
@@ -65,7 +62,7 @@ suspend inline fun <K, V> KafkaOperations2<K, V>.sendFlowAsParallel(
 suspend inline fun <K, V> KafkaOperations2<K, V>.sendAndForget(
     records: Flow<ProducerRecord<K, V>>,
     needFlush: Boolean = false,
-) = coroutineScope {
+) {
     records
         .async {
             sendSuspending(it)

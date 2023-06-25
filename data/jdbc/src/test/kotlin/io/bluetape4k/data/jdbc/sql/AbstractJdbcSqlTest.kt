@@ -1,7 +1,7 @@
-package io.bluetake4k.data.jdbc.sql
+package io.bluetape4k.data.jdbc.sql
 
-import io.bluetake4k.data.jdbc.AbstractJdbcTest
-import io.bluetake4k.data.jdbc.model.TestBean
+import io.bluetape4k.data.jdbc.AbstractJdbcTest
+import io.bluetape4k.data.jdbc.model.TestBean
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeTrue

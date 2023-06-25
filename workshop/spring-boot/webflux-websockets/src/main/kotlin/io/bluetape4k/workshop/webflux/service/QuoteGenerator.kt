@@ -2,10 +2,10 @@ package io.bluetape4k.workshop.webflux.service
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
-import io.bluetape4k.logging.info
 import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.workshop.webflux.model.Event
 import io.bluetape4k.workshop.webflux.model.Quote
@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.yield
@@ -61,9 +60,8 @@ class QuoteGenerator {
             delay(period.toMillis())
             val quotes = generateStringQuotes(period.toMillis())
             emit(quotes)
-            log.info { "emit quote. $quotes" }
         }
-    }.conflate()   // conflate는 onBackpressureDrop() 과 같이 적체되면 무시해버린다.
+    }.conflate().log("string")   // conflate는 onBackpressureDrop() 과 같이 적체되면 무시해버린다.
 
     private fun generateStringQuotes(interval: Long): String {
         return try {
@@ -78,7 +76,7 @@ class QuoteGenerator {
         withTimeoutOrNull(period.toMillis()) {
             while (currentCoroutineContext().isActive) {
                 val quotes = generateQuotes(period.toMillis())
-                emitAll(quotes.asFlow().onEach { log.info { "emit quote. $it" } })
+                emitAll(quotes.asFlow().log("quote")) // .onEach { log.info { "emit quote. $it" } })
                 yield()
             }
         }

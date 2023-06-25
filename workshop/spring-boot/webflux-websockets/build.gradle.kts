@@ -13,7 +13,7 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-spring-support"))
+    implementation(project(":bluetape4k-spring-support"))
     implementation(project(":bluetape4k-io-json"))
     implementation(project(":bluetape4k-io-netty"))
     implementation(project(":bluetape4k-utils-idgenerators"))
@@ -40,6 +40,7 @@ dependencies {
     }
 
     // Coroutines
+    implementation(project(":bluetape4k-coroutines"))
     implementation(Libs.kotlinx_coroutines_core)
     implementation(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)

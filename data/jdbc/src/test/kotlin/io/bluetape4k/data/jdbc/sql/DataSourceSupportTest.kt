@@ -1,6 +1,6 @@
-package io.bluetake4k.data.jdbc.sql
+package io.bluetape4k.data.jdbc.sql
 
-import io.bluetake4k.data.jdbc.model.Actor
+import io.bluetape4k.data.jdbc.model.Actor
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan

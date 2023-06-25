@@ -34,7 +34,6 @@ class WorkStealingPoolTest {
 
     @Test
     fun `executeAll multiple actions with work stealing pool`() {
-
         val tasks = List(20) { index ->
             {
                 Thread.sleep(Random.nextLong(100, 200))

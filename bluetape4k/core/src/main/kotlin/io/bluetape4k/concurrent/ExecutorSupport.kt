@@ -7,7 +7,6 @@ import io.bluetape4k.logging.debug
 import java.util.concurrent.Callable
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
-import java.util.concurrent.ForkJoinPool
 
 private val log = KotlinLogging.logger {}
 
@@ -28,7 +27,7 @@ fun <T> withWorkStealingPool(
     task: () -> T,
 ): CompletableFuture<T> {
     parallelism.assertPositiveNumber("parallelism")
-    val executor = Executors.newWorkStealingPool(parallelism) as ForkJoinPool
+    val executor = Executors.newWorkStealingPool(parallelism)
 
     return executor
         .invokeAll(listOf(Callable { task() }))
@@ -58,7 +57,7 @@ fun <T> withWorkStealingPool(
     tasks: Collection<() -> T>,
 ): CompletableFuture<List<T>> {
     parallelism.requirePositiveNumber("parallelism")
-    val executor = Executors.newWorkStealingPool(parallelism) as ForkJoinPool
+    val executor = Executors.newWorkStealingPool(parallelism)
 
     return executor
         .invokeAll(tasks.map { Callable { it.invoke() } })

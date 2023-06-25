@@ -1,4 +1,4 @@
-package io.bluetake4k.data.jdbc.model
+package io.bluetape4k.data.jdbc.model
 
 import java.io.Serializable
 

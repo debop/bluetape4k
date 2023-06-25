@@ -1,4 +1,4 @@
-package io.bluetake4k.data.jdbc.sql
+package io.bluetape4k.data.jdbc.sql
 
 import io.bluetape4k.logging.KLogging
 import org.junit.jupiter.api.Test

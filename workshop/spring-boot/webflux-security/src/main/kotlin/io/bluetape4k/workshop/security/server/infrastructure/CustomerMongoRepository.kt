@@ -1,5 +1,6 @@
 package io.bluetape4k.workshop.security.server.infrastructure
 
+import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.workshop.security.server.domain.Customer
 import io.bluetape4k.workshop.security.server.domain.CustomerRepository
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +16,7 @@ class CustomerMongoRepository(
     }
 
     override fun all(): Flow<Customer> {
-        return findAll()
+        return findAll().log("all")
     }
 
     override suspend fun findByEmail(email: String): Customer? {

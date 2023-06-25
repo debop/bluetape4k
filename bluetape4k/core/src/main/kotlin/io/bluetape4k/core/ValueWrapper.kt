@@ -8,4 +8,6 @@ value class ValueWrapper(val value: Any?): Serializable {
     inline fun getOrElse(getter: () -> Any?): Any? = value ?: getter()
 
     fun getOrNull(): Any? = value
+
+    inline fun <reified T> getAs(): T? = (value as? T)
 }

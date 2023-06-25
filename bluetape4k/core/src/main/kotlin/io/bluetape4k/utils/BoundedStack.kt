@@ -55,6 +55,7 @@ class BoundedStack<E: Any> private constructor(val maxSize: Int): Stack<E>() {
         return true
     }
 
+    @Synchronized
     override fun addAll(index: Int, elements: Collection<E>): Boolean {
         throw UnsupportedOperationException()
     }
@@ -97,14 +98,14 @@ class BoundedStack<E: Any> private constructor(val maxSize: Int): Stack<E>() {
     @Synchronized
     fun insert(index: Int, elem: E): E {
         when {
-            index == 0 -> return push(elem)
-            index > count -> throw java.lang.IndexOutOfBoundsException(index.toString())
+            index == 0     -> return push(elem)
+            index > count  -> throw java.lang.IndexOutOfBoundsException(index.toString())
             index == count -> {
                 array[(top + index) % maxSize] = elem
                 counter.incrementAndGet()
             }
 
-            else -> {
+            else           -> {
                 val swapped = array[index]!!
                 array[index] = elem
                 insert(index - 1, swapped)
@@ -121,7 +122,7 @@ class BoundedStack<E: Any> private constructor(val maxSize: Int): Stack<E>() {
     }
 
     @Synchronized
-    fun toList(): List<E> {
+    fun toList(): MutableList<E> {
         val results = fastListOf<E>()
         forEach {
             results.add(it)
@@ -131,14 +132,14 @@ class BoundedStack<E: Any> private constructor(val maxSize: Int): Stack<E>() {
 
     @Synchronized
     override fun iterator(): MutableIterator<E> {
-        return object: MutableIterator<E> {
-
-            private var index = 0
-            override fun hasNext(): Boolean = index != count
-            override fun next(): E = get(index++)
-            override fun remove() {
-                /* Nothing to do. */
-            }
-        }
+        return toList().iterator()
+//        return object: MutableIterator<E> {
+//            private var index = 0
+//            override fun hasNext(): Boolean = index != count
+//            override fun next(): E = get(index++)
+//            override fun remove() {
+//                /* Nothing to do. */
+//            }
+//        }
     }
 }

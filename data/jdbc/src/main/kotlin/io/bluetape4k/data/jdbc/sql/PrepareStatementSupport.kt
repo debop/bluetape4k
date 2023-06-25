@@ -1,4 +1,4 @@
-package io.bluetake4k.data.jdbc.sql
+package io.bluetape4k.data.jdbc.sql
 
 import java.sql.PreparedStatement
 

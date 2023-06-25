@@ -1,4 +1,4 @@
-package io.bluetake4k.data.jdbc.sql
+package io.bluetape4k.data.jdbc.sql
 
 /**
  * [java.sql.ResultSet]으로부터 Column 값을 얻기 위한 코드를 담는 클래스입니다.

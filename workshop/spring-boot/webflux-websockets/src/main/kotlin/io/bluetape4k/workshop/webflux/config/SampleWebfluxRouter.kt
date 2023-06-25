@@ -33,12 +33,16 @@ class SampleWebfluxRouter(
     @Bean
     fun compositeRountes(quoteGenerator: QuoteGenerator): RouterFunction<ServerResponse> = coRouter {
         GET("/quotes") { request ->
+            // 여러 개의 JSON 객체를 보낼 때에는 `application/x-ndjson` 을 사용해야 합니다.
+            // https://www.devopsschool.com/blog/what-is-difference-between-application-x-ndjson-and-application-json/
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_NDJSON)
                 .bodyAndAwait(quoteGenerator.getQuotes())
         }
         GET("/quotes/{duration}") { request ->
             val duration = Duration.ofMillis(request.pathVariable("duration").toLong())
+            // 여러 개의 JSON 객체를 보낼 때에는 `application/x-ndjson` 을 사용해야 합니다.
+            // https://www.devopsschool.com/blog/what-is-difference-between-application-x-ndjson-and-application-json/
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_NDJSON)
                 .bodyAndAwait(quoteGenerator.fetchQuoteAsFlow(duration))
