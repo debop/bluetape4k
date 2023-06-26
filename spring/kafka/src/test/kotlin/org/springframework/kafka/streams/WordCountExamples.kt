@@ -17,6 +17,7 @@ import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.KTable
+import org.apache.kafka.streams.kstream.Printed
 import org.apache.kafka.streams.kstream.ValueMapper
 import org.apache.kafka.streams.processor.WallclockTimestampExtractor
 import org.junit.jupiter.api.Test
@@ -120,7 +121,7 @@ class WordCountExamples {
             return KafkaTemplate(producerFactory())
         }
 
-        @Value("\${spring.kafka.streams.state.dir")
+        @Value("\${spring.kafka.streams.state.dir:streams-state}")
         private var stateStoreLocation: String? = null
 
         @Bean(name = [KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME])
@@ -183,7 +184,7 @@ class WordCountExamples {
                 )
                 .count(materializedOf("counts"))
 
-            wordCounts.toStream()// .apply { print(Printed.toSysOut()) }
+            wordCounts.toStream().apply { print(Printed.toSysOut()) }
                 .to(OUTPUT_TOPIC)
         }
     }

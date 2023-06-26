@@ -54,3 +54,6 @@ lucene/
 /test/**/ignite/
 /data/**/ignite/
 .resourceCache
+
+# kafka stream store
+**/streams-state/
