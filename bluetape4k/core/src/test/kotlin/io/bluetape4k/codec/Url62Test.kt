@@ -1,5 +1,6 @@
 package io.bluetape4k.codec
 
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
@@ -49,5 +50,18 @@ class Url62Test {
         assertFailsWith<IllegalArgumentException> {
             Url62.decode("7NLCAyd6sKR7kDHxgAWFPas")
         }
+    }
+
+    @Test
+    fun `encode decode in multi-threading`() {
+        MultithreadingTester()
+            .numThreads(16)
+            .roundsPerThread(4)
+            .add {
+                val url = UUID.randomUUID()
+                val converted = Url62.decode(Url62.encode(url))
+                converted shouldBeEqualTo url
+            }
+            .run()
     }
 }

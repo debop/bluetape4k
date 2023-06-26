@@ -1,5 +1,6 @@
 package io.bluetape4k.codec
 
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
@@ -54,5 +55,17 @@ class Base62Test {
             expected.encodeBase62().decodeBase62AsUuid() shouldBeEqualTo expected
             Url62.decode(Url62.encode(expected)) shouldBeEqualTo expected
         }
+    }
+
+    @Test
+    fun `encode and decode in multi-thread`() {
+        MultithreadingTester()
+            .numThreads(16)
+            .roundsPerThread(4)
+            .add {
+                val uuid = UUID.randomUUID()
+                uuid.encodeBase62().decodeBase62AsUuid() shouldBeEqualTo uuid
+            }
+            .run()
     }
 }

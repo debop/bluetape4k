@@ -30,6 +30,9 @@ inline fun intArrayList(size: Int, initializer: (Int) -> Int = { it }): IntArray
 
 fun intArrayListOf(vararg elements: Int): IntArrayList = IntArrayList.newListWith(*elements)
 fun intArrayListOf(elements: Iterable<Int>): IntArrayList = elements.toIntArrayList()
+fun intArrayListOf(ints: IntIterable): IntArrayList = IntArrayList.newList(ints)
+
+fun IntIterable.asArrayList(): IntArrayList = intArrayListOf(this)
 
 fun IntIterable.asSequence(): Sequence<Int> = sequence {
     val iter = intIterator()
