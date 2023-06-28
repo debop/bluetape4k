@@ -1,5 +1,6 @@
 package io.bluetape4k.openai.api.models
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.Serializable
 
 /**
@@ -11,6 +12,9 @@ import java.io.Serializable
  */
 data class DeleteResponse(
     val id: String,
+
+    @get:JsonProperty("object")
     val objectType: String,
+
     val deleted: Boolean,
 ): Serializable

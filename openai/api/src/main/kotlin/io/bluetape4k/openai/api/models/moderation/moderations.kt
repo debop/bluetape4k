@@ -2,11 +2,11 @@ package io.bluetape4k.openai.api.models.moderation
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.bluetape4k.core.requireNotNull
-import io.bluetape4k.openai.api.OpenAIDsl
+import io.bluetape4k.openai.api.annotations.OpenAIDsl
 import java.io.Serializable
 
 /**
- * ModerationResult model.
+ * Moderation model.
  */
 @JvmInline
 value class ModerationModel(val model: String): Serializable {
@@ -34,14 +34,14 @@ value class ModerationModel(val model: String): Serializable {
  * Request to classify if text violates OpenAI's Content Policy.
  *
  * @property input The input text to classify.
- * @property model ModerationResult model. Defaults to [ModerationModel.Latest].
+ * @property model Moderation model. Defaults to [ModerationModel.Latest].
  */
 data class ModerationRequest(
-    val input: List<String>,
+    val input: String,
     val model: ModerationModel? = ModerationModel.Default,
 ): Serializable
 
-inline fun modeationRequest(initializer: ModerationRequestBuilder.() -> Unit): ModerationRequest =
+inline fun moderationRequest(initializer: ModerationRequestBuilder.() -> Unit): ModerationRequest =
     ModerationRequestBuilder().apply(initializer).build()
 
 /**
@@ -53,7 +53,7 @@ class ModerationRequestBuilder {
     /**
      * The input text to classify.
      */
-    var input: List<String>? = null
+    var input: String? = null
 
     /**
      * Moderation model. Defaults to [ModerationModel.Latest].
@@ -75,11 +75,11 @@ class ModerationRequestBuilder {
  * @property model The model used.
  * @property results A list of moderation scores.
  */
-data class TextModeration(
+data class ModerationResult(
     val id: String,
     val model: ModerationModel,
-    val results: List<ModerationResult>,
-): Serializable
+    val results: List<Moderation>,
+) : Serializable
 
 /**
  * An object containing the moderation data for a single input string
@@ -90,18 +90,18 @@ data class TextModeration(
  * @property categoryScores    Object containing per-category raw scores output by the model, denoting the model's confidence that the input violates the OpenAI's policy for the category. The value is between 0 and 1, where higher values denote higher confidence. The scores should not be interpreted as probabilities.
  * @property flagged            Set to true if the model classifies the content as violating OpenAI's content policy, false otherwise
  */
-data class ModerationResult(
-    val categories: Categories,
-    val categoryScores: CategoryScores,
+data class Moderation(
+    val categories: ModerationCategories,
+    val categoryScores: ModerationCategoryScores,
     val flagged: Boolean,
-): Serializable
+) : Serializable
 
 /**
  * An object containing the flags for each moderation category
  *
  * 참고: [Moderations Create](https://beta.openai.com/docs/api-reference/moderations/create)
  */
-data class Categories(
+data class ModerationCategories(
     /**
      * Content that expresses, incites, or promotes hate based on race, gender, ethnicity, religion, nationality, sexual
      * orientation, disability status, or caste.
@@ -111,13 +111,13 @@ data class Categories(
     /**
      * Hateful content that also includes violence or serious harm towards the targeted group.
      */
-    @JsonProperty("hate/threatening")
+    @get:JsonProperty("hate/threatening")
     val hateThreatening: Boolean,
 
     /**
      * Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders.
      */
-    @JsonProperty("self-harm")
+    @get:JsonProperty("self-harm")
     val selfHarm: Boolean,
 
     /**
@@ -129,7 +129,7 @@ data class Categories(
     /**
      * Sexual content that includes an individual who is under 18 years old.
      */
-    @JsonProperty("sexual/minors")
+    @get:JsonProperty("sexual/minors")
     val sexualMinors: Boolean,
 
     /**
@@ -140,16 +140,16 @@ data class Categories(
     /**
      * Violent content that depicts death, violence, or serious physical injury in extreme graphic detail.
      */
-    @JsonProperty("violence/graphic")
+    @get:JsonProperty("violence/graphic")
     val violenceGraphic: Boolean,
 ): Serializable
 
 /**
  * An object containing the scores for each moderation category
  *
- * 참고: [ModerationResult Create](https://beta.openai.com/docs/api-reference/moderations/create)
+ * 참고: [Moderation Create](https://beta.openai.com/docs/api-reference/moderations/create)
  */
-data class CategoryScores(
+data class ModerationCategoryScores(
     /**
      * Content that expresses, incites, or promotes hate based on race, gender, ethnicity, religion, nationality, sexual
      * orientation, disability status, or caste.
@@ -159,13 +159,13 @@ data class CategoryScores(
     /**
      * Hateful content that also includes violence or serious harm towards the targeted group.
      */
-    @JsonProperty("hate/threatening")
+    @get:JsonProperty("hate/threatening")
     val hateThreatening: Double,
 
     /**
      * Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders.
      */
-    @JsonProperty("self-harm")
+    @get:JsonProperty("self-harm")
     val selfHarm: Double,
 
     /**
@@ -177,7 +177,7 @@ data class CategoryScores(
     /**
      * Sexual content that includes an individual who is under 18 years old.
      */
-    @JsonProperty("sexual/minors")
+    @get:JsonProperty("sexual/minors")
     val sexualMinors: Double,
 
     /**
@@ -188,6 +188,6 @@ data class CategoryScores(
     /**
      * Violent content that depicts death, violence, or serious physical injury in extreme graphic detail.
      */
-    @JsonProperty("violence/graphic")
+    @get:JsonProperty("violence/graphic")
     val violenceGraphic: Double,
 ): Serializable

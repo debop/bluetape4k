@@ -14,9 +14,15 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
+    testImplementation(project(":bluetape4k-io-json"))
     testImplementation(project(":bluetape4k-junit5"))
 
+    // Json
     api(Libs.jackson_annotations)
+    api(Libs.jackson_databind)
+    api(Libs.jackson_module_kotlin)
+
+    api(Libs.kotlinx_serialization_json)
 
     // Coroutines
     api(project(":bluetape4k-coroutines"))

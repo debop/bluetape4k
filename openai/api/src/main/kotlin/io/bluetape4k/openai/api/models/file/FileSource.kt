@@ -2,13 +2,13 @@ package io.bluetape4k.openai.api.models.file
 
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.core.requireNotNull
-import io.bluetape4k.openai.api.OpenAIDsl
-import java.nio.file.Path
+import io.bluetape4k.openai.api.annotations.OpenAIDsl
+import java.io.Serializable
 
 data class FileSource(
     val name: String,
-    val source: Path,
-)
+    val source: String,
+) : Serializable
 
 fun fileSource(initializer: FileSourceBuilder.() -> Unit): FileSource =
     FileSourceBuilder().apply(initializer).build()
@@ -17,7 +17,7 @@ fun fileSource(initializer: FileSourceBuilder.() -> Unit): FileSource =
 class FileSourceBuilder {
 
     var name: String? = null
-    var source: Path? = null
+    var source: String? = null
 
     fun build(): FileSource = FileSource(
         name = this.name.requireNotBlank("name"),

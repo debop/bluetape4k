@@ -6,6 +6,6 @@ import java.io.Serializable
 
 @BetaOpenAI
 data class ImageJSON(
-    @JsonProperty("b64_json")
+    @get:JsonProperty("b64_json")
     val b64JSON: String,
 ): Serializable
