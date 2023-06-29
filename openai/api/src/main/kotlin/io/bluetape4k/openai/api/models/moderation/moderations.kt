@@ -79,7 +79,7 @@ data class ModerationResult(
     val id: String,
     val model: ModerationModel,
     val results: List<Moderation>,
-) : Serializable
+): Serializable
 
 /**
  * An object containing the moderation data for a single input string
@@ -94,7 +94,7 @@ data class Moderation(
     val categories: ModerationCategories,
     val categoryScores: ModerationCategoryScores,
     val flagged: Boolean,
-) : Serializable
+): Serializable
 
 /**
  * An object containing the flags for each moderation category

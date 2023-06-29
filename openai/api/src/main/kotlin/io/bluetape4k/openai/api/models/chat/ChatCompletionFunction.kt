@@ -13,7 +13,7 @@ data class ChatCompletionFunction(
     val name: String,
     val description: String? = null,
     val parameters: Class<*>? = null,
-) : Serializable {
+): Serializable {
 
     @JsonIgnore
     var executor: Function<Any?, Any?>? = null
@@ -25,14 +25,14 @@ inline fun chatCompletionFunction(initializer: ChatCompletionFunctionBuilder.() 
 
 @BetaOpenAI
 @OpenAIDsl
-class ChatCompletionFunctionBuilder : ModelBuilder<ChatCompletionFunction> {
+class ChatCompletionFunctionBuilder: ModelBuilder<ChatCompletionFunction> {
 
     var name: String? = null
     var description: String? = null
     private var parameters: Class<*>? = null
     private var executor: Function<Any?, Any?>? = null
 
-    fun <T : Any?> executor(requestClass: Class<T>, executor: Function<T, Any?>) = apply {
+    fun <T: Any?> executor(requestClass: Class<T>, executor: Function<T, Any?>) = apply {
         this.parameters = requestClass
         this.executor = executor as Function<Any?, Any?>
     }

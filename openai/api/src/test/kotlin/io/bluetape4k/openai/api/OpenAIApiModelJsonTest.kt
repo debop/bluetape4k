@@ -6,11 +6,28 @@ import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.openai.api.annotations.BetaOpenAI
-import io.bluetape4k.openai.api.models.audio.Transcription
+import io.bluetape4k.openai.api.models.DeleteResult
 import io.bluetape4k.openai.api.models.audio.TranscriptionRequest
-import io.bluetape4k.openai.api.models.audio.Translation
+import io.bluetape4k.openai.api.models.audio.TranscriptionResult
 import io.bluetape4k.openai.api.models.audio.TranslationRequest
-import io.bluetape4k.openai.api.models.model.Model
+import io.bluetape4k.openai.api.models.audio.TranslationResult
+import io.bluetape4k.openai.api.models.chat.ChatCompletionRequest
+import io.bluetape4k.openai.api.models.chat.ChatCompletionResult
+import io.bluetape4k.openai.api.models.completion.CompletionRequest
+import io.bluetape4k.openai.api.models.completion.CompletionResult
+import io.bluetape4k.openai.api.models.edits.EditRequest
+import io.bluetape4k.openai.api.models.edits.EditResult
+import io.bluetape4k.openai.api.models.embedding.EmbeddingRequest
+import io.bluetape4k.openai.api.models.embedding.EmbeddingResult
+import io.bluetape4k.openai.api.models.file.File
+import io.bluetape4k.openai.api.models.finetune.FineTuneEvent
+import io.bluetape4k.openai.api.models.finetune.FineTuneResult
+import io.bluetape4k.openai.api.models.image.ImageCreationRequest
+import io.bluetape4k.openai.api.models.image.ImageEditRequest
+import io.bluetape4k.openai.api.models.image.ImageJSONResult
+import io.bluetape4k.openai.api.models.image.ImageURLResult
+import io.bluetape4k.openai.api.models.image.ImageVariationRequest
+import io.bluetape4k.openai.api.models.model.ModelResult
 import io.bluetape4k.openai.api.models.moderation.ModerationRequest
 import io.bluetape4k.openai.api.models.moderation.ModerationResult
 import io.bluetape4k.support.cast
@@ -23,7 +40,7 @@ import org.junit.jupiter.params.provider.ValueSource
 @BetaOpenAI
 class OpenAIApiModelJsonTest {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     private val mapper = Jackson.defaultJsonMapper.rebuild()
         .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
@@ -32,13 +49,30 @@ class OpenAIApiModelJsonTest {
     @ParameterizedTest
     @ValueSource(
         classes = [
-            Model::class,
+            ChatCompletionRequest::class,
+            ChatCompletionResult::class,
+            CompletionRequest::class,
+            CompletionResult::class,
+            DeleteResult::class,
+            EditRequest::class,
+            EditResult::class,
+            EmbeddingRequest::class,
+            EmbeddingResult::class,
+            File::class,
+            FineTuneEvent::class,
+            FineTuneResult::class,
+            ImageCreationRequest::class,
+            ImageEditRequest::class,
+            ImageJSONResult::class,
+            ImageURLResult::class,
+            ImageVariationRequest::class,
+            ModelResult::class,
             ModerationRequest::class,
             ModerationResult::class,
             TranscriptionRequest::class,
-            Transcription::class,
+            TranscriptionResult::class,
             TranslationRequest::class,
-            Translation::class,
+            TranslationResult::class,
         ]
     )
     fun `parse json text`(clazz: Class<*>) {

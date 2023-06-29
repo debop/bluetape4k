@@ -8,4 +8,4 @@ data class ChatChoice(
     val index: Int? = null,
     val message: ChatMessage? = null,
     val finishReason: String? = null,
-) : Serializable
+): Serializable

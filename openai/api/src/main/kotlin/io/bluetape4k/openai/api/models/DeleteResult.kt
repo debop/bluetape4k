@@ -10,11 +10,11 @@ import java.io.Serializable
  * @property objectType
  * @property deleted
  */
-data class DeleteResponse(
+data class DeleteResult(
     val id: String,
 
     @get:JsonProperty("object")
-    val objectType: String,
+    val objectId: ObjectId? = null,
 
     val deleted: Boolean,
 ): Serializable

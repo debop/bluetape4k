@@ -1,5 +1,6 @@
 package io.bluetape4k.openai.api.models
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.Serializable
 
 /**
@@ -9,7 +10,9 @@ import java.io.Serializable
  * @property data
  * @property usage
  */
-data class ListResponse<T>(
+data class ListResult<T>(
     val data: List<T>,
     val usage: Usage? = null,
+    @get:JsonProperty("object")
+    val objectId: ObjectId? = null,
 ): Serializable

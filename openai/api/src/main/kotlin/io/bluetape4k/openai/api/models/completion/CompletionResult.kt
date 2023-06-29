@@ -15,10 +15,10 @@ import java.io.Serializable
  * @property choices  A list of generated completions
  * @property usage    Text completion usage data.
  */
-data class TextCompletion(
+data class CompletionResult(
     val id: String,
     val created: Long,
     val model: ModelId,
     val choices: List<Choice>,
     val usage: Usage? = null,
-) : Serializable
+): Serializable

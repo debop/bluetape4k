@@ -16,4 +16,4 @@ data class Segment(
     val compressionRatio: Double,
     val noSpeechProb: Double,
     val transient: Boolean,
-) : Serializable
+): Serializable

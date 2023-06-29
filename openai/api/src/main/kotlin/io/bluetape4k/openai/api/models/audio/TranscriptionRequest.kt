@@ -26,11 +26,11 @@ data class TranscriptionRequest(
     val responseFormat: String? = null,
     val temperature: Double? = null,
     val language: String? = null,
-) : Serializable
+): Serializable
 
 @BetaOpenAI
 @OpenAIDsl
-class TranscriptionRequestBuilder : ModelBuilder<TranscriptionRequest> {
+class TranscriptionRequestBuilder: ModelBuilder<TranscriptionRequest> {
 
     var audio: FileSource? = null
     var model: ModelId? = null

@@ -23,7 +23,7 @@ data class ChatCompletionRequest(
     val user: String? = null,
     val functions: List<ChatCompletionFunction>? = null,
     val functionCall: FunctionMode? = null,
-) : Serializable
+): Serializable
 
 @BetaOpenAI
 fun chatCompletionRequest(initializer: ChatCompletionRequstBuilder.() -> Unit): ChatCompletionRequest =
@@ -31,7 +31,7 @@ fun chatCompletionRequest(initializer: ChatCompletionRequstBuilder.() -> Unit): 
 
 @BetaOpenAI
 @OpenAIDsl
-class ChatCompletionRequstBuilder : ModelBuilder<ChatCompletionRequest> {
+class ChatCompletionRequstBuilder: ModelBuilder<ChatCompletionRequest> {
 
     var model: ModelId? = null
     internal var messages: List<ChatMessage>? = null

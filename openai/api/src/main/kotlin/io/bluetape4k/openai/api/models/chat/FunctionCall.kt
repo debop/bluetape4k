@@ -16,7 +16,7 @@ import java.io.Serializable
 class FunctionCall(
     val name: String? = null,
     val arguments: String? = null,
-) : Serializable {
+): Serializable {
 
     /**
      * Decodes the [arguments] JSON string into a [JsonNode].

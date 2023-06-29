@@ -17,4 +17,4 @@ data class Choice(
     val index: Int,
     val logprobs: Logprobs? = null,
     val finishReason: String? = null,
-) : Serializable
+): Serializable

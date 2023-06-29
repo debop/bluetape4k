@@ -9,3 +9,10 @@ data class ImageJSON(
     @get:JsonProperty("b64_json")
     val b64JSON: String,
 ): Serializable
+
+
+@BetaOpenAI
+data class ImageJSONResult(
+    val created: Long,
+    val data: List<ImageJSON>,
+): Serializable

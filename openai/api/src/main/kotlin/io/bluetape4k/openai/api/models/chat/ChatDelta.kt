@@ -8,4 +8,4 @@ data class ChatDelta(
     val role: ChatRole? = null,
     val content: String? = null,
     val functionCall: FunctionCall? = null,
-) : Serializable
+): Serializable

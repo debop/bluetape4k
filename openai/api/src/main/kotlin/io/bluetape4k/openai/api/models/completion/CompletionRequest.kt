@@ -28,13 +28,13 @@ data class CompletionRequest(
     val logitBias: Map<String, Int>? = null,
     val user: String? = null,
     val suffix: String? = null,
-) : Serializable
+): Serializable
 
 inline fun completionRequest(initializer: CompletionRequestBuilder.() -> Unit): CompletionRequest =
     CompletionRequestBuilder().apply(initializer).build()
 
 @OpenAIDsl
-class CompletionRequestBuilder : ModelBuilder<CompletionRequest> {
+class CompletionRequestBuilder: ModelBuilder<CompletionRequest> {
 
     var model: ModelId? = null
     var prompt: String? = null

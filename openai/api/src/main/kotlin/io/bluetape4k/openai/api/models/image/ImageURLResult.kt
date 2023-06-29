@@ -7,3 +7,9 @@ import java.io.Serializable
 data class ImageURL(
     val url: String,
 ): Serializable
+
+@BetaOpenAI
+data class ImageURLResult(
+    val created: Long,
+    val data: List<ImageURL>,
+): Serializable 

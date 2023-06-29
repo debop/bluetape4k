@@ -21,10 +21,10 @@ data class EmbeddingRequest(
     val model: ModelId,
     val input: List<String>,
     val user: String? = null,
-) : Serializable
+): Serializable
 
 @OpenAIDsl
-class EmbeddingRequestBuilder : ModelBuilder<EmbeddingRequest> {
+class EmbeddingRequestBuilder: ModelBuilder<EmbeddingRequest> {
     var model: ModelId? = null
     var input: List<String>? = null
     var user: String? = null

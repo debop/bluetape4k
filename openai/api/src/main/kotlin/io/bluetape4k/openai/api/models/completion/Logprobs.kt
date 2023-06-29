@@ -19,4 +19,4 @@ data class Logprobs(
     val tokenLogprobs: List<Double>,
     val topLogprobs: List<Map<String, Double>>,
     val textOffset: List<Int>,
-) : Serializable
+): Serializable

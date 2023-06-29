@@ -12,7 +12,7 @@ data class ChatMessage(
     val content: String? = null,
     val name: String? = null,
     val functionCall: FunctionCall? = null,
-) : Serializable
+): Serializable
 
 @BetaOpenAI
 inline fun chatMessage(builder: ChatMessageBuilder.() -> Unit): ChatMessage =
@@ -20,7 +20,7 @@ inline fun chatMessage(builder: ChatMessageBuilder.() -> Unit): ChatMessage =
 
 @BetaOpenAI
 @OpenAIDsl
-class ChatMessageBuilder : ModelBuilder<ChatMessage> {
+class ChatMessageBuilder: ModelBuilder<ChatMessage> {
 
     var role: ChatRole? = null
     var content: String? = null

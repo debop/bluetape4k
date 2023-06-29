@@ -10,10 +10,10 @@ import java.io.Serializable
  * Remaining field are provided only in case of response format `verbose_json`.
  */
 @BetaOpenAI
-data class Transcription(
+data class TranscriptionResult(
     val task: String? = null,
     val language: String? = null,
     val duration: Double? = null,
     val segments: List<Segment>? = null,
     val text: String,
-) : Serializable
+): Serializable

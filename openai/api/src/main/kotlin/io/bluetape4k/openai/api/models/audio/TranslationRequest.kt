@@ -16,7 +16,7 @@ import java.io.Serializable
  * @property prompt
  * @property responseFormat
  * @property temperature
- * @constructor Create empty Translation request
+ * @constructor Create empty TranslationResult request
  */
 @BetaOpenAI
 data class TranslationRequest(
@@ -51,11 +51,11 @@ data class TranslationRequest(
      * Default: 0
      */
     val temperature: Double? = null,
-) : Serializable
+): Serializable
 
 @BetaOpenAI
 @OpenAIDsl
-class TranslationRequestBuilder : ModelBuilder<TranslationRequest> {
+class TranslationRequestBuilder: ModelBuilder<TranslationRequest> {
 
     var audio: FileSource? = null
     var model: ModelId? = null

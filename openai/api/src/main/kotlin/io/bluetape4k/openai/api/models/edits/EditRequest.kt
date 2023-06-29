@@ -7,16 +7,20 @@ import io.bluetape4k.openai.api.models.ModelBuilder
 import io.bluetape4k.openai.api.models.model.ModelId
 import java.io.Serializable
 
-data class EditsRequest(
+data class EditRequest(
     val model: ModelId,
     val instruction: String,
     val input: String? = null,
     val temperature: Double? = null,
     val topP: Double? = null,
-) : Serializable
+): Serializable
+
+inline fun editsRequest(initializer: EditsRequestBuilder.() -> Unit): EditRequest {
+    return EditsRequestBuilder().apply(initializer).build()
+}
 
 @OpenAIDsl
-class EditsRequestBuilder : ModelBuilder<EditsRequest> {
+class EditsRequestBuilder: ModelBuilder<EditRequest> {
 
     var model: ModelId? = null
     var instruction: String? = null
@@ -24,8 +28,8 @@ class EditsRequestBuilder : ModelBuilder<EditsRequest> {
     var temperature: Double? = null
     var topP: Double? = null
 
-    override fun build(): EditsRequest {
-        return EditsRequest(
+    override fun build(): EditRequest {
+        return EditRequest(
             model = model.requireNotNull("model"),
             instruction = instruction.requireNotBlank("instruction"),
             input = input,
@@ -34,6 +38,3 @@ class EditsRequestBuilder : ModelBuilder<EditsRequest> {
         )
     }
 }
-
-inline fun editsRequest(initializer: EditsRequestBuilder.() -> Unit): EditsRequest =
-    EditsRequestBuilder().apply(initializer).build()

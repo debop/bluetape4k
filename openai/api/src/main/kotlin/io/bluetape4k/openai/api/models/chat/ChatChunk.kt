@@ -6,6 +6,6 @@ import java.io.Serializable
 @BetaOpenAI
 data class ChatChunk(
     val index: Int? = null,
-    val delta: ChatDelta? = null,
+    val message: ChatDelta? = null,
     val finishReason: String? = null,
-) : Serializable
+): Serializable

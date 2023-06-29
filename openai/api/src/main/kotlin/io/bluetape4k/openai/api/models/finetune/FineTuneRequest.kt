@@ -18,10 +18,10 @@ data class FineTuneRequest(
     val classificationPositiveClass: String? = null,
     val classificationBetas: List<Double>? = null,
     val suffix: String? = null,
-) : Serializable
+): Serializable
 
 @OpenAIDsl
-class FineTuneRequestBuilder : ModelBuilder<FineTuneRequest> {
+class FineTuneRequestBuilder: ModelBuilder<FineTuneRequest> {
 
     override fun build(): FineTuneRequest {
         TODO("Not yet implemented")

@@ -21,13 +21,13 @@ import java.io.Serializable
 data class FileUpload(
     val file: FileSource,
     val purpose: Purpose,
-) : Serializable
+): Serializable
 
 inline fun fileUpload(initializer: FileUploadBuilder.() -> Unit): FileUpload =
     FileUploadBuilder().apply(initializer).build()
 
 @OpenAIDsl
-class FileUploadBuilder : ModelBuilder<FileUpload> {
+class FileUploadBuilder: ModelBuilder<FileUpload> {
 
     var file: FileSource? = null
     var purpose: Purpose? = null
