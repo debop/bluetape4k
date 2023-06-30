@@ -9,13 +9,13 @@ import io.bluetape4k.openai.api.models.model.ModelResultList
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.Test
 
-class ModelResultListTest: AbstractApiTest() {
+class ModelListTest: AbstractApiTest() {
 
     companion object: KLogging()
 
     @Test
     fun `parse ModelResultList`() {
-        val json = Resourcex.getString("fixtures/ModelResultList.json")
+        val json = Resourcex.getString("fixtures/ModelListResult.json")
         json.shouldNotBeEmpty()
 
         log.debug { "json=$json" }

@@ -13,6 +13,8 @@ configurations {
 }
 
 dependencies {
+    api(project(":bluetape4k-openai-api"))
+
     api(project(":bluetape4k-io-http"))
     api(project(":bluetape4k-io-netty"))
     api(project(":bluetape4k-infra-resilience4j"))
@@ -21,28 +23,27 @@ dependencies {
     // Coroutines
     api(project(":bluetape4k-coroutines"))
     api(Libs.kotlinx_coroutines_core)
-    api(Libs.kotlinx_coroutines_jdk8)
     compileOnly(Libs.kotlinx_coroutines_reactive)
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 
-    // https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api
-    api(Libs.javax_ws_rs_api)
+    // Retrofit2
+    api(project(":bluetape4k-io-retrofit2"))
+    compileOnly(project(":bluetape4k-spring-retrofit2"))
 
-    // Feign
-    api(Libs.feign_core)
-    api(Libs.feign_hc5)
-    api(Libs.feign_kotlin)
-    api(Libs.feign_slf4j)
-    api(Libs.feign_jackson)
-    compileOnly(Libs.feign_micrometer)
-    compileOnly(Libs.feign_jaxrs)
-    compileOnly(Libs.feign_jaxrs2)
-    testImplementation(Libs.feign_mock)
+    // Retrofit2
+    api(Libs.retrofit2)
+    api(Libs.retrofit2_converter_jackson)
+    api(Libs.retrofit2_converter_scalars)
+    api(Libs.retrofit2_adapter_java8)
+    compileOnly(Libs.retrofit2_adapter_reactor)
+    compileOnly(Libs.retrofit2_adapter_rxjava2)
+    compileOnly(Libs.retrofit2_adapter_rxjava3)
+    testImplementation(Libs.retrofit2_mock)
 
     // OkHttp3
-    compileOnly(Libs.okhttp3)
-    compileOnly(Libs.okhttp3_logging_interceptor)
+    api(Libs.okhttp3)
+    api(Libs.okhttp3_logging_interceptor)
 
     // OkHttp3 MockWebServer
     testImplementation(Libs.okhttp3_mockwebserver)
@@ -79,13 +80,9 @@ dependencies {
     compileOnly(Libs.resilience4j_circuitbreaker)
     compileOnly(Libs.resilience4j_reactor)
 
-    //
-    // Spring Cloud OpenFeign 사용
-    //
-    testImplementation(Libs.springCloudStarter("openfeign"))
-    testImplementation(Libs.springBootStarter("webflux"))
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(module = "mockito")
     }
 }

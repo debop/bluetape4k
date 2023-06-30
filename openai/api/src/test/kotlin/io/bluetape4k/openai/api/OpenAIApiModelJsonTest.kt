@@ -24,10 +24,9 @@ import io.bluetape4k.openai.api.models.finetune.FineTuneEvent
 import io.bluetape4k.openai.api.models.finetune.FineTuneResult
 import io.bluetape4k.openai.api.models.image.ImageCreationRequest
 import io.bluetape4k.openai.api.models.image.ImageEditRequest
-import io.bluetape4k.openai.api.models.image.ImageJSONResult
-import io.bluetape4k.openai.api.models.image.ImageURLResult
+import io.bluetape4k.openai.api.models.image.ImageResult
 import io.bluetape4k.openai.api.models.image.ImageVariationRequest
-import io.bluetape4k.openai.api.models.model.ModelResult
+import io.bluetape4k.openai.api.models.model.Model
 import io.bluetape4k.openai.api.models.moderation.ModerationRequest
 import io.bluetape4k.openai.api.models.moderation.ModerationResult
 import io.bluetape4k.support.cast
@@ -63,10 +62,9 @@ class OpenAIApiModelJsonTest {
             FineTuneResult::class,
             ImageCreationRequest::class,
             ImageEditRequest::class,
-            ImageJSONResult::class,
-            ImageURLResult::class,
+            ImageResult::class,
             ImageVariationRequest::class,
-            ModelResult::class,
+            Model::class,
             ModerationRequest::class,
             ModerationResult::class,
             TranscriptionRequest::class,

@@ -775,6 +775,7 @@ object Libs {
     val feign_micrometer = feign("micrometer")
     val feign_mock = feign("mock")
     val feign_okhttp = feign("okhttp")
+    val feign_reactive_wrappers = feign("reactive-wrappers")
     val feign_ribbon = feign("ribbon")
     val feign_slf4j = feign("slf4j")
 

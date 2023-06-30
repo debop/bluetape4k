@@ -22,8 +22,4 @@ data class FineTuneResult(
     val validationFiles: List<File>? = null,
     val trainingFiles: List<File>? = null,
     val updatedAt: Long? = null,
-): Serializable {
-
-//    internal var `object`: ObjectId = ObjectId("")
-//    val objectId: String = `object`.id
-}
+): Serializable 

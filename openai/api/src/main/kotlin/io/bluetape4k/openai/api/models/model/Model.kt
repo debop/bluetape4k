@@ -5,9 +5,9 @@ import io.bluetape4k.openai.api.models.ListResult
 import io.bluetape4k.openai.api.models.ObjectId
 import java.io.Serializable
 
-typealias ModelResultList = ListResult<ModelResult>
+typealias ModelResultList = ListResult<Model>
 
-data class ModelResult(
+data class Model(
     val id: ModelId,
     @get:JsonProperty(value = "object")
     val objectId: ObjectId? = null,
