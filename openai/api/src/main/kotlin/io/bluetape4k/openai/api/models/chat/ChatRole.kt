@@ -1,8 +1,5 @@
 package io.bluetape4k.openai.api.models.chat
 
-import io.bluetape4k.openai.api.annotations.BetaOpenAI
-
-@BetaOpenAI
 @JvmInline
 value class ChatRole(val role: String) {
 

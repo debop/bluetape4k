@@ -23,8 +23,8 @@ dependencies {
     // Coroutines
     api(project(":bluetape4k-coroutines"))
     api(Libs.kotlinx_coroutines_core)
-    compileOnly(Libs.kotlinx_coroutines_reactive)
-    compileOnly(Libs.kotlinx_coroutines_reactor)
+    api(Libs.kotlinx_coroutines_reactive)
+    api(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // Retrofit2
@@ -36,7 +36,7 @@ dependencies {
     api(Libs.retrofit2_converter_jackson)
     api(Libs.retrofit2_converter_scalars)
     api(Libs.retrofit2_adapter_java8)
-    compileOnly(Libs.retrofit2_adapter_reactor)
+    api(Libs.retrofit2_adapter_reactor)
     compileOnly(Libs.retrofit2_adapter_rxjava2)
     compileOnly(Libs.retrofit2_adapter_rxjava3)
     testImplementation(Libs.retrofit2_mock)
@@ -65,6 +65,7 @@ dependencies {
     api(Libs.jackson_core)
     api(Libs.jackson_databind)
     api(Libs.jackson_module_kotlin)
+    api(Libs.jackson_module_jsonSchema)
 
     // Gson
     compileOnly(Libs.gson)

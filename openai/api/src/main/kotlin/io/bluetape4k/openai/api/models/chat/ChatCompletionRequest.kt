@@ -1,13 +1,11 @@
 package io.bluetape4k.openai.api.models.chat
 
 import io.bluetape4k.core.requireNotNull
-import io.bluetape4k.openai.api.annotations.BetaOpenAI
 import io.bluetape4k.openai.api.annotations.OpenAIDsl
 import io.bluetape4k.openai.api.models.ModelBuilder
 import io.bluetape4k.openai.api.models.model.ModelId
 import java.io.Serializable
 
-@BetaOpenAI
 data class ChatCompletionRequest(
     val model: ModelId,
     val messages: List<ChatMessage>,
@@ -22,14 +20,12 @@ data class ChatCompletionRequest(
     val logitBias: Map<String, Int>? = null,
     val user: String? = null,
     val functions: List<ChatCompletionFunction>? = null,
-    val functionCall: FunctionMode? = null,
+    val functionCall: ChatFunctionMode? = null,
 ): Serializable
 
-@BetaOpenAI
 fun chatCompletionRequest(initializer: ChatCompletionRequstBuilder.() -> Unit): ChatCompletionRequest =
     ChatCompletionRequstBuilder().apply(initializer).build()
 
-@BetaOpenAI
 @OpenAIDsl
 class ChatCompletionRequstBuilder: ModelBuilder<ChatCompletionRequest> {
 
@@ -46,7 +42,7 @@ class ChatCompletionRequstBuilder: ModelBuilder<ChatCompletionRequest> {
     var logitBias: Map<String, Int>? = null
     var user: String? = null
     internal var functions: List<ChatCompletionFunction>? = null
-    var functionCall: FunctionMode? = null
+    var functionCall: ChatFunctionMode? = null
 
     fun messages(initializer: ChatMessagesBuilder.() -> Unit) {
         messages = ChatMessagesBuilder().apply(initializer).messages
@@ -75,7 +71,6 @@ class ChatCompletionRequstBuilder: ModelBuilder<ChatCompletionRequest> {
     }
 }
 
-@BetaOpenAI
 class ChatMessagesBuilder {
     internal val messages = mutableListOf<ChatMessage>()
 
@@ -84,7 +79,6 @@ class ChatMessagesBuilder {
     }
 }
 
-@BetaOpenAI
 class ChatCompletionFunctionsBuilder {
     internal val functions = mutableListOf<ChatCompletionFunction>()
 

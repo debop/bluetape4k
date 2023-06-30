@@ -1,7 +1,6 @@
 package io.bluetape4k.openai.api.models.audio
 
 import io.bluetape4k.core.requireNotNull
-import io.bluetape4k.openai.api.annotations.BetaOpenAI
 import io.bluetape4k.openai.api.annotations.OpenAIDsl
 import io.bluetape4k.openai.api.models.ModelBuilder
 import io.bluetape4k.openai.api.models.file.FileSource
@@ -18,7 +17,6 @@ import java.io.Serializable
  * @property temperature
  * @property language
  */
-@BetaOpenAI
 data class TranscriptionRequest(
     val audio: FileSource,
     val model: ModelId,
@@ -28,7 +26,6 @@ data class TranscriptionRequest(
     val language: String? = null,
 ): Serializable
 
-@BetaOpenAI
 @OpenAIDsl
 class TranscriptionRequestBuilder: ModelBuilder<TranscriptionRequest> {
 
@@ -51,6 +48,5 @@ class TranscriptionRequestBuilder: ModelBuilder<TranscriptionRequest> {
     }
 }
 
-@BetaOpenAI
 inline fun transcriptionRequest(builder: TranscriptionRequestBuilder.() -> Unit): TranscriptionRequest =
     TranscriptionRequestBuilder().apply(builder).build()

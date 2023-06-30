@@ -1,7 +1,6 @@
 package io.bluetape4k.openai.api.models.chat
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.Serializable
 
 /**
@@ -13,17 +12,7 @@ import java.io.Serializable
  *                      not defined by your function schema.
  *                      Validate the arguments in your code before calling your function.
  */
-class FunctionCall(
+class ChatFunctionCall(
     val name: String? = null,
-    val arguments: String? = null,
-): Serializable {
-
-    /**
-     * Decodes the [arguments] JSON string into a [JsonNode].
-     * If [arguments] is null, the function will return null.
-     *
-     * @param objectMapper default Jackson [ObjectMapper] instance
-     */
-    fun argumentsAsJson(objectMapper: ObjectMapper): JsonNode? =
-        arguments?.let { objectMapper.readTree(it) }
-}
+    val arguments: JsonNode? = null,
+): Serializable

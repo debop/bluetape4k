@@ -1,7 +1,6 @@
 package io.bluetape4k.openai.api.models.audio
 
 import io.bluetape4k.core.requireNotNull
-import io.bluetape4k.openai.api.annotations.BetaOpenAI
 import io.bluetape4k.openai.api.annotations.OpenAIDsl
 import io.bluetape4k.openai.api.models.ModelBuilder
 import io.bluetape4k.openai.api.models.file.FileSource
@@ -18,7 +17,6 @@ import java.io.Serializable
  * @property temperature
  * @constructor Create empty TranslationResult request
  */
-@BetaOpenAI
 data class TranslationRequest(
     /**
      * The audio file to translate, in one of these formats: mp3, mp4, mpeg, mpga, m4a, wav, or webm.
@@ -53,7 +51,6 @@ data class TranslationRequest(
     val temperature: Double? = null,
 ): Serializable
 
-@BetaOpenAI
 @OpenAIDsl
 class TranslationRequestBuilder: ModelBuilder<TranslationRequest> {
 
@@ -77,6 +74,5 @@ class TranslationRequestBuilder: ModelBuilder<TranslationRequest> {
 /**
  * Creates a translation request ([TranslationRequest])
  */
-@BetaOpenAI
 inline fun translationRequest(builder: TranslationRequestBuilder.() -> Unit): TranslationRequest =
     TranslationRequestBuilder().apply(builder).build()

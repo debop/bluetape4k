@@ -1,9 +1,7 @@
 package io.bluetape4k.openai.api.models.audio
 
-import io.bluetape4k.openai.api.annotations.BetaOpenAI
 import java.io.Serializable
 
-@BetaOpenAI
 data class Segment(
     val id: Int,
     val seek: Int,

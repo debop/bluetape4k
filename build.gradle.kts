@@ -370,6 +370,7 @@ subprojects {
             dependency(Libs.jackson_module_paranamer)
             dependency(Libs.jackson_module_parameter_names)
             dependency(Libs.jackson_module_afterburner)
+            dependency(Libs.jackson_module_jsonSchema)
 
             // Retrofit
             dependency(Libs.retrofit2)

@@ -841,6 +841,7 @@ object Libs {
     val jackson_module_paranamer = jacksonModule("parameter")
     val jackson_module_parameter_names = jacksonModule("parameter-names")
     val jackson_module_afterburner = jacksonModule("afterburner")
+    val jackson_module_jsonSchema = jacksonModule("jsonSchema")
 
     // Json assertions
     const val jsonpath = "com.jayway.jsonpath:json-path:2.7.0"
