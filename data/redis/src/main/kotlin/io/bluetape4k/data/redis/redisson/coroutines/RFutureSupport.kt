@@ -11,9 +11,7 @@ import java.util.concurrent.ForkJoinPool
 /**
  * Coroutines 환경 하에서 결과를 기다리는 동안 suspend 합니다. (blocking 하지 않습니다)
  */
-suspend fun <V> RFuture<V>.awaitSuspending(): V {
-    return toCompletableFuture().await()
-}
+suspend inline fun <V> RFuture<V>.awaitSuspending(): V = toCompletableFuture().await()
 
 /**
  * [RFuture]의 컬렉션을 결과를 모두 기다리고 List 로 반환한다

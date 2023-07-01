@@ -68,11 +68,11 @@ class LocalCachedMapTest: AbstractRedissonCoroutineTest() {
     fun `frontCache1 에 cache item을 추가하면 frontCache2에 추가됩니다`() = runTest {
         val keyToAdd = randomName()
 
-        log.debug { "front cache1: put" }
+        log.debug { "front cache1: put key=$keyToAdd" }
         frontCache1.fastPutAsync(keyToAdd, 42).awaitSuspending()
         await.until { backCache.containsKey(keyToAdd) }
 
-        log.debug { "front cache2: get" }
+        log.debug { "front cache2: get key=$keyToAdd" }
         frontCache2.getAsync(keyToAdd).awaitSuspending() shouldBeEqualTo 42
     }
 

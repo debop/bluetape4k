@@ -1,6 +1,5 @@
 package io.bluetape4k.examples.redisson.coroutines
 
-import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.data.redis.redisson.redissonClientOf
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
@@ -32,8 +31,7 @@ abstract class AbstractRedissonCoroutineTest {
             Fakers.randomString(1024, 2048)
 
         @JvmStatic
-        protected fun randomName(): String =
-            "bluetape4k:${Fakers.randomUuid().encodeBase62()}"
+        protected fun randomName(): String = "bluetape4k:${Fakers.fixedString(32)}"
 
     }
 

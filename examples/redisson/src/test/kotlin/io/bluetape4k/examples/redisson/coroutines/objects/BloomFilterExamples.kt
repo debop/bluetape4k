@@ -67,6 +67,6 @@ class BloomFilterExamples: AbstractRedissonCoroutineTest() {
         // 존재하지 않는 요소는 false 를 반환한다
         bloomFilter.contains(excludedMessage).shouldBeFalse()
 
-        bloomFilter.deleteAsync().awaitSuspending()
+        bloomFilter.deleteAsync().awaitSuspending().shouldBeTrue()
     }
 }

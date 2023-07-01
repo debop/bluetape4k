@@ -51,7 +51,7 @@ class RateLimiterExamples: AbstractRedissonCoroutineTest() {
         limiter.availablePermitsAsync().awaitSuspending() shouldBeEqualTo 0L
         limiter.tryAcquireAsync(1).awaitSuspending().shouldBeFalse()
 
-        limiter.deleteAsync().awaitSuspending()
+        limiter.deleteAsync().awaitSuspending().shouldBeTrue()
     }
 
     @Test
@@ -104,7 +104,7 @@ class RateLimiterExamples: AbstractRedissonCoroutineTest() {
         limiter1.availablePermits() shouldBeEqualTo 0L
         limiter1.tryAcquire(1).shouldBeFalse()
 
-        limiter1.delete()
+        limiter1.delete().shouldBeTrue()
     }
 
     @Test
@@ -157,6 +157,6 @@ class RateLimiterExamples: AbstractRedissonCoroutineTest() {
         limiter1.availablePermitsAsync().awaitSuspending() shouldBeEqualTo 0L
         limiter1.tryAcquireAsync(1).awaitSuspending().shouldBeFalse()
 
-        limiter1.deleteAsync().awaitSuspending()
+        limiter1.deleteAsync().awaitSuspending().shouldBeTrue()
     }
 }
