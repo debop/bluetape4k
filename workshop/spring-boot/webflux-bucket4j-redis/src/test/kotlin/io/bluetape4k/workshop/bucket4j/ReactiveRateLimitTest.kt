@@ -1,4 +1,4 @@
-package io.bluetape4k.workshop.bucket4j.hazelcast
+package io.bluetape4k.workshop.bucket4j
 
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test

@@ -2,15 +2,8 @@ package io.bluetape4k.workshop.bucket4j.hazelcast
 
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpStatus
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.reactive.server.WebTestClient
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("webflux")
-class CoroutinesRateLimitTest(@Autowired private val client: WebTestClient) {
+class CoroutinesRateLimitTest: AbstractRateLimitTest() {
 
     @Test
     fun `call hello with rate limit`() = runTest {
@@ -32,21 +25,5 @@ class CoroutinesRateLimitTest(@Autowired private val client: WebTestClient) {
         }
 
         blockedWebRequestDueToRateLimit(url)
-    }
-
-    private fun successfulWebRequest(url: String, remainingTries: Int) {
-        client.get()
-            .uri(url)
-            .exchange()
-            .expectStatus().isOk
-            .expectHeader().valueEquals("X-Rate-Limit-Remaining", remainingTries.toString())
-    }
-
-    private fun blockedWebRequestDueToRateLimit(url: String) {
-        client.get()
-            .uri(url)
-            .exchange()
-            .expectStatus().isEqualTo(HttpStatus.TOO_MANY_REQUESTS)
-            .expectBody().jsonPath("error", "Too many requests!")
     }
 }
