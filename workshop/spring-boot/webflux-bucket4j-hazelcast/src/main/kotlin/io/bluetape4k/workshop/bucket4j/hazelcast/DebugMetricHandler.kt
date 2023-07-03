@@ -1,4 +1,4 @@
-package io.bluetape4k.workshop.bucket4j.caffeine
+package io.bluetape4k.workshop.bucket4j.hazelcast
 
 import com.giffing.bucket4j.spring.boot.starter.context.metrics.MetricHandler
 import com.giffing.bucket4j.spring.boot.starter.context.metrics.MetricTagResult

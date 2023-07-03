@@ -1,4 +1,4 @@
-package io.bluetape4k.workshop.bucket4j.caffeine
+package io.bluetape4k.workshop.bucket4j.hazelcast
 
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
@@ -10,11 +10,11 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("webflux")
-class WebfluxRateLimitTest(@Autowired private val client: WebTestClient) {
+class ReactiveRateLimitTest(@Autowired private val client: WebTestClient) {
 
     @Test
     fun `call hello with rate limit`() = runTest {
-        val url = "/hello"
+        val url = "/reactive/hello"
         val limit = 5
         repeat(limit) {
             successfulWebRequest(url, limit - 1 - it)
@@ -25,7 +25,7 @@ class WebfluxRateLimitTest(@Autowired private val client: WebTestClient) {
 
     @Test
     fun `call world with rate limit`() = runTest {
-        val url = "/world"
+        val url = "/reactive/world"
         val limit = 10
         repeat(limit) {
             successfulWebRequest(url, limit - 1 - it)

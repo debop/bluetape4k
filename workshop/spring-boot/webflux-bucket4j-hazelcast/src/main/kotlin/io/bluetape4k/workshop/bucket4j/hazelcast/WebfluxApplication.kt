@@ -1,4 +1,4 @@
-package io.bluetape4k.workshop.bucket4j.caffeine
+package io.bluetape4k.workshop.bucket4j.hazelcast
 
 import io.bluetape4k.logging.KLogging
 import org.springframework.boot.WebApplicationType
@@ -8,14 +8,14 @@ import org.springframework.cache.annotation.EnableCaching
 
 @SpringBootApplication
 @EnableCaching
-class CaffeineApplication {
+class WebfluxApplication {
 
     companion object: KLogging()
 
 }
 
 fun main(vararg args: String) {
-    runApplication<CaffeineApplication>(*args) {
+    runApplication<WebfluxApplication>(*args) {
         webApplicationType = WebApplicationType.REACTIVE
     }
 }

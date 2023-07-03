@@ -5,7 +5,7 @@ plugins {
 }
 
 springBoot {
-    mainClass.set("io.bluetape4k.workshop.bucket4j.hazelcast.WebfluxApplicationKt")
+    mainClass.set("io.bluetape4k.workshop.bucket4j.CaffeineApplicationKt")
 }
 
 configurations {
@@ -21,14 +21,14 @@ dependencies {
 
     // Bucket4j
     api(Libs.bucket4j_core)
-    api("com.bucket4j:bucket4j_jdk8-hazelcast:${Versions.bucket4j}")
+    api(Libs.bucket4j_caffeine)
     api(Libs.bucket4j_spring_boot)
 
     api(Libs.javax_cache_api)
 
-    // Hazelcast
-    api(Libs.hazelcast)
-    api(Libs.hazelcast_spring)
+    // Caffeine - 로컬 캐시는 AsyncCacheResolver를 구현한 것이 아니므로 Webflux 에서는 사용하지 못한다.
+    api(Libs.caffeine)
+    api(Libs.caffeine_jcache)
 
     // Spring Boot
     implementation(Libs.springBoot("autoconfigure"))
@@ -36,23 +36,15 @@ dependencies {
     kapt(Libs.springBoot("configuration-processor"))
     runtimeOnly(Libs.springBoot("devtools"))
 
-    implementation(Libs.springBootStarter("webflux"))
+    implementation(Libs.springBootStarter("web"))
     implementation(Libs.springBootStarter("cache"))
     implementation(Libs.springBootStarter("validation"))
     implementation(Libs.springBootStarter("actuator"))
+
+    testImplementation(Libs.springBootStarter("webflux"))
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
         exclude(module = "mockito-core")
     }
-
-    // Coroutines
-    implementation(Libs.kotlinx_coroutines_core)
-    implementation(Libs.kotlinx_coroutines_reactor)
-    testImplementation(Libs.kotlinx_coroutines_test)
-
-    // Reactor
-    implementation(Libs.reactor_netty)
-    implementation(Libs.reactor_kotlin_extensions)
-    testImplementation(Libs.reactor_test)
 }
