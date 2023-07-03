@@ -105,7 +105,7 @@ object Versions {
     const val springfox_swagger = "3.0.0"
     const val problem = "0.27.0"
 
-    const val bucket4j = "7.6.0"
+    const val bucket4j = "8.3.0"
     const val resilience4j = "2.0.2"
     const val netty = "4.1.92.Final"
 
@@ -617,10 +617,19 @@ object Libs {
     val resilience4j_vertx = resilience4j("vertx")
 
     // Bucket4j
-    fun bucket4j(module: String) = "com.github.vladimir-bukhtoyarov:bucket4j-$module:${Versions.bucket4j}"
+    fun bucket4j(module: String) = "com.bucket4j:bucket4j-$module:${Versions.bucket4j}"
+    val bucket4j_caffeine = bucket4j("caffeine")
     val bucket4j_core = bucket4j("core")
     val bucket4j_jcache = bucket4j("jcache")
+    val bucket4j_jdk8_hazelcast = bucket4j("hazelcast")
+    val bucket4j_hazelcast_all = bucket4j("hazelcast-all")
     val bucket4j_ignite = bucket4j("ignite")
+    val bucket4j_infinispan_all = bucket4j("infinispan-all")
+    val bucket4j_redis = bucket4j("redis")
+
+    // Bucket4j Spring Boot
+    // https://mvnrepository.com/artifact/com.giffing.bucket4j.spring.boot.starter/bucket4j-spring-boot-starter
+    val bucket4j_spring_boot = "com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.8.1"
 
     // Netty
     fun netty(module: String, version: String = Versions.netty) = "io.netty:netty-$module:$version"
