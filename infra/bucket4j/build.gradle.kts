@@ -9,7 +9,6 @@ dependencies {
 
     // Bucket4j
     api(Libs.bucket4j_core)
-    compileOnly(Libs.bucket4j_jcache)
 
     // Coroutines
     compileOnly(Libs.kotlinx_coroutines_core)

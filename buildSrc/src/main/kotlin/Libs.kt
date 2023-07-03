@@ -621,15 +621,15 @@ object Libs {
     val bucket4j_caffeine = bucket4j("caffeine")
     val bucket4j_core = bucket4j("core")
     val bucket4j_jcache = bucket4j("jcache")
-    val bucket4j_hazelcast = bucket4j("hazelcast")
+    val bucket4j_jdk8_hazelcast = bucket4j("hazelcast")
+    val bucket4j_hazelcast_all = bucket4j("hazelcast-all")
     val bucket4j_ignite = bucket4j("ignite")
-    val bucket4j_infinispan = bucket4j("infinispan")
+    val bucket4j_infinispan_all = bucket4j("infinispan-all")
     val bucket4j_redis = bucket4j("redis")
-
 
     // Bucket4j Spring Boot
     // https://mvnrepository.com/artifact/com.giffing.bucket4j.spring.boot.starter/bucket4j-spring-boot-starter
-    val bucket4j_spring_boot = "com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.9.1"
+    val bucket4j_spring_boot = "com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.8.1"
 
     // Netty
     fun netty(module: String, version: String = Versions.netty) = "io.netty:netty-$module:$version"

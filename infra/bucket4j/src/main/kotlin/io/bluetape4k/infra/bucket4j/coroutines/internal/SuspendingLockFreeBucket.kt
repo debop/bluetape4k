@@ -1,5 +1,6 @@
-package io.bluetape4k.infra.bucket4j.coroutines
+package io.bluetape4k.infra.bucket4j.coroutines.internal
 
+import io.bluetape4k.infra.bucket4j.coroutines.SuspendingBucketConfiguration
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.github.bucket4j.BucketConfiguration
@@ -12,7 +13,7 @@ import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.nanoseconds
 
-internal class SuspendingBucketImpl private constructor(
+open class SuspendingLockFreeBucket private constructor(
     bucketConfiguration: BucketConfiguration,
     timeMeter: TimeMeter,
     mathType: MathType,
@@ -23,8 +24,8 @@ internal class SuspendingBucketImpl private constructor(
         operator fun invoke(
             config: SuspendingBucketConfiguration,
             mathType: MathType = MathType.INTEGER_64_BITS,
-        ): SuspendingBucketImpl {
-            return SuspendingBucketImpl(
+        ): SuspendingLockFreeBucket {
+            return SuspendingLockFreeBucket(
                 config.toBucketConfiguration(),
                 config.timeMeter,
                 mathType
