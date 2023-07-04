@@ -61,11 +61,11 @@ object Plugins {
 object Versions {
 
     const val kotlin = "1.8.22"
-    const val kotlinx_coroutines = "1.7.1"
+    const val kotlinx_coroutines = "1.7.2"
     const val kotlinx_serialization = "1.5.1"
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/atomicfu
-    const val kotlinx_atomicfu = "0.20.2"
+    const val kotlinx_atomicfu = "0.21.0"
 
     const val kotlinx_benchmark = Plugins.Versions.kotlinx_benchmark
 
