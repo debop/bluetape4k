@@ -18,7 +18,7 @@ dependencies {
     implementation(project(":bluetape4k-io-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 
-    api(Libs.javax_annotation_api)
+    api(Libs.jakarta_annotation_api)
 
     // Spring Boot
     implementation(Libs.springBoot("autoconfigure"))

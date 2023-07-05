@@ -23,6 +23,7 @@ dependencies {
     implementation(Libs.lz4_java)
 
     // Coroutines
+    implementation(project(":bluetape4k-coroutines"))
     implementation(Libs.kotlinx_coroutines_core)
     implementation(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)

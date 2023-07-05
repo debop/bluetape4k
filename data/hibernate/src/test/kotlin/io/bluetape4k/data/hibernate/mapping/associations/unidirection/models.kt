@@ -5,15 +5,15 @@ import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.core.requireZeroOrPositiveNumber
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.support.hashOf
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
-import javax.persistence.OneToMany
-import javax.persistence.OrderBy
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
 
 @Entity(name = "unidirection_cloud")
 @Access(AccessType.FIELD)

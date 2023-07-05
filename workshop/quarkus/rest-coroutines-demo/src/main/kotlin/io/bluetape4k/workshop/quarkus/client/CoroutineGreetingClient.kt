@@ -4,10 +4,10 @@ import io.bluetape4k.workshop.quarkus.model.Greeting
 import io.smallrye.mutiny.Multi
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient
 import org.jboss.resteasy.reactive.RestStreamElementType
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.core.MediaType
 
 /**
  * quarkus-rest-client-reactive 모듈을 이용하여 Retrofit2 처럼 외부 REST API 를 호출하기 위한 Client를 정의합니다.

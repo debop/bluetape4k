@@ -16,10 +16,10 @@ import io.bluetape4k.spring.cassandra.domain.DomainTestConfiguration
 import io.bluetape4k.spring.cassandra.domain.model.User
 import io.bluetape4k.spring.cassandra.domain.model.UserToken
 import io.bluetape4k.spring.cassandra.query.eq
-import io.bluetape4k.spring.coroutines.await
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse

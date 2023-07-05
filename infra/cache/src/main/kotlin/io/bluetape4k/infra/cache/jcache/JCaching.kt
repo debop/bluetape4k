@@ -5,6 +5,7 @@ import org.ehcache.jsr107.EhcacheCachingProvider
 import org.redisson.api.RedissonClient
 import org.redisson.jcache.JCachingProvider
 import org.redisson.jcache.configuration.RedissonConfiguration
+import javax.cache.CacheManager
 import javax.cache.configuration.Configuration
 import javax.cache.configuration.MutableConfiguration
 
@@ -14,7 +15,7 @@ typealias JCache<K, V> = javax.cache.Cache<K, V>
 object JCaching {
 
     object Cache2k {
-        val cacheManager = jcacheManager<org.cache2k.jcache.provider.JCacheProvider>()
+        val cacheManager: CacheManager by lazy { jcacheManager<org.cache2k.jcache.provider.JCacheProvider>() }
 
         inline fun <reified K, reified V> getOrCreate(
             name: String,
@@ -25,7 +26,7 @@ object JCaching {
 
     object Caffeine {
 
-        val cacheManager = jcacheManager<CaffeineCachingProvider>()
+        val cacheManager by lazy { jcacheManager<CaffeineCachingProvider>() }
 
         inline fun <reified K, reified V> getOrCreate(
             name: String,
@@ -35,7 +36,7 @@ object JCaching {
     }
 
     object EhCache {
-        val cacheManager = jcacheManager<EhcacheCachingProvider>()
+        val cacheManager by lazy { jcacheManager<EhcacheCachingProvider>() }
 
         inline fun <reified K, reified V> getOrCreate(
             name: String,
@@ -45,7 +46,7 @@ object JCaching {
     }
 
     object Redisson {
-        val cacheManager = jcacheManager<JCachingProvider>()
+        val cacheManager by lazy { jcacheManager<JCachingProvider>() }
 
         inline fun <reified K, reified V> getOrCreate(
             name: String,

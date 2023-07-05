@@ -1,5 +1,6 @@
 package org.springframework.kafka.core
 
+import io.bluetape4k.concurrent.onSuccess
 import io.bluetape4k.infra.kafka.spring.test.utils.consumerProps
 import io.bluetape4k.infra.kafka.spring.test.utils.getSingleRecord
 import io.bluetape4k.infra.kafka.spring.test.utils.producerProps
@@ -43,7 +44,6 @@ import org.springframework.kafka.test.condition.EmbeddedKafkaCondition
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.kafka.test.utils.KafkaTestUtils
 import org.springframework.messaging.Message
-import org.springframework.util.concurrent.ListenableFutureCallback
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -366,15 +366,10 @@ class KafkaTemplateTests {
         val latch = CountDownLatch(1)
         val theResult = atomic<SendResult<Int, String>?>(null)
 
-        future.addCallback(object: ListenableFutureCallback<SendResult<Int, String>> {
-            override fun onSuccess(result: SendResult<Int, String>?) {
-                theResult.value = result
-                latch.countDown()
-            }
-
-            override fun onFailure(ex: Throwable) {
-            }
-        })
+        future.onSuccess { result ->
+            theResult.value = result
+            latch.countDown()
+        }
 
         consumer.getSingleRecord(INT_KEY_TOPIC).value() shouldBeEqualTo "foo"
         latch.await(5, TimeUnit.SECONDS).shouldBeTrue()

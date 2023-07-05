@@ -3,12 +3,11 @@ spring:
         redis:
             repositories:
                 enabled: true
-    redis:
-        host: ${testcontainers.redis.host}
-        port: ${testcontainers.redis.port}
+            host: ${testcontainers.redis.host}
+            port: ${testcontainers.redis.port}
 
-        lettuce:
-            pool:
-                enabled: true
-                max-active: 16
-                max-idle: 8
+            lettuce:
+                pool:
+                    enabled: true
+                    max-active: 16
+                    max-idle: 8

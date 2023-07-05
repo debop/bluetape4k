@@ -1,14 +1,14 @@
 package io.bluetape4k.data.hibernate.mapping.associations.onetomany.list
 
 import com.querydsl.jpa.impl.JPAQuery
+import jakarta.persistence.EntityManager
+import jakarta.persistence.PersistenceContext
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import javax.persistence.EntityManager
-import javax.persistence.PersistenceContext
 
 interface FatherRepository: JpaRepository<Father, Int>
 interface ChildRepository: JpaRepository<Child, Int>
@@ -20,7 +20,7 @@ interface BatchItemRepository: JpaRepository<BatchItem, Int> {
     fun deleteEachByBatchId(batchId: Int)
 
     @Modifying
-    @Query("delete from onetomany_batch_item where batch_id = :batchId")
+    @Query("delete from onetomany_batch_item where batch.id = :batchId")
     fun deleteAllByBatchId(@Param("batchId") batchId: Int)
 }
 

@@ -3,16 +3,16 @@ package io.bluetape4k.spring.cassandra.cql
 import com.datastax.oss.driver.api.core.cql.AsyncResultSet
 import com.datastax.oss.driver.api.core.cql.Row
 import com.datastax.oss.driver.api.core.cql.Statement
-import io.bluetape4k.spring.coroutines.await
+import kotlinx.coroutines.future.await
 import org.springframework.data.cassandra.core.cql.AsyncCqlOperations
 import org.springframework.data.cassandra.core.cql.AsyncResultSetExtractor
-import org.springframework.util.concurrent.ListenableFuture
+import java.util.concurrent.CompletableFuture
 
 
 suspend inline fun <reified T: Any> AsyncCqlOperations.querySuspending(
     cql: String,
     vararg args: Any,
-    crossinline extractor: (AsyncResultSet) -> ListenableFuture<T?>,
+    crossinline extractor: (AsyncResultSet) -> CompletableFuture<T?>,
 ): T? =
     query<T>(cql, AsyncResultSetExtractor { extractor(it) }, *args).await()
 
@@ -25,7 +25,7 @@ suspend inline fun <reified T: Any> AsyncCqlOperations.querySuspending(
 
 suspend inline fun <reified T: Any> AsyncCqlOperations.querySuspending(
     statement: Statement<*>,
-    crossinline extractor: (AsyncResultSet) -> ListenableFuture<T?>,
+    crossinline extractor: (AsyncResultSet) -> CompletableFuture<T?>,
 ): T? =
     query<T>(statement, AsyncResultSetExtractor { extractor(it) }).await()
 

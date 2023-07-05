@@ -13,13 +13,13 @@ dependencies {
     compileOnly(Libs.vertx_junit5)
 
     // Vertx Kotlin
-    implementation(Libs.vertx_core)
-    implementation(Libs.vertx_lang_kotlin)
-    implementation(Libs.vertx_lang_kotlin_coroutines)
+    api(Libs.vertx_core)
+    api(Libs.vertx_lang_kotlin)
+    api(Libs.vertx_lang_kotlin_coroutines)
 
     // Vertx SqlClient
-    implementation(Libs.vertx_sql_client)
-    implementation(Libs.vertx_sql_client_templates)
+    api(Libs.vertx_sql_client)
+    api(Libs.vertx_sql_client_templates)
     compileOnly(Libs.vertx_mysql_client)
     compileOnly(Libs.vertx_pg_client)
 
@@ -28,7 +28,7 @@ dependencies {
     compileOnly(Libs.agroal_pool)
 
     // MyBatis
-    implementation(Libs.mybatis_dynamic_sql)
+    api(Libs.mybatis_dynamic_sql)
 
     // Vetx SqlClient Templates 에서 Jackson Databind 를 이용한 매핑을 사용한다
     compileOnly(project(":bluetape4k-io-json"))
@@ -45,8 +45,8 @@ dependencies {
     testImplementation(Libs.testcontainers_mysql)
 
     // Coroutines
+    api(project(":bluetape4k-coroutines"))
     api(Libs.kotlinx_coroutines_core)
-    api(Libs.kotlinx_coroutines_jdk8)
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 }

@@ -9,7 +9,7 @@ import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldHaveSize
 import org.eclipse.microprofile.rest.client.inject.RestClient
 import org.junit.jupiter.api.Test
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @QuarkusTest
 class ReactiveGreetingClientTest {

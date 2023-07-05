@@ -50,7 +50,7 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:7.3")
 
     // Validation
-    implementation(Libs.javax_validation_api)
+    implementation(Libs.jakarta_validation_api)
     implementation(Libs.hibernate_validator)
     implementation(Libs.springBootStarter("validation"))
 

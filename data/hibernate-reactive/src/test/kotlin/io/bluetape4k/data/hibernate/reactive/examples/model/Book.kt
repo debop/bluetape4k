@@ -6,16 +6,16 @@ import io.bluetape4k.support.hashOf
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.FetchProfile
 import java.time.LocalDate
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.ManyToOne
-import javax.persistence.Table
-import javax.validation.constraints.Past
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
+import jakarta.validation.constraints.Past
 
 
 // NOTE: author 를 lazy 로 얻기 위해서는 @FetchProfile 을 이용해야 합니다.

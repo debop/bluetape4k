@@ -5,8 +5,8 @@ import io.bluetape4k.testcontainers.jdbc.MySQL8Server
 import org.hibernate.tool.schema.Action
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import javax.persistence.EntityManagerFactory
-import javax.persistence.Persistence
+import jakarta.persistence.EntityManagerFactory
+import jakarta.persistence.Persistence
 
 @Configuration
 class HibernateReactiveConfiguration {
@@ -20,10 +20,10 @@ class HibernateReactiveConfiguration {
 
     private val hibernateProperties: Map<String, Any?> by lazy {
         mutableMapOf<String, Any?>(
-            "javax.persistence.jdbc.url" to MySQL8Server.Launcher.mysql.jdbcUrl,
-            "javax.persistence.jdbc.user" to MySQL8Server.Launcher.mysql.username,
-            "javax.persistence.jdbc.password" to MySQL8Server.Launcher.mysql.password,
-            "javax.persistence.schema-generation.database.action" to Action.CREATE.externalJpaName,
+            "jakarta.persistence.jdbc.url" to MySQL8Server.Launcher.mysql.jdbcUrl,
+            "jakarta.persistence.jdbc.user" to MySQL8Server.Launcher.mysql.username,
+            "jakarta.persistence.jdbc.password" to MySQL8Server.Launcher.mysql.password,
+            "jakarta.persistence.schema-generation.database.action" to Action.CREATE.externalJpaName,
         )
     }
 }

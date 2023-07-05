@@ -1,9 +1,9 @@
 package io.bluetape4k.data.hibernate.model
 
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.MappedSuperclass
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.MappedSuperclass
 
 /**
  * Long 수형의 Identifier를 가지는 [JpaTreeEntity]의 추상 클래스입니다.

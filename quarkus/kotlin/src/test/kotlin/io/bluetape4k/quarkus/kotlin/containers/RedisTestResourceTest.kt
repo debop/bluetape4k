@@ -13,7 +13,7 @@ import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import org.redisson.api.RedissonClient
 import org.redisson.api.redisnode.RedisNodes
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 /**
  * Redis 사용하는 데 `redisson-quarkus-20` 라이브러리를 활용하여, quarkus framework에서 redisson 을 활용하는 예제입니다.
@@ -48,7 +48,6 @@ class RedisTestResourceTest: AbstractQuarkusTest() {
         val redisSingle = redisson.getRedisNodes(RedisNodes.SINGLE)
         redisSingle.pingAll().shouldBeTrue()
     }
-
 
     @Test
     fun `run redisson operations`() {

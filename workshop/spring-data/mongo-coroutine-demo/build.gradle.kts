@@ -41,10 +41,11 @@ dependencies {
     implementation(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 
+    implementation(Libs.reactor_kotlin_extensions)
+    testImplementation(Libs.reactor_test)
+    testImplementation(Libs.turbine)
+
     implementation(project(":bluetape4k-io-json"))
     implementation(project(":bluetape4k-utils-idgenerators"))
     testImplementation(project(":bluetape4k-junit5"))
-
-    testImplementation(Libs.reactor_test)
-    testImplementation(Libs.turbine)
 }

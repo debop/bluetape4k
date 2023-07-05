@@ -7,16 +7,16 @@ import org.springframework.kafka.support.SendResult
 import org.springframework.messaging.Message
 
 suspend fun <K: Any, V: Any> KafkaOperations<K, V>.sendSuspending(record: ProducerRecord<K, V>): SendResult<K, V> =
-    usingCompletableFuture().send(record).await()
+    send(record).await()
 
 suspend fun <K: Any, V: Any> KafkaOperations<K, V>.sendSuspending(message: Message<*>): SendResult<K, V> =
-    usingCompletableFuture().send(message).await()
+    send(message).await()
 
 suspend fun <K: Any, V: Any> KafkaOperations<K, V>.sendSuspending(topic: String, value: V): SendResult<K, V> =
-    usingCompletableFuture().send(topic, value).await()
+    send(topic, value).await()
 
 suspend fun <K: Any, V: Any> KafkaOperations<K, V>.sendSuspending(topic: String, key: K, value: V): SendResult<K, V> =
-    usingCompletableFuture().send(topic, key, value).await()
+    send(topic, key, value).await()
 
 suspend fun <K: Any, V: Any> KafkaOperations<K, V>.sendSuspending(
     topic: String,
@@ -24,7 +24,7 @@ suspend fun <K: Any, V: Any> KafkaOperations<K, V>.sendSuspending(
     key: K,
     value: V,
 ): SendResult<K, V> =
-    usingCompletableFuture().send(topic, partition, key, value).await()
+    send(topic, partition, key, value).await()
 
 suspend fun <K: Any, V: Any> KafkaOperations<K, V>.sendSuspending(
     topic: String,
@@ -33,11 +33,11 @@ suspend fun <K: Any, V: Any> KafkaOperations<K, V>.sendSuspending(
     key: K,
     value: V,
 ): SendResult<K, V> =
-    usingCompletableFuture().send(topic, partition, timestamp, key, value).await()
+    send(topic, partition, timestamp, key, value).await()
 
 
 suspend fun <K: Any, V: Any> KafkaOperations<K, V>.sendDefaultSuspending(value: V): SendResult<K, V> =
-    usingCompletableFuture().sendDefault(value).await()
+    sendDefault(value).await()
 
 suspend fun <K: Any, V: Any> KafkaOperations<K, V>.sendDefaultSuspending(key: K, value: V): SendResult<K, V> =
-    usingCompletableFuture().sendDefault(key, value).await()
+    sendDefault(key, value).await()

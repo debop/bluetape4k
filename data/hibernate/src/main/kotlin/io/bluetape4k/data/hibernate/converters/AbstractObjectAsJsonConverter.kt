@@ -6,7 +6,7 @@ import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.trace
-import javax.persistence.AttributeConverter
+import jakarta.persistence.AttributeConverter
 
 /**
  * Object를 JSON 포맷으로 렌더링된 문자열로 저장하고, 로드 시에는 원래 Object로 변환하는 Converter 입니다.

@@ -12,13 +12,6 @@ dependencies {
     api(project(":bluetape4k-infra-micrometer"))
     testImplementation(project(":bluetape4k-junit5"))
 
-    // Coroutines
-    compileOnly(Libs.kotlinx_coroutines_core)
-    compileOnly(Libs.kotlinx_coroutines_jdk8)
-    compileOnly(Libs.kotlinx_coroutines_reactive)
-    compileOnly(Libs.kotlinx_coroutines_reactor)
-    testImplementation(Libs.kotlinx_coroutines_test)
-
     // Spring Framework
     api(project(":bluetape4k-spring-support"))
     api(Libs.spring("context-support"))
@@ -77,6 +70,19 @@ dependencies {
     compileOnly(Libs.resilience4j_circuitbreaker)
     compileOnly(Libs.resilience4j_reactor)
 
+    // Coroutines
+    compileOnly(project(":bluetape4k-coroutines"))
+    compileOnly(Libs.kotlinx_coroutines_core)
+    compileOnly(Libs.kotlinx_coroutines_reactive)
+    compileOnly(Libs.kotlinx_coroutines_reactor)
+    testImplementation(Libs.kotlinx_coroutines_test)
+
+    // Spring Cloud
+    compileOnly(Libs.spring_cloud_starter_bootstrap)
+
+    compileOnly(Libs.hibernate_validator)
+    compileOnly(Libs.jakarta_el)
+
     // Spring Boot
     compileOnly(Libs.springBoot("autoconfigure"))
     compileOnly(Libs.springBoot("configuration-processor"))
@@ -91,11 +97,6 @@ dependencies {
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(group = "org.mockito", module = "mockito-core")
     }
-
-    // Spring Cloud
-    compileOnly(Libs.spring_cloud_starter_bootstrap)
-
-    compileOnly(Libs.hibernate_validator)
-    compileOnly(Libs.javax_el)
 }

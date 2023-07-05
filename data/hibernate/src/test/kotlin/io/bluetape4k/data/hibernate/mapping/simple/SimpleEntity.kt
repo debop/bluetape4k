@@ -3,13 +3,13 @@ package io.bluetape4k.data.hibernate.mapping.simple
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.model.LongJpaEntity
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Index
-import javax.persistence.Table
-import javax.validation.constraints.NotBlank
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Index
+import jakarta.persistence.Table
+import jakarta.validation.constraints.NotBlank
 
 /**
  * Kotlin에서는 data class 로 entity를 정의하는 것이 가장 쉽고, 편하다.

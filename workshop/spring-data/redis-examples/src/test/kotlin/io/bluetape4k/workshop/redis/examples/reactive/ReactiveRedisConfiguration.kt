@@ -16,7 +16,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.RedisSerializer
-import javax.annotation.PreDestroy
+import jakarta.annotation.PreDestroy
 
 /**
  * [RedisApplication] 과 분리해서 독립적으로 테스트하기 위해서 [SpringBootApplication] 을 선언합니다.

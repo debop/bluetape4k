@@ -2,18 +2,16 @@ package io.bluetape4k.data.hibernate.mapping.associations.manytoone
 
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.CascadeType.*
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
-import org.hibernate.annotations.LazyToOne
-import org.hibernate.annotations.LazyToOneOption
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.CascadeType.*
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
 
 @Entity(name = "manytoone_bear")
 @Access(AccessType.FIELD)
@@ -23,7 +21,6 @@ class Beer(val name: String): IntJpaEntity() {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = [MERGE, PERSIST, REFRESH])
     @JoinColumn(name = "brewery_id", nullable = false)
-    @LazyToOne(LazyToOneOption.PROXY)
     var brewery: Brewery? = null
 
     override fun equalProperties(other: Any): Boolean {
@@ -143,7 +140,6 @@ class SalesGuy(val name: String): IntJpaEntity() {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [MERGE, PERSIST, REFRESH])
     @JoinColumn(name = "sales_force_id")
-    @LazyToOne(LazyToOneOption.PROXY)
     var salesForce: SalesForce? = null
 
     override fun equalProperties(other: Any): Boolean {

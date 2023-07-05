@@ -17,10 +17,10 @@ class DummyUser(@Id val name: String, var surname: String? = null): AbstractDumm
         fun dummyUser(name: String = "name") = DummyUser(name)
     }
 
-    @Transient
+    @field:Transient
     var someTransientField: Int = 0
 
-    @javax.persistence.Transient
+    @field:Transient
     var propertyWithTransientAnn: Int = 0
 
     @DiffIgnore

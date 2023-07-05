@@ -6,7 +6,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest
 import io.bluetape4k.spring.cassandra.domain.DomainTestConfiguration
 import io.bluetape4k.spring.cassandra.domain.model.VersionedEntity
-import io.bluetape4k.spring.coroutines.await
+import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull

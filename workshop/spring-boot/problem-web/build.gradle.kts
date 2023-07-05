@@ -21,6 +21,7 @@ dependencies {
 
     // Problem
     implementation(Libs.problem_spring_webflux)
+    api(Libs.jakarta_validation_api)
 
     // Resilience4j
     implementation(project(":bluetape4k-infra-resilience4j"))
@@ -46,7 +47,6 @@ dependencies {
     // Coroutines
     implementation(project(":bluetape4k-coroutines"))
     implementation(Libs.kotlinx_coroutines_core)
-    implementation(Libs.kotlinx_coroutines_jdk8)
     implementation(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 

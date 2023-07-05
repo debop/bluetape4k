@@ -27,6 +27,7 @@ dependencies {
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api
+    // feign 12.3 에서는 아직 javax.ws.rs-api 를 사용합니다.
     api(Libs.javax_ws_rs_api)
 
     // Feign
@@ -88,5 +89,6 @@ dependencies {
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(group = "org.mockito", module = "mockito-core")
     }
 }

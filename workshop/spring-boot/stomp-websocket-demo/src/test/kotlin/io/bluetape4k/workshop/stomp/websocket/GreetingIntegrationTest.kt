@@ -11,6 +11,7 @@ import io.bluetape4k.workshop.stomp.websocket.model.Greeting
 import io.bluetape4k.workshop.stomp.websocket.model.HelloMessage
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.future.await
 import org.amshove.kluent.shouldBeEqualTo
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
@@ -61,7 +62,7 @@ class GreetingIntegrationTest(
         val failure = atomic<Throwable?>(null)
         val handler: StompSessionHandler = getStopmSessionHandler(received, failure)
 
-        val session = stompClient.connect(wsUrl, headers, handler, port).get()
+        val session = stompClient.connectAsync(wsUrl, headers, handler, port).get()
 
         log.debug { "Send HelloMessage to /app/hello" }
         try {
@@ -85,7 +86,7 @@ class GreetingIntegrationTest(
         val failure = atomic<Throwable?>(null)
         val handler: StompSessionHandler = getStopmSessionHandler(received, failure)
 
-        val session = stompClient.connect(wsUrl, headers, handler, port).await()
+        val session = stompClient.connectAsync(wsUrl, headers, handler, port).await()
 
         log.debug { "Send HelloMessage to /app/hello" }
         try {

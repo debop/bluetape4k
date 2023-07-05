@@ -3,12 +3,12 @@ package io.bluetape4k.data.hibernate.mapping.compositeid
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.model.AbstractPersistenceObject
 import java.io.Serializable
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.Column
-import javax.persistence.Embeddable
-import javax.persistence.EmbeddedId
-import javax.persistence.Entity
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
 
 @Embeddable
 @Access(AccessType.FIELD)

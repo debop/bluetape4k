@@ -7,11 +7,17 @@ import io.bluetape4k.data.hibernate.converters.LocaleAsStringConverter
 import io.bluetape4k.data.hibernate.converters.RC2StringConverter
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.io.cryptography.randomBytes
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.Basic
+import jakarta.persistence.Column
+import jakarta.persistence.Convert
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.validation.constraints.NotBlank
 import java.io.Serializable
 import java.time.Duration
 import java.util.*
-import javax.persistence.*
-import javax.validation.constraints.NotBlank
 
 @Entity(name = "convertable_entity")
 @Access(AccessType.FIELD)
@@ -31,6 +37,7 @@ class ConvertableEntity(
 
     @Convert(converter = LZ4KryoObjectAsByteArrayConverter::class)
     @Basic(fetch = FetchType.LAZY)
+    @Column(length = 1024)
     val component: Component = Component("test data")
 
     override fun equalProperties(other: Any): Boolean {

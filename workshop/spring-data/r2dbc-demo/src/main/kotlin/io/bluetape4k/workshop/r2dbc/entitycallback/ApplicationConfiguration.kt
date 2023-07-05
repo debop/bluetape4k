@@ -1,6 +1,7 @@
 package io.bluetape4k.workshop.r2dbc.entitycallback
 
 import io.bluetape4k.data.r2dbc.connection.init.connectionFactoryInitializer
+import io.bluetape4k.support.asLong
 import io.bluetape4k.support.toUtf8Bytes
 import io.r2dbc.spi.ConnectionFactory
 import io.r2dbc.spi.Row
@@ -29,7 +30,7 @@ class ApplicationConfiguration {
         BeforeConvertCallback { customer, sqlIdentifier ->
             if (customer.id == null) {
                 databaseClient.sql("SELECT NEXT VALUE FOR primary_key")
-                    .map { row: Row -> row.get(0) as Long }
+                    .map { readable -> readable[0].asLong() }
                     .first()
                     .map { id -> customer.withId(id) }
             } else {

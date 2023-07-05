@@ -3,8 +3,10 @@ package io.bluetape4k.data.hibernate.querydsl.simple
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.core.requireNotEmpty
 import io.bluetape4k.data.hibernate.model.LongJpaTreeEntity
-import javax.persistence.*
-import javax.validation.constraints.NotBlank
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.Entity
+import jakarta.validation.constraints.NotBlank
 
 @Entity(name = "querydsl_example_entity")
 @Access(AccessType.FIELD)

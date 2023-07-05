@@ -2,9 +2,9 @@ package io.bluetape4k.workshop.security.server.application.login
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import java.io.Serializable
-import javax.validation.constraints.Email
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Size
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 
 data class LoginRequest(
     @field:Email(regexp = ".+@.+\\..+")

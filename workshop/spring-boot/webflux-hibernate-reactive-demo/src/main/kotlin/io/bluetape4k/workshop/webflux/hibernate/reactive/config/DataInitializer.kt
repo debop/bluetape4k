@@ -15,7 +15,7 @@ import org.hibernate.reactive.mutiny.Mutiny
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.stereotype.Component
-import javax.persistence.EntityManagerFactory
+import jakarta.persistence.EntityManagerFactory
 
 @Component
 class DataInitializer(

@@ -11,15 +11,18 @@ plugins {
 // 이렇게 해야 association의 proxy 가 만들어집니다.
 // https://kotlinlang.org/docs/reference/compiler-plugins.html
 allOpen {
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.Embeddable")
-    annotation("javax.persistence.MappedSuperclass")
+//    annotation("javax.persistence.Entity")
+//    annotation("javax.persistence.Embeddable")
+//    annotation("javax.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.persistence.MappedSuperclass")
 }
 
 kapt {
-    showProcessorStats = true
+    // showProcessorStats = true
     // kapt 가 제대로 동작하지 않는 경우, 해당 클래스를 약간 수정해보세요. (Comments 추가 등으로)
-    correctErrorTypes = true
+    // correctErrorTypes = true
 }
 
 idea {
@@ -54,9 +57,11 @@ dependencies {
     testImplementation(project(":bluetape4k-junit5"))
 
     // NOTE: Java 9+ 환경에서 kapt가 제대로 동작하려면 javax.annotation-api 를 참조해야 합니다.
-    api(Libs.javax_annotation_api)
+    // api(Libs.javax_annotation_api)
+    api(Libs.jakarta_annotation_api)
 
-    api(Libs.javax_persistence_api)
+    // api(Libs.javax_persistence_api)
+    api(Libs.jakarta_persistence_api)
     api(Libs.hibernate_core)
     api(Libs.hibernate_micrometer)
     testImplementation(Libs.hibernate_testing)
@@ -65,17 +70,21 @@ dependencies {
     kaptTest(Libs.hibernate_jpamodelgen)
 
     // Querydsl
-    compileOnly(Libs.querydsl_jpa)
     // Hibernate 6+ jakarta 용은 claasifier로 ":jpa" 대신 ":jakarta" 를 사용해야 합니다.
     // https://github.com/querydsl/querydsl/issues/3493
-    kapt(Libs.querydsl_apt + ":jpa")
-    kaptTest(Libs.querydsl_apt + ":jpa")
+    api(Libs.querydsl_jpa + ":jakarta")
+    kapt(Libs.querydsl_apt + ":jakarta")
+    kaptTest(Libs.querydsl_apt + ":jakarta")
 
-    api(Libs.javax_el_api)
-    api(Libs.javax_el)
+//    api(Libs.javax_el_api)
+//    api(Libs.javax_el)
+
+    api(Libs.jakarta_el_api)
+    api(Libs.jakarta_el)
 
     // Validator
-    api(Libs.javax_validation_api)
+    // api(Libs.javax_validation_api)
+    api(Libs.jakarta_validation_api)
     compileOnly(Libs.hibernate_validator)
 
     // Converter
@@ -101,6 +110,7 @@ dependencies {
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(group = "org.mockito", module = "mockito-core")
     }
 
     testImplementation(Libs.hikaricp)

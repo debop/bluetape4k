@@ -15,7 +15,7 @@ import org.springframework.security.web.server.authentication.ServerAuthenticati
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
-import javax.validation.Validator
+import jakarta.validation.Validator
 
 /**
  * 로그인 시 제출된 username, password 정보를 [UsernamePasswordAuthenticationToken]으로 변환하는 컨버터입니다.

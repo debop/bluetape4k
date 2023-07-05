@@ -20,7 +20,7 @@ class NumberServiceTest(
     @BeforeEach
     fun beforeEach() {
         connectionFactory.clusterConnection.use { conn ->
-            conn.flushDb()
+            conn.serverCommands().flushDb()
         }
     }
 

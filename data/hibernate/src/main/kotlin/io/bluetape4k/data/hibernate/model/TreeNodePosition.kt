@@ -1,8 +1,8 @@
 package io.bluetape4k.data.hibernate.model
 
 import java.io.Serializable
-import javax.persistence.Column
-import javax.persistence.Embeddable
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
 
 @Embeddable
 data class TreeNodePosition(

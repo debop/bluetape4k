@@ -5,10 +5,10 @@ import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.model.LongJpaTreeEntity
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
-import javax.persistence.Entity
-import javax.persistence.Index
-import javax.persistence.Table
-import javax.validation.constraints.NotBlank
+import jakarta.persistence.Entity
+import jakarta.persistence.Index
+import jakarta.persistence.Table
+import jakarta.validation.constraints.NotBlank
 
 @Entity(name = "tree_treenode")
 @Table(indexes = [Index(name = "ix_treenode_parent", columnList = "parent_id")])

@@ -5,6 +5,29 @@ import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.model.AbstractJpaEntity
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.support.hashOf
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.AttributeOverride
+import jakarta.persistence.AttributeOverrides
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.ElementCollection
+import jakarta.persistence.Embeddable
+import jakarta.persistence.Embedded
+import jakarta.persistence.Entity
+import jakarta.persistence.EntityListeners
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Index
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.MapKeyColumn
+import jakarta.persistence.OneToMany
+import jakarta.persistence.PrimaryKeyJoinColumn
+import jakarta.persistence.SecondaryTable
+import jakarta.validation.constraints.NotBlank
 import org.hibernate.annotations.Cascade
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -13,8 +36,6 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.io.Serializable
 import java.time.LocalDateTime
-import javax.persistence.*
-import javax.validation.constraints.NotBlank
 
 @Embeddable
 data class Address(
@@ -42,9 +63,9 @@ class AddressEntity(
 
     override fun equalProperties(other: Any): Boolean {
         return other is AddressEntity &&
-            street == other.street &&
-            city == other.city &&
-            zipcode == other.zipcode
+                street == other.street &&
+                city == other.city &&
+                zipcode == other.zipcode
     }
 
     override fun hashCode(): Int = id?.hashCode() ?: hashOf(street, city, zipcode)

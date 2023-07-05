@@ -13,7 +13,7 @@ import org.amshove.kluent.shouldNotBeNull
 import org.hibernate.reactive.mutiny.Mutiny
 import org.junit.jupiter.api.Test
 import java.time.Duration
-import javax.inject.Inject
+import jakarta.inject.Inject
 import kotlin.random.Random
 
 @QuarkusTest

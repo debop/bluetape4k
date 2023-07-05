@@ -1,10 +1,12 @@
 package io.bluetape4k.workshop.kafka.ping
 
+import io.bluetape4k.concurrent.onFailure
+import io.bluetape4k.concurrent.onSuccess
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.info
-import io.bluetape4k.spring.coroutines.await
 import io.bluetape4k.support.uninitialized
+import kotlinx.coroutines.future.await
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate
@@ -26,10 +28,9 @@ class PingController {
     suspend fun ping(): String {
         val record = ProducerRecord<String, String>(TOPIC_PINGPONG, "ping")
         val replyFuture: RequestReplyFuture<String, String, String> = template.sendAndReceive(record)
-        replyFuture.addCallback(
-            { result -> log.info { "callback result: $result" } },
-            { e -> log.error(e) { "callback exception." } }
-        )
+        replyFuture
+            .onSuccess { result -> log.info { "callback result: $result" } }
+            .onFailure { e -> log.error(e) { "callback exception." } }
 
         // 전송 결과
         val sendResult = replyFuture.sendFuture.await()

@@ -8,6 +8,13 @@ springBoot {
     mainClass.set("io.bluetape4k.workshop.webflux.SampleApplicationKt")
 }
 
+dependencyManagement {
+    imports {
+        mavenBom(Libs.spring_cloud_dependencies)
+        mavenBom(Libs.spring_boot_dependencies)
+    }
+}
+
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }
@@ -26,7 +33,6 @@ dependencies {
     runtimeOnly(Libs.springBoot("devtools"))
 
     implementation(Libs.springBootStarter("webflux"))
-    implementation(Libs.springCloudStarter("sleuth"))
 
     implementation(Libs.webjar("webjars-locator-core", "0.52"))
     implementation(Libs.webjar("bootstrap", "5.2.3"))
@@ -46,5 +52,6 @@ dependencies {
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // Reactor
+    implementation(Libs.reactor_kotlin_extensions)
     testImplementation(Libs.reactor_test)
 }

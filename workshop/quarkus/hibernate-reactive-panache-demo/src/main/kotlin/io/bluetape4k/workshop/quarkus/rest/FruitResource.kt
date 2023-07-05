@@ -4,18 +4,18 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.workshop.quarkus.model.Fruit
 import io.bluetape4k.workshop.quarkus.repository.FruitRepository
-import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.awaitSuspending
+import jakarta.validation.Valid
+import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.POST
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.core.MediaType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import javax.validation.Valid
-import javax.ws.rs.Consumes
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
 
 
 @Path("/fruits")
@@ -42,7 +42,7 @@ class FruitResource(
      * NOTE: `@ReactiveTransactional` 이 suspend 함수를 지원하지 않는다 !!!
      */
     @POST
-    @ReactiveTransactional
+    @WithTransaction
     fun addFruit(@Valid fruit: Fruit): Uni<Fruit> {
         log.debug { "add fruit. $fruit" }
         return repository.persist(fruit)

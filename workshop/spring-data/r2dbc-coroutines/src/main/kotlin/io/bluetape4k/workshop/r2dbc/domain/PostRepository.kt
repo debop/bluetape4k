@@ -59,7 +59,7 @@ class PostRepository(
             .awaitFirstOrNull()
     }
 
-    suspend fun deleteAll(): Int {
+    suspend fun deleteAll(): Long {
         return operations.delete<Post>().allAndAwait()
     }
 

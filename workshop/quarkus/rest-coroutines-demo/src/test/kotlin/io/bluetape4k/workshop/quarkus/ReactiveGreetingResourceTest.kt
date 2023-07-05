@@ -16,7 +16,7 @@ import org.hamcrest.CoreMatchers
 import org.jboss.resteasy.reactive.RestResponse
 import org.junit.jupiter.api.Test
 import java.util.*
-import javax.ws.rs.core.MediaType
+import jakarta.ws.rs.core.MediaType
 
 /**
  * `rest-assured` 를 이용하여 REST API 테스트를 수행합니다

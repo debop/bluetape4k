@@ -9,7 +9,6 @@ configurations {
 dependencies {
     implementation(project(":bluetape4k-data-redis"))
     implementation(project(":bluetape4k-spring-support"))
-    implementation(project(":bluetape4k-coroutines"))
     implementation(project(":bluetape4k-io-json"))
     implementation(project(":bluetape4k-utils-idgenerators"))
     testImplementation(project(":bluetape4k-junit5"))
@@ -27,17 +26,24 @@ dependencies {
     // Compressor
     implementation(Libs.lz4_java)
 
+    // Coroutines
+    implementation(project(":bluetape4k-coroutines"))
     implementation(Libs.kotlinx_coroutines_core)
     implementation(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
+
+    // Reactor
+    implementation(Libs.reactor_kotlin_extensions)
+    testImplementation(Libs.reactor_test)
 
     implementation(Libs.lettuce_core)
     implementation(Libs.commons_pool2)
     implementation(Libs.springBootStarter("data-redis"))
 
+    implementation(Libs.springBoot("autoconfigure"))
+
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-    testImplementation(Libs.reactor_test)
 }

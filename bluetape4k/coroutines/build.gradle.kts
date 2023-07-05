@@ -11,9 +11,8 @@ dependencies {
 
     // Coroutines
     api(Libs.kotlinx_coroutines_core)
-    api(Libs.kotlinx_coroutines_jdk8)
     api(Libs.kotlinx_coroutines_slf4j)
-    compileOnly(Libs.kotlinx_coroutines_jdk9)
+    api(Libs.kotlinx_coroutines_jdk9)
     testImplementation(Libs.kotlinx_coroutines_debug)
     testImplementation(Libs.kotlinx_coroutines_test)
 

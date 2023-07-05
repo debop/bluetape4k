@@ -2,13 +2,13 @@ package io.bluetape4k.data.hibernate.listeners
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import javax.persistence.PostLoad
-import javax.persistence.PostPersist
-import javax.persistence.PostRemove
-import javax.persistence.PostUpdate
-import javax.persistence.PrePersist
-import javax.persistence.PreRemove
-import javax.persistence.PreUpdate
+import jakarta.persistence.PostLoad
+import jakarta.persistence.PostPersist
+import jakarta.persistence.PostRemove
+import jakarta.persistence.PostUpdate
+import jakarta.persistence.PrePersist
+import jakarta.persistence.PreRemove
+import jakarta.persistence.PreUpdate
 
 /**
  * JPA Entity 변화에 대한 Listener

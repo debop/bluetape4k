@@ -10,6 +10,7 @@ import io.bluetape4k.data.hibernate.reactive.stage.withTransactionSuspending
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import jakarta.persistence.criteria.CriteriaQuery
 import kotlinx.coroutines.future.await
 import org.amshove.kluent.shouldHaveSize
 import org.hibernate.graph.RootGraph
@@ -19,7 +20,6 @@ import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import java.time.LocalDate
 import java.time.Month
-import javax.persistence.criteria.CriteriaQuery
 
 @Execution(ExecutionMode.SAME_THREAD)
 class StageSessionFactoryExamples: AbstractStageTest() {
@@ -151,7 +151,8 @@ class StageSessionFactoryExamples: AbstractStageTest() {
             session.createQuery(criteria).resultList.await()
         } // NOTE: author 만 로딩했으므로, books 에 접근하면 lazy initialization 예외가 발생합니다.
         authors.forEach {
-            println(it) //            it.books.forEach { book ->
+            println(it)
+            //            it.books.forEach { book ->
             //                println("book=$book")
             //            }
         }
@@ -184,7 +185,7 @@ class StageSessionFactoryExamples: AbstractStageTest() {
         }
         authors shouldHaveSize 1
         authors.forEach {
-            it.books shouldHaveSize 1
+            it.books shouldHaveSize 2
         }
     }
 

@@ -20,8 +20,6 @@ dependencies {
     compileOnly(Libs.micrometer_registry_prometheus)
     testImplementation(Libs.micrometer_test)
 
-    api(Libs.commons_lang3)
-
     // Micrometer Tracing
     compileOnly(Libs.micrometer_tracing_bridge_otel)
     testImplementation(Libs.micrometer_tracing_test)

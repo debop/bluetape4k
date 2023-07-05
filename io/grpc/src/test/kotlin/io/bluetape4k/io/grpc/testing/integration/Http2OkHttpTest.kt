@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.IOException
 import java.net.InetSocketAddress
+import javax.net.ssl.SSLContext
 
 @Disabled("보안관련 설정 후에 테스트해야 합니다")
 class Http2OkHttpTest: AbstractInteropTest() {
@@ -40,7 +41,10 @@ class Http2OkHttpTest: AbstractInteropTest() {
                 .forServer(TestUtils.loadCert("server1.pem"), TestUtils.loadCert("server1.key"))
 
             GrpcSslContexts.configure(contextBuilder, sslProvider)
-            contextBuilder.ciphers(TestUtils.preferredTestCiphers(), SupportedCipherSuiteFilter.INSTANCE)
+            contextBuilder.ciphers(
+                SSLContext.getDefault().defaultSSLParameters.cipherSuites.toList(),
+                SupportedCipherSuiteFilter.INSTANCE
+            )
 
             NettyServerBuilder.forPort(0)
                 .flowControlWindow(65 * 1024)
@@ -60,7 +64,7 @@ class Http2OkHttpTest: AbstractInteropTest() {
             .maxInboundMessageSize(MAX_MESSAGE_SIZE)
             .tlsConnectionSpec(
                 arrayOf(TlsVersion.TLS_1_3.name, TlsVersion.TLS_1_2.name),
-                TestUtils.preferredTestCiphers().toTypedArray()
+                SSLContext.getDefault().defaultSSLParameters.cipherSuites
             )
             .overrideAuthority(Util.authorityFromHostAndPort(TestUtils.TEST_SERVER_HOST, port))
 

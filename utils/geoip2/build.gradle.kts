@@ -8,5 +8,5 @@ dependencies {
     testImplementation(project(":bluetape4k-junit5"))
 
     // MaxMind GeoIP2
-    implementation("com.maxmind.geoip2:geoip2:4.0.1")
+    api("com.maxmind.geoip2:geoip2:4.0.1")
 }

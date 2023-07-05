@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
 
 /**

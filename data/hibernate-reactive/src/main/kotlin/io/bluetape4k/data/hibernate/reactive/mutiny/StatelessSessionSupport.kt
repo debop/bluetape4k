@@ -4,7 +4,7 @@ import io.smallrye.mutiny.Uni
 import org.hibernate.LockMode
 import org.hibernate.reactive.common.ResultSetMapping
 import org.hibernate.reactive.mutiny.Mutiny
-import javax.persistence.EntityGraph
+import jakarta.persistence.EntityGraph
 
 inline fun <reified T> Mutiny.StatelessSession.getAs(id: java.io.Serializable): Uni<T> =
     get(T::class.java, id)
@@ -12,13 +12,13 @@ inline fun <reified T> Mutiny.StatelessSession.getAs(id: java.io.Serializable): 
 inline fun <reified T> Mutiny.StatelessSession.getAs(id: java.io.Serializable, lockMode: LockMode): Uni<T> =
     get(T::class.java, id, lockMode)
 
-inline fun <reified R> Mutiny.StatelessSession.createQueryAs(queryString: String): Mutiny.Query<R> =
+inline fun <reified R> Mutiny.StatelessSession.createQueryAs(queryString: String): Mutiny.SelectionQuery<R> =
     createQuery(queryString, R::class.java)
 
-inline fun <reified R> Mutiny.StatelessSession.createNamedQueryAs(queryName: String): Mutiny.Query<R> =
+inline fun <reified R> Mutiny.StatelessSession.createNamedQueryAs(queryName: String): Mutiny.SelectionQuery<R> =
     createNamedQuery(queryName, R::class.java)
 
-inline fun <reified R> Mutiny.StatelessSession.createNativeQueryAs(queryString: String): Mutiny.Query<R> =
+inline fun <reified R> Mutiny.StatelessSession.createNativeQueryAs(queryString: String): Mutiny.SelectionQuery<R> =
     createNativeQuery(queryString, R::class.java)
 
 inline fun <reified T> Mutiny.StatelessSession.getResultSetMappingAs(mappingName: String): ResultSetMapping<T> =

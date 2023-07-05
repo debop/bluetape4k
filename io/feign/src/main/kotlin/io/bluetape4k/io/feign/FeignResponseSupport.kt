@@ -2,7 +2,6 @@ package io.bluetape4k.io.feign
 
 import feign.Response
 import java.io.Reader
-import javax.ws.rs.core.MediaType
 
 /**
  * [feign.Response.Builder]를 빌드합니다.
@@ -36,7 +35,6 @@ fun Response.isJsonBody(): Boolean {
  * [Response]가 TEXT 형식인지 검사합니다.
  */
 fun Response.isTextBody(): Boolean {
-    MediaType.TEXT_HTML
     val contentType = headers()["Content-Type"] ?: headers()["content-type"]
     return contentType?.any { it.contains("text/plain", true) } ?: false
 }

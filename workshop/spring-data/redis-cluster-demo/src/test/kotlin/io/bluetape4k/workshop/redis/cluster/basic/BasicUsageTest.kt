@@ -4,6 +4,7 @@ import io.bluetape4k.workshop.redis.cluster.AbstractRedisClusterTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainAll
 import org.amshove.kluent.shouldContainSame
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,10 +14,15 @@ class BasicUsageTest(
     @Autowired private val operations: RedisOperations<String, String>,
 ): AbstractRedisClusterTest() {
 
+    @BeforeAll
+    fun beforeAll() {
+        Thread.sleep(1000)
+    }
+
     @BeforeEach
     fun beforeEach() {
         operations.execute { conn ->
-            conn.flushDb()
+            conn.serverCommands().flushDb()
         }
     }
 

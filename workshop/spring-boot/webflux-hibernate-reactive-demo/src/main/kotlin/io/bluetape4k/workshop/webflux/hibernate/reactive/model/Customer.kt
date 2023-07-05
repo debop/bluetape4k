@@ -5,13 +5,13 @@ import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.model.LongJpaEntity
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.FetchProfile
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.ManyToOne
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.ManyToOne
 
 @Entity
 @Access(AccessType.FIELD)

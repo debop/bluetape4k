@@ -4,7 +4,7 @@ import org.hibernate.LockMode
 import org.hibernate.reactive.common.ResultSetMapping
 import org.hibernate.reactive.stage.Stage
 import java.util.concurrent.CompletionStage
-import javax.persistence.EntityGraph
+import jakarta.persistence.EntityGraph
 
 inline fun <reified T> Stage.StatelessSession.getAs(id: java.io.Serializable): CompletionStage<T> =
     get(T::class.java, id)
@@ -12,13 +12,13 @@ inline fun <reified T> Stage.StatelessSession.getAs(id: java.io.Serializable): C
 inline fun <reified T> Stage.StatelessSession.getAs(id: java.io.Serializable, lockMode: LockMode): CompletionStage<T> =
     get(T::class.java, id, lockMode)
 
-inline fun <reified R> Stage.StatelessSession.createQueryAs(queryString: String): Stage.Query<R> =
+inline fun <reified R> Stage.StatelessSession.createQueryAs(queryString: String): Stage.SelectionQuery<R> =
     createQuery(queryString, R::class.java)
 
-inline fun <reified R> Stage.StatelessSession.createNamedQueryAs(queryName: String): Stage.Query<R> =
+inline fun <reified R> Stage.StatelessSession.createNamedQueryAs(queryName: String): Stage.SelectionQuery<R> =
     createNamedQuery(queryName, R::class.java)
 
-inline fun <reified R> Stage.StatelessSession.createNativeQueryAs(queryString: String): Stage.Query<R> =
+inline fun <reified R> Stage.StatelessSession.createNativeQueryAs(queryString: String): Stage.SelectionQuery<R> =
     createNativeQuery(queryString, R::class.java)
 
 inline fun <reified T> Stage.StatelessSession.getResultSetMappingAs(mappingName: String): ResultSetMapping<T> =

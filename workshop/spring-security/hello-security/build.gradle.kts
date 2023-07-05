@@ -22,7 +22,7 @@ dependencies {
     implementation(Libs.springBootStarter("oauth2-resource-server"))
     implementation(Libs.springBootStarter("web"))
     implementation(Libs.springBootStarter("thymeleaf"))
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.1.1.RELEASE")
     testImplementation(Libs.springSecurity("test"))
 
     testImplementation(Libs.springBootStarter("test")) {

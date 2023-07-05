@@ -31,7 +31,7 @@ inline fun <reified T: Any> UpdateTableSpec.table(): ReactiveUpdateOperation.Rea
 inline fun <reified T: Any> ReactiveUpdateOperation.UpdateWithQuery.using(
     obj: T,
     client: R2dbcClient,
-): Mono<Int> {
+): Mono<Long> {
     val dataAccessStrategy = client.entityTemplate.dataAccessStrategy
     val idColumns = dataAccessStrategy.getIdentifierColumns(T::class.java)
     if (idColumns.isEmpty()) {

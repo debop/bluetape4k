@@ -3,27 +3,25 @@ package io.bluetape4k.data.hibernate.mapping.associations.onetomany.list
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.support.hashOf
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
+import jakarta.persistence.OrderColumn
+import jakarta.validation.constraints.NotBlank
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
-import org.hibernate.annotations.LazyCollection
-import org.hibernate.annotations.LazyCollectionOption
 import java.time.LocalDate
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
-import javax.persistence.OrderBy
-import javax.persistence.OrderColumn
-import javax.validation.constraints.NotBlank
 
 
 @Entity(name = "onetomany_father")
@@ -98,7 +96,6 @@ class Order(@NotBlank val no: String): IntJpaEntity() {
 
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
     @OrderBy("name")
-    @LazyCollection(LazyCollectionOption.EXTRA)
     val items: MutableList<OrderItem> = arrayListOf()
 
     fun addItems(vararg itemsToAdd: OrderItem) {
@@ -173,12 +170,12 @@ class Batch(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "batch_id")
+    @field:Column(name = "batch_id")
     override var id: Int? = null
 
     // One To Many 를 Join Table을 이용하여 Unidirection으로 연결한다
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "batch_id")
+    @field:OneToMany(fetch = FetchType.LAZY)
+    @field:JoinColumn(name = "batch_id")
     val items: MutableList<BatchItem> = arrayListOf()
 
     fun addItems(vararg itemsToAdd: BatchItem) {
@@ -225,10 +222,11 @@ class BatchItem(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "batch_item_id")
+    @field:Column(name = "batch_item_id")
     override var id: Int? = null
 
     @ManyToOne
+    @JoinColumn(name = "batch_id")
     var batch: Batch? = null
 
     override fun equalProperties(other: Any): Boolean {

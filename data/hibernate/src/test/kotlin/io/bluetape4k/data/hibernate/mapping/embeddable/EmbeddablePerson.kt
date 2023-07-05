@@ -7,17 +7,17 @@ import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.support.hashOf
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.AttributeOverride
-import javax.persistence.AttributeOverrides
-import javax.persistence.Column
-import javax.persistence.Convert
-import javax.persistence.Embedded
-import javax.persistence.Entity
-import javax.persistence.Index
-import javax.persistence.Table
-import javax.validation.constraints.NotBlank
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.AttributeOverride
+import jakarta.persistence.AttributeOverrides
+import jakarta.persistence.Column
+import jakarta.persistence.Convert
+import jakarta.persistence.Embedded
+import jakarta.persistence.Entity
+import jakarta.persistence.Index
+import jakarta.persistence.Table
+import jakarta.validation.constraints.NotBlank
 
 @Entity
 @Table(

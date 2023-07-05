@@ -21,7 +21,7 @@ import java.time.LocalTime
 import java.time.ZoneOffset
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 @Service
 class ReviewServiceImpl(private val showService: ShowService): ReviewService {

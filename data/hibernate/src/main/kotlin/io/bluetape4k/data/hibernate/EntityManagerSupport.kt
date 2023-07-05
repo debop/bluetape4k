@@ -6,8 +6,8 @@ import org.hibernate.SessionFactory
 import org.hibernate.internal.SessionImpl
 import java.io.Serializable
 import java.sql.Connection
-import javax.persistence.EntityManager
-import javax.persistence.TypedQuery
+import jakarta.persistence.EntityManager
+import jakarta.persistence.TypedQuery
 
 fun EntityManager.currentSession(): Session = unwrap(Session::class.java)
 fun EntityManager.asSession(): Session = unwrap(Session::class.java)

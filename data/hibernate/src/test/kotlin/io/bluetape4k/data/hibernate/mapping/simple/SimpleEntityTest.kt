@@ -10,8 +10,8 @@ import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataIntegrityViolationException
-import javax.persistence.EntityManager
-import javax.persistence.PersistenceContext
+import jakarta.persistence.EntityManager
+import jakarta.persistence.PersistenceContext
 import kotlin.test.assertFailsWith
 
 class SimpleEntityTest(

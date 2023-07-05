@@ -10,7 +10,7 @@ import io.smallrye.mutiny.coroutines.awaitSuspending
 import org.hibernate.reactive.mutiny.Mutiny
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import javax.persistence.EntityManagerFactory
+import jakarta.persistence.EntityManagerFactory
 
 @Repository
 class CityRepository(@Autowired emf: EntityManagerFactory) {

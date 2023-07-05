@@ -9,7 +9,6 @@ import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import org.redisson.api.redisnode.RedisNodes
 
-
 @Execution(ExecutionMode.SAME_THREAD)
 class RedisClusterServerTest {
 
@@ -23,7 +22,6 @@ class RedisClusterServerTest {
 
             verifyWithLettuce(redisCluster)
             verifyWithRedisson(redisCluster)
-
         }
     }
 

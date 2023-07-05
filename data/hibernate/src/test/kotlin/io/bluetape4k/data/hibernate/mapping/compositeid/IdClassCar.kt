@@ -4,12 +4,12 @@ import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.model.AbstractPersistenceObject
 import io.bluetape4k.support.hashOf
 import java.io.Serializable
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.IdClass
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.IdClass
 
 
 data class CarIdentifier(

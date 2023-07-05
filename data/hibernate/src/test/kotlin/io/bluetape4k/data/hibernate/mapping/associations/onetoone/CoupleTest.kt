@@ -5,12 +5,12 @@ import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.findAs
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
+import jakarta.persistence.*
+import jakarta.validation.constraints.NotBlank
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
-import javax.persistence.*
-import javax.validation.constraints.NotBlank
 
 class CoupleTest(
     @Autowired private val husbandRepo: HusbandRepository,

@@ -4,6 +4,14 @@ import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.logging.KLogging
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.CascadeType.*
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType.*
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
@@ -11,9 +19,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
-import javax.persistence.*
-import javax.persistence.CascadeType.*
-import javax.persistence.FetchType.*
 
 class ManyToManyTest(
     @Autowired private val accountRepo: BankAccountRepository,

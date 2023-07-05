@@ -9,7 +9,6 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    api(project(":bluetape4k-io-json"))
     compileOnly(project(":bluetape4k-infra-resilience4j"))
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-testcontainers"))
@@ -27,6 +26,12 @@ dependencies {
     compileOnly(Libs.spring_kafka_test)
     compileOnly(Libs.springData("commons"))
     compileOnly(project(":bluetape4k-spring-support"))
+
+    // Jackson
+    api(project(":bluetape4k-io-json"))
+    api(Libs.jackson_databind)
+    api(Libs.jackson_module_kotlin)
+    api(Libs.javax_xml_bind)         // jackson findModules 에서 xml 관련 모듈도 등록할 때 필요하다 
 
     // Codecs
     compileOnly(Libs.kryo)

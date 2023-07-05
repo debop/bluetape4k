@@ -3,8 +3,8 @@ package io.bluetape4k.workshop.quarkus.repository
 import io.bluetape4k.workshop.quarkus.model.Fruit
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase
 import io.smallrye.mutiny.Uni
-import javax.enterprise.context.ApplicationScoped
-import javax.transaction.Transactional
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.transaction.Transactional
 
 @ApplicationScoped
 class FruitRepository: PanacheRepositoryBase<Fruit, Long> {

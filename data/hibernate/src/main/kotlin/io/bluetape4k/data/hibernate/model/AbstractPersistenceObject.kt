@@ -1,7 +1,7 @@
 package io.bluetape4k.data.hibernate.model
 
 import io.bluetape4k.core.AbstractValueObject
-import javax.persistence.Transient
+import jakarta.persistence.Transient
 
 abstract class AbstractPersistenceObject: AbstractValueObject(), PersistenceObject {
 

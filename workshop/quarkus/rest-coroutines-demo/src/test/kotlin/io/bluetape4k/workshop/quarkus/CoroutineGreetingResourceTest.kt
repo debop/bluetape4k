@@ -14,7 +14,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.Test
 import java.util.*
-import javax.ws.rs.core.MediaType
+import jakarta.ws.rs.core.MediaType
 
 
 @QuarkusTest

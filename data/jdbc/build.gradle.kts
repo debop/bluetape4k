@@ -14,6 +14,8 @@ dependencies {
 
     compileOnly(Libs.hikaricp)
     compileOnly(Libs.tomcat_jdbc)
+    compileOnly(Libs.agroal_hikari)
+    compileOnly(Libs.agroal_pool)
 
     compileOnly(Libs.springBootStarter("jdbc"))
     testImplementation(Libs.springBootStarter("test")) {

@@ -4,12 +4,12 @@ import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.quarkus.tests.containers.RedisTestResource
-import io.quarkus.redis.client.RedisClient
-import io.quarkus.redis.client.reactive.ReactiveRedisClient
+import io.quarkus.redis.datasource.ReactiveRedisDataSource
+import io.quarkus.redis.datasource.RedisDataSource
 import io.quarkus.test.junit.QuarkusTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 /**
  * Quarkus 의 DevDevices 에서 제공하는 Redis 를 사용합니다.
@@ -22,19 +22,20 @@ class RedisClientTest {
     companion object: KLogging()
 
     @Inject
-    internal lateinit var redisClient: RedisClient
+    internal lateinit var redisClient: RedisDataSource
 
     @Inject
-    internal lateinit var reactiveRedisClient: ReactiveRedisClient
+    internal lateinit var reactiveRedisClient: ReactiveRedisDataSource
 
     @Test
     fun `access redis server`() {
         val key = Fakers.randomUuid().encodeBase62()
         val value = Fakers.randomString()
 
-        redisClient.set(listOf(key, value))
+        val valueCommands = redisClient.value(String::class.java, String::class.java)
+        valueCommands.set(key, value)
 
-        val saved = redisClient.get(key).toString()
+        val saved = valueCommands.get(key).toString()
         saved shouldBeEqualTo value
     }
 }

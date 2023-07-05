@@ -19,7 +19,7 @@ import org.springframework.data.redis.serializer.RedisSerializer
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport
 import java.util.concurrent.TimeUnit
-import javax.annotation.PreDestroy
+import jakarta.annotation.PreDestroy
 
 fun main(vararg args: String) {
     runApplication<RedisApplication>(*args)

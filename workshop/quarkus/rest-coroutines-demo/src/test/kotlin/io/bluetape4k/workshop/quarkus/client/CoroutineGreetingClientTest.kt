@@ -15,7 +15,7 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder
 import org.eclipse.microprofile.rest.client.inject.RestClient
 import org.junit.jupiter.api.Test
 import java.net.URI
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @QuarkusTest
 class CoroutineGreetingClientTest {

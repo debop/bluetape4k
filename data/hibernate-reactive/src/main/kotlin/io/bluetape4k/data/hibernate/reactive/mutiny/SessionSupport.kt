@@ -6,7 +6,7 @@ import org.hibernate.reactive.common.AffectedEntities
 import org.hibernate.reactive.common.Identifier
 import org.hibernate.reactive.common.ResultSetMapping
 import org.hibernate.reactive.mutiny.Mutiny
-import javax.persistence.EntityGraph
+import jakarta.persistence.EntityGraph
 
 inline fun <reified T> Mutiny.Session.findAs(id: java.io.Serializable): Uni<T> =
     find(T::class.java, id)
@@ -23,19 +23,19 @@ inline fun <reified T> Mutiny.Session.findAs(naturalId: Identifier<T>): Uni<T> =
 inline fun <reified T> Mutiny.Session.getReferenceAs(id: java.io.Serializable): T =
     getReference(T::class.java, id)
 
-inline fun <reified R> Mutiny.Session.createQueryAs(queryString: String): Mutiny.Query<R> =
+inline fun <reified R> Mutiny.Session.createQueryAs(queryString: String): Mutiny.SelectionQuery<R> =
     createQuery(queryString, R::class.java)
 
-inline fun <reified R> Mutiny.Session.createNamedQueryAs(queryName: String): Mutiny.Query<R> =
+inline fun <reified R> Mutiny.Session.createNamedQueryAs(queryName: String): Mutiny.SelectionQuery<R> =
     createNamedQuery(queryName, R::class.java)
 
-inline fun <reified R> Mutiny.Session.createNativeQueryAs(queryString: String): Mutiny.Query<R> =
+inline fun <reified R> Mutiny.Session.createNativeQueryAs(queryString: String): Mutiny.SelectionQuery<R> =
     createNativeQuery(queryString, R::class.java)
 
 inline fun <reified R> Mutiny.Session.createNativeQueryAs(
     queryString: String,
     affectedEntities: AffectedEntities,
-): Mutiny.Query<R> =
+): Mutiny.SelectionQuery<R> =
     createNativeQuery(queryString, R::class.java, affectedEntities)
 
 inline fun <reified T> Mutiny.Session.getResultSetMappingAs(mappingName: String): ResultSetMapping<T> =

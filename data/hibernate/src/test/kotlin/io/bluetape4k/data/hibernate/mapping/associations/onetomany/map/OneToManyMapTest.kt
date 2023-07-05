@@ -4,6 +4,18 @@ import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.logging.KLogging
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.CollectionTable
+import jakarta.persistence.ElementCollection
+import jakarta.persistence.Embeddable
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.MapKeyClass
+import jakarta.persistence.MapKeyColumn
+import jakarta.persistence.OneToMany
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldContainSame
@@ -13,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
 import java.io.Serializable
-import javax.persistence.*
 
 class OneToManyMapTest(
     @Autowired private val carRepo: OneToManyCarRepository,

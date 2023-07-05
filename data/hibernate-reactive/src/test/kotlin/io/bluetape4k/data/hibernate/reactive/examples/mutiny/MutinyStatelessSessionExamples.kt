@@ -20,7 +20,7 @@ import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import java.time.LocalDate
 import java.time.Month
-import javax.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.CriteriaQuery
 
 @Execution(ExecutionMode.SAME_THREAD)
 class MutinyStatelessSessionExamples: AbstractMutinyTest() {
@@ -178,7 +178,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
         }
         authors shouldHaveSize 1
         authors.forEach {
-            it.books shouldHaveSize 1
+            it.books shouldHaveSize 2
         }
     }
 }

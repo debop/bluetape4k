@@ -3,11 +3,23 @@ package io.bluetape4k.data.hibernate.mapping.associations.onetomany.set
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.CascadeType
+import jakarta.persistence.CollectionTable
+import jakarta.persistence.Column
+import jakarta.persistence.ElementCollection
+import jakarta.persistence.Embeddable
+import jakarta.persistence.Entity
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.hibernate.annotations.LazyCollection
-import org.hibernate.annotations.LazyCollectionOption
 import org.hibernate.annotations.Parent
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +29,6 @@ import java.io.Serializable
 import java.math.BigDecimal
 import java.sql.Timestamp
 import java.time.LocalDate
-import javax.persistence.*
 
 class OneToManySetTest @Autowired constructor(
     private val biddingItemRepo: BiddingItemRepository,
@@ -93,7 +104,6 @@ class OneToManySetTest @Autowired constructor(
 class BiddingItem(val name: String): IntJpaEntity() {
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-    @LazyCollection(LazyCollectionOption.EXTRA)
     val bids: MutableSet<Bid> = mutableSetOf()
 
     fun addBids(vararg bidsToAdd: Bid) {
@@ -137,7 +147,7 @@ class Bid(val amount: BigDecimal = BigDecimal.ZERO): IntJpaEntity() {
     @ManyToOne(fetch = FetchType.LAZY)
     var item: BiddingItem? = null
 
-    @get:Transient
+    @Transient
     var timestamp: Timestamp? = null
 
     override fun equalProperties(other: Any): Boolean {

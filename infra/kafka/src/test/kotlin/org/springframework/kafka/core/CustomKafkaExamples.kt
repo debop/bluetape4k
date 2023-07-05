@@ -4,9 +4,9 @@ import io.bluetape4k.infra.kafka.codec.JacksonKafkaCodec
 import io.bluetape4k.infra.kafka.codec.StringKafkaCodec
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.spring.coroutines.await
 import io.bluetape4k.testcontainers.massage.KafkaServer
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.future.await
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldNotBeNull
 import org.apache.kafka.clients.consumer.ConsumerConfig

@@ -14,11 +14,11 @@ import org.hibernate.LockMode
 import org.hibernate.reactive.mutiny.Mutiny
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import javax.persistence.EntityManagerFactory
-import javax.persistence.criteria.CriteriaBuilder
-import javax.persistence.criteria.CriteriaQuery
-import javax.persistence.criteria.Join
-import javax.persistence.criteria.Root
+import jakarta.persistence.EntityManagerFactory
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.Join
+import jakarta.persistence.criteria.Root
 
 @Repository
 class CustomerRepository(@Autowired emf: EntityManagerFactory) {

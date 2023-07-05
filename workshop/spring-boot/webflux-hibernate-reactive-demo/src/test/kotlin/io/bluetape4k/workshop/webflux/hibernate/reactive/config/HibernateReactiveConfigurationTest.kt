@@ -8,7 +8,7 @@ import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import javax.persistence.EntityManagerFactory
+import jakarta.persistence.EntityManagerFactory
 
 class HibernateReactiveConfigurationTest: AbstractHibernateReactiveTest() {
 

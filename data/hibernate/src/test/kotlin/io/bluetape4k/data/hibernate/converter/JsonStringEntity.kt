@@ -3,8 +3,15 @@ package io.bluetape4k.data.hibernate.converter
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.data.hibernate.converters.AbstractObjectAsJsonConverter
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.Column
+import jakarta.persistence.Convert
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
 import java.io.Serializable
-import javax.persistence.*
 
 @Entity(name = "converter_purchase")
 @Access(AccessType.FIELD)

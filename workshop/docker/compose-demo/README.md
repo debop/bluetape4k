@@ -13,7 +13,7 @@
 ### Q. `Container startup failed for image alpine/socat:1.7.4.3-r0` 예외 발생 시
 
 [alpine/socat container pinned at old version lacking arm64 platform](https://github.com/testcontainers/testcontainers-java/issues/5279)
-를 참고해서, `~/.testcontainers.properties` 파일의 `socat.container.image=alphine/socat:latest` 를 추가하면 됩니다.
+를 참고해서, `~/.testcontainers.properties` 파일에 `socat.container.image=alpine/socat:latest` 를 추가하면 됩니다.
 
 ```shell
 $grep socat ~/.testcontainers.properties

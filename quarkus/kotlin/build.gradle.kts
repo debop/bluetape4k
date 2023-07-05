@@ -12,10 +12,14 @@ plugins {
 }
 
 allOpen {
-    annotation("javax.ws.rs.Path")
-    annotation("javax.enterprise.context.ApplicationScoped")
+//    annotation("javax.ws.rs.Path")
+//    annotation("javax.enterprise.context.ApplicationScoped")
+//    annotation("javax.persistence.Entity")
+    annotation("jakarta.ws.rs.Path")
+    annotation("jakarta.enterprise.context.ApplicationScoped")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
     annotation("io.quarkus.test.junit.QuarkusTest")
-    annotation("javax.persistence.Entity")
 }
 
 dependencyManagement {
@@ -73,5 +77,5 @@ dependencies {
 
     // Redis
     compileOnly(Libs.quarkus("redis-client"))
-    testImplementation(Libs.redisson("redisson-quarkus-20"))
+    testImplementation(Libs.redisson("redisson-quarkus-30"))
 }

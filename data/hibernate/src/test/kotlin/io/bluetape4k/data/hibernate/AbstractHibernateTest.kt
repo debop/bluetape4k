@@ -3,13 +3,13 @@ package io.bluetape4k.data.hibernate
 import io.bluetape4k.infra.cache.jcache.JCaching
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
+import jakarta.persistence.EntityManager
+import jakarta.persistence.EntityManagerFactory
 import net.datafaker.Faker
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
-import javax.persistence.EntityManager
-import javax.persistence.EntityManagerFactory
 
 /**
  * `@DataJpaTest`를 사용하려면 SprinBootApplication 이 정의되어 있어야 합니다 (see [SpringDataJpaTestApplication])

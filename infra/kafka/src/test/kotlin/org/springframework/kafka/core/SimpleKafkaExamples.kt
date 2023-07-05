@@ -2,10 +2,10 @@ package org.springframework.kafka.core
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.spring.coroutines.await
 import io.bluetape4k.support.uninitialized
 import io.bluetape4k.testcontainers.massage.KafkaServer
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.future.await
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan

@@ -3,7 +3,7 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 object Plugins {
 
     object Versions {
-        const val dokka = "1.7.20"
+        const val dokka = "1.8.20"
         const val detekt = "1.21.0"
         const val dependency_management = "1.1.0"
         const val jooq = "3.0.3"
@@ -14,10 +14,10 @@ object Plugins {
         const val testLogger = "3.2.0"
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.7"
-        
-        const val spring_boot = "2.7.12"
-        const val quarkus = "2.16.7.Final"
-        const val apollo = "3.7.4"
+
+        const val spring_boot = "3.1.1"
+        const val quarkus = "3.2.0.Final"
+        const val apollo = "3.8.2"
         const val dgs = "5.6.9"
         const val docker_compose = "0.16.11"
     }
@@ -70,18 +70,18 @@ object Versions {
     const val kotlinx_benchmark = Plugins.Versions.kotlinx_benchmark
 
     const val spring_boot = Plugins.Versions.spring_boot
-    const val spring_cloud = "2021.0.6"
-    const val reactor_bom = "2022.0.7"
-    const val spring_statemachine = "3.2.0"
+    const val spring_cloud = "2022.0.3"
+    const val reactor_bom = "2022.0.8"
+    const val spring_statemachine = "3.2.1"
 
-    const val chaos_monkey = "2.7.2"
+    const val chaos_monkey = "3.0.1"
     const val blockhound = "1.0.8.RELEASE"
 
     // GraphQL
     // Netflix DGS 의 bom (5.5.x) 에서 graph-java 버전이 낮아서 (18.3) 최신 버전 (19.+)으로 강제 update 해야 한다
     // https://github.com/Netflix/dgs-framework/issues/1281#issuecomment-1284694300
-    const val graphql_java = "19.3"
-    const val graphql_dgs = "5.5.3"
+    const val graphql_java = "20.3"
+    const val graphql_dgs = "7.2.0"
     const val apollo3 = "3.7.4"
 
     const val quarkus = Plugins.Versions.quarkus
@@ -94,19 +94,19 @@ object Versions {
         const val reactive_messaging_http = "1.0.3"
     }
 
-    const val resteasy = "6.2.3.Final"
-    const val mutiny = "2.2.0"
-    const val vertx = "4.3.8"
-    const val camel_quarkus = "2.11.0"
-    const val agroal = "1.16"
+    const val resteasy = "6.2.4.Final"
+    const val mutiny = "2.3.1"
+    const val vertx = "4.4.4"
+    const val camel_quarkus = "2.16.0"
+    const val agroal = "2.2"
 
     const val swagger = "1.6.2"
     const val springdoc_openapi = "1.7.0"
     const val springfox_swagger = "3.0.0"
-    const val problem = "0.27.0"
+    const val problem = "0.29.1"
 
     const val bucket4j = "8.3.0"
-    const val resilience4j = "2.0.2"
+    const val resilience4j = "2.1.0"
     const val netty = "4.1.92.Final"
 
     // https://mvnrepository.com/artifact/com.amazonaws
@@ -121,12 +121,12 @@ object Versions {
     // https://mvnrepository.com/artifact/aws.sdk.kotlin
     const val aws_kotlin = "0.25.0-beta"
 
-    const val grpc = "1.54.1"
+    const val grpc = "1.56.1"
     const val grpc_kotlin = "1.3.0"
-    const val protobuf = "3.22.3"
+    const val protobuf = "3.23.2"
 
     // https://mvnrepository.com/artifact/org.apache.avro/avro
-    const val avro = "1.11.1"
+    const val avro = "1.11.2"
 
     const val feign = "12.3"
     const val httpclient5 = "5.2.1"
@@ -145,28 +145,28 @@ object Versions {
     const val lettuce = "6.2.4.RELEASE"
 
     // 참고: https://github.com/redisson/redisson/issues/4809
-    const val redisson = "3.21.3"
+    const val redisson = "3.22.1"
 
     // NOTE: Hibernate 는 jakarta 버전인 경우 orm, validator 등이 group 에 포함됩니다.
     // NOTE: 이 경우 기존 javax 를 사용하는 버전과 충돌이 생길 수 있으니 조심하세요 
     // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
 
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
-    const val hibernate = "5.6.15.Final"
-    const val hibernate_reactive = "1.1.9.Final"
+    const val hibernate = "6.2.6.Final" // "5.6.15.Final"
+    const val hibernate_reactive = "2.0.2.Final" // "1.1.9.Final"
 
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
-    const val hibernate_validator = "8.0.0.Final"
+    const val hibernate_validator = "8.0.1.Final"
     const val querydsl = "5.0.0"
 
     // https://mvnrepository.com/artifact/io.quarkus.platform/quarkus-blaze-persistence-bom
     const val blaze_persistence = "1.6.8"
 
     // https://github.com/javers/javers
-    const val javers = "6.14.0"
+    const val javers = "7.0.1"
 
-    const val slf4j = "1.7.36"
-    const val logback = "1.2.12"
+    const val slf4j = "2.0.7" // "1.7.36"
+    const val logback = "1.4.8" // "1.2.12"
     const val log4j = "2.20.0"
 
     const val metrics = "4.1.25"
@@ -194,12 +194,12 @@ object Versions {
     const val hazelcast_client = "3.12.13"
 
     // https://mvnrepository.com/artifact/com.datastax.oss/java-driver-core
-    const val cassandra = "4.15.0"
+    const val cassandra = "4.16.0"
     const val scylla_java = "4.13.0.0"
     const val elasticsearch = "8.7.0"
 
-    const val kafka = "3.4.1"
-    const val spring_kafka = "2.9.9"
+    const val kafka = "3.5.0"
+    const val spring_kafka = "3.0.8" // "2.9.9"
 
     const val eclipse_collections = "11.1.0"
     const val jctools = "3.3.0"
@@ -215,7 +215,7 @@ object Versions {
     const val mockito = "3.12.4"
     const val awaitility = "4.2.0"
     const val jmh = "1.36"
-    const val testcontainers = "1.18.2"
+    const val testcontainers = "1.18.3"
     const val jna = "5.13.0"
     const val archunit = "0.21.0"
 
@@ -340,6 +340,7 @@ object Libs {
     const val javax_transaction_api = "javax.transaction:jta:1.1"
     const val javax_validation_api = "javax.validation:validation-api:2.0.1.Final"
     const val javax_ws_rs_api = "javax.ws.rs:javax.ws.rs-api:2.1.1"
+    const val javax_xml_bind = "javax.xml.bind:jaxb-api:2.3.1"
 
     // javax expression
     const val javax_el_api = "javax.el:javax.el-api:3.0.0"
@@ -354,20 +355,21 @@ object Libs {
     const val javamoney_moneta = "org.javamoney:moneta:1.4.2"
 
     // jakarta
-    const val jakarta_activation_api = "jakarta.activation:jakarta.activation-api:2.1.1"
+    const val jakarta_activation_api = "jakarta.activation:jakarta.activation-api:2.1.2"
     const val jakarta_annotation_api = "jakarta.annotation:jakarta.annotation-api:2.1.1"
     const val jakarta_el_api = "jakarta.el:jakarta.el-api:5.0.1"
     const val jakarta_el = "org.glassfish:jakarta.el:5.0.0-M1"
-    const val jakarta_inject_api = "jakarta.inject:jakarta.inject-api:1.0.5"
+    const val jakarta_inject_api = "jakarta.inject:jakarta.inject-api:2.0.1"
     const val jakarta_interceptor_api = "jakarta.interceptor:jakarta.interceptor-api:2.1.0"
     const val jakarta_jms_api = "jakarta.jms:jakarta.jms-api:3.1.0"
-    const val jakarta_json_api = "jakarta.json:jakarta.json-api:1.1.6"
+    const val jakarta_json_api = "jakarta.json:jakarta.json-api:2.1.2"
     const val jakarta_json = "org.glassfish:jakarta.json:2.0.1"
     const val jakarta_persistence_api = "jakarta.persistence:jakarta.persistence-api:3.1.0"
     const val jakarta_servlet_api = "jakarta.servlet:jakarta.servlet-api:6.0.0"
     const val jakarta_transaction_api = "jakarta.transaction:jakarta.transaction-api:2.0.1"
     const val jakarta_validation_api = "jakarta.validation:jakarta.validation-api:3.0.2"
     const val jakarta_ws_rs_api = "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"
+    const val jakarta_xml_bind = "jakarta.xml.bind:jakarta.xml.bind-api:4.0.0"
 
 
     // Apache Commons
@@ -633,7 +635,7 @@ object Libs {
 
     // Bucket4j Spring Boot
     // https://mvnrepository.com/artifact/com.giffing.bucket4j.spring.boot.starter/bucket4j-spring-boot-starter
-    val bucket4j_spring_boot = "com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.8.1"
+    val bucket4j_spring_boot = "com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.9.1"
 
     // Netty
     fun netty(module: String, version: String = Versions.netty) = "io.netty:netty-$module:$version"
@@ -1035,6 +1037,7 @@ object Libs {
     val redisson_spring_data_26 = redisson("redisson-spring-data-26")
     val redisson_spring_data_27 = redisson("redisson-spring-data-27")
     val redisson_spring_data_30 = redisson("redisson-spring-data-30")
+    val redisson_spring_data_31 = redisson("redisson-spring-data-31")
 
     // Cassandra
     fun cassandra(module: String, version: String = Versions.cassandra): String =
@@ -1102,7 +1105,7 @@ object Libs {
     const val vault_java_driver = "com.bettercloud:vault-java-driver:5.1.0"
 
     // Hibernate
-    fun hibernate(module: String) = "org.hibernate:hibernate-$module:${Versions.hibernate}"
+    fun hibernate(module: String) = "org.hibernate.orm:hibernate-$module:${Versions.hibernate}"
     val hibernate_core = hibernate("core")
     val hibernate_jcache = hibernate("jcache")
     val hibernate_micrometer = hibernate("micrometer")
@@ -1116,7 +1119,7 @@ object Libs {
     const val javassist = "org.javassist:javassist:3.29.2-GA"
 
     // Validators
-    const val hibernate_validator = "org.hibernate:hibernate-validator:${Versions.hibernate_validator}"
+    const val hibernate_validator = "org.hibernate.validator:hibernate-validator:${Versions.hibernate_validator}"
     const val hibernate_validator_annotation_processor =
         "org.hibernate:hibernate-validator-annotation-processor:${Versions.hibernate_validator}"
 
@@ -1176,13 +1179,14 @@ object Libs {
     val blaze_persistence_integration_entity_view_spring = blazePersistenceIntegration("entity-view-spring")
 
     // Javers (https://javers.org - Java Audit library)
-    const val javers_core = "org.javers:javers-core:${Versions.javers}"
-    const val javers_spring = "org.javers:javers-spring:${Versions.javers}"
-    const val javers_spring_jpa = "org.javers:javers-spring-jpa:${Versions.javers}"
-    const val javers_spring_mongo = "org.javers:javers-spring-mongo:${Versions.javers}"
-    const val javers_persistence_mongo = "org.javers:javers-persistence-mongo:${Versions.javers}"
-    const val javers_persistence_sql = "org.javers:javers-persistence-sql:${Versions.javers}"
-    const val javers_spring_boot_starter_sql = "org.javers:javers-spring-boot-starter-sql:${Versions.javers}"
+    fun javers(module: String) = "org.javers:javers-$module:${Versions.javers}"
+    val javers_core = javers("core")
+    val javers_spring = javers("spring")
+    val javers_spring_jpa = javers("spring-jpa")
+    val javers_spring_mongo = javers("spring-mongo")
+    val javers_persistence_mongo = javers("persistence-mongo")
+    val javers_persistence_sql = javers("persistence-sql")
+    val javers_spring_boot_starter_sql = javers("spring-boot-starter-sql")
 
     // MyBatis Mapping 에 사용한다
     const val byte_buddy = "net.bytebuddy:byte-buddy:1.14.4"

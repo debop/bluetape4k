@@ -4,8 +4,8 @@ import io.bluetape4k.codec.decodeBase64ByteArray
 import io.bluetape4k.codec.encodeBase64ByteArray
 import io.bluetape4k.io.serializer.BinarySerializer
 import io.bluetape4k.io.serializer.BinarySerializers
-import javax.persistence.AttributeConverter
-import javax.persistence.Converter
+import jakarta.persistence.AttributeConverter
+import jakarta.persistence.Converter
 
 /**
  * 객체를 직렬화하여 Base64 인코딩을 거쳐 ByteArray 로 변환해서 DB에 저장합니다.

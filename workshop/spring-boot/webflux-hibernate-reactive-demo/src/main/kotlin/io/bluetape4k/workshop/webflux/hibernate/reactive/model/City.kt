@@ -3,10 +3,10 @@ package io.bluetape4k.workshop.webflux.hibernate.reactive.model
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.model.LongJpaEntity
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.Column
-import javax.persistence.Entity
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
 
 @Entity
 @Access(AccessType.FIELD)

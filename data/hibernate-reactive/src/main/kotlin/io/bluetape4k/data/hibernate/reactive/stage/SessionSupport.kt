@@ -6,7 +6,7 @@ import org.hibernate.reactive.common.Identifier
 import org.hibernate.reactive.common.ResultSetMapping
 import org.hibernate.reactive.stage.Stage
 import java.util.concurrent.CompletionStage
-import javax.persistence.EntityGraph
+import jakarta.persistence.EntityGraph
 
 inline fun <reified T> Stage.Session.findAs(id: java.io.Serializable): CompletionStage<T> =
     find(T::class.java, id)
@@ -23,19 +23,19 @@ inline fun <reified T> Stage.Session.findAs(naturalId: Identifier<T>): Completio
 inline fun <reified T> Stage.Session.getReferenceAs(id: java.io.Serializable): T =
     getReference(T::class.java, id)
 
-inline fun <reified R> Stage.Session.createQueryAs(queryString: String): Stage.Query<R> =
+inline fun <reified R> Stage.Session.createQueryAs(queryString: String): Stage.SelectionQuery<R> =
     createQuery(queryString, R::class.java)
 
-inline fun <reified R> Stage.Session.createNamedQueryAs(queryName: String): Stage.Query<R> =
+inline fun <reified R> Stage.Session.createNamedQueryAs(queryName: String): Stage.SelectionQuery<R> =
     createNamedQuery(queryName, R::class.java)
 
-inline fun <reified R> Stage.Session.createNativeQueryAs(queryString: String): Stage.Query<R> =
+inline fun <reified R> Stage.Session.createNativeQueryAs(queryString: String): Stage.SelectionQuery<R> =
     createNativeQuery(queryString, R::class.java)
 
 inline fun <reified R> Stage.Session.createNativeQueryAs(
     queryString: String,
     affectedEntities: AffectedEntities,
-): Stage.Query<R> =
+): Stage.SelectionQuery<R> =
     createNativeQuery(queryString, R::class.java, affectedEntities)
 
 inline fun <reified T> Stage.Session.getResultSetMappingAs(mappingName: String): ResultSetMapping<T> =

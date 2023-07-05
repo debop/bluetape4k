@@ -2,8 +2,8 @@ package io.bluetape4k.data.hibernate.converters
 
 import io.bluetape4k.io.cryptography.encrypt.Encryptor
 import io.bluetape4k.io.cryptography.encrypt.Encryptors
-import javax.persistence.AttributeConverter
-import javax.persistence.Converter
+import jakarta.persistence.AttributeConverter
+import jakarta.persistence.Converter
 
 /**
  * 문자열을 암호화해서 문자열로 저장하는 JPA Converter 입니다.
