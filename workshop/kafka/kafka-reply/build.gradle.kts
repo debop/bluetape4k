@@ -23,7 +23,6 @@ dependencies {
     compileOnly(Libs.springData("commons"))
 
     api(project(":bluetape4k-infra-kafka"))
-    api(project(":bluetape4k-spring-kafka"))
     implementation(project(":bluetape4k-testcontainers"))
     implementation(Libs.testcontainers_kafka)
 
@@ -33,6 +32,7 @@ dependencies {
     api(Libs.jackson_module_kotlin)
 
     // Coroutines
+    api(project(":bluetape4k-coroutines"))
     implementation(Libs.kotlinx_coroutines_core)
     implementation(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
