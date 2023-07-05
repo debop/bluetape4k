@@ -4,9 +4,9 @@ plugins {
     id(Plugins.spring_boot)
 }
 
-//springBoot {
-//    mainClass.set("io.bluetape4k.workshop.kafka.KafkaApplicationKt")
-//}
+springBoot {
+    mainClass.set("io.bluetape4k.workshop.kafka.KafkaApplicationKt")
+}
 
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())

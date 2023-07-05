@@ -4,6 +4,7 @@ import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.WebClient
@@ -21,6 +22,7 @@ class PingPongApplicationTest {
 
     val client = WebClient.builder().baseUrl("http://localhost:8080").build()
 
+    @Disabled("KafkaApplication 을 수동으로 실행시켜야 합니다.")
     @Test
     fun `call ping and then return pong`() = runTest {
         client.get()
