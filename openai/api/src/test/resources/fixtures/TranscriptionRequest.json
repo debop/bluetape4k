@@ -1,0 +1,11 @@
+{
+  "audio": {
+    "name": "audio-name",
+    "source": "audio-file.mp4"
+  },
+  "model": "gpt-3.5-turbo",
+  "prompt": "prompt",
+  "response_format": "json",
+  "temperature": 1.5,
+  "language": "english"
+}

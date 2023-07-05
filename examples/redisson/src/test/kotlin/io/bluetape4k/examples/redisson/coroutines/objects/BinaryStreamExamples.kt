@@ -44,6 +44,6 @@ class BinaryStreamExamples: AbstractRedissonCoroutineTest() {
         val contentBytes2 = randomString().toUtf8Bytes()
         stream.compareAndSetAsync(contentBytes, contentBytes2).awaitSuspending().shouldBeTrue()
 
-        stream.deleteAsync().awaitSuspending()
+        stream.deleteAsync().awaitSuspending().shouldBeTrue()
     }
 }

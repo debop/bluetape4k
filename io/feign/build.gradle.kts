@@ -35,6 +35,7 @@ dependencies {
     api(Libs.feign_kotlin)
     api(Libs.feign_slf4j)
     api(Libs.feign_jackson)
+    api(Libs.feign_reactive_wrappers)
     compileOnly(Libs.feign_micrometer)
     compileOnly(Libs.feign_jaxrs)
     compileOnly(Libs.feign_jaxrs2)
