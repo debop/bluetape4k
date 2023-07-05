@@ -11,9 +11,9 @@ plugins {
 // 이렇게 해야 association의 proxy 가 만들어집니다.
 // https://kotlinlang.org/docs/reference/compiler-plugins.html
 allOpen {
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.Embeddable")
-    annotation("javax.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.persistence.MappedSuperclass")
 }
 
 kapt {

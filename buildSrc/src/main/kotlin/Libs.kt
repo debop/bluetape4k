@@ -113,17 +113,17 @@ object Versions {
     const val aws = "1.12.459"
 
     // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
-    const val aws2 = "2.20.69"
+    const val aws2 = "2.20.98"
 
     // https://mvnrepository.com/artifact/software.amazon.awssdk.crt
-    const val aws2_crt = "0.21.17"
+    const val aws2_crt = "0.22.2"
 
     // https://mvnrepository.com/artifact/aws.sdk.kotlin
-    const val aws_kotlin = "0.25.0-beta"
+    const val aws_kotlin = "0.28.0-beta"
 
-    const val grpc = "1.56.1"
-    const val grpc_kotlin = "1.3.0"
-    const val protobuf = "3.23.2"
+    const val grpc = "1.56.1"           // https://mvnrepository.com/artifact/io.grpc/grpc-stub
+    const val grpc_kotlin = "1.3.0"     // https://mvnrepository.com/artifact/io.grpc/grpc-kotlin-stub
+    const val protobuf = "3.23.2"       // https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java
 
     // https://mvnrepository.com/artifact/org.apache.avro/avro
     const val avro = "1.11.2"

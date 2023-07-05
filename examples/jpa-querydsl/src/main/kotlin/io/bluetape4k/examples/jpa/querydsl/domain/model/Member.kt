@@ -4,13 +4,13 @@ import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.core.requireNotEmpty
 import io.bluetape4k.data.hibernate.model.LongJpaEntity
 import io.bluetape4k.support.hashOf
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.ManyToOne
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.ManyToOne
 
 @Entity
 @Access(AccessType.FIELD)

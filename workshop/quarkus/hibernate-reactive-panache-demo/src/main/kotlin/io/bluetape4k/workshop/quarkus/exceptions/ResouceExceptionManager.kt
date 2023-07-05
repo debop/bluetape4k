@@ -27,7 +27,7 @@ class ResouceExceptionManager: ExceptionMapper<Exception> {
         val node = objectMapper.createObjectNode()
         node.put("exceptionType", exception.javaClass.name)
         node.put("code", code)
-        node.put("producer", "HyperConnect ResourceExceptionManager")
+        node.put("producer", "Bluetape4k ResourceExceptionManager")
 
         exception.message?.let { node.put("error", it) }
 

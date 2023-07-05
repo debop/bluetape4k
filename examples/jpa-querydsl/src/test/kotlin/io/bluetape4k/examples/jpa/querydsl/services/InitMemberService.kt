@@ -4,10 +4,10 @@ import io.bluetape4k.examples.jpa.querydsl.domain.model.Member
 import io.bluetape4k.examples.jpa.querydsl.domain.model.Team
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import jakarta.persistence.EntityManager
+import jakarta.persistence.PersistenceContext
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import javax.persistence.EntityManager
-import javax.persistence.PersistenceContext
 
 @Component
 class InitMemberService {

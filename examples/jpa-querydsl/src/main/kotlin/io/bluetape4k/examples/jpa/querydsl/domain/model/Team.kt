@@ -3,10 +3,10 @@ package io.bluetape4k.examples.jpa.querydsl.domain.model
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.core.requireNotEmpty
 import io.bluetape4k.data.hibernate.model.LongJpaEntity
-import javax.persistence.Access
-import javax.persistence.AccessType
-import javax.persistence.Entity
-import javax.persistence.OneToMany
+import jakarta.persistence.Access
+import jakarta.persistence.AccessType
+import jakarta.persistence.Entity
+import jakarta.persistence.OneToMany
 
 @Entity
 @Access(AccessType.FIELD)

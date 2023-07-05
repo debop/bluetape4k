@@ -15,10 +15,12 @@ allOpen {
 //    annotation("javax.ws.rs.Path")
 //    annotation("javax.enterprise.context.ApplicationScoped")
 //    annotation("javax.persistence.Entity")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.persistence.MappedSuperclass")
+
     annotation("jakarta.ws.rs.Path")
     annotation("jakarta.enterprise.context.ApplicationScoped")
-    annotation("jakarta.persistence.Entity")
-    annotation("jakarta.persistence.MappedSuperclass")
     annotation("io.quarkus.test.junit.QuarkusTest")
 }
 
@@ -59,8 +61,8 @@ dependencies {
     compileOnly(Libs.camel_quarkus_kotlin)
 
     // Coroutines
+    api(project(":bluetape4k-coroutines"))
     api(Libs.kotlinx_coroutines_core)
-    compileOnly(Libs.kotlinx_coroutines_jdk8)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // Testing

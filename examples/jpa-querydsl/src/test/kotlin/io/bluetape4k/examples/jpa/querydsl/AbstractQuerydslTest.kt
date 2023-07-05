@@ -2,14 +2,13 @@ package io.bluetape4k.examples.jpa.querydsl
 
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
+import jakarta.persistence.EntityManager
+import jakarta.persistence.EntityManagerFactory
 import net.datafaker.Faker
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
-import javax.persistence.EntityManager
-import javax.persistence.EntityManagerFactory
-
 
 /**
  * `@DataJpaTest`를 사용하려면 SpringBootApplication 이 정의되어 있어야 합니다 (see [SpringDataJpaTestApplication])
@@ -61,7 +60,7 @@ import javax.persistence.EntityManagerFactory
 
         // Caching Providers (hibernate-jcache 와 caffeine-jcache 를 참조해야 합니다)
         "spring.jpa.properties.hibernate.cache.region.factory_class=jcache",
-        "spring.jpa.properties.hibernate.javax.cache.provider=com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider",
+        "spring.jpa.properties.hibernate.jakarta.cache.provider=com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider",
 
 
         // JPA Batch Insert (https://cheese10yun.github.io/jpa-batch-insert/)

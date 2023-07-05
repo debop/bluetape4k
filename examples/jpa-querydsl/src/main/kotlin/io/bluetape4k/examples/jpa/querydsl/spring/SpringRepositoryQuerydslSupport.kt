@@ -4,6 +4,9 @@ import com.querydsl.core.types.dsl.PathBuilder
 import com.querydsl.jpa.impl.JPAQuery
 import com.querydsl.jpa.impl.JPAQueryFactory
 import io.bluetape4k.core.assertNotNull
+import jakarta.annotation.PostConstruct
+import jakarta.persistence.EntityManager
+import jakarta.persistence.PersistenceContext
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport
@@ -11,9 +14,6 @@ import org.springframework.data.jpa.repository.support.Querydsl
 import org.springframework.data.querydsl.SimpleEntityPathResolver
 import org.springframework.data.support.PageableExecutionUtils
 import org.springframework.stereotype.Repository
-import javax.annotation.PostConstruct
-import javax.persistence.EntityManager
-import javax.persistence.PersistenceContext
 
 @Repository
 class SpringRepositoryQuerydslSupport(private val entityClass: Class<*>) {

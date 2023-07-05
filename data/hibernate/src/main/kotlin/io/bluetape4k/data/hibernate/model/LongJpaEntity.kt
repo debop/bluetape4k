@@ -11,7 +11,7 @@ import jakarta.persistence.MappedSuperclass
 @MappedSuperclass
 abstract class LongJpaEntity: AbstractJpaEntity<Long>() {
 
-    @field:Id
-    @field:GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     override var id: Long? = null
 }

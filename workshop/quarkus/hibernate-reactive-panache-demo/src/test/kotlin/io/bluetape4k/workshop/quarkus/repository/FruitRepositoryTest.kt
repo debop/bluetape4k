@@ -7,13 +7,13 @@ import io.bluetape4k.workshop.quarkus.model.Fruit
 import io.quarkus.test.junit.QuarkusTest
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.vertx.mutiny.core.Vertx
+import jakarta.inject.Inject
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
 import org.hibernate.reactive.mutiny.Mutiny
 import org.junit.jupiter.api.Test
 import java.time.Duration
-import jakarta.inject.Inject
 import kotlin.random.Random
 
 @QuarkusTest
