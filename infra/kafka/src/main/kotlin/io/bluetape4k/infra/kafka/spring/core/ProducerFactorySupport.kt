@@ -1,4 +1,4 @@
-package io.bluetape4k.spring.kafka.core
+package io.bluetape4k.infra.kafka.spring.core
 
 import org.springframework.kafka.core.KafkaResourceHolder
 import org.springframework.kafka.core.ProducerFactory

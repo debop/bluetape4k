@@ -1,4 +1,4 @@
-package io.bluetape4k.spring.kafka.core
+package io.bluetape4k.infra.kafka.spring.core
 
 import io.bluetape4k.coroutines.flow.async
 import io.bluetape4k.support.asDouble

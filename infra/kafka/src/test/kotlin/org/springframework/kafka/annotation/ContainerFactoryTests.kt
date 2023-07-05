@@ -1,6 +1,6 @@
 package org.springframework.kafka.annotation
 
-import io.bluetape4k.spring.kafka.test.utils.getPropertyValue
+import io.bluetape4k.infra.kafka.spring.test.utils.getPropertyValue
 import io.mockk.mockk
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo

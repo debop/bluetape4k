@@ -1,7 +1,7 @@
 package org.springframework.kafka.streams
 
+import io.bluetape4k.infra.kafka.spring.test.utils.getPropertyValue
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.spring.kafka.test.utils.getPropertyValue
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.uninitialized
 import io.mockk.mockk

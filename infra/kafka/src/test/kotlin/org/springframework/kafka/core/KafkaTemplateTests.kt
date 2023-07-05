@@ -1,10 +1,10 @@
 package org.springframework.kafka.core
 
+import io.bluetape4k.infra.kafka.spring.test.utils.consumerProps
+import io.bluetape4k.infra.kafka.spring.test.utils.getSingleRecord
+import io.bluetape4k.infra.kafka.spring.test.utils.producerProps
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.spring.kafka.test.utils.consumerProps
-import io.bluetape4k.spring.kafka.test.utils.getSingleRecord
-import io.bluetape4k.spring.kafka.test.utils.producerProps
 import io.bluetape4k.spring.messaging.support.message
 import io.bluetape4k.support.toUtf8String
 import io.bluetape4k.support.uninitialized

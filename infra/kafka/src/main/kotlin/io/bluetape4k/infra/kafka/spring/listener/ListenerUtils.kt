@@ -1,4 +1,4 @@
-package io.bluetape4k.spring.kafka.listener
+package io.bluetape4k.infra.kafka.spring.listener
 
 import org.apache.kafka.clients.consumer.OffsetAndMetadata
 import org.springframework.kafka.listener.ListenerType

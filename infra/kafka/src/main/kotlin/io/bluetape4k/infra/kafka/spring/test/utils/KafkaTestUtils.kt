@@ -1,4 +1,4 @@
-package io.bluetape4k.spring.kafka.test.utils
+package io.bluetape4k.infra.kafka.spring.test.utils
 
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord

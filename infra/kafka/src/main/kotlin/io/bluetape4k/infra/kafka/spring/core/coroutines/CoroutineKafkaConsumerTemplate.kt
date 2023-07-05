@@ -1,4 +1,4 @@
-package io.bluetape4k.spring.kafka.core.coroutines
+package io.bluetape4k.infra.kafka.spring.core.coroutines
 
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.CoroutineScope
@@ -83,8 +83,8 @@ class CoroutineKafkaConsumerTemplate<K, V>(
         return receiver.receiveExactlyOnce(transactionManager).map { it.asFlow() }.asFlow()
     }
 
-    suspend fun <T> doOnConsumer(function: (Consumer<K, V>) -> T): T {
-        return receiver.doOnConsumer(function).awaitSingle()
+    private suspend inline fun <T> doOnConsumer(crossinline function: (Consumer<K, V>) -> T): T {
+        return receiver.doOnConsumer { function(it) }.awaitSingle()
     }
 
     suspend fun assignment(): Set<TopicPartition> {

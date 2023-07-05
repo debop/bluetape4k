@@ -1,4 +1,4 @@
-package io.bluetape4k.spring.kafka.listener.adapter
+package io.bluetape4k.infra.kafka.spring.listener.adapter
 
 import org.springframework.kafka.listener.adapter.AdapterUtils
 import org.springframework.kafka.listener.adapter.ConsumerRecordMetadata
