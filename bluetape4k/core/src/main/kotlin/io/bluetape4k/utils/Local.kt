@@ -29,6 +29,9 @@ object Local: KLogging() {
         threadLocal.set(saved)
     }
 
+    @JvmName("getObject")
+    operator fun get(key: Any): Any? = storage[key]
+
     operator fun <T: Any> get(key: Any): T? = storage[key] as? T
 
     operator fun <T: Any> set(key: Any, value: T?) {
@@ -56,7 +59,7 @@ internal class LocalStorage<T: Any>: Serializable {
 
     private val key: UUID = UUID.randomUUID()
 
-    fun get(): T? = Local[key]
+    fun get(): T? = Local.get<T>(key)
 
     fun set(value: T?) {
         Local[key] = value

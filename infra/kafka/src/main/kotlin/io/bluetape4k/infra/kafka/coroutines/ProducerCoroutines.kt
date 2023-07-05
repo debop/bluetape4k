@@ -2,7 +2,6 @@ package io.bluetape4k.infra.kafka.coroutines
 
 import io.bluetape4k.coroutines.flow.async
 import io.bluetape4k.coroutines.support.awaitSuspending
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collectLatest
@@ -46,8 +45,8 @@ suspend fun <K, V> Producer<K, V>.sendFlow(records: Flow<ProducerRecord<K, V>>):
  */
 suspend fun <K, V> Producer<K, V>.sendFlowParallel(
     records: Flow<ProducerRecord<K, V>>,
-): RecordMetadata = coroutineScope {
-    records
+): RecordMetadata {
+    return records
         .buffer()
         .async {
             sendSuspending(it)

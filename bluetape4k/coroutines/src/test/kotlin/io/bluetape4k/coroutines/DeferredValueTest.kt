@@ -21,7 +21,7 @@ class DeferredValueTest {
 
     @Test
     fun `값 계산은 async로 시작합니다`() = runTest {
-        val x = deferredValueOf {
+        val deferredValue = deferredValueOf {
             log.trace { "Calc deferred value ... " }
             delay(100)
             System.currentTimeMillis()
@@ -29,58 +29,59 @@ class DeferredValueTest {
         val createdTime = System.currentTimeMillis()
         yield()
 
-        x.isActive.shouldBeTrue()
-        x.isCompleted.shouldBeFalse()
+        deferredValue.isActive.shouldBeTrue()
+        deferredValue.isCompleted.shouldBeFalse()
 
         // 초기화 진행 후 반환합니다. 이미 초기화가 끝난 후에는 바로 반환합니다.
-        x.value shouldBeGreaterThan createdTime
+        deferredValue.value shouldBeGreaterThan createdTime
 
-        x.isActive.shouldBeFalse()
-        x.isCompleted.shouldBeTrue()
+        deferredValue.isActive.shouldBeFalse()
+        deferredValue.isCompleted.shouldBeTrue()
     }
 
     @Test
     fun `map deferred value`() = runTest {
-        val x1 = deferredValueOf {
+        val deferred1 = deferredValueOf {
             log.trace { "Calc deferred value ... " }
             delay(100)
             42
         }
-        val x2 = x1.map {
+        val deferred2 = deferred1.map {
             log.trace { "Map deferred value ... " }
             it * 2
         }
 
-        x1.isCompleted.shouldBeFalse()
-        x2.isCompleted.shouldBeFalse()
+        deferred1.isCompleted.shouldBeFalse()
+        deferred2.isCompleted.shouldBeFalse()
 
-        x2.await() shouldBeEqualTo 84
+        deferred2.await() shouldBeEqualTo 42 * 2
+        deferred1.await() shouldBeEqualTo 42
 
-        x1.isCompleted.shouldBeTrue()
-        x2.isCompleted.shouldBeTrue()
+        deferred1.isCompleted.shouldBeTrue()
+        deferred2.isCompleted.shouldBeTrue()
     }
 
     @Test
     fun `flatmap deferred value`() = runTest {
-        val x1 = deferredValueOf {
+        val deferred1 = deferredValueOf {
             log.trace { "Calc deferred value ... " }
             delay(100)
 
             deferredValueOf { 42 }
         }
-        val x2 = x1.flatMap { r ->
+        val deferred2 = deferred1.flatMap { r ->
             r.map {
                 log.trace { "Map deferred value ... " }
                 it * 2
             }
         }
 
-        x1.isCompleted.shouldBeFalse()
-        x2.isCompleted.shouldBeFalse()
+        deferred1.isCompleted.shouldBeFalse()
+        deferred2.isCompleted.shouldBeFalse()
 
-        x2.await() shouldBeEqualTo 84
+        deferred2.await() shouldBeEqualTo 42 * 2
 
-        x1.isCompleted.shouldBeTrue()
-        x2.isCompleted.shouldBeTrue()
+        deferred1.isCompleted.shouldBeTrue()
+        deferred2.isCompleted.shouldBeTrue()
     }
 }

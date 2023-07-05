@@ -1,5 +1,6 @@
 package io.bluetape4k.codec
 
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
@@ -48,5 +49,19 @@ abstract class AbstractStringEncoderTest {
         val decoded = encoder.decode(encoded)
 
         decoded shouldBeEqualTo bytes
+    }
+
+    @Test
+    fun `encode decode in multi-thread`() {
+        val bytes = TestBytes.randomBytes(4096)
+
+        MultithreadingTester()
+            .numThreads(16)
+            .roundsPerThread(4)
+            .add {
+                val converted = encoder.decode(encoder.encode(bytes))
+                converted shouldBeEqualTo bytes
+            }
+            .run()
     }
 }

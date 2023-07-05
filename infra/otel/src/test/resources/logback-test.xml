@@ -25,6 +25,6 @@
         <appender-ref ref="Otel"/>
     </root>
 
-    <logger name="io.bluetake4k.infra.otel" level="DEBUG"/>
+    <logger name="io.bluetape4k.infra.otel" level="DEBUG"/>
 
 </configuration>

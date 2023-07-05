@@ -6,6 +6,7 @@ import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import org.redisson.api.GeoEntry
 import org.redisson.api.GeoPosition
@@ -72,6 +73,6 @@ class GeoExamples: AbstractRedissonCoroutineTest() {
             log.debug { "city=$city, position=$position" }
         }
 
-        geo.deleteAsync().awaitSuspending()
+        geo.deleteAsync().awaitSuspending().shouldBeTrue()
     }
 }

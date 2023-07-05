@@ -64,6 +64,7 @@ dependencies {
     // Kafka
     compileOnly(Libs.testcontainers_kafka)
     compileOnly(Libs.kafka_clients)
+    compileOnly(Libs.spring_kafka)
 
     // Pulsar
     compileOnly(Libs.testcontainers_pulsar)

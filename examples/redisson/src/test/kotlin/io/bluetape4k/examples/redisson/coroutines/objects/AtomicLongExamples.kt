@@ -32,7 +32,7 @@ class AtomicLongExamples: AbstractRedissonCoroutineTest() {
         jobs.joinAll()
 
         counter.getAsync().awaitSuspending() shouldBeEqualTo TEST_COUNT.toLong()
-        counter.deleteAsync().awaitSuspending()
+        counter.deleteAsync().awaitSuspending().shouldBeTrue()
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -53,7 +53,7 @@ class AtomicLongExamples: AbstractRedissonCoroutineTest() {
         counter.getAndDecrementAsync().awaitSuspending() shouldBeEqualTo 45L
         counter.getAndIncrementAsync().awaitSuspending() shouldBeEqualTo 44L
 
-        counter.deleteAsync().awaitSuspending()
+        counter.deleteAsync().awaitSuspending().shouldBeTrue()
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -69,7 +69,7 @@ class AtomicLongExamples: AbstractRedissonCoroutineTest() {
             .run()
 
         counter.async.awaitSuspending() shouldBeEqualTo 8 * 32L
-        counter.deleteAsync().awaitSuspending()
+        counter.deleteAsync().awaitSuspending().shouldBeTrue()
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -85,6 +85,6 @@ class AtomicLongExamples: AbstractRedissonCoroutineTest() {
             .run()
 
         counter.get() shouldBeEqualTo 32 * 8L
-        counter.deleteAsync().get()
+        counter.delete().shouldBeTrue()
     }
 }

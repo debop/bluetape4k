@@ -55,10 +55,15 @@ class RedissonCoLeaderElection(
             // val lockId = redissonClient.getLockId(lockName)
 
             // Redis IO 를 줄이기 위해 Default Snowflake 를 사용합니다.
-            val lockId = Snowfloker.Default.nextId()
+            val lockId = Snowfloker.Global.nextId()
 
-            val acquired = lock.tryLockAsync(waitTimeMills, leaseTimeMills, TimeUnit.MILLISECONDS, lockId)
-                .awaitSuspending()
+            val acquired = lock.tryLockAsync(
+                waitTimeMills,
+                leaseTimeMills,
+                TimeUnit.MILLISECONDS,
+                lockId
+            ).awaitSuspending()
+
             if (acquired) {
                 log.debug { "Leader로 승격되어 작업을 수행합니다. lock=$lockName, lockId=$lockId" }
                 try {

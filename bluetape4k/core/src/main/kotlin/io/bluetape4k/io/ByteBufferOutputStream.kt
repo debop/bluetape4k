@@ -15,7 +15,7 @@ open class ByteBufferOutputStream private constructor(
     companion object: KLogging() {
         @JvmStatic
         operator fun invoke(capacity: Int = DEFAULT_BUFFER_SIZE): ByteBufferOutputStream {
-            return ByteBufferOutputStream(ByteBuffer.allocate(capacity))
+            return ByteBufferOutputStream(ByteBuffer.allocateDirect(capacity))
         }
 
         @JvmStatic

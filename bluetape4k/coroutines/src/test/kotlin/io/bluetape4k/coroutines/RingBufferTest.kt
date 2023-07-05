@@ -1,8 +1,10 @@
 package io.bluetape4k.coroutines
 
 import io.bluetape4k.coroutines.flow.extensions.bufferedSliding
+import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.single
@@ -29,6 +31,22 @@ class RingBufferTest {
         buffer.forEach {
             log.debug { it }
         }
+    }
+
+    @Test
+    fun `push items in multi-jobs`() = runTest {
+        val buffer = io.bluetape4k.coroutines.RingBuffer(16, Double.NaN)
+        val counter = atomic(0)
+
+        MultiJobTester()
+            .numThreads(8)
+            .roundsPerThread(2)
+            .add {
+                buffer.push(counter.incrementAndGet().toDouble())
+            }
+            .run()
+
+        buffer.toList().sortedBy { it } shouldBeEqualTo List(16) { (it + 1).toDouble() }
     }
 
     @Test

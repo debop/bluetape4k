@@ -15,9 +15,7 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Eomi
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
 import io.bluetape4k.tokenizer.korean.utils.koreanContains
-import kotlinx.coroutines.runBlocking
 import java.io.Serializable
-import java.util.regex.MatchResult
 import java.util.regex.Matcher
 
 /**
@@ -39,9 +37,26 @@ object KoreanNormalizer: KLogging(), Serializable {
     private data class Segment(val text: String, val matchData: MatchResult?)
 
     suspend fun normalize(input: CharSequence): CharSequence {
-        return EXTENTED_KOREAN_REGEX.replace(input) { m ->
-            runBlocking {
-                normalizeKoreanChunk(m.groupValues.first())
+//        return EXTENTED_KOREAN_REGEX.replace(input) { m ->
+//            runBlocking {
+//                normalizeKoreanChunk(m.groupValues.first())
+//            }
+//        }
+        var match: MatchResult? = EXTENTED_KOREAN_REGEX.find(input) ?: return input.toString()
+
+        var lastStart = 0
+        val length = input.length
+        return buildString(length) {
+            do {
+                val foundMatch: MatchResult = match!!
+                append(input, lastStart, foundMatch.range.first)
+                append(normalizeKoreanChunk(foundMatch.groupValues.first()))
+                lastStart = foundMatch.range.last + 1
+                match = foundMatch.next()
+            } while (lastStart < length && match != null)
+
+            if (lastStart < length) {
+                append(input, lastStart, length)
             }
         }
     }
@@ -79,19 +94,16 @@ object KoreanNormalizer: KLogging(), Serializable {
     }
 
     fun correctTypo(chunk: CharSequence): CharSequence {
+        var output = chunk.toString()
 
-        var output = chunk
-
-        KoreanDictionaryProvider.typoDictionaryByLength.entries
-            .forEach { (wordLen: Int, typoMap: Map<String, String>) ->
-                output.sliding(wordLen).forEach { slice ->
-                    if (typoMap.containsKey(slice)) {
-                        log.debug { "Typo check: $slice -> ${typoMap[slice]}" }
-                        output =
-                            output.toString().replace(slice.toString(), typoMap[slice].toString(), ignoreCase = true)
-                    }
+        KoreanDictionaryProvider.typoDictionaryByLength.entries.forEach { (wordLen: Int, typoMap: Map<String, String>) ->
+            output.sliding(wordLen).forEach { slice ->
+                if (typoMap.containsKey(slice)) {
+                    log.debug { "Typo check: $slice -> ${typoMap[slice]}" }
+                    output = output.replace(slice, typoMap[slice].toString(), ignoreCase = true)
                 }
             }
+        }
 
         return output
     }
@@ -106,12 +118,12 @@ object KoreanNormalizer: KLogging(), Serializable {
 
         fun isExceptional(): Boolean =
             koreanContains(Noun, chunk) ||
-                koreanContains(Conjunction, chunk) ||
-                koreanContains(Adverb, chunk) ||
-                koreanContains(Noun, lastTwo) ||
-                lastTwoHead < '가' ||
-                lastTwoHead > '힣' ||
-                CODA_N_EXCPETION.contains(lastTwoHead)
+            koreanContains(Conjunction, chunk) ||
+            koreanContains(Adverb, chunk) ||
+            koreanContains(Noun, lastTwo) ||
+            lastTwoHead < '가' ||
+            lastTwoHead > '힣' ||
+            CODA_N_EXCPETION.contains(lastTwoHead)
 
         if (isExceptional()) {
             return chunk
@@ -128,8 +140,8 @@ object KoreanNormalizer: KLogging(), Serializable {
             .append(composeHangul(hc.onset, hc.vowel))
 
         val needNewHead = hc.coda == 'ㄴ' &&
-            last in CODA_N_LAST_CHAR &&
-            koreanContains(Noun, newHead)
+                          last in CODA_N_LAST_CHAR &&
+                          koreanContains(Noun, newHead)
         return if (needNewHead) {
             newHead.append("인").append(last).toString()
         } else {
@@ -142,8 +154,8 @@ object KoreanNormalizer: KLogging(), Serializable {
         val toNormalize = m.groupValues[2]
 
         val isNormalized = koreanContains(Noun, chunk) ||
-            koreanContains(Eomi, chunk.takeLast(1)) ||
-            koreanContains(Eomi, chunk.takeLast(2))
+                           koreanContains(Eomi, chunk.takeLast(1)) ||
+                           koreanContains(Eomi, chunk.takeLast(2))
 
         val normalizedChunk = if (isNormalized) chunk else normalizeEmotionAttachedChunk(chunk, toNormalize)
 
@@ -165,9 +177,9 @@ object KoreanNormalizer: KLogging(), Serializable {
 
         fun hasSecondToLastDecomposed(): Boolean =
             hc.codaIsEmpty &&
-                secondToLastDecomposed != null &&
-                hc.vowel == toNormalize[0] &&
-                Hangul.CODA_MAP.containsKey(hc.onset)
+            secondToLastDecomposed != null &&
+            hc.vowel == toNormalize[0] &&
+            Hangul.CODA_MAP.containsKey(hc.onset)
 
         if (hc.coda in charArrayOf('ㅋ', 'ㅎ')) {
             return buildString {

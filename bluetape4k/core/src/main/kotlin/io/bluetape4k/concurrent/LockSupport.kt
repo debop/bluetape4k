@@ -1,7 +1,12 @@
 package io.bluetape4k.concurrent
 
+import java.time.Duration
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
+import kotlin.concurrent.write
 
 /**
  * [CountDownLatch]를 이용하여 `operation`을 수행하고, 대기합니다.
@@ -19,11 +24,21 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
  * @param operation [@kotlin.ExtensionFunctionType] Function1<CountDownLatch, T>
  * @return T
  */
-inline fun <T> withLatch(count: Int = 1, operation: CountDownLatch.() -> T): T {
+inline fun <T> withLatch(count: Int = 1, crossinline operation: CountDownLatch.() -> T): T {
     val latch = CountDownLatch(count)
-    val result: T = latch.operation()
+    val result = futureOf { latch.operation() }
     latch.await()
-    return result
+    return result.get()
+}
+
+inline fun <T> withLatch(count: Int = 1, timeout: Duration, crossinline operation: CountDownLatch.() -> T): T {
+    val latch = CountDownLatch(count)
+    val result = futureOf { latch.operation() }
+    return if (latch.await(timeout.toMillis(), TimeUnit.MILLISECONDS)) {
+        result.get()
+    } else {
+        throw TimeoutException("operation is timeout")
+    }
 }
 
 /**
@@ -35,18 +50,14 @@ inline fun <T> withLatch(count: Int = 1, operation: CountDownLatch.() -> T): T {
  *     // do work
  * }
  * ```
+ * @see [ReentrantReadWriteLock.read]
  *
  * @param block Function0<T>
  * @return T
  */
+@Deprecated("use read", replaceWith = ReplaceWith("this.read(block)"))
 inline fun <T> ReentrantReadWriteLock.withReadLock(block: () -> T): T {
-    val readLock = readLock()
-    readLock.lock()
-    try {
-        return block()
-    } finally {
-        readLock.unlock()
-    }
+    return read { block() }
 }
 
 /**
@@ -58,22 +69,12 @@ inline fun <T> ReentrantReadWriteLock.withReadLock(block: () -> T): T {
  *     // do work
  * }
  * ```
+ * @see [ReentrantReadWriteLock.write]
+ *
  * @param block Function0<T>
  * @return T
  */
+@Deprecated("use write", replaceWith = ReplaceWith("this.write(block)"))
 inline fun <T> ReentrantReadWriteLock.withWriteLock(block: () -> T): T {
-    // read lock이 lock 들을 unlock 한다
-    val readLock = readLock()
-    val readCount = if (writeHoldCount == 0) readHoldCount else 0
-    repeat(readCount) { readLock.unlock() }
-
-    val writeLock = writeLock()
-    writeLock.lock()
-    try {
-        return block()
-    } finally {
-        // 기존 readLock을 다시 lock 으로 복구한다
-        repeat(readCount) { readLock.lock() }
-        writeLock.unlock()
-    }
+    return write { block() }
 }

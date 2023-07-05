@@ -370,6 +370,7 @@ subprojects {
             dependency(Libs.jackson_module_paranamer)
             dependency(Libs.jackson_module_parameter_names)
             dependency(Libs.jackson_module_afterburner)
+            dependency(Libs.jackson_module_jsonSchema)
 
             // Retrofit
             dependency(Libs.retrofit2)
@@ -397,6 +398,18 @@ subprojects {
             dependency(Libs.mongo_bson)
             dependency(Libs.mongodb_driver_core)
             dependency(Libs.mongodb_driver_reactivestreams)
+
+            // Kafka
+            dependency(Libs.kafka_clients)
+            dependency(Libs.kafka_generator)
+            dependency(Libs.kafka_metadata)
+            dependency(Libs.kafka_raft)
+            dependency(Libs.kafka_server_common)
+            dependency(Libs.kafka_storage)
+            dependency(Libs.kafka_storage_api)
+            dependency(Libs.kafka_streams)
+            dependency(Libs.kafka_streams_test_utils)
+            dependency(Libs.kafka_2_13)
 
             // Hibernate
             dependency(Libs.hibernate_core)

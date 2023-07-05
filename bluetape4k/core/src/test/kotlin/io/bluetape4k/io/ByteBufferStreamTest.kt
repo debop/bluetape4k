@@ -22,7 +22,7 @@ class ByteBufferStreamTest {
         val bytes = randomBytes
         val buffer = bytes.toByteBuffer()
 
-        ByteBufferInputStream(buffer).use { inputStream ->
+        ByteBufferInputStream(bytes).use { inputStream ->
             inputStream.available() shouldBeEqualTo bytes.size
 
             val actual = ByteArray(bytes.size)
@@ -35,9 +35,8 @@ class ByteBufferStreamTest {
     @RepeatedTest(REPEAT_COUNT)
     fun `use ByteBufferOutputStream`() {
         val bytes = randomBytes
-        val buffer = bytes.toByteBuffer()
 
-        ByteBufferOutputStream(buffer).use { outputStream ->
+        ByteBufferOutputStream(bytes.size).use { outputStream ->
             outputStream.write(bytes)
             outputStream.flush()
 
@@ -61,7 +60,7 @@ class ByteBufferStreamTest {
     @RepeatedTest(REPEAT_COUNT)
     fun `use ByteBufferOutputStream Direct`() {
         val bytes = randomBytes
-        ByteBufferOutputStream.direct(bytes).use { outputStream ->
+        ByteBufferOutputStream.direct(bytes.size).use { outputStream ->
             outputStream.write(bytes)
             outputStream.flush()
 

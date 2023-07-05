@@ -15,31 +15,6 @@ class PersonConverterTest: AbstractMapstructTest() {
         private const val REPEAT_SIZE = 5
     }
 
-    data class Person(
-        var firstName: String?,
-        var lastName: String?,
-        var phoneNumber: String?,
-        var birthDate: LocalDate?,
-    )
-
-    data class PersonDto(
-        var firstName: String?,
-        var lastName: String?,
-        var phone: String?,
-        var birthDate: LocalDate?,
-    )
-
-    @Mapper
-    interface PersonConverter {
-
-        @Mapping(source = "phoneNumber", target = "phone")
-        fun convertToDto(person: Person): PersonDto
-
-        @InheritInverseConfiguration
-        fun convertToModel(personDto: PersonDto): Person
-
-    }
-
     val converter = mapper<PersonConverter>()
 
     @RepeatedTest(REPEAT_SIZE)
@@ -84,4 +59,30 @@ class PersonConverterTest: AbstractMapstructTest() {
         val actual = converter.convertToDto(person)
         actual shouldBeEqualTo personDto
     }
+}
+
+
+data class Person(
+    var firstName: String?,
+    var lastName: String?,
+    var phoneNumber: String?,
+    var birthDate: LocalDate?,
+)
+
+data class PersonDto(
+    var firstName: String?,
+    var lastName: String?,
+    var phone: String?,
+    var birthDate: LocalDate?,
+)
+
+@Mapper
+interface PersonConverter {
+
+    @Mapping(source = "phoneNumber", target = "phone")
+    fun convertToDto(person: Person): PersonDto
+
+    @InheritInverseConfiguration
+    fun convertToModel(personDto: PersonDto): Person
+
 }
