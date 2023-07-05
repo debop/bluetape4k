@@ -162,6 +162,9 @@ object Versions {
     // https://mvnrepository.com/artifact/io.quarkus.platform/quarkus-blaze-persistence-bom
     const val blaze_persistence = "1.6.8"
 
+    // https://github.com/javers/javers
+    const val javers = "6.14.0"
+
     const val slf4j = "1.7.36"
     const val logback = "1.2.12"
     const val log4j = "2.20.0"
@@ -1171,6 +1174,15 @@ object Libs {
     val blaze_persistence_integration_jackson = blazePersistenceIntegration("jackson")
     val blaze_persistence_integration_jaxrs_jackson = blazePersistenceIntegration("jaxrs-jackson")
     val blaze_persistence_integration_entity_view_spring = blazePersistenceIntegration("entity-view-spring")
+
+    // Javers (https://javers.org - Java Audit library)
+    const val javers_core = "org.javers:javers-core:${Versions.javers}"
+    const val javers_spring = "org.javers:javers-spring:${Versions.javers}"
+    const val javers_spring_jpa = "org.javers:javers-spring-jpa:${Versions.javers}"
+    const val javers_spring_mongo = "org.javers:javers-spring-mongo:${Versions.javers}"
+    const val javers_persistence_mongo = "org.javers:javers-persistence-mongo:${Versions.javers}"
+    const val javers_persistence_sql = "org.javers:javers-persistence-sql:${Versions.javers}"
+    const val javers_spring_boot_starter_sql = "org.javers:javers-spring-boot-starter-sql:${Versions.javers}"
 
     // MyBatis Mapping 에 사용한다
     const val byte_buddy = "net.bytebuddy:byte-buddy:1.14.4"

@@ -14,38 +14,46 @@ typealias JCache<K, V> = javax.cache.Cache<K, V>
 object JCaching {
 
     object Cache2k {
+        val cacheManager = jcacheManager<org.cache2k.jcache.provider.JCacheProvider>()
+
         inline fun <reified K, reified V> getOrCreate(
             name: String,
             configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
         ): JCache<K, V> =
-            jcacheManager<org.cache2k.jcache.provider.JCacheProvider>().getOrCreate(name, configuration)
+            cacheManager.getOrCreate(name, configuration)
     }
 
     object Caffeine {
-        inline fun <reified K, reified V> getOrCreate(
-            name: String,
-            configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
-        ): JCache<K, V> {
-            return jcacheManager<CaffeineCachingProvider>().getOrCreate(name, configuration)
-        }
-    }
 
-    object EhCache {
+        val cacheManager = jcacheManager<CaffeineCachingProvider>()
+
         inline fun <reified K, reified V> getOrCreate(
             name: String,
             configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
         ): JCache<K, V> =
-            jcacheManager<EhcacheCachingProvider>().getOrCreate(name, configuration)
+            cacheManager.getOrCreate(name, configuration)
+    }
+
+    object EhCache {
+        val cacheManager = jcacheManager<EhcacheCachingProvider>()
+
+        inline fun <reified K, reified V> getOrCreate(
+            name: String,
+            configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
+        ): JCache<K, V> =
+            cacheManager.getOrCreate(name, configuration)
     }
 
     object Redisson {
+        val cacheManager = jcacheManager<JCachingProvider>()
+
         inline fun <reified K, reified V> getOrCreate(
             name: String,
             redisson: RedissonClient,
             configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
         ): JCache<K, V> {
             val redissonConfiguration = RedissonConfiguration.fromInstance(redisson, configuration)
-            return jcacheManager<JCachingProvider>().getOrCreate(name, redissonConfiguration)
+            return cacheManager.getOrCreate(name, redissonConfiguration)
         }
 
         inline fun <reified K, reified V> getOrCreate(
@@ -54,7 +62,7 @@ object JCaching {
             configuration: Configuration<K, V> = getDefaultJCacheConfiguration(),
         ): JCache<K, V> {
             val redissonConfiguration = RedissonConfiguration.fromConfig(redissonConfig, configuration)
-            return jcacheManager<JCachingProvider>().getOrCreate(name, redissonConfiguration)
+            return cacheManager.getOrCreate(name, redissonConfiguration)
         }
 
         fun <K, V> getOrCreateCache(
@@ -64,10 +72,10 @@ object JCaching {
         ): JCache<K, V> {
             return with(jcacheManager<JCachingProvider>()) {
                 getCache(cacheName)
-                    ?: run {
-                        val redissonConfiguration = RedissonConfiguration.fromInstance(redisson, configuration)
-                        createCache(cacheName, redissonConfiguration)
-                    }
+                ?: run {
+                    val redissonConfiguration = RedissonConfiguration.fromInstance(redisson, configuration)
+                    createCache(cacheName, redissonConfiguration)
+                }
             }
         }
     }
