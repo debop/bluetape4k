@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import java.util.*
 
 class LocaleSupportTest {
+
     companion object: KLogging()
 
     @Test

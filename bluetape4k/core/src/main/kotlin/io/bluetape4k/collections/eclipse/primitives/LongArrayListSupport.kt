@@ -30,6 +30,9 @@ inline fun longArrayList(size: Int, initializer: (Int) -> Long): LongArrayList {
 
 fun longArrayListOf(vararg elements: Long): LongArrayList = LongArrayList.newListWith(*elements)
 fun longArrayListOf(elements: Iterable<Long>): LongArrayList = elements.toLongArrayList()
+fun longArrayListOf(longs: LongIterable): LongArrayList = LongArrayList.newList(longs)
+
+fun LongIterable.asLongArrayList(): LongArrayList = longArrayListOf(this)
 
 fun LongIterable.asSequence(): Sequence<Long> = sequence {
     val iter = longIterator()

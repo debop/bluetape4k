@@ -29,6 +29,7 @@ includeModules("examples", false)
 
 includeModules("workshop/docker", false, false)
 includeModules("workshop/graphql", false, false)
+includeModules("workshop/kafka", false, false)
 includeModules("workshop/quarkus", false, false)
 includeModules("workshop/spring-boot", false, false)
 includeModules("workshop/spring-data", false, false)

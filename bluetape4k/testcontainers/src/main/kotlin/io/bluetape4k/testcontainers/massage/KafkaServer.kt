@@ -10,8 +10,19 @@ import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.common.serialization.Deserializer
+import org.apache.kafka.common.serialization.Serializer
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
+import org.springframework.kafka.config.KafkaListenerContainerFactory
+import org.springframework.kafka.core.ConsumerFactory
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory
+import org.springframework.kafka.core.DefaultKafkaProducerFactory
+import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.core.ProducerFactory
+import org.springframework.kafka.listener.ConcurrentMessageListenerContainer
+import org.springframework.kafka.listener.ContainerProperties
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.utility.DockerImageName
 import java.util.*
@@ -93,6 +104,9 @@ class KafkaServer private constructor(
     }
 
     object Launcher {
+
+        const val DEFAULT_TOPIC = "bluetape4k.test-topic.1"
+
         val kafka: KafkaServer by lazy {
             KafkaServer().apply {
                 start()
@@ -103,27 +117,158 @@ class KafkaServer private constructor(
         private val stringSerializer = StringSerializer()
         private val stringDeserializer = StringDeserializer()
 
-        fun createStringProducer(kafkaServer: KafkaServer = kafka): KafkaProducer<String, String> {
-            val map = mapOf(
+        fun getProducerProperties(kafkaServer: KafkaServer = kafka): MutableMap<String, Any?> {
+            return mutableMapOf(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to kafkaServer.bootstrapServers,
                 ProducerConfig.CLIENT_ID_CONFIG to UUID.randomUUID().encodeBase62(),
                 ProducerConfig.COMPRESSION_TYPE_CONFIG to "lz4",
                 ProducerConfig.LINGER_MS_CONFIG to "0",
                 ProducerConfig.BATCH_SIZE_CONFIG to "1"
             )
-            return KafkaProducer(map, stringSerializer, stringSerializer)
         }
 
-        fun createStringConsumer(kafkaServer: KafkaServer = kafka): KafkaConsumer<String, String> {
-            val map = mapOf(
+        fun getConsumerProperties(kafkaServer: KafkaServer = kafka): MutableMap<String, Any?> {
+            return mutableMapOf(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to kafkaServer.bootstrapServers,
                 ConsumerConfig.GROUP_ID_CONFIG to UUID.randomUUID().encodeBase62(),
                 ConsumerConfig.CLIENT_ID_CONFIG to UUID.randomUUID().encodeBase62(),
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
-                ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to "true",
-                ConsumerConfig.RETRY_BACKOFF_MS_CONFIG to 100
+                // ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to "true",
+                // ConsumerConfig.RETRY_BACKOFF_MS_CONFIG to 100
             )
-            return KafkaConsumer(map, stringDeserializer, stringDeserializer)
+        }
+
+        fun createStringProducer(kafkaServer: KafkaServer = kafka): KafkaProducer<String, String> {
+            val props = getProducerProperties(kafkaServer)
+            return KafkaProducer(props, stringSerializer, stringSerializer)
+        }
+
+        fun createStringConsumer(kafkaServer: KafkaServer = kafka): KafkaConsumer<String, String> {
+            val props = getConsumerProperties(kafkaServer)
+            return KafkaConsumer(props, stringDeserializer, stringDeserializer)
+        }
+
+        object Spring {
+
+            fun getStringProducerFactory(kafkaServer: KafkaServer = kafka): ProducerFactory<String, String> {
+                return getStringProducerFactory(getProducerProperties(kafkaServer))
+            }
+
+            fun getStringProducerFactory(properties: MutableMap<String, Any?>): ProducerFactory<String, String> {
+                return getProducerFactory(properties.apply {
+                    this[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+                    this[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+                })
+            }
+
+
+            fun getStringConsumerFactory(kafkaServer: KafkaServer = kafka): ConsumerFactory<String, String> {
+                return getStringConsumerFactory(getConsumerProperties(kafkaServer))
+            }
+
+            fun getStringConsumerFactory(properties: MutableMap<String, Any?>): ConsumerFactory<String, String> {
+                return getConsumerFactory(properties.apply {
+                    this[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+                    this[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+                })
+            }
+
+            fun getStringKafkaTemplate(
+                kafkaServer: KafkaServer = kafka,
+                defaultTopic: String = DEFAULT_TOPIC,
+            ): KafkaTemplate<String, String> {
+                return getStringKafkaTemplate(
+                    getStringProducerFactory(kafkaServer),
+                    true,
+                    getStringConsumerFactory(kafkaServer)
+                )
+            }
+
+            fun getStringKafkaTemplate(
+                producerFactory: ProducerFactory<String, String>,
+                autoFlush: Boolean = true,
+                consumerFactory: ConsumerFactory<String, String>? = null,
+            ): KafkaTemplate<String, String> {
+                return KafkaTemplate(producerFactory, autoFlush).apply {
+                    consumerFactory?.let { setConsumerFactory(it) }
+                }
+            }
+
+            fun <K, V> getProducerFactory(
+                properties: MutableMap<String, Any?> = getProducerProperties(kafka),
+            ): ProducerFactory<K, V> {
+                return DefaultKafkaProducerFactory(properties)
+            }
+
+            fun <K, V> getProducerFactory(
+                keySerializer: Serializer<K>,
+                valueSerializer: Serializer<V>,
+                properties: MutableMap<String, Any?> = getProducerProperties(kafka),
+            ): ProducerFactory<K, V> {
+                return DefaultKafkaProducerFactory(properties, keySerializer, valueSerializer)
+            }
+
+            fun <K, V> getConsumerFactory(
+                properties: MutableMap<String, Any?> = getConsumerProperties(kafka),
+            ): ConsumerFactory<K, V> {
+                return DefaultKafkaConsumerFactory(properties)
+            }
+
+            fun <K, V> getConsumerFactory(
+                keyDeserializer: Deserializer<K>,
+                valueDeserializer: Deserializer<V>,
+                properties: MutableMap<String, Any?> = getConsumerProperties(kafka),
+            ): ConsumerFactory<K, V> {
+                return DefaultKafkaConsumerFactory(properties, keyDeserializer, valueDeserializer)
+            }
+
+            fun <K, V> getKafkaTemplate(
+                keySerializer: Serializer<K>,
+                valueSerializer: Serializer<V>,
+                keyDeserializer: Deserializer<K>,
+                valueDeserializer: Deserializer<V>,
+                kafkaServer: KafkaServer = kafka,
+                defaultTopic: String = DEFAULT_TOPIC,
+            ): KafkaTemplate<K, V> {
+                val producerFactory = getProducerFactory(
+                    keySerializer,
+                    valueSerializer,
+                    getProducerProperties(kafkaServer)
+                )
+                val consumerFactory = getConsumerFactory(
+                    keyDeserializer,
+                    valueDeserializer,
+                    getConsumerProperties(kafkaServer)
+                )
+                return KafkaTemplate(producerFactory, true).apply {
+                    setConsumerFactory(consumerFactory)
+                    this.defaultTopic = defaultTopic
+                }
+            }
+
+            fun <K, V> getConcurrentKafkaListenerContainerFactory(
+                consumerFactory: ConsumerFactory<K, V>,
+            ): ConcurrentKafkaListenerContainerFactory<K, V> {
+                return ConcurrentKafkaListenerContainerFactory<K, V>().apply {
+                    this.consumerFactory = consumerFactory
+                }
+            }
+
+            fun <K, V> getKafkaManualAckListenerContainerFactory(
+                consumerFactory: ConsumerFactory<K, V>,
+            ): KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<K, V>> {
+                return ConcurrentKafkaListenerContainerFactory<K, V>().apply {
+                    this.consumerFactory = consumerFactory
+
+                    this.containerProperties.apply {
+                        this.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
+                        this.idleEventInterval = 100L
+                        this.pollTimeout = 50L
+                    }
+
+                    this.setAckDiscarded(true)
+                }
+            }
         }
     }
 }

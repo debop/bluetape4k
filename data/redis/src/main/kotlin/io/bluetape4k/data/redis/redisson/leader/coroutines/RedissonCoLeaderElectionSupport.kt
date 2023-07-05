@@ -10,6 +10,7 @@ suspend inline fun <T> RedissonClient.runIfLeaderSuspending(
     crossinline action: suspend () -> T,
 ): T {
     jobName.requireNotBlank("jobName")
+
     val leaderElection = RedissonCoLeaderElection(this, options)
     return leaderElection.runIfLeader(jobName) { action() }
 }

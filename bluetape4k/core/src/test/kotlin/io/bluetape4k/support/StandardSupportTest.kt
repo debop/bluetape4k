@@ -3,17 +3,36 @@ package io.bluetape4k.support
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
+import org.amshove.kluent.fail
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.RepeatedTest
+import org.junit.jupiter.api.Test
 
 @RandomizedTest
 class StandardSupportTest {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 5
+        private const val REPEAT_SIZE = 3
     }
 
+    @Test
+    fun `run safeLet with null`() {
+        val p1: String? = null
+        val p2: String? = null
+
+        safeLet(p1, p2) { a, b ->
+            fail("p1, p2 둘 다 null 이므로 실행되어서는 안됩니다")
+        }
+
+        safeLet(null, "b") { a, b ->
+            fail("p1 이 null 이므로 실행되어서는 안됩니다")
+        }
+        safeLet("a", null) { a, b ->
+            fail("p2 이 null 이므로 실행되어서는 안됩니다")
+        }
+    }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `run safeLet`(@RandomValue p1: String?, @RandomValue p2: String?) {
@@ -37,5 +56,10 @@ class StandardSupportTest {
             p2 != null -> p2
             else       -> null
         }
+
+        coalesce("a", null) shouldBeEqualTo "a"
+        coalesce(null, "b") shouldBeEqualTo "b"
+        coalesce("a", "b") shouldBeEqualTo "a"
+        coalesce<Any>(null, null).shouldBeNull()
     }
 }

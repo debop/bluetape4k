@@ -61,11 +61,11 @@ object Plugins {
 object Versions {
 
     const val kotlin = "1.8.22"
-    const val kotlinx_coroutines = "1.7.1"
+    const val kotlinx_coroutines = "1.7.2"
     const val kotlinx_serialization = "1.5.1"
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/atomicfu
-    const val kotlinx_atomicfu = "0.20.2"
+    const val kotlinx_atomicfu = "0.21.0"
 
     const val kotlinx_benchmark = Plugins.Versions.kotlinx_benchmark
 
@@ -195,7 +195,8 @@ object Versions {
     const val scylla_java = "4.13.0.0"
     const val elasticsearch = "8.7.0"
 
-    const val kafka = "3.4.0"
+    const val kafka = "3.4.1"
+    const val spring_kafka = "2.9.9"
 
     const val eclipse_collections = "11.1.0"
     const val jctools = "3.3.0"
@@ -1068,12 +1069,18 @@ object Libs {
     fun kafka(module: String) = "org.apache.kafka:$module:${Versions.kafka}"
     val kafka_clients = kafka("kafka-clients")
     val kafka_generator = kafka("generator")
+    val kafka_metadata = kafka("kafka-metadata")
+    val kafka_raft = kafka("kafka-raft")
     val kafka_server_common = kafka("kafka-server-common")
+    val kafka_storage = kafka("kafka-storage")
+    val kafka_storage_api = kafka("kafka-storage-api")
     val kafka_streams = kafka("kafka-streams")
     val kafka_streams_test_utils = kafka("kafka-streams-test-utils")
+    val kafka_2_13 = kafka("kafka_2.13")
 
     // Spring Kafka
-    const val spring_kafka = "org.springframework.kafka:spring-kafka:2.9.4"
+    const val spring_kafka = "org.springframework.kafka:spring-kafka:${Versions.spring_kafka}"
+    const val spring_kafka_test = "org.springframework.kafka:spring-kafka-test:${Versions.spring_kafka}"
 
     // Pulsar
     const val pulsar_client = "org.apache.pulsar:pulsar-client:3.0.0"

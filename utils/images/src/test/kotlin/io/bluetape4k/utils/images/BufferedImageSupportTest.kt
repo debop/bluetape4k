@@ -45,7 +45,6 @@ class BufferedImageSupportTest: AbstractImageTest() {
             scaled.width shouldBeEqualTo 100
             scaled.height shouldBeEqualTo 100
 
-
             scaled.writeJpg("cafe_fixed.jpg")
             scaled.write(ImageFormat.JPG, tempFolder.createFile())
         }
@@ -62,7 +61,6 @@ class BufferedImageSupportTest: AbstractImageTest() {
             } else {
                 scaled.height shouldBeEqualTo 100
             }
-
 
             scaled.writeJpg("cafe_proportional.jpg")
             scaled.write(ImageFormat.JPG, tempFolder.createFile())

@@ -33,7 +33,10 @@ abstract class ComparisonChain {
     companion object: KLogging() {
 
         @JvmStatic
-        val ACTIVE by lazy {
+        val ACTIVE by lazy { createChain() }
+
+        @JvmStatic
+        private fun createChain(): ComparisonChain =
             object: ComparisonChain() {
                 override val result: Int
                     get() = 0
@@ -54,7 +57,6 @@ abstract class ComparisonChain {
                 override fun compareFalseFirst(left: Boolean, right: Boolean): ComparisonChain =
                     classify(compareBoolean(left, right))
             }
-        }
 
         @JvmField
         val LESS: ComparisonChain = InactiveComparisonChain(-1)
@@ -69,7 +71,7 @@ abstract class ComparisonChain {
         }
 
         @JvmStatic
-        fun start(): ComparisonChain = ACTIVE
+        fun start(): ComparisonChain = createChain()
     }
 
 

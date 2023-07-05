@@ -1,6 +1,7 @@
 package io.bluetape4k.coroutines
 
 import io.bluetape4k.logging.KLogging
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -30,6 +31,7 @@ class RingBuffer<T>(
 
     val isFull: Boolean get() = size == buffer.size
 
+    @Synchronized
     operator fun get(index: Int): T {
         require(index >= 0) { "Index must be positive" }
         require(index < size) { "Index $index is out of circular buffer size $size" }
@@ -37,19 +39,20 @@ class RingBuffer<T>(
     }
 
     override fun iterator(): Iterator<T> {
-        return object: AbstractIterator<T>() {
-            private var count = size
-            private var index = startIndex
-            val copy = buffer.toList()
-
-            override fun computeNext() {
-                if (count == 0) done() else {
-                    setNext(copy[index] as T)
-                    index = index.forward(1)
-                    count--
-                }
-            }
-        }
+        return runBlocking { snapshot().iterator() }
+//        return object: AbstractIterator<T>() {
+//            private var count = size
+//            private var index = startIndex
+//            val copy = buffer.toList()
+//
+//            override fun computeNext() {
+//                if (count == 0) done() else {
+//                    setNext(copy[index] as T)
+//                    index = index.forward(1)
+//                    count--
+//                }
+//            }
+//        }
     }
 
     suspend fun snapshot(): List<T> = mutex.withLock {

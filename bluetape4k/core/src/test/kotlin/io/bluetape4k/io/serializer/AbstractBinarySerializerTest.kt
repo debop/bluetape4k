@@ -45,7 +45,6 @@ abstract class AbstractBinarySerializerTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `serialize primitive type`(@RandomValue expected: Long) {
-
         val bytes = serializer.serialize(expected)
         bytes.shouldNotBeEmpty()
 

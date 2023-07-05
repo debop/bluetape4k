@@ -1,5 +1,6 @@
 package io.bluetape4k.utils
 
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
@@ -15,12 +16,12 @@ class LocalTest {
         Local["a"] = "Alpha"
         Local["b"] = "Beta"
 
-        Local.get<String>("a") shouldBeEqualTo "Alpha"
-        Local.get<String>("b") shouldBeEqualTo "Beta"
+        Local["a"] shouldBeEqualTo "Alpha"
+        Local["b"] shouldBeEqualTo "Beta"
 
         Local.clearAll()
-        Local.get<String>("a").shouldBeNull()
-        Local.get<String>("b").shouldBeNull()
+        Local["a"].shouldBeNull()
+        Local["b"].shouldBeNull()
     }
 
     @Test
@@ -28,16 +29,38 @@ class LocalTest {
         val thread1 = thread {
             Local["a"] = "Alpha"
             Thread.sleep(10)
-            Local.get<String>("a") shouldBeEqualTo "Alpha"
+            Local["a"] shouldBeEqualTo "Alpha"
+            Local["b"].shouldBeNull()
         }
 
         val thread2 = thread {
-            Local["a"] = "Beta"
+            Local["b"] = "Beta"
             Thread.sleep(5)
-            Local.get<String>("a") shouldBeEqualTo "Beta"
+            Local["b"] shouldBeEqualTo "Beta"
+            Local["a"].shouldBeNull()
         }
 
         thread1.join()
         thread2.join()
+    }
+
+    @Test
+    fun `thread local value in multi-threading`() {
+        MultithreadingTester()
+            .numThreads(64)
+            .roundsPerThread(4)
+            .add {
+                Local["a"] = "Alpha"
+                Thread.sleep(1)
+                Local["a"] shouldBeEqualTo "Alpha"
+                Local["b"].shouldBeNull()
+            }
+            .add {
+                Local["b"] = "Beta"
+                Thread.sleep(1)
+                Local["a"].shouldBeNull()
+                Local["b"] shouldBeEqualTo "Beta"
+            }
+            .run()
     }
 }

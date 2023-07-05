@@ -1,8 +1,8 @@
 package io.bluetape4k.examples.redisson.coroutines.readwritethrough
 
-import io.bluetake4k.data.jdbc.sql.extract
-import io.bluetake4k.data.jdbc.sql.runQuery
-import io.bluetake4k.data.jdbc.sql.withConnect
+import io.bluetape4k.data.jdbc.sql.extract
+import io.bluetape4k.data.jdbc.sql.runQuery
+import io.bluetape4k.data.jdbc.sql.withConnect
 import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO

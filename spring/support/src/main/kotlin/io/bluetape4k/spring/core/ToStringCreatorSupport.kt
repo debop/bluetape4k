@@ -74,7 +74,7 @@ inline fun toStringCreatorOf(
  * @param body 문자열로 표현할 코드
  * @return ToStringCreator
  *
- * @see [io.bluetake4k.core.ToStringBuilder]
+ * @see [io.bluetape4k.core.ToStringBuilder]
  */
 inline fun toStringCreatorOf(
     obj: Any,

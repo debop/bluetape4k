@@ -1,6 +1,7 @@
 package io.bluetape4k.concurrent
 
 import io.bluetape4k.collections.eclipse.fastList
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
@@ -55,5 +56,20 @@ class AtomicRoundrobinTest {
         assertFailsWith<IllegalArgumentException> {
             atomic.set(Int.MIN_VALUE)
         }
+    }
+
+    @Test
+    fun `increment round robine in multi-thread`() {
+        val atomic = AtomicIntRoundrobin(16)
+
+        MultithreadingTester()
+            .numThreads(8)
+            .roundsPerThread(4)
+            .add {
+                atomic.next()
+            }
+            .run()
+
+        atomic.get() shouldBeEqualTo 0
     }
 }

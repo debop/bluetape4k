@@ -23,7 +23,7 @@ abstract class AbstractKafkaCodecTest: AbstractKafkaTest() {
 
     companion object: KLogging()
 
-    abstract val codec: KafkaCodec<Any>
+    abstract val codec: KafkaCodec<Any?>
 
     @RepeatedTest(REPEAT_SIZE)
     fun `codec simple object`(@RandomValue data: MessageData) {

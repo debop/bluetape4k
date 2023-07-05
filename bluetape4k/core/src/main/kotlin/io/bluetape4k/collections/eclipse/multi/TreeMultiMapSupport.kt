@@ -5,7 +5,7 @@ import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap
 
 typealias TreeMultimap<K, V> = TreeSortedMap<K, MutableList<V>>
 
-fun <K, V> TreeMultimap<K, V>.valueSize(): Int = this.valuesView().sumOf { it.size }
+fun <K, V> TreeMultimap<K, V>.valueSize(): Int = this.values.sumOf { it.size }
 
 inline fun <K: Comparable<K>, V> Iterable<V>.toTreeMultimap(keySelector: (V) -> K): TreeMultimap<K, V> {
     val map = TreeMultimap<K, V>()

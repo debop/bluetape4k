@@ -6,18 +6,17 @@ import io.bluetape4k.io.json.jackson.writeAsBytes
 import io.bluetape4k.support.emptyByteArray
 import org.apache.kafka.common.header.Headers
 
-class JacksonKafkaCodec<T: Any>(
+class JacksonKafkaCodec(
     private val mapper: JsonMapper = Jackson.defaultJsonMapper,
-): AbstractKafkaCodec<T>() {
+): AbstractKafkaCodec<Any?>() {
 
-    override fun doSerialize(topic: String?, headers: Headers?, graph: T): ByteArray {
+    override fun doSerialize(topic: String?, headers: Headers?, graph: Any?): ByteArray {
         return mapper.writeAsBytes(graph) ?: emptyByteArray
     }
 
-    @Suppress("UNCHECKED_CAST")
-    override fun doDeserialize(topic: String?, headers: Headers?, bytes: ByteArray): T? {
+    override fun doDeserialize(topic: String?, headers: Headers?, bytes: ByteArray): Any? {
         val clazz = getValueType(headers)
         return if (bytes.isEmpty()) null
-        else mapper.readValue(bytes, clazz) as? T
+        else mapper.readValue(bytes, clazz)
     }
 }
