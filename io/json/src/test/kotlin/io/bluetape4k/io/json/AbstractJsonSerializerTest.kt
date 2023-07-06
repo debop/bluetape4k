@@ -1,5 +1,6 @@
 package io.bluetape4k.io.json
 
+import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
@@ -14,6 +15,7 @@ abstract class AbstractJsonSerializerTest {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 5
+        val faker = Fakers.faker
     }
 
     protected abstract val serializer: JsonSerializer

@@ -6,6 +6,9 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import java.util.*
 
+/**
+ * UUID 수형을 Base62 로 인코딩/디코딩 하는 Module 입니다.
+ */
 class JsonUuidModule: SimpleModule() {
 
     companion object: KLogging()

@@ -7,7 +7,6 @@ import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.io.json.jackson.prettyWriteAsString
 import io.bluetape4k.io.json.jackson.writeAsString
 import io.bluetape4k.junit5.faker.Fakers
-import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -36,6 +35,14 @@ class JsonEncryptTest {
 
     private val mapper = Jackson.defaultJsonMapper
 
+    private fun createUser(): User {
+        return User(
+            username = faker.name().username(),
+            password = faker.internet().password(),
+            mobile = faker.phoneNumber().cellPhone()
+        )
+    }
+
     @Test
     fun `encrypt string property`() {
         val user = User(faker.name().username(), "mypassword", "010-8955-0581")
@@ -47,20 +54,23 @@ class JsonEncryptTest {
     }
 
     @RepeatedTest(REPEAT_COUNT)
-    fun `encrypt json property`(@RandomValue user: User) {
-        val encrypted = mapper.writeValueAsString(user)
+    fun `encrypt json property`() {
+        val expected = createUser()
+        val encrypted = mapper.writeValueAsString(expected)
         log.debug { "encrypted=$encrypted" }
 
         val actual = mapper.readValue<User>(encrypted)
-        actual shouldBeEqualTo user
+        log.debug { "actual=$actual" }
+        actual shouldBeEqualTo expected
     }
 
     @RepeatedTest(REPEAT_COUNT)
-    fun `encrypt json property in list`(@RandomValue(type = User::class, size = 10) users: List<User>) {
-        val encrypted = mapper.writeValueAsString(users)
+    fun `encrypt json property in list`() {
+        val expected = List(20) { createUser() }
+        val encrypted = mapper.writeValueAsString(expected)
         log.debug { "encrypted=$encrypted" }
 
         val actuals = mapper.readValue<List<User>>(encrypted)
-        actuals shouldBeEqualTo users
+        actuals shouldBeEqualTo expected
     }
 }
