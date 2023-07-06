@@ -18,7 +18,7 @@ class ImageFileExamples: AbstractImageTest() {
 
     @Test
     fun `load large image file`() {
-        getImage("images/aqua.jpg").use { input ->
+        getImage(AQUA_JPG).use { input ->
             val image: BufferedImage = ImageIO.read(input)
             image.height shouldBeGreaterThan 0
             image.width shouldBeGreaterThan 0
@@ -35,7 +35,7 @@ class ImageFileExamples: AbstractImageTest() {
 
     @Test
     fun `create thumbnail image`(tempFolder: TempFolder) {
-        getImage("images/cafe.jpg").use { input ->
+        getImage(CAFE_JPG).use { input ->
             val scaled = BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB)
 
             // HINT: 이 방식은 느리다. BufferedImage.scale 함수를 사용하세요.

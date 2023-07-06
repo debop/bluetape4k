@@ -16,9 +16,23 @@ import javax.imageio.ImageWriter
 
 abstract class AbstractImageTest {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        const val BASE_PATH = "src/test/resources/images"
+        const val AQUA_JPG = "images/aqua.jpg"
+        const val EVERLAND_JPG = "images/everland.jpg"
+        const val CAFE_JPG = "images/cafe.jpg"
+        const val LANDSCAPE_JPG = "images/landscape.jpg"
+    }
 
     protected fun getImage(path: String): InputStream = Resourcex.getInputStream(path)!!
+
+    protected fun writeToFile(bytes: ByteArray, filename: String, format: ImageFormat = ImageFormat.JPG) {
+        val path = Paths.get("$BASE_PATH/$filename.${format.name}")
+        if (Files.exists(path)) {
+            Files.delete(path)
+        }
+        Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE)
+    }
 
     protected fun getImageWriter(format: ImageFormat): ImageWriter =
         ImageIO.getImageWritersByFormatName(format.name).next()
@@ -26,7 +40,7 @@ abstract class AbstractImageTest {
     protected fun writeToFile(items: List<ByteArray>, filename: String, format: ImageFormat) {
         items
             .forEachIndexed { index, bytes ->
-                val path = Paths.get("src/test/resources/images/${filename}_${index}.${format.name}")
+                val path = Paths.get("$BASE_PATH/${filename}_${index}.${format.name}")
                 if (Files.exists(path)) {
                     Files.delete(path)
                 }
@@ -38,7 +52,7 @@ abstract class AbstractImageTest {
         items
             .buffer()
             .collectIndexed { index, bytes ->
-                val path = Paths.get("src/test/resources/images/${filename}_${index}.${format.name}")
+                val path = Paths.get("$BASE_PATH/${filename}_${index}.${format.name}")
                 withContext(Dispatchers.IO) {
                     if (Files.exists(path)) {
                         Files.delete(path)

@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.images
+package io.bluetape4k.utils.images.splitter
 
 import io.bluetape4k.io.toInputStream
 import io.bluetape4k.io.write
@@ -6,6 +6,8 @@ import io.bluetape4k.junit5.folder.TempFolder
 import io.bluetape4k.junit5.folder.TempFolderTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.utils.images.AbstractImageTest
+import io.bluetape4k.utils.images.ImageFormat
 import io.bluetape4k.utils.images.compressor.JpgCompressor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer

@@ -1,10 +1,11 @@
-package io.bluetape4k.utils.images
+package io.bluetape4k.utils.images.splitter
 
 import io.bluetape4k.core.requirePositiveNumber
 import io.bluetape4k.coroutines.flow.async
 import io.bluetape4k.io.toByteArray
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.utils.images.ImageFormat
 import io.bluetape4k.utils.images.compressor.ImageCompressor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer

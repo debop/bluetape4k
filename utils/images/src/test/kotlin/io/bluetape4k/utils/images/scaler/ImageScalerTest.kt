@@ -1,8 +1,11 @@
-package io.bluetape4k.utils.images
+package io.bluetape4k.utils.images.scaler
 
 import io.bluetape4k.junit5.folder.TempFolder
 import io.bluetape4k.junit5.folder.TempFolderTest
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.utils.images.AbstractImageTest
+import io.bluetape4k.utils.images.ImageFormat
+import io.bluetape4k.utils.images.write
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.jupiter.api.Test
@@ -10,7 +13,7 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 
 @TempFolderTest
-class BufferedImageSupportTest: AbstractImageTest() {
+class ImageScalerTest: AbstractImageTest() {
 
     companion object: KLogging()
 
@@ -24,35 +27,35 @@ class BufferedImageSupportTest: AbstractImageTest() {
 
     @Test
     fun `이미지를 비율로 scale 한다`(tempFolder: TempFolder) {
-        getImage("images/cafe.jpg").use { input ->
+        getImage(CAFE_JPG).use { input ->
             val image = ImageIO.read(input)
             val scaled = image.scale(0.15)
 
             scaled.width shouldBeGreaterThan 0
             scaled.height shouldBeGreaterThan 0
 
-            scaled.writeJpg("cafe_ratio.jpg")
-            ImageIO.write(scaled, "jpg", tempFolder.createFile())
+            scaled.writeJpg("$BASE_PATH/cafe_ratio.jpg")
+            scaled.write(ImageFormat.JPG, tempFolder.createFile())
         }
     }
 
     @Test
     fun `이미지를 특정 크기 100x100로 Scaling한다`(tempFolder: TempFolder) {
-        getImage("images/cafe.jpg").use { input ->
+        getImage(CAFE_JPG).use { input ->
             val image = ImageIO.read(input)
             val scaled = image.scale(100, 100, proportional = false)
 
             scaled.width shouldBeEqualTo 100
             scaled.height shouldBeEqualTo 100
 
-            scaled.writeJpg("cafe_fixed.jpg")
+            scaled.writeJpg("$BASE_PATH/cafe_fixed.jpg")
             scaled.write(ImageFormat.JPG, tempFolder.createFile())
         }
     }
 
     @Test
     fun `이미지를 특정 크기 100x100을 비례적으로 Scaling 한다`(tempFolder: TempFolder) {
-        getImage("images/cafe.jpg").use { input ->
+        getImage(CAFE_JPG).use { input ->
             val image = ImageIO.read(input)
             val scaled = image.scale(100, 100)
 
@@ -62,7 +65,7 @@ class BufferedImageSupportTest: AbstractImageTest() {
                 scaled.height shouldBeEqualTo 100
             }
 
-            scaled.writeJpg("cafe_proportional.jpg")
+            scaled.writeJpg("$BASE_PATH/cafe_proportional.jpg")
             scaled.write(ImageFormat.JPG, tempFolder.createFile())
         }
     }
