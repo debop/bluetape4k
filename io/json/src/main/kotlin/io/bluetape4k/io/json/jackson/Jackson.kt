@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
 import com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder
-import io.bluetape4k.io.json.jackson.uuid.JsonUuidModule
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
 import java.io.IOException
@@ -45,7 +44,8 @@ object Jackson: KLogging() {
             findAndAddModules()
 
             // 내부의 Module은 직접 등록합니다. (findAndRegisterModules() 에서 등록해주지 않는다)
-            addModules(JsonUuidModule())
+            // 리소스에 services 로 등록해줘서 이제 등록됩니다.
+            // addModules(JsonUuidModule())
 
             // Serialization feature
             serializationInclusion(JsonInclude.Include.NON_NULL)
