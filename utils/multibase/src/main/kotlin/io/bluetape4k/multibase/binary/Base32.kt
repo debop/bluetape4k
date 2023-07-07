@@ -228,14 +228,13 @@ class Base32(
      *
      * Output is written to {@link Context#buffer} as 8-bit octets, using {@link Context#pos} as the buffer position
      */
-    override fun decode(source: ByteArray?, inPos: Int, inAvail: Int, context: Context) {
+    override fun decode(source: ByteArray, inPos: Int, inAvail: Int, context: Context) {
         if (context.eof) {
             return
         }
         if (inAvail < 0) {
             context.eof = true
         }
-        source!!
         var pos = inPos
         for (i in 0 until inAvail) {
             val b = source[pos++]
@@ -333,7 +332,7 @@ class Base32(
      *            Amount of bytes available from input for encoding.
      * @param context the context to be used
      */
-    override fun encode(source: ByteArray?, inPos: Int, inAvail: Int, context: Context) {
+    override fun encode(source: ByteArray, inPos: Int, inAvail: Int, context: Context) {
         if (context.eof) {
             return
         }
@@ -427,11 +426,10 @@ class Base32(
                 context.pos += lineSeparator!!.size
             }
         } else {
-            val input = source!!
             for (i in 0 until inAvail) {
                 val buffer = ensureBufferSize(encodeSize, context)!!
                 context.modulus = (context.modulus + 1) % BYTES_PER_UNENCODED_BLOCK
-                var b = input[pos++].toInt()
+                var b = source[pos++].toInt()
                 if (b < 0) {
                     b += 256
                 }

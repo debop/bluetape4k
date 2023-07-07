@@ -17,7 +17,7 @@ object Base16 {
     private val HEX_DIGITS = arrayOf(
         "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"
     )
-    private val HEX = Array<String>(256) {
+    private val HEX = Array(256) {
         HEX_DIGITS[(it shr 4) and 0xF] + HEX_DIGITS[it and 0xF]
     }
 

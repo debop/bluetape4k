@@ -57,7 +57,7 @@ object Base58: KLogging() {
     /**
      * Decodes the given base58 string into the original data bytes.
      *
-     * @param input the base58-encoded string to decode
+     * @param source the base58-encoded string to decode
      * @return the decoded data bytes
      */
     fun decode(source: String): ByteArray {

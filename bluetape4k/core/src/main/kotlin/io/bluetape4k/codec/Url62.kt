@@ -5,7 +5,7 @@ import io.bluetape4k.support.toUuid
 import java.util.*
 
 /**
- * [Base62] 를 이용하여 [UUD]를 문자열로 encoding/decoding 합니다.
+ * [Base62] 를 이용하여 [UUID]를 문자열로 encoding/decoding 합니다.
  */
 object Url62 {
 

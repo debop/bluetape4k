@@ -2,6 +2,7 @@ package io.bluetape4k.codec
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import io.bluetape4k.support.toStr
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -75,11 +76,10 @@ class RadixCoderTest {
     }
 
     private fun <N> invert(coder: RadixCoder<N>, bytes: ByteArray) {
-        log.trace { "bytes=${bytes.contentToString()}" }
+        log.trace { "bytes=${bytes.toStr()}" }
         val encoded = coder.encode(bytes)
-        log.trace { "encoded=$encoded" }
         val decoded = coder.decode(encoded)
-        log.trace { "decoded=${decoded.contentToString()}" }
+        log.trace { "encoded=${encoded.toStr()}, decoded=${decoded.toStr()}" }
         decoded shouldBeEqualTo bytes
     }
 
@@ -119,7 +119,7 @@ class RadixCoderTest {
 
     @ParameterizedTest(name = "short range coder={0}")
     @MethodSource("getAll")
-    fun `invert all length 2`(coder: RadixCoder<*>) {
+    fun `invert all length 2`(coder: RadixCoder<ByteArray>) {
         TestBytes.allLength2().forEach { bytes ->
             invert(coder, bytes)
         }

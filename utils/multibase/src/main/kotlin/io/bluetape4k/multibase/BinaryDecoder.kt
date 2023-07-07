@@ -8,6 +8,6 @@ interface BinaryDecoder: Decoder {
      * @param source A byte array which has been encoded with the appropriate encoder
      * @return a byte array that contains decoded content
      */
-    fun decode(source: ByteArray?): ByteArray?
+    fun decode(source: ByteArray): ByteArray
 
 }

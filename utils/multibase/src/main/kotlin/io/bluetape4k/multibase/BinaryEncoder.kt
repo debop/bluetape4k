@@ -8,5 +8,5 @@ interface BinaryEncoder: Encoder {
      * @param source Data to be encoded
      * @return A byte array containing the encoded data
      */
-    fun encode(source: ByteArray?): ByteArray?
+    fun encode(source: ByteArray): ByteArray
 }

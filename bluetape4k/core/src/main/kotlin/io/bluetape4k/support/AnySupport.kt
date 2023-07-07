@@ -1,6 +1,9 @@
 package io.bluetape4k.support
 
+import java.lang.reflect.Method
 import java.util.*
+import kotlin.coroutines.Continuation
+import kotlin.reflect.KClass
 
 /**
  * var 로 선언된 필드 중 non null 수형에 대해 초기화 값을 지정하고자 할 때 사용합니다.
@@ -143,3 +146,27 @@ fun Any?.identityToString(): String = when (this) {
 }
 
 fun Any.identityHexString(): String = Integer.toHexString(System.identityHashCode(this))
+
+fun Any?.toStr(): String = try {
+    when (this) {
+        null                                             -> "null"
+        is BooleanArray                                  -> this.contentToString()
+        is ByteArray                                     -> this.contentToString()
+        is CharArray                                     -> this.contentToString()
+        is ShortArray                                    -> this.contentToString()
+        is IntArray                                      -> this.contentToString()
+        is LongArray                                     -> this.contentToString()
+        is FloatArray                                    -> this.contentToString()
+        is DoubleArray                                   -> this.contentToString()
+        is Array<*>                                      -> this.contentDeepToString()
+        Void.TYPE.kotlin                                 -> "void"
+        kotlin.coroutines.intrinsics.COROUTINE_SUSPENDED -> "SUSPEND_MARKER"
+        is Continuation<*>                               -> "continuation {}"
+        is KClass<*>                                     -> this.simpleName ?: "<null name class>"
+        is Method                                        -> name + "(" + parameterTypes.joinToString { it.simpleName } + ")"
+        is Function<*>                                   -> "lambda {}"
+        else                                             -> toString()
+    }
+} catch (thr: Throwable) {
+    "<error \"$thr\">"
+}

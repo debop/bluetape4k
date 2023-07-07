@@ -1,6 +1,6 @@
 package io.bluetape4k.multibase
 
-import io.bluetape4k.core.requireNotEmpty
+import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.multibase.binary.Base32
 import io.bluetape4k.multibase.binary.Base64
@@ -47,8 +47,7 @@ object Multibase: KLogging() {
             }
 
             fun lookup(p: Char): Base {
-                require(lookup.containsKey(p)) { "Unknown Multibase type: $p" }
-                return lookup[p]!!
+                return lookup[p] ?: throw IllegalArgumentException("Unknown Multibase type: $p")
             }
         }
     }
@@ -56,30 +55,31 @@ object Multibase: KLogging() {
 
     fun encode(b: Base, data: ByteArray): String {
         return when (b) {
-            Base.Base58BTC -> b.prefix + Base58.encode(data)
-            Base.Base16 -> b.prefix + Base16.encode(data)
-            Base.Base16Upper -> b.prefix + Base16.encode(data).uppercase()
-            Base.Base32 -> b.prefix.toString() + Base32().encode(data)?.toUtf8String()?.lowercase()
-                ?.replace("=".toRegex(), "")
+            Base.Base58BTC         -> b.prefix + Base58.encode(data)
+            Base.Base16            -> b.prefix + Base16.encode(data)
+            Base.Base16Upper       -> b.prefix + Base16.encode(data).uppercase()
+            Base.Base32            -> b.prefix + Base32().encode(data).toUtf8String().lowercase()
+                .replace("=".toRegex(), "")
 
-            Base.Base32Pad -> b.prefix.toString() + Base32().encode(data)?.toUtf8String()?.lowercase()
-            Base.Base32PadUpper -> b.prefix.toString() + Base32().encode(data)?.toUtf8String()
-            Base.Base32Upper -> b.prefix.toString() + Base32().encode(data)?.toUtf8String()?.replace("=".toRegex(), "")
-            Base.Base32Hex -> b.prefix.toString() + Base32(useHex = true).encode(data)?.toUtf8String()
-                ?.lowercase()?.replace("=".toRegex(), "")
+            Base.Base32Pad         -> b.prefix + Base32().encode(data).toUtf8String().lowercase()
+            Base.Base32PadUpper    -> b.prefix + Base32().encode(data).toUtf8String()
+            Base.Base32Upper       -> b.prefix + Base32().encode(data).toUtf8String().replace("=".toRegex(), "")
+            Base.Base32Hex         -> b.prefix + Base32(useHex = true).encode(data).toUtf8String().lowercase()
+                .replace("=".toRegex(), "")
 
-            Base.Base32HexPad -> b.prefix.toString() + Base32(useHex = true).encode(data)?.toUtf8String()?.lowercase()
-            Base.Base32HexPadUpper -> b.prefix.toString() + Base32(useHex = true).encode(data)?.toUtf8String()
-            Base.Base32HexUpper -> b.prefix.toString() + Base32(useHex = true).encode(data)?.toUtf8String()
-                ?.replace("=".toRegex(), "")
+            Base.Base32HexPad      -> b.prefix + Base32(useHex = true).encode(data).toUtf8String().lowercase()
+            Base.Base32HexPadUpper -> b.prefix + Base32(useHex = true).encode(data).toUtf8String()
+            Base.Base32HexUpper    -> b.prefix + Base32(useHex = true).encode(data).toUtf8String()
+                .replace("=".toRegex(), "")
 
-            Base.Base36 -> b.prefix + Base36.encode(data)
-            Base.Base36Upper -> b.prefix + Base36.encode(data).uppercase()
-            Base.Base64 -> b.prefix + Base64.encodeBase64String(data)!!.replace("=", "")
-            Base.Base64Url -> b.prefix + Base64.encodeBase64URLSafeString(data)!!.replace("=", "")
-            Base.Base64Pad -> b.prefix + Base64.encodeBase64String(data)!!
-            Base.Base64UrlPad -> b.prefix + Base64.encodeBase64String(data)!!.replace("\\+", "-").replace("/", "_")
-            else -> throw UnsupportedOperationException("Unsupported base encoding: " + b.name)
+            Base.Base36            -> b.prefix + Base36.encode(data)
+            Base.Base36Upper       -> b.prefix + Base36.encode(data).uppercase()
+            Base.Base64            -> b.prefix + Base64.encodeBase64String(data).replace("=", "")
+            Base.Base64Url         -> b.prefix + Base64.encodeBase64URLSafeString(data).replace("=", "")
+            Base.Base64Pad         -> b.prefix + Base64.encodeBase64String(data)
+            Base.Base64UrlPad      -> b.prefix + Base64.encodeBase64String(data).replace("\\+", "-").replace("/", "_")
+            else                   ->
+                throw UnsupportedOperationException("Unsupported base encoding: ${b.name}")
         }
     }
 
@@ -87,24 +87,25 @@ object Multibase: KLogging() {
         return Base.lookup(data[0])
     }
 
-    fun decode(data: String): ByteArray? {
-        data.requireNotEmpty("data")
+    fun decode(data: String): ByteArray {
+        data.requireNotBlank("data")
         val b: Base = encoding(data)
         val rest = data.substring(1)
 
         return when (b) {
-            Base.Base58BTC -> Base58.decode(rest)
-            Base.Base16 -> Base16.decode(rest)
-            Base.Base16Upper -> Base16.decode(rest.lowercase())
-            Base.Base32, Base.Base32Pad -> Base32().decode(rest)
-            Base.Base32PadUpper, Base.Base32Upper -> Base32().decode(rest.lowercase())
-            Base.Base32Hex, Base.Base32HexPad -> Base32(useHex = true).decode(rest)
-            Base.Base32HexPadUpper, Base.Base32HexUpper -> Base32(useHex = true).decode(rest.lowercase())
-            Base.Base36 -> Base36.decode(rest)
-            Base.Base36Upper -> Base36.decode(rest.lowercase())
+            Base.Base58BTC                                                 -> Base58.decode(rest)
+            Base.Base16                                                    -> Base16.decode(rest)
+            Base.Base16Upper                                               -> Base16.decode(rest.lowercase())
+            Base.Base32, Base.Base32Pad                                    -> Base32().decode(rest)
+            Base.Base32PadUpper, Base.Base32Upper                          -> Base32().decode(rest.lowercase())
+            Base.Base32Hex, Base.Base32HexPad                              -> Base32(useHex = true).decode(rest)
+            Base.Base32HexPadUpper, Base.Base32HexUpper                    -> Base32(useHex = true).decode(rest.lowercase())
+            Base.Base36                                                    -> Base36.decode(rest)
+            Base.Base36Upper                                               -> Base36.decode(rest.lowercase())
             Base.Base64, Base.Base64Url, Base.Base64Pad, Base.Base64UrlPad -> Base64.decodeBase64(rest)
 
-            else -> throw java.lang.UnsupportedOperationException("Unsupported base encoding: " + b.name)
+            else                                                           ->
+                throw java.lang.UnsupportedOperationException("Unsupported base encoding: ${b.name}")
         }
     }
 }

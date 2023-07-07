@@ -300,7 +300,7 @@ class Base64(
          * binary data to encode
          * @return byte[] containing Base64 characters in their UTF-8 representation.
          */
-        fun encodeBase64(binaryData: ByteArray?): ByteArray? {
+        fun encodeBase64(binaryData: ByteArray): ByteArray {
             return encodeBase64(binaryData, false)
         }
 
@@ -315,8 +315,8 @@ class Base64(
          * @return String containing Base64 characters.
          * @since 1.4 (NOTE:  1.4 chunked the output, whereas 1.5 does not).
          */
-        fun encodeBase64String(binaryData: ByteArray?): String? {
-            return encodeBase64(binaryData, isChunked = false)?.toString(Charsets.US_ASCII)
+        fun encodeBase64String(binaryData: ByteArray): String {
+            return encodeBase64(binaryData, isChunked = false).toString(Charsets.US_ASCII)
         }
 
         /**
@@ -328,7 +328,7 @@ class Base64(
          * @return byte[] containing Base64 characters in their UTF-8 representation.
          * @since 1.4
          */
-        fun encodeBase64URLSafe(binaryData: ByteArray?): ByteArray? {
+        fun encodeBase64URLSafe(binaryData: ByteArray): ByteArray {
             return encodeBase64(binaryData, isChunked = false, urlSafe = true)
         }
 
@@ -341,8 +341,8 @@ class Base64(
          * @return String containing Base64 characters
          * @since 1.4
          */
-        fun encodeBase64URLSafeString(binaryData: ByteArray?): String? {
-            return encodeBase64(binaryData, isChunked = false, urlSafe = true)?.toString(Charsets.US_ASCII)
+        fun encodeBase64URLSafeString(binaryData: ByteArray): String {
+            return encodeBase64(binaryData, isChunked = false, urlSafe = true).toString(Charsets.US_ASCII)
         }
 
         /**
@@ -352,7 +352,7 @@ class Base64(
          * binary data to encode
          * @return Base64 characters chunked in 76 character blocks
          */
-        fun encodeBase64Chunked(binaryData: ByteArray?): ByteArray? {
+        fun encodeBase64Chunked(binaryData: ByteArray): ByteArray? {
             return encodeBase64(binaryData, isChunked = true)
         }
 
@@ -367,7 +367,7 @@ class Base64(
          * @throws IllegalArgumentException
          * Thrown when the input array needs an output array bigger than [Integer.MAX_VALUE]
          */
-        fun encodeBase64(binaryData: ByteArray?, isChunked: Boolean): ByteArray? {
+        fun encodeBase64(binaryData: ByteArray, isChunked: Boolean): ByteArray {
             return encodeBase64(binaryData, isChunked, urlSafe = false)
         }
 
@@ -386,7 +386,7 @@ class Base64(
          * Thrown when the input array needs an output array bigger than [Integer.MAX_VALUE]
          * @since 1.4
          */
-        fun encodeBase64(binaryData: ByteArray?, isChunked: Boolean, urlSafe: Boolean): ByteArray? {
+        fun encodeBase64(binaryData: ByteArray, isChunked: Boolean, urlSafe: Boolean): ByteArray {
             return encodeBase64(binaryData, isChunked, urlSafe, Int.MAX_VALUE)
         }
 
@@ -408,10 +408,12 @@ class Base64(
          * @since 1.4
          */
         fun encodeBase64(
-            binaryData: ByteArray?, isChunked: Boolean,
-            urlSafe: Boolean, maxResultSize: Int,
-        ): ByteArray? {
-            if (binaryData == null || binaryData.size == 0) {
+            binaryData: ByteArray,
+            isChunked: Boolean,
+            urlSafe: Boolean,
+            maxResultSize: Int,
+        ): ByteArray {
+            if (binaryData.size == 0) {
                 return binaryData
             }
 
@@ -441,8 +443,8 @@ class Base64(
          * String containing Base64 data
          * @return Array containing decoded data.
          */
-        fun decodeBase64(base64String: String?): ByteArray? {
-            return Base64().decode(base64String) as? ByteArray
+        fun decodeBase64(base64String: String): ByteArray {
+            return Base64().decode(base64String)
         }
 
         /**
@@ -456,7 +458,7 @@ class Base64(
          * Byte array containing Base64 data
          * @return Array containing decoded data.
          */
-        fun decodeBase64(base64Data: ByteArray?): ByteArray? {
+        fun decodeBase64(base64Data: ByteArray): ByteArray {
             return Base64().decode(base64Data)
         }
 
@@ -473,7 +475,7 @@ class Base64(
          * @return A BigInteger
          * @since 1.4
          */
-        fun decodeInteger(pArray: ByteArray?): BigInteger? {
+        fun decodeInteger(pArray: ByteArray): BigInteger {
             return BigInteger(1, decodeBase64(pArray))
         }
 
@@ -487,10 +489,7 @@ class Base64(
          * if null is passed in
          * @since 1.4
          */
-        fun encodeInteger(bigInt: BigInteger?): ByteArray? {
-            if (bigInt == null) {
-                throw NullPointerException("encodeInteger called with null parameter")
-            }
+        fun encodeInteger(bigInt: BigInteger): ByteArray {
             return encodeBase64(toIntegerBytes(bigInt), false)
         }
 
@@ -501,7 +500,7 @@ class Base64(
          * `BigInteger` to be converted
          * @return a byte array representation of the BigInteger parameter
          */
-        fun toIntegerBytes(bigInt: BigInteger): ByteArray? {
+        fun toIntegerBytes(bigInt: BigInteger): ByteArray {
             var bitlen = bigInt.bitLength()
             // round bitlen
             bitlen = ((bitlen + 7) shr 3) shl 3
@@ -581,7 +580,7 @@ class Base64(
      * @param context
      * the context to be used
      */
-    override fun encode(source: ByteArray?, inPos: Int, inAvail: Int, context: Context) {
+    override fun encode(source: ByteArray, inPos: Int, inAvail: Int, context: Context) {
         var pos = inPos
         if (context.eof) {
             return
@@ -628,11 +627,10 @@ class Base64(
                 context.pos += lineSeparator!!.size
             }
         } else {
-            val input = source!!
             for (i in 0 until inAvail) {
                 val buffer = ensureBufferSize(encodeSize, context)!!
                 context.modulus = (context.modulus + 1) % BYTES_PER_UNENCODED_BLOCK
-                var b = input[pos++].toInt()
+                var b = source[pos++].toInt()
                 if (b < 0) {
                     b += 256
                 }
@@ -681,7 +679,7 @@ class Base64(
      * @param context
      * the context to be used
      */
-    override fun decode(source: ByteArray?, inPos: Int, inAvail: Int, context: Context) {
+    override fun decode(source: ByteArray, inPos: Int, inAvail: Int, context: Context) {
         var pos = inPos
         if (context.eof) {
             return
@@ -689,10 +687,10 @@ class Base64(
         if (inAvail < 0) {
             context.eof = true
         }
-        val input = source!!
+
         for (i in 0 until inAvail) {
             val buffer = ensureBufferSize(decodeSize, context)!!
-            val b = input[pos++]
+            val b = source[pos++]
             if (b == pad) {
                 // We're done.
                 context.eof = true
@@ -719,13 +717,13 @@ class Base64(
         if (context.eof && context.modulus != 0) {
             val buffer = ensureBufferSize(decodeSize, context)!!
             when (context.modulus) {
-                1 -> {}
-                2 -> {
+                1    -> {}
+                2    -> {
                     context.ibitWorkArea = context.ibitWorkArea shr 4 // dump the extra 4 bits
                     buffer[context.pos++] = (context.ibitWorkArea and MASK_8BITS).toByte()
                 }
 
-                3 -> {
+                3    -> {
                     context.ibitWorkArea = context.ibitWorkArea shr 2 // dump 2 bits
                     buffer[context.pos++] = (context.ibitWorkArea shr 8 and MASK_8BITS).toByte()
                     buffer[context.pos++] = (context.ibitWorkArea and MASK_8BITS).toByte()

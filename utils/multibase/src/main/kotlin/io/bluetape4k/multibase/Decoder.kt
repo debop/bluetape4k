@@ -1,6 +1,6 @@
 package io.bluetape4k.multibase
 
-interface Decoder {
+fun interface Decoder {
 
     /**
      * Decodes an "encoded" Object and returns a "decoded" Object.
@@ -10,8 +10,8 @@ interface Decoder {
      * @param source the object to decode
      * @return a 'decoded" object
      */
-    fun decode(source: Any?): Any?
+    fun decode(source: Any): Any
 }
 
-inline fun <reified T: Any> Decoder.decodeAs(source: Any): T? =
-    decode(source) as? T
+inline fun <reified T: Any> Decoder.decodeAs(source: Any): T =
+    decode(source) as T

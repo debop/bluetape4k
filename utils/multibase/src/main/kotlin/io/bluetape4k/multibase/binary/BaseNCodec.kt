@@ -136,7 +136,7 @@ abstract class BaseNCodec(
         val Byte.isWhiteSpace: Boolean
             get() {
                 return when (this.toInt().toChar()) {
-                    ' ' -> true
+                    ' '  -> true
                     '\n' -> true
                     '\r' -> true
                     '\t' -> true
@@ -225,7 +225,7 @@ abstract class BaseNCodec(
      * @throws EncoderException
      *             if the parameter supplied is not of type ByteArray
      */
-    override fun encode(source: Any?): Any? {
+    override fun encode(source: Any): Any {
         if (source is ByteArray) {
             return encode(source)
         }
@@ -241,8 +241,8 @@ abstract class BaseNCodec(
      * @since 1.5
      * This is a duplicate of {@link #encodeToString(ByteArray)}; it was merged during refactoring.
      */
-    fun encodeAsString(source: ByteArray?): String? {
-        return encode(source)?.toUtf8String()
+    fun encodeAsString(source: ByteArray): String {
+        return encode(source).toUtf8String()
     }
 
     /**
@@ -255,11 +255,11 @@ abstract class BaseNCodec(
      * @throws DecoderException
      *             if the parameter supplied is not of type ByteArray
      */
-    override fun decode(source: Any?): Any? {
+    override fun decode(source: Any): Any {
         return when (source) {
             is ByteArray -> decode(source)
-            is String -> decode(source)
-            else -> throw DecoderException("Parameter supplied to Base-N decode is not a ByteArray or a String")
+            is String    -> decode(source)
+            else         -> throw DecoderException("Parameter supplied to Base-N decode is not a ByteArray or a String")
         }
     }
 
@@ -269,7 +269,7 @@ abstract class BaseNCodec(
      * @param source A String containing Base-N character data
      * @return a byte array containing binary data
      */
-    fun decode(source: String): ByteArray? {
+    fun decode(source: String): ByteArray {
         return decode(source.toUtf8Bytes())
     }
 
@@ -279,12 +279,12 @@ abstract class BaseNCodec(
      * @param source A byte array containing Base-N character data
      * @return a byte array containing binary data
      */
-    override fun decode(source: ByteArray?): ByteArray? {
+    override fun decode(source: ByteArray): ByteArray {
         if (source.isNullOrEmpty()) {
             return source
         }
         val context = Context()
-        decode(source, 0, source!!.size, context)
+        decode(source, 0, source.size, context)
         decode(source, 0, EOF, context)
         val result = ByteArray(context.pos)
         readResults(result, 0, result.size, context)
@@ -298,11 +298,11 @@ abstract class BaseNCodec(
      *            a byte array containing binary data
      * @return A byte array containing only the base N alphabetic character data
      */
-    override fun encode(source: ByteArray?): ByteArray? {
-        if (source.isNullOrEmpty()) {
+    override fun encode(source: ByteArray): ByteArray {
+        if (source.isEmpty()) {
             return source
         }
-        return encode(source, 0, source!!.size)
+        return encode(source, 0, source.size)
     }
 
     /**
@@ -317,7 +317,7 @@ abstract class BaseNCodec(
      *            length of the subarray.
      * @return A byte array containing only the base N alphabetic character data
      */
-    fun encode(source: ByteArray?, offset: Int, length: Int): ByteArray? {
+    fun encode(source: ByteArray, offset: Int, length: Int): ByteArray {
         if (source.isNullOrEmpty()) {
             return source
         }
@@ -329,9 +329,9 @@ abstract class BaseNCodec(
         return buf
     }
 
-    abstract fun encode(source: ByteArray?, i: Int, length: Int, context: Context)
+    abstract fun encode(source: ByteArray, i: Int, length: Int, context: Context)
 
-    abstract fun decode(source: ByteArray?, i: Int, length: Int, context: Context)
+    abstract fun decode(source: ByteArray, i: Int, length: Int, context: Context)
 
     /**
      * Returns whether or not the <code>octet</code> is in the current alphabet.

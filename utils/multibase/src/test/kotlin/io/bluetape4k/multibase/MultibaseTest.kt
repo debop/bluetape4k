@@ -232,7 +232,7 @@ class MultibaseTest {
         val encoded = Multibase.encode(base, origin.toUtf8Bytes())
         log.debug { "base=$base, encoded=$encoded" }
 
-        val decoded = Multibase.decode(encoded)!!
+        val decoded = Multibase.decode(encoded)
         val decodedString = decoded.toUtf8String()
 
         decodedString shouldBeEqualTo origin

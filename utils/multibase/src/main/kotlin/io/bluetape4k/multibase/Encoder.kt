@@ -1,6 +1,6 @@
 package io.bluetape4k.multibase
 
-interface Encoder {
+fun interface Encoder {
     /**
      * Encodes an "Object" and returns the encoded content as an Object.
      * The Objects here may just be [ByteArray] or [String]s depending on the implementation used.
@@ -8,6 +8,6 @@ interface Encoder {
      * @param source An object to encode
      * @return An "encoded" Object
      */
-    fun encode(source: Any?): Any?
+    fun encode(source: Any): Any
 
 }

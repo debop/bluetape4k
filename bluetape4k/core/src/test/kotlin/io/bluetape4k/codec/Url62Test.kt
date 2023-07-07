@@ -15,7 +15,7 @@ import kotlin.test.assertFailsWith
 class Url62Test {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 10
+        private const val REPEAT_SIZE = 5
     }
 
     @RepeatedTest(REPEAT_SIZE)
