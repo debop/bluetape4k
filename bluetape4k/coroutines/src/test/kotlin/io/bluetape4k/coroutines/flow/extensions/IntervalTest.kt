@@ -5,7 +5,8 @@ import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 class IntervalTest: AbstractFlowTest() {
 
@@ -28,7 +29,7 @@ class IntervalTest: AbstractFlowTest() {
     @Test
     fun `interval operator with duration`() = runTest {
         range(0, 10)
-            .interval(Duration.ofMillis(200), Duration.ofMillis(100))
+            .interval(200.milliseconds, 100.milliseconds)
             .assertResult(range(0, 10))
     }
 
@@ -48,7 +49,7 @@ class IntervalTest: AbstractFlowTest() {
 
     @Test
     fun `create interval by duration`() = runTest {
-        intervalFlowOf(Duration.ofMillis(200), Duration.ofMillis(100))
+        intervalFlowOf(200.milliseconds, 100.milliseconds)
             .take(20)
             .assertResult(range(0L, 20))
     }

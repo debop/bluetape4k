@@ -14,7 +14,8 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 class NeverFlowTest: AbstractFlowTest() {
@@ -37,7 +38,7 @@ class NeverFlowTest: AbstractFlowTest() {
             neverFlow().toList(list)
         }
 
-        val intervalJob = intervalFlowOf(Duration.ZERO, Duration.ofMillis(100))
+        val intervalJob = intervalFlowOf(Duration.ZERO, 100.milliseconds)
             .log("interval")
             .take(itemSize)
             .launchIn(this)

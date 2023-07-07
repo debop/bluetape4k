@@ -36,19 +36,3 @@ fun <T> Flow<T>.log(tag: Any): Flow<T> =
             }
         }
         .onEmpty { logger.debug { "[$tag] Flow is empty" } }
-
-// FIXME: 이 방식은 `unsafeFlow` 때문에 예외가 발생한다.
-//@Suppress("UNCHECKED_CAST")
-//fun <F: Flow<T>, T> F.log(tag: Any): F {
-//    return onStart { logger.debug { "[$tag] start " } }
-//        .onEach {
-//            val item = when (it) {
-//                is Flow<*> -> it.toList()
-//                else       -> it
-//            }
-//            logger.debug { "[$tag] emit $item" }
-//        }
-//        .onCompletion { logger.debug { "[$tag] complete $it" } }
-//        .onEmpty { logger.debug { "[$tag] empty" } }
-//        as F
-//}

@@ -9,8 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.time.delay
-import java.time.Duration
+import kotlin.time.Duration
 
 fun <T> Flow<T>.interval(
     initialDelay: Duration,
