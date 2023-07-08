@@ -29,7 +29,7 @@ fun <T: CharSequence> T?.requireNotEmpty(parameterName: String): T {
 
 fun <T: CharSequence> T?.requireNullOrEmpty(parameterName: String): T? {
     contract {
-        returnsNotNull() implies (this@requireNullOrEmpty == null)
+        returns() implies (this@requireNullOrEmpty == null)
     }
     require(this.isNullOrEmpty()) { "$parameterName[$this] must be null or empty." }
     return this
@@ -46,7 +46,7 @@ fun <T: CharSequence> T?.requireNotBlank(parameterName: String): T {
 
 fun <T: CharSequence> T?.requireNullOrBlank(parameterName: String): T? {
     contract {
-        returnsNotNull() implies (this@requireNullOrBlank == null)
+        returns() implies (this@requireNullOrBlank == null)
     }
     require(this.isNullOrEmpty()) { "$parameterName[$this] must be null or blank." }
     return this

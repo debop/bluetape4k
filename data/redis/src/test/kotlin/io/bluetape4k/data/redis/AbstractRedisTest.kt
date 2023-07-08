@@ -3,7 +3,7 @@ package io.bluetape4k.data.redis
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.storage.RedisServer
-import io.bluetape4k.utils.idgenerators.snowflake.Snowfloker
+import io.bluetape4k.utils.idgenerators.snowflake.Snowflakers
 
 abstract class AbstractRedisTest {
 
@@ -17,7 +17,7 @@ abstract class AbstractRedisTest {
 
         @JvmStatic
         protected fun randomName(): String =
-            "bluetape4k:${faker.name().username()}:${Snowfloker.Global.nextId()}"
+            "bluetape4k:${faker.name().username()}:${Snowflakers.Global.nextId()}"
 
         @JvmStatic
         protected fun randomString(size: Int = 2048): String =

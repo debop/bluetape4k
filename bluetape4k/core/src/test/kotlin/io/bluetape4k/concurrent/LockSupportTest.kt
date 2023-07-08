@@ -57,14 +57,13 @@ class LockSupportTest {
                 Thread.sleep(200)
                 countDown()
                 log.trace { "countDown latch ..." }
-                42
             }
         }
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `with readLock`() = runTest {
-        var counter = 0
+        var counter: Int
 
         val rwLock = ReentrantReadWriteLock()
 

@@ -179,7 +179,7 @@ class WordCountExamples {
                 .mapValues(ValueMapper { it.lowercase() })
                 .flatMapValues { value -> value.split("\\W+".toRegex()) }
                 .groupBy(
-                    { key, word -> word },
+                    { _, word -> word },
                     groupedOf(SERDE_STRING, SERDE_STRING)
                 )
                 .count(materializedOf("counts"))

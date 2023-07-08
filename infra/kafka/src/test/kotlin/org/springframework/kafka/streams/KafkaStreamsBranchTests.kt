@@ -130,13 +130,13 @@ class KafkaStreamsBranchTests {
         fun trueFalseStream(kStreamBuilder: StreamsBuilder): KStream<String, String> {
             return KafkaStreamBrancher<String, String>()
                 .branch(
-                    { key, value -> value.asBoolean() == true },
+                    { _, value -> value.asBoolean() == true },
                     { ks ->
                         ks.to(TRUE_TOPIC, Produced.with(Serdes.String(), Serdes.String()))
                     }
                 )
                 .branch(
-                    { key, value -> value.asBoolean() == false },
+                    { _, value -> value.asBoolean() == false },
                     { ks -> ks.to(FALSE_TOPIC, Produced.with(Serdes.String(), Serdes.String())) }
                 )
                 .onTopOf(kStreamBuilder.stream(TRUE_FALSE_INPUT_TOPIC, Consumed.with(Serdes.String(), Serdes.String())))

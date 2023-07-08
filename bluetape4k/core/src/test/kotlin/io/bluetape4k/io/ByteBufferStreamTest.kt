@@ -24,11 +24,10 @@ class ByteBufferStreamTest {
 
         ByteBufferInputStream(bytes).use { inputStream ->
             inputStream.available() shouldBeEqualTo bytes.size
-
             val actual = ByteArray(bytes.size)
             inputStream.read(actual)
 
-            actual shouldBeEqualTo bytes
+            actual shouldBeEqualTo buffer.getBytes()
         }
     }
 

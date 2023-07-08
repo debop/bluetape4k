@@ -3,6 +3,7 @@ package org.springframework.kafka.annotation
 import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
+import io.bluetape4k.logging.trace
 import io.bluetape4k.spring.messaging.support.message
 import io.bluetape4k.spring.messaging.support.messageOf
 import io.bluetape4k.support.uninitialized
@@ -255,6 +256,7 @@ class BatchListenerConversionTests {
 
         @KafkaListener(beanRef = "__x", topics = ["#{__x.topic}"], groupId = "#{__x.topic}.group2")
         fun listen2(foos: List<Foo>) {
+            log.trace { "foos=${foos.joinToString()}" }
             this.latch2.countDown()
         }
 

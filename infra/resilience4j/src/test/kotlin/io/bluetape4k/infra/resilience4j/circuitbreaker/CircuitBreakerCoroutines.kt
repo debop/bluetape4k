@@ -62,7 +62,7 @@ class CircuitBreakerCoroutines {
         val supplier = breaker.checkedSupplier {
             "This can be any method which returns: `Hello"
         }
-        val result = runCatching { supplier() }.map { "$it world`" }.recover { e -> "Failed" }
+        val result = runCatching { supplier() }.map { "$it world`" }.recover { _ -> "Failed" }
 
         result.isSuccess.shouldBeTrue()
         result.getOrNull() shouldBeEqualTo "This can be any method which returns: `Hello world`"

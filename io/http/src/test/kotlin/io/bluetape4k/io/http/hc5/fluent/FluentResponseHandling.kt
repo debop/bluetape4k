@@ -7,13 +7,13 @@ import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.io.toString
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import jakarta.json.JsonException
 import org.amshove.kluent.shouldBeEqualTo
 import org.apache.hc.client5.http.ClientProtocolException
 import org.apache.hc.client5.http.HttpResponseException
 import org.apache.hc.core5.http.ContentType
 import org.apache.hc.core5.http.HttpStatus
 import org.junit.jupiter.api.Test
-import javax.json.JsonException
 import javax.xml.parsers.ParserConfigurationException
 
 /**

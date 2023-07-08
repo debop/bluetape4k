@@ -22,14 +22,14 @@ class StandardSupportTest {
         val p1: String? = null
         val p2: String? = null
 
-        safeLet(p1, p2) { a, b ->
+        safeLet(p1, p2) { _, _ ->
             fail("p1, p2 둘 다 null 이므로 실행되어서는 안됩니다")
         }
 
-        safeLet(null, "b") { a, b ->
+        safeLet(null, "b") { _, _ ->
             fail("p1 이 null 이므로 실행되어서는 안됩니다")
         }
-        safeLet("a", null) { a, b ->
+        safeLet("a", null) { _, _ ->
             fail("p2 이 null 이므로 실행되어서는 안됩니다")
         }
     }

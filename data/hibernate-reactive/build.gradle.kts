@@ -11,18 +11,9 @@ plugins {
 // 이렇게 해야 association의 proxy 가 만들어집니다.
 // https://kotlinlang.org/docs/reference/compiler-plugins.html
 allOpen {
-//    annotation("javax.persistence.Entity")
-//    annotation("javax.persistence.Embeddable")
-//    annotation("javax.persistence.MappedSuperclass")
     annotation("jakarta.persistence.Entity")
     annotation("jakarta.persistence.Embeddable")
     annotation("jakarta.persistence.MappedSuperclass")
-}
-
-kapt {
-    showProcessorStats = true
-    // kapt 가 제대로 동작하지 않는 경우, 해당 클래스를 약간 수정해보세요. (Comments 추가 등으로)
-    correctErrorTypes = true
 }
 
 idea {
@@ -47,10 +38,8 @@ dependencies {
     api(project(":bluetape4k-vertx-core"))
 
     // NOTE: Java 9+ 환경에서 kapt가 제대로 동작하려면 javax.annotation-api 를 참조해야 합니다.
-//    api(Libs.javax_annotation_api)
     api(Libs.jakarta_annotation_api)
 
-//    api(Libs.javax_persistence_api)
     api(Libs.jakarta_persistence_api)
     api(Libs.hibernate_reactive_core)
 
@@ -58,7 +47,6 @@ dependencies {
     kapt(Libs.hibernate_jpamodelgen)
     kaptTest(Libs.hibernate_jpamodelgen)
 
-//    runtimeOnly(Libs.javax_validation_api)
     api(Libs.jakarta_validation_api)
     implementation(Libs.hibernate_validator)
 

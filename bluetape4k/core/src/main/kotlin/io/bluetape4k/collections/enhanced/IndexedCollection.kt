@@ -77,7 +77,7 @@ class IndexedCollection<K, E> private constructor(
     }
 
     fun values(key: K): MutableCollection<E> {
-        return index.get(key) ?: emptyFastList()
+        return index[key] ?: emptyFastList()
     }
 
     override fun remove(element: E): Boolean {

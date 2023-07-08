@@ -2,6 +2,7 @@ package org.springframework.kafka.streams
 
 import io.bluetape4k.infra.kafka.spring.test.utils.getPropertyValue
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.trace
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.uninitialized
 import io.mockk.mockk
@@ -113,7 +114,7 @@ class KafkaStreamsTests {
 
         val stateLatch = CountDownLatch(1)
 
-        this.streamsBuilderFactoryBean.setStateListener({ newState, oldState -> stateLatch.countDown() })
+        this.streamsBuilderFactoryBean.setStateListener({ _, _ -> stateLatch.countDown() })
         val exceptionHandler = mockk<StreamsUncaughtExceptionHandler>(relaxUnitFun = true)
         this.streamsBuilderFactoryBean.setStreamsUncaughtExceptionHandler(exceptionHandler)
 
@@ -195,6 +196,7 @@ class KafkaStreamsTests {
         fun customizer(): StreamsBuilderFactoryBeanConfigurer {
             return StreamsBuilderFactoryBeanConfigurer { fb: StreamsBuilderFactoryBean ->
                 fb.setStateListener { newState: KafkaStreams.State?, oldState: KafkaStreams.State? ->
+                    log.trace { "newState=$newState, oldState=$oldState" }
                     stateChangeCalled().set(true)
                 }
             }
@@ -220,8 +222,8 @@ class KafkaStreamsTests {
                     Materialized.`as`<Int, String, WindowStore<Bytes, ByteArray>>("windowStore")
                 )
                 .toStream()
-                .map<Int, String> { windowedId: Windowed<Int>, value: String ->
-                    KeyValue<Int, String>(windowedId.key(), value)
+                .map { windowedId: Windowed<Int>, value: String ->
+                    KeyValue(windowedId.key(), value)
                 }
                 .filter { i: Int?, s: String -> s.length > 40 }
                 .transform<Int, String>({ enricher })

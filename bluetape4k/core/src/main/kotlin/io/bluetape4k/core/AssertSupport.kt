@@ -20,7 +20,7 @@ fun <T: Any> T?.assertNull(parameterName: String): T? {
 
 fun <T: CharSequence> T?.assertNotEmpty(parameterName: String): T {
     contract {
-        returnsNotNull() implies (this@assertNotEmpty != null)
+        returns() implies (this@assertNotEmpty != null)
     }
     val self = this.assertNotNull(parameterName)
     assert(self.isNotEmpty()) { "$parameterName[$self] must not be empty." }
@@ -29,7 +29,7 @@ fun <T: CharSequence> T?.assertNotEmpty(parameterName: String): T {
 
 fun <T: CharSequence> T?.assertNullOrEmpty(parameterName: String): T? {
     contract {
-        returnsNotNull() implies (this@assertNullOrEmpty == null)
+        returns() implies (this@assertNullOrEmpty == null)
     }
     assert(this.isNullOrEmpty()) { "$parameterName[$this] must be null or empty." }
     return this
@@ -37,7 +37,7 @@ fun <T: CharSequence> T?.assertNullOrEmpty(parameterName: String): T? {
 
 fun <T: CharSequence> T?.assertNotBlank(parameterName: String): T {
     contract {
-        returnsNotNull() implies (this@assertNotBlank != null)
+        returns() implies (this@assertNotBlank != null)
     }
     val self = this.assertNotNull(parameterName)
     assert(self.isNotBlank()) { "$parameterName[$self] must not be blank." }
@@ -46,7 +46,7 @@ fun <T: CharSequence> T?.assertNotBlank(parameterName: String): T {
 
 fun <T: CharSequence> T?.assertNullOrBlank(parameterName: String): T? {
     contract {
-        returnsNotNull() implies (this@assertNullOrBlank == null)
+        returns() implies (this@assertNullOrBlank == null)
     }
     assert(this.isNullOrEmpty()) { "$parameterName[$this] must be null or blank." }
     return this

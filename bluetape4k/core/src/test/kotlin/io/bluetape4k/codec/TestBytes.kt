@@ -60,7 +60,7 @@ object TestBytes {
         }
 
         private val medium: Int
-            private get() = buf.getShort(0).toInt() shl 8 or (buf[2].toInt() and 0xFF)
+            get() = buf.getShort(0).toInt() shl 8 or (buf[2].toInt() and 0xFF)
 
         private fun putMedium(value: Int): ByteBuffer {
             return buf.putShort(0, (value shr 8).toShort()).put(2, value.toByte())

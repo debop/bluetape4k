@@ -68,7 +68,6 @@ class UpdateTest: AbstractR2dbcTest() {
         user shouldBeEqualTo User(username = "nick", password = "pass", name = "John Smith", userId = user.userId)
 
         val now = OffsetDateTime.now()
-        val oldId = user.userId
 
         val newUser = user.copy(description = "description", createdAt = now, active = true)
         val rowsUpdated = client.update().table<User>().using(newUser, client).awaitSingle()
