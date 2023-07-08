@@ -39,6 +39,7 @@ import java.math.BigInteger
  * @since 1.0
  * @version $Id$
  */
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 class Base64(
     lineLength: Int = MIME_CHUNK_SIZE,
     lineSeparator: ByteArray? = CHUNK_SEPARATOR,

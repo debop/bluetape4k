@@ -1,3 +1,5 @@
+@file:Suppress("removal", "DEPRECATION")
+
 package io.bluetape4k.infra.kafka.spring.core
 
 import io.bluetape4k.coroutines.flow.async
@@ -22,6 +24,7 @@ import kotlin.coroutines.resumeWithException
  * @param record 전송할 정보 [ProducerRecord]
  * @return 발송 결과 정보 [SendResult]
  */
+
 suspend inline fun <K, V> KafkaOperations2<K, V>.sendSuspending(
     record: ProducerRecord<K, V>,
 ): SendResult<K, V> = suspendCancellableCoroutine { cont ->

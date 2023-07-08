@@ -26,6 +26,7 @@ import io.bluetape4k.support.toUtf8String
  *
  * 참고: [RFC 4648](http://www.ietf.org/rfc/rfc4648.txt)
  */
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 class Base32(
     lineLength: Int = 0,
     lineSeparator: ByteArray? = null,

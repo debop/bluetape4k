@@ -181,7 +181,9 @@ class KafkaServer private constructor(
                     getStringProducerFactory(kafkaServer),
                     true,
                     getStringConsumerFactory(kafkaServer)
-                )
+                ).apply {
+                    this.defaultTopic = defaultTopic
+                }
             }
 
             fun getStringKafkaTemplate(

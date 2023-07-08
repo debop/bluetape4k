@@ -25,14 +25,14 @@ class SampleWebfluxRouter(
 
     @Bean
     fun getIndex(): RouterFunction<ServerResponse> = coRouter {
-        GET("/") { request ->
+        GET("/") { _ ->
             ServerResponse.ok().contentType(MediaType.TEXT_HTML).bodyValueAndAwait(indexHtml)
         }
     }
 
     @Bean
     fun compositeRountes(quoteGenerator: QuoteGenerator): RouterFunction<ServerResponse> = coRouter {
-        GET("/quotes") { request ->
+        GET("/quotes") { _ ->
             // 여러 개의 JSON 객체를 보낼 때에는 `application/x-ndjson` 을 사용해야 합니다.
             // https://www.devopsschool.com/blog/what-is-difference-between-application-x-ndjson-and-application-json/
             ServerResponse.ok()

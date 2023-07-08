@@ -4,7 +4,6 @@ import io.bluetape4k.data.r2dbc.connection.init.connectionFactoryInitializer
 import io.bluetape4k.support.asLong
 import io.bluetape4k.support.toUtf8Bytes
 import io.r2dbc.spi.ConnectionFactory
-import io.r2dbc.spi.Row
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ByteArrayResource
@@ -27,7 +26,7 @@ class ApplicationConfiguration {
      */
     @Bean
     fun idGeneratingCallback(databaseClient: DatabaseClient): BeforeConvertCallback<Customer> =
-        BeforeConvertCallback { customer, sqlIdentifier ->
+        BeforeConvertCallback { customer, _ ->
             if (customer.id == null) {
                 databaseClient.sql("SELECT NEXT VALUE FOR primary_key")
                     .map { readable -> readable[0].asLong() }

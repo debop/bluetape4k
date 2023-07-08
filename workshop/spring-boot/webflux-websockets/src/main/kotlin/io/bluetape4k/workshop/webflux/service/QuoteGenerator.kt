@@ -94,7 +94,7 @@ class QuoteGenerator {
         return Event(traceId, generateQuotes(interval))
     }
 
-    private fun generateQuotes(interval: Long): List<Quote> {
+    private fun generateQuotes(@Suppress("UNUSED_PARAMETER") interval: Long): List<Quote> {
         val instant = Instant.now()
 
         return prices.collect { baseQuote ->

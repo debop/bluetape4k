@@ -8,7 +8,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.warn
 import io.bluetape4k.support.uninitialized
-import io.bluetape4k.utils.idgenerators.snowflake.Snowfloker
+import io.bluetape4k.utils.idgenerators.snowflake.Snowflakers
 import kotlinx.coroutines.coroutineScope
 import org.redisson.api.RLock
 import org.redisson.api.RedissonClient
@@ -55,7 +55,7 @@ class RedissonCoLeaderElection(
             // val lockId = redissonClient.getLockId(lockName)
 
             // Redis IO 를 줄이기 위해 Default Snowflake 를 사용합니다.
-            val lockId = Snowfloker.Global.nextId()
+            val lockId = Snowflakers.Global.nextId()
 
             val acquired = lock.tryLockAsync(
                 waitTimeMills,

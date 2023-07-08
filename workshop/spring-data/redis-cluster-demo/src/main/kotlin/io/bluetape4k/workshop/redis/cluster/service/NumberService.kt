@@ -21,13 +21,13 @@ class NumberService(
         log.debug { "multiply and save: number=$number" }
 
         operations.requiredConnectionFactory.clusterConnection.use { conn ->
-            conn.set(number.toByteArray(), (number * 2).toByteArray())
+            conn.stringCommands()[number.toByteArray()] = (number * 2).toByteArray()
         }
     }
 
     fun get(number: Int): Int? {
         return operations.requiredConnectionFactory.clusterConnection.use { conn ->
-            conn.get(number.toByteArray())?.toInt().apply {
+            conn.stringCommands()[number.toByteArray()]?.toInt().apply {
                 log.debug { "get number=$number, value=$this" }
             }
         }

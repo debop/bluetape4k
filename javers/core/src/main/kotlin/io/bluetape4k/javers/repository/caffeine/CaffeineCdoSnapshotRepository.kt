@@ -56,7 +56,7 @@ class CaffeineCdoSnapshotRepository(
     override fun saveSnapshot(snapshot: CdoSnapshot) {
         synchronized(this) {
             val globalIdValue = snapshot.globalId.value()
-            val snapshots = snapshotCache.get(globalIdValue) { key -> mutableListOf() }
+            val snapshots = snapshotCache.get(globalIdValue) { _ -> mutableListOf() }
             val encoded = encode(snapshot)
             snapshots.add(0, encoded)
         }

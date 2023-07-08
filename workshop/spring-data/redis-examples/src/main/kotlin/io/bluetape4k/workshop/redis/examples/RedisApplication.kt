@@ -6,6 +6,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.uninitialized
 import io.bluetape4k.testcontainers.storage.RedisServer
+import jakarta.annotation.PreDestroy
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -19,7 +20,6 @@ import org.springframework.data.redis.serializer.RedisSerializer
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport
 import java.util.concurrent.TimeUnit
-import jakarta.annotation.PreDestroy
 
 fun main(vararg args: String) {
     runApplication<RedisApplication>(*args)
@@ -63,7 +63,7 @@ class RedisApplication {
 
     @PreDestroy
     fun flushTestDb() {
-        factory.connection.flushDb()
+        factory.connection.serverCommands().flushDb()
     }
 
     @Bean

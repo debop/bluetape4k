@@ -36,12 +36,12 @@ class ResponseBodyCallback(
                 }
             }
 
-            val input = response.body()!!.byteStream()
+            // val input = response.body()!!.byteStream()
             reader = response.body()?.byteStream()?.reader(Charsets.UTF_8)?.buffered()
             if (reader == null) {
                 return
             }
-            var line: String = ""
+            var line = ""
             var sse: SSE? = null
             while (!emitter.isCancelled && (reader.readLine()?.let { line = it }) != null) {
                 when {
