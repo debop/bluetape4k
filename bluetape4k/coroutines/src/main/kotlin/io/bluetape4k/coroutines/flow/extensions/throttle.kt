@@ -13,11 +13,12 @@ import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.channels.onSuccess
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.time.delay
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Define leading and trailing behavior.
@@ -56,13 +57,13 @@ fun <T> Flow<T>.throttleLeading(duration: Duration): Flow<T> =
     throttleTime(ThrottleBehavior.LEADING) { duration }
 
 fun <T> Flow<T>.throttleLeading(timeMillis: Long): Flow<T> =
-    throttleTime(ThrottleBehavior.LEADING) { Duration.ofMillis(timeMillis) }
+    throttleTime(ThrottleBehavior.LEADING) { timeMillis.milliseconds }
 
 fun <T> Flow<T>.throttleLeading(durationSelector: (value: T) -> Duration): Flow<T> =
     throttleTime(ThrottleBehavior.LEADING, durationSelector)
 
 fun <T> Flow<T>.throttleTrailing(timeMillis: Long): Flow<T> =
-    throttleTime(ThrottleBehavior.TRAILING) { Duration.ofMillis(timeMillis) }
+    throttleTime(ThrottleBehavior.TRAILING) { timeMillis.milliseconds }
 
 fun <T> Flow<T>.throttleTrailing(duration: Duration): Flow<T> =
     throttleTime(ThrottleBehavior.TRAILING) { duration }
@@ -71,7 +72,7 @@ fun <T> Flow<T>.throttleTrailing(durationSelector: (value: T) -> Duration): Flow
     throttleTime(ThrottleBehavior.TRAILING, durationSelector)
 
 fun <T> Flow<T>.throttleBoth(timeMillis: Long): Flow<T> =
-    throttleTime(ThrottleBehavior.BOTH) { Duration.ofMillis(timeMillis) }
+    throttleTime(ThrottleBehavior.BOTH) { timeMillis.milliseconds }
 
 fun <T> Flow<T>.throttleBoth(duration: Duration): Flow<T> =
     throttleTime(ThrottleBehavior.BOTH) { duration }
@@ -193,7 +194,7 @@ fun <T> Flow<T>.throttleTime(
     timeMillis: Long,
     throttleBehavior: ThrottleBehavior = ThrottleBehavior.LEADING,
 ): Flow<T> =
-    throttleTime(throttleBehavior) { Duration.ofMillis(timeMillis) }
+    throttleTime(throttleBehavior) { timeMillis.milliseconds }
 
 
 /**
@@ -254,7 +255,6 @@ fun <T> Flow<T>.throttleTime(
     val leading = throttleBehavior.isLeading
     val trailing = throttleBehavior.isTrailing
     val downstream = this
-
 
     coroutineScope {
         val scope = this

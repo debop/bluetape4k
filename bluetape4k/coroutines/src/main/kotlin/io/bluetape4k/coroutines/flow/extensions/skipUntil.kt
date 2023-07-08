@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-import java.time.Duration
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration
 
 /**
  * 두 번째 [Flow]([notifier])이 값을 방출하거나 완료될 때까지 소스 [Flow]에서 방출된 항목을 건너뛰는 [Flow]을 반환합니다.

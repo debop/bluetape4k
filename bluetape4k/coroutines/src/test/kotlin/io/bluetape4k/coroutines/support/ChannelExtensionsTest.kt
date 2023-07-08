@@ -9,7 +9,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
-import java.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 class ChannelExtensionsTest {
 
@@ -104,7 +104,7 @@ class ChannelExtensionsTest {
             send(5)
         }
 
-        val debounded = channel.debounce(Duration.ofMillis(1000))
+        val debounded = channel.debounce(1.seconds)
         debounded.toList() shouldBeEqualTo listOf(1, 3, 4, 5)
     }
 }

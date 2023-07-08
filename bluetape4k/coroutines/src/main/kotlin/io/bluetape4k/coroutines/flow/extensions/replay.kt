@@ -5,8 +5,8 @@ package io.bluetape4k.coroutines.flow.extensions
 
 import io.bluetape4k.coroutines.flow.extensions.subject.ReplaySubject
 import kotlinx.coroutines.flow.Flow
-import java.time.Duration
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration
 
 /**
  * Shares a single collector towards the upstream source and multicasts
@@ -21,10 +21,10 @@ fun <T, R> Flow<T>.replay(maxSize: Int, transform: suspend (Flow<T>) -> Flow<R>)
     replay({ ReplaySubject(maxSize) }, transform)
 
 fun <T, R> Flow<T>.replay(maxTimeout: Duration, transform: suspend (Flow<T>) -> Flow<R>): Flow<R> =
-    replay({ ReplaySubject(maxTimeout.toMillis(), TimeUnit.MILLISECONDS) }, transform)
+    replay({ ReplaySubject(maxTimeout.inWholeMilliseconds, TimeUnit.MILLISECONDS) }, transform)
 
 fun <T, R> Flow<T>.replay(maxSize: Int, maxTimeout: Duration, transform: suspend (Flow<T>) -> Flow<R>): Flow<R> =
-    replay({ ReplaySubject(maxSize, maxTimeout.toMillis(), TimeUnit.MILLISECONDS) }, transform)
+    replay({ ReplaySubject(maxSize, maxTimeout.inWholeMilliseconds, TimeUnit.MILLISECONDS) }, transform)
 
 fun <T, R> Flow<T>.replay(
     maxSize: Int,
@@ -32,7 +32,7 @@ fun <T, R> Flow<T>.replay(
     timeSource: (TimeUnit) -> Long,
     transform: suspend (Flow<T>) -> Flow<R>,
 ): Flow<R> =
-    replay({ ReplaySubject(maxSize, maxTimeout.toMillis(), TimeUnit.MILLISECONDS, timeSource) }, transform)
+    replay({ ReplaySubject(maxSize, maxTimeout.inWholeMilliseconds, TimeUnit.MILLISECONDS, timeSource) }, transform)
 
 fun <T, R> Flow<T>.replay(
     replaySubjectSupplier: () -> ReplaySubject<T>,

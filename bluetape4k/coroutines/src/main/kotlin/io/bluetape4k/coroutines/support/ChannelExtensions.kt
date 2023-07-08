@@ -10,8 +10,8 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import java.time.Duration
 import kotlin.coroutines.CoroutineContext
+import kotlin.time.Duration
 
 @PublishedApi
 internal val log = KotlinLogging.logger { }
@@ -19,7 +19,6 @@ internal val log = KotlinLogging.logger { }
 /**
  * 연속해서 중복되는 요소를 제거하도록 합니다.
  *
- * @param T
  * @param context
  * @return
  */
@@ -46,7 +45,6 @@ suspend fun <E> ReceiveChannel<E>.distinctUntilChanged(
 /**
  * 연속해서 중복되는 요소를 제거하도록 합니다.
  *
- * @param T
  * @param context
  * @param equalOperator 요소들을 비교해서 같은지 판단하도록 한다 (두 요소가 같으면 true를 반환)
  * @return
@@ -162,10 +160,10 @@ suspend fun <E> ReceiveChannel<E>.debounce(
     context: CoroutineContext = Dispatchers.Default,
 ): ReceiveChannel<E> = coroutineScope {
     val self = this@debounce
-    require(!waitDuration.isNegative) { "waitDuration must be zero or positive value." }
+    require(!waitDuration.isNegative()) { "waitDuration must be zero or positive value." }
     produce(context, Channel.BUFFERED) {
         val producer = this@produce
-        val waitMillis = waitDuration.toMillis()
+        val waitMillis = waitDuration.inWholeMilliseconds
         var nextTime = 0L
         self.consumeEach { received ->
             val currentTime = System.currentTimeMillis()

@@ -1,9 +1,9 @@
 package io.bluetape4k.core
 
-import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration
 
 /**
  * 제한시간을 두고 [action]을 비동기로 실행합니다. 제한시간이 지나면 Exception을 가지는 [CompletableFuture]를 반환합니다.
@@ -35,7 +35,7 @@ inline fun <T> asyncRunWithTimeout(timeoutMillis: Long, crossinline action: () -
  * @return [action]의 실행 결과를 담은 [CompletableFuture], 제한시간이 초과되면 [TimeoutException]을 담은 [CompletableFuture]를 반환합니다.
  */
 inline fun <T> asyncRunWithTimeout(timeout: Duration, crossinline action: () -> T): CompletableFuture<T> {
-    return asyncRunWithTimeout(timeout.toMillis(), action)
+    return asyncRunWithTimeout(timeout.inWholeMilliseconds, action)
 }
 
 /**
@@ -61,5 +61,5 @@ inline fun <T: Any> withTimeoutOrNull(timeoutMillis: Long, crossinline action: (
  * @return [block]의 실행 결과, [timeout] 시간 내에 종료되지 않으면 null
  */
 inline fun <T: Any> withTimeoutOrNull(timeout: Duration, crossinline action: () -> T): T? {
-    return withTimeoutOrNull(timeout.toMillis(), action)
+    return withTimeoutOrNull(timeout.inWholeMilliseconds, action)
 }

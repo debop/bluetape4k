@@ -2,7 +2,9 @@ package io.bluetape4k.aws.http
 
 import software.amazon.awssdk.http.async.SdkAsyncHttpClient
 import software.amazon.awssdk.http.crt.AwsCrtAsyncHttpClient
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 /**
  * Crt 기반의 [SdkAsyncHttpClient]를 생성합니다.
@@ -24,15 +26,15 @@ inline fun awsCrtAsyncHttpClient(
 fun awsCrtAsyncHttpClientOf(
     maxConcurrency: Int = 100,
     readBufferSize: Long = 2 * 1024 * 1024,
-    connectionMaxIdleTime: Duration = Duration.ofSeconds(30),
-    connectionTimeout: Duration = Duration.ofSeconds(5),
+    connectionMaxIdleTime: Duration = 30.seconds,
+    connectionTimeout: Duration = 5.seconds,
     postQuantumTlsEnabled: Boolean = false,
     initializer: AwsCrtAsyncHttpClient.Builder.() -> Unit = {},
 ): SdkAsyncHttpClient = awsCrtAsyncHttpClient {
     this.maxConcurrency(maxConcurrency)
     this.readBufferSizeInBytes(readBufferSize)
-    this.connectionMaxIdleTime(connectionMaxIdleTime)
-    this.connectionTimeout(connectionTimeout)
+    this.connectionMaxIdleTime(connectionMaxIdleTime.toJavaDuration())
+    this.connectionTimeout(connectionTimeout.toJavaDuration())
     this.postQuantumTlsEnabled(postQuantumTlsEnabled)
 
     initializer()

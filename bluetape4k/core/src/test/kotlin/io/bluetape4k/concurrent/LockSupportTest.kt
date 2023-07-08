@@ -9,10 +9,13 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
-import java.time.Duration
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
+import kotlin.concurrent.write
 import kotlin.test.assertFailsWith
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 class LockSupportTest {
 
@@ -35,7 +38,7 @@ class LockSupportTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `with CountDownLatch with Timeout`() {
-        val result = withLatch(1, Duration.ofSeconds(1)) {
+        val result = withLatch(1, 1.seconds) {
             log.trace { "with CountDownLatch ..." }
             Thread.sleep(10)
             countDown()
@@ -49,7 +52,7 @@ class LockSupportTest {
     @Test
     fun `long task with CountDownLatch with Timeout`() {
         assertFailsWith<TimeoutException> {
-            withLatch(1, Duration.ofMillis(100)) {
+            withLatch(1, 100.milliseconds) {
                 log.trace { "with CountDownLatch ..." }
                 Thread.sleep(200)
                 countDown()
@@ -66,22 +69,22 @@ class LockSupportTest {
         val rwLock = ReentrantReadWriteLock()
 
         val result1 = async {
-            rwLock.withWriteLock {
+            rwLock.write {
                 delay(200)
                 counter = 42
             }
-            rwLock.withReadLock {
+            rwLock.read {
                 delay(20)
                 counter
             }
         }
 
         val result2 = async {
-            rwLock.withWriteLock {
+            rwLock.write {
                 delay(20)
                 counter = 21
             }
-            rwLock.withReadLock {
+            rwLock.read {
                 delay(200)
                 counter
             }
@@ -101,14 +104,14 @@ class LockSupportTest {
             .numThreads(16)
             .roundsPerThread(2)
             .add {
-                lock.withReadLock {
+                lock.read {
                     Thread.sleep(10)
                     val current = counter
                     log.trace { "current=$current" }
                 }
             }
             .add {
-                lock.withWriteLock {
+                lock.write {
                     Thread.sleep(20)
                     counter++
                 }

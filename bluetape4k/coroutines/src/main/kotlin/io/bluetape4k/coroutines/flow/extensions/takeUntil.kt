@@ -11,7 +11,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import java.time.Duration
+import kotlin.time.Duration
 
 /**
  * [other] 소스에서 요소가 emit 되거나 완료될 때까지는 main source로부터 소비한다.

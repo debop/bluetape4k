@@ -11,7 +11,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
-import java.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 class DelayTest: AbstractFlowTest() {
 
@@ -19,7 +19,7 @@ class DelayTest: AbstractFlowTest() {
 
     @Test
     fun `delayed flow`() = runTest {
-        delayedFlow(1, Duration.ofSeconds(1))
+        delayedFlow(1, 1.seconds)
             .assertResult(1)
 
         delayedFlow(2, 1_000L)
@@ -53,7 +53,7 @@ class DelayTest: AbstractFlowTest() {
         val emitted = atomic(false)
 
         launch {
-            delayedFlow(1, Duration.ofSeconds(2))
+            delayedFlow(1, 2.seconds)
                 .collect {
                     it shouldBeEqualTo 1
                     emitted.compareAndSet(expect = false, update = true)

@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import java.time.Duration
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
 
 class ReplayTest: AbstractFlowTest() {
 
@@ -49,7 +49,7 @@ class ReplayTest: AbstractFlowTest() {
 
     @Test
     fun `replay time bound`() = runTest {
-        val timeout = Duration.ofMinutes(1)
+        val timeout = 1.minutes
 
         range(1, 5)
             .onEach { delay(100) }
@@ -64,7 +64,7 @@ class ReplayTest: AbstractFlowTest() {
 
     @Test
     fun `replay size and time bound`() = runTest {
-        val timeout = Duration.ofMinutes(1)
+        val timeout = 1.minutes
 
         range(1, 5)
             .replay(2, timeout) { shared ->
@@ -78,7 +78,7 @@ class ReplayTest: AbstractFlowTest() {
 
     @Test
     fun `replay size and time and custom time source bound`() = runTest {
-        val timeout = Duration.ofMinutes(1)
+        val timeout = 1.minutes
         val timeSource: (TimeUnit) -> Long = { System.currentTimeMillis() }
 
         range(1, 5)

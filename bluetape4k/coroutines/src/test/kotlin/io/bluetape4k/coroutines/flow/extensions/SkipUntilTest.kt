@@ -3,6 +3,7 @@ package io.bluetape4k.coroutines.flow.extensions
 import app.cash.turbine.test
 import io.bluetape4k.coroutines.tests.assertResult
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -18,13 +19,15 @@ class SkipUntilTest: AbstractFlowTest() {
     fun `skip until`() = runTest {
         // -------1-------2-------3
         // -----------|
-        flowOf(1, 2, 3).log("source")
+        flowOf(1, 2, 3)
+            .log("source")
             .onEach { delay(100) }
             .skipUntil(delayedFlow(150)).log("skipUntil")
             .assertResult(2, 3)
 
         // dropUntil 은 skipUntil 과 같은 기능을 합니다.
-        flowOf(1, 2, 3).log("source")
+        flowOf(1, 2, 3)
+            .log("source")
             .onEach { delay(100) }
             .dropUntil(delayedFlow(150)).log("dropUntil")
             .assertResult(2, 3)
@@ -32,14 +35,16 @@ class SkipUntilTest: AbstractFlowTest() {
 
     @Test
     fun `skip until with never flow`() = runTest {
-        flowOf(1, 2, 3, 4).log("source")
+        flowOf(1, 2, 3, 4)
+            .log("source")
             .skipUntil(neverFlow()).log("skipUntil")
             .assertResult()
     }
 
     @Test
     fun `skip until with empty flow`() = runTest {
-        flowOf(1, 2, 3, 4).log("source")
+        flowOf(1, 2, 3, 4)
+            .log("source")
             .skipUntil(emptyFlow()).log("skipUntil")
             .assertResult(1, 2, 3, 4)
     }
@@ -55,11 +60,13 @@ class SkipUntilTest: AbstractFlowTest() {
             delay(20)
             emit(2)
             throw RuntimeException("Boom!")
-        }.log("source")
+        }
 
         val notifier = flowOf(100).onEach { delay(10) }.log("notifier")
 
         source
+            .log("source")
+            .buffer()
             .skipUntil(notifier)
             .onEach {
                 it shouldBeEqualTo 2

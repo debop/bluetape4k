@@ -12,7 +12,7 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
-import java.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 class TakeUntilTest: AbstractFlowTest() {
 
@@ -20,7 +20,7 @@ class TakeUntilTest: AbstractFlowTest() {
     fun basic() = runTest {
         range(1, 10).log("source")
             .onEach { delay(100) }
-            .takeUntil(Duration.ofMillis(550)).log("takeUntil")
+            .takeUntil(550.milliseconds).log("takeUntil")
             .assertResult(1, 2, 3, 4, 5)
     }
 
@@ -28,7 +28,7 @@ class TakeUntilTest: AbstractFlowTest() {
     fun `takeUntil has longer timeout`() = runTest {
         range(1, 10).log("source")
             .onEach { delay(100) }
-            .takeUntil(Duration.ofMillis(1500)).log("takeUntil")
+            .takeUntil(1500.milliseconds).log("takeUntil")
             .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     }
 
@@ -65,7 +65,7 @@ class TakeUntilTest: AbstractFlowTest() {
         //--------------------|
         range(1, 5).log("source")
             .onEach { delay(100) }
-            .takeUntil(Duration.ofMillis(350)).log("takeUntil")
+            .takeUntil(350.milliseconds).log("takeUntil")
             .assertResult(1, 2, 3)
     }
 
@@ -75,7 +75,7 @@ class TakeUntilTest: AbstractFlowTest() {
         //----------------------------------|
         range(1, 5).log("source")
             .onEach { delay(100) }
-            .takeUntil(Duration.ofMillis(600)).log("takeUntil")
+            .takeUntil(600.milliseconds).log("takeUntil")
             .assertResult(1, 2, 3, 4, 5)
     }
 

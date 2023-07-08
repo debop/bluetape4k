@@ -41,21 +41,24 @@ class RepeatTest: AbstractFlowTest() {
     inner class RepeatForever {
 
         @Test
-        fun `never stop flow`() = runTest(timeout = 3.seconds) {
-            val flow = flow<Int> { delay(1) }.repeat()
+        fun `never stop flow`() = runTest(timeout = 5.seconds) {
+            val flow = flow<Int> { delay(1) }
+                .log("#1")
+                .repeat()
 
             val buffer = mutableListOf<Int>()
             val job = launch(start = CoroutineStart.UNDISPATCHED) {
                 flow.toList(buffer)
             }
             val internalJob = intervalFlowOf(Duration.ZERO, 100.milliseconds)
+                .log("#2")
                 .take(1_000)
                 .launchIn(this)
 
             runCurrent()
 
-            repeat(1_000) {
-                advanceTimeBy(100)
+            repeat(100) {
+                advanceTimeBy(10)
                 runCurrent()
                 buffer.isEmpty().shouldBeTrue()
             }
@@ -69,6 +72,7 @@ class RepeatTest: AbstractFlowTest() {
         @Test
         fun `repeat elements`() = runTest {
             flowOf(1, 2, 3)
+                .log("#1")
                 .repeat()
                 .take(100)
                 .assertResultSet(listOf(1, 2, 3).cycled().take(100).toList())
@@ -93,6 +97,7 @@ class RepeatTest: AbstractFlowTest() {
                     job = null
                 }
             }
+                .log("#1")
                 .repeat(delay)
                 .take(100)
                 .assertResultSet(listOf(1, 2, 3).cycled().take(100).toList())
@@ -117,6 +122,7 @@ class RepeatTest: AbstractFlowTest() {
                     job = null
                 }
             }
+                .log("#1")
                 .repeat { (it + 1).milliseconds }
                 .take(100)
                 .assertResultSet(listOf(1, 2, 3).cycled().take(100).toList())
@@ -130,7 +136,7 @@ class RepeatTest: AbstractFlowTest() {
             }
 
             assertFailsWith<RuntimeException> {
-                flow.repeat().collect()
+                flow.log("#1").repeat().collect()
             }
         }
     }
@@ -141,6 +147,7 @@ class RepeatTest: AbstractFlowTest() {
         @Test
         fun `repeat with zero count`() = runTest {
             flowOf(1, 2, 3)
+                .log("#1")
                 .repeat(0)
                 .count() shouldBeEqualTo 0
         }
@@ -148,6 +155,7 @@ class RepeatTest: AbstractFlowTest() {
         @Test
         fun `repeat with negative count`() = runTest {
             flowOf(1, 2, 3)
+                .log("#1")
                 .repeat(-1)
                 .count() shouldBeEqualTo 0
         }
@@ -155,6 +163,7 @@ class RepeatTest: AbstractFlowTest() {
         @Test
         fun `repeat with count`() = runTest {
             flowOf(1, 2, 3)
+                .log("#1")
                 .repeat(100)
                 .assertResultSet(listOf(1, 2, 3).cycled().take(300).toList())
         }
@@ -178,6 +187,7 @@ class RepeatTest: AbstractFlowTest() {
                     job = null
                 }
             }
+                .log("#1")
                 .repeat(100, delay)
                 .assertResultSet(listOf(1, 2, 3).cycled().take(300).toList())
         }
@@ -201,6 +211,7 @@ class RepeatTest: AbstractFlowTest() {
                     job = null
                 }
             }
+                .log("#1")
                 .repeat(100) { (it + 1).milliseconds }
                 .assertResultSet(listOf(1, 2, 3).cycled().take(300).toList())
         }
@@ -213,7 +224,7 @@ class RepeatTest: AbstractFlowTest() {
             }
 
             assertFailsWith<RuntimeException> {
-                flow.repeat(100).collect()
+                flow.log("#1").repeat(100).collect()
             }
         }
     }

@@ -1,7 +1,8 @@
 package io.bluetape4k.support
 
 import io.bluetape4k.core.asyncRunWithTimeout
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 @JvmField
 val EMPTY_CLOSE_ERROR_HANDLER: (error: Throwable) -> Unit = { }
@@ -43,10 +44,10 @@ inline fun AutoCloseable.closeTimeout(
  * @param errorHandler close 에서 예외 발생 시 수행할 함수
  */
 inline fun AutoCloseable.closeTimeout(
-    timeout: Duration = Duration.ofSeconds(3),
+    timeout: Duration = 3.seconds,
     crossinline errorHandler: (error: Throwable) -> Unit = {},
 ) {
-    closeTimeout(timeout.toMillis(), errorHandler)
+    closeTimeout(timeout.inWholeMilliseconds, errorHandler)
 }
 
 inline infix fun <T> AutoCloseable.using(action: (AutoCloseable) -> T): T {

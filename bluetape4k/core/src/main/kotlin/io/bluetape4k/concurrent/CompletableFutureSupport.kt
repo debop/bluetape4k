@@ -1,7 +1,7 @@
 package io.bluetape4k.concurrent
 
-import java.time.Duration
 import java.util.concurrent.*
+import kotlin.time.Duration
 
 
 /**
@@ -42,7 +42,7 @@ fun <V> failedCompletableFutureOf(cause: Throwable): CompletableFuture<V> = Comp
  * @return [block]의 실행 결과, [timeout] 시간 내에 종료되지 않으면 null 을 반환하는 [CompletableFuture] 인스턴스
  */
 inline fun <V> futureWithTimeout(timeout: Duration, crossinline block: () -> V): CompletableFuture<V> {
-    return futureWithTimeout(timeout.toMillis(), block)
+    return futureWithTimeout(timeout.inWholeMilliseconds, block)
 }
 
 /**
@@ -256,7 +256,7 @@ val <V> CompletableFuture<V>.isSuccess: Boolean get() = this.isDone
 
 fun <V> CompletableFuture<V>.join(duration: Duration): V {
     return try {
-        get(duration.toNanos(), TimeUnit.NANOSECONDS)
+        get(duration.inWholeNanoseconds, TimeUnit.NANOSECONDS)
     } catch (e: Exception) {
         //        if (e is InterruptedException || e is ExecutionException || e is TimeoutException) null
         //        else throw e
@@ -268,4 +268,4 @@ fun <V> CompletableFuture<V>.join(duration: Duration, defaultValue: V): V =
     runCatching { join(duration) ?: defaultValue }.getOrDefault(defaultValue)
 
 fun <V> CompletableFuture<V>.joinOrNull(duration: Duration): V? =
-    runCatching { get(duration.toNanos(), TimeUnit.NANOSECONDS) }.getOrNull()
+    runCatching { get(duration.inWholeNanoseconds, TimeUnit.NANOSECONDS) }.getOrNull()

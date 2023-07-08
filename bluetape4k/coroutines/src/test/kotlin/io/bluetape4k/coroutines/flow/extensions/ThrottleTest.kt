@@ -22,7 +22,8 @@ import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Kotlinx Coroutines 에서 공식적으로 제공하는
@@ -337,7 +338,7 @@ class ThrottleTest: AbstractFlowTest() {
             }.log("source")
                 .throttleLeading {
                     when (it) {
-                        1    -> Duration.ofMillis(400)
+                        1    -> 400.milliseconds
                         3    -> throw RuntimeException("first")
                         else -> throw RuntimeException("second")
                     }
@@ -374,7 +375,7 @@ class ThrottleTest: AbstractFlowTest() {
                     if (count++ % 2 == 0) {
                         throw CancellationException("$it")
                     } else {
-                        Duration.ofMillis(500L)
+                        500.milliseconds
                     }
                 }.log("leading")
                 .materialize()
@@ -585,7 +586,7 @@ class ThrottleTest: AbstractFlowTest() {
             }.log("source")
                 .throttleTrailing {
                     when (it) {
-                        1    -> Duration.ofMillis(400)
+                        1    -> 400.milliseconds
                         3    -> throw RuntimeException("first")
                         else -> throw RuntimeException("second")
                     }
@@ -608,7 +609,7 @@ class ThrottleTest: AbstractFlowTest() {
             }.log("source")
                 .throttleTrailing {
                     when (it) {
-                        1    -> Duration.ofMillis(400)
+                        1    -> 400.milliseconds
                         3    -> throw RuntimeException("first")
                         else -> throw RuntimeException("second")
                     }
@@ -646,7 +647,7 @@ class ThrottleTest: AbstractFlowTest() {
                     if (count++ % 2 == 0) {
                         throw CancellationException("$it")
                     } else {
-                        Duration.ofMillis(500L)
+                        500.milliseconds
                     }
                 }.log("trailing")
                 .test {
