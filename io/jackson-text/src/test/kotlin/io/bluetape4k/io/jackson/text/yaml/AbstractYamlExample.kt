@@ -7,7 +7,7 @@ abstract class AbstractYamlExample: AbstractJacksonTextTest() {
 
     companion object: KLogging()
 
-    protected val yamlMapper = JacksonYaml.defaultYamlMapper
-    protected val yamlFactory = JacksonYaml.defaultYamlFactory
-    protected val objectMapper = JacksonYaml.defaultObjectMapper
+    protected val yamlMapper by lazy { JacksonYaml.defaultYamlMapper }
+    protected val yamlFactory by lazy { JacksonYaml.defaultYamlFactory }
+    protected val objectMapper by lazy { JacksonYaml.defaultObjectMapper }
 }

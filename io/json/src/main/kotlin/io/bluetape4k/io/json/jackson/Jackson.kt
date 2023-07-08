@@ -1,6 +1,5 @@
 package io.bluetape4k.io.json.jackson
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -48,7 +47,6 @@ object Jackson: KLogging() {
             // addModules(JsonUuidModule())
 
             // Serialization feature
-            serializationInclusion(JsonInclude.Include.NON_NULL)
             enable(
                 JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT,
                 JsonGenerator.Feature.IGNORE_UNKNOWN,
