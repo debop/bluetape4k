@@ -66,6 +66,7 @@ subprojects {
     }
 
     val javaVersion = JavaVersion.VERSION_17.toString()
+    val kotlinVersion = "1.9"
 
     tasks {
 
@@ -80,8 +81,8 @@ subprojects {
                 jvmTarget = javaVersion
                 incremental = true
                 javaParameters = true
-                languageVersion = "1.8"
-                apiVersion = "1.8"
+                languageVersion = kotlinVersion
+                apiVersion = kotlinVersion
                 freeCompilerArgs = listOf(
                     "-Xjsr305=strict",
                     "-Xjvm-default=all",
@@ -112,8 +113,8 @@ subprojects {
                 jvmTarget = javaVersion
                 incremental = true
                 javaParameters = true
-                languageVersion = "1.8"
-                apiVersion = "1.8"
+                languageVersion = kotlinVersion
+                apiVersion = kotlinVersion
                 freeCompilerArgs = listOf(
                     "-Xjsr305=strict",
                     "-Xjvm-default=all",

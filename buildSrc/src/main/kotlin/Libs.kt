@@ -60,7 +60,7 @@ object Plugins {
 
 object Versions {
 
-    const val kotlin = "1.8.22"
+    const val kotlin = "1.9.0"
     const val kotlinx_coroutines = "1.7.2"
     const val kotlinx_serialization = "1.5.1"
 
