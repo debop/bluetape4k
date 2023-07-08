@@ -22,6 +22,5 @@ inline fun <reified T: Any> JqlQuery.findShadowsAndSequence(javers: Javers): Seq
 fun JqlQuery.findSnapshots(javers: Javers): MutableList<CdoSnapshot> =
     javers.findSnapshots(this)
 
-
 fun JqlQuery.findChanges(javers: Javers): Changes =
     javers.findChanges(this)

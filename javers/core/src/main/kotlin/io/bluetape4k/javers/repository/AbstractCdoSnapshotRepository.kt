@@ -2,14 +2,14 @@ package io.bluetape4k.javers.repository
 
 import com.google.gson.JsonObject
 import io.bluetape4k.javers.codecs.GsonCodec
-import io.bluetape4k.javers.filterByAuthor
-import io.bluetape4k.javers.filterByChangedPropertyNames
-import io.bluetape4k.javers.filterByCommitDate
-import io.bluetape4k.javers.filterByCommitIds
-import io.bluetape4k.javers.filterByCommitProperties
-import io.bluetape4k.javers.filterByToCommitId
-import io.bluetape4k.javers.filterByType
-import io.bluetape4k.javers.filterByVersion
+import io.bluetape4k.javers.metamodel.filterByAuthor
+import io.bluetape4k.javers.metamodel.filterByChangedPropertyNames
+import io.bluetape4k.javers.metamodel.filterByCommitDate
+import io.bluetape4k.javers.metamodel.filterByCommitIds
+import io.bluetape4k.javers.metamodel.filterByCommitProperties
+import io.bluetape4k.javers.metamodel.filterByToCommitId
+import io.bluetape4k.javers.metamodel.filterByType
+import io.bluetape4k.javers.metamodel.filterByVersion
 import io.bluetape4k.javers.metamodel.isChild
 import io.bluetape4k.javers.metamodel.isParent
 import io.bluetape4k.logging.KLogging
@@ -171,7 +171,7 @@ abstract class AbstractCdoSnapshotRepository<T: Any>(
             commit.snapshots.forEach {
                 saveSnapshot(it)
             }
-            log.debug { "${commit.snapshots.size} snapshot(s) persisted" }
+            log.trace { "${commit.snapshots.size} snapshot(s) persisted" }
             head = commit.id
             head?.let {
                 updateCommitId(it, commitIdSupplier.nextId())

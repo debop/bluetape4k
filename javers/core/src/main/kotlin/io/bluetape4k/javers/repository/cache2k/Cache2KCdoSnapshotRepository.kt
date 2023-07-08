@@ -17,18 +17,20 @@ class Cache2KCdoSnapshotRepository(
     codec: GsonCodec<String> = GsonCodecs.LZ4String,
 ): AbstractCdoSnapshotRepository<String>(codec) {
 
-    private val snapshotCache: Cache<String, MutableList<String>> =
+    private val snapshotCache: Cache<String, MutableList<String>> by lazy {
         cache2k<String, MutableList<String>> {
             this.entryCapacity(100_000)
             this.storeByReference(true)
             this.eternal(true)
         }.build()
+    }
 
-    private val commitSeqCache: Cache<CommitId, Long> =
+    private val commitSeqCache: Cache<CommitId, Long> by lazy {
         cache2k<CommitId, Long> {
             this.entryCapacity(100_000)
             this.eternal(true)
         }.build()
+    }
 
     override fun getKeys(): List<String> {
         return snapshotCache.keys().toList()
