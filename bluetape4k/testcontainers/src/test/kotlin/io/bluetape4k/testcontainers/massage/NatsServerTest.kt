@@ -5,6 +5,7 @@ import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
 import io.nats.client.Connection
 import io.nats.client.Nats
+import io.nats.client.Subscription
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
@@ -41,18 +42,19 @@ class NatsServerTest {
     }
 
     private fun connectToNats(nats: NatsServer) {
-        val client = Nats.connect(nats.url)
-        await until { client.status == Connection.Status.CONNECTED }
+        Nats.connect(nats.url).use { client ->
+            await until { client.status == Connection.Status.CONNECTED }
 
-        val subscription = client.subscribe("subject")
-        subscription.isActive.shouldBeTrue()
+            val subscription: Subscription = client.subscribe("subject")
+            subscription.isActive.shouldBeTrue()
 
-        client.publish("subject", "Hello world".toUtf8Bytes())
-        val message = subscription.nextMessage(Duration.ofMillis(500))
+            client.publish("subject", "Hello world".toUtf8Bytes())
+            val message = subscription.nextMessage(Duration.ofMillis(500))
 
-        message.subject shouldBeEqualTo "subject"
-        message.subscription shouldBeEqualTo subscription
-        message.replyTo.shouldBeNull()
-        message.data.toUtf8String() shouldBeEqualTo "Hello world"
+            message.subject shouldBeEqualTo "subject"
+            message.subscription shouldBeEqualTo subscription
+            message.replyTo.shouldBeNull()
+            message.data.toUtf8String() shouldBeEqualTo "Hello world"
+        }
     }
 }

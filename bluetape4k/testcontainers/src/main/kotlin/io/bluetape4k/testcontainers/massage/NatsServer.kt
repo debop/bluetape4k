@@ -58,6 +58,10 @@ class NatsServer private constructor(
         addExposedPorts(*NATS_PORTS)
         withReuse(reuse)
 
+        // JetStream 을 사용하기 위해서 지정
+        // 참고; [Nats Commandline Options](https://hub.docker.com/_/nats)
+        withCommand("-js")
+
         if (useDefaultPort) {
             // 위에 addExposedPorts 를 등록했으면, 따로 지정하지 않으면 그 값들을 사용합니다.
             exposeCustomPorts(*NATS_PORTS)

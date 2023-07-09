@@ -1094,8 +1094,10 @@ object Libs {
     const val pulsar_client = "org.apache.pulsar:pulsar-client:3.0.0"
 
     // Nats
-    // https://github.com/nats-io/nats.java
-    const val jnats = "io.nats:jnats:2.16.10"
+    const val jnats = "io.nats:jnats:2.16.13"     // https://github.com/nats-io/nats.java
+    const val nats_spring = "io.nats:nats-spring:0.5.6"  // https://mvnrepository.com/artifact/io.nats/nats-spring
+    const val nats_spring_cloud_stream_binder = "io.nats:nats-spring-cloud-stream-binder:0.5.6"
+
 
     // Zipkin
     const val zipkin_brave = "io.zipkin.brave:brave:5.15.1"
