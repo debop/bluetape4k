@@ -12,7 +12,12 @@ fun Connection.publish(subject: String, body: String, headers: Headers? = null) 
     publish(subject, headers, body.toUtf8Bytes())
 }
 
-fun Connection.publish(subject: String, replyTo: String, body: String, headers: Headers? = null) {
+fun Connection.publish(
+    subject: String,
+    replyTo: String,
+    body: String,
+    headers: Headers? = null,
+) {
     publish(subject, replyTo, headers, body.toUtf8Bytes())
 }
 
