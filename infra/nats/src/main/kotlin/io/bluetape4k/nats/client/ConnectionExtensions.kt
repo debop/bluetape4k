@@ -21,6 +21,22 @@ fun Connection.publish(
     publish(subject, replyTo, headers, body.toUtf8Bytes())
 }
 
+fun Connection.request(
+    subject: String,
+    body: String?,
+    headers: Headers? = null,
+    timeout: Duration? = null,
+): Message {
+    return request(subject, headers, body?.toUtf8Bytes(), timeout?.toJavaDuration())
+}
+
+fun Connection.request(
+    message: Message,
+    timeout: Duration? = null,
+): Message {
+    return request(message, timeout?.toJavaDuration())
+}
+
 suspend fun Connection.requestSuspending(
     message: Message,
     timeout: Duration? = null,
