@@ -17,7 +17,7 @@ class ServerPoolExample: AbstractNatsTest() {
         private val natsServer3 by lazy { createNatsServer() }
 
         private fun createNatsServer(): NatsServer {
-            return NatsServer().apply {
+            return NatsServer(reuse = false).apply {
                 start()
                 ShutdownQueue.register(this)
             }
