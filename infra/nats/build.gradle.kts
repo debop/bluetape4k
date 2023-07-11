@@ -18,4 +18,13 @@ dependencies {
     compileOnly(Libs.kotlinx_coroutines_jdk8)
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
+
+    // Json
+    testImplementation(project(":bluetape4k-io-json"))
+    testImplementation(Libs.jackson_databind)
+    testImplementation(Libs.jackson_module_kotlin)
+
+    // Compressors & Serializers
+    testImplementation(Libs.lz4_java)
+    testImplementation(Libs.kryo)
 }
