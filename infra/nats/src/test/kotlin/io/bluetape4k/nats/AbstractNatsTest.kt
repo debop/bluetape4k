@@ -3,7 +3,7 @@ package io.bluetape4k.nats
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.nats.client.options
+import io.bluetape4k.nats.client.natsOptions
 import io.bluetape4k.testcontainers.massage.NatsServer
 import io.bluetape4k.utils.ShutdownQueue
 import io.nats.client.Connection
@@ -32,7 +32,7 @@ abstract class AbstractNatsTest {
     }
 
     protected fun getConnection(): Connection {
-        val options = options {
+        val options = natsOptions {
             server(nats.url)
             connectionListener { conn, event ->
                 conn.servers.forEach { server ->

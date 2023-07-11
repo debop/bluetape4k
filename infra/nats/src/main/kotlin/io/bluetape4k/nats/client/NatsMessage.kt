@@ -6,7 +6,7 @@ import io.nats.client.impl.Headers
 import io.nats.client.impl.NatsMessage
 
 inline fun natsMessage(initializer: NatsMessage.Builder.() -> Unit): NatsMessage {
-    return NatsMessage.Builder().apply(initializer).build()
+    return NatsMessage.builder().apply(initializer).build()
 }
 
 fun natsMessageOf(message: Message) = NatsMessage(message)

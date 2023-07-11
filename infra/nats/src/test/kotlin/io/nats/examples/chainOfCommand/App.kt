@@ -78,7 +78,7 @@ class App: AbstractNatsTest() {
             log.debug { "Request Style starter received a response: $response" }
 
             Thread.sleep(2000)
-            nc.flush(Duration.ofSeconds(1))
+            nc.flush(Duration.ofSeconds(3))
         }
     }
 }

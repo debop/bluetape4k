@@ -3,7 +3,7 @@ package io.nats.examples
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.nats.AbstractNatsTest
-import io.bluetape4k.nats.client.options
+import io.bluetape4k.nats.client.natsOptions
 import io.bluetape4k.nats.client.publish
 import io.bluetape4k.support.toUtf8String
 import io.nats.client.Connection
@@ -43,7 +43,7 @@ class FunctionalExamples: AbstractNatsTest() {
 
     @Test
     fun `connect control 2k`() {
-        val options = options {
+        val options = natsOptions {
             server(nats.url)
             maxControlLine(2 * 1024)
         }
@@ -56,7 +56,7 @@ class FunctionalExamples: AbstractNatsTest() {
 
     @Test
     fun `connect max ping five`() {
-        val options = options {
+        val options = natsOptions {
             server(nats.url)
             maxPingsOut(5) // Set max pings in flight
         }
@@ -69,7 +69,7 @@ class FunctionalExamples: AbstractNatsTest() {
 
     @Test
     fun `connect with connectionName`() {
-        val options = options {
+        val options = natsOptions {
             server(nats.url)
             connectionName("my-connection")
         }
@@ -82,7 +82,7 @@ class FunctionalExamples: AbstractNatsTest() {
 
     @Test
     fun `connect with pedantic mode`() {
-        val options = options {
+        val options = natsOptions {
             server(nats.url)
             pedantic()
         }
@@ -95,7 +95,7 @@ class FunctionalExamples: AbstractNatsTest() {
 
     @Test
     fun `connect with token`() {
-        val options = options {
+        val options = natsOptions {
             server(nats.url)
             token("mytoken".toCharArray())
         }
@@ -108,7 +108,7 @@ class FunctionalExamples: AbstractNatsTest() {
 
     @Test
     fun `connect to multiple servers`() {
-        val options = options {
+        val options = natsOptions {
             server(nats.url)
             server(natsDefault.url)
         }
@@ -121,7 +121,7 @@ class FunctionalExamples: AbstractNatsTest() {
 
     @Test
     fun `connect with user password`() {
-        val options = options {
+        val options = natsOptions {
             server(nats.url)
             userInfo("myname", "password")
         }
@@ -134,7 +134,7 @@ class FunctionalExamples: AbstractNatsTest() {
 
     @Test
     fun `connect with verbose`() {
-        val options = options {
+        val options = natsOptions {
             server(nats.url)
             verbose()
             connectionTimeout(Duration.ofSeconds(10))
@@ -256,7 +256,7 @@ class FunctionalExamples: AbstractNatsTest() {
 
     @Test
     fun `reconnect 5 MB`() {
-        val options = options {
+        val options = natsOptions {
             server(nats.url)
             reconnectBufferSize(5 * 1024 * 1024)
             reconnectWait(Duration.ofSeconds(10))   // Set Reconnect Wait

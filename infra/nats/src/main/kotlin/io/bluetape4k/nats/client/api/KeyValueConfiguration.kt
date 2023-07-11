@@ -2,8 +2,18 @@ package io.bluetape4k.nats.client.api
 
 import io.nats.client.api.KeyValueConfiguration
 
-inline fun keyValueConfiguration(initializer: KeyValueConfiguration.Builder.() -> Unit): KeyValueConfiguration {
-    return KeyValueConfiguration.builder().apply(initializer).build()
+inline fun keyValueConfiguration(
+    name: String,
+    initializer: KeyValueConfiguration.Builder.() -> Unit,
+): KeyValueConfiguration {
+    return KeyValueConfiguration.builder(name).apply(initializer).build()
+}
+
+inline fun keyValueConfiguration(
+    kvConfig: KeyValueConfiguration? = null,
+    initializer: KeyValueConfiguration.Builder.() -> Unit,
+): KeyValueConfiguration {
+    return KeyValueConfiguration.builder(kvConfig).apply(initializer).build()
 }
 
 fun keyValueConfigurationOf(
