@@ -1,10 +1,11 @@
 spring:
-    redis:
-        host: ${testcontainers.redis.host}
-        port: ${testcontainers.redis.port}
-        lettuce:
-            pool:
-                enabled: true
+    data:
+        redis:
+            host: ${testcontainers.redis.host}
+            port: ${testcontainers.redis.port}
+            lettuce:
+                pool:
+                    enabled: true
 
 bucket4j:
     enabled: true
