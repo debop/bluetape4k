@@ -323,7 +323,6 @@ class FunctionalExamples: AbstractNatsTest() {
             List(10) {
                 nc.publish("updates", "message $it.")
             }
-
             repeat(10) {
                 val msg = subscription.nextMessage(Duration.ZERO)
                 log.debug { "Received: ${msg.data.toUtf8String()}" }
