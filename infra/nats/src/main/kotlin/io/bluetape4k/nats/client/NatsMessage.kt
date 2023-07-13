@@ -12,7 +12,7 @@ fun natsMessageOf(message: Message) = NatsMessage(message)
 
 fun natsMessageOf(
     subject: String,
-    data: ByteArray,
+    data: ByteArray?,
     replyTo: String? = null,
     headers: Headers? = null,
 ): NatsMessage = natsMessage {
@@ -24,7 +24,7 @@ fun natsMessageOf(
 
 fun natsMessageOf(
     subject: String,
-    data: String,
+    data: String?,
     replyTo: String? = null,
     headers: Headers? = null,
 ): NatsMessage = natsMessage {
