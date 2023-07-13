@@ -32,10 +32,8 @@ class MessageConsumerExample: AbstractSimpleExample() {
             publish(js, SUBJECT, MESSAGE_TEXT, 2500)
 
             // get stream context, create consumer and get the consumer context
-            val streamContext = nc.streamContext(STREAM).apply {
-                createOrUpdateConsumer(consumerConfiguration { durable(CONSUMER_NAME) })
-            }
-            val consumerContext = streamContext.consumerContext(CONSUMER_NAME)
+            val streamContext = nc.streamContext(STREAM)
+            val consumerContext = streamContext.createOrUpdateConsumer(consumerConfiguration { durable(CONSUMER_NAME) })
 
             val latch = CountDownLatch(1)
             val counter = atomic(0)
