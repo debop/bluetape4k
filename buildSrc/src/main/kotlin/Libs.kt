@@ -173,8 +173,8 @@ object Versions {
     const val prometheus = "0.16.0"
 
     //NOTE: spring boot 2.7.x 를 사용할 시 micrometer는 1.9+ 를 사용해야 합니다.
-    const val micrometer = "1.10.7"
-    const val micrometerTracing = "1.0.6"
+    const val micrometer = "1.11.2"
+    const val micrometerTracing = "1.1.3"
 
     // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom
     const val opentelemetry = "1.26.0"
@@ -948,9 +948,10 @@ object Libs {
     val prometheus_simpleclient_tracer_otel_agent = prometheusSimple("tracer_otel_agent")
 
     // Micrometer
-    fun micrometer(module: String) = "io.micrometer:micrometer-$module:${Versions.micrometer}"
-    val micrometer_bom = micrometer("bom")
+    fun micrometer(module: String) = "io.micrometer:micrometer-$module"
+    val micrometer_bom = micrometer("bom" + ":" + Versions.micrometer)
     val micrometer_core = micrometer("core")
+    val micrometer_observation = micrometer("observation")
     val micrometer_test = micrometer("test")
     val micrometer_registry_cloudwatch = micrometer("registry-cloudwatch")
     val micrometer_registry_elastic = micrometer("registry-elastic")

@@ -5,7 +5,13 @@ plugins {
 }
 
 springBoot {
-    mainClass.set("io.bluetape4k.workshop.bucket4j.RedisApplicationKt")
+    mainClass.set("io.bluetape4k.workshop.cloud.gateway.GatewayApplicationKt")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom(Libs.micrometer_bom)
+    }
 }
 
 configurations {
@@ -28,7 +34,7 @@ dependencies {
     api(Libs.lettuce_core)
     implementation(project(":bluetape4k-testcontainers"))
 
-    api(Libs.javax_cache_api)
+    api(Libs.jakarta_servlet_api)
 
     // Spring Boot
     implementation(Libs.springBoot("autoconfigure"))
@@ -37,11 +43,15 @@ dependencies {
     runtimeOnly(Libs.springBoot("devtools"))
 
     implementation(Libs.springCloudStarter("gateway"))
+    testImplementation(Libs.springCloudStarter("loadbalancer"))
+    testImplementation(Libs.springCloud("test-support"))
+    testImplementation(Libs.springCloud("gateway-server") + "::tests")
 
     implementation(Libs.springBootStarter("webflux"))
-    implementation(Libs.springBootStarter("cache"))
-    implementation(Libs.springBootStarter("validation"))
+    // implementation(Libs.springBootStarter("cache"))
+    // implementation(Libs.springBootStarter("validation"))
     implementation(Libs.springBootStarter("actuator"))
+    implementation(Libs.micrometer_core)
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")

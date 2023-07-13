@@ -1,3 +1,9 @@
+test:
+    #  hostport: httpbin.org:80
+    #  hostport: localhost:5000
+    #  uri: http://${test.hostport}
+    uri: lb://httpbin  # https://nghttp2.org/httpbin/
+
 logging:
     level:
         io.bluetape4k.workshop.bucket4j: debug
@@ -8,7 +14,33 @@ management:
         web:
             exposure:
                 include: "*"
+
 spring:
+    jmx:
+        enabled: false
+    cloud:
+        gateway:
+            default-filters:
+                - PrefixPath=/httpbin
+                - AddResponseHeader=X-Response-Default-Foo, Default-Bar
+
+            routes:
+                # =====================================
+                # to run server
+                # $ wscat --listen 9000
+                # to run client
+                # $ wscat --connect ws://localhost:8080/echo
+                -   id: websocket_test
+                    uri: ws://localhost:9000
+                    order: 9000
+                    predicates:
+                        - Path=/echo
+                # =====================================
+                -   id: default_path_to_httpbin
+                    uri: ${test.uri}
+                    order: 10000
+                    predicates:
+                        - Path=/**
     data:
         redis:
             host: ${testcontainers.redis.host}
