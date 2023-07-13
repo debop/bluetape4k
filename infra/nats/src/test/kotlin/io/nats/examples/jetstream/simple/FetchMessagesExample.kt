@@ -2,9 +2,11 @@ package io.nats.examples.jetstream.simple
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import io.bluetape4k.nats.client.api.consumerConfiguration
 import io.bluetape4k.nats.client.api.fetchConsumeOptionsOf
 import io.bluetape4k.nats.client.createOrReplaceStream
+import io.bluetape4k.support.toUtf8String
 import io.nats.client.Connection
 import io.nats.client.JetStream
 import org.junit.jupiter.api.Test
@@ -62,6 +64,7 @@ class FetchMessagesExample: AbstractSimpleExample() {
             consumerContext.fetch(fetchOptions).use { consumer ->
                 var msg = consumer.nextMessage()
                 while (msg != null) {
+                    log.trace { "msg=${msg.data.toUtf8String()}" }
                     msg.ack()
                     if (++receivedMessages == maxMessages) {
                         msg = null
