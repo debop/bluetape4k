@@ -22,6 +22,11 @@ fun Connection.createStream(
 
 fun Connection.createOrReplaceStream(
     streamName: String,
+    subject: String,
+): StreamInfo = createOrReplaceStream(streamName, subjects = arrayOf(subject))
+
+fun Connection.createOrReplaceStream(
+    streamName: String,
     storageType: StorageType = StorageType.Memory,
     vararg subjects: String,
 ): StreamInfo {
