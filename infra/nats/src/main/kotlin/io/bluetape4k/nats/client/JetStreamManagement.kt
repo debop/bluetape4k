@@ -75,7 +75,6 @@ fun JetStreamManagement.createStreamOrUpdateSubjects(
     storageType: StorageType = StorageType.Memory,
     vararg subjects: String,
 ): StreamInfo {
-
     val si = getStreamInfoOrNull(streamName)
         ?: return createStream(streamName, storageType, *subjects)
 
