@@ -7,7 +7,7 @@ fun ObjectStoreManagement.tryDelete(bucketName: String) {
     try {
         delete(bucketName)
     } catch (e: JetStreamApiException) {
-        if (e.apiErrorCode != 10059) {
+        if (e.apiErrorCode != JET_STREAM_NOT_FOUND) {
             throw e
         }
     }

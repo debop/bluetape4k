@@ -4,7 +4,7 @@ import io.nats.client.api.KeyValueConfiguration
 
 inline fun keyValueConfiguration(
     name: String,
-    initializer: KeyValueConfiguration.Builder.() -> Unit,
+    initializer: KeyValueConfiguration.Builder.() -> Unit = {},
 ): KeyValueConfiguration {
     return KeyValueConfiguration.builder(name).apply(initializer).build()
 }

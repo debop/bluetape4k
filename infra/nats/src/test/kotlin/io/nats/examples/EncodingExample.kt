@@ -59,7 +59,7 @@ class EncodingExample: AbstractNatsTest() {
                 }
             }
 
-            val js: JetStream = nc.jetStream()
+            val js = nc.jetStream()
 
             val originalPojo = createPojo()
             js.publish("json", mapper.writeValueAsBytes(originalPojo))

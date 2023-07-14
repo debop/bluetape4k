@@ -4,7 +4,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.nats.AbstractNatsTest
 import io.bluetape4k.nats.client.api.consumerConfiguration
 import io.bluetape4k.nats.client.api.streamConfiguration
-import io.bluetape4k.nats.client.deleteStreamIfExists
+import io.bluetape4k.nats.client.forcedDeleteStream
 import io.bluetape4k.nats.client.publish
 import io.bluetape4k.support.toUtf8String
 import io.nats.client.PushSubscribeOptions
@@ -30,7 +30,7 @@ class RecreateConsumerExample: AbstractNatsTest() {
     fun `publish message`() {
         getConnection().use { nc ->
             val jsm = nc.jetStreamManagement()
-            jsm.deleteStreamIfExists(TEST_STREAM_NAME)
+            jsm.forcedDeleteStream(TEST_STREAM_NAME)
 
             val streamConfig = streamConfiguration(TEST_STREAM_NAME) {
                 subjects("re-sub")

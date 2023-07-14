@@ -3,7 +3,9 @@ package io.bluetape4k.nats.client
 import io.nats.client.JetStreamOptions
 import io.nats.client.KeyValueOptions
 
-inline fun keyValueOptions(initializer: KeyValueOptions.Builder.() -> Unit): KeyValueOptions {
+inline fun keyValueOptions(
+    initializer: KeyValueOptions.Builder.() -> Unit,
+): KeyValueOptions {
     return KeyValueOptions.builder().apply(initializer).build()
 }
 

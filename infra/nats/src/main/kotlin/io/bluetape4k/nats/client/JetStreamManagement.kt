@@ -3,42 +3,66 @@ package io.bluetape4k.nats.client
 import io.bluetape4k.nats.client.api.streamConfiguration
 import io.nats.client.JetStreamApiException
 import io.nats.client.JetStreamManagement
+import io.nats.client.api.ConsumerInfo
+import io.nats.client.api.PurgeResponse
 import io.nats.client.api.StorageType
 import io.nats.client.api.StreamConfiguration
 import io.nats.client.api.StreamInfo
 
-fun JetStreamManagement.deleteStreamIfExists(streamName: String) {
-    runCatching { deleteStream(streamName) }
-}
+fun JetStreamManagement.forcedDeleteStream(streamName: String): Boolean =
+    runCatching { deleteStream(streamName) }.getOrDefault(false)
+
+fun JetStreamManagement.forcedDeleteConsumer(streamName: String, consumerName: String): Boolean =
+    runCatching { deleteConsumer(streamName, consumerName) }.getOrDefault(false)
+
+fun JetStreamManagement.forcedPurgeStream(streamName: String): PurgeResponse? =
+    runCatching { purgeStream(streamName) }.getOrNull()
 
 fun JetStreamManagement.tryPurgeStream(
     streamName: String,
     streamConfigurationCreator: () -> StreamConfiguration = { StreamConfiguration.builder().name(streamName).build() },
-) {
-    try {
+): PurgeResponse? {
+    return try {
         purgeStream(streamName)
     } catch (je: JetStreamApiException) {
-        if (je.apiErrorCode == 10059) {
+        if (je.isNotFound) {
             addStream(streamConfigurationCreator())
+        } else {
+            throw je
+        }
+        null
+    }
+}
+
+fun JetStreamManagement.getStreamInfoOrNull(streamName: String): StreamInfo? {
+    return try {
+        getStreamInfo(streamName)
+    } catch (je: JetStreamApiException) {
+        if (je.isNotFound) {
+            null
         } else {
             throw je
         }
     }
 }
 
-fun JetStreamManagement.getStreamInfoOrNull(streamName: String): StreamInfo? {
-    try {
-        return getStreamInfo(streamName)
-    } catch (jsae: JetStreamApiException) {
-        if (jsae.apiErrorCode == 10059) {
-            return null
+fun JetStreamManagement.streamExists(streamName: String): Boolean =
+    getStreamInfoOrNull(streamName) != null
+
+fun JetStreamManagement.getConsumerInfoOrNull(streamName: String, consumerName: String): ConsumerInfo? {
+    return try {
+        getConsumerInfo(streamName, consumerName)
+    } catch (ex: JetStreamApiException) {
+        if (ex.apiErrorCode == JET_STREAM_NOT_FOUND) {
+            null
+        } else {
+            throw ex
         }
-        throw jsae
     }
 }
 
-fun JetStreamManagement.streamExists(streamName: String): Boolean =
-    getStreamInfoOrNull(streamName) != null
+fun JetStreamManagement.consumerExists(streamName: String, consumerName: String): Boolean =
+    getConsumerInfoOrNull(streamName, consumerName) != null
 
 
 fun JetStreamManagement.createStream(
