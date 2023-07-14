@@ -12,7 +12,6 @@ dependencies {
 
     // Coroutines
     implementation(Libs.kotlinx_coroutines_core)
-    implementation(Libs.kotlinx_coroutines_jdk8)
     implementation(Libs.kotlinx_coroutines_slf4j)
     implementation(Libs.kotlinx_coroutines_jdk9)
     implementation(Libs.kotlinx_coroutines_reactor)

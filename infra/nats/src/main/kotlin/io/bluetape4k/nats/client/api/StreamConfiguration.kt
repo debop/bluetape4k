@@ -11,8 +11,9 @@ inline fun streamConfiguration(
 inline fun streamConfiguration(
     streamName: String,
     initializer: StreamConfiguration.Builder.() -> Unit,
-): StreamConfiguration {
-    return StreamConfiguration.builder().name(streamName).apply(initializer).build()
+): StreamConfiguration = streamConfiguration {
+    name(streamName)
+    initializer()
 }
 
 inline fun streamConfiguration(
