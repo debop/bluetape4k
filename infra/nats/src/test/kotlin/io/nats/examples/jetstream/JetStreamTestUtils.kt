@@ -1,4 +1,4 @@
-package io.bluetape4k.nats.client.tests
+package io.nats.examples.jetstream
 
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.debug
