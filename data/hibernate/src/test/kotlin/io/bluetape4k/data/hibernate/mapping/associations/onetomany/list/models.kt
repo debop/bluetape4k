@@ -174,8 +174,8 @@ class Batch(
     override var id: Int? = null
 
     // One To Many 를 Join Table을 이용하여 Unidirection으로 연결한다
-    @field:OneToMany(fetch = FetchType.LAZY)
-    @field:JoinColumn(name = "batch_id")
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "batch_id")
     val items: MutableList<BatchItem> = arrayListOf()
 
     fun addItems(vararg itemsToAdd: BatchItem) {

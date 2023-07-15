@@ -3,7 +3,7 @@ package io.bluetape4k.workshop.graphql.dgs.instrumentation
 import graphql.ExecutionResult
 import graphql.execution.instrumentation.InstrumentationContext
 import graphql.execution.instrumentation.InstrumentationState
-import graphql.execution.instrumentation.SimpleInstrumentation
+import graphql.execution.instrumentation.SimplePerformantInstrumentation
 import graphql.execution.instrumentation.parameters.InstrumentationCreateStateParameters
 import graphql.execution.instrumentation.parameters.InstrumentationExecutionParameters
 import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchParameters
@@ -18,19 +18,21 @@ import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture
 
 @Component
-class ExampleTracingInstrumentation: SimpleInstrumentation() {
+class ExampleTracingInstrumentation: SimplePerformantInstrumentation() {
 
     companion object: KLogging()
 
+    private var state: TraceState? = null
+
     override fun createState(parameters: InstrumentationCreateStateParameters): InstrumentationState? {
         log.debug { "Create TraceState. parameters=$parameters" }
-        return TraceState()
+        state = TraceState()
+        return state
     }
 
     override fun beginExecution(parameters: InstrumentationExecutionParameters): InstrumentationContext<ExecutionResult> {
-        val state = parameters.getInstrumentationState<TraceState>()
         if (state != null) {
-            state.traceStartTime = System.currentTimeMillis()
+            state!!.traceStartTime = System.currentTimeMillis()
             log.debug { "Begin execution. state=$state" }
         }
         return super.beginExecution(parameters)
@@ -60,7 +62,8 @@ class ExampleTracingInstrumentation: SimpleInstrumentation() {
                     }
                 }
 
-                else                    -> reportExecutionTimes(parameters, startTime)
+                else                    ->
+                    reportExecutionTimes(parameters, startTime)
             }
             result
         }
@@ -78,9 +81,8 @@ class ExampleTracingInstrumentation: SimpleInstrumentation() {
         executionResult: ExecutionResult,
         parameters: InstrumentationExecutionParameters,
     ): CompletableFuture<ExecutionResult> {
-        val state = parameters.getInstrumentationState<TraceState>()
         if (state != null) {
-            val totalTime = System.currentTimeMillis() - state.traceStartTime
+            val totalTime = System.currentTimeMillis() - state!!.traceStartTime
             log.info { "Total execution time: $totalTime msec" }
         }
 

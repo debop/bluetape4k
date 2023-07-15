@@ -20,18 +20,13 @@ allOpen {
     annotation("javax.persistence.MappedSuperclass")
 }
 
-kapt {
-    showProcessorStats = true
-    // kapt 가 제대로 동작하지 않는 경우, 해당 클래스를 약간 수정해보세요. (Comments 추가 등으로)
-    correctErrorTypes = true
-}
-
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }
 
 dependencies {
-    implementation(project(":bluetape4k-data-hibernate-reactive"))
+    api(project(":bluetape4k-data-hibernate"))
+    api(project(":bluetape4k-data-hibernate-reactive"))
     implementation(project(":bluetape4k-utils-mutiny"))
     implementation(project(":bluetape4k-vertx-core"))
     implementation(project(":bluetape4k-spring-support"))

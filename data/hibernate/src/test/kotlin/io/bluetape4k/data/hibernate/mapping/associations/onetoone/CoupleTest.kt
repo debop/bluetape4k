@@ -63,7 +63,7 @@ class Husband: IntJpaEntity() {
     }
 
     @NotBlank
-    @Column(nullable = false, unique = true)
+    @field:Column(nullable = false, unique = true)
     var name: String = ""
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -103,7 +103,7 @@ class Wife: IntJpaEntity() {
     }
 
     @NotBlank
-    @Column(nullable = false, unique = true)
+    @field:Column(nullable = false, unique = true)
     var name: String = ""
 
     // Bidirectional one-to-one

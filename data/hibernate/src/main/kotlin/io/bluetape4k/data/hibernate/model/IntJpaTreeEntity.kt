@@ -8,8 +8,8 @@ import jakarta.persistence.MappedSuperclass
 @MappedSuperclass
 abstract class IntJpaTreeEntity<T: IntJpaTreeEntity<T>>: AbstractJpaTreeEntity<T, Int>() {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @field:Id
+    @field:GeneratedValue(strategy = GenerationType.IDENTITY)
     override var id: Int? = null
 
 }
