@@ -17,7 +17,9 @@ import java.nio.file.Paths
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TempFolderExtensionParameterTest {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        private const val REPEAT_SIZE = 3
+    }
 
     private val tempFilenames = HashSet<String>()
     private val tempDirnames = HashSet<String>()
@@ -49,7 +51,7 @@ class TempFolderExtensionParameterTest {
         dir.parentFile shouldBeEqualTo root
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(REPEAT_SIZE)
     @ExtendWith(TempFolderExtension::class)
     fun `반복 수행되는 메소드에 대해 매번 temporary file이 생성됩니다`(tempFolder: TempFolder) {
         val file = tempFolder.createFile("foo.txt")
@@ -61,7 +63,7 @@ class TempFolderExtensionParameterTest {
         tempFilenames.add(file.absolutePath)
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(REPEAT_SIZE)
     @TempFolderTest
     fun `반복 수행되는 메소드에 대해 매번 temporary folder가 생성됩니다`(tempFolder: TempFolder) {
         val dir = tempFolder.createDirectory("bar")

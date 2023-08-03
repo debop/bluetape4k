@@ -27,7 +27,6 @@ class TempFolderExtensionBeforeAllTest {
         createdFiles shouldContainAll listOf("foo.txt", "bar")
     }
 
-
     @Test
     fun `임시 파일 생성`() {
         val file = tempFolder.createFile("foo.txt")
@@ -39,5 +38,4 @@ class TempFolderExtensionBeforeAllTest {
         val dir = tempFolder.createDirectory("bar")
         dir.exists().shouldBeTrue()
     }
-
 }
