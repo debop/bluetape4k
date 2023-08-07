@@ -23,7 +23,6 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Punctuation
  * 섹.스 -> 섹스
  * 찌~찌~뽕 -> 찌찌뽕
  * ```
- *
  */
 class PunctuationProcessor {
 
@@ -68,7 +67,7 @@ class PunctuationProcessor {
         val next = tokens[2]
 
         return prev.pos in normalPos &&
-            current.pos in punctuationPos &&
-            next.pos in normalPos
+                current.pos in punctuationPos &&
+                next.pos in normalPos
     }
 }

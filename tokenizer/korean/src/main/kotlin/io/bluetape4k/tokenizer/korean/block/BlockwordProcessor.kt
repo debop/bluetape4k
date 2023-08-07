@@ -53,7 +53,6 @@ object BlockwordProcessor: KLogging() {
         }
         try {
             val punctuationRemoved = punctuationProcessor.removePunctuation(request.text)
-            // val maskChunkText = maskChunk(punctuationRemoved, request.options.mask)
             val tokens = KoreanTokenizer.tokenize(punctuationRemoved)
 
             var result = punctuationRemoved
@@ -83,7 +82,7 @@ object BlockwordProcessor: KLogging() {
      */
     private fun canMask(token: KoreanToken, severity: Severity = Severity.DEFAULT): Boolean {
         return token.pos in blockedPos &&
-            (containsBlockWord(token.text, severity) || containsBlockWord(token.stem, severity))
+                (containsBlockWord(token.text, severity) || containsBlockWord(token.stem, severity))
     }
 
     private fun containsBlockWord(text: String?, severity: Severity = Severity.DEFAULT): Boolean {
