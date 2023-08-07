@@ -9,9 +9,7 @@ import java.util.*
 
 
 /**
- * Java Faker를 이용한
- *
- * @constructor Create empty Fakers
+ * [Data Faker](https://github.com/datafaker-net/datafaker) 를 이용하여 테스트용 램덤 데이터를 생성합니다.
  */
 object Fakers: KLogging() {
     /**
@@ -23,6 +21,7 @@ object Fakers: KLogging() {
      * Fake 값을 제공하는 난수발생기
      */
     val random: RandomService = faker.random()
+
 
     /**
      * 임의의 길이의 fake 문자열을 생성합니다.
@@ -38,9 +37,9 @@ object Fakers: KLogging() {
         includeUppercase: Boolean = true,
         includeSpecial: Boolean = true,
         includeDigit: Boolean = true,
-    ): String {
-        return faker.text().text(minLength, maxLength, includeUppercase, includeSpecial, includeDigit)
-    }
+    ): String =
+        faker.text().text(minLength, maxLength, includeUppercase, includeSpecial, includeDigit)
+
 
     /**
      * [length] 크기의 fake 문자열을 반환합니다.
@@ -48,7 +47,13 @@ object Fakers: KLogging() {
      * @param length 문자열 길이
      * @return [lengh] 길이의 fake 문자열
      */
-    fun fixedString(length: Int): String = randomString(length, length)
+    fun fixedString(
+        length: Int,
+        includeUppercase: Boolean = true,
+        includeSpecial: Boolean = true,
+        includeDigit: Boolean = true,
+    ): String =
+        randomString(length, length, includeUppercase, includeSpecial, includeDigit)
 
     /**
      * [format]에 `#`을 임의의 숫자(0~9)로 치환하는 문자열을 빌드합니다.

@@ -127,9 +127,9 @@ class MultithreadingTesterTest {
                     }
                 }
                 .run()
-            fail("RuntomeException expected.")
+            fail("RuntimeException expected.")
         } catch (expected: RuntimeException) {
-            log.error(expected) { "expected" }
+            log.error(expected) { "Expected" }
             expected.message!! shouldContain "Detected 2 deadlocked threads"
         }
     }

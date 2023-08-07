@@ -15,11 +15,11 @@ object Plugins {
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.7"
 
-        const val spring_boot = "3.1.1"
-        const val quarkus = "3.2.0.Final"
+        const val spring_boot = "3.1.2"
+        const val quarkus = "3.2.2.Final"
         const val apollo = "3.8.2"
         const val dgs = "5.6.9"
-        const val docker_compose = "0.16.11"
+        const val docker_compose = "0.16.12"
     }
 
     const val detekt = "io.gitlab.arturbosch.detekt"
@@ -128,8 +128,9 @@ object Versions {
     // https://mvnrepository.com/artifact/org.apache.avro/avro
     const val avro = "1.11.2"
 
-    const val feign = "12.3"
-    const val httpclient5 = "5.2.1"
+    const val feign = "12.4"
+    const val httpclient5 =
+        "5.2.1"     // https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
     const val retrofit2 = "2.9.0"
     const val okhttp3 = "4.11.0"
     const val asynchttpclient = "2.12.3"
@@ -145,14 +146,14 @@ object Versions {
     const val lettuce = "6.2.4.RELEASE"
 
     // 참고: https://github.com/redisson/redisson/issues/4809
-    const val redisson = "3.22.1"
+    const val redisson = "3.23.2"
 
     // NOTE: Hibernate 는 jakarta 버전인 경우 orm, validator 등이 group 에 포함됩니다.
     // NOTE: 이 경우 기존 javax 를 사용하는 버전과 충돌이 생길 수 있으니 조심하세요 
     // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
 
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
-    const val hibernate = "6.2.6.Final" // "5.6.15.Final"
+    const val hibernate = "6.2.7.Final" // "5.6.15.Final"
     const val hibernate_reactive = "2.0.2.Final" // "1.1.9.Final"
 
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
@@ -163,7 +164,7 @@ object Versions {
     const val blaze_persistence = "1.6.8"
 
     // https://github.com/javers/javers
-    const val javers = "7.0.1"
+    const val javers = "7.0.3"
 
     const val slf4j = "2.0.7" // "1.7.36"
     const val logback = "1.4.8" // "1.2.12"

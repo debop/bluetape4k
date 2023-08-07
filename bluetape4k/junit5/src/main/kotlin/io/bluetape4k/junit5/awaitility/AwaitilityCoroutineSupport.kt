@@ -8,7 +8,7 @@ import org.awaitility.core.ConditionFactory
 /**
  * suspend 함수가 true 를 반환할 때까지 대기한다
  *
- * @param condition 판단을 위한 코드 블럭
+ * @param block 판단을 위한 코드 블럭
  */
 suspend inline infix fun ConditionFactory.await(crossinline block: suspend () -> Unit) =
     untilSuspending { block(); true }
@@ -16,7 +16,7 @@ suspend inline infix fun ConditionFactory.await(crossinline block: suspend () ->
 /**
  * suspend 함수가 true 를 반환할 때까지 대기한다
  *
- * @param condition 판단을 위한 코드 블럭
+ * @param block 판단을 위한 코드 블럭
  */
 suspend inline infix fun ConditionFactory.untilSuspending(
     crossinline block: suspend () -> Boolean,

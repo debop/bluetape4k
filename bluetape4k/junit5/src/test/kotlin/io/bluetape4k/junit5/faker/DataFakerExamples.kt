@@ -6,6 +6,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import net.datafaker.Faker
+import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
@@ -83,6 +84,9 @@ class DataFakerExamples {
         val code = faker.numerify("NO-####")
         code shouldStartWith "NO"
         log.debug { "code=$code" }
+
+        val numbers = code.substringAfter("-")
+        numbers.toLong() shouldBeGreaterThan 0L
     }
 
     @Test
@@ -102,10 +106,14 @@ class DataFakerExamples {
 
     @Test
     fun `DataFaker로부터 함수문자열로 데이터 얻기`() {
-        faker.javaClass.methods.forEach {
-            log.debug { "method name=${it.name}" }
-        }
+        val names = faker.javaClass.methods.map { it.name }.distinct()
+        log.debug { "names=${names.joinToString("\n")}" }
+    }
+
+    @Test
+    fun `함수 문자열로부터 fake 값 얻기`() {
         val names = faker.getValues("name.fullName", 10).toList()
+        log.debug { "names=${names.joinToString("\n")}" }
     }
 
     private fun Faker.getValues(providerFullName: String, size: Int = 1): Sequence<Any> {

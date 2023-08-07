@@ -24,7 +24,6 @@ import java.util.stream.Stream
  *     Strings.isBlank(input) shouldBeEqualTo expected
  * }
  * ```
- *
  */
 class FieldArgumentsProvider: ArgumentsProvider, AnnotationConsumer<FieldSource> {
 

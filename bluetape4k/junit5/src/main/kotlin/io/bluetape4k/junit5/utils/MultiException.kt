@@ -40,8 +40,8 @@ class MultiException: RuntimeException("Multiple exceptions") {
         }
     }
 
-    fun isEmpty() {
-        synchronized(nested) {
+    fun isEmpty(): Boolean {
+        return synchronized(nested) {
             nested.isEmpty()
         }
     }
