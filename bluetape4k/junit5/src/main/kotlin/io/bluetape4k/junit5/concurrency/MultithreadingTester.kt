@@ -80,7 +80,7 @@ class MultithreadingTester {
      * This method blocks until all started threads are finished.
      *
      * @see [numThreads]
-     * @see [numRoundsPerThread]
+     * @see [roundsPerThread]
      */
     fun run() {
         check(runnables.isNotEmpty()) {
