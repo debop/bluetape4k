@@ -61,7 +61,7 @@ object Plugins {
 object Versions {
 
     const val kotlin = "1.9.0"
-    const val kotlinx_coroutines = "1.7.2"
+    const val kotlinx_coroutines = "1.7.3"
     const val kotlinx_serialization = "1.5.1"
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/atomicfu
@@ -636,7 +636,7 @@ object Libs {
 
     // Bucket4j Spring Boot
     // https://mvnrepository.com/artifact/com.giffing.bucket4j.spring.boot.starter/bucket4j-spring-boot-starter
-    val bucket4j_spring_boot = "com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.9.1"
+    const val bucket4j_spring_boot = "com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.9.1"
 
     // Netty
     fun netty(module: String, version: String = Versions.netty) = "io.netty:netty-$module:$version"
@@ -1128,7 +1128,7 @@ object Libs {
         "org.hibernate:hibernate-validator-annotation-processor:${Versions.hibernate_validator}"
 
     // R2DBC (버전은 spring-data 버전을 사용한다)
-    fun r2dbc(module:String): String = "io.r2dbc:r2dbc-$module"
+    fun r2dbc(module: String): String = "io.r2dbc:r2dbc-$module"
     val r2dbc_h2 = r2dbc("h2")
     val r2dbc_pool = r2dbc("pool")
     val r2dbc_spi = r2dbc("spi")
@@ -1139,15 +1139,15 @@ object Libs {
     // NOTE: Spring Boot 2.6 에서는 miku 것을 사용
     // https://github.com/mirromutth/r2dbc-mysql
     // https://github.com/asyncer-io/r2dbc-mysql
-    val r2dbc_mysql_0_9 = "io.asyncer:r2dbc-mysql:0.9.3"
-    val r2dbc_mysql_1_0 = "io.asyncer:r2dbc-mysql:1.0.2"
-    val r2dbc_mysql_0_8 = "dev.miku:r2dbc-mysql:0.8.2.RELEASE"
+    const val r2dbc_mysql_0_9 = "io.asyncer:r2dbc-mysql:0.9.3"
+    const val r2dbc_mysql_1_0 = "io.asyncer:r2dbc-mysql:1.0.2"
+    const val r2dbc_mysql_0_8 = "dev.miku:r2dbc-mysql:0.8.2.RELEASE"
 
     // https://github.com/mariadb-corporation/mariadb-connector-r2dbc
-    val r2dbc_mariadb = "org.mariadb:r2dbc-mariadb:1.1.4"
+    const val r2dbc_mariadb = "org.mariadb:r2dbc-mariadb:1.1.4"
 
     // https://github.com/pgjdbc/r2dbc-postgresql
-    val r2dbc_postgresql = "org.postgresql:r2dbc-postgresql:1.0.1.RELEASE"
+    const val r2dbc_postgresql = "org.postgresql:r2dbc-postgresql:1.0.1.RELEASE"
 
     // QueryDSL
     fun querydsl(module: String) = "com.querydsl:querydsl-$module:${Versions.querydsl}"
