@@ -36,7 +36,8 @@ val JPY: CurrencyUnit = currencyUnitOf("JPY")
  * @param providers
  * @return
  */
-fun String.isAvailableCurrency(vararg providers: String): Boolean = Monetary.isCurrencyAvailable(this, *providers)
+fun String.isAvailableCurrency(vararg providers: String): Boolean =
+    Monetary.isCurrencyAvailable(this, *providers)
 
 /**
  * 해당 통화 코드의 [CurrencyUnit]을 생성합니다.

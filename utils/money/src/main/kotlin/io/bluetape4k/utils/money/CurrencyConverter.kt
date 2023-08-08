@@ -16,7 +16,7 @@ object CurrencyConvertor: KLogging() {
     val KRWConversion: CurrencyConversion by lazy { getConversion(KRW) }
     val USDConversion: CurrencyConversion by lazy { getConversion(USD) }
     val EURConversion: CurrencyConversion by lazy { getConversion(EUR) }
-    val JPYConver: CurrencyConversion by lazy { getConversion(JPY) }
+    val JPYConversion: CurrencyConversion by lazy { getConversion(JPY) }
 
     fun getConversion(currency: CurrencyUnit): CurrencyConversion {
         log.info { "Retrieve currency conversion ratio. currency=$currency" }

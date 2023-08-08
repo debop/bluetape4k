@@ -67,6 +67,9 @@ class HttpbinServer private constructor(
         writeToSystemProperties(NAME)
     }
 
+    /**
+     * [HttpbinServer]를 실행해주는 Launcher
+     */
     object Launcher {
         val httpbin: HttpbinServer by lazy {
             HttpbinServer().apply {
