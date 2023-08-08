@@ -1,6 +1,7 @@
 package io.bluetape4k.utils.units
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.unsafeLazy
 import io.bluetape4k.utils.units.VolumeUnit.CC
 import io.bluetape4k.utils.units.VolumeUnit.CENTIMETER_3
 import io.bluetape4k.utils.units.VolumeUnit.DECILITER
@@ -100,22 +101,22 @@ value class Volume(val value: Double = 0.0): Comparable<Volume>, Serializable {
     companion object: KLogging() {
 
         @JvmStatic
-        val Zero by lazy { Volume(0.0) }
+        val Zero: Volume by unsafeLazy { Volume(0.0) }
 
         @JvmStatic
-        val MaxValue by lazy { Volume(Double.MAX_VALUE) }
+        val MaxValue: Volume by unsafeLazy { Volume(Double.MAX_VALUE) }
 
         @JvmStatic
-        val MinValue by lazy { Volume(Double.MIN_VALUE) }
+        val MinValue: Volume by unsafeLazy { Volume(Double.MIN_VALUE) }
 
         @JvmStatic
-        val PositiveInf by lazy { Volume(Double.POSITIVE_INFINITY) }
+        val PositiveInf: Volume by unsafeLazy { Volume(Double.POSITIVE_INFINITY) }
 
         @JvmStatic
-        val NegativeInf by lazy { Volume(Double.NEGATIVE_INFINITY) }
+        val NegativeInf: Volume by unsafeLazy { Volume(Double.NEGATIVE_INFINITY) }
 
         @JvmStatic
-        val NaN by lazy { Volume(Double.NaN) }
+        val NaN: Volume by unsafeLazy { Volume(Double.NaN) }
 
         operator fun invoke(volumn: Number, unit: VolumeUnit = LITER): Volume =
             Volume(volumn.toDouble() * unit.factor)

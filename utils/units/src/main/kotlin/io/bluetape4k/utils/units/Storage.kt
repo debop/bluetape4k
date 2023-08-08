@@ -1,6 +1,7 @@
 package io.bluetape4k.utils.units
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.unsafeLazy
 import java.io.Serializable
 import kotlin.math.absoluteValue
 import kotlin.math.pow
@@ -112,8 +113,11 @@ value class Storage(val value: Double = 0.0): Comparable<Storage>, Serializable 
         const val KBYTES: Double = 1024.0
         const val MBYTES: Double = KBYTES * KBYTES
 
-        val ZERO = Storage(0.0)
-        val NaN = Storage(Double.NaN)
+        @JvmStatic
+        val ZERO: Storage by unsafeLazy { Storage(0.0) }
+
+        @JvmStatic
+        val NaN: Storage by unsafeLazy { Storage(Double.NaN) }
 
         operator fun invoke(value: Number = 0.0, unit: StorageUnit = StorageUnit.BYTE): Storage =
             Storage(value.toDouble() * unit.factor)

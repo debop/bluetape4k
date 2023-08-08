@@ -1,6 +1,7 @@
 package io.bluetape4k.utils.units
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.unsafeLazy
 import java.io.Serializable
 import kotlin.math.absoluteValue
 
@@ -75,8 +76,11 @@ value class Length(val value: Double = 0.0): Comparable<Length>, Serializable {
 
     companion object: KLogging() {
 
-        val ZERO = Length(0.0)
-        val NaN = Length(Double.NaN)
+        @JvmStatic
+        val ZERO: Length by unsafeLazy { Length(0.0) }
+
+        @JvmStatic
+        val NaN: Length by unsafeLazy { Length(Double.NaN) }
 
         operator fun invoke(value: Number = 0.0, unit: LengthUnit = LengthUnit.MILLIMETER): Length =
             Length(value.toDouble() * unit.factor)

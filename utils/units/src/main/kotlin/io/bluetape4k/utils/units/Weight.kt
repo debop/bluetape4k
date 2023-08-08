@@ -1,6 +1,7 @@
 package io.bluetape4k.utils.units
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.unsafeLazy
 import java.io.Serializable
 import kotlin.math.absoluteValue
 import kotlin.math.sign
@@ -89,8 +90,11 @@ value class Weight(val value: Double = 0.0): Comparable<Weight>, Serializable {
 
     companion object: KLogging() {
 
-        val ZERO = Weight(0.0)
-        val NaN = Weight(Double.NaN)
+        @JvmStatic
+        val ZERO: Weight by unsafeLazy { Weight(0.0) }
+
+        @JvmStatic
+        val NaN: Weight by unsafeLazy { Weight(Double.NaN) }
 
         operator fun invoke(value: Number = 0.0, unit: WeightUnit): Weight =
             Weight(value.toDouble() * unit.factor)

@@ -1,6 +1,7 @@
 package io.bluetape4k.utils.units
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.unsafeLazy
 import io.bluetape4k.utils.units.AreaUnit.CENTI_METER_2
 import io.bluetape4k.utils.units.AreaUnit.METER_2
 import io.bluetape4k.utils.units.AreaUnit.MILLI_METER_2
@@ -37,7 +38,7 @@ enum class AreaUnit(val unitName: String, val factor: Double) {
 
     companion object {
         @JvmField
-        val VALS = values()
+        val VALS = entries.toTypedArray()
 
         @JvmStatic
         fun parse(unitName: String): AreaUnit {
@@ -89,22 +90,22 @@ value class Area(val value: Double = 0.0): Comparable<Area>, Serializable {
 
     companion object: KLogging() {
         @JvmStatic
-        val Zero by lazy { Area(0.0) }
+        val Zero: Area by unsafeLazy { Area(0.0) }
 
         @JvmStatic
-        val MaxValue by lazy { Area(Double.MAX_VALUE) }
+        val MaxValue: Area by unsafeLazy { Area(Double.MAX_VALUE) }
 
         @JvmStatic
-        val MinValue by lazy { Area(Double.MIN_VALUE) }
+        val MinValue: Area by unsafeLazy { Area(Double.MIN_VALUE) }
 
         @JvmStatic
-        val PositiveInf by lazy { Area(Double.POSITIVE_INFINITY) }
+        val PositiveInf: Area by unsafeLazy { Area(Double.POSITIVE_INFINITY) }
 
         @JvmStatic
-        val NegateInf by lazy { Area(Double.NEGATIVE_INFINITY) }
+        val NegateInf: Area by unsafeLazy { Area(Double.NEGATIVE_INFINITY) }
 
         @JvmStatic
-        val NaN by lazy { Area(Double.NaN) }
+        val NaN: Area by unsafeLazy { Area(Double.NaN) }
 
         operator fun invoke(area: Number = 0.0, unit: AreaUnit = MILLI_METER_2): Area =
             Area(area.toDouble() * unit.factor)
