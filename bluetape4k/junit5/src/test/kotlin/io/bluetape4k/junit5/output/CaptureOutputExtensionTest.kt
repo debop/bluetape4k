@@ -41,20 +41,24 @@ class CaptureOutputExtensionTest {
     @Test
     @Order(3)
     fun `capture system out and err`(output: OutputCapturer) {
-        verifyOutput(output, "SYS OUT #2")
+        verifyOutput(output, "SYS OUT #3")
         verifyError(output, "SYS ERR #4")
     }
 
     private fun verifyOutput(output: OutputCapturer, expected: String) {
         output.toString() shouldNotContain expected
+
         println(expected)
+
         output.expect { it shouldContain expected }
         output.expect { it shouldNotContain expected.lowercase() }
     }
 
     private fun verifyError(output: OutputCapturer, expected: String) {
         output.toString() shouldNotContain expected
-        println(expected)
+
+        System.err.println(expected)
+
         output.expect { it shouldContain expected }
         output.expect { it shouldNotContain expected.lowercase() }
     }

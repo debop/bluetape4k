@@ -57,8 +57,8 @@ inline fun <T: Any> withTimeoutOrNull(timeoutMillis: Long, crossinline action: (
  * Timeout 내에서 [block]을 실행합니다. [block]이 [timeoutMillis] 시간 내에 종료되지 않으면 null 을 반환합니다.
  *
  * @param timeout 제한 시간
- * @param block 실행할 block
- * @return [block]의 실행 결과, [timeout] 시간 내에 종료되지 않으면 null
+ * @param action 실행할 block
+ * @return [action]의 실행 결과, [timeout] 시간 내에 종료되지 않으면 null
  */
 inline fun <T: Any> withTimeoutOrNull(timeout: Duration, crossinline action: () -> T): T? {
     return withTimeoutOrNull(timeout.inWholeMilliseconds, action)

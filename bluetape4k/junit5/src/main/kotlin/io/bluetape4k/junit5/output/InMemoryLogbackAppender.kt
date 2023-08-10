@@ -13,15 +13,20 @@ import kotlin.reflect.KClass
  * NOTE: 단 parallel 테스트 시에는 제대로 Logger를 casting 할 수 없습니다.
  * HINT : http://www.slf4j.org/codes.html#substituteLogger
  */
-class InMemoryLogbackAppender private constructor(name: String): AppenderBase<ILoggingEvent>() {
+class InMemoryLogbackAppender private constructor(private val name: String): AppenderBase<ILoggingEvent>() {
 
     companion object: KLogging() {
+        @JvmStatic
         operator fun invoke(name: String = "root"): InMemoryLogbackAppender = InMemoryLogbackAppender(name)
+
+        @JvmStatic
         operator fun invoke(clazz: Class<*>): InMemoryLogbackAppender = invoke(clazz.name)
+
+        @JvmStatic
         operator fun invoke(kclazz: KClass<*>): InMemoryLogbackAppender = invoke(kclazz.qualifiedName!!)
     }
 
-    private val logger by lazy {
+    private val logger by lazy(LazyThreadSafetyMode.PUBLICATION) {
         do {
             Thread.sleep(1)
             val logger = LoggerFactory.getLogger(name)

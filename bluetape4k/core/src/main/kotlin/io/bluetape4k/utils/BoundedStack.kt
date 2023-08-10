@@ -133,13 +133,5 @@ class BoundedStack<E: Any> private constructor(val maxSize: Int): Stack<E>() {
     @Synchronized
     override fun iterator(): MutableIterator<E> {
         return toList().iterator()
-//        return object: MutableIterator<E> {
-//            private var index = 0
-//            override fun hasNext(): Boolean = index != count
-//            override fun next(): E = get(index++)
-//            override fun remove() {
-//                /* Nothing to do. */
-//            }
-//        }
     }
 }
