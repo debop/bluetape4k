@@ -84,8 +84,8 @@ class FutureSupportTest {
         val counter = atomic(0)
 
         MultiJobTester()
-            .numThreads(4)
-            .roundsPerThread(ITEM_COUNT)
+            .numJobs(4)
+            .roundsPerJob(ITEM_COUNT)
             .add {
                 val task = async {
                     delay(Random.nextLong(10))

@@ -1,6 +1,10 @@
 package io.bluetape4k.concurrent
 
-import java.util.concurrent.*
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CompletionStage
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
 
 
@@ -56,9 +60,9 @@ inline fun <V> futureWithTimeout(timeout: Duration, crossinline block: () -> V):
  * ```
  *
  * @param V
- * @param timeout 최대 수행 시간
+ * @param timeoutMillis 최대 수행 시간 (밀리초)
  * @param block 수행할 코드 블럭
- * @return [block]의 실행 결과, [timeout] 시간 내에 종료되지 않으면 실패했음을 나타내는 [CompletableFuture] 인스턴스
+ * @return [block]의 실행 결과, [timeoutMillis] 시간 내에 종료되지 않으면 실패했음을 나타내는 [CompletableFuture] 인스턴스
  */
 inline fun <V> futureWithTimeout(
     timeoutMillis: Long = 1000L,
@@ -258,8 +262,6 @@ fun <V> CompletableFuture<V>.join(duration: Duration): V {
     return try {
         get(duration.inWholeNanoseconds, TimeUnit.NANOSECONDS)
     } catch (e: Exception) {
-        //        if (e is InterruptedException || e is ExecutionException || e is TimeoutException) null
-        //        else throw e
         throw e.cause ?: e
     }
 }

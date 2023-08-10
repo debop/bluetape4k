@@ -50,8 +50,8 @@ class RedissonCoLeaderElectionTest: AbstractRedissonTest() {
         val task2 = atomic(0)
 
         MultiJobTester()
-            .numThreads(4)
-            .roundsPerThread(36)
+            .numJobs(4)
+            .roundsPerJob(36)
             .add {
                 leaderElection.runIfLeader(lockName) {
                     log.debug { "작업 1 을 시작합니다." }

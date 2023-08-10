@@ -53,8 +53,8 @@ class DequeExamples: AbstractRedissonCoroutineTest() {
         deque.clear()
 
         MultiJobTester()
-            .numThreads(16)
-            .roundsPerThread(4)
+            .numJobs(16)
+            .roundsPerJob(4)
             .add {
                 deque.addLastAsync(counter.incrementAndGet()).awaitSuspending()
             }

@@ -13,7 +13,12 @@ import io.bluetape4k.utils.Runtimex
 import io.bluetape4k.utils.idgenerators.getMachineId
 import io.bluetape4k.utils.idgenerators.parseAsLong
 import kotlinx.coroutines.test.runTest
-import org.amshove.kluent.*
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeGreaterOrEqualTo
+import org.amshove.kluent.shouldBeGreaterThan
+import org.amshove.kluent.shouldBeInRange
+import org.amshove.kluent.shouldBeNull
+import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import java.util.concurrent.ConcurrentHashMap
@@ -228,8 +233,8 @@ abstract class AbstractSnowflakeTest {
         val idMap = ConcurrentHashMap<Long, Int>()
 
         MultiJobTester()
-            .numThreads(4)
-            .roundsPerThread(16)
+            .numJobs(4)
+            .roundsPerJob(16)
             .add {
                 val id = snowflake.nextId()
                 idMap.putIfAbsent(id, 1).shouldBeNull()
@@ -246,8 +251,8 @@ abstract class AbstractSnowflakeTest {
         val idMap = ConcurrentHashMap<Long, Int>()
 
         MultiJobTester()
-            .numThreads(4)
-            .roundsPerThread(16)
+            .numJobs(4)
+            .roundsPerJob(16)
             .add {
                 val ids = snowflake.nextIds(10)
                 ids.forEach { id ->

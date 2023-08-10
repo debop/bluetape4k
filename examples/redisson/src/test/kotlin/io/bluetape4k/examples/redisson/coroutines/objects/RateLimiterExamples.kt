@@ -123,8 +123,8 @@ class RateLimiterExamples: AbstractRedissonCoroutineTest() {
         limiter1.tryAcquireAsync(1).awaitSuspending().shouldBeFalse()
 
         MultiJobTester()
-            .numThreads(4)
-            .roundsPerThread(8)
+            .numJobs(4)
+            .roundsPerJob(8)
             .add {
                 val redisson = newRedisson()
                 // RRateLimiter Exception----RateLimiter is not initialized

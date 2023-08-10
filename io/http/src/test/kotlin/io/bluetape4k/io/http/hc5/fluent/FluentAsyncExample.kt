@@ -95,8 +95,8 @@ class FluentAsyncExample: AbstractHc5Test() {
         val counter = atomic(0)
 
         MultiJobTester()
-            .numThreads(4)
-            .roundsPerThread(2)
+            .numJobs(4)
+            .roundsPerJob(2)
             .add {
                 val index = counter.getAndIncrement() % requests.size
                 val request = requests[index]

@@ -61,8 +61,8 @@ class AtomicLongExamples: AbstractRedissonCoroutineTest() {
         val counter = redisson.getAtomicLong(randomName())
 
         MultiJobTester()
-            .numThreads(8)
-            .roundsPerThread(32)
+            .numJobs(8)
+            .roundsPerJob(32)
             .add {
                 counter.incrementAndGetAsync().awaitSuspending()
             }

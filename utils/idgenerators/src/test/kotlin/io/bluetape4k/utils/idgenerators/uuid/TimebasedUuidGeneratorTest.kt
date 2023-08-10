@@ -89,8 +89,8 @@ class TimebasedUuidGeneratorTest {
     fun `generate timebased uuids in multi job`() = runTest {
         val idMap = ConcurrentHashMap<UUID, Int>()
         MultiJobTester()
-            .numThreads(2 * Runtimex.availableProcessors)
-            .roundsPerThread(TEST_COUNT)
+            .numJobs(2 * Runtimex.availableProcessors)
+            .roundsPerJob(TEST_COUNT)
             .add {
                 val id = uuidGenerator.nextUUID()
                 idMap.putIfAbsent(id, 1).shouldBeNull()

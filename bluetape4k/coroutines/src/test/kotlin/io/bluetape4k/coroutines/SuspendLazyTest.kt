@@ -49,8 +49,8 @@ class SuspendLazyTest {
         callCounter.value shouldBeEqualTo 0
 
         MultiJobTester()
-            .numThreads(16)
-            .roundsPerThread(1)
+            .numJobs(16)
+            .roundsPerJob(1)
             .add {
                 lazyValue() shouldBeEqualTo 42
             }
@@ -121,8 +121,8 @@ class SuspendLazyTest {
 
         runTest {
             MultiJobTester()
-                .numThreads(16)
-                .roundsPerThread(1)
+                .numJobs(16)
+                .roundsPerJob(1)
                 .add {
                     lazyValue.invoke() shouldBeEqualTo 42
                 }

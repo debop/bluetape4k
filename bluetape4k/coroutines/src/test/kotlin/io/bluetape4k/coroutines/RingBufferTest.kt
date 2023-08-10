@@ -39,8 +39,8 @@ class RingBufferTest {
         val counter = atomic(0)
 
         MultiJobTester()
-            .numThreads(8)
-            .roundsPerThread(2)
+            .numJobs(8)
+            .roundsPerJob(2)
             .add {
                 buffer.push(counter.incrementAndGet().toDouble())
             }

@@ -47,12 +47,12 @@ class MultiJobTester {
     private lateinit var workerDispatcher: ExecutorCoroutineDispatcher
     private lateinit var workerJobs: List<Job>
 
-    fun numThreads(numThreads: Int): MultiJobTester = apply {
+    fun numJobs(numThreads: Int): MultiJobTester = apply {
         check(numThreads in 2..2000) { "Invalid numThreads: $numThreads -- must be range in 2..2000" }
         this.numThreads = numThreads
     }
 
-    fun roundsPerThread(roundsPerThreads: Int) = apply {
+    fun roundsPerJob(roundsPerThreads: Int) = apply {
         check(roundsPerThreads in 1..Int.MAX_VALUE) {
             "Invalid roundsPerThreads: $roundsPerThreads -- must be range in 1..${Int.MAX_VALUE}"
         }
