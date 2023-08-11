@@ -1,4 +1,4 @@
-# module bluetape4k-test-testcontainers
+# module bluetape4k-testcontainers
 
 ## 개요
 
@@ -108,3 +108,14 @@ Mac AirPlay 를 중단하면 됩니다.
 * [Docker address already in use](https://www.baeldung.com/linux/docker-address-already-in-use)
 * [[Docker] bind:address already in use](https://steady-coding.tistory.com/488)
 * [포트가 이미 할달되어 있어서 발생한 에러 해결](https://a-half-human-half-developer.tistory.com/18)  
+
+### Q. Mac 에서 Docker Desktop을 대체할 솔루션은?
+
+Colima 를 사용하세요
+
+```shell
+$ brew install colima
+$ colima start --vm-type=vz --cpu 4 --memory 4 --disk 64 --runtime docker
+```
+
+* [Docker on Macs without Docker Desktop with Lima and Colima](https://patrickwthomas.net/docker-on-macs-without-docker-desktop/)
