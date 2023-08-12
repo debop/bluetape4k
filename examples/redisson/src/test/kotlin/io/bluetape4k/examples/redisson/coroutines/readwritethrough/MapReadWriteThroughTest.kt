@@ -11,7 +11,12 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import org.amshove.kluent.*
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeGreaterOrEqualTo
+import org.amshove.kluent.shouldBeGreaterThan
+import org.amshove.kluent.shouldBeNull
+import org.amshove.kluent.shouldBeTrue
+import org.amshove.kluent.shouldNotBeNull
 import org.awaitility.kotlin.atMost
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
@@ -20,6 +25,7 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.extension.ExtendWith
+import org.redisson.api.MapCacheOptions
 import org.redisson.api.MapOptions
 import org.redisson.api.map.MapLoader
 import org.redisson.api.map.MapWriter
@@ -136,7 +142,7 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
     @Test
     @Order(0)
     fun `read through by redisson map`() {
-        val options = MapOptions.defaults<Int, Actor>()
+        val options = MapCacheOptions.defaults<Int, Actor>()
             .loader(actorLoader)
 
         // DB에 5개의 record가 있고, Redis에는 아무 것도 없다
@@ -177,7 +183,7 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
     @Test
     @Order(1)
     fun `write through by redisson map`() {
-        val options = MapOptions.defaults<Int, Actor>()
+        val options = MapCacheOptions.defaults<Int, Actor>()
             .loader(actorLoader)
             .writer(actorWriter)
             .writeMode(MapOptions.WriteMode.WRITE_THROUGH)   // 추가될 때마다 즉시 DB에 저장된다.
@@ -205,7 +211,7 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
     @Test
     @Order(2)
     fun `write behind by redisson map`() {
-        val options = MapOptions.defaults<Int, Actor>()
+        val options = MapCacheOptions.defaults<Int, Actor>()
             .loader(actorLoader)
             .writer(actorWriter)
             .writeMode(MapOptions.WriteMode.WRITE_BEHIND)   // delay를 두고, batch로 insert 한다
@@ -251,7 +257,7 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
     @Test
     @Order(4)
     fun `read write through with coroutines`() = runSuspendWithIO {
-        val options = MapOptions.defaults<Int, Actor>()
+        val options = MapCacheOptions.defaults<Int, Actor>()
             .loader(actorLoader)
             .writer(actorWriter)
             .writeMode(MapOptions.WriteMode.WRITE_THROUGH)   // 추가될 때마다 즉시 DB에 저장된다.
@@ -286,7 +292,7 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
     @Test
     @Order(4)
     fun `read write behind with coroutines`() = runSuspendWithIO {
-        val options = MapOptions.defaults<Int, Actor>()
+        val options = MapCacheOptions.defaults<Int, Actor>()
             .loader(actorLoader)
             .writer(actorWriter)
             .writeMode(MapOptions.WriteMode.WRITE_BEHIND)   // delay를 두고, batch로 insert 한다
