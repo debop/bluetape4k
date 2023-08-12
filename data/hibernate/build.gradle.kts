@@ -27,6 +27,13 @@ idea {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+    arguments {
+        arg("spring.jpa.open-in-view", "false")
+    }
+}
+
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
     create("testJar")
