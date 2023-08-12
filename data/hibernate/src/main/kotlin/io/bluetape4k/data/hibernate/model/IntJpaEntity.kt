@@ -14,4 +14,5 @@ abstract class IntJpaEntity: AbstractJpaEntity<Int>() {
     @field:Id
     @field:GeneratedValue(strategy = GenerationType.IDENTITY)
     override var id: Int? = null
+
 }

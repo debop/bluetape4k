@@ -154,7 +154,7 @@ object Versions {
 
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
     const val hibernate = "6.2.7.Final" // "5.6.15.Final"
-    const val hibernate_reactive = "2.0.2.Final" // "1.1.9.Final"
+    const val hibernate_reactive = "2.0.4.Final" // "1.1.9.Final"
 
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
     const val hibernate_validator = "8.0.1.Final"

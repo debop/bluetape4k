@@ -19,7 +19,6 @@ import jakarta.persistence.OneToMany
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
-import org.hibernate.annotations.LazyCollection
 import org.hibernate.annotations.Parent
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -221,9 +220,7 @@ class Product(val name: String): IntJpaEntity() {
 }
 
 enum class ProductStatus {
-    UNKNOWN,
-    ACTIVE,
-    INACTIVE
+    UNKNOWN, ACTIVE, INACTIVE
 }
 
 @Embeddable
