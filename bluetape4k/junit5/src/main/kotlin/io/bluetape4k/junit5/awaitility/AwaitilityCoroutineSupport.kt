@@ -32,7 +32,7 @@ suspend inline infix fun ConditionFactory.untilSuspending(
 /**
  * suspend 함수가 true 를 반환할 때까지 대기한다
  *
- * @param supplier [predicate]가 판단할 수 있는 값을 제공합니다
+ * @param block [predicate]가 판단할 수 있는 값을 제공합니다
  * @param predicate 대기 판단을 수행합니다
  */
 @Deprecated("use untilSuspend(block)")

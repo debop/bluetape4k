@@ -38,4 +38,27 @@ object FakeValueProvider {
         const val Username = "$NAME.username"
         const val Title = "$NAME.title"
     }
+
+    private const val APP = "app"
+
+    object App {
+        const val Name = "$APP.name"
+        const val Version = "$APP.version"
+        const val Author = "$APP.author"
+    }
+
+    private const val ARTIST = "artist"
+
+    object Artist {
+        const val Name = "$ARTIST.name"
+    }
+
+    private const val BOOK = "book"
+
+    object Book {
+        const val Title = "$BOOK.title"
+        const val Author = "$BOOK.author"
+        const val Publisher = "$BOOK.publisher"
+        const val Genre = "$BOOK.genre"
+    }
 }

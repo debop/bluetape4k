@@ -134,4 +134,12 @@ class DataFakerExamples {
             }
         }
     }
+
+    // FakerValueProvider 를 이용하여 Book 정보 생성하기
+    @Test
+    fun `FakerValueProvider 를 이용하여 Book 정보 생성하기`() {
+        val book = faker.getValues(FakeValueProvider.Book.Title, 1).first()
+        log.debug { "book=$book" }
+        book.toString().shouldNotBeEmpty()
+    }
 }
