@@ -107,15 +107,45 @@ Mac AirPlay 를 중단하면 됩니다.
 
 * [Docker address already in use](https://www.baeldung.com/linux/docker-address-already-in-use)
 * [[Docker] bind:address already in use](https://steady-coding.tistory.com/488)
-* [포트가 이미 할달되어 있어서 발생한 에러 해결](https://a-half-human-half-developer.tistory.com/18)  
+* [포트가 이미 할달되어 있어서 발생한 에러 해결](https://a-half-human-half-developer.tistory.com/18)
 
 ### Q. Mac 에서 Docker Desktop을 대체할 솔루션은?
 
-Colima 를 사용하세요
+Colima 를 사용하세요.
+
+vm type 을 vz 로 설정하면, mount type을 9p로 설정할 수 없는 문제가 있습니다.
+그래서 mount type=9p 를 우선 시 하고, vm type 은 vz 가 아닌 qemu 를 사용하도록 합니다.
 
 ```shell
 $ brew install colima
-$ colima start --vm-type=vz --cpu 4 --memory 4 --disk 64 --runtime docker
+$ colima start --mount-type=9p --cpu 4 --memory 4 --disk 64 --runtime docker
+```
+
+만약 기존 설정을 변경하고 싶다면, 다음과 같이 기존 VM 을 삭제하고 새롭게 시작해야 합니다.
+
+```shell
+$ colima stop
+$ colima delete
 ```
 
 * [Docker on Macs without Docker Desktop with Lima and Colima](https://patrickwthomas.net/docker-on-macs-without-docker-desktop/)
+
+Colima 사용 시 환경설정에 `DOCKER_HOST` 를 추가해야 합니다.
+
+```shell
+# Colima 사용 
+export DOCKER_HOST="unix://$HOME/.colima/docker.sock"
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="$HOME/.colima/docker.sock"
+export TESTCONTAINERS_RYUK_DISABLED=true
+```
+
+### Q. Colima 사용 시
+
+Colima 로 Docker 를 실행할 때 다음과 같은 예외가 발생할 수 있습니다. 이 때에는 mount type 을 `9p` 를 사용하면 된다
+
+```shell
+Error response from daemon: error while creating mount source path '<path>':
+chown '<path>': operation not permitted
+```
+
+* [Colima and mounting volumes on MacOS](https://mpanin.me/posts/colima-and-mounting-volumes/)
