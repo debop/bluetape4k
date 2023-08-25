@@ -30,4 +30,7 @@ interface FileSyncApi {
 
     @GET("$FILES_PATH/{fileId}")
     fun getFile(@Path("fileId") fileId: FileId): File
+
+    @GET("$FILES_PATH/{fileId}/contents")
+    fun downloadFile(fileId: FileId): ByteArray
 }

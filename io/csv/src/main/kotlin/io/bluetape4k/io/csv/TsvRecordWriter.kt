@@ -15,15 +15,17 @@ class TsvRecordWriter private constructor(
 ): RecordWriter {
 
     companion object: KLogging() {
+        @JvmStatic
         operator fun invoke(tsvWriter: TsvWriter): TsvRecordWriter {
             return TsvRecordWriter(tsvWriter)
         }
 
+        @JvmStatic
         operator fun invoke(
             writer: Writer,
             settings: TsvWriterSettings = DefaultTsvWriterSettings,
         ): TsvRecordWriter {
-            return TsvRecordWriter(TsvWriter(writer, settings))
+            return invoke(TsvWriter(writer, settings))
         }
     }
 

@@ -79,7 +79,7 @@ class FunctionExecutor private constructor() {
 
     @Suppress("UNCHECKED_CAST")
     fun <T> execute(call: ChatFunctionCall): T? {
-        try {
+        return try {
             val function = functionMap.get(call.name)!!
             val source = when (val arguments = call.arguments!!) {
                 is TextNode -> arguments.asText()
@@ -87,7 +87,7 @@ class FunctionExecutor private constructor() {
             }
             val obj = mapper.readValue(source, function.parametersClass)
 
-            return function.executor?.apply(obj) as? T
+            function.executor?.apply(obj) as? T
         } catch (e: JsonProcessingException) {
             throw RuntimeException(e)
         }

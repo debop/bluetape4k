@@ -13,16 +13,17 @@ class CsvRecordWriter private constructor(
 ): RecordWriter {
 
     companion object: KLogging() {
-
+        @JvmStatic
         operator fun invoke(csvWriter: CsvWriter): CsvRecordWriter {
             return CsvRecordWriter(csvWriter)
         }
 
+        @JvmStatic
         operator fun invoke(
             writer: Writer,
             settings: CsvWriterSettings = DefaultCsvWriterSettings,
         ): CsvRecordWriter {
-            return CsvRecordWriter(CsvWriter(writer, settings))
+            return invoke(CsvWriter(writer, settings))
         }
     }
 

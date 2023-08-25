@@ -13,15 +13,17 @@ class CoTsvRecordWriter private constructor(
 ): CoRecordWriter {
 
     companion object: KLogging() {
+        @JvmStatic
         operator fun invoke(writer: TsvWriter): CoTsvRecordWriter {
             return CoTsvRecordWriter(writer)
         }
 
+        @JvmStatic
         operator fun invoke(
             writer: Writer,
             settings: TsvWriterSettings = DefaultTsvWriterSettings,
         ): CoTsvRecordWriter {
-            return CoTsvRecordWriter(TsvWriter(writer, settings))
+            return invoke(TsvWriter(writer, settings))
         }
     }
 

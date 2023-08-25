@@ -32,11 +32,13 @@ class CoTsvRecordReader(
         parser.iterateRecords(input, encoding)
             .drop(if (skipHeaders) 1 else 0)
             .forEach { record ->
-                emit(recordMapper(record))
+                runCatching { recordMapper(record) }.onSuccess { emit(it) }
             }
     }
 
     override fun close() {
+        // 뭘 close 해야지?
+
         // Nothing to do
     }
 }

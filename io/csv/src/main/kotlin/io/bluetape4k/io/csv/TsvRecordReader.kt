@@ -26,7 +26,7 @@ class TsvRecordReader(
         parser.iterateRecords(input, encoding)
             .drop(if (skipHeaders) 1 else 0)
             .forEach { record ->
-                yield(recordMapper(record))
+                runCatching { recordMapper(record) }.onSuccess { yield(it) }
             }
     }
 }

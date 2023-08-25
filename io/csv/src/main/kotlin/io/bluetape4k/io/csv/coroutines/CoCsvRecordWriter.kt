@@ -13,14 +13,18 @@ class CoCsvRecordWriter private constructor(
 ): CoRecordWriter {
 
     companion object: KLogging() {
-        operator fun invoke(writer: CsvWriter): CoCsvRecordWriter =
-            CoCsvRecordWriter(writer)
+        @JvmStatic
+        operator fun invoke(writer: CsvWriter): CoCsvRecordWriter {
+            return CoCsvRecordWriter(writer)
+        }
 
+        @JvmStatic
         operator fun invoke(
             writer: Writer,
             settings: CsvWriterSettings = DefaultCsvWriterSettings,
-        ): CoCsvRecordWriter =
-            CoCsvRecordWriter(CsvWriter(writer, settings))
+        ): CoCsvRecordWriter {
+            return invoke(CsvWriter(writer, settings))
+        }
     }
 
     override suspend fun writeHeaders(headers: Iterable<String>) {
