@@ -15,8 +15,8 @@ object Plugins {
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.7"
 
-        const val spring_boot = "3.1.2"
-        const val quarkus = "3.2.2.Final"
+        const val spring_boot = "3.1.3"
+        const val quarkus = "3.3.2"
         const val apollo = "3.8.2"
         const val dgs = "5.6.9"
         const val docker_compose = "0.16.12"
@@ -60,7 +60,7 @@ object Plugins {
 
 object Versions {
 
-    const val kotlin = "1.9.0"
+    const val kotlin = "1.9.10"
     const val kotlinx_coroutines = "1.7.3"
     const val kotlinx_serialization = "1.5.1"
 
@@ -70,11 +70,12 @@ object Versions {
     const val kotlinx_benchmark = Plugins.Versions.kotlinx_benchmark
 
     const val spring_boot = Plugins.Versions.spring_boot
-    const val spring_cloud = "2022.0.3"
-    const val reactor_bom = "2022.0.8"
+    const val spring_cloud = "2022.0.4"
+    const val reactor_bom = "2022.0.10"
     const val spring_statemachine = "3.2.1"
 
-    const val chaos_monkey = "3.0.1"
+    const val chaos_monkey =
+        "3.0.2"        // https://mvnrepository.com/artifact/de.codecentric/chaos-monkey-spring-boot
     const val blockhound = "1.0.8.RELEASE"
 
     // GraphQL
@@ -107,57 +108,44 @@ object Versions {
 
     const val bucket4j = "8.3.0"
     const val resilience4j = "2.1.0"
-    const val netty = "4.1.92.Final"
+    const val netty = "4.1.97.Final"
 
-    // https://mvnrepository.com/artifact/com.amazonaws
-    const val aws = "1.12.459"
+    const val aws = "1.12.546"    // https://mvnrepository.com/artifact/com.amazonaws
+    const val aws2 = "2.20.143"   // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
+    const val aws2_crt = "0.26.0" // https://mvnrepository.com/artifact/software.amazon.awssdk.crt
+    const val aws_kotlin = "0.32.0-beta" // https://mvnrepository.com/artifact/aws.sdk.kotlin
 
-    // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
-    const val aws2 = "2.20.98"
+    const val grpc = "1.58.0"           // https://mvnrepository.com/artifact/io.grpc/grpc-stub
+    const val grpc_kotlin = "1.3.1"     // https://mvnrepository.com/artifact/io.grpc/grpc-kotlin-stub
+    const val protobuf = "3.24.3"       // https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java
+    const val avro = "1.11.2"           // https://mvnrepository.com/artifact/org.apache.avro/avro
 
-    // https://mvnrepository.com/artifact/software.amazon.awssdk.crt
-    const val aws2_crt = "0.22.2"
-
-    // https://mvnrepository.com/artifact/aws.sdk.kotlin
-    const val aws_kotlin = "0.28.0-beta"
-
-    const val grpc = "1.56.1"           // https://mvnrepository.com/artifact/io.grpc/grpc-stub
-    const val grpc_kotlin = "1.3.0"     // https://mvnrepository.com/artifact/io.grpc/grpc-kotlin-stub
-    const val protobuf = "3.23.2"       // https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java
-
-    // https://mvnrepository.com/artifact/org.apache.avro/avro
-    const val avro = "1.11.2"
-
-    const val feign = "12.4"
+    const val feign = "12.5"            // https://mvnrepository.com/artifact/io.github.openfeign/feign-core
     const val httpclient5 =
         "5.2.1"     // https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
-    const val retrofit2 = "2.9.0"
-    const val okhttp3 = "4.11.0"
+    const val retrofit2 = "2.9.0"       // https://mvnrepository.com/artifact/com.squareup.retrofit2/adapter-rxjava2
+    const val okhttp3 = "4.11.0"        // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     const val asynchttpclient = "2.12.3"
 
-    const val jackson = "2.15.2"
+    const val jackson = "2.15.2"        // https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom
     const val jjwt = "0.11.5"
 
     const val mapstruct = "1.5.5.Final"
     const val reflectasm = "1.11.9"
 
-    // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
-    const val mongo_driver = "4.9.1"
-    const val lettuce = "6.2.4.RELEASE"
-
-    // 참고: https://github.com/redisson/redisson/issues/4809
-    const val redisson = "3.23.2"
+    const val mongo_driver = "4.10.2"   // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
+    const val lettuce = "6.2.6.RELEASE" // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
+    const val redisson = "3.23.4"       // https://mvnrepository.com/artifact/org.redisson/redisson
 
     // NOTE: Hibernate 는 jakarta 버전인 경우 orm, validator 등이 group 에 포함됩니다.
     // NOTE: 이 경우 기존 javax 를 사용하는 버전과 충돌이 생길 수 있으니 조심하세요 
     // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
 
-    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
-    const val hibernate = "6.2.7.Final" // "5.6.15.Final"
-    const val hibernate_reactive = "2.0.4.Final" // "1.1.9.Final"
-
-    // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
-    const val hibernate_validator = "8.0.1.Final"
+    const val hibernate = "6.3.0.Final"           // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+    const val hibernate_reactive =
+        "2.0.5.Final"  // https://mvnrepository.com/artifact/org.hibernate.reactive/hibernate-reactive-core
+    const val hibernate_validator =
+        "8.0.1.Final" // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
     const val querydsl = "5.0.0"
 
     // https://mvnrepository.com/artifact/io.quarkus.platform/quarkus-blaze-persistence-bom
@@ -173,18 +161,15 @@ object Versions {
     const val metrics = "4.1.25"
     const val prometheus = "0.16.0"
 
-    //NOTE: spring boot 2.7.x 를 사용할 시 micrometer는 1.9+ 를 사용해야 합니다.
-    const val micrometer = "1.11.2"
-    const val micrometerTracing = "1.1.3"
+    // NOTE: spring boot 2.7.x 를 사용할 시 micrometer는 1.9+ 를 사용해야 합니다.
+    const val micrometer = "1.11.3"         // https://mvnrepository.com/artifact/io.micrometer/micrometer-core
+    const val micrometerTracing = "1.1.4"   // https://mvnrepository.com/artifact/io.micrometer/micrometer-tracing
 
-    // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom
-    const val opentelemetry = "1.26.0"
-
-    // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom-alpha
-    const val opentelemetryAlpha = "$opentelemetry-alpha"
-
-    // https://mvnrepository.com/artifact/io.opentelemetry.instrumentation/opentelemetry-instrumentation-bom-alpha
-    const val opentelemetryInstrumentationAlpha = "$opentelemetry-alpha"
+    const val opentelemetry = "1.26.0" // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom
+    const val opentelemetryAlpha =
+        "$opentelemetry-alpha" // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom-alpha
+    const val opentelemetryInstrumentationAlpha =
+        "$opentelemetry-alpha" // https://mvnrepository.com/artifact/io.opentelemetry.instrumentation/opentelemetry-instrumentation-bom-alpha
 
     const val caffeine = "3.1.6"        // Java 9+ 이상에서는 3.x 사용
     const val ehcache = "3.10.8"
@@ -194,21 +179,21 @@ object Versions {
     const val hazelcast = "5.2.3"
     const val hazelcast_client = "3.12.13"
 
-    // https://mvnrepository.com/artifact/com.datastax.oss/java-driver-core
-    const val cassandra = "4.16.0"
+    const val cassandra = "4.17.0"     // https://mvnrepository.com/artifact/com.datastax.oss/java-driver-core
     const val scylla_java = "4.13.0.0"
     const val elasticsearch = "8.7.0"
 
-    const val kafka = "3.5.0"
-    const val spring_kafka = "3.0.8" // "2.9.9"
+    const val kafka = "3.5.1"           // https://mvnrepository.com/artifact/org.apache.kafka/kafka
+    const val spring_kafka = "3.0.11"   // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
 
     const val eclipse_collections = "11.1.0"
     const val jctools = "3.3.0"
 
     const val ow2_asm = "9.5"
 
-    const val junit_jupiter = "5.9.3"
-    const val junit_platform = "1.9.3"
+    const val junit_jupiter = "5.10.0"      // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    const val junit_platform =
+        "1.10.0"     // https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
     const val assertj_core = "3.24.2"
     const val kluent = "1.73"
     const val mockk = "1.13.5"
@@ -667,6 +652,7 @@ object Libs {
     val grpc_context = grpc("context")
     val grpc_core = grpc("core")
     val grpc_grpclb = grpc("grpclb")
+    val grpc_inprocess = grpc("inprocess")
     val grpc_protobuf = grpc("protobuf")
     val grpc_protobuf_lite = grpc("protobuf-lite")
     val grpc_stub = grpc("stub")
@@ -876,7 +862,7 @@ object Libs {
     val jjwt_extensions = jjwt("extensions")
 
     // Compression
-    const val snappy_java = "org.xerial.snappy:snappy-java:1.1.8.4"
+    const val snappy_java = "org.xerial.snappy:snappy-java:1.1.10.3"
     const val lz4_java = "org.lz4:lz4-java:1.8.0"
 
     // https://github.com/hyperxpro/Brotli4j

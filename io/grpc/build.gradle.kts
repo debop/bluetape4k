@@ -69,6 +69,7 @@ dependencies {
     api(Libs.grpc_auth)
     api(Libs.grpc_grpclb)
     api(Libs.grpc_services)
+    api(Libs.grpc_inprocess)
     testImplementation(Libs.grpc_okhttp)
     testImplementation(Libs.grpc_testing)
 
