@@ -62,6 +62,7 @@ dependencies {
     api(Libs.hibernate_micrometer)
     testImplementation(Libs.hibernate_testing)
 
+    // NOTE: hibernate 6.3.0+ 는 hibernate-jpamodelgen 예서 예외가 발생합니다. (6.2.x 를 사용하세요)
     kapt(Libs.hibernate_jpamodelgen)
     kaptTest(Libs.hibernate_jpamodelgen)
 

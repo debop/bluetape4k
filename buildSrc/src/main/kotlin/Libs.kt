@@ -141,7 +141,7 @@ object Versions {
     // NOTE: 이 경우 기존 javax 를 사용하는 버전과 충돌이 생길 수 있으니 조심하세요 
     // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
 
-    const val hibernate = "6.3.0.Final"           // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+    const val hibernate = "6.2.8.Final"           // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
     const val hibernate_reactive =
         "2.0.5.Final"  // https://mvnrepository.com/artifact/org.hibernate.reactive/hibernate-reactive-core
     const val hibernate_validator =

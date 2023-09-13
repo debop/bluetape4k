@@ -6,15 +6,20 @@ import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.logging.KLogging
 import jakarta.persistence.Access
 import jakarta.persistence.AccessType
-import jakarta.persistence.CascadeType.*
+import jakarta.persistence.CascadeType.MERGE
+import jakarta.persistence.CascadeType.PERSIST
+import jakarta.persistence.CascadeType.REFRESH
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType.*
+import jakarta.persistence.FetchType.EAGER
+import jakarta.persistence.FetchType.LAZY
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainSame
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
@@ -116,6 +121,8 @@ class ManyToManyTest(
 
 @Entity(name = "manytomany_bank_account")
 @Access(AccessType.FIELD)
+@DynamicInsert
+@DynamicUpdate
 class BankAccount(val number: String): IntJpaEntity() {
 
     // NOTE: many-to-many 관계에서는 cascade에 REMOVE, DETACH를 포함시키면 상대 entity도 삭제된다.
@@ -158,6 +165,8 @@ class BankAccount(val number: String): IntJpaEntity() {
 
 @Entity(name = "manytomany_account_owner")
 @Access(AccessType.FIELD)
+@DynamicInsert
+@DynamicUpdate
 class AccountOwner(val ssn: String): IntJpaEntity() {
 
     // NOTE: many-to-many 관계에서는 cascade에 REMOVE, DETACH를 포함시키면 상대 entity도 삭제된다.
