@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Positive
 
 
-data class CreateBookRequest(
+data class ModifyBookRequest(
     @NotBlank
     val title: String,
 
@@ -21,8 +21,17 @@ data class CreateBookRequest(
     val isbn: String,
 )
 
-fun CreateBookRequest.toBook(): Book {
+fun ModifyBookRequest.toBook(): Book {
     return Book(
+        title = title,
+        publicationYear = publicationYear,
+        authorName = authorName,
+        isbn = isbn,
+    )
+}
+
+fun Book.toModifyBookRequest(): ModifyBookRequest {
+    return ModifyBookRequest(
         title = title,
         publicationYear = publicationYear,
         authorName = authorName,

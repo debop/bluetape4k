@@ -32,7 +32,7 @@ abstract class AbstractEsDemoTest {
         val book = Book(
             title = faker.book().title(),
             authorName = faker.book().author(),
-            publicationYear = faker.number().numberBetween(1900, 2020),
+            publicationYear = faker.number().numberBetween(1945, 2020),
             isbn = faker.code().isbn13(),
         )
         log.debug { "create book=$book" }

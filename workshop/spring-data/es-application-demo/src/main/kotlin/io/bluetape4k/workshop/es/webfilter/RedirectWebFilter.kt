@@ -1,6 +1,7 @@
 package io.bluetape4k.workshop.es.webfilter
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
@@ -16,6 +17,7 @@ class RedirectWebFilter: WebFilter {
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         if (exchange.request.uri.path == "/") {
+            log.debug { "Redirect to $SWAGGER_PATH" }
             return chain.filter(exchange.mutate().request(exchange.request.mutate().path(SWAGGER_PATH).build()).build())
         }
         return chain.filter(exchange)

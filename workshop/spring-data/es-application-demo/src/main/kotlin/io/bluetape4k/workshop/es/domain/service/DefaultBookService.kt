@@ -59,6 +59,7 @@ class DefaultBookService(
     }
 
     override suspend fun deleteById(id: String) {
+        id.requireNotBlank("id")
         bookRepository.deleteById(id)
     }
 
