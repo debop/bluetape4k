@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 @Service
 class DefaultBookService(
     private val bookRepository: BookRepository,
-    private val esTemplate: ReactiveElasticsearchTemplate,
+    private val reactiveTemplate: ReactiveElasticsearchTemplate,
 ): BookService {
 
     companion object: KLogging()
@@ -38,16 +38,16 @@ class DefaultBookService(
     override suspend fun findByTitleAndAuthor(title: String, author: String): List<Book> {
         val criteria = QueryBuilders.bool { bqb ->
             bqb.must { qb ->
-                qb.match {
-                    it.field("authorName").query(author)
+                qb.match { mqb ->
+                    mqb.field("authorName").query(author)
                 }
-                qb.match {
-                    it.field("title").query(title)
+                qb.match { mqb ->
+                    mqb.field("title").query(title)
                 }
             }
         }
         val query = NativeQuery.builder().withQuery(criteria).build()
-        return esTemplate.search(query, Book::class.java).map { it.content }.asFlow().toList()
+        return reactiveTemplate.search(query, Book::class.java).map { it.content }.asFlow().toList()
     }
 
     override suspend fun create(book: Book): Book {

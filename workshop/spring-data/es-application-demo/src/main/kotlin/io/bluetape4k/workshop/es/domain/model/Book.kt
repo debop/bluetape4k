@@ -6,9 +6,9 @@ import java.io.Serializable
 
 @Document(indexName = "books")
 data class Book(
-    @Id var id: String? = null,
     val title: String,
+    val authorName: String,
     val publicationYear: Int,
-    val authorName: String? = null,
     val isbn: String,
+    @Id var id: String? = null,
 ): Serializable

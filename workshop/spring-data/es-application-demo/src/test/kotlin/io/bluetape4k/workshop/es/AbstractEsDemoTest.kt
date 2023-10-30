@@ -18,11 +18,14 @@ abstract class AbstractEsDemoTest {
     }
 
     @Autowired
-    private val template: ElasticsearchTemplate = uninitialized()
+    protected val operations: ElasticsearchTemplate = uninitialized()
+
+    // NOTE: ES index refresh는 동기방식으로 해야 검색이 제대로 됩니다.
+    protected val indexOpsForBook by lazy { operations.indexOps(Book::class.java) }
 
     @BeforeEach
     fun beforeEach() {
-        // recreateIndex()
+        recreateIndex()
     }
 
     protected fun createBook(): Book {
@@ -38,7 +41,7 @@ abstract class AbstractEsDemoTest {
 
     private fun recreateIndex() {
         log.debug { "recreate index for Book" }
-        val ops = template.indexOps(Book::class.java)
+        val ops = operations.indexOps(Book::class.java)
         if (ops.exists()) {
             ops.delete()
             ops.create()
