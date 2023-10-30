@@ -11,23 +11,21 @@ import org.testcontainers.utility.DockerImageName
 
 
 /**
- * Elasticsearch Server 를 Docker container 로 실행해주는 클래스입니다.
+ * Elasticsearch Open Source 용 Server 를 Docker container 로 실행해주는 클래스입니다.
  *
- * Link: [Elasticsearch Docker images](https://www.docker.elastic.co/r/elasticsearch)
+ * Link: [Elasticsearch OSS Docker Images](https://www.docker.elastic.co/r/elasticsearch/elasticsearch-oss)
  */
-class ElasticsearchServer private constructor(
+class ElasticsearchOss private constructor(
     imageName: DockerImageName,
-    val password: String,
     useDefaultPort: Boolean,
     reuse: Boolean,
 ): ElasticsearchContainer(imageName), GenericServer {
 
     companion object: KLogging() {
-        const val IMAGE = "docker.elastic.co/elasticsearch/elasticsearch"
-        const val TAG = "8.9.0"
+        const val IMAGE = "docker.elastic.co/elasticsearch/elasticsearch-oss"
+        const val TAG = "7.10.2"
 
-        const val NAME = "elasticsearch"
-        const val DEFAULT_PASSWORD = "kommons"
+        const val NAME = "elasticsearch-oss"
 
         const val PORT = 9200
         const val TCP_PORT = 9300
@@ -36,12 +34,11 @@ class ElasticsearchServer private constructor(
         operator fun invoke(
             image: String = IMAGE,
             tag: String = TAG,
-            password: String = DEFAULT_PASSWORD,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
-        ): ElasticsearchServer {
+        ): ElasticsearchOss {
             val imageName = DockerImageName.parse(image).withTag(tag)
-            return ElasticsearchServer(imageName, password, useDefaultPort, reuse)
+            return ElasticsearchOss(imageName, useDefaultPort, reuse)
         }
     }
 
@@ -51,7 +48,6 @@ class ElasticsearchServer private constructor(
     init {
         addExposedPorts(PORT, TCP_PORT)
         withReuse(reuse)
-        withPassword(password)
 
         if (useDefaultPort) {
             exposeCustomPorts(PORT, TCP_PORT)
@@ -64,15 +60,13 @@ class ElasticsearchServer private constructor(
     }
 
     object Launcher {
-        /**
-         * 기본 [ElasticsearchServer]를 제공합니다.
-         */
-        val elasticsearch: ElasticsearchServer by lazy {
-            ElasticsearchServer().apply {
+        val elasticsearchOss: ElasticsearchOss by lazy {
+            ElasticsearchOss().apply {
                 start()
                 ShutdownQueue.register(this)
             }
         }
+
 
         /**
          * Spring Data Elasticsearch 를 사용 할 때 사용할 클라이언트 설정을 제공합니다.
@@ -80,11 +74,10 @@ class ElasticsearchServer private constructor(
          * @param elasticsearch [ElasticsearchServer] 인스턴스
          * @return Spring Data Elasticsearch에서 제공하는 [ClientConfiguration] 인스턴스
          */
-        fun getClientConfiguration(elasticsearch: ElasticsearchServer): ClientConfiguration {
+        fun getClientConfiguration(elasticsearch: ElasticsearchOss): ClientConfiguration {
             return ClientConfiguration.builder()
                 .connectedTo(elasticsearch.url)
                 .usingSsl(elasticsearch.createSslContextFromCa())
-                .withBasicAuth("elastic", elasticsearch.password)
                 .build()
         }
     }

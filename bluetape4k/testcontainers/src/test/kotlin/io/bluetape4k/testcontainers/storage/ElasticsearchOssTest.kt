@@ -8,24 +8,25 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 
+
 @Execution(ExecutionMode.SAME_THREAD)
-class ElasticsearchServerTest {
+class ElasticsearchOssTest {
 
     companion object: KLogging()
 
     @Test
-    fun `launch elasticsearch`() {
-        ElasticsearchServer.Launcher.elasticsearch.use { es ->
-            log.debug { "Elasticsearch URL: ${es.url}" }
+    fun `launch elasticsearch oss version`() {
+        ElasticsearchOss.Launcher.elasticsearchOss.use { es ->
+            log.debug { "Elasticsearch OSS URL: ${es.url}" }
             es.isRunning.shouldBeTrue()
         }
     }
 
     @Test
-    fun `launch elasticsearch with default port`() {
-        ElasticsearchServer(useDefaultPort = true).use { es ->
+    fun `launch elasticsearch oss version with default port`() {
+        ElasticsearchOss(useDefaultPort = true).use { es ->
             es.start()
-            log.debug { "Elasticsearch URL: ${es.url}" }
+            log.debug { "Elasticsearch OSS URL: ${es.url}" }
             es.isRunning.shouldBeTrue()
             es.port shouldBeEqualTo ElasticsearchServer.PORT
         }

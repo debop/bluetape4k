@@ -15,7 +15,7 @@ object Plugins {
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.7"
 
-        const val spring_boot = "3.1.3"
+        const val spring_boot = "3.1.5"
         const val quarkus = "3.3.2"
         const val apollo = "3.8.2"
         const val dgs = "5.6.9"
@@ -102,7 +102,7 @@ object Versions {
     const val agroal = "2.2"
 
     const val swagger = "1.6.2"
-    const val springdoc_openapi = "1.7.0"
+    const val springdoc_openapi = "2.2.0"
     const val springfox_swagger = "3.0.0"
     const val problem = "0.29.1"
 
@@ -201,7 +201,7 @@ object Versions {
     const val mockito = "3.12.4"
     const val awaitility = "4.2.0"
     const val jmh = "1.36"
-    const val testcontainers = "1.18.3"
+    const val testcontainers = "1.19.1"
     const val jna = "5.13.0"
     const val archunit = "0.21.0"
 
@@ -1356,8 +1356,12 @@ object Libs {
     const val wiremock_jre8 = "com.github.tomakehurst:wiremock-jre8:2.33.2"
 
     // Springdoc OpenAPI
-    const val springdoc_openapi_ui = "org.springdoc:springdoc-openapi-ui:${Versions.springdoc_openapi}"
-    const val springdoc_openapi_webflux_ui = "org.springdoc:springdoc-openapi-webflux-ui:${Versions.springdoc_openapi}"
+    const val springdoc_openapi_starter_webmvc_api =
+        "org.springdoc:springdoc-openapi-starter-webmvc-api:${Versions.springdoc_openapi}"
+    const val springdoc_openapi_starter_webmvc_ui =
+        "org.springdoc:springdoc-openapi-starter-webmvc-ui:${Versions.springdoc_openapi}"
+    const val springdoc_openapi_starter_webflux_ui =
+        "org.springdoc:springdoc-openapi-starter-webflux-ui:${Versions.springdoc_openapi}"
     const val springdoc_openapi_security = "org.springdoc:springdoc-openapi-security:${Versions.springdoc_openapi}"
 
     // Swagger

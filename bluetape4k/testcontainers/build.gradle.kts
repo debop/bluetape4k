@@ -60,6 +60,7 @@ dependencies {
     // ElasticSearch
     compileOnly(Libs.testcontainers_elasticsearch)
     compileOnly(Libs.elasticsearch_rest_client)
+    compileOnly(Libs.springData("elasticsearch"))
 
     // Kafka
     compileOnly(Libs.testcontainers_kafka)
