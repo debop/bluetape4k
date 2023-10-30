@@ -34,6 +34,11 @@ class ElasticsearchServer private constructor(
         const val PORT = 9200
         const val TCP_PORT = 9300
 
+        private const val CLUSTER_NAME = "cluster.name"
+        private const val DISCOVERY_TYPE = "discovery.type"
+        private const val DISCOVERY_TYPE_SINGLE_NODE = "single-node"
+        private const val XPACK_SECURITY_ENABLED = "xpack.security.enabled"
+
         @JvmStatic
         operator fun invoke(
             image: String = OSS_IMAGE,
@@ -53,6 +58,11 @@ class ElasticsearchServer private constructor(
         addExposedPorts(PORT, TCP_PORT)
         withReuse(reuse)
         withLogConsumer(Slf4jLogConsumer(log))
+
+        addEnv(DISCOVERY_TYPE, DISCOVERY_TYPE_SINGLE_NODE)
+        addEnv(CLUSTER_NAME, NAME)
+        // 이 설정을 넣으면 안된다.
+        // addEnv(XPACK_SECURITY_ENABLED, false.toString())
 
         if (useDefaultPort) {
             exposeCustomPorts(PORT, TCP_PORT)
