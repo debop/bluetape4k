@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.concurrent.Executors
 
 @RestController
-@RequestMapping(path = ["/coroutine/backendB"])
+@RequestMapping("/coroutine/backendB")
 class BackendBCoroutineController(
     @Qualifier("backendBCoroutineService") private val businessBCoroutineService: CoroutineService,
     circuitBreakerRegistry: CircuitBreakerRegistry,

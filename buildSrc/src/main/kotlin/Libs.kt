@@ -3,7 +3,7 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 object Plugins {
 
     object Versions {
-        const val dokka = "1.8.20"
+        const val dokka = "1.9.10"
         const val detekt = "1.21.0"
         const val dependency_management = "1.1.0"
         const val jooq = "3.0.3"
@@ -15,7 +15,7 @@ object Plugins {
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.7"
 
-        const val spring_boot = "3.1.5"
+        const val spring_boot = "3.1.6"
         const val quarkus = "3.3.2"
         const val apollo = "3.8.2"
         const val dgs = "5.6.9"
@@ -60,9 +60,9 @@ object Plugins {
 
 object Versions {
 
-    const val kotlin = "1.9.10"
+    const val kotlin = "1.9.21"
     const val kotlinx_coroutines = "1.7.3"
-    const val kotlinx_serialization = "1.5.1"
+    const val kotlinx_serialization = "1.6.1"
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/atomicfu
     const val kotlinx_atomicfu = "0.21.0"
@@ -133,7 +133,7 @@ object Versions {
     const val mapstruct = "1.5.5.Final"
     const val reflectasm = "1.11.9"
 
-    const val mongo_driver = "4.10.2"   // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
+    const val mongo_driver = "4.11.1"   // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
     const val lettuce = "6.2.6.RELEASE" // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
     const val redisson = "3.23.4"       // https://mvnrepository.com/artifact/org.redisson/redisson
 
@@ -141,9 +141,9 @@ object Versions {
     // NOTE: 이 경우 기존 javax 를 사용하는 버전과 충돌이 생길 수 있으니 조심하세요 
     // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
 
-    const val hibernate = "6.2.8.Final"           // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+    const val hibernate = "6.4.0.Final"           // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
     const val hibernate_reactive =
-        "2.0.5.Final"  // https://mvnrepository.com/artifact/org.hibernate.reactive/hibernate-reactive-core
+        "2.2.0.Final"  // https://mvnrepository.com/artifact/org.hibernate.reactive/hibernate-reactive-core
     const val hibernate_validator =
         "8.0.1.Final" // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
     const val querydsl = "5.0.0"
@@ -162,8 +162,8 @@ object Versions {
     const val prometheus = "0.16.0"
 
     // NOTE: spring boot 2.7.x 를 사용할 시 micrometer는 1.9+ 를 사용해야 합니다.
-    const val micrometer = "1.11.3"         // https://mvnrepository.com/artifact/io.micrometer/micrometer-core
-    const val micrometerTracing = "1.1.4"   // https://mvnrepository.com/artifact/io.micrometer/micrometer-tracing
+    const val micrometer = "1.11.6"         // https://mvnrepository.com/artifact/io.micrometer/micrometer-core
+    const val micrometerTracing = "1.1.7"   // https://mvnrepository.com/artifact/io.micrometer/micrometer-tracing
 
     const val opentelemetry = "1.26.0" // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-bom
     const val opentelemetryAlpha =
@@ -206,7 +206,7 @@ object Versions {
     const val archunit = "0.21.0"
 
     const val datafaker = "1.9.0"
-    const val snakeyaml = "1.33"
+    const val snakeyaml = "2.2"
     const val random_beans = "3.9.0"
 
     // https://mvnrepository.com/artifact/com.github.maricn/logback-slack-appender

@@ -1,7 +1,17 @@
 plugins {
-    kotlin("plugin.spring")
-    kotlin("kapt")
     id(Plugins.spring_boot)
+    kotlin("plugin.spring")
+    kotlin("plugin.noarg")
+    kotlin("plugin.allopen")
+    kotlin("kapt")
+}
+
+allOpen {
+    annotation("org.springframework.data.elasticsearch.annotations.Document")
+}
+noArg {
+    annotation("org.springframework.data.elasticsearch.annotations.Document")
+    invokeInitializers = true
 }
 
 springBoot {

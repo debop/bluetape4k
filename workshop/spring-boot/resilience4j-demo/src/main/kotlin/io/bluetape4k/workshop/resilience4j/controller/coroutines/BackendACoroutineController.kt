@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(path = ["/coroutine/backendA"])
+@RequestMapping("/coroutine/backendA")
 class BackendACoroutineController(
     @Qualifier("backendACoroutineService") private val businessACoroutineService: CoroutineService
 ) {

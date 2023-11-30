@@ -58,19 +58,24 @@ class FunctionExecutor private constructor() {
 
     fun executeAndConvertToJson(call: ChatFunctionCall): JsonNode {
         try {
-            return when (val execution = execute<Any>(call)) {
+            val result = execute<Any>(call)
+            return when (result) {
                 is TextNode -> {
-                    val objectNode = mapper.readTree(execution.asText())
-                    if (objectNode.isMissingNode) execution else objectNode
+                    val objectNode = mapper.readTree(result.asText())
+
+                    if (objectNode.isMissingNode) result
+                    else objectNode
                 }
 
-                is ObjectNode -> execution
+                is ObjectNode -> result
                 is String -> {
-                    val objectNode = mapper.readTree(execution)
-                    if (objectNode.isMissingNode) throw RuntimeException("Parsing exception") else objectNode
+                    val objectNode = mapper.readTree(result)
+
+                    if (objectNode.isMissingNode) throw RuntimeException("Parsing exception")
+                    else objectNode
                 }
 
-                else -> mapper.readValueOrNull<JsonNode>(mapper.writeValueAsString(execution))!!
+                else -> mapper.readValueOrNull<JsonNode>(mapper.writeValueAsString(result))!!
             }
         } catch (e: Exception) {
             throw OpenAIHttpException(e)

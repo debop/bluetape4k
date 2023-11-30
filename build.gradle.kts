@@ -1,9 +1,7 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
-
 plugins {
     base
     `maven-publish`
-    jacoco
+    // jacoco
     kotlin("jvm") version Versions.kotlin
 
     // see: https://kotlinlang.org/docs/reference/compiler-plugins.html
@@ -48,9 +46,10 @@ subprojects {
 
     apply {
         plugin<JavaLibraryPlugin>()
-        plugin<KotlinPlatformJvmPlugin>()
+        // plugin<KotlinPlatformJvmPlugin>()
+        plugin("org.jetbrains.kotlin.jvm")
 
-        plugin("jacoco")
+        // plugin("jacoco")
         plugin("maven-publish")
 
         plugin(Plugins.dependency_management)
@@ -61,24 +60,29 @@ subprojects {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
+            languageVersion.set(JavaLanguageVersion.of(21))
         }
     }
 
-    val javaVersion = JavaVersion.VERSION_17.toString()
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
+    }
+
+//    val javaVersion = JavaVersion.VERSION_21.toString()
     val kotlinVersion = "1.9"
 
     tasks {
-
         compileJava {
             options.isIncremental = true
-            sourceCompatibility = javaVersion
-            targetCompatibility = javaVersion
+//            sourceCompatibility = javaVersion
+//            targetCompatibility = javaVersion
         }
 
         compileKotlin {
             kotlinOptions {
-                jvmTarget = javaVersion
+//                jvmTarget = javaVersion
                 incremental = true
                 javaParameters = true
                 languageVersion = kotlinVersion
@@ -109,7 +113,7 @@ subprojects {
 
         compileTestKotlin {
             kotlinOptions {
-                jvmTarget = javaVersion
+//                jvmTarget = javaVersion
                 incremental = true
                 javaParameters = true
                 languageVersion = kotlinVersion
@@ -167,62 +171,62 @@ subprojects {
             showFullStackTraces = true
         }
 
-        jacoco {
-            toolVersion = Plugins.Versions.jacoco
-        }
-
-        jacocoTestReport {
-            reports {
-                html.required.set(true)
-                xml.required.set(true)
-            }
-        }
-
-        jacocoTestCoverageVerification {
-            dependsOn(jacocoTestReport)
-
-            violationRules {
-                rule {
-                    // 룰 검증 수행 여부
-                    enabled = true
-
-                    // 룰을 검증할 단위를 클래스 단위로 한다
-                    element = "CLASS"         // BUNDLE|PACKAGE|CLASS|SOURCEFILE|METHOD
-
-                    // 브랜치 커버리지를 최소한 10% 를 만족시켜야 한다
-                    limit {
-                        counter =
-                            "INSTRUCTION"       // INSTRUCTION, LINE, BRANCH, COMPLEXITY, METHOD and CLASS. Defaults to INSTRUCTION.
-                        value =
-                            "COVEREDRATIO"   // TOTALCOUNT, MISSEDCOUNT, COVEREDCOUNT, MISSEDRATIO and COVEREDRATIO. Defaults to COVEREDRATIO
-                        minimum = 0.10.toBigDecimal()
-                    }
-                }
-            }
-        }
-
-        jacocoTestCoverageVerification {
-            dependsOn(jacocoTestReport)
-
-            violationRules {
-                rule {
-                    // 룰 검증 수행 여부
-                    enabled = true
-
-                    // 룰을 검증할 단위를 클래스 단위로 한다
-                    element = "CLASS"         // BUNDLE|PACKAGE|CLASS|SOURCEFILE|METHOD
-
-                    // 브랜치 커버리지를 최소한 10% 를 만족시켜야 한다
-                    limit {
-                        counter =
-                            "INSTRUCTION"       // INSTRUCTION, LINE, BRANCH, COMPLEXITY, METHOD and CLASS. Defaults to INSTRUCTION.
-                        value =
-                            "COVEREDRATIO"   // TOTALCOUNT, MISSEDCOUNT, COVEREDCOUNT, MISSEDRATIO and COVEREDRATIO. Defaults to COVEREDRATIO
-                        minimum = 0.10.toBigDecimal()
-                    }
-                }
-            }
-        }
+//        jacoco {
+//            toolVersion = Plugins.Versions.jacoco
+//        }
+//
+//        jacocoTestReport {
+//            reports {
+//                html.required.set(true)
+//                xml.required.set(true)
+//            }
+//        }
+//
+//        jacocoTestCoverageVerification {
+//            dependsOn(jacocoTestReport)
+//
+//            violationRules {
+//                rule {
+//                    // 룰 검증 수행 여부
+//                    enabled = true
+//
+//                    // 룰을 검증할 단위를 클래스 단위로 한다
+//                    element = "CLASS"         // BUNDLE|PACKAGE|CLASS|SOURCEFILE|METHOD
+//
+//                    // 브랜치 커버리지를 최소한 10% 를 만족시켜야 한다
+//                    limit {
+//                        counter =
+//                            "INSTRUCTION"       // INSTRUCTION, LINE, BRANCH, COMPLEXITY, METHOD and CLASS. Defaults to INSTRUCTION.
+//                        value =
+//                            "COVEREDRATIO"   // TOTALCOUNT, MISSEDCOUNT, COVEREDCOUNT, MISSEDRATIO and COVEREDRATIO. Defaults to COVEREDRATIO
+//                        minimum = 0.10.toBigDecimal()
+//                    }
+//                }
+//            }
+//        }
+//
+//        jacocoTestCoverageVerification {
+//            dependsOn(jacocoTestReport)
+//
+//            violationRules {
+//                rule {
+//                    // 룰 검증 수행 여부
+//                    enabled = true
+//
+//                    // 룰을 검증할 단위를 클래스 단위로 한다
+//                    element = "CLASS"         // BUNDLE|PACKAGE|CLASS|SOURCEFILE|METHOD
+//
+//                    // 브랜치 커버리지를 최소한 10% 를 만족시켜야 한다
+//                    limit {
+//                        counter =
+//                            "INSTRUCTION"       // INSTRUCTION, LINE, BRANCH, COMPLEXITY, METHOD and CLASS. Defaults to INSTRUCTION.
+//                        value =
+//                            "COVEREDRATIO"   // TOTALCOUNT, MISSEDCOUNT, COVEREDCOUNT, MISSEDRATIO and COVEREDRATIO. Defaults to COVEREDRATIO
+//                        minimum = 0.10.toBigDecimal()
+//                    }
+//                }
+//            }
+//        }
 
         jar {
             manifest.attributes["Specification-Title"] = project.name

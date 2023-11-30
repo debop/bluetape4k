@@ -26,7 +26,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeoutException
 
 @RestController
-@RequestMapping(path = ["/backendB"])
+@RequestMapping("/backendB")
 class BackendBController(
     @Qualifier("backendBService") private val businessBService: Service,
     circuitBreakerRegistry: CircuitBreakerRegistry,

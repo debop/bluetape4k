@@ -4,18 +4,9 @@ import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.hibernate.AbstractHibernateTest
 import io.bluetape4k.data.hibernate.findAs
-import io.bluetape4k.data.hibernate.model.AbstractJpaEntity
 import io.bluetape4k.data.hibernate.model.IntJpaEntity
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.hashOf
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeFalse
-import org.amshove.kluent.shouldBeNull
-import org.amshove.kluent.shouldNotBeNull
-import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.repository.findByIdOrNull
 import jakarta.persistence.Access
 import jakarta.persistence.AccessType
 import jakarta.persistence.CascadeType
@@ -26,6 +17,14 @@ import jakarta.persistence.MapsId
 import jakarta.persistence.OneToOne
 import jakarta.persistence.PrimaryKeyJoinColumn
 import jakarta.validation.constraints.NotBlank
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeNull
+import org.amshove.kluent.shouldNotBeNull
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.repository.findByIdOrNull
 
 class MapsIdOneToOneTest(
     @Autowired private val authorRepo: AuthorRepository,
@@ -80,8 +79,7 @@ class MapsIdOneToOneTest(
 @Entity(name = "onetoone_author")
 @Access(AccessType.FIELD)
 class Author private constructor(
-    @NotBlank
-    val name: String,
+    @NotBlank val name: String,
 ): IntJpaEntity() {
 
     companion object {
@@ -157,7 +155,7 @@ class Picture private constructor(): IntJpaEntity() {
 
 @Entity(name = "onetoone_biography")
 @Access(AccessType.FIELD)
-class Biography private constructor(): AbstractJpaEntity<Int>() {
+class Biography private constructor(): IntJpaEntity() {
 
     companion object {
         @JvmStatic

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(path = ["/backendA"])
+@RequestMapping("/backendA")
 class BackendAController(
     @Qualifier("backendAService") private val businessAService: Service
 ) {
