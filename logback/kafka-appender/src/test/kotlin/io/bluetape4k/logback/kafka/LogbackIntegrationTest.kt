@@ -1,8 +1,10 @@
 package io.bluetape4k.logback.kafka
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import io.bluetape4k.support.toUtf8String
+import io.bluetape4k.support.trimWhitespace
 import io.bluetape4k.testcontainers.massage.KafkaServer
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
@@ -55,8 +57,8 @@ class LogbackIntegrationTest {
         var records = consumer.poll(Duration.ofSeconds(1))
         while (!records.isEmpty) {
             records.forEach { record ->
-                val message = record.value()?.toUtf8String()
-                println("received: $message")
+                val message = record.value()?.toUtf8String()?.trimWhitespace()
+                log.debug { "received from topic=${record.topic()}, partition=${record.partition()}, message: `$message`" }
                 message.shouldNotBeNull() shouldContain "test message $receivedCount"
                 receivedCount++
             }

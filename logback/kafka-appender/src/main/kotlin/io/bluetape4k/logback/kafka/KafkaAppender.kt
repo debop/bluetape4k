@@ -69,7 +69,6 @@ class KafkaAppender<E>: KafkaAppenderOptions<E>() {
         val key = keyProvider?.get(event)
         val timestamp: Long? = if (needAppendTimestamp) getTimestamp(event) else null
         val record = ProducerRecord(topic, partition, timestamp, key, payload)
-        // println("append record. record=$record")
 
         val producer = producerProvider?.get()
 

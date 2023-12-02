@@ -15,11 +15,7 @@ abstract class KafkaAppenderOptions<E>: UnsynchronizedAppenderBase<E>(), Appende
     var topic: String? = null
     var partition: Int? = null
         set(value) {
-            field = if (value != null && value >= 0) {
-                value
-            } else {
-                null
-            }
+            field = value?.let { maxOf(0, value) }
         }
     var needAppendTimestamp: Boolean = true
     var encoder: Encoder<E>? = null

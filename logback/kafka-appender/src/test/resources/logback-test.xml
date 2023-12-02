@@ -8,7 +8,7 @@
 
         <bootstrapServers>localhost:9093</bootstrapServers>
         <topic>logs</topic>
-        <keyProvider class="io.bluetape4k.logback.kafka.keyprovider.NullKeyProvider"/>
+        <keyProvider class="io.bluetape4k.logback.kafka.keyprovider.HostNameKeyProvider"/>
         <logExporter class="io.bluetape4k.logback.kafka.exporter.DefaultLogExporter"/>
     </appender>
 
