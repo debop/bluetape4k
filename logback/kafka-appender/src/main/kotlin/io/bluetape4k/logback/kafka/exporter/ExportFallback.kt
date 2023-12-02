@@ -1,4 +1,4 @@
-package io.bluetape4k.logback.kafka.export
+package io.bluetape4k.logback.kafka.exporter
 
 /**
  * Export 시에 예외가 발생했을 경우, Fallback 처리를 위한 인터페이스
@@ -7,5 +7,6 @@ package io.bluetape4k.logback.kafka.export
  */
 fun interface ExportFallback<E> {
 
-    fun onFail(event: E, throwable: Throwable?)
+    fun handleException(event: E, throwable: Throwable?)
+    
 }

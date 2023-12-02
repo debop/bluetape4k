@@ -1,16 +1,17 @@
 package io.bluetape4k.logback.kafka
 
+import ch.qos.logback.core.UnsynchronizedAppenderBase
 import ch.qos.logback.core.encoder.Encoder
-import ch.qos.logback.core.spi.ContextAwareBase
-import io.bluetape4k.logback.kafka.export.DefaultLogExporter
-import io.bluetape4k.logback.kafka.export.LogExporter
-import io.bluetape4k.logback.kafka.keycreator.KeyCreator
-import io.bluetape4k.logback.kafka.keycreator.NullKeyCreator
+import ch.qos.logback.core.spi.AppenderAttachable
+import io.bluetape4k.logback.kafka.exporter.DefaultLogExporter
+import io.bluetape4k.logback.kafka.exporter.LogExporter
+import io.bluetape4k.logback.kafka.keyprovider.KeyProvider
+import io.bluetape4k.logback.kafka.keyprovider.NullKeyProvider
 import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.kafka.common.serialization.ByteArraySerializer
 
-internal class KafkaAppenderOptions<E>: ContextAwareBase() {
+abstract class KafkaAppenderOptions<E>: UnsynchronizedAppenderBase<E>(), AppenderAttachable<E> {
 
+    var bootstrapServers: String? = null
     var topic: String? = null
     var partition: Int? = null
         set(value) {
@@ -22,22 +23,27 @@ internal class KafkaAppenderOptions<E>: ContextAwareBase() {
         }
     var needAppendTimestamp: Boolean = true
     var encoder: Encoder<E>? = null
-    var keyCreator: KeyCreator<E>? = null
+    var keyProvider: KeyProvider<in E>? = null
     var logExporter: LogExporter? = null
 
-    val producerConfig: MutableMap<String, Any?> = mutableMapOf(
-        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to ByteArraySerializer::class.java,
-        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to ByteArraySerializer::class.java
-    )
+    var producerConfig: MutableMap<String, Any?> = mutableMapOf()
 
     fun addProducerConfigValue(key: String, value: Any?) {
         producerConfig[key] = value
     }
 
+    fun addProducerConfigValue(keyValue: String) {
+        val (key, value) = keyValue.split("=", limit = 2)
+        addProducerConfigValue(key, value)
+    }
+
+
     fun checkOptions(): Boolean {
         var validOptions = true
 
-        if (producerConfig[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] == null) {
+        producerConfig[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
+
+        if (bootstrapServers.isNullOrBlank()) {
             addError("bootstrap.servers is not set")
             validOptions = false
         }
@@ -52,9 +58,9 @@ internal class KafkaAppenderOptions<E>: ContextAwareBase() {
             validOptions = false
         }
 
-        if (keyCreator == null) {
-            addInfo("keyCreator is not set. use NullKeyCreator")
-            keyCreator = NullKeyCreator()
+        if (keyProvider == null) {
+            addInfo("keyProvider is not set. use NullKeyProvider")
+            keyProvider = NullKeyProvider()
         }
 
         if (logExporter == null) {
@@ -62,6 +68,7 @@ internal class KafkaAppenderOptions<E>: ContextAwareBase() {
             logExporter = DefaultLogExporter()
         }
 
+        println("Check options. valid options=$validOptions")
         return validOptions
     }
 }

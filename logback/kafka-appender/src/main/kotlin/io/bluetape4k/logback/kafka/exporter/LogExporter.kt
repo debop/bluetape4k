@@ -1,4 +1,4 @@
-package io.bluetape4k.logback.kafka.export
+package io.bluetape4k.logback.kafka.exporter
 
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -26,7 +26,7 @@ interface LogExporter {
         producer: Producer<K, V>,
         record: ProducerRecord<K, V>,
         event: E,
-        fallback: (event: E, throwable: Throwable?) -> Unit,
+        fallback: ExportFallback<E>,
     ): Boolean
 
 }

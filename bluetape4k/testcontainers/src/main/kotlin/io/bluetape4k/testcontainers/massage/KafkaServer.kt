@@ -10,6 +10,8 @@ import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.common.serialization.ByteArrayDeserializer
+import org.apache.kafka.common.serialization.ByteArraySerializer
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serializer
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -49,7 +51,7 @@ class KafkaServer private constructor(
     companion object: KLogging() {
         val IMAGE = "confluentinc/cp-kafka"
         val NAME = "kafka"
-        val TAG = "7.3.3"
+        val TAG = "7.5.2"
 
         @JvmStatic
         operator fun invoke(
@@ -77,8 +79,11 @@ class KafkaServer private constructor(
 
     init {
         addExposedPorts(KAFKA_PORT)
-        withEmbeddedZookeeper()
         withReuse(reuse)
+
+        // Kafka 7.4.0 이상부터는 Zookeeper 대신에 Kraft를 사용할 수 있습니다.
+        // 기본 port 사용을 위해 Kraft를 사용합니다.
+        withKraft()
 
         // HINT: Transaction 관련 테스트를 위해서는 다음과 같은 값을 넣어줘야 합니다.
         // HINT: 테스트 시에는 transaction log replica 를 1로 설정해야 합니다. (기본은 3)
@@ -146,6 +151,24 @@ class KafkaServer private constructor(
         fun createStringConsumer(kafkaServer: KafkaServer = kafka): KafkaConsumer<String, String> {
             val props = getConsumerProperties(kafkaServer)
             return KafkaConsumer(props, stringDeserializer, stringDeserializer)
+        }
+
+        fun createBinaryProducer(kafkaServer: KafkaServer = kafka): KafkaProducer<ByteArray?, ByteArray?> {
+            val props = getProducerProperties(kafkaServer)
+            props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer::class.java)
+            props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer::class.java)
+
+            return KafkaProducer(props)
+        }
+
+        fun createBinaryConsumer(
+            kafkaServer: KafkaServer = kafka,
+        ): KafkaConsumer<ByteArray?, ByteArray?> {
+            val props = getConsumerProperties(kafkaServer)
+            props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer::class.java)
+            props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer::class.java)
+
+            return KafkaConsumer(props)
         }
 
         object Spring {

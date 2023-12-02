@@ -22,5 +22,4 @@ dependencies {
     // Coroutines
     compileOnly(Libs.kotlinx_coroutines_core)
     testImplementation(Libs.kotlinx_coroutines_test)
-
 }

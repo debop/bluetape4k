@@ -198,10 +198,11 @@ object Versions {
     const val kluent = "1.73"
     const val mockk = "1.13.5"
     const val springmockk = "4.0.2"
-    const val mockito = "3.12.4"
+    const val mockito = "5.7.0"
+    const val mockito_kotlin = "5.1.0"
     const val awaitility = "4.2.0"
-    const val jmh = "1.36"
-    const val testcontainers = "1.19.1"
+    const val jmh = "1.37"
+    const val testcontainers = "1.19.3"
     const val jna = "5.13.0"
     const val archunit = "0.21.0"
 
@@ -1291,7 +1292,7 @@ object Libs {
 
     const val mockito_core = "org.mockito:mockito-core:${Versions.mockito}"
     const val mockito_junit_jupiter = "org.mockito:mockito-junit-jupiter:${Versions.mockito}"
-    const val mockito_kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+    const val mockito_kotlin = "org.mockito.kotlin:mockito-kotlin:${Versions.mockito_kotlin}"
     const val jmock_junit5 = "org.jmock:jmock-junit5:2.12.0"
 
     // Awaitility (https://github.com/awaitility/awaitility)

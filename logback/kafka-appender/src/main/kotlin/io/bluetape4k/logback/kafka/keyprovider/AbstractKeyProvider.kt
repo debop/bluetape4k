@@ -1,9 +1,9 @@
-package io.bluetape4k.logback.kafka.keycreator
+package io.bluetape4k.logback.kafka.keyprovider
 
 import ch.qos.logback.core.spi.ContextAwareBase
 import ch.qos.logback.core.spi.LifeCycle
 
-abstract class AbstractKeyCreator<E>: ContextAwareBase(), KeyCreator<E>, LifeCycle {
+abstract class AbstractKeyProvider<E>: ContextAwareBase(), KeyProvider<E>, LifeCycle {
 
     protected var errorWasShown: Boolean = false
 

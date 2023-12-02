@@ -76,13 +76,10 @@ subprojects {
     tasks {
         compileJava {
             options.isIncremental = true
-//            sourceCompatibility = javaVersion
-//            targetCompatibility = javaVersion
         }
 
         compileKotlin {
             kotlinOptions {
-//                jvmTarget = javaVersion
                 incremental = true
                 javaParameters = true
                 languageVersion = kotlinVersion
@@ -113,7 +110,6 @@ subprojects {
 
         compileTestKotlin {
             kotlinOptions {
-//                jvmTarget = javaVersion
                 incremental = true
                 javaParameters = true
                 languageVersion = kotlinVersion

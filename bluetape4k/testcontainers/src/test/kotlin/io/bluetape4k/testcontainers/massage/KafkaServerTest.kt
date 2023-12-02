@@ -51,6 +51,20 @@ class KafkaServerTest {
     }
 
     @Test
+    fun `launch kafka server with default port`() {
+        KafkaServer(useDefaultPort = true).use { kafka ->
+
+            kafka.start()
+
+            log.debug { "bootstrapServers=${kafka.bootstrapServers}" }
+            log.debug { "boundPortNumbers=${kafka.boundPortNumbers}" }
+
+            kafka.bootstrapServers.shouldNotBeNull()
+            kafka.isRunning.shouldBeTrue()
+        }
+    }
+
+    @Test
     fun `producing and consuming messages`() {
 
         val producer = KafkaServer.Launcher.createStringProducer()

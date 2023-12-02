@@ -1,11 +1,11 @@
-package io.bluetape4k.logback.kafka.keycreator
+package io.bluetape4k.logback.kafka.keyprovider
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.Context
 import ch.qos.logback.core.CoreConstants
-import io.bluetape4k.logback.kafka.utils.toHashBytes
+import io.bluetape4k.logback.kafka.utils.hashBytes
 
-class ContextNameKeyCreator: AbstractKeyCreator<ILoggingEvent>() {
+class ContextNameKeyProvider: AbstractKeyProvider<ILoggingEvent>() {
 
     private var contextNameHash: ByteArray? = null
 
@@ -19,11 +19,11 @@ class ContextNameKeyCreator: AbstractKeyCreator<ILoggingEvent>() {
                 errorWasShown = true
             }
         } else {
-            contextNameHash = hostname.toHashBytes()
+            contextNameHash = hostname.hashBytes()
         }
     }
 
-    override fun create(e: ILoggingEvent): ByteArray? {
+    override fun get(e: ILoggingEvent): ByteArray? {
         return contextNameHash
     }
 }

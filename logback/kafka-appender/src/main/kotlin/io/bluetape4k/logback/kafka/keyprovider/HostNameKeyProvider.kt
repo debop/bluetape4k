@@ -1,10 +1,10 @@
-package io.bluetape4k.logback.kafka.keycreator
+package io.bluetape4k.logback.kafka.keyprovider
 
 import ch.qos.logback.core.Context
 import ch.qos.logback.core.CoreConstants
-import io.bluetape4k.logback.kafka.utils.toHashBytes
+import io.bluetape4k.logback.kafka.utils.hashBytes
 
-class HostNameKeyCreator: AbstractKeyCreator<Any?>() {
+class HostNameKeyProvider: AbstractKeyProvider<Any?>() {
 
     private var hostnameHash: ByteArray? = null
 
@@ -18,11 +18,11 @@ class HostNameKeyCreator: AbstractKeyCreator<Any?>() {
                 errorWasShown = true
             }
         } else {
-            hostnameHash = hostname.toHashBytes()
+            hostnameHash = hostname.hashBytes()
         }
     }
 
-    override fun create(e: Any?): ByteArray? {
+    override fun get(e: Any?): ByteArray? {
         return hostnameHash
     }
 }
