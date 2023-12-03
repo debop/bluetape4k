@@ -1,5 +1,7 @@
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
+// @formatter:off
+
 object Plugins {
 
     object Versions {
@@ -29,20 +31,17 @@ object Plugins {
 
     const val jooq = "nu.studer.jooq"
 
-    // https://github.com/google/protobuf-gradle-plugin
-    const val protobuf = "com.google.protobuf"
+    const val protobuf = "com.google.protobuf" // https://github.com/google/protobuf-gradle-plugin
 
     // https://github.com/davidmc24/gradle-avro-plugin
     const val avro = "com.github.davidmc24.gradle.plugin.avro" //"com.commercehub.gradle.plugin.avro"
 
     const val jarTest = "com.github.hauner.jarTest"
 
-    // https://mvnrepository.com/artifact/com.adarshr/gradle-test-logger-plugin
-    const val testLogger = "com.adarshr.test-logger"
+    const val testLogger = "com.adarshr.test-logger"      // https://mvnrepository.com/artifact/com.adarshr/gradle-test-logger-plugin
     const val shadow = "com.github.johnrengelman.shadow"
 
-    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-benchmark-plugin
-    const val kotlinx_benchmark = "org.jetbrains.kotlinx.benchmark"
+    const val kotlinx_benchmark = "org.jetbrains.kotlinx.benchmark" // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-benchmark-plugin
 
     // Quarkus
     const val quarkus = "io.quarkus"
@@ -60,23 +59,21 @@ object Plugins {
 
 object Versions {
 
-    const val kotlin = "1.9.21"
-    const val kotlinx_coroutines = "1.7.3"
-    const val kotlinx_serialization = "1.6.1"
+    const val kotlin = "1.9.21"             // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
+    const val kotlinx_coroutines = "1.7.3"  // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
+    const val kotlinx_serialization = "1.6.2"  // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm
 
-    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/atomicfu
-    const val kotlinx_atomicfu = "0.21.0"
+    const val kotlinx_atomicfu = "0.23.1" // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/atomicfu
 
     const val kotlinx_benchmark = Plugins.Versions.kotlinx_benchmark
 
     const val spring_boot = Plugins.Versions.spring_boot
-    const val spring_cloud = "2022.0.4"
-    const val reactor_bom = "2022.0.10"
-    const val spring_statemachine = "3.2.1"
+    const val spring_cloud = "2022.0.4"      // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies
+    const val reactor_bom = "2022.0.13"      // https://mvnrepository.com/artifact/io.projectreactor/reactor-bom
+    const val spring_statemachine = "3.2.1"  // https://mvnrepository.com/artifact/org.springframework.statemachine/spring-statemachine-core
 
-    const val chaos_monkey =
-        "3.0.2"        // https://mvnrepository.com/artifact/de.codecentric/chaos-monkey-spring-boot
-    const val blockhound = "1.0.8.RELEASE"
+    const val chaos_monkey = "3.0.2"        // https://mvnrepository.com/artifact/de.codecentric/chaos-monkey-spring-boot
+    const val blockhound = "1.0.8.RELEASE"  // https://mvnrepository.com/artifact/io.projectreactor.tools/blockhound
 
     // GraphQL
     // Netflix DGS 의 bom (5.5.x) 에서 graph-java 버전이 낮아서 (18.3) 최신 버전 (19.+)으로 강제 update 해야 한다
@@ -110,10 +107,10 @@ object Versions {
     const val resilience4j = "2.1.0"
     const val netty = "4.1.97.Final"
 
-    const val aws = "1.12.546"    // https://mvnrepository.com/artifact/com.amazonaws
-    const val aws2 = "2.20.143"   // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
-    const val aws2_crt = "0.26.0" // https://mvnrepository.com/artifact/software.amazon.awssdk.crt
-    const val aws_kotlin = "0.32.0-beta" // https://mvnrepository.com/artifact/aws.sdk.kotlin
+    const val aws = "1.12.603"    // https://mvnrepository.com/artifact/com.amazonaws
+    const val aws2 = "2.21.36"   // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
+    const val aws2_crt = "0.28.11" // https://mvnrepository.com/artifact/software.amazon.awssdk.crt
+    const val aws_kotlin = "1.0.8" // https://mvnrepository.com/artifact/aws.sdk.kotlin
 
     const val grpc = "1.58.0"           // https://mvnrepository.com/artifact/io.grpc/grpc-stub
     const val grpc_kotlin = "1.3.1"     // https://mvnrepository.com/artifact/io.grpc/grpc-kotlin-stub
@@ -127,8 +124,8 @@ object Versions {
     const val okhttp3 = "4.11.0"        // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     const val asynchttpclient = "2.12.3"
 
-    const val jackson = "2.15.2"        // https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom
-    const val jjwt = "0.11.5"
+    const val jackson = "2.16.0"        // https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom
+    const val jjwt = "0.12.3"           // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
 
     const val mapstruct = "1.5.5.Final"
     const val reflectasm = "1.11.9"
@@ -1387,3 +1384,5 @@ object Libs {
     // WebJars
     fun webjar(module: String, version: String) = "org.webjars:$module:$version"
 }
+
+// @formatter:on

@@ -35,9 +35,9 @@ class SqsAsyncClientSupport: AbstractSqsTest() {
     fun `create queue`() = runSuspendWithIO {
         val url = asyncClient.createQueue(QUEUE_NAME).await()
         queueUrl = asyncClient.getQueueUrl(QUEUE_NAME).await().queueUrl()
+        log.debug { "queue url=$queueUrl for queue name=$QUEUE_NAME" }
 
         queueUrl shouldBeEqualTo url
-        log.debug { "queue url=$queueUrl" }
     }
 
     @Test

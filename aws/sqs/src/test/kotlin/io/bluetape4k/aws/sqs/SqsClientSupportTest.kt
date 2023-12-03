@@ -33,9 +33,9 @@ class SqsClientSupportTest: AbstractSqsTest() {
     fun `create queue`() {
         val url = client.createQueue(QUEUE_NAME)
         queueUrl = client.getQueueUrl(QUEUE_NAME).queueUrl()
+        log.debug { "queue url=$queueUrl for queue name=$QUEUE_NAME" }
 
         queueUrl shouldBeEqualTo url
-        log.debug { "queue url=$queueUrl" }
     }
 
     @Test
@@ -79,6 +79,7 @@ class SqsClientSupportTest: AbstractSqsTest() {
     @Test
     @Order(5)
     fun `receive messages`() {
+        log.debug { "Receive message from $queueUrl, maxResults=3" }
         val messages = client.receiveMessages(queueUrl, 3).messages()
 
         messages shouldHaveSize 3
