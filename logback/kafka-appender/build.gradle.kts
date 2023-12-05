@@ -1,8 +1,3 @@
-plugins {
-    kotlin("plugin.spring")
-    kotlin("plugin.noarg")
-}
-
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }

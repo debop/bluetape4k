@@ -13,7 +13,7 @@ import java.io.File
 import java.time.Duration
 
 /**
- * Docker Compose Module을 이용하여
+ * Docker Compose Module을 이용하여 서비스를 실행하는 테스트
  *
  * 참고 : [Docker Compose Module](https://www.testcontainers.org/modules/docker_compose/)
  */
@@ -31,7 +31,7 @@ class SimpleIntegrationTest {
                     5432,
                     Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(30))
                 )
-                .withLocalCompose(true)
+        // .withLocalCompose(true) // docker-compose 가 설치되어 있어야 한다.
     }
 
     @Test
@@ -39,11 +39,11 @@ class SimpleIntegrationTest {
         val postgresContainer: ContainerState by lazy {
             dockerComposeContainer.getContainerByServiceName("postgres").orElseThrow()
         }
+        postgresContainer.isRunning.shouldBeTrue()
 
         val host = postgresContainer.host
         val port = postgresContainer.getMappedPort(5432)
 
         log.debug { "postgres host=$host, port=$$port" }
-        postgresContainer.isRunning.shouldBeTrue()
     }
 }
