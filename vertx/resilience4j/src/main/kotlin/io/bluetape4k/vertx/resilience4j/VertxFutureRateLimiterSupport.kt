@@ -13,14 +13,12 @@ inline fun <T> RateLimiter.decorateVertxFuture(
 ): () -> Future<T> = {
     val promise = Promise.promise<T>()
 
-    try {
-        RateLimiter.waitForPermission(this, 1)
-        supplier.invoke()
-            .onSuccess { promise.complete(it) }
-            .onFailure { promise.fail(it) }
-    } catch (e: Throwable) {
-        promise.fail(e)
-    }
+    RateLimiter.waitForPermission(this, 1)
+    supplier.invoke()
+        .onComplete { ar ->
+            if (ar.succeeded()) promise.complete(ar.result())
+            else promise.fail(ar.cause())
+        }
 
     promise.future()
 }

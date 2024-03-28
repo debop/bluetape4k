@@ -21,23 +21,17 @@ inline fun <T> CircuitBreaker.decorateVertxFuture(
         promise.fail(CallNotPermittedException.createCallNotPermittedException(this))
     } else {
         val start = System.nanoTime()
-        try {
-            supplier.invoke()
-                .onComplete { ar ->
-                    val durationInNanos = System.nanoTime() - start
-                    if (ar.succeeded()) {
-                        onSuccess(durationInNanos, TimeUnit.NANOSECONDS)
-                        promise.complete(ar.result())
-                    } else {
-                        onError(durationInNanos, TimeUnit.NANOSECONDS, ar.cause())
-                        promise.fail(ar.cause())
-                    }
+        supplier.invoke()
+            .onComplete { ar ->
+                val durationInNanos = System.nanoTime() - start
+                if (ar.succeeded()) {
+                    onSuccess(durationInNanos, TimeUnit.NANOSECONDS)
+                    promise.complete(ar.result())
+                } else {
+                    onError(durationInNanos, TimeUnit.NANOSECONDS, ar.cause())
+                    promise.fail(ar.cause())
                 }
-        } catch (e: Exception) {
-            val durationInNanos = System.nanoTime() - start
-            onError(durationInNanos, TimeUnit.NANOSECONDS, e)
-            promise.fail(e)
-        }
+            }
     }
 
     promise.future()

@@ -14,22 +14,19 @@ inline fun <T> Bulkhead.executeVertxFuture(
 inline fun <T> Bulkhead.decorateVertxFuture(
     crossinline supplier: () -> Future<T>,
 ): () -> Future<T> = {
+    val self = this
     val promise = Promise.promise<T>()
 
     if (tryAcquirePermission()) {
-        try {
-            supplier().onComplete { ar ->
-                onComplete()
+        supplier.invoke()
+            .onComplete { ar ->
+                self.onComplete()
                 if (ar.succeeded()) {
                     promise.complete(ar.result())
                 } else {
                     promise.fail(ar.cause())
                 }
             }
-        } catch (e: Throwable) {
-            onComplete()
-            promise.fail(e)
-        }
     } else {
         promise.fail(BulkheadFullException.createBulkheadFullException(this))
     }
