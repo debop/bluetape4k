@@ -1,11 +1,11 @@
 package io.bluetape4k.infra.cache.nearcache.spring
 
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.infra.cache.jcache.jcachingProvider
 import io.bluetape4k.infra.cache.nearcache.redis.RedisNearCachingProvider
 import io.bluetape4k.infra.cache.nearcache.redis.redisNearCacheConfigurationOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.storage.RedisServer
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

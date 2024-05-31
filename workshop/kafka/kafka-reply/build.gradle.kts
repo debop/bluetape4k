@@ -22,12 +22,12 @@ dependencies {
     compileOnly(Libs.spring_kafka_test)
     compileOnly(Libs.springData("commons"))
 
-    api(project(":bluetape4k-infra-kafka"))
+    api(project(":bluetape4k-kafka"))
     implementation(project(":bluetape4k-testcontainers"))
     implementation(Libs.testcontainers_kafka)
 
     // Jackson
-    api(project(":bluetape4k-io-json"))
+    api(project(":bluetape4k-json"))
     api(Libs.jackson_databind)
     api(Libs.jackson_module_kotlin)
 

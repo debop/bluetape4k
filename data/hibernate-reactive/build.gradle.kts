@@ -33,8 +33,8 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-data-hibernate"))
-    api(project(":bluetape4k-utils-mutiny"))
+    api(project(":bluetape4k-hibernate"))
+    api(project(":bluetape4k-mutiny"))
     api(project(":bluetape4k-vertx-core"))
 
     // NOTE: Java 9+ 환경에서 kapt가 제대로 동작하려면 javax.annotation-api 를 참조해야 합니다.
@@ -58,11 +58,11 @@ dependencies {
     testImplementation(project(":bluetape4k-junit5"))
 
     // bluetape4k-data-hibernate 의 테스트용 엔티티를 사용하기 위해 추가합니다
-    testImplementation(project(path = ":bluetape4k-data-hibernate", configuration = "testJar"))
+    testImplementation(project(path = ":bluetape4k-hibernate", configuration = "testJar"))
 
     // Converter 때문에
-    compileOnly(project(":bluetape4k-io-cryptography"))
-    testImplementation(project(":bluetape4k-io-json"))
+    compileOnly(project(":bluetape4k-cryptography"))
+    testImplementation(project(":bluetape4k-json"))
 
     testImplementation(Libs.kryo)
     testImplementation(Libs.marshalling)
@@ -71,10 +71,10 @@ dependencies {
     testImplementation(Libs.snappy_java)
     testImplementation(Libs.lz4_java)
 
-    testImplementation(project(":bluetape4k-utils-idgenerators"))
+    testImplementation(project(":bluetape4k-idgenerators"))
 
     // Caching 테스트
-    compileOnly(project(":bluetape4k-infra-cache"))
+    compileOnly(project(":bluetape4k-cache"))
     testImplementation(Libs.springBootStarter("cache"))
     testImplementation(Libs.caffeine)
     testImplementation(Libs.caffeine_jcache)

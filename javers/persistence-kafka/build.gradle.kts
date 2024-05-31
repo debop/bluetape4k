@@ -5,9 +5,9 @@ configurations {
 dependencies {
 
     api(project(":bluetape4k-core"))
-    api(project(":bluetape4k-io-json"))
-    api(project(":bluetape4k-infra-kafka"))
-    api(project(":bluetape4k-utils-idgenerators"))
+    api(project(":bluetape4k-json"))
+    api(project(":bluetape4k-kafka"))
+    api(project(":bluetape4k-idgenerators"))
 
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-testcontainers"))

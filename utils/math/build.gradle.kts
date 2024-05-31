@@ -4,8 +4,8 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    compileOnly(project(":bluetape4k-infra-cache"))
-    testImplementation(project(":bluetape4k-utils-times"))
+    compileOnly(project(":bluetape4k-cache"))
+    testImplementation(project(":bluetape4k-times"))
     testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.commons_math3)

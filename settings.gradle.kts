@@ -15,22 +15,20 @@ rootProject.name = "$PROJECT_NAME-root"
 
 includeModules(PROJECT_NAME, false)
 
-includeModules("aws")
-includeModules("data")
-includeModules("infra")
-includeModules("io")
-includeModules("javers")
-includeModules("logback")
-includeModules("openai")
-includeModules("quarkus")
-includeModules("spring")
-includeModules("test")
-includeModules("tokenizer")
-includeModules("utils")
-includeModules("vertx")
+includeModules("aws", withBaseDir = true)
+includeModules("data", withBaseDir = false)
+includeModules("infra", withBaseDir = false)
+includeModules("io", withBaseDir = false)
+includeModules("javers", withBaseDir = true)
+includeModules("openai", withBaseDir = true)
+includeModules("quarkus", withBaseDir = true)
+includeModules("spring", withBaseDir = true)
+includeModules("tokenizer", withBaseDir = true)
+includeModules("utils", withBaseDir = false)
+includeModules("vertx", withBaseDir = true)
 
 // Examples (library style examples)
-includeModules("examples", false)
+includeModules("examples", false, true)
 // Workshop (application style examples)
 
 includeModules("workshop/docker", false, false)
@@ -53,6 +51,7 @@ fun includeModules(baseDir: String, withProjectName: Boolean = true, withBaseDir
                     val basePath = baseDir.replace("/", "-")
                     val projectName = when {
                         !withProjectName && !withBaseDir -> dir.name
+                        withProjectName && !withBaseDir  -> PROJECT_NAME + "-" + dir.name
                         withProjectName                  -> PROJECT_NAME + "-" + basePath + "-" + dir.name
                         else                             -> basePath + "-" + dir.name
                     }

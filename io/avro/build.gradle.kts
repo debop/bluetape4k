@@ -25,7 +25,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    testImplementation(project(":bluetape4k-io-http"))
+    testImplementation(project(":bluetape4k-http"))
     testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.avro)

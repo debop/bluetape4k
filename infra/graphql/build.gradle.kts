@@ -9,9 +9,9 @@ configurations {
 dependencies {
     api(project(":bluetape4k-core"))
     api(project(":bluetape4k-coroutines"))
-    api(project(":bluetape4k-io-cryptography"))
-    api(project(":bluetape4k-io-json"))
-    compileOnly(project(":bluetape4k-infra-cache"))
+    api(project(":bluetape4k-cryptography"))
+    api(project(":bluetape4k-json"))
+    compileOnly(project(":bluetape4k-cache"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Apollo GraphQL

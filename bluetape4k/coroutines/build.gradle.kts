@@ -5,7 +5,7 @@ configurations {
 dependencies {
     api(project(":bluetape4k-core"))
     testImplementation(project(":bluetape4k-junit5"))
-    testImplementation(project(":bluetape4k-utils-idgenerators"))
+    testImplementation(project(":bluetape4k-idgenerators"))
 
     api(Libs.kotlinx_atomicfu)
 

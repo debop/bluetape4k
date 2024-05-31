@@ -3,9 +3,9 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-io-netty"))
-    api(project(":bluetape4k-io-json"))
-    api(project(":bluetape4k-infra-resilience4j"))
+    api(project(":bluetape4k-netty"))
+    api(project(":bluetape4k-json"))
+    api(project(":bluetape4k-resilience4j"))
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-testcontainers"))
 
@@ -33,7 +33,7 @@ dependencies {
     api(Libs.httpcore5_reactive)
     testImplementation(Libs.httpclient5_testing)
 
-    compileOnly(project(":bluetape4k-infra-cache"))
+    compileOnly(project(":bluetape4k-cache"))
     compileOnly(Libs.caffeine)
     compileOnly(Libs.caffeine_jcache)
 
@@ -47,7 +47,7 @@ dependencies {
     compileOnly(Libs.async_http_client)
 
     // Jackson
-    compileOnly(project(":bluetape4k-io-json"))
+    compileOnly(project(":bluetape4k-json"))
     compileOnly(Libs.jackson_databind)
     compileOnly(Libs.jackson_module_kotlin)
 

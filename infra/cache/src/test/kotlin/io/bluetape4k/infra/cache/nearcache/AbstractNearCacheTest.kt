@@ -1,11 +1,11 @@
 package io.bluetape4k.infra.cache.nearcache
 
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.infra.cache.jcache.JCache
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.output.CaptureOutput
 import io.bluetape4k.junit5.output.OutputCapturer
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeNull

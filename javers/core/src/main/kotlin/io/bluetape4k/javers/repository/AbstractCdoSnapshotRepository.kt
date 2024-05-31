@@ -1,6 +1,8 @@
 package io.bluetape4k.javers.repository
 
 import com.google.gson.JsonObject
+import io.bluetape4k.idgenerators.snowflake.Snowflake
+import io.bluetape4k.idgenerators.snowflake.Snowflakers
 import io.bluetape4k.javers.codecs.GsonCodec
 import io.bluetape4k.javers.metamodel.filterByAuthor
 import io.bluetape4k.javers.metamodel.filterByChangedPropertyNames
@@ -16,8 +18,6 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import io.bluetape4k.support.toOptional
-import io.bluetape4k.utils.idgenerators.snowflake.Snowflake
-import io.bluetape4k.utils.idgenerators.snowflake.Snowflakers
 import org.javers.core.commit.Commit
 import org.javers.core.commit.CommitId
 import org.javers.core.json.JsonConverter

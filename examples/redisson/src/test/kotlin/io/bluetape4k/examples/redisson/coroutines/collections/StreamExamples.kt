@@ -4,10 +4,10 @@ import io.bluetape4k.coroutines.support.awaitSuspending
 import io.bluetape4k.data.redis.redisson.ackAllAsync
 import io.bluetape4k.data.redis.redisson.streamAddArgsOf
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.amshove.kluent.shouldBeEqualTo

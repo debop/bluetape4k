@@ -38,7 +38,7 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-data-hibernate"))
+    api(project(":bluetape4k-hibernate"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // NOTE: Java 9+ 환경에서 kapt가 제대로 동작하려면 javax.annotation-api 를 참조해야 합니다.
@@ -71,8 +71,8 @@ dependencies {
     api(Libs.hibernate_validator)
 
     // Converter
-    compileOnly(project(":bluetape4k-io-cryptography"))
-    compileOnly(project(":bluetape4k-io-json"))
+    compileOnly(project(":bluetape4k-cryptography"))
+    compileOnly(project(":bluetape4k-json"))
 
     testImplementation(Libs.kryo)
     testImplementation(Libs.marshalling)
@@ -102,11 +102,11 @@ dependencies {
     testImplementation(Libs.testcontainers_mysql)
 
     // Caching 테스트
-    testImplementation(project(":bluetape4k-infra-cache"))
+    testImplementation(project(":bluetape4k-cache"))
     testImplementation(Libs.springBootStarter("cache"))
     testImplementation(Libs.caffeine)
     testImplementation(Libs.caffeine_jcache)
 
     // JDBC 와 같이 사용
-    testImplementation(project(":bluetape4k-data-jdbc"))
+    testImplementation(project(":bluetape4k-jdbc"))
 }

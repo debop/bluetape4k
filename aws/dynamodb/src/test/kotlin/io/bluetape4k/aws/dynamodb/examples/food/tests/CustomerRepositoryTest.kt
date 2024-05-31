@@ -4,10 +4,10 @@ import io.bluetape4k.aws.dynamodb.examples.food.AbstractFoodApplicationTest
 import io.bluetape4k.aws.dynamodb.examples.food.model.CustomerDocument
 import io.bluetape4k.aws.dynamodb.examples.food.model.CustomerGrade
 import io.bluetape4k.aws.dynamodb.examples.food.repository.CustomerRepository
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import kotlinx.coroutines.Dispatchers
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test

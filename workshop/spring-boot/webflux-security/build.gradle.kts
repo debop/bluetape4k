@@ -14,8 +14,8 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-spring-support"))
-    implementation(project(":bluetape4k-io-json"))
-    implementation(project(":bluetape4k-utils-idgenerators"))
+    implementation(project(":bluetape4k-json"))
+    implementation(project(":bluetape4k-idgenerators"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Spring Boot
@@ -45,7 +45,7 @@ dependencies {
 
     // JWT
     // TODO: Spring Security에서 제공하는 JWT 라이브러리를 사용하도록 변경
-    implementation(project(":bluetape4k-utils-jwt"))
+    implementation(project(":bluetape4k-jwt"))
     implementation("com.auth0:java-jwt:4.4.0")
     implementation("net.logstash.logback:logstash-logback-encoder:7.3")
 
@@ -62,7 +62,7 @@ dependencies {
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // Reactor
-    implementation(project(":bluetape4k-io-netty"))
+    implementation(project(":bluetape4k-netty"))
     implementation(Libs.reactor_netty)
     implementation(Libs.reactor_kotlin_extensions)
     testImplementation(Libs.reactor_test)

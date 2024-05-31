@@ -7,6 +7,6 @@ dependencies {
     testImplementation(project(":bluetape4k-junit5"))
 
     // Jackson
-    testImplementation(project(":bluetape4k-io-json"))
+    testImplementation(project(":bluetape4k-json"))
     testImplementation(Libs.jackson_module_kotlin)
 }

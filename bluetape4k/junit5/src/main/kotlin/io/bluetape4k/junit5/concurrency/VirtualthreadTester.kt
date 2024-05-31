@@ -73,10 +73,10 @@ class VirtualthreadTester {
     private fun startWorkerThreads(me: MultiException) {
         log.trace { "Start virtual threads ... numThreads=$numThreads" }
 
-        val tasks = List(numThreads * roundsPerThread) { index ->
+        val tasks = List(numThreads * roundsPerThread) {
             Callable {
                 try {
-                    val runnableAssert = runnables[index % runnables.size]
+                    val runnableAssert = runnables[it % runnables.size]
                     runnableAssert.invoke()
                 } catch (t: Throwable) {
                     me.add(t)

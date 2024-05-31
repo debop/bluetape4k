@@ -42,5 +42,5 @@ dependencies {
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // jackson
-    implementation(project(":bluetape4k-io-json"))
+    implementation(project(":bluetape4k-json"))
 }

@@ -4,8 +4,8 @@ configurations {
 
 dependencies {
     implementation(project(":bluetape4k-core"))
-    implementation(project(":bluetape4k-data-jdbc"))
-    implementation(project(":bluetape4k-io-netty"))
+    implementation(project(":bluetape4k-jdbc"))
+    implementation(project(":bluetape4k-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Vertx
@@ -27,7 +27,7 @@ dependencies {
     implementation(Libs.vertx_web_client)
 
     // Json
-    implementation(project(":bluetape4k-io-json"))
+    implementation(project(":bluetape4k-json"))
     implementation(Libs.jackson_module_kotlin)
     implementation(Libs.jackson_datatype_jdk8)
     implementation(Libs.jackson_datatype_jsr310)
@@ -35,7 +35,6 @@ dependencies {
     // Coroutines
     implementation(project(":bluetape4k-coroutines"))
     implementation(Libs.kotlinx_coroutines_core)
-    implementation(Libs.kotlinx_coroutines_jdk8)
     implementation(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 

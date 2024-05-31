@@ -14,8 +14,8 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-spring-support"))
-    implementation(project(":bluetape4k-io-json"))
-    implementation(project(":bluetape4k-io-netty"))
+    implementation(project(":bluetape4k-json"))
+    implementation(project(":bluetape4k-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.jakarta_annotation_api)

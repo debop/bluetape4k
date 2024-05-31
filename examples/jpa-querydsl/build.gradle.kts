@@ -30,7 +30,7 @@ configurations {
 }
 
 dependencies {
-    implementation(project(":bluetape4k-data-hibernate"))
+    implementation(project(":bluetape4k-hibernate"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // NOTE: Java 9+ 환경에서 kapt가 제대로 동작하려면 javax.annotation-api 를 참조해야 합니다.

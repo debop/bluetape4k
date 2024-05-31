@@ -39,7 +39,7 @@ dependencyManagement {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    implementation(project(":bluetape4k-io-netty"))
+    implementation(project(":bluetape4k-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // OpenTelemetry

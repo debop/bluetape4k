@@ -9,11 +9,11 @@ configurations {
 dependencies {
 
     api(project(":bluetape4k-core"))
-    api(project(":bluetape4k-io-json"))
-    api(project(":bluetape4k-utils-idgenerators"))
-    compileOnly(project(":bluetape4k-data-hibernate"))
-    compileOnly(project(":bluetape4k-data-redis"))
-    compileOnly(project(":bluetape4k-infra-cache"))
+    api(project(":bluetape4k-json"))
+    api(project(":bluetape4k-idgenerators"))
+    compileOnly(project(":bluetape4k-hibernate"))
+    compileOnly(project(":bluetape4k-redis"))
+    compileOnly(project(":bluetape4k-cache"))
 
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-testcontainers"))

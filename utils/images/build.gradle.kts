@@ -7,8 +7,11 @@ dependencies {
     api(project(":bluetape4k-coroutines"))
     testImplementation(project(":bluetape4k-junit5"))
 
-    // PNG 압축 (https://github.com/depsypher/pngtastic)
-    api("com.github.depsypher:pngtastic:1.7")
+    // Images
+    // https://mvnrepository.com/artifact/com.sksamuel.scrimage/scrimage-core
+    implementation(Libs.scrimage_core)
+    implementation(Libs.scrimage_filters)
+    implementation(Libs.scrimage_webp)
 
     testImplementation(Libs.kotlinx_coroutines_test)
 }

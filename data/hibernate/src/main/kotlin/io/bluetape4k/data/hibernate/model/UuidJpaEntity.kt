@@ -1,6 +1,6 @@
 package io.bluetape4k.data.hibernate.model
 
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
 import java.util.*

@@ -8,12 +8,12 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-data-redis"))
-    implementation(project(":bluetape4k-io-json"))
-    implementation(project(":bluetape4k-io-grpc"))
+    api(project(":bluetape4k-redis"))
+    implementation(project(":bluetape4k-json"))
+    implementation(project(":bluetape4k-grpc"))
     implementation(project(":bluetape4k-coroutines"))
-    implementation(project(":bluetape4k-infra-cache"))
-    testImplementation(project(":bluetape4k-utils-idgenerators"))
+    implementation(project(":bluetape4k-cache"))
+    testImplementation(project(":bluetape4k-idgenerators"))
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-testcontainers"))
 
@@ -50,7 +50,7 @@ dependencies {
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // Redisson Map Read/Write Through 예제를 위해 
-    testImplementation(project(":bluetape4k-data-jdbc"))
+    testImplementation(project(":bluetape4k-jdbc"))
     testRuntimeOnly(Libs.h2)
     testImplementation(Libs.hikaricp)
     testImplementation(Libs.springBootStarter("jdbc"))

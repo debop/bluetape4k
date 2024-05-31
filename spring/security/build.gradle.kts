@@ -9,7 +9,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-spring-support"))
-    testImplementation(project(":bluetape4k-io-json"))
+    testImplementation(project(":bluetape4k-json"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Spring Security

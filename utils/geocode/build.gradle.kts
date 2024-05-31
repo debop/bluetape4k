@@ -5,8 +5,8 @@ configurations {
 dependencies {
     api(project(":bluetape4k-core"))
     api(project(":bluetape4k-coroutines"))
-    api(project(":bluetape4k-io-json"))
-    api(project(":bluetape4k-infra-resilience4j"))
+    api(project(":bluetape4k-json"))
+    api(project(":bluetape4k-resilience4j"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Google Maps Services
@@ -15,7 +15,7 @@ dependencies {
     api("com.google.maps:google-maps-services:2.2.0")
 
     // Bing Map Services (REST API로 사용하므로 feign 을 사용한다)
-    api(project(":bluetape4k-io-feign"))
+    api(project(":bluetape4k-feign"))
     api(Libs.feign_core)
     api(Libs.feign_kotlin)
     api(Libs.feign_slf4j)

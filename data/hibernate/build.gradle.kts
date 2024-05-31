@@ -81,8 +81,8 @@ dependencies {
     compileOnly(Libs.hibernate_validator)
 
     // Converter
-    compileOnly(project(":bluetape4k-io-cryptography"))
-    compileOnly(project(":bluetape4k-io-json"))
+    compileOnly(project(":bluetape4k-cryptography"))
+    compileOnly(project(":bluetape4k-json"))
 
     testImplementation(Libs.kryo)
     testImplementation(Libs.marshalling)
@@ -91,7 +91,7 @@ dependencies {
     testImplementation(Libs.snappy_java)
     testImplementation(Libs.lz4_java)
 
-    compileOnly(project(":bluetape4k-utils-idgenerators"))
+    compileOnly(project(":bluetape4k-idgenerators"))
 
     // TODO: querydsl-kotlin-codegen 은 tree entity 도 못 만들고, spring-data-jpa 의 repository에서 문제가 생긴다.
     // https://github.com/querydsl/querydsl/issues/3454
@@ -114,10 +114,10 @@ dependencies {
     testImplementation(Libs.testcontainers_mysql)
 
     // Caching 테스트
-    testImplementation(project(":bluetape4k-infra-cache"))
+    testImplementation(project(":bluetape4k-cache"))
     testImplementation(Libs.hibernate_jcache)
 
     // JDBC 와 같이 사용
-    testImplementation(project(":bluetape4k-data-jdbc"))
+    testImplementation(project(":bluetape4k-jdbc"))
     testImplementation(project(":bluetape4k-vertx-sqlclient"))
 }

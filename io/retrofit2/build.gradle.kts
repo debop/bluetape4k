@@ -3,10 +3,10 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-io-http"))
-    api(project(":bluetape4k-io-json"))
-    api(project(":bluetape4k-io-netty"))
-    api(project(":bluetape4k-infra-resilience4j"))
+    api(project(":bluetape4k-http"))
+    api(project(":bluetape4k-json"))
+    api(project(":bluetape4k-netty"))
+    api(project(":bluetape4k-resilience4j"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Coroutines
@@ -50,7 +50,7 @@ dependencies {
     compileOnly(Libs.async_http_client_extras_rxjava2)
 
     // Jackson
-    api(project(":bluetape4k-io-json"))
+    api(project(":bluetape4k-json"))
     api(Libs.jackson_core)
     api(Libs.jackson_databind)
     api(Libs.jackson_module_kotlin)
@@ -60,7 +60,7 @@ dependencies {
     compileOnly(Libs.gson_javatime_serializers)
 
     // Resilience4j
-    compileOnly(project(":bluetape4k-infra-resilience4j"))
+    compileOnly(project(":bluetape4k-resilience4j"))
     compileOnly(Libs.resilience4j_all)
     compileOnly(Libs.resilience4j_kotlin)
     compileOnly(Libs.resilience4j_cache)

@@ -15,7 +15,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    compileOnly(project(":bluetape4k-io-cryptography"))
+    compileOnly(project(":bluetape4k-cryptography"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // api(Libs.javax_json_api)

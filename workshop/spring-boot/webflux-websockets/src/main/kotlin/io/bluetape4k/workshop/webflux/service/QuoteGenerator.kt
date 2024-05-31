@@ -3,10 +3,10 @@ package io.bluetape4k.workshop.webflux.service
 import com.fasterxml.jackson.core.JsonProcessingException
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.coroutines.flow.extensions.log
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.io.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.workshop.webflux.model.Event
 import io.bluetape4k.workshop.webflux.model.Quote
 import kotlinx.coroutines.Dispatchers

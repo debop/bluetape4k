@@ -2,6 +2,7 @@ package io.bluetape4k.infra.cache.nearcache.coroutines
 
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.toUnifiedMap
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.infra.cache.jcache.coroutines.CaffeineCoCache
 import io.bluetape4k.infra.cache.jcache.coroutines.CoCache
 import io.bluetape4k.infra.cache.jcache.coroutines.CoCacheEntry
@@ -9,7 +10,6 @@ import io.bluetape4k.junit5.awaitility.untilSuspending
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +29,6 @@ import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import java.time.Duration
-import java.util.*
 
 @Execution(ExecutionMode.SAME_THREAD)
 abstract class AbstractNearCoCacheTest
@@ -154,7 +153,7 @@ abstract class AbstractNearCoCacheTest
         nearCoCache2.put(key2, value2)
         await untilSuspending {
             nearCoCache1.containsKey(key2) &&
-                nearCoCache2.containsKey(key1)
+                    nearCoCache2.containsKey(key1)
         }
 
         val actual2 = nearCoCache2.getAll(key1, key2).map { it.key to it.value }.toList().toMap()
@@ -335,13 +334,13 @@ abstract class AbstractNearCoCacheTest
         nearCoCache2.put(key2, value2)
         await untilSuspending {
             nearCoCache1.containsKey(key2) &&
-                nearCoCache2.containsKey(key1)
+                    nearCoCache2.containsKey(key1)
         }
 
         nearCoCache2.removeAll(key1, key2)
         await untilSuspending {
             !nearCoCache1.containsKey(key1) &&
-                !nearCoCache1.containsKey(key2)
+                    !nearCoCache1.containsKey(key2)
         }
 
         nearCoCache1.containsKey(key1).shouldBeFalse()
@@ -377,7 +376,7 @@ abstract class AbstractNearCoCacheTest
         nearCoCache2.put(key2, value2)
         await untilSuspending {
             nearCoCache1.containsKey(key2) &&
-                nearCoCache2.containsKey(key1)
+                    nearCoCache2.containsKey(key1)
         }
 
         nearCoCache1.clear()
@@ -403,7 +402,7 @@ abstract class AbstractNearCoCacheTest
 
         await untilSuspending {
             nearCoCache1.containsKey(key2) &&
-                nearCoCache2.containsKey(key1)
+                    nearCoCache2.containsKey(key1)
         }
 
         // nearCache1 과 backCache 는 clear 되지만, nearCache2 로는 전파되지 않는다

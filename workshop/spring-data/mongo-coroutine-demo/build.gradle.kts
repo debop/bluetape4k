@@ -45,7 +45,7 @@ dependencies {
     testImplementation(Libs.reactor_test)
     testImplementation(Libs.turbine)
 
-    implementation(project(":bluetape4k-io-json"))
-    implementation(project(":bluetape4k-utils-idgenerators"))
+    implementation(project(":bluetape4k-json"))
+    implementation(project(":bluetape4k-idgenerators"))
     testImplementation(project(":bluetape4k-junit5"))
 }

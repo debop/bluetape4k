@@ -4,7 +4,7 @@ configurations {
 
 dependencies {
     implementation(project(":bluetape4k-coroutines"))
-    implementation(project(":bluetape4k-utils-idgenerators"))
+    implementation(project(":bluetape4k-idgenerators"))
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-testcontainers"))
 

@@ -9,7 +9,7 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-infra-micrometer"))
+    api(project(":bluetape4k-micrometer"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Spring Framework
@@ -18,7 +18,7 @@ dependencies {
     compileOnly(Libs.micrometer_core)
 
     // Retrofit2
-    api(project(":bluetape4k-io-retrofit2"))
+    api(project(":bluetape4k-retrofit2"))
     api(Libs.retrofit2)
     api(Libs.retrofit2_converter_jackson)
     api(Libs.retrofit2_converter_scalars)
@@ -52,7 +52,7 @@ dependencies {
     compileOnly(Libs.async_http_client_extras_rxjava2)
 
     // Jackson
-    api(project(":bluetape4k-io-json"))
+    api(project(":bluetape4k-json"))
     api(Libs.jackson_core)
     api(Libs.jackson_databind)
     api(Libs.jackson_module_kotlin)
@@ -62,7 +62,7 @@ dependencies {
     compileOnly(Libs.gson_javatime_serializers)
 
     // Resilience4j
-    compileOnly(project(":bluetape4k-infra-resilience4j"))
+    compileOnly(project(":bluetape4k-resilience4j"))
     compileOnly(Libs.resilience4j_all)
     compileOnly(Libs.resilience4j_kotlin)
     compileOnly(Libs.resilience4j_cache)

@@ -8,8 +8,8 @@ configurations {
 
 dependencies {
     implementation(project(":bluetape4k-core"))
-    implementation(project(":bluetape4k-data-jdbc"))
-    implementation(project(":bluetape4k-io-netty"))
+    implementation(project(":bluetape4k-jdbc"))
+    implementation(project(":bluetape4k-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Vertx
@@ -41,7 +41,7 @@ dependencies {
     implementation(Libs.mybatis_dynamic_sql)
 
     // Vetx SqlClient Templates 에서 Jackson Databind 를 이용한 매핑을 사용한다
-    implementation(project(":bluetape4k-io-json"))
+    implementation(project(":bluetape4k-json"))
     implementation(Libs.jackson_module_kotlin)
     implementation(Libs.jackson_datatype_jdk8)
     implementation(Libs.jackson_datatype_jsr310)

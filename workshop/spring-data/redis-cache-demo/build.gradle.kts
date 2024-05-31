@@ -12,7 +12,7 @@ configurations {
 }
 
 dependencies {
-    implementation(project(":bluetape4k-data-redis"))
+    implementation(project(":bluetape4k-redis"))
     implementation(project(":bluetape4k-spring-support"))
     testImplementation(project(":bluetape4k-junit5"))
     implementation(project(":bluetape4k-testcontainers"))

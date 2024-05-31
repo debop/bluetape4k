@@ -18,9 +18,9 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-coroutines"))
     api(project(":bluetape4k-core"))
-    testImplementation(project(":bluetape4k-io-json"))
+    api(project(":bluetape4k-coroutines"))
+    testImplementation(project(":bluetape4k-json"))
     testImplementation(project(":bluetape4k-junit5"))
 
     testImplementation(project(":bluetape4k-testcontainers"))

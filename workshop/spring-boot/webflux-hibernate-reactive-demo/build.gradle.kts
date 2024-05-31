@@ -25,13 +25,13 @@ configurations {
 }
 
 dependencies {
-    api(project(":bluetape4k-data-hibernate"))
-    api(project(":bluetape4k-data-hibernate-reactive"))
-    implementation(project(":bluetape4k-utils-mutiny"))
+    api(project(":bluetape4k-hibernate"))
+    api(project(":bluetape4k-hibernate-reactive"))
+    implementation(project(":bluetape4k-mutiny"))
     implementation(project(":bluetape4k-vertx-core"))
     implementation(project(":bluetape4k-spring-support"))
-    implementation(project(":bluetape4k-io-json"))
-    implementation(project(":bluetape4k-io-netty"))
+    implementation(project(":bluetape4k-json"))
+    implementation(project(":bluetape4k-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Hibernate Reactive

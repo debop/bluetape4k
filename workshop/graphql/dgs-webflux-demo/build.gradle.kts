@@ -33,7 +33,7 @@ configurations {
 
 dependencies {
 
-    implementation(project(":bluetape4k-infra-graphql"))
+    implementation(project(":bluetape4k-graphql"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // GraphQL Java
@@ -57,7 +57,7 @@ dependencies {
     testImplementation(Libs.reactor_test)
 
     // Jackson
-    implementation(project(":bluetape4k-io-json"))
+    implementation(project(":bluetape4k-json"))
     implementation(Libs.jackson_module_kotlin)
 
     // Spring Boot

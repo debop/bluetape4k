@@ -16,7 +16,7 @@ dependencies {
     api(Libs.jjwt_jackson)
 
     // Jackson
-    api(project(":bluetape4k-io-json"))
+    api(project(":bluetape4k-json"))
     api(Libs.jackson_module_kotlin)
 
     // Compressor
@@ -28,12 +28,12 @@ dependencies {
     compileOnly(Libs.kryo)
 
     // Caching
-    compileOnly(project(":bluetape4k-infra-cache"))
+    compileOnly(project(":bluetape4k-cache"))
     testImplementation(Libs.caffeine_jcache)
     testImplementation(Libs.ehcache)
 
     // Id Generators
-    api(project(":bluetape4k-utils-idgenerators"))
+    api(project(":bluetape4k-idgenerators"))
     api(Libs.java_uuid_generator)
 
     // KeyChain을 Redis 나 MongoDB에 저장하여, 다중서버가 공유하기 위한 KeyChainPersister 를 사용하기 위해

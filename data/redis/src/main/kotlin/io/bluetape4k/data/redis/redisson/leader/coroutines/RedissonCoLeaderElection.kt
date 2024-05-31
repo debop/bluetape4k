@@ -3,12 +3,12 @@ package io.bluetape4k.data.redis.redisson.leader.coroutines
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.data.redis.redisson.leader.RedissonLeaderElectionOptions
+import io.bluetape4k.idgenerators.snowflake.Snowflakers
 import io.bluetape4k.leader.CoLeaderElection
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.warn
 import io.bluetape4k.support.uninitialized
-import io.bluetape4k.utils.idgenerators.snowflake.Snowflakers
 import kotlinx.coroutines.coroutineScope
 import org.redisson.api.RLock
 import org.redisson.api.RedissonClient

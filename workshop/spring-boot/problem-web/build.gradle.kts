@@ -15,8 +15,8 @@ configurations {
 
 dependencies {
     implementation(project(":bluetape4k-spring-support"))
-    implementation(project(":bluetape4k-io-json"))
-    implementation(project(":bluetape4k-io-netty"))
+    implementation(project(":bluetape4k-json"))
+    implementation(project(":bluetape4k-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Problem
@@ -24,7 +24,7 @@ dependencies {
     api(Libs.jakarta_validation_api)
 
     // Resilience4j
-    implementation(project(":bluetape4k-infra-resilience4j"))
+    implementation(project(":bluetape4k-resilience4j"))
     implementation(Libs.resilience4j_all)
     implementation(Libs.resilience4j_kotlin)
 

@@ -21,9 +21,9 @@ configurations {
 
 dependencies {
     implementation(project(":bluetape4k-spring-support"))
-    implementation(project(":bluetape4k-io-json"))
-    implementation(project(":bluetape4k-io-netty"))
-    implementation(project(":bluetape4k-utils-idgenerators"))
+    implementation(project(":bluetape4k-json"))
+    implementation(project(":bluetape4k-netty"))
+    implementation(project(":bluetape4k-idgenerators"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Spring Boot

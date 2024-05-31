@@ -1,8 +1,8 @@
 package io.bluetape4k.javers.commit
 
 import io.bluetape4k.collections.eclipse.unifiedMapOf
-import io.bluetape4k.utils.idgenerators.snowflake.Snowflake
-import io.bluetape4k.utils.idgenerators.snowflake.Snowflakers
+import io.bluetape4k.idgenerators.snowflake.Snowflake
+import io.bluetape4k.idgenerators.snowflake.Snowflakers
 import kotlinx.atomicfu.atomic
 import org.javers.core.commit.CommitId
 import java.util.function.Supplier

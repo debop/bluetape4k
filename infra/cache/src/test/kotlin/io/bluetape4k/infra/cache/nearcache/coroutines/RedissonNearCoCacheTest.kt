@@ -1,5 +1,6 @@
 package io.bluetape4k.infra.cache.nearcache.coroutines
 
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.infra.cache.jcache.coroutines.CoCache
 import io.bluetape4k.infra.cache.jcache.coroutines.RedissonCoCache
 import io.bluetape4k.infra.cache.jcache.jcacheConfiguration
@@ -7,7 +8,6 @@ import io.bluetape4k.junit5.awaitility.untilSuspending
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.storage.RedisServer
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.awaitility.kotlin.await

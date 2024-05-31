@@ -20,7 +20,7 @@ dependencies {
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // Json
-    testImplementation(project(":bluetape4k-io-json"))
+    testImplementation(project(":bluetape4k-json"))
     testImplementation(Libs.jackson_databind)
     testImplementation(Libs.jackson_module_kotlin)
 

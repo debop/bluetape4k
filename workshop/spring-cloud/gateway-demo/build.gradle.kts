@@ -20,8 +20,8 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-spring-support"))
-    implementation(project(":bluetape4k-io-json"))
-    implementation(project(":bluetape4k-io-netty"))
+    implementation(project(":bluetape4k-json"))
+    implementation(project(":bluetape4k-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Bucket4j
@@ -30,7 +30,7 @@ dependencies {
     api(Libs.bucket4j_spring_boot)
 
     // Redis
-    api(project(":bluetape4k-data-redis"))
+    api(project(":bluetape4k-redis"))
     api(Libs.lettuce_core)
     implementation(project(":bluetape4k-testcontainers"))
 

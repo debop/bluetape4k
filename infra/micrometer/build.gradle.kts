@@ -9,9 +9,9 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    compileOnly(project(":bluetape4k-infra-cache"))
-    testImplementation(project(":bluetape4k-io-http"))
-    testImplementation(project(":bluetape4k-io-json"))
+    compileOnly(project(":bluetape4k-cache"))
+    testImplementation(project(":bluetape4k-http"))
+    testImplementation(project(":bluetape4k-json"))
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-testcontainers"))
 
@@ -32,7 +32,7 @@ dependencies {
     compileOnly(Libs.ignite_core)
 
     // Retrofit2 Instrumentations
-    testImplementation(project(":bluetape4k-io-retrofit2"))
+    testImplementation(project(":bluetape4k-retrofit2"))
     compileOnly(Libs.retrofit2)
     compileOnly(Libs.retrofit2_adapter_reactor)
     compileOnly(Libs.retrofit2_adapter_rxjava2)

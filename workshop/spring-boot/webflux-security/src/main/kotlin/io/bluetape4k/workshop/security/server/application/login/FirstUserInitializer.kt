@@ -1,8 +1,8 @@
 package io.bluetape4k.workshop.security.server.application.login
 
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.workshop.security.server.domain.Customer
 import io.bluetape4k.workshop.security.server.domain.CustomerRepository
 import kotlinx.coroutines.runBlocking

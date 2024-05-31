@@ -1,5 +1,6 @@
 package io.bluetape4k.infra.cache.nearcache.redis
 
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.infra.cache.jcache.getConfiguration
 import io.bluetape4k.infra.cache.jcache.getOrCreate
 import io.bluetape4k.infra.cache.jcache.jcacheConfiguration
@@ -8,7 +9,6 @@ import io.bluetape4k.infra.cache.nearcache.NearCache
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.testcontainers.storage.RedisServer
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeInstanceOf
@@ -19,7 +19,6 @@ import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import org.redisson.jcache.configuration.JCacheConfiguration
 import org.redisson.jcache.configuration.RedissonConfiguration
-import java.util.*
 import javax.cache.Caching
 import javax.cache.expiry.CreatedExpiryPolicy
 import javax.cache.expiry.Duration

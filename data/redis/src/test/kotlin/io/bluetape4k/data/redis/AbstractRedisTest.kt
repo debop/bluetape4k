@@ -1,9 +1,9 @@
 package io.bluetape4k.data.redis
 
+import io.bluetape4k.idgenerators.snowflake.Snowflakers
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.storage.RedisServer
-import io.bluetape4k.utils.idgenerators.snowflake.Snowflakers
 
 abstract class AbstractRedisTest {
 

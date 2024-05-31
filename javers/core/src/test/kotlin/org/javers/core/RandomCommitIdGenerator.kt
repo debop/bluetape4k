@@ -1,8 +1,8 @@
 package org.javers.core
 
+import io.bluetape4k.idgenerators.snowflake.Snowflakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import io.bluetape4k.utils.idgenerators.snowflake.Snowflakers
 import org.javers.core.commit.CommitId
 import java.util.function.Supplier
 

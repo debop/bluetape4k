@@ -11,7 +11,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    compileOnly(project(":bluetape4k-io-json"))
+    compileOnly(project(":bluetape4k-json"))
     testImplementation(project(":bluetape4k-junit5"))
 
     api(Libs.jackson_core)

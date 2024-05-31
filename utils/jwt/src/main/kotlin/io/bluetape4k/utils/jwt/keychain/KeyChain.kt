@@ -3,8 +3,8 @@ package io.bluetape4k.utils.jwt.keychain
 import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.core.ToStringBuilder
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.support.hashOf
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
 import io.bluetape4k.utils.jwt.JwtConsts.DEFAULT_KEY_ROTATION_TTL_MILLIS
 import io.bluetape4k.utils.jwt.JwtConsts.DefaultSignatureAlgorithm
 import io.jsonwebtoken.SignatureAlgorithm
@@ -30,7 +30,7 @@ class KeyChain private constructor(
             keyPair: KeyPair = Keys.keyPairFor(algorithm),
             id: String = TimebasedUuid.nextUUID().encodeBase62(),
             createdAt: Long = System.currentTimeMillis(),
-            expiredTtl: Duration = Duration.ofMillis(DEFAULT_KEY_ROTATION_TTL_MILLIS)
+            expiredTtl: Duration = Duration.ofMillis(DEFAULT_KEY_ROTATION_TTL_MILLIS),
         ): KeyChain {
             require(algorithm.isRsa) { "Algorithm must be RSA signature algorithm." }
             return KeyChain(algorithm, keyPair, id, createdAt, expiredTtl.toMillis())
@@ -49,10 +49,10 @@ class KeyChain private constructor(
 
     override fun equalProperties(other: Any): Boolean {
         return other is KeyChain &&
-            id == other.id &&
-            algorithm == other.algorithm &&
-            keyPair.private == other.keyPair.private &&
-            keyPair.public == other.keyPair.public
+                id == other.id &&
+                algorithm == other.algorithm &&
+                keyPair.private == other.keyPair.private &&
+                keyPair.public == other.keyPair.public
     }
 
     override fun buildStringHelper(): ToStringBuilder {

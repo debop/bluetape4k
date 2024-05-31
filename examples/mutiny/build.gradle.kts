@@ -3,7 +3,7 @@ configurations {
 }
 
 dependencies {
-    implementation(project(":bluetape4k-utils-mutiny"))
+    implementation(project(":bluetape4k-mutiny"))
     testImplementation(project(":bluetape4k-junit5"))
 
     implementation(Libs.kotlinx_atomicfu)

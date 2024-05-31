@@ -4,9 +4,9 @@ import io.bluetape4k.aws.dynamodb.model.DynamoDbEntity.Companion.ENTITY_ID_DELIM
 import io.bluetape4k.aws.dynamodb.model.DynamoDbEntity.Companion.ENTITY_NAME_DELIMITER
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.core.ToStringBuilder
+import io.bluetape4k.idgenerators.snowflake.GlobalSnowflake
+import io.bluetape4k.idgenerators.uuid.TimebasedUuidGenerator
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.idgenerators.snowflake.GlobalSnowflake
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuidGenerator
 import software.amazon.awssdk.enhanced.dynamodb.Key
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey
@@ -46,8 +46,8 @@ abstract class AbstractDynamoDbEntity: AbstractValueObject(), DynamoDbEntity {
 
     override fun equalProperties(other: Any): Boolean {
         return other is DynamoDbEntity &&
-            partitionKey == other.partitionKey &&
-            sortKey == other.sortKey
+                partitionKey == other.partitionKey &&
+                sortKey == other.sortKey
     }
 
     override fun buildStringHelper(): ToStringBuilder {

@@ -1,6 +1,6 @@
 package io.bluetape4k.examples.coroutines.context
 
-import io.bluetape4k.utils.idgenerators.uuid.TimebasedUuid
+import io.bluetape4k.idgenerators.uuid.TimebasedUuid
 import kotlin.coroutines.CoroutineContext
 
 /**

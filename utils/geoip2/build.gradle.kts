@@ -4,7 +4,7 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    testImplementation(project(":bluetape4k-io-json"))
+    testImplementation(project(":bluetape4k-json"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // MaxMind GeoIP2

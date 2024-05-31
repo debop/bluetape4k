@@ -15,7 +15,7 @@ dependencies {
     compileOnly(Libs.vertx_junit5)
 
     // Resilience4j
-    api(project(":bluetape4k-infra-resilience4j"))
+    api(project(":bluetape4k-resilience4j"))
     compileOnly(Libs.resilience4j_reactor)
     compileOnly(Libs.resilience4j_micrometer)
 
