@@ -20,8 +20,8 @@ dependencies {
     testImplementation(Libs.aws2_test_utils)
 
     // Coroutines
+    compileOnly(project(":bluetape4k-coroutines"))
     compileOnly(Libs.kotlinx_coroutines_core)
-    compileOnly(Libs.kotlinx_coroutines_jdk8)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     testImplementation(Libs.mockk)
