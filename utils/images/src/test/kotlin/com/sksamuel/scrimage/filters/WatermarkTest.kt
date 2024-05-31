@@ -4,7 +4,7 @@ import com.sksamuel.scrimage.filter.WatermarkCoverFilter
 import com.sksamuel.scrimage.filter.WatermarkFilter
 import com.sksamuel.scrimage.filter.WatermarkStampFilter
 import com.sksamuel.scrimage.nio.PngWriter
-import io.wrtn.kommons.logging.KLogging
+import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import java.awt.Color

@@ -1,8 +1,8 @@
 package com.sksamuel.scrimage
 
-import io.wrtn.kommons.junit5.folder.TempFolderTest
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.utils.Resourcex
+import io.bluetape4k.junit5.folder.TempFolderTest
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.utils.Resourcex
 import java.awt.Font
 
 @TempFolderTest

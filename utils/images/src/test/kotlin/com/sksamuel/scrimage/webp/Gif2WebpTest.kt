@@ -2,11 +2,11 @@ package com.sksamuel.scrimage.webp
 
 import com.sksamuel.scrimage.nio.AnimatedGifReader
 import com.sksamuel.scrimage.nio.ImageSource
-import io.wrtn.kommons.images.coroutines.animated.CoGif2WebpWriter
-import io.wrtn.kommons.images.coroutines.animated.bytesSuspending
-import io.wrtn.kommons.junit5.coroutines.runSuspendWithIO
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.utils.Resourcex
+import io.bluetape4k.images.coroutines.animated.CoGif2WebpWriter
+import io.bluetape4k.images.coroutines.animated.bytesSuspending
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.utils.Resourcex
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 

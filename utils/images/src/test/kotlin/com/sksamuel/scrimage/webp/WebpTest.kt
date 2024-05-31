@@ -2,10 +2,10 @@ package com.sksamuel.scrimage.webp
 
 import com.sksamuel.scrimage.ImmutableImage
 import com.sksamuel.scrimage.nio.ImageIOReader
-import io.wrtn.kommons.junit5.coroutines.runSuspendWithIO
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.logging.debug
-import io.wrtn.kommons.utils.Resourcex
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
+import io.bluetape4k.utils.Resourcex
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldNotBeNull

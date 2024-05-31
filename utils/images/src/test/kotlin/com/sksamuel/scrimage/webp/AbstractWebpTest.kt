@@ -4,7 +4,7 @@ import com.sksamuel.scrimage.AbstractScrimageTest
 import com.sksamuel.scrimage.ImmutableImage
 import com.sksamuel.scrimage.metadata.ImageMetadata
 import com.sksamuel.scrimage.metadata.Tag
-import io.wrtn.kommons.logging.KLogging
+import io.bluetape4k.logging.KLogging
 
 abstract class AbstractWebpTest: AbstractScrimageTest() {
 

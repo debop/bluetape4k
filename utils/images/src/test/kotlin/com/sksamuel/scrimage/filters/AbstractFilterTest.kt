@@ -2,7 +2,7 @@ package com.sksamuel.scrimage.filters
 
 import com.sksamuel.scrimage.AbstractScrimageTest
 import com.sksamuel.scrimage.ImmutableImage
-import io.wrtn.kommons.logging.KLogging
+import io.bluetape4k.logging.KLogging
 
 abstract class AbstractFilterTest: AbstractScrimageTest() {
 

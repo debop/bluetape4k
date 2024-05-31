@@ -2,9 +2,9 @@ package com.sksamuel.scrimage.examples
 
 import com.sksamuel.scrimage.AbstractScrimageTest
 import com.sksamuel.scrimage.ImmutableImage
-import io.wrtn.kommons.junit5.folder.TempFolder
-import io.wrtn.kommons.junit5.folder.TempFolderTest
-import io.wrtn.kommons.logging.KLogging
+import io.bluetape4k.junit5.folder.TempFolder
+import io.bluetape4k.junit5.folder.TempFolderTest
+import io.bluetape4k.logging.KLogging
 import java.io.File
 import java.nio.file.Path
 

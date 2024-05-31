@@ -8,8 +8,8 @@ import com.sksamuel.scrimage.canvas.painters.LinearGradient
 import com.sksamuel.scrimage.color.Colors
 import com.sksamuel.scrimage.nio.JpegWriter
 import com.sksamuel.scrimage.nio.PngWriter
-import io.wrtn.kommons.junit5.folder.TempFolder
-import io.wrtn.kommons.logging.KLogging
+import io.bluetape4k.junit5.folder.TempFolder
+import io.bluetape4k.logging.KLogging
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.awt.Color

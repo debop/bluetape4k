@@ -2,8 +2,8 @@ package com.sksamuel.scrimage.examples
 
 import com.sksamuel.scrimage.ScaleMethod
 import com.sksamuel.scrimage.nio.JpegWriter
-import io.wrtn.kommons.junit5.folder.TempFolder
-import io.wrtn.kommons.logging.KLogging
+import io.bluetape4k.junit5.folder.TempFolder
+import io.bluetape4k.logging.KLogging
 import org.junit.jupiter.api.Test
 
 class BoundExamples: AbstractExampleTest() {
