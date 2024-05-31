@@ -1,12 +1,12 @@
-package io.bluetape4k.utils.ahocorasick.interval
+package io.bluetape4k.ahocorasick.interval
 
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldBeLessThan
 import org.amshove.kluent.shouldBeTrue
-import org.eclipse.collections.api.factory.SortedSets
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class IntervalTest {
 
@@ -61,7 +61,7 @@ class IntervalTest {
 
     @Test
     fun `interval sort with comparable`() {
-        val intervals = SortedSets.mutable.of<Interval>()
+        val intervals = TreeSet<Interval>()
 
         intervals.add(Interval(4, 6))
         intervals.add(Interval(2, 7))

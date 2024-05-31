@@ -10,9 +10,9 @@
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.utils.ahocorasick" level="DEBUG"/>
+    <logger name="io.bluetape4k.ahocorasick" level="TRACE"/>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="Console"/>
     </root>
 

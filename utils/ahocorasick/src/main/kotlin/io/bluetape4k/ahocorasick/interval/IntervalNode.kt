@@ -1,6 +1,5 @@
-package io.bluetape4k.utils.ahocorasick.interval
+package io.bluetape4k.ahocorasick.interval
 
-import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.core.AbstractValueObject
 
 class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
@@ -9,7 +8,7 @@ class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
 
     var left: IntervalNode? = null
     var right: IntervalNode? = null
-    val intervals = fastListOf<Intervalable>()
+    val intervals = mutableListOf<Intervalable>()
     val median: Int
 
     init {
@@ -28,8 +27,8 @@ class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
             return
         }
 
-        val toLeft = fastListOf<Intervalable>()
-        val toRight = fastListOf<Intervalable>()
+        val toLeft = mutableListOf<Intervalable>()
+        val toRight = mutableListOf<Intervalable>()
 
         inputs.forEach { input ->
             when {
@@ -46,8 +45,8 @@ class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
         }
     }
 
-    suspend fun findOverlaps(interval: Intervalable): MutableList<Intervalable> {
-        val overlaps = fastListOf<Intervalable>()
+    fun findOverlaps(interval: Intervalable): MutableList<Intervalable> {
+        val overlaps = mutableListOf<Intervalable>()
 
         when {
             interval.start > median -> {
@@ -60,7 +59,7 @@ class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
                 addToOverlaps(interval, overlaps, checkForOverlapsToLeft(interval))
             }
 
-            else                  -> {
+            else                    -> {
                 addToOverlaps(interval, overlaps, this.intervals)
                 addToOverlaps(interval, overlaps, findOverlappingRanges(left, interval))
                 addToOverlaps(interval, overlaps, findOverlappingRanges(right, interval))
@@ -85,11 +84,11 @@ class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
 
 
     private fun checkForOverlaps(interval: Intervalable, direction: Direction): List<Intervalable> {
-        val overlaps = fastListOf<Intervalable>()
+        val overlaps = mutableListOf<Intervalable>()
 
         this.intervals.forEach {
             when (direction) {
-                Direction.LEFT ->
+                Direction.LEFT  ->
                     if (it.start <= interval.end) {
                         overlaps.add(it)
                     }
@@ -103,14 +102,14 @@ class IntervalNode(inputs: Collection<Intervalable>): AbstractValueObject() {
         return overlaps
     }
 
-    private suspend fun findOverlappingRanges(node: IntervalNode?, interval: Intervalable): List<Intervalable> =
-        node?.findOverlaps(interval) ?: fastListOf()
+    private fun findOverlappingRanges(node: IntervalNode?, interval: Intervalable): List<Intervalable> =
+        node?.findOverlaps(interval) ?: emptyList()
 
     override fun equalProperties(other: Any): Boolean {
         return other is IntervalNode &&
-            left == other.left &&
-            right == other.right &&
-            median == other.median &&
-            intervals == other.intervals
+                left == other.left &&
+                right == other.right &&
+                median == other.median &&
+                intervals == other.intervals
     }
 }

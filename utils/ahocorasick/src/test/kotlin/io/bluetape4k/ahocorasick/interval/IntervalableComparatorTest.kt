@@ -1,8 +1,7 @@
-package io.bluetape4k.utils.ahocorasick.interval
+package io.bluetape4k.ahocorasick.interval
 
-import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.ahocorasick.interval.IntervalableComparators.ReverseSizeComparator
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.ahocorasick.interval.IntervalableComparators.ReverseSizeComparator
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
@@ -12,7 +11,7 @@ class IntervalableComparatorTest {
 
     @Test
     fun `compare intervalable by position`() {
-        val intervals = fastListOf(
+        val intervals = mutableListOf(
             Interval(4, 5),
             Interval(1, 4),
             Interval(3, 8)
@@ -27,7 +26,7 @@ class IntervalableComparatorTest {
 
     @Test
     fun `compare intervalable by size`() {
-        val intervals = fastListOf(
+        val intervals = mutableListOf(
             Interval(4, 5),
             Interval(1, 4),
             Interval(3, 8)
@@ -42,7 +41,7 @@ class IntervalableComparatorTest {
 
     @Test
     fun `compare intervalable by size reverse`() {
-        val intervals = fastListOf(
+        val intervals = mutableListOf(
             Interval(4, 5),
             Interval(1, 4),
             Interval(3, 8)
@@ -50,18 +49,18 @@ class IntervalableComparatorTest {
 
         intervals.sortWith(ReverseSizeComparator)
 
-        intervals.map { it.size } shouldBeEqualTo fastListOf(6, 4, 2)
+        intervals.map { it.size } shouldBeEqualTo listOf(6, 4, 2)
     }
 
     @Test
     fun `compare intervalable by size reverse and position`() {
-        val intervals = fastListOf(
+        val intervals = mutableListOf(
             Interval(4, 7),
             Interval(2, 5),
             Interval(3, 6)
         )
 
-        intervals.sortedWith(ReverseSizeComparator) shouldBeEqualTo fastListOf(
+        intervals.sortedWith(ReverseSizeComparator) shouldBeEqualTo listOf(
             Interval(2, 5),
             Interval(3, 6),
             Interval(4, 7)

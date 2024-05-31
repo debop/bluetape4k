@@ -1,6 +1,5 @@
-package io.bluetape4k.utils.ahocorasick.trie
+package io.bluetape4k.ahocorasick.trie
 
-import io.bluetape4k.collections.eclipse.fastListOf
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
@@ -34,7 +33,7 @@ class StateTest {
         rootState.addEmit("def")
         rootState.addEmit("abc")
 
-        rootState.emit().toList() shouldBeEqualTo fastListOf("abc", "def", "ghi")
+        rootState.emit().toList() shouldBeEqualTo listOf("abc", "def", "ghi")
     }
 
     @Test
@@ -43,6 +42,6 @@ class StateTest {
 
         rootState.addEmits("ghi", "def", "abc")
 
-        rootState.emit().toList() shouldBeEqualTo fastListOf("abc", "def", "ghi")
+        rootState.emit().toList() shouldBeEqualTo listOf("abc", "def", "ghi")
     }
 }

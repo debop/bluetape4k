@@ -1,17 +1,16 @@
-package io.bluetape4k.utils.ahocorasick.trie
+package io.bluetape4k.ahocorasick.trie
 
-import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.core.ValueObject
 import io.bluetape4k.logging.KLogging
-import org.eclipse.collections.api.factory.SortedSets
+import java.util.*
 
 class State(val depth: Int = 0): ValueObject {
 
     companion object: KLogging()
 
     private val rootState: State? get() = if (depth == 0) this else null
-    private val success = unifiedMapOf<Char, State>()
-    private val emits = SortedSets.mutable.of<String>()
+    private val success = mutableMapOf<Char, State>()
+    private val emits = TreeSet<String>()
 
     var failure: State? = null
 

@@ -1,7 +1,8 @@
-package io.bluetape4k.utils.ahocorasick.interval
+package io.bluetape4k.ahocorasick.interval
 
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.support.hashOf
+
 
 open class Interval(
     override val start: Int,

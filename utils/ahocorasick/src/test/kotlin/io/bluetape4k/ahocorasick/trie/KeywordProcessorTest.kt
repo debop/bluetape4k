@@ -1,8 +1,7 @@
-package io.bluetape4k.utils.ahocorasick.trie
+package io.bluetape4k.ahocorasick.trie
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Test
@@ -21,7 +20,7 @@ class KeywordProcessorTest {
     val text = "I am a PM for a java_2e platform working from APPL, NYC"
 
     @Test
-    fun `extract keywords`() = runTest {
+    fun `extract keywords`() {
         val emits = trie.parseText(text)
         log.debug { "emits=$emits" }
         emits shouldBeEqualTo listOf(
@@ -33,15 +32,15 @@ class KeywordProcessorTest {
     }
 
     @Test
-    fun `tokenize keywords`() = runTest {
-        val tokens = trie.tokenize(text)
+    fun `tokenize keywords`() {
+        val tokens = trie.tokenize(text).toList()
         log.debug { "tokens=$tokens" }
 
         tokens shouldHaveSize 8
     }
 
     @Test
-    fun `replace keywords`() = runTest {
+    fun `replace keywords`() {
         val map = mapOf(
             "APPL" to "Apple",
             "NYC" to "New york",

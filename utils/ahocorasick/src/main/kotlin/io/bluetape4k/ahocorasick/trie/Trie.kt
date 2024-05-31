@@ -1,11 +1,9 @@
-package io.bluetape4k.utils.ahocorasick.trie
+package io.bluetape4k.ahocorasick.trie
 
-import io.bluetape4k.collections.eclipse.fastListOf
+import io.bluetape4k.ahocorasick.interval.IntervalTree
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
-import io.bluetape4k.utils.ahocorasick.interval.IntervalTree
 import java.util.*
-
 
 /**
  * Trie
@@ -22,7 +20,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
 
     private val ignoreCase: Boolean get() = config.ignoreCase
 
-    suspend fun replace(text: String, map: Map<String, String>): String {
+    fun replace(text: String, map: Map<String, String>): String {
         val tokens = tokenize(text)
 
         return buildString {
@@ -37,31 +35,33 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
         }
     }
 
-    suspend fun tokenize(text: String): MutableList<Token> {
-        val tokens = fastListOf<Token>()
-        if (text.isEmpty()) {
-            return tokens
-        }
+    fun tokenizeToList(text: String): List<Token> = tokenize(text).toList()
 
+    fun tokenize(text: String): List<Token> {
+        if (text.isEmpty()) {
+            return emptyList()
+        }
         var lastCollectionIndex = -1
         val collectedEmits = parseText(text)
 
-        collectedEmits.forEach { emit ->
-            if (emit.start - lastCollectionIndex > 1) {
-                tokens.add(createFragment(emit, text, lastCollectionIndex))
+        val results = mutableListOf<Token>()
+
+        collectedEmits
+            .map { emit ->
+                if (emit.start - lastCollectionIndex > 1) {
+                    results.add(createFragment(emit, text, lastCollectionIndex))
+                }
+                results.add(createMatch(emit, text))
+                lastCollectionIndex = emit.end
             }
-            tokens.add(createMatch(emit, text))
-            lastCollectionIndex = emit.end
-        }
 
         if (text.length - lastCollectionIndex > 1) {
-            tokens.add(createFragment(null, text, lastCollectionIndex))
+            results.add(createFragment(null, text, lastCollectionIndex))
         }
-
-        return tokens
+        return results
     }
 
-    suspend fun parseText(text: CharSequence, emitHandler: StatefulEmitHandler = DefaultEmitHandler()): List<Emit> {
+    fun parseText(text: CharSequence, emitHandler: StatefulEmitHandler = DefaultEmitHandler()): List<Emit> {
         runParseText(text, emitHandler)
         var collectedEmits = emitHandler.emits
 
@@ -82,7 +82,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
         return collectedEmits
     }
 
-    suspend fun containsMatch(text: CharSequence): Boolean = firstMatch(text) != null
+    fun containsMatch(text: CharSequence): Boolean = firstMatch(text) != null
 
     fun runParseText(text: CharSequence, emitHandler: EmitHandler) {
         var currentState = rootState
@@ -105,7 +105,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
      * @param text The text to search for keywords
      * @return null if no matches found.
      */
-    suspend fun firstMatch(text: CharSequence): Emit? {
+    fun firstMatch(text: CharSequence): Emit? {
         if (!config.allowOverlaps) {
             return parseText(text).firstOrNull()
         }
@@ -211,7 +211,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
         }
 
         // Second, determine the fail state for all depth > 1 state
-        while (!queue.isEmpty()) {
+        while (queue.isNotEmpty()) {
             val currentState = queue.remove()
             log.trace { "currentState=$currentState" }
 
@@ -241,7 +241,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
         emits.forEach { emit ->
             emitted = emitHandler.emit(Emit(position - emit.length + 1, position, emit))
             if (emitted && config.stopOnHit) {
-                return emitted
+                return true
             }
         }
         return emitted
@@ -250,7 +250,7 @@ class Trie(private val config: TrieConfig = TrieConfig.DEFAULT) {
 
     class TrieBuilder {
         private val configBuilder = TrieConfig.builder()
-        private val keywords: MutableList<String> = fastListOf() // mutableListOf()
+        private val keywords: MutableList<String> = mutableListOf()
 
         fun addKeyword(keyword: String) = apply {
             this.keywords.add(keyword)

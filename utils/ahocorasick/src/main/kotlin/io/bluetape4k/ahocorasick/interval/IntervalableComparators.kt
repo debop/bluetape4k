@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.ahocorasick.interval
+package io.bluetape4k.ahocorasick.interval
 
 object IntervalableComparators {
 

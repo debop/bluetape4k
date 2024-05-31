@@ -1,6 +1,4 @@
-package io.bluetape4k.utils.ahocorasick.trie
-
-import io.bluetape4k.collections.eclipse.fastListOf
+package io.bluetape4k.ahocorasick.trie
 
 fun interface EmitHandler {
     fun emit(emit: Emit): Boolean
@@ -11,7 +9,7 @@ interface StatefulEmitHandler: EmitHandler {
 }
 
 abstract class AbstractStatefulEmitHandler: StatefulEmitHandler {
-    override val emits: MutableList<Emit> = fastListOf()
+    override val emits: MutableList<Emit> = mutableListOf()
     fun addEmit(emit: Emit): Boolean = emits.add(emit)
 }
 
