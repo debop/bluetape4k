@@ -36,6 +36,11 @@ dependencies {
     api(Libs.kotlinx_coroutines_core)
     testImplementation(Libs.kotlinx_coroutines_test)
 
+    // Reactor
+    implementation(Libs.reactor_core)
+    implementation(Libs.reactor_kotlin_extensions)
+    testImplementation(Libs.reactor_test)
+
     // Eclipse Collections
     api(Libs.eclipse_collections)
     compileOnly(Libs.eclipse_collections_forkjoin)
