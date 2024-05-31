@@ -2,7 +2,6 @@ package io.bluetape4k.openai.api
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import io.bluetape4k.io.json.jackson.Jackson
-import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.openai.api.annotations.BetaOpenAI
@@ -30,6 +29,7 @@ import io.bluetape4k.openai.api.models.model.Model
 import io.bluetape4k.openai.api.models.moderation.ModerationRequest
 import io.bluetape4k.openai.api.models.moderation.ModerationResult
 import io.bluetape4k.support.cast
+import io.bluetape4k.utils.Resourcex
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull

@@ -2,6 +2,7 @@ package io.bluetape4k.utils
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
@@ -28,5 +29,19 @@ class SystemxTest {
 
         log.debug { "Temp Dir = ${Systemx.TempDir}" }
         log.debug { "User Dir = ${Systemx.UserDir}" }
+    }
+
+    @Test
+    fun `시스템 설정 얻기`() {
+        Systemx.getProp("line.separator") shouldBeEqualTo Systemx.LineSeparator
+        Systemx.getProp("java.io.tmpdir") shouldBeEqualTo Systemx.TempDir
+    }
+
+    @Test
+    fun `System Env 값 얻기`() {
+        val envs = Systemx.getenv()
+        envs["JAVA_HOME"]!!.shouldNotBeEmpty()
+
+        Systemx.getenv("JAVA_HOME") shouldBeEqualTo envs["JAVA_HOME"]
     }
 }

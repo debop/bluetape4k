@@ -9,7 +9,6 @@ import io.bluetape4k.support.toUtf8String
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
 import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.StringReader
 import java.io.StringWriter
 import java.nio.ByteBuffer
@@ -25,16 +24,15 @@ class InputStreamExtensionsTest {
         private val faker = Fakers.faker
 
         @JvmStatic
-        private fun randomString(length: Int = 2048): String =
-            Fakers.fixedString(length)
+        private fun randomString(length: Int = 2048): String = Fakers.fixedString(length)
     }
 
     @RepeatedTest(REPEAT_SIZE)
     fun `input stream copy to writer with string`() {
         val expected = randomString()
 
-        StringWriter(DEFAULT_BUFFER_SIZE).use { writer ->
-            expected.toInputStream().use { bis ->
+        StringWriter(kotlin.io.DEFAULT_BUFFER_SIZE).use { writer ->
+            expected.toInputStream().buffered().use { bis ->
                 bis.copyTo(writer, bufferSize = 1024)
 
                 writer.flush()
@@ -45,8 +43,8 @@ class InputStreamExtensionsTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `input stream copy to output stream with byte array`(@RandomValue expected: ByteArray) {
-        ByteArrayOutputStream().use { bos ->
-            expected.toInputStream().use { bis ->
+        ApacheByteArrayOutputStream().use { bos ->
+            expected.toInputStream().buffered().use { bis ->
                 bis.copyTo(bos, 1024)
 
                 bos.flush()
@@ -59,8 +57,8 @@ class InputStreamExtensionsTest {
     fun `input stream copy to output stream with string`() {
         val expected = randomString()
 
-        ByteArrayOutputStream().use { bos ->
-            expected.toInputStream().use { bis ->
+        ApacheByteArrayOutputStream().use { bos ->
+            expected.toInputStream().buffered().use { bis ->
                 bis.copyTo(bos, 1024)
 
                 bos.flush()
@@ -74,9 +72,9 @@ class InputStreamExtensionsTest {
         val expected = randomString()
 
         Channels.newChannel(expected.toUtf8Bytes().toInputStream()).use { readable ->
-            ByteArrayOutputStream().use { bos ->
+            ApacheByteArrayOutputStream().use { bos ->
                 Channels.newChannel(bos).use { writable ->
-                    readable.copyTo(writable, DEFAULT_BUFFER_SIZE)
+                    readable.copyTo(writable, kotlin.io.DEFAULT_BUFFER_SIZE)
                 }
                 bos.toByteArray().toUtf8String() shouldBeEqualTo expected
             }
@@ -87,7 +85,7 @@ class InputStreamExtensionsTest {
     fun `copyTo operator for Reader`() {
         val expected = randomString()
 
-        StringReader(expected).use { reader ->
+        StringReader(expected).buffered(1024).use { reader ->
             StringWriter().use { writer ->
                 reader.copyTo(writer)
 
@@ -100,8 +98,8 @@ class InputStreamExtensionsTest {
     fun `copyTo operator for Reader to OutputStream`() {
         val expected = randomString()
 
-        StringReader(expected).use { reader ->
-            ByteArrayOutputStream().use { bos ->
+        StringReader(expected).buffered().use { reader ->
+            ApacheByteArrayOutputStream().use { bos ->
                 reader.copyTo(bos)
                 bos.toByteArray().toUtf8String() shouldBeEqualTo expected
             }
@@ -112,10 +110,9 @@ class InputStreamExtensionsTest {
     fun `bytearray to input stream`() {
         val expected = randomString().toUtf8Bytes()
 
-        expected.toInputStream().use { bis ->
-            ByteArrayOutputStream().use { bos ->
+        expected.toInputStream().buffered().use { bis ->
+            ApacheByteArrayOutputStream().use { bos ->
                 bis.copyTo(bos)
-
                 bos.toByteArray() shouldBeEqualTo expected
             }
         }
@@ -126,7 +123,7 @@ class InputStreamExtensionsTest {
         val expected = randomString()
 
         expected.toInputStream().use { bis ->
-            ByteArrayOutputStream().use { bos ->
+            ApacheByteArrayOutputStream().use { bos ->
                 bis.copyTo(bos)
 
                 bos.toByteArray().toUtf8String() shouldBeEqualTo expected
@@ -222,7 +219,7 @@ class InputStreamExtensionsTest {
     }
 
     private fun inputStreamPutToByteBuffer(expected: String, buffer: ByteBuffer) {
-        expected.toInputStream().buffered(DEFAULT_BUFFER_SIZE).use { bis ->
+        expected.toInputStream().buffered(kotlin.io.DEFAULT_BUFFER_SIZE).use { bis ->
             bis.putTo(buffer)
 
             buffer.flip()

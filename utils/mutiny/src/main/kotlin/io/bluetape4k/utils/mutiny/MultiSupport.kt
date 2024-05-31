@@ -1,8 +1,8 @@
 package io.bluetape4k.utils.mutiny
 
+import io.bluetape4k.collections.asSequence
+import io.bluetape4k.collections.asStream
 import io.bluetape4k.collections.eclipse.primitives.asIterable
-import io.bluetape4k.collections.stream.asSequence
-import io.bluetape4k.collections.stream.asStream
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.groups.MultiRepetition

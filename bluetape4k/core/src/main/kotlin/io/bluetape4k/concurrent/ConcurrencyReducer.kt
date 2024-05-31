@@ -1,12 +1,12 @@
 package io.bluetape4k.concurrent
 
-import io.bluetape4k.core.requirePositiveNumber
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.support.requirePositiveNumber
+import io.bluetape4k.utils.Runtimex
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CompletableFuture.failedFuture
 import java.util.concurrent.CompletionStage
 import java.util.concurrent.Semaphore
 
@@ -23,7 +23,10 @@ class ConcurrencyReducer<T> private constructor(
 ) {
     companion object: KLogging() {
         @JvmStatic
-        operator fun <T> invoke(maxConcurrency: Int, maxQueueSize: Int): ConcurrencyReducer<T> {
+        operator fun <T> invoke(
+            maxConcurrency: Int = Runtimex.availableProcessors,
+            maxQueueSize: Int = 100,
+        ): ConcurrencyReducer<T> {
             maxConcurrency.requirePositiveNumber("maxConcurrency")
             maxQueueSize.requirePositiveNumber("maxQueueSize")
 
@@ -51,7 +54,7 @@ class ConcurrencyReducer<T> private constructor(
         val job = Job(task, promise)
 
         if (!queue.offer(job)) {
-            return failedFuture(CapacityReachedException("Queue size has reached capacity: $maxQueueSize"))
+            return CompletableFuture.failedFuture(CapacityReachedException("Queue size has reached capacity: $maxQueueSize"))
         }
         pump()
         return promise

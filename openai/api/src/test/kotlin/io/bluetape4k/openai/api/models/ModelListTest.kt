@@ -1,11 +1,11 @@
 package io.bluetape4k.openai.api.models
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.openai.api.AbstractApiTest
 import io.bluetape4k.openai.api.models.model.ModelResultList
+import io.bluetape4k.utils.Resourcex
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.Test
 

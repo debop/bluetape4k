@@ -136,7 +136,7 @@ fun <T> Array<T>.removeLastValue(): Array<T> = this.copyOfRange(0, size - 1)
  * @param value 설정할 값
  */
 fun <T> Array<T>.setFirst(value: T) {
-    check(size > 0) { "Array is empty." }
+    check(isNotEmpty()) { "Array is empty." }
     this[0] = value
 }
 
@@ -146,7 +146,7 @@ fun <T> Array<T>.setFirst(value: T) {
  * @param value 설정할 값
  */
 fun <T> Array<T>.setLast(value: T) {
-    check(size > 0) { "Array is empty." }
+    check(isNotEmpty()) { "Array is empty." }
     this[lastIndex] = value
 }
 
@@ -158,26 +158,56 @@ inline fun <T> Array<T>.forEachCatching(action: (T) -> Unit): List<Result<Unit>>
     return map { runCatching { action(it) } }
 }
 
+/**
+ * Array의 요소가 `0` 이 아닌 첫번째 인덱스를 반환합니다.
+ */
 fun ByteArray.leadingZeros(): Int {
     var zc = 0
     while (zc < size && this[zc] == 0.toByte()) zc++
     return zc
 }
 
+/**
+ * Array의 요소가 `0` 이 아닌 첫번째 인덱스를 반환합니다.
+ */
 fun ShortArray.leadingZeros(): Int {
     var zc = 0
     while (zc < size && this[zc] == 0.toShort()) zc++
     return zc
 }
 
+/**
+ * Array의 요소가 `0` 이 아닌 첫번째 인덱스를 반환합니다.
+ */
 fun IntArray.leadingZeros(): Int {
     var zc = 0
     while (zc < size && this[zc] == 0) zc++
     return zc
 }
 
+/**
+ * Array의 요소가 `0` 이 아닌 첫번째 인덱스를 반환합니다.
+ */
 fun LongArray.leadingZeros(): Int {
     var zc = 0
     while (zc < size && this[zc] == 0L) zc++
     return zc
+}
+
+/**
+ * 현 Array 항목 수가 지정한 항목 수보다 작다면, 새로운 Array을 만들고, 기존 요소는 복사하고, `item` 값을 새롭게 할당된 공간에 추가합니다.
+ *
+ * @param newSize 새로운 Array의 크기
+ * @param item 새롭게 추가될 요소의 값
+ * @return 새로운 아이템이 추가된 Array
+ */
+inline fun <reified T> Array<T>.padTo(newSize: Int, item: T): Array<T> {
+    val remains = newSize - this.size
+    if (remains <= 0) {
+        return this
+    }
+
+    val array = Array(newSize) { item }
+    this.copyInto(array, 0, 0, this.size)
+    return array
 }

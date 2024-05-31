@@ -1,7 +1,7 @@
 package io.bluetape4k.utils.idgenerators.hashids
 
+import io.bluetape4k.collections.asParallelStream
 import io.bluetape4k.collections.eclipse.fastList
-import io.bluetape4k.collections.stream.asParallelStream
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.idgenerators.snowflake.DefaultSnowflake

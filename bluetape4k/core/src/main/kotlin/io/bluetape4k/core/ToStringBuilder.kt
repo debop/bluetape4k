@@ -1,9 +1,18 @@
 package io.bluetape4k.core
 
+import io.bluetape4k.support.assertNotBlank
 import java.io.Serializable
 
 /**
  * Business Entity의 toString()을 손쉽게 설정할 수 있게 해주는 Builder 입니다.
+ *
+ * ```
+ * val builder = ToStringBuilder("object").apply {
+ *     add("a", 1)
+ *     add("b", "two")
+ * }
+ * builder.toString() shouldBeEqualTo "object(a=1,b=two)"
+ * ```
  *
  * @see AbstractValueObject
  */

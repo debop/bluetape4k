@@ -2,15 +2,15 @@
 
 package io.bluetape4k.support
 
-import io.bluetape4k.core.assertPositiveNumber
-import io.bluetape4k.core.assertZeroOrPositiveNumber
 import org.apache.commons.lang3.RandomStringUtils
 import org.apache.commons.lang3.StringUtils
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
+
 
 private typealias JChar = Character
 
@@ -33,6 +33,7 @@ val UTF_8: Charset = Charsets.UTF_8
 fun CharSequence?.isWhitespace(): Boolean = isNullOrBlank()
 fun CharSequence?.isNotWhitespace(): Boolean = !isWhitespace()
 
+@OptIn(ExperimentalContracts::class)
 fun CharSequence?.hasLength(): Boolean {
     contract {
         returns(true) implies (this@hasLength != null)
@@ -432,4 +433,106 @@ fun String.toDashedString(delimiter: String = "-"): String = buildString {
             else               -> append(char)
         }
     }
+}
+
+/**
+ * Returns a string, of length at least [minLength], consisting of String prepended
+ * with as many copies of [padChar] as are necessary to reach that length. For example,
+ *
+ * ```
+ * "7".padStart(3, '0')  // return "007"
+ * "2010".padStart(3, '0')  // return "2010"
+ * ```
+ *
+ * <p>See {@link java.util.Formatter} for a richer set of formatting capabilities.
+ *
+ * @receiver the string which should appear at the end of the result
+ * @param minLength the minimum length the resulting string must have. Can be zero or negative, in
+ *     which case the input string is always returned.
+ * @param padChar the character to insert at the beginning of the result until the minimum length
+ *     is reached
+ * @return the padded string
+ */
+fun String.padStart(minLength: Int, padChar: Char): String {
+    if (length >= minLength) return this
+
+    val sb = StringBuilder(minLength)
+    for (i in length until minLength) {
+        sb.append(padChar)
+    }
+    sb.append(this)
+    return sb.toString()
+}
+
+/**
+ * Returns a string, of length at least [minLength], consisting of String appended
+ * with as many copies of [padChar] as are necessary to reach that length. For example,
+ *
+ * ```
+ * "4.".padEnd(5, '0')  // return "4.000"
+ * "2010".padEnd(3, '!')  // return "2010"
+ * ```
+ *
+ * <p>See {@link java.util.Formatter} for a richer set of formatting capabilities.
+ *
+ * @receiver the string which should appear at the beginning of the result
+ * @param minLength the minimum length the resulting string must have. Can be zero or negative, in
+ *     which case the input string is always returned.
+ * @param padChar the character to append to the end of the result until the minimum length is
+ *     reached
+ * @return the padded string
+ */
+fun String.padEnd(minLength: Int, padChar: Char): String {
+    if (length >= minLength) return this
+
+    val sb = StringBuilder(minLength)
+    sb.append(this)
+    for (i in length until minLength) {
+        sb.append(padChar)
+    }
+    return sb.toString()
+}
+
+/**
+ * Returns the longest string `prefix` such that `a.toString().startsWith(prefix) &&
+ * b.toString().startsWith(prefix)`, taking care not to split surrogate pairs. If [a] and
+ * [b] have no common prefix, returns the empty string.
+ */
+fun commonPrefix(a: CharSequence, b: CharSequence): String {
+    val maxPrefixLength = minOf(a.length, b.length)
+    var p = 0
+    while (p < maxPrefixLength && a[p] == b[p]) {
+        p++
+    }
+    if (a.validSurrogatePairAt(p - 1) || b.validSurrogatePairAt(p - 1)) {
+        p--
+    }
+    return a.substring(0, p)
+}
+
+/**
+ * Returns the longest string {@code suffix} such that {@code a.toString().endsWith(suffix) &&
+ * b.toString().endsWith(suffix)}, taking care not to split surrogate pairs. If {@code a} and
+ * {@code b} have no common suffix, returns the empty string.
+ */
+fun commonSuffix(a: CharSequence, b: CharSequence): String {
+    val maxSuffixLength = minOf(a.length, b.length)
+    var s = 0
+    while (s < maxSuffixLength && a[a.length - s - 1] == b[b.length - s - 1]) {
+        s++
+    }
+    if (a.validSurrogatePairAt(a.length - s - 1) || b.validSurrogatePairAt(b.length - s - 1)) {
+        s--
+    }
+    return a.substring(a.length - s, a.length)
+}
+
+/**
+ * True when a valid surrogate pair starts at the given `index` in the given string.
+ * Out-of-range indexes return false.
+ */
+internal fun CharSequence.validSurrogatePairAt(index: Int): Boolean {
+    return index >= 0 && index <= (length - 2) &&
+            Character.isHighSurrogate(this[index]) &&
+            Character.isLowSurrogate(this[index + 1])
 }

@@ -1,7 +1,7 @@
 package io.bluetape4k.io.grpc.examples.routeguide
 
 import com.google.protobuf.util.JsonFormat
-import io.bluetape4k.io.utils.Resourcex
+import io.bluetape4k.utils.Resourcex
 import java.io.StringReader
 
 internal fun defaultFeatureString(): String =

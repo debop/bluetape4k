@@ -14,16 +14,16 @@ class KotlinDetectorTest {
 
     @Test
     fun `detect kotlin environment`() {
-        KotlinDetector.isKotlinPresent().shouldBeTrue()
+        KotlinDetector.isKotlinPresent.shouldBeTrue()
     }
 
     @Test
     fun `detect kotlin class`() {
-        Date::class.java.isKotlinType().shouldBeFalse()
-        Instant::class.java.isKotlinType().shouldBeFalse()
+        Date::class.java.isKotlinType.shouldBeFalse()
+        Instant::class.java.isKotlinType.shouldBeFalse()
 
-        Sequence::class.java.isKotlinType().shouldBeTrue()
-        LazyValue::class.java.isKotlinType().shouldBeTrue()
+        Sequence::class.java.isKotlinType.shouldBeTrue()
+        LazyValue::class.java.isKotlinType.shouldBeTrue()
     }
 
     @Test

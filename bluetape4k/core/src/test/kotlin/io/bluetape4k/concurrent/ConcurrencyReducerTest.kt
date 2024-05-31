@@ -1,6 +1,5 @@
 package io.bluetape4k.concurrent
 
-import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.AtomicInt
@@ -150,8 +149,8 @@ class ConcurrencyReducerTest {
         val maxConcurrency = 10
         val limiter = ConcurrencyReducer<String>(maxConcurrency, queueSize)
 
-        val jobs = fastListOf<CountingJob>()
-        val promises = fastListOf<CompletableFuture<String>>()
+        val jobs = mutableListOf<CountingJob>()
+        val promises = mutableListOf<CompletableFuture<String>>()
 
         repeat(queueSize) {
             val job = CountingJob(limiter::activeCount, maxCounter)
@@ -190,14 +189,17 @@ class ConcurrencyReducerTest {
 
     @Test
     fun `verify queue size`() {
+        val concurrency = 4
+        val queueSize = 10
         val future = CompletableFuture<String>()
-        val limiter = ConcurrencyReducer<String>(10, 10)
+        val limiter = ConcurrencyReducer<String>(concurrency, queueSize)
+
         repeat(20) {
             limiter.add { future }
         }
 
-        limiter.activeCount shouldBeEqualTo 10
-        limiter.queuedCount shouldBeEqualTo 10
+        limiter.activeCount shouldBeEqualTo concurrency
+        limiter.queuedCount shouldBeEqualTo queueSize
         limiter.remainingActiveCapacity shouldBeEqualTo 0
         limiter.remainingQueueCapacity shouldBeEqualTo 0
 
@@ -205,8 +207,8 @@ class ConcurrencyReducerTest {
 
         limiter.activeCount shouldBeEqualTo 0
         limiter.queuedCount shouldBeEqualTo 0
-        limiter.remainingActiveCapacity shouldBeEqualTo 10
-        limiter.remainingQueueCapacity shouldBeEqualTo 10
+        limiter.remainingActiveCapacity shouldBeEqualTo concurrency
+        limiter.remainingQueueCapacity shouldBeEqualTo queueSize
     }
 
     private fun job(future: CompletionStage<String>?): () -> CompletionStage<String>? = { future }

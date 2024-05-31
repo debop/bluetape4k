@@ -22,3 +22,10 @@ class GZipMarshallingSerializer: CompressableBinarySerializer(BinarySerializers.
 class LZ4MarshallingSerializer: CompressableBinarySerializer(BinarySerializers.Marshalling, Compressors.LZ4)
 class SnappyMarshallingSerializer: CompressableBinarySerializer(BinarySerializers.Marshalling, Compressors.Snappy)
 class ZstdMarshallingSerializer: CompressableBinarySerializer(BinarySerializers.Marshalling, Compressors.Zstd)
+
+class BZip2FurySerializer: CompressableBinarySerializer(BinarySerializers.Fury, Compressors.BZip2)
+class DeflateFurySerializer: CompressableBinarySerializer(BinarySerializers.Fury, Compressors.Deflate)
+class GZipFurySerializer: CompressableBinarySerializer(BinarySerializers.Fury, Compressors.GZip)
+class LZ4FurySerializer: CompressableBinarySerializer(BinarySerializers.Fury, Compressors.LZ4)
+class SnappyFurySerializer: CompressableBinarySerializer(BinarySerializers.Fury, Compressors.Snappy)
+class ZstdFurySerializer: CompressableBinarySerializer(BinarySerializers.Fury, Compressors.Zstd)

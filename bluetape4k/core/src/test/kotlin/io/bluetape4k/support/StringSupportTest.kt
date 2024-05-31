@@ -217,12 +217,12 @@ class StringSupportTest {
 
     @Test
     fun `add prefix if absent`() {
-        val prefix = "bluetape4k."
-        val expected = "bluetape4k.version"
+        val prefix = "kommons."
+        val expected = "kommons.version"
 
         "version".prefixIfAbsent(prefix, true) shouldBeEqualTo expected
-        "bluetape4k.version".prefixIfAbsent(prefix, true) shouldBeEqualTo expected
-        "bluetape4k.version".prefixIfAbsent(prefix, false) shouldBeEqualTo expected
+        "kommons.version".prefixIfAbsent(prefix, true) shouldBeEqualTo expected
+        "kommons.version".prefixIfAbsent(prefix, false) shouldBeEqualTo expected
     }
 
     @Test
@@ -236,7 +236,8 @@ class StringSupportTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `get unique characters`(@RandomValue str: String) {
+    fun `get unique characters`() {
+        val str = Fakers.randomString(16, 32)
         val duplicated = str.repeat(3)
 
         val uniques = duplicated.uniqueChars()
@@ -245,7 +246,8 @@ class StringSupportTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `redact string for password`(@RandomValue str: String) {
+    fun `redact string for password`() {
+        val str = Fakers.randomString(16, 32)
         val redacted = str.redact()
 
         redacted.length shouldBeEqualTo str.length

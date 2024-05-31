@@ -8,21 +8,22 @@ import kotlin.reflect.full.memberExtensionFunctions
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.kotlinFunction
 
+/**
+ * Kotlin 관련 유틸리티 클래스
+ */
 @Suppress("UNCHECKED_CAST")
 object KotlinDetector: KLogging() {
 
     val kotlinMetadata: Class<out Annotation>? by lazy {
-        try {
+        runCatching {
             Class.forName("kotlin.Metadata", false, KotlinDetector::class.java.classLoader)
-        } catch (e: ClassNotFoundException) {
-            null
-        } as? Class<out Annotation>
+        }.getOrNull() as? Class<out Annotation>
     }
 
     /**
      * 현 프로세스에서 Kotlin을 사용할 수 있는지 알려준다
      */
-    fun isKotlinPresent(): Boolean = kotlinMetadata != null
+    val isKotlinPresent: Boolean get() = kotlinMetadata != null
 
     /**
      * 지정한 수형이 Kotlin 으로 정의된 수형인가 판단합니다.
@@ -31,16 +32,17 @@ object KotlinDetector: KLogging() {
      * @return Boolean 수형이 Kotlin으로 정의되었다면 true, 아니면 False를 반환
      */
     fun isKotlinType(clazz: Class<*>): Boolean =
-        isKotlinPresent() && clazz.getDeclaredAnnotation(kotlinMetadata) != null
+        isKotlinPresent && clazz.getDeclaredAnnotation(kotlinMetadata) != null
+
 }
 
 /**
  * 현 수형이 Kotlin 으로 정의된 수형인가 판단합니다.
+ *
  * @receiver Class<*> 검사할 수형
  * @return Boolean 수형이 Kotlin으로 정의되었다면 true, 아니면 False를 반환
  */
-fun Class<*>.isKotlinType(): Boolean = KotlinDetector.isKotlinType(this)
-
+val Class<*>.isKotlinType: Boolean get() = KotlinDetector.isKotlinType(this)
 
 /**
  * 메소드가 `suspend` 메소드인지 판단합니다.
@@ -48,23 +50,25 @@ fun Class<*>.isKotlinType(): Boolean = KotlinDetector.isKotlinType(this)
  * @param methodName 메소드 명
  * @return suspend 함수인지 여부
  */
-fun KClass<*>.isSuspendableFunction(methodName: String): Boolean =
-    memberFunctions.firstOrNull { it.name == methodName } != null ||
-        memberExtensionFunctions.firstOrNull { it.name == methodName } != null
+fun KClass<*>.isSuspendableFunction(methodName: String): Boolean {
+    return memberFunctions.firstOrNull { it.name == methodName } != null ||
+            memberExtensionFunctions.firstOrNull { it.name == methodName } != null
+}
 
 /**
  * 현 클래스의 `suspend` 메소드들의 컬렉션을 조회합니다.
  *
  * @return suspend 함수 컬렉션
  */
-fun KClass<*>.getSuspendableFunctions(): List<KFunction<*>> =
-    memberFunctions.filter { it.isSuspend } +
-        memberExtensionFunctions.filter { it.isSuspend }
+fun KClass<*>.getSuspendableFunctions(): List<KFunction<*>> {
+    return memberFunctions.filter { it.isSuspend } +
+            memberExtensionFunctions.filter { it.isSuspend }
+}
 
 /**
  * Method가 `suspend` 메소드인지 판단합니다.
  *
  * @return suspend 메소드이면 true, 아니면 false
  */
-fun Method.isSuspendableFunction(): Boolean =
-    this.kotlinFunction?.run { isSuspend } ?: false
+val Method.isSuspendableFunction: Boolean
+    get() = this.kotlinFunction?.run { isSuspend } ?: false

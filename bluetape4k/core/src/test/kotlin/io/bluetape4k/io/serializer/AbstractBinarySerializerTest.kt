@@ -40,6 +40,7 @@ abstract class AbstractBinarySerializerTest {
         val biography: String,
         val zip: String,
         val address: String,
+        val amount: Double? = null,  // NOTE: Fury 가 BigDecimal, BigInteger를 지원하지 않음
     ): Serializable
 
 

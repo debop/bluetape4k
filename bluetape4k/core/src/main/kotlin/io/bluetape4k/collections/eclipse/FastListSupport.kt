@@ -1,7 +1,7 @@
 package io.bluetape4k.collections.eclipse
 
 import io.bluetape4k.collections.asIterable
-import io.bluetape4k.core.assertZeroOrPositiveNumber
+import io.bluetape4k.support.assertZeroOrPositiveNumber
 import org.eclipse.collections.impl.list.mutable.FastList
 
 fun <T> emptyFastList(): FastList<T> = FastList.newList()

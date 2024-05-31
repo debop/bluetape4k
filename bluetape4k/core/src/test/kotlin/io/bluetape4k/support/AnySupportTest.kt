@@ -5,7 +5,6 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContainSame
-import org.eclipse.collections.impl.block.factory.Comparators.nullSafeEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import java.util.*
@@ -35,15 +34,15 @@ class AnySupportTest {
     fun `두 값 비교하기 with null safe`() {
         val a: String? = null
         val b: Int? = null
-        nullSafeEquals(a, b).shouldBeTrue()
+        areEquals(a, b).shouldBeTrue()
 
-        nullSafeEquals(null, null).shouldBeTrue()
-        nullSafeEquals(null, "").shouldBeFalse()
-        nullSafeEquals("", "").shouldBeTrue()
-        nullSafeEquals("a", "a").shouldBeTrue()
+        areEquals(null, null).shouldBeTrue()
+        areEquals(null, "").shouldBeFalse()
+        areEquals("", "").shouldBeTrue()
+        areEquals("a", "a").shouldBeTrue()
 
         // Array 도 비교할 수 있다
-        nullSafeEquals(emptyByteArray, emptyIntArray).shouldBeFalse()
+        areEquals(emptyByteArray, emptyIntArray).shouldBeFalse()
     }
 
     @Test

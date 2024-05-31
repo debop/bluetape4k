@@ -1,7 +1,10 @@
 package io.bluetape4k.codec
 
+import io.bluetape4k.io.BitInputStream
+import io.bluetape4k.io.BitOutputStream
 import io.bluetape4k.logging.KLogging
-import org.apache.commons.compress.utils.BitInputStream
+import io.bluetape4k.support.toByteArray
+import io.bluetape4k.support.toUuid
 import java.util.*
 
 
@@ -10,7 +13,7 @@ import java.util.*
 fun ByteArray.encodeBase62(): String = BytesBase62.encode(this)
 fun String.decodeBase62AsByteArray(): ByteArray = BytesBase62.decode(this)
 
-fun UUID.encodeBase62String(): String = toByteArray().encodeBase62()
+fun UUID.encodeBase62String(): String = this.toByteArray().encodeBase62()
 fun String.decodeBase62AsUUID(): UUID = decodeBase62AsByteArray().toUuid()
 
 /**

@@ -2,9 +2,9 @@ package io.bluetape4k.io.csv
 
 import com.univocity.parsers.common.record.Record
 import io.bluetape4k.io.csv.model.ProductType
-import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import io.bluetape4k.utils.Resourcex
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldNotBeBlank
 import org.amshove.kluent.shouldNotBeEmpty

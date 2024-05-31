@@ -28,7 +28,9 @@ fun <T> Iterable<T>.size(): Int = when (this) {
 
 inline fun <T> Iterable<T>.exists(predicate: (T) -> Boolean): Boolean = any { predicate(it) }
 
-/** Iterable이 다른 iterable과 같은 요소들을 가졌는가? */
+/**
+ * Iterable이 다른 iterable과 같은 요소들을 가졌는가를 검사합니다.
+ */
 infix fun <T> Iterable<T>.isSameElements(that: Iterable<T>): Boolean {
     if (this is List<T> && that is List<T>) {
         if (this.size == that.size) {
@@ -77,8 +79,33 @@ inline fun <reified T: Any> Iterable<*>.asArray(): Array<T?> =
  * @param mapper 변환 작업
  * @return
  */
-inline fun <T, R> Iterable<T>.tryMap(mapper: (T) -> R): List<Result<R>> =
-    map { runCatching { mapper(it) } }
+inline fun <T, R> Iterable<T>.tryMap(mapper: (T) -> R): List<Result<R>> {
+    return map { runCatching { mapper(it) } }
+}
+
+/**
+ * [mapper] 실행의 [Result] 를 반환합니다.
+ *
+ * @param mapper 변환 작업
+ * @return
+ */
+inline fun <T, R> Iterable<T>.mapCatching(mapper: (T) -> R): List<Result<R>> {
+    return map { runCatching { mapper(it) } }
+}
+
+/**
+ * forEach 구문 실행 시 `runCatching` 구문으로 [action] 실행합니다. 예외를 무시합니다.
+ */
+inline fun <T> Iterable<T>.tryForEach(action: (T) -> Unit) {
+    forEach { runCatching { action(it) } }
+}
+
+/**
+ * `runCatching` 구문으로 [action] 실행합니다. action 결과를 [Result]로 반환합니다.
+ */
+inline fun <T> Iterable<T>.forEachCatching(action: (T) -> Unit): List<Result<Unit>> {
+    return map { runCatching { action(it) } }
+}
 
 /**
  * [mapper] 실행이 성공한 결과만 추출합니다.
@@ -89,16 +116,6 @@ inline fun <T, R> Iterable<T>.tryMap(mapper: (T) -> R): List<Result<R>> =
 inline fun <T, R: Any> Iterable<T>.mapIfSuccess(mapper: (T) -> R): List<R> =
     mapNotNull { runCatching { mapper(it) }.getOrNull() }
 
-inline fun <T> Iterable<T>.tryForEach(action: (T) -> Unit) {
-    forEach { runCatching { action(it) } }
-}
-
-inline fun <T, R> Iterable<T>.mapCatching(mapper: (T) -> R): List<Result<R>> =
-    map { runCatching { mapper(it) } }
-
-inline fun <T> Iterable<T>.forEachCatching(action: (T) -> Unit): List<Result<Unit>> {
-    return map { runCatching { action(it) } }
-}
 
 /**
  * 컬렉션의 요소를 [size]만큼의 켤렉션으로 묶어서 반환합니다. 마지막 켤렉션의 크기는 [size]보다 작을 수 있습니다.
@@ -121,4 +138,4 @@ inline fun <T, R> Iterable<T>.sliding(
     partialWindows: Boolean = true,
     crossinline transform: (List<T>) -> R,
 ): List<R> =
-    windowed(size, 1, partialWindows) { transform(it) }
+    windowed(size, 1, partialWindows).map(transform)

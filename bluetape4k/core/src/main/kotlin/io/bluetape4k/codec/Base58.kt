@@ -1,9 +1,9 @@
 package io.bluetape4k.codec
 
-import io.bluetape4k.core.requireGt
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.support.isNullOrEmpty
+import io.bluetape4k.support.requireGt
 import java.security.SecureRandom
 
 /**

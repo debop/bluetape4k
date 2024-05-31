@@ -1,6 +1,5 @@
 package io.bluetape4k.ranges
 
-import io.bluetape4k.ranges.impl.DefaultClosedClosedRange
 import java.math.BigDecimal
 import java.math.BigInteger
 

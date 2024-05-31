@@ -1,12 +1,10 @@
 package io.bluetape4k.support
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.core.assertNotBlank
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.trace
 import java.util.*
 
-private val log = KotlinLogging.logger {}
+private val log by lazy { KotlinLogging.logger {} }
 
 fun Locale.isDefault(): Boolean = Locale.getDefault() == this
 
@@ -15,19 +13,21 @@ fun Locale?.orDefault(): Locale = this ?: Locale.getDefault()
 /**
  * [Locale] 의 부모 Locale을 구합니다.
  */
+@Deprecated("use getParent()", replaceWith = ReplaceWith("getParentOrNull()"))
 val Locale.parent: Locale?
     get() = when {
-        variant.isNotEmpty() && (language.isNotEmpty() || country.isNotEmpty()) -> Locale(language, country)
-        country.isNotEmpty()                                                    -> Locale(language)
+        variant.isNotEmpty() && (language.isNotEmpty() || country.isNotEmpty()) -> Locale.of(language, country)
+        country.isNotEmpty()                                                    -> Locale.of(language)
         else                                                                    -> null
     }
 
 /**
  * [Locale] 의 모든 부모 Locale 들을 구합니다.
  */
+@Deprecated("Use getParents() methods", replaceWith = ReplaceWith("getParentList()"))
 val Locale.parents: List<Locale>
     get() {
-        val result = fastListOf<Locale>()
+        val result = mutableListOf<Locale>()
         var current: Locale? = this
         while (current != null) {
             result.add(current)
@@ -35,6 +35,28 @@ val Locale.parents: List<Locale>
         }
         return result
     }
+
+/**
+ * [Locale] 의 부모 Locale을 구합니다.
+ */
+fun Locale.getParentOrNull(): Locale? = when {
+    variant.isNotEmpty() && (language.isNotEmpty() || country.isNotEmpty()) -> Locale.of(language, country)
+    country.isNotEmpty()                                                    -> Locale.of(language)
+    else                                                                    -> null
+}
+
+/**
+ * [Locale] 자신과 모든 부모 Locale 들을 구합니다.
+ */
+fun Locale.getParentList(): List<Locale> {
+    val result = mutableListOf<Locale>()
+    var current: Locale? = this
+    while (current != null) {
+        result.add(current)
+        current = current.getParentOrNull()
+    }
+    return result
+}
 
 
 /**
@@ -52,7 +74,7 @@ fun Locale.calculateFilenames(basename: String): List<String> {
     basename.assertNotBlank("basename")
     log.trace { "Locale에 해당하는 파일명을 조합합니다. basename=$basename, locale=$this" }
 
-    val results = fastListOf<String>()
+    val results = mutableListOf<String>()
 
     val language = this.language
     val country = this.country

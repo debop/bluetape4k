@@ -69,7 +69,7 @@ class DelegateSupportTest {
     fun `map property delegation example`() {
         val map = mutableMapOf<String, String>(
             "id" to faker.idNumber().ssnValid(),
-            "name" to faker.name().username(),
+            "name" to faker.internet().username(),
         )
 
         val user = User(map)

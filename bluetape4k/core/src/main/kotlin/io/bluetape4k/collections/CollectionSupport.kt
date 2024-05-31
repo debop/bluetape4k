@@ -1,8 +1,6 @@
 package io.bluetape4k.collections
 
-import io.bluetape4k.collections.eclipse.fastList
-import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.core.assertInRange
+import io.bluetape4k.support.assertInRange
 
 /**
  * receiver 를 첫번째 요소로 하고, [tail]을 리스트의 후속 요소로 하는 리스트를 빌드합니다.
@@ -68,7 +66,21 @@ inline fun <reified T> List<T>.padTo(newSize: Int, item: T): List<T> {
         return this
     }
 
-    return this.toFastList().apply {
-        addAll(fastList(remains) { item })
+    return this.toMutableList().apply {
+        addAll(List(remains) { item })
     }
 }
+
+/**
+ * 목록의 요소별로 카운트를 반환합니다.
+ *
+ * ```
+ * val list = listOf(1,2,2,3)
+ * val map = list.eachCount()  // {1=1, 2=2, 3=1}
+ * ```
+ *
+ * @param T
+ * @return
+ */
+fun <T> List<T>.eachCount(): Map<T, Int> =
+    groupBy { it }.mapValues { it.value.size }

@@ -4,7 +4,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.compareBoolean
 
 /**
- * A utility for performing a chained comparison statement.
+ * 연쇄적인 비교문을 수행하는 유틸리티
  *
  * For example:
  * ```

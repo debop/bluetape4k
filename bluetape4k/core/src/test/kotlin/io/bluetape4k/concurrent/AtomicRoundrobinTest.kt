@@ -1,8 +1,9 @@
 package io.bluetape4k.concurrent
 
-import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
+import io.bluetape4k.junit5.concurrency.VirtualthreadTester
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
@@ -16,7 +17,7 @@ class AtomicRoundrobinTest {
         val size = 10000
         val atomic = AtomicIntRoundrobin(size)
 
-        val ids = fastList(size) { it }.parallelStream().map { atomic.next() }.toList()
+        val ids = List(size) { it }.parallelStream().map { atomic.next() }.toList()
         ids.size shouldBeEqualTo size
         ids.toSet().size shouldBeEqualTo size
     }
@@ -66,7 +67,26 @@ class AtomicRoundrobinTest {
             .numThreads(8)
             .roundsPerThread(4)
             .add {
-                atomic.next()
+                atomic.next().apply {
+                    log.debug { "atomic=$this" }
+                }
+            }
+            .run()
+
+        atomic.get() shouldBeEqualTo 0
+    }
+
+    @Test
+    fun `increment round robine in virtual threads`() {
+        val atomic = AtomicIntRoundrobin(16)
+
+        VirtualthreadTester()
+            .numThreads(8)
+            .roundsPerThread(4)
+            .add {
+                atomic.next().apply {
+                    log.debug { "atomic=$this" }
+                }
             }
             .run()
 

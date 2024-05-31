@@ -2,6 +2,21 @@ package io.bluetape4k.support
 
 /**
  * 모든 인자가 not null 일 때에만 [block] 을 실행합니다.
+ *
+ * ```
+ * safeLet(p1, p2) { a, b ->
+ *     a.shouldNotBeNull()
+ *     b.shouldNotBeNull()
+ * }
+ * ```
+ * ```
+ * safeLet(null, "b") { _, _ ->
+ *     fail("p1 이 null 이므로 실행되어서는 안됩니다")
+ * }
+ * safeLet("a", null) { _, _ ->
+ *     fail("p2 이 null 이므로 실행되어서는 안됩니다")
+ * }
+ * ```
  */
 inline fun <T1: Any, T2: Any, R: Any> safeLet(
     p1: T1?,

@@ -8,11 +8,12 @@ import io.bluetape4k.support.coerce
 import io.bluetape4k.support.emptyByteArray
 import java.nio.ByteBuffer
 
-
 /**
  * Zstd 알고리즘을 활용한 압축기
  *
  * 참고: [zstd-jni](https://github.com/luben/zstd-jni)
+ *
+ * @property level 압축 레벨
  */
 class ZstdCompressor private constructor(val level: Int): AbstractCompressor() {
 

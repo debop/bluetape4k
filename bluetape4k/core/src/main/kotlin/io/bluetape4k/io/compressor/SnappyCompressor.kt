@@ -3,7 +3,7 @@ package io.bluetape4k.io.compressor
 import org.xerial.snappy.Snappy
 
 /**
- * Snappy Compressor
+ * Snappy 알고리즘을 사용한 Compressor
  */
 class SnappyCompressor: AbstractCompressor() {
 

@@ -1,31 +1,28 @@
 package io.bluetape4k.collections.enhanced
 
 import io.bluetape4k.collections.asMutableIterator
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.stream.asStream
+import io.bluetape4k.collections.asStream
 import io.bluetape4k.logging.KLogging
-import org.eclipse.collections.impl.EmptyIterator
 import java.io.Serializable
+import java.util.*
 import java.util.function.Consumer
 import java.util.function.Predicate
 import java.util.stream.Stream
 
 /**
- * 여러개의 [MutableCollection]을 하나의 [MutableCollection]처럼 제공하는 클래스입니다.
- *
- * @param E
- * @constructor Create empty Composite collection
+ * 여러 개의 [MutableCollection]을 하나의 [MutableCollection]처럼 제공하는 클래스입니다.
  */
 class CompositeCollection<E> private constructor(): MutableCollection<E>, Serializable {
 
     companion object: KLogging() {
+        @JvmStatic
         operator fun <E> invoke(vararg collections: MutableCollection<E>): CompositeCollection<E> =
             CompositeCollection<E>().apply {
                 addComposited(*collections)
             }
     }
 
-    private val all = fastListOf<MutableCollection<E>>()
+    private val all = mutableListOf<MutableCollection<E>>()
 
     var mutator: CollectionMutator<E>? = null
 
@@ -53,7 +50,7 @@ class CompositeCollection<E> private constructor(): MutableCollection<E>, Serial
                 "addAll() is not supported on CompositeCollection without a CollectionMutator strategy"
             )
         }
-        return mutator!!.addAll(this, all, elements)
+        return mutator?.addAll(this, all, elements) ?: false
     }
 
     override fun isEmpty(): Boolean {
@@ -61,8 +58,8 @@ class CompositeCollection<E> private constructor(): MutableCollection<E>, Serial
     }
 
     override fun iterator(): MutableIterator<E> {
-        if (all.isEmpty) {
-            return EmptyIterator.getInstance()
+        if (all.isEmpty()) {
+            return Collections.emptyIterator()
         }
 
         return sequence {

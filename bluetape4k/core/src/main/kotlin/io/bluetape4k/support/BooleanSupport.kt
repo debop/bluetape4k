@@ -35,3 +35,63 @@ fun compareBoolean(left: Boolean, right: Boolean): Int = when {
     left          -> 1
     else          -> -1
 }
+
+/**
+ * 값이 true 라면 [other]를 실행하여 반환하고, 아니면 null 을 반환합니다.
+ *
+ * ```
+ * val result = (condition == 1) then { true } ?: false
+ * ```
+ */
+inline fun <T> Boolean.then(other: () -> T): T? = if (this) other() else null
+
+/**
+ * 값이 true 라면 [result]를 반환하고, 아니면 null 을 반환합니다.
+ *
+ * ```
+ * val result = (condition == 1) then { true } ?: false
+ * ```
+ */
+fun <T> Boolean.then(result: T): T? = if (this) result else null
+
+/**
+ * 값이 true 라면 [other]를 실행하여 반환하고, 아니면 null 을 반환합니다.
+ *
+ * ```
+ * val result = (condition == 1) then { true } ?: false
+ * ```
+ */
+inline fun <T> (() -> Boolean).then(other: () -> T): T? = if (this()) other() else null
+
+/**
+ * 값이 true 라면 [result]를 반환하고, 아니면 null 을 반환합니다.
+ *
+ * ```
+ * val result = (condition == 1) then { true } ?: false
+ * ```
+ */
+fun <T> (() -> Boolean).then(result: T): T? = if (this()) result else null
+
+/**
+ * False if null
+ *
+ * ```
+ * val x: Boolean? = null
+ *
+ * x.falseIfNull() // false
+ * x.trueIfNull() // true
+ * ```
+ */
+fun Boolean?.falseIfNull(): Boolean = this ?: false
+
+/**
+ * True if null
+ *
+ * ```
+ * val x: Boolean? = null
+ *
+ * x.falseIfNull() // false
+ * x.trueIfNull() // true
+ * ```
+ */
+fun Boolean?.trueIfNull(): Boolean = this ?: true

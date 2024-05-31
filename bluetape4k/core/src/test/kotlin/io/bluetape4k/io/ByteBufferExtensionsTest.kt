@@ -49,10 +49,10 @@ class ByteBufferExtensionsTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `put to dest byte byffer`(@RandomValue bytes: ByteArray) {
+    fun `move to dest byte byffer`(@RandomValue bytes: ByteArray) {
         val srcBuffer = ByteBuffer.wrap(bytes)
         val destBuffer = ByteBuffer.allocate(bytes.size)
-        srcBuffer.putTo(destBuffer)
+        srcBuffer.moveTo(destBuffer)
 
         if (destBuffer.position() > 0) {
             destBuffer.flip()

@@ -42,7 +42,7 @@ interface BinarySerializer {
      * 직렬화된 [buffer]를 읽어 대상 객체로 역직렬화합니다.
      *
      * @param T     역직렬화할 객체 수형
-     * @param bytes 직렬화된 데이터
+     * @param buffer 직렬화된 데이터
      * @return 역직렬화한 객체
      */
     fun <T: Any> deserialize(buffer: ByteBuffer): T? =

@@ -1,8 +1,8 @@
 package io.bluetape4k.collections.eclipse.primitives
 
+import io.bluetape4k.collections.asIterable
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.unifiedSetOf
-import io.bluetape4k.collections.stream.asIterable
 import org.eclipse.collections.api.DoubleIterable
 import org.eclipse.collections.api.FloatIterable
 import org.eclipse.collections.api.IntIterable

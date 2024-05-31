@@ -1,11 +1,11 @@
 package io.bluetape4k.vertx.sqlclient
 
 import io.bluetape4k.core.requireNotBlank
-import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
 import io.bluetape4k.testcontainers.jdbc.MySQL8Server
+import io.bluetape4k.utils.Resourcex
 import io.vertx.core.Vertx
 import io.vertx.jdbcclient.JDBCConnectOptions
 import io.vertx.jdbcclient.JDBCPool

@@ -1,5 +1,6 @@
 package io.bluetape4k.io
 
+import io.bluetape4k.concurrent.asCompletableFuture
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.trace
@@ -18,7 +19,6 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousFileChannel
-import java.nio.channels.CompletionHandler
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Path
@@ -26,7 +26,7 @@ import java.nio.file.StandardOpenOption
 import java.util.concurrent.CompletableFuture
 import kotlin.text.Charsets.UTF_8
 
-private val log = KotlinLogging.logger {}
+private val log by lazy { KotlinLogging.logger {} }
 
 const val EXTENSION_SEPARATOR = '.'
 const val UNIX_SEPARATOR = '/'
@@ -100,7 +100,7 @@ fun createTempDirectory(prefix: String = "temp", suffix: String = "dir", deleteA
 fun File.copyToAsync(
     target: File,
     overwrite: Boolean = false,
-    bufferSize: Int = DEFAULT_BUFFER_SIZE,
+    bufferSize: Int = kotlin.io.DEFAULT_BUFFER_SIZE,
 ): CompletableFuture<File> =
     CompletableFuture.supplyAsync {
         this@copyToAsync.copyTo(target, overwrite, bufferSize)
@@ -143,50 +143,49 @@ fun File.deleteDirectory(recusive: Boolean = true): Boolean {
  * Unit "touch" utility를 구현한 함수입니다.
  * 파일이 존재하지 않는 경우 크기가 0 인 파일을 새로 만듭니다.
  */
-fun File.touch() {
+fun File.touch(): Boolean {
     if (!exists()) {
-        FileOutputStream(this).close()
+        FileOutputStream(this).closeSafe()
     }
-    setLastModified(System.currentTimeMillis())
+    return setLastModified(System.currentTimeMillis())
 }
-
 
 fun File.readAllBytes(): ByteArray {
     if (!exists()) {
-        return ByteArray(0)
+        return emptyByteArray
     }
     return this.readBytes()
 }
 
+/**
+ * 해당 경로[Path]의 파일을 비동기 방식으로 읽어 [ByteArray]로 반환하는 [CompletableFuture]를 반환합니다.
+ */
 fun Path.readAllBytesAsync(): CompletableFuture<ByteArray> {
-    val future = CompletableFuture<ByteArray>()
-
+    val promise = CompletableFuture<ByteArray>()
     val channel = AsynchronousFileChannel.open(this, StandardOpenOption.READ)
-
     val buffer = ByteBuffer.allocateDirect(channel.size().toInt())
-    val handler = object: CompletionHandler<Int?, Void?> {
-        override fun completed(result: Int?, attachment: Void?) {
-            if (result != null) {
-                buffer.flip()
-                future.complete(buffer.getBytes())
-                log.trace { "Read bytearray from file. path=[${this@readAllBytesAsync}], read size=$result" }
+
+    channel.read(buffer, 0).asCompletableFuture()
+        .whenCompleteAsync { result, error ->
+            if (error != null) {
+                channel.closeSafe()
+                promise.completeExceptionally(error)
             } else {
-                future.complete(emptyByteArray)
+                try {
+                    if (result != null) {
+                        buffer.flip()
+                        promise.complete(buffer.getBytes())
+                        log.trace { "Read bytearray from file. path=[${this@readAllBytesAsync}], read size=$result" }
+                    } else {
+                        promise.complete(emptyByteArray)
+                    }
+                } finally {
+                    channel.closeSafe()
+                }
             }
-            channel.closeSafe()
         }
-
-        override fun failed(exc: Throwable?, attachment: Void?) {
-            future.completeExceptionally(exc)
-            channel.closeSafe()
-        }
-    }
-
-    channel.read(buffer, 0, null, handler)
-
-    return future
+    return promise
 }
-
 
 fun File.readLineSequence(cs: Charset = UTF_8): Sequence<String> =
     FileInputStream(this).toLineSequence(cs)
@@ -205,6 +204,13 @@ fun File.writeLines(lines: Collection<String>, append: Boolean = false, cs: Char
     FileUtils.writeLines(this, cs.name(), lines, append)
 }
 
+/**
+ * 지정한 경로[Path]에 [bytes] 내용을 비동기 방식으로 쓰고, 쓰기 완료 후 쓰여진 바이트 수를 반환하는 [CompletableFuture]를 반환합니다.
+ *
+ * @param bytes 파일에 쓸 [ByteArray]
+ * @param append 기존 파일에 추가할 것인가 여부
+ * @return 파일에 쓰여진 바이트 수를 반환하는 [CompletableFuture]
+ */
 fun Path.writeAsync(bytes: ByteArray, append: Boolean = false): CompletableFuture<Long> {
     val promise = CompletableFuture<Long>()
 
@@ -214,26 +220,30 @@ fun Path.writeAsync(bytes: ByteArray, append: Boolean = false): CompletableFutur
     val pos = if (append) channel.size() else 0L
     val content = bytes.toByteBufferDirect()
 
-    // TODO: 이렇게 Callback 방식 이외에 Future 방식 (channel.write(content, pos)) 를 사용하면 Coroutines로 사용할 수 있다.
-    val handler = object: CompletionHandler<Int, ByteBuffer?> {
-        override fun completed(result: Int, attachment: ByteBuffer?) {
-            promise.complete(result.toLong())
-            log.trace { "Write bytearray to file. path=[${this@writeAsync}], written=$result" }
-            channel.closeSafe()
+    channel.write(content, pos).asCompletableFuture()
+        .whenCompleteAsync { result, error ->
+            if (error != null) {
+                channel.closeSafe()
+                promise.completeExceptionally(error)
+            } else {
+                promise.complete(result.toLong())
+                log.trace { "Write bytearray to file. path=[${this@writeAsync}], written size=$result" }
+                channel.closeSafe()
+            }
         }
-
-        override fun failed(exc: Throwable?, attachment: ByteBuffer?) {
-            promise.completeExceptionally(exc)
-            channel.closeSafe()
-        }
-    }
-    channel.write(content, pos, content, handler)
-
     return promise
 }
 
+/**
+ * 지정한 경로[Path]에 [lines] 내용을 비동기 방식으로 쓰고, 쓰기 완료 후 쓰여진 바이트 수를 반환하는 [CompletableFuture]를 반환합니다.
+ *
+ * @param lines 파일에 쓸 라인
+ * @param append 기존 파일에 추가할 것인가 여부
+ * @param cs Charset
+ * @return 파일에 쓰여진 바이트 수를 반환하는 [CompletableFuture]
+ */
 fun Path.writeLinesAsync(
-    lines: Collection<String>,
+    lines: Iterable<String>,
     append: Boolean = false,
     cs: Charset = UTF_8,
 ): CompletableFuture<Long> {
@@ -248,7 +258,7 @@ fun Path.writeLinesAsync(
  * @param bufferSize Int
  * @return BufferedReader
  */
-fun Path.bufferedReader(cs: Charset = UTF_8, bufferSize: Int = DEFAULT_BUFFER_SIZE) =
+fun Path.bufferedReader(cs: Charset = UTF_8, bufferSize: Int = kotlin.io.DEFAULT_BUFFER_SIZE) =
     InputStreamReader(FileInputStream(this.toFile()), cs).buffered(bufferSize)
 
 /**
@@ -258,7 +268,7 @@ fun Path.bufferedReader(cs: Charset = UTF_8, bufferSize: Int = DEFAULT_BUFFER_SI
  * @param bufferSize Int
  * @return BufferedWriter
  */
-fun Path.bufferedWriter(cs: Charset = UTF_8, bufferSize: Int = DEFAULT_BUFFER_SIZE): BufferedWriter =
+fun Path.bufferedWriter(cs: Charset = UTF_8, bufferSize: Int = kotlin.io.DEFAULT_BUFFER_SIZE): BufferedWriter =
     OutputStreamWriter(FileOutputStream(this.toFile()), cs).buffered(bufferSize)
 
 /**

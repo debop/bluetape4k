@@ -5,6 +5,12 @@ import io.bluetape4k.logging.debug
 import kotlinx.atomicfu.atomic
 import java.util.concurrent.ThreadFactory
 
+/**
+ * NamedThreadFactory
+ *
+ * @property prefix   The prefix of thread name
+ * @property isDaemon The daemon flag of thread
+ */
 class NamedThreadFactory private constructor(
     val prefix: String,
     val isDaemon: Boolean,
@@ -25,10 +31,22 @@ class NamedThreadFactory private constructor(
 
     private val threadNumber = atomic(1)
 
+    /**
+     * Create a new thread
+     *
+     * @param body The body of thread
+     * @return The new thread
+     */
     fun newThread(body: () -> Unit): Thread {
         return newThread(Runnable { body() })
     }
 
+    /**
+     * Create a new thread
+     *
+     * @param runnable The runnable
+     * @return The new thread
+     */
     override fun newThread(runnable: Runnable): Thread {
         val threadName = name + "-" + threadNumber.getAndIncrement()
         return Thread(group, runnable, threadName)

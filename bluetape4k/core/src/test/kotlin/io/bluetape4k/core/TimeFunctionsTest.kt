@@ -2,6 +2,8 @@ package io.bluetape4k.core
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import io.bluetape4k.support.asyncRunWithTimeout
+import io.bluetape4k.support.withTimeoutOrNull
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.internal.assertFailsWith
 import org.amshove.kluent.shouldBeEqualTo
@@ -17,11 +19,11 @@ class TimeFunctionsTest {
 
     companion object: KLogging()
 
-    //    @Suppress("UNREACHABLE_CODE")
+    @Suppress("UNREACHABLE_CODE")
     @Test
     fun `함수 실행이 timeout에 걸릴때는 예외를 발생시키는 CompletableFuture 반환한다`() {
         val isWorking = atomic(false)
-        val future = asyncRunWithTimeout(500) {
+        val future = asyncRunWithTimeout(100) {
             var i = 0
             isWorking.value = true
             while (true) {
@@ -29,10 +31,10 @@ class TimeFunctionsTest {
                 log.trace { "Working... $i" }
                 i++
             }
-            //            isWorking.value = false
-            //            "Hello"
+            isWorking.value = false
+            "Hello"
         }
-        Thread.sleep(1000)
+        Thread.sleep(200)
         future.isDone.shouldBeTrue()
         future.isCompletedExceptionally.shouldBeTrue()
 
@@ -45,11 +47,11 @@ class TimeFunctionsTest {
     @Test
     fun `함수 실행이 timeout 에 걸리지 않으면 작업 결과를 반환한다`() {
         val isWorking = atomic(false)
-        val future = asyncRunWithTimeout(500) {
+        val future = asyncRunWithTimeout(100) {
             isWorking.value = true
             var i = 0
             while (i < 2) {
-                Thread.sleep(100)
+                Thread.sleep(10)
                 log.trace { "Working... $i" }
                 i++
             }
@@ -65,22 +67,23 @@ class TimeFunctionsTest {
 
     @Test
     fun `함수 실행이 timeout에 걸릴때는 null을 반환한다`() {
-        val isWorking = atomic(false)
-        val result = withTimeoutOrNull(500) {
+        val workIsStarted = atomic(false)
+        val result = withTimeoutOrNull(100) {
             var i = 0
-            isWorking.value = true
+            workIsStarted.value = true
             while (true) {
-                Thread.sleep(100)
+                Thread.sleep(10)
                 log.trace { "Working... $i" }
                 i++
             }
-//            isWorking.value = false
-//            "Hello"
+            //            workIsStarted.value = false
+            //            "Hello"
         }
+
         result.shouldBeNull()
-        log.trace { "작업 종료: ${isWorking.value}" }
-        // 함수 실행이 계속되는지 확인
-        Thread.sleep(100)
+        workIsStarted.value.shouldBeTrue()
+        Thread.sleep(10)
+        log.trace { "작업 시작 여부: ${workIsStarted.value}" }
     }
 
     @Test

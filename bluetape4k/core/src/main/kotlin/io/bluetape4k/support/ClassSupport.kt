@@ -1,9 +1,6 @@
 package io.bluetape4k.support
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.collections.eclipse.unifiedSetOf
-import io.bluetape4k.core.assertNotBlank
+import org.apache.commons.lang3.ClassUtils
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.jvm.javaMethod
@@ -75,7 +72,7 @@ fun classIsPresent(
  */
 fun Class<*>.findAllSuperTypes(): List<Class<*>> {
     val result = LinkedHashSet<Class<*>>()
-    findAllSuperTypes(fastListOf(this to supertypes()), unifiedSetOf(this), result)
+    findAllSuperTypes(mutableListOf(this to supertypes()), mutableSetOf(this), result)
     return result.toList()
 }
 
@@ -108,10 +105,17 @@ private tailrec fun findAllSuperTypes(
 @Suppress("UNNECESSARY_SAFE_CALL")
 private fun Class<*>.supertypes(): MutableList<Class<*>> =
     when {
-        superclass == null -> interfaces?.toFastList() ?: fastListOf()
-        interfaces.isNullOrEmpty() -> fastListOf(superclass)
-        else -> ArrayList<Class<*>>(interfaces.size + 1).also {
+        superclass == null         -> interfaces?.toMutableList() ?: mutableListOf()
+        interfaces.isNullOrEmpty() -> mutableListOf(superclass)
+        else                       -> ArrayList<Class<*>>(interfaces.size + 1).also {
             interfaces.toCollection(it)
             it.add(superclass)
         }
     }
+
+fun <T> Class<T>.abbrName(lengthHint: Int): String =
+    ClassUtils.getAbbreviatedName(this, lengthHint)
+
+fun <T> Class<T>.getAllInterfaces(): List<Class<*>> = ClassUtils.getAllInterfaces(this)
+
+fun <T> Class<T>.getAllSuperclasses(): List<Class<*>> = ClassUtils.getAllSuperclasses(this)

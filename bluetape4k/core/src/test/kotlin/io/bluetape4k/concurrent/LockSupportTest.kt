@@ -1,6 +1,9 @@
 package io.bluetape4k.concurrent
 
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
+import io.bluetape4k.junit5.concurrency.VirtualthreadTester
+import io.bluetape4k.junit5.coroutines.MultiJobTester
+import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.coroutines.async
@@ -102,6 +105,58 @@ class LockSupportTest {
         MultithreadingTester()
             .numThreads(16)
             .roundsPerThread(2)
+            .add {
+                lock.read {
+                    Thread.sleep(10)
+                    val current = counter
+                    log.trace { "current=$current" }
+                }
+            }
+            .add {
+                lock.write {
+                    Thread.sleep(20)
+                    counter++
+                }
+            }
+            .run()
+
+        counter shouldBeEqualTo 16
+    }
+
+    @Test
+    fun `read and write lock in multi virtual thread`() {
+        val lock = ReentrantReadWriteLock()
+        var counter = 0
+
+        VirtualthreadTester()
+            .numThreads(16)
+            .roundsPerThread(2)
+            .add {
+                lock.read {
+                    Thread.sleep(10)
+                    val current = counter
+                    log.trace { "current=$current" }
+                }
+            }
+            .add {
+                lock.write {
+                    Thread.sleep(20)
+                    counter++
+                }
+            }
+            .run()
+
+        counter shouldBeEqualTo 16
+    }
+
+    @Test
+    fun `read and write lock in multi jobs`() = runSuspendTest {
+        val lock = ReentrantReadWriteLock()
+        var counter = 0
+
+        MultiJobTester()
+            .numJobs(16)
+            .roundsPerJob(2)
             .add {
                 lock.read {
                     Thread.sleep(10)

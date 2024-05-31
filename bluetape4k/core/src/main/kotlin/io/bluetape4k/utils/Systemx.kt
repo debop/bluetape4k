@@ -62,9 +62,11 @@ object Systemx {
     @JvmStatic
     val JavaImplementationVendor: String? by unsafeLazy { RuntimePackage.implementationVendor }
 
+    /** JVM 구현 벤더 URL */
     @JvmStatic
     val JavaClassVersion: String? by unsafeLazy { System.getProperty(JAVA_CLASS_VERION) }
 
+    /** JVM 라이브러리 경로 */
     @JvmStatic
     val JavaLibraryPath: String? by unsafeLazy { System.getProperty("java.library.path") }
 
@@ -117,8 +119,11 @@ object Systemx {
     @JvmStatic
     val UserDir: String? by unsafeLazy { System.getProperty(USER_DIR) }
 
+    /** 사용자 언어 */
     @JvmStatic
-    val UserCountry: String? by unsafeLazy { System.getProperty("user.country") ?: System.getProperty("user.region") }
+    val UserCountry: String? by unsafeLazy {
+        System.getProperty("user.country") ?: System.getProperty("user.region")
+    }
 
     @JvmStatic
     val TempDir: String? by unsafeLazy { System.getProperty(TEMP_DIR) }
@@ -144,8 +149,34 @@ object Systemx {
     @JvmStatic
     val isUnix: Boolean by unsafeLazy {
         OSName?.contains("nix") ?: false ||
-            OSName?.contains("nux") ?: false ||
-            OSName?.contains("aix") ?: false
+                OSName?.contains("nux") ?: false ||
+                OSName?.contains("aix") ?: false
     }
 
+
+    /**
+     * 지정한 키[name]에 해당하는 시스템 속성 정보를 가져옵니다. 없다면 null 을 반환합니다.
+     *
+     * @param name 시스템 속성 key
+     * @return 시스템 속성 값
+     */
+    @JvmStatic
+    fun getProp(name: String): String? = System.getProperty(name)
+
+    /**
+     * 환경설정 키[name]에 해당하는 값을 가져옵니다. 없다면 null 을 반환합니다.
+     *
+     * @param name 환경설정 Key
+     * @return 환경설정 값
+     */
+    @JvmStatic
+    fun getenv(name: String): String? = System.getenv(name)
+
+    /**
+     * 모든 환경설정 정보를 가져옵니다.
+     *
+     * @return 환경설정 정보
+     */
+    @JvmStatic
+    fun getenv(): Map<String, String> = System.getenv()
 }

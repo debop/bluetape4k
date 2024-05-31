@@ -174,7 +174,7 @@ fun <T: Number> Number.toTargetClass(targetClass: KClass<T>): T {
         else              ->
             throw IllegalArgumentException(
                 "Could not convert number[$this] of type[${this::class.java.simpleName}] " +
-                    "to unsupported target class [${targetClass.simpleName}]"
+                        "to unsupported target class [${targetClass.simpleName}]"
             )
     }
 }
@@ -196,6 +196,6 @@ private fun Number.checkedLongValue(targetClass: KClass<out Number>): Long {
 private fun raiseOverflowException(number: Number, targetClass: KClass<*>) {
     throw IllegalArgumentException(
         "Could not convert number[$number] of type [${number::class.java.simpleName}] " +
-            "to target class [${targetClass.qualifiedName}]: overflow"
+                "to target class [${targetClass.qualifiedName}]: overflow"
     )
 }

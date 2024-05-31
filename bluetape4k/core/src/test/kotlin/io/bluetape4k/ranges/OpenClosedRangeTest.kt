@@ -1,7 +1,6 @@
 package io.bluetape4k.ranges
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.ranges.impl.DefaultOpenClosedRange
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue

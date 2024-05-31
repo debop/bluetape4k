@@ -5,12 +5,12 @@ import io.bluetape4k.io.http.hc5.AbstractHc5Test
 import io.bluetape4k.io.http.hc5.async.minimalHttpAsyncClientOf
 import io.bluetape4k.io.http.hc5.http.ContentTypes
 import io.bluetape4k.io.http.hc5.http.basicRequestProducerOf
-import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.toUtf8ByteBuffer
 import io.bluetape4k.support.toUtf8String
+import io.bluetape4k.utils.Resourcex
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactor.asFlux

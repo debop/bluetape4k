@@ -10,6 +10,7 @@ import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
+import kotlin.random.Random
 
 @RandomizedTest
 abstract class AbstractStringEncoderTest {
@@ -53,7 +54,7 @@ abstract class AbstractStringEncoderTest {
 
     @Test
     fun `encode decode in multi-thread`() {
-        val bytes = TestBytes.randomBytes(4096)
+        val bytes = Random.nextBytes(4096)
 
         MultithreadingTester()
             .numThreads(16)

@@ -10,12 +10,12 @@ class NamedThreadFactoryTest {
 
     @Test
     fun `create named thread`() {
-        val factory = NamedThreadFactory("bluetape4k")
+        val factory = NamedThreadFactory("kommons")
 
         val thread1 = factory.newThread { Thread.sleep(100) }
-        thread1.name shouldBeEqualTo "bluetape4k-1"
+        thread1.name shouldBeEqualTo "kommons-1"
 
         val thread2 = factory.newThread { Thread.sleep(100) }
-        thread2.name shouldBeEqualTo "bluetape4k-2"
+        thread2.name shouldBeEqualTo "kommons-2"
     }
 }

@@ -11,13 +11,13 @@ import java.util.concurrent.TimeUnit
 import java.util.function.BiConsumer
 
 @Suppress("UNCHECKED_CAST")
-fun <T> Future<T>.asCompletionStage(): CompletionStage<T> = when (this) {
-    is CompletionStage<*> -> this as CompletionStage<T>
+fun <T> Future<T>.asCompletionStage(): CompletionStage<T> = when (this@asCompletionStage) {
+    is CompletionStage<*> -> this@asCompletionStage as CompletionStage<T>
     else                  -> FutureToCompletableFutureWrapper(this)
 }
 
-fun <T> Future<T>.asCompletableFuture(): CompletableFuture<T> = when (this) {
-    is CompletableFuture<*> -> this as CompletableFuture<T>
+fun <T> Future<T>.asCompletableFuture(): CompletableFuture<T> = when (this@asCompletableFuture) {
+    is CompletableFuture<*> -> this@asCompletableFuture as CompletableFuture<T>
     else                    -> FutureToCompletableFutureWrapper(this)
 }
 

@@ -1,6 +1,6 @@
 package io.bluetape4k.workshop.redis.examples.commands
 
-import io.bluetape4k.collections.stream.toFastList
+import io.bluetape4k.collections.toFastList
 import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.coroutines.support.asFlow
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
@@ -21,10 +21,10 @@ import org.springframework.data.redis.core.ScanOptions
 import org.springframework.data.redis.serializer.StringRedisSerializer
 
 class KeyOperationsTest(
-    @Autowired private val connectionFactory: RedisConnectionFactory
-) : AbstractRedisTest() {
+    @Autowired private val connectionFactory: RedisConnectionFactory,
+): AbstractRedisTest() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private val PREFIX: String = KeyOperationsTest::class.simpleName!!
         private val KEY_PATTERN = "$PREFIX*"
         private const val KEY_SIZE = 5000

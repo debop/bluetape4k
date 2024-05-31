@@ -1,12 +1,12 @@
 package io.bluetape4k.io
 
-import io.bluetape4k.core.assertZeroOrPositiveNumber
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.assertZeroOrPositiveNumber
 import java.io.OutputStream
 import java.nio.ByteBuffer
 
 /**
- * [ByteBuffer]를 저장소로 사용하는 [OutputStream] 구현체입니다.
+ * [[java.nio.ByteBuffer]]를 저장소로 사용하는 [OutputStream] 구현체입니다.
  */
 open class ByteBufferOutputStream private constructor(
     private val buffer: ByteBuffer,
@@ -14,7 +14,7 @@ open class ByteBufferOutputStream private constructor(
 
     companion object: KLogging() {
         @JvmStatic
-        operator fun invoke(capacity: Int = DEFAULT_BUFFER_SIZE): ByteBufferOutputStream {
+        operator fun invoke(capacity: Int = kotlin.io.DEFAULT_BUFFER_SIZE): ByteBufferOutputStream {
             return ByteBufferOutputStream(ByteBuffer.allocateDirect(capacity))
         }
 
@@ -29,7 +29,7 @@ open class ByteBufferOutputStream private constructor(
         }
 
         @JvmStatic
-        fun direct(capacity: Int = DEFAULT_BUFFER_SIZE): ByteBufferOutputStream {
+        fun direct(capacity: Int = kotlin.io.DEFAULT_BUFFER_SIZE): ByteBufferOutputStream {
             return ByteBufferOutputStream(ByteBuffer.allocateDirect(capacity))
         }
 

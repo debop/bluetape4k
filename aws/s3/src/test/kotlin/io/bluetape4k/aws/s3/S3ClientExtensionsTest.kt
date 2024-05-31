@@ -1,10 +1,10 @@
 package io.bluetape4k.aws.s3
 
 import io.bluetape4k.io.deleteIfExists
-import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.toUtf8String
+import io.bluetape4k.utils.Resourcex
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull

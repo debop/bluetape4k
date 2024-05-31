@@ -1,5 +1,6 @@
 package io.bluetape4k.io.serializer
 
+import io.bluetape4k.io.ApacheByteArrayOutputStream
 import io.bluetape4k.logging.KLogging
 import org.jboss.marshalling.InputStreamByteInput
 import org.jboss.marshalling.MarshallerFactory
@@ -7,7 +8,6 @@ import org.jboss.marshalling.Marshalling
 import org.jboss.marshalling.MarshallingConfiguration
 import org.jboss.marshalling.OutputStreamByteOutput
 import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.util.*
 
 /**
@@ -29,11 +29,12 @@ class MarshallingSerializer private constructor(
     companion object: KLogging() {
 
         @JvmField
-        val DefaultMarshallingConfiguration = MarshallingConfiguration().apply {
-            instanceCount = 256
-            classCount = 64
-            bufferSize = 1024
-        }
+        val DefaultMarshallingConfiguration = MarshallingConfiguration()
+            .apply {
+                instanceCount = 256
+                classCount = 64
+                bufferSize = 1024
+            }
 
         @JvmStatic
         operator fun invoke(
@@ -52,7 +53,7 @@ class MarshallingSerializer private constructor(
 
     override fun doSerialize(graph: Any): ByteArray {
         return factory.createMarshaller(configuration).use { marshaller ->
-            ByteArrayOutputStream(bufferSize).use { bos ->
+            ApacheByteArrayOutputStream(bufferSize).use { bos ->
                 OutputStreamByteOutput(bos).use { osbo ->
                     marshaller.start(osbo)
                     marshaller.writeObject(graph)

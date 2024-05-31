@@ -28,3 +28,11 @@ fun LongArray.toUUID(): UUID {
     require(this.size >= 2) { "UUID need 2 long value" }
     return UUID(this[0], this[1])
 }
+
+private val UUID_REGEX =
+    "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\$".toRegex()
+
+/**
+ * 문자열이 UUID 형식인지 판단합니다.
+ */
+fun String.isUuid(): Boolean = UUID_REGEX.matches(this)

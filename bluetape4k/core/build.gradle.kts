@@ -34,7 +34,6 @@ dependencies {
 
     // Coroutines
     api(Libs.kotlinx_coroutines_core)
-    api(Libs.kotlinx_coroutines_jdk8)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // Eclipse Collections
@@ -61,6 +60,7 @@ dependencies {
     compileOnly(Libs.marshalling)
     compileOnly(Libs.marshalling_river)
     compileOnly(Libs.marshalling_serial)
+    compileOnly(Libs.fury)                  // NOTE: Fury 가 빠르긴 하지만 BigDecimal, BigInteger 등의 타입을 지원하지 않는다
 
     // Apple M1
     compileOnly(Libs.jna_platform)

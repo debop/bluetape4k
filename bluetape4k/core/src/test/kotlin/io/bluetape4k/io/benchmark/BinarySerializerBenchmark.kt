@@ -5,19 +5,20 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.bluetape4k.io.serializer.BinarySerializers
 import io.github.benas.randombeans.EnhancedRandomBuilder
 import io.github.benas.randombeans.api.EnhancedRandom
-import org.openjdk.jmh.annotations.Benchmark
-import org.openjdk.jmh.annotations.Fork
-import org.openjdk.jmh.annotations.Measurement
-import org.openjdk.jmh.annotations.Scope
-import org.openjdk.jmh.annotations.Setup
-import org.openjdk.jmh.annotations.State
-import org.openjdk.jmh.annotations.Warmup
+import kotlinx.benchmark.Benchmark
+import kotlinx.benchmark.BenchmarkMode
+import kotlinx.benchmark.Measurement
+import kotlinx.benchmark.Mode
+import kotlinx.benchmark.Scope
+import kotlinx.benchmark.Setup
+import kotlinx.benchmark.State
+import kotlinx.benchmark.Warmup
 import java.io.Serializable
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Benchmark)
-@Fork(1)
+@BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 3)
 @Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.NANOSECONDS)
 class BinarySerializerBenchmark {
@@ -25,6 +26,7 @@ class BinarySerializerBenchmark {
     private val jdk = BinarySerializers.Jdk
     private val kryo = BinarySerializers.Kryo
     private val marshalling = BinarySerializers.Marshalling
+    private val fury = BinarySerializers.Fury
     private val jsonMapper = jacksonObjectMapper()
 
     data class SimpleData(
@@ -72,6 +74,13 @@ class BinarySerializerBenchmark {
     @Benchmark
     fun marshalling() {
         with(marshalling) {
+            deserialize<List<SimpleData>>(serialize(targets))
+        }
+    }
+
+    @Benchmark
+    fun fury() {
+        with(fury) {
             deserialize<List<SimpleData>>(serialize(targets))
         }
     }

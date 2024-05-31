@@ -3,18 +3,19 @@ package io.bluetape4k.io.benchmark
 import com.github.luben.zstd.Zstd
 import io.bluetape4k.io.compressor.Compressors
 import io.bluetape4k.io.compressor.ZstdCompressor
-import io.bluetape4k.io.utils.Resourcex
-import org.openjdk.jmh.annotations.Benchmark
-import org.openjdk.jmh.annotations.Fork
-import org.openjdk.jmh.annotations.Measurement
-import org.openjdk.jmh.annotations.Scope
-import org.openjdk.jmh.annotations.Setup
-import org.openjdk.jmh.annotations.State
-import org.openjdk.jmh.annotations.Warmup
+import io.bluetape4k.utils.Resourcex
+import kotlinx.benchmark.Benchmark
+import kotlinx.benchmark.BenchmarkMode
+import kotlinx.benchmark.Measurement
+import kotlinx.benchmark.Mode
+import kotlinx.benchmark.Scope
+import kotlinx.benchmark.Setup
+import kotlinx.benchmark.State
+import kotlinx.benchmark.Warmup
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Benchmark)
-@Fork(1)
+@BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 3)
 @Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.NANOSECONDS)
 class CompressBenchmark {

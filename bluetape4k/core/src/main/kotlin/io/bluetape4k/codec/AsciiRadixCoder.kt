@@ -1,7 +1,7 @@
 package io.bluetape4k.codec
 
-import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.requireNotBlank
 
 class AsciiRadixCoder private constructor(
     private val alphabet: String,

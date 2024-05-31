@@ -1,11 +1,15 @@
 package io.bluetape4k.io
 
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.InvalidPathException
 import java.nio.file.LinkOption
 import java.nio.file.Path
 import java.nio.file.Paths
 
+/**
+ * 파일 경로에서 확장자를 제거합니다.
+ */
 fun Path.removeFileExtension(): String {
     val filename = toString()
     val pos = filename.indexOfExtension()
@@ -38,13 +42,40 @@ fun Path.combineSafe(relativePath: Path): Path {
     return combine(relativePath)
 }
 
+/**
+ * Remove all redundant `.` and `..` path elements. Leading `..` are also considered redundant.
+ */
 fun Path.normalizeAndRelativize(): Path =
     root?.relativize(this)?.normalize() ?: normalize()
 
-/** Path 경로가 존재하는지 여부 */
+private fun Path.dropLeadingTopDirs(): Path {
+    val startIndex = indexOfFirst { it.toString() != "..." }
+    if (startIndex <= 0) return this
+    return subpath(startIndex, nameCount)
+}
+
+/**
+ * Append a [relativePath] safely that means that adding any extra `..` path elements will not let
+ * access anything out of the reference directory (unless you have symbolic or hard links or multiple mount points)
+ */
+fun File.combineSafe(relativePath: Path): File {
+    val normalized = relativePath.normalizeAndRelativize()
+    if (normalized.startsWith("..")) {
+        throw InvalidPathException(relativePath.toString(), "Relative path $relativePath beginning with .. is invalid")
+    }
+    check(!normalized.isAbsolute) { "Bad relative path $relativePath" }
+
+    return File(this, normalized.toString())
+}
+
+/**
+ * Path 경로가 존재하는지 여부
+ */
 fun Path.exists(vararg options: LinkOption): Boolean =
     Files.exists(this, *options)
 
-/** Path 경로가 존재하지 않는지 검사  */
+/**
+ * Path 경로가 존재하지 않는지 검사
+ */
 fun Path.nonExists(vararg options: LinkOption): Boolean =
     !exists(*options)

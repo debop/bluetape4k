@@ -2,10 +2,10 @@ package io.bluetape4k.io.csv.coroutines
 
 import com.univocity.parsers.common.record.Record
 import io.bluetape4k.io.csv.model.ProductType
-import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import io.bluetape4k.utils.Resourcex
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.buffer
 import org.amshove.kluent.shouldBeGreaterThan

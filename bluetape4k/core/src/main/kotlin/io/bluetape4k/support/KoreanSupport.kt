@@ -1,31 +1,33 @@
 package io.bluetape4k.support
 
-import io.bluetape4k.collections.eclipse.primitives.charArrayListOf
-
-private val CHO_SUNG: IntArray =
+// @formatter:off
+private val CHO_SUNG: IntArray by lazy {
     intArrayOf(
         0x3131, 0x3132, 0x3134, 0x3137, 0x3138, 0x3139,
         0x3141, 0x3142, 0x3143, 0x3145, 0x3146, 0x3147, 0x3148, 0x3149,
         0x314a, 0x314b, 0x314c, 0x314d, 0x314e
     )
+}
 
-
-private val JUNG_SUNG: IntArray =
+private val JUNG_SUNG: IntArray by lazy {
     intArrayOf(
         0x314f, 0x3150, 0x3151, 0x3152,
         0x3153, 0x3154, 0x3155, 0x3156, 0x3157, 0x3158, 0x3159,
         0x315a, 0x315b, 0x315c, 0x315d, 0x315e, 0x315f, 0x3160, 0x3161, 0x3162, 0x3163
     )
+}
 
-private val JONG_SUNG: IntArray =
+private val JONG_SUNG: IntArray by lazy {
     intArrayOf(
         0x0000, 0x3131, 0x3132, 0x3133, 0x3134, 0x3135,
         0x3136, 0x3137, 0x3139, 0x313a, 0x313b, 0x313c, 0x313d, 0x313e,
         0x313f, 0x3140, 0x3141, 0x3142, 0x3144, 0x3145, 0x3146,
         0x3147, 0x3148, 0x314a, 0x314b, 0x314c, 0x314d, 0x314e
     )
+}
+// @formatter:on
 
-private val KOREAN_RANGE = (0xAC00..0xD7AF)
+val KOREAN_RANGE = (0xAC00..0xD7AF)
 
 
 /**
@@ -49,7 +51,10 @@ fun String.containKorean(): Boolean {
 
 /**
  * 문자열 내에서 할글 자소를 분해하여 초/중/종성 으로 제공합니다.
+ *
+ * ```
  * 예: 한국 -> ㅎㅏㄴㄱㅜㄱ
+ * ```
  */
 fun String.getJasoLetter(): String {
     if (this.isBlank())
@@ -76,13 +81,16 @@ fun String.getJasoLetter(): String {
 
 /**
  * 문자열의 초성만 추출합니다.
+ *
+ * ```
  * 예: 대한민국 -> ㄷㅎㅁㄱ
+ * ```
  */
 fun String.getChosung(): CharArray {
     if (this.isBlank())
         return charArrayOf()
 
-    val chosungs = charArrayListOf()
+    val chosungs = mutableListOf<Char>()
 
     repeat(length) { i ->
         val char = this[i].code
@@ -91,7 +99,7 @@ fun String.getChosung(): CharArray {
             chosungs.add(CHO_SUNG[choIndex].toChar())
         }
     }
-    return chosungs.toArray()
+    return chosungs.toCharArray()
 }
 
 private fun Int.getIndexes(): Triple<Int, Int, Int> {

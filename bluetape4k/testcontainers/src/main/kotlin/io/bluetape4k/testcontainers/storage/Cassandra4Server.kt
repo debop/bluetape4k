@@ -7,7 +7,6 @@ import com.datastax.oss.driver.api.querybuilder.SchemaBuilder
 import com.github.dockerjava.api.command.InspectContainerResponse
 import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.exceptions.BluetapeException
-import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
@@ -17,6 +16,7 @@ import io.bluetape4k.support.EMPTY_STRING
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
+import io.bluetape4k.utils.Resourcex
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.utility.DockerImageName

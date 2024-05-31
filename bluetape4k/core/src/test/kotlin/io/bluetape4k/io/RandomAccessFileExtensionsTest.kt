@@ -1,7 +1,7 @@
 package io.bluetape4k.io
 
-import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.utils.Resourcex
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
 import java.io.File

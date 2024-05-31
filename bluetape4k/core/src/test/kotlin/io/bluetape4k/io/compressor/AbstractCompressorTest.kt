@@ -26,7 +26,7 @@ abstract class AbstractCompressorTest {
         init {
             // Snappy 는 이렇게 한 번 초기화 해주어야 제대로 성능을 알 수 있다.
             Snappy.cleanUp()
-            val compressed = Snappy.compress("bluetape4k")
+            val compressed = Snappy.compress("kommons")
             Snappy.uncompress(compressed)
         }
 

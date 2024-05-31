@@ -26,7 +26,9 @@ fun <T: Any> Class<T>.findPrimaryConstructor(): Constructor<T>? =
 fun <T: Any> Constructor<T>.instantiateClass(vararg args: Any?): T? =
     KotlinDelegates.instantiateClass(this, *args)
 
-
+/**
+ * Kotlin Reflection을 이용하여 타입의 생성자를 찾거나 인스턴스를 생성하는 유틸리티 클래스
+ */
 object KotlinDelegates: KLogging() {
 
     /**

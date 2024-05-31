@@ -15,7 +15,7 @@ import io.bluetape4k.io.feign.codec.JacksonEncoder2
 import io.bluetape4k.io.feign.coroutines.client
 import io.bluetape4k.io.feign.coroutines.coroutineFeignBuilder
 import io.bluetape4k.io.feign.feignBuilder
-import io.bluetape4k.io.utils.Resourcex
+import io.bluetape4k.utils.Resourcex
 
 /**
  * Microsoft Bing Map Service

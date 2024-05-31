@@ -4,6 +4,7 @@ import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
@@ -53,7 +54,9 @@ class Base62Test {
         val expectes = List(10) { UUID.randomUUID() }
         expectes.forEach { expected ->
             expected.encodeBase62().decodeBase62AsUuid() shouldBeEqualTo expected
-            Url62.decode(Url62.encode(expected)) shouldBeEqualTo expected
+            val encoded = Url62.encode(expected)
+            Url62.decode(encoded) shouldBeEqualTo expected
+            log.debug { "expected=$expected, encoded=$encoded" }
         }
     }
 

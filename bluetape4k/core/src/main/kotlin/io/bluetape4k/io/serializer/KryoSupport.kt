@@ -82,6 +82,9 @@ suspend inline fun <T: Any> withKryoSuspending(
     }
 }
 
+/**
+ * Kryo 를 이용한 함수를 제공합니다.
+ */
 object Kryox: KLogging() {
 
     private val kryoPool by lazy {
@@ -102,6 +105,9 @@ object Kryox: KLogging() {
         }
     }
 
+    /**
+     * 새로운 [Kryo] 인스턴스를 생성합니다.
+     */
     fun createKryo(classLoader: ClassLoader? = null): Kryo {
         log.info { "Create new Kryo instance..." }
 
@@ -113,9 +119,10 @@ object Kryox: KLogging() {
             addDefaultSerializer(Throwable::class.java, JavaSerializer())
 
             // no-arg constructor 가 없더라도 deserialize 가 가능하도록
-            // kryo 5.x
+            // for kryo 5.x
             instantiatorStrategy = DefaultInstantiatorStrategy(StdInstantiatorStrategy())
-            // kryo 4.x
+
+            // for kryo 4.x
             // instantiatorStrategy = Kryo.DefaultInstantiatorStrategy(StdInstantiatorStrategy())
 
             // schema evolution 시 오류를 줄일 수 있다.
@@ -128,8 +135,13 @@ object Kryox: KLogging() {
         }
     }
 
+    /**
+     * [Kryo] Pool 에서 [Kryo]를 획득한다
+     */
     fun obtainKryo(): Kryo = kryoPool.obtain()
+
     fun obtainInput(): Input = inputPool.obtain()
+
     fun obtainOutput(): Output = outputPool.obtain()
 
     fun Kryo.release() {

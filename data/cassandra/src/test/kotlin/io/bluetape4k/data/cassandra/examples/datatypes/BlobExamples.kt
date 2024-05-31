@@ -7,9 +7,9 @@ import io.bluetape4k.data.cassandra.data.getMap
 import io.bluetape4k.io.erase
 import io.bluetape4k.io.getBytes
 import io.bluetape4k.io.toByteBuffer
-import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.utils.Resourcex
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull

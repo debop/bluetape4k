@@ -1,6 +1,5 @@
 package io.bluetape4k.collections
 
-import io.bluetape4k.core.requireLe
 import io.bluetape4k.support.asByte
 import io.bluetape4k.support.asChar
 import io.bluetape4k.support.asDouble
@@ -8,12 +7,29 @@ import io.bluetape4k.support.asFloat
 import io.bluetape4k.support.asInt
 import io.bluetape4k.support.asLong
 import io.bluetape4k.support.asString
+import io.bluetape4k.support.requireLe
 
+/**
+ * [start] 부터 [endInclusive] 까지의 [Char] 시퀀스를 생성합니다.
+ *
+ * @param start 시작 문자
+ * @param endInclusive 종료 문자
+ * @param step 증가 값
+ * @return
+ */
 fun charSequenceOf(start: Char, endInclusive: Char, step: Int = 1): Sequence<Char> {
     start.requireLe(endInclusive, "start")
     return CharProgression.fromClosedRange(start, endInclusive, step).asSequence()
 }
 
+/**
+ * [start] 부터 [endInclusive] 까지의 [Byte] 시퀀스를 생성합니다.
+ *
+ * @param start 시작 바이트
+ * @param endInclusive 종료 바이트
+ * @param step 증가 값
+ * @return
+ */
 fun byteSequenceOf(start: Byte, endInclusive: Byte, step: Byte = 1): Sequence<Byte> = sequence {
     start.requireLe(endInclusive, "start")
 
@@ -26,11 +42,13 @@ fun byteSequenceOf(start: Byte, endInclusive: Byte, step: Byte = 1): Sequence<By
 
 fun intSequenceOf(start: Int, endInclusive: Int, step: Int = 1): Sequence<Int> {
     start.requireLe(endInclusive, "start")
+
     return IntProgression.fromClosedRange(start, endInclusive, step).asSequence()
 }
 
 fun longSequenceOf(start: Long, endInclusive: Long, step: Long = 1L): Sequence<Long> {
     start.requireLe(endInclusive, "start")
+
     return LongProgression.fromClosedRange(start, endInclusive, step).asSequence()
 }
 
@@ -46,6 +64,7 @@ fun floatSequenceOf(start: Float, endInclusive: Float, step: Float = 1.0F): Sequ
 
 fun doubleSequenceOf(start: Double, endInclusive: Double, step: Double = 1.0): Sequence<Double> = sequence {
     start.requireLe(endInclusive, "start")
+
     var current = start
     while (current <= endInclusive) {
         yield(current)
@@ -61,29 +80,22 @@ fun Sequence<Long>.toLongArray(): LongArray = toList().toLongArray()
 fun Sequence<Float>.toFloatArray(): FloatArray = toList().toFloatArray()
 fun Sequence<Double>.toDoubleArray(): DoubleArray = toList().toDoubleArray()
 
-fun Sequence<*>.asCharArray(dv: Char = '\u0000'): CharArray =
-    map { it.asChar(dv) }.toCharArray()
+fun Sequence<*>.asCharArray(dv: Char = '\u0000'): CharArray = map { it.asChar(dv) }.toCharArray()
 
-fun Sequence<*>.asByteArray(fallback: Byte = 0): ByteArray =
-    map { it.asByte(fallback) }.toByteArray()
+fun Sequence<*>.asByteArray(fallback: Byte = 0): ByteArray = map { it.asByte(fallback) }.toByteArray()
 
-fun Sequence<*>.asIntArray(fallback: Int = 0): IntArray =
-    map { it.asInt(fallback) }.toIntArray()
+fun Sequence<*>.asIntArray(fallback: Int = 0): IntArray = map { it.asInt(fallback) }.toIntArray()
 
-fun Sequence<*>.asLongArray(fallback: Long = 0): LongArray =
-    map { it.asLong(fallback) }.toLongArray()
+fun Sequence<*>.asLongArray(fallback: Long = 0): LongArray = map { it.asLong(fallback) }.toLongArray()
 
-fun Sequence<*>.asFloatArray(fallback: Float = 0.0F): FloatArray =
-    map { it.asFloat(fallback) }.toFloatArray()
+fun Sequence<*>.asFloatArray(fallback: Float = 0.0F): FloatArray = map { it.asFloat(fallback) }.toFloatArray()
 
-fun Sequence<*>.asDoubleArray(fallback: Double = 0.0): DoubleArray =
-    map { it.asDouble(fallback) }.toDoubleArray()
+fun Sequence<*>.asDoubleArray(fallback: Double = 0.0): DoubleArray = map { it.asDouble(fallback) }.toDoubleArray()
 
 fun Sequence<*>.asStringArray(fallback: String = ""): Array<String> =
     map { it.asString(fallback) }.toList().toTypedArray()
 
-inline fun <reified T: Any> Sequence<*>.asArray(): Array<T?> =
-    map { it as? T }.toList().toTypedArray()
+inline fun <reified T: Any> Sequence<*>.asArray(): Array<T?> = map { it as? T }.toList().toTypedArray()
 
 
 /**
@@ -136,5 +148,4 @@ inline fun <T, R> Sequence<T>.sliding(
     size: Int,
     partialWindows: Boolean = true,
     crossinline transform: (List<T>) -> R,
-): Sequence<R> =
-    windowed(size, 1, partialWindows) { transform(it) }
+): Sequence<R> = windowed(size, 1, partialWindows) { transform(it) }

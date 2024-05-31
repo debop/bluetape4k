@@ -1,10 +1,10 @@
 package io.bluetape4k.utils.idgenerators.snowflake
 
+import io.bluetape4k.collections.asParallelStream
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.primitives.longArrayList
 import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.collections.stream.asParallelStream
-import io.bluetape4k.collections.stream.toFastList
+import io.bluetape4k.collections.toFastList
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging

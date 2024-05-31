@@ -2,8 +2,8 @@ package io.bluetape4k.io.http.hc5.examples
 
 import io.bluetape4k.io.http.hc5.AbstractHc5Test
 import io.bluetape4k.io.http.hc5.entity.consume
-import io.bluetape4k.io.utils.Resourcex
 import io.bluetape4k.logging.debug
+import io.bluetape4k.utils.Resourcex
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.apache.hc.client5.http.classic.methods.HttpPost

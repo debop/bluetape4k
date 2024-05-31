@@ -46,7 +46,7 @@ object Networkx: KLogging() {
                 else addr[0] == 192.toByte() && addr[1] == 168.toByte()
             }
 
-            else -> false
+            else            -> false
         }
     }
 
@@ -108,12 +108,12 @@ object Networkx: KLogging() {
             is Inet4Address -> {
                 val addr = inetAddress.address
                 return ((addr[0].toInt() and 0xFF) shl 24) or
-                    ((addr[1].toInt() and 0xFF) shl 16) or
-                    ((addr[2].toInt() and 0xFF) shl 8) or
-                    (addr[3].toInt() and 0xFF)
+                        ((addr[1].toInt() and 0xFF) shl 16) or
+                        ((addr[2].toInt() and 0xFF) shl 8) or
+                        (addr[3].toInt() and 0xFF)
             }
 
-            else ->
+            else            ->
                 throw IllegalArgumentException("non-Inet4Address cannot be converted to an Int")
         }
     }

@@ -3,7 +3,6 @@ package io.bluetape4k.io.compressor
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 
-
 class CompressorTest {
 
     @Nested

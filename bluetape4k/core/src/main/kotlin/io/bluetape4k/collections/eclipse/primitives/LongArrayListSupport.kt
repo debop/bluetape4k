@@ -2,7 +2,7 @@ package io.bluetape4k.collections.eclipse.primitives
 
 import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet
-import io.bluetape4k.core.assertZeroOrPositiveNumber
+import io.bluetape4k.support.assertZeroOrPositiveNumber
 import org.eclipse.collections.api.LongIterable
 import org.eclipse.collections.impl.list.mutable.FastList
 import org.eclipse.collections.impl.list.mutable.primitive.LongArrayList

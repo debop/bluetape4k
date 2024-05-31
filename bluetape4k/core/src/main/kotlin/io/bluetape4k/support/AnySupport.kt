@@ -33,6 +33,9 @@ fun Any.unwrapOptional(): Any? {
     return this
 }
 
+/**
+ * 객체가 [Array] 수형인지 확인합니다.
+ */
 val Any.isArray: Boolean get() = this.javaClass.isArray
 
 /**
@@ -125,15 +128,15 @@ fun <T: Any> T?.hashCodeSafe(): Int {
     }
     if (this.isArray) {
         when (this) {
-            is Array<*>     -> Arrays.hashCode(this)
-            is BooleanArray -> Arrays.hashCode(this)
-            is ByteArray    -> Arrays.hashCode(this)
-            is CharArray    -> Arrays.hashCode(this)
-            is DoubleArray  -> Arrays.hashCode(this)
-            is FloatArray   -> Arrays.hashCode(this)
-            is IntArray     -> Arrays.hashCode(this)
-            is LongArray    -> Arrays.hashCode(this)
-            is ShortArray   -> Arrays.hashCode(this)
+            is Array<*>     -> this.contentHashCode()
+            is BooleanArray -> this.contentHashCode()
+            is ByteArray    -> this.contentHashCode()
+            is CharArray    -> this.contentHashCode()
+            is DoubleArray  -> this.contentHashCode()
+            is FloatArray   -> this.contentHashCode()
+            is IntArray     -> this.contentHashCode()
+            is LongArray    -> this.contentHashCode()
+            is ShortArray   -> this.contentHashCode()
             else            -> Objects.hash(this)
         }
     }

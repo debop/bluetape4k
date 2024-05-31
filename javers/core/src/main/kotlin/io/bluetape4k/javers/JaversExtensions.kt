@@ -1,6 +1,6 @@
 package io.bluetape4k.javers
 
-import io.bluetape4k.collections.stream.asSequence
+import io.bluetape4k.collections.asSequence
 import org.javers.core.Javers
 import org.javers.core.diff.Diff
 import org.javers.core.metamodel.`object`.CdoSnapshot

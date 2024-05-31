@@ -31,20 +31,20 @@ class LocaleSupportTest {
 
     @Test
     fun `get parent locale`() {
-        Locale.KOREA.parent shouldBeEqualTo Locale.KOREAN
-        Locale.KOREAN.parent.shouldBeNull()
+        Locale.KOREA.getParentOrNull() shouldBeEqualTo Locale.KOREAN
+        Locale.KOREAN.getParentOrNull().shouldBeNull()
 
-        Locale.US.parent shouldBeEqualTo Locale.ENGLISH
-        Locale.UK.parent shouldBeEqualTo Locale.ENGLISH
+        Locale.US.getParentOrNull() shouldBeEqualTo Locale.ENGLISH
+        Locale.UK.getParentOrNull() shouldBeEqualTo Locale.ENGLISH
     }
 
     @Test
     fun `get all parents`() {
-        Locale.KOREA.parents shouldBeEqualTo listOf(Locale.KOREA, Locale.KOREAN)
-        Locale.KOREAN.parents shouldContain Locale.KOREAN
+        Locale.KOREA.getParentList() shouldBeEqualTo listOf(Locale.KOREA, Locale.KOREAN)
+        Locale.KOREAN.getParentList() shouldContain Locale.KOREAN
 
-        Locale.US.parents shouldBeEqualTo listOf(Locale.US, Locale.ENGLISH)
-        Locale.ENGLISH.parents shouldContain Locale.ENGLISH
+        Locale.US.getParentList() shouldBeEqualTo listOf(Locale.US, Locale.ENGLISH)
+        Locale.ENGLISH.getParentList() shouldContain Locale.ENGLISH
     }
 
     @Test

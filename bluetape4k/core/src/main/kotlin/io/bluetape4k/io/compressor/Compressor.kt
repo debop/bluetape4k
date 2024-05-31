@@ -35,21 +35,57 @@ interface Compressor {
      */
     fun decompress(compressed: ByteArray?): ByteArray
 
+    /**
+     * 데이터를 압축합니다.
+     *
+     * @param plain 원본 데이터
+     * @return 압축된 데이터
+     */
     fun compress(plain: String): String =
         compress(plain.toUtf8Bytes()).encodeBase64String()
 
+    /**
+     * 압축된 데이터를 복원합니다.
+     *
+     * @param compressed 압축된 데이터
+     * @return 복원된 데이터
+     */
     fun decompress(compressed: String): String =
         decompress(compressed.decodeBase64ByteArray()).toUtf8String()
 
+    /**
+     * 데이터를 압축합니다.
+     *
+     * @param plainBuffer 원본 데이터
+     * @return 압축된 데이터를 담은 [ByteBuffer]
+     */
     fun compress(plainBuffer: ByteBuffer): ByteBuffer =
         ByteBuffer.wrap(compress(plainBuffer.getBytes()))
 
+    /**
+     * 압축된 데이터를 복원합니다.
+     *
+     * @param compressedBuffer 압축된 데이터
+     * @return 복원된 데이터를 담은 [ByteBuffer]
+     */
     fun decompress(compressedBuffer: ByteBuffer): ByteBuffer =
         ByteBuffer.wrap(decompress(compressedBuffer.getBytes()))
 
+    /**
+     * 데이터를 압축합니다.
+     *
+     * @param plainStream 원본 데이터
+     * @return 압축된 데이터를 담은 [InputStream]
+     */
     fun compress(plainStream: InputStream): InputStream =
         compress(plainStream.toByteArray()).toInputStream()
 
+    /**
+     * 압축된 데이터를 복원합니다.
+     *
+     * @param compressedStream 압축된 데이터
+     * @return 복원된 데이터를 담은 [InputStream]
+     */
     fun decompress(compressedStream: InputStream): InputStream =
         decompress(compressedStream.toByteArray()).toInputStream()
 }

@@ -1,6 +1,5 @@
 package io.bluetape4k.collections.enhanced
 
-import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
@@ -18,10 +17,10 @@ class IndexedCollectionTest {
         IndexedCollection.uniqueIndexed(collection) { it.toInt() }
 
     private fun makeTestCollection() =
-        decorateCollection(fastListOf<String>())
+        decorateCollection(mutableListOf())
 
     private fun makeUniqueTestCollection() =
-        decorateUniqueCollection(fastListOf<String>())
+        decorateUniqueCollection(mutableListOf())
 
     val fullElements = arrayOf("1", "2", "3", "4", "5", "6")
     val otherElements = arrayOf("9", "88", "678", "87", "98", "78", "99")
@@ -68,7 +67,7 @@ class IndexedCollectionTest {
 
     @Test
     fun `when collection is modified, update index`() {
-        val original = fastListOf<String>()
+        val original = mutableListOf<String>()
         val indexed = decorateUniqueCollection(original)
 
         original.add("1")

@@ -1,11 +1,18 @@
 package io.bluetape4k.collections.enhanced
 
 import io.bluetape4k.collections.AbstractCollectionDecorator
-import io.bluetape4k.collections.eclipse.emptyFastList
 import io.bluetape4k.logging.KLogging
-import org.eclipse.collections.impl.factory.Multimaps
 import java.util.function.Predicate
 
+/**
+ *
+ * `keySelector`로 선정된 key에 의해 요소를 인덱싱하는 컬렉션입니다.
+ *
+ * @param K the type of the key
+ * @param E the type of the elements
+ * @property keySelector 인덱싱에 사용될 key를 선택하는 함수
+ * @property uniqueIndex 인덱스가 유일해야 하는지 여부
+ */
 class IndexedCollection<K, E> private constructor(
     decorated: MutableCollection<E>,
     private val keySelector: (E) -> K,
@@ -14,6 +21,7 @@ class IndexedCollection<K, E> private constructor(
 
     companion object: KLogging() {
 
+        @JvmStatic
         operator fun <K, E> invoke(
             collection: MutableCollection<E>,
             uniqueIndex: Boolean = true,
@@ -37,7 +45,7 @@ class IndexedCollection<K, E> private constructor(
         }
     }
 
-    private val index = Multimaps.mutable.list.of<K, E>()
+    private val index = mutableMapOf<K, MutableList<E>>()
 
     init {
         reindex()
@@ -77,7 +85,7 @@ class IndexedCollection<K, E> private constructor(
     }
 
     fun values(key: K): MutableCollection<E> {
-        return index[key] ?: emptyFastList()
+        return index[key] ?: mutableListOf()
     }
 
     override fun remove(element: E): Boolean {
@@ -131,11 +139,11 @@ class IndexedCollection<K, E> private constructor(
         if (uniqueIndex && index.containsKey(key)) {
             throw IllegalArgumentException("Duplicate key in uniquely indexed collection: key=$key, element=$element")
         }
-        index.put(key, element)
+        index.computeIfAbsent(key) { mutableListOf() }.add(element)
     }
 
     private fun removeFromIndex(element: E) {
         val key = keySelector(element)
-        index.removeAll(key)
+        index.remove(key)
     }
 }

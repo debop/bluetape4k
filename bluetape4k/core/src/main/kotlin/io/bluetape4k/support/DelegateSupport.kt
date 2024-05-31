@@ -23,7 +23,7 @@ package io.bluetape4k.support
 @Suppress("UNCHECKED_CAST")
 operator fun <V: Any, S: V> Map<String, V>.getValue(
     thisRef: Any?,
-    property: kotlin.reflect.KProperty<*>
+    property: kotlin.reflect.KProperty<*>,
 ): S {
     val key = property.name
     if (!containsKey(key)) {
@@ -50,7 +50,7 @@ operator fun <V: Any, S: V> Map<String, V>.getValue(
  */
 operator fun Map<String, String>.getValue(
     thisRef: Any?,
-    property: kotlin.reflect.KProperty<*>
+    property: kotlin.reflect.KProperty<*>,
 ): String {
     val key = property.name
     if (!containsKey(key)) {
@@ -83,7 +83,7 @@ operator fun Map<String, String>.getValue(
 operator fun <V> MutableMap<String, V>.setValue(
     thisRef: Any?,
     property: kotlin.reflect.KProperty<*>,
-    value: V
+    value: V,
 ) {
     val key = property.name
     this[key] = value
@@ -113,7 +113,7 @@ operator fun <V> MutableMap<String, V>.setValue(
 operator fun MutableMap<String, String>.setValue(
     thisRef: Any?,
     property: kotlin.reflect.KProperty<*>,
-    value: String
+    value: String,
 ) {
     val key = property.name
     this[key] = value

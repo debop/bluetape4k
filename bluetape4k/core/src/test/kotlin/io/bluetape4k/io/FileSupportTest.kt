@@ -1,11 +1,10 @@
 package io.bluetape4k.io
 
 import io.bluetape4k.codec.encodeBase62
-import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.folder.TempFolder
-import io.bluetape4k.junit5.folder.TempFolderExtension
+import io.bluetape4k.junit5.folder.TempFolderTest
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
@@ -13,23 +12,16 @@ import kotlinx.coroutines.future.await
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.jupiter.api.RepeatedTest
-import org.junit.jupiter.api.extension.ExtendWith
-import java.util.*
 
 @RandomizedTest
-@ExtendWith(TempFolderExtension::class)
+@TempFolderTest
 class FileSupportTest {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 3
-
         private val faker = Fakers.faker
-
-        private fun randomString(length: Int = 256): String =
-            Fakers.fixedString(length)
-
-        private fun randomStrings(size: Int = 20): List<String> =
-            fastList(size) { randomString() }
+        private fun randomString(length: Int = 256): String = Fakers.fixedString(length)
+        private fun randomStrings(size: Int = 20): List<String> = List(size) { randomString() }
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -69,9 +61,7 @@ class FileSupportTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `write string list to file`(
-        tempDir: TempFolder,
-    ) {
+    fun `write string list to file`(tempDir: TempFolder) {
         val contents = randomStrings()
         val filename = Fakers.randomUuid().encodeBase62() + ".txt"
         val path = tempDir.createFile(filename).toPath()
@@ -87,9 +77,7 @@ class FileSupportTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `write string list to file in coroutines`(
-        tempDir: TempFolder,
-    ) = runSuspendWithIO {
+    fun `write string list to file in coroutines`(tempDir: TempFolder) = runSuspendWithIO {
         val contents = randomStrings()
         val filename = Fakers.randomUuid().encodeBase62() + ".txt"
         val path = tempDir.createFile(filename).toPath()

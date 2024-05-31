@@ -4,19 +4,28 @@ import io.bluetape4k.io.getBytes
 import io.bluetape4k.io.toByteBufferDirect
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.emptyByteArray
+import net.jpountz.lz4.LZ4Compressor
 import net.jpountz.lz4.LZ4Factory
+import net.jpountz.lz4.LZ4FastDecompressor
 import java.nio.ByteBuffer
 
 /**
- * LZ4 Compressor
+ * LZ4 알고리즘을 사용한 Compressor
+ *
+ * @see [LZ4Factory]
+ * @see [LZ4Factory.fastestInstance]
+ * @see [LZ4Factory.fastCompressor]
+ * @see [LZ4Factory.fastDecompressor]
+ * @see [LZ4Compressor]
+ * @see [LZ4FastDecompressor]
  */
 class LZ4Compressor: AbstractCompressor() {
 
     companion object: KLogging() {
         private const val MAGIC_NUMBER_SIZE: Int = Integer.BYTES
-        private val factory = LZ4Factory.fastestInstance()
-        private val compressor = factory.fastCompressor()
-        private val decompressor = factory.fastDecompressor()
+        private val factory: LZ4Factory by lazy { LZ4Factory.fastestInstance() }
+        private val compressor: LZ4Compressor by lazy { factory.fastCompressor() }
+        private val decompressor: LZ4FastDecompressor by lazy { factory.fastDecompressor() }
     }
 
     override fun doCompress(plain: ByteArray): ByteArray {

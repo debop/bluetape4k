@@ -13,45 +13,75 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
 import kotlin.concurrent.withLock
 
+/**
+ * [Runtime]이 제공하는 다양한 정보를 조회할 수 있는 유틸리티 클래스
+ */
 object Runtimex: KLogging() {
 
     private val runtime = Runtime.getRuntime()
 
+    /**
+     * 사용 가능한 프로세서 수
+     */
     @JvmField
     val availableProcessors = runtime.availableProcessors()
 
+    /**
+     * 현재 JVM의 메모리 사용량 정보를 조회합니다.
+     */
     @JvmStatic
     val totalMemory: Long
         get() = runtime.totalMemory()
 
+    /**
+     * 현재 JVM의 최대 메모리 사용량 정보를 조회합니다.
+     */
     @JvmStatic
     val maxMemory: Long
         get() = runtime.maxMemory()
 
+    /**
+     * 사용 가능한 메모리 정보를 조회합니다.
+     */
     @JvmStatic
     val availableMemory: Long
         get() = freeMemory + (maxMemory - totalMemory)
 
+    /**
+     * 사용 가능한 메모리의 백분율 정보를 조회합니다.
+     */
     @JvmStatic
     val availableMemoryPercent: Double
         get() = availableMemory.toDouble() * 100.0 / runtime.maxMemory()
 
+    /**
+     * 사용 가능한 메모리의 백분율 정보를 조회합니다.
+     */
     @JvmStatic
     val freeMemory: Long
         get() = runtime.freeMemory()
 
+    /**
+     * 사용 가능한 메모리의 백분율 정보를 조회합니다.
+     */
     @JvmStatic
     val freeMemoryPercent: Double
         get() = freeMemory.toDouble() / runtime.totalMemory()
 
+    /**
+     * 사용 중인 메모리 정보를 조회합니다.
+     */
     @JvmStatic
     val usedMemory: Long
         get() = totalMemory - freeMemory
 
     private const val TWO_GIGA = 2_000_000_000
 
+    /**
+     * 메모리를 정리합니다.
+     */
     @JvmStatic
-    fun compatMemory() {
+    fun compactMemory() {
         try {
             val unused = arrayListOf<ByteArray>()
             repeat(128) {
@@ -64,6 +94,9 @@ object Runtimex: KLogging() {
         System.gc()
     }
 
+    /**
+     * [clazz]의 위치를 조회합니다.
+     */
     @JvmStatic
     fun classLocation(clazz: Class<*>): URL =
         clazz.protectionDomain.codeSource.location
@@ -102,7 +135,6 @@ object Runtimex: KLogging() {
 
     /**
      * Consumes a stream
-
      */
     internal class StreamGobbler @JvmOverloads constructor(
         private val input: InputStream,

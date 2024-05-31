@@ -1,13 +1,13 @@
 package io.bluetape4k.io
 
-import io.bluetape4k.core.assertZeroOrPositiveNumber
+import io.bluetape4k.support.assertZeroOrPositiveNumber
 import org.apache.commons.codec.binary.Hex
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import kotlin.text.Charsets.UTF_8
 
 /**
- * ByteBuffer를 읽어 바이트 배열을 빌드합니다
+ * [ByteBuffer]를 읽어 바이트 배열을 빌드합니다
  */
 fun ByteBuffer.getBytes(): ByteArray {
     val length = remaining()
@@ -26,12 +26,11 @@ fun ByteBuffer.getBytes(): ByteArray {
 /**
  * 대상 [ByteBuffer]를 건드리지 않고, 내용만 추출합니다.
  */
-fun ByteBuffer.extractBytes(): ByteArray =
-    ByteArray(remaining()).apply { this@extractBytes.get(this) }
+fun ByteBuffer.extractBytes(): ByteArray = ByteArray(remaining()).apply { this@extractBytes.get(this) }
 
 
 /**
- * ByteBuffer의 모든 내용을 읽어 [ByteArray]로 반환합니다.
+ * [java.nio.ByteBuffer]의 모든 내용을 읽어 [ByteArray]로 반환합니다.
  */
 fun ByteBuffer.getAllBytes(): ByteArray {
     return if (hasArray()) {
@@ -42,18 +41,18 @@ fun ByteBuffer.getAllBytes(): ByteArray {
 }
 
 /**
- * ByteBuffer의 내용을 Hex 형식 인코딩 방식을 이용하여 문자열로 변환합니다.
+ * [java.nio.ByteBuffer]의 내용을 Hex 형식 인코딩 방식을 이용하여 문자열로 변환합니다.
  */
 fun ByteBuffer.encodeHexString(): String = Hex.encodeHexString(this)
 
 /**
- * Hex 형식으로 인코딩된 문자열을 [ByteBuffer]로 변환합니다.
+ * Hex 형식으로 인코딩된 문자열을 [java.nio.ByteBuffer]로 변환합니다.
  */
 fun String.decodeHexByteBuffer(): ByteBuffer = Hex.decodeHex(this).toByteBuffer()
 
 
 /**
- * ByteBuffer의 내용을 모두 삭제합니다.
+ * [java.nio.ByteBuffer]의 내용을 `value` 값으로 설정합니다.
  */
 fun ByteBuffer.erase(value: Byte = 0) {
     if (!isReadOnly) {
@@ -64,50 +63,68 @@ fun ByteBuffer.erase(value: Byte = 0) {
 }
 
 /**
- * 현 ByteBuffer 내용을 읽어 대상 ByteBuffer 에 씁니다
+ * 현 [ByteBuffer] 내용을 읽어 대상 [ByteBuffer] 에 씁니다
  */
+@Deprecated("use moveTo", replaceWith = ReplaceWith("moveTo(dst, limit)"))
 fun ByteBuffer.putTo(dst: ByteBuffer, limit: Int = Int.MAX_VALUE): Int {
     limit.assertZeroOrPositiveNumber("limit")
 
     val size = minOf(limit, remaining(), dst.remaining())
-    repeat(size) {
-        dst.put(get())
+    if (size == remaining()) {
+        dst.put(this)
+    } else {
+        val l = limit()
+        limit(position() + size)
+        dst.put(this)
+        limit(l)
     }
     return size
 }
 
 /**
- * ByteBuffer를 읽어 문자열로 빌드합니다
+ * 현 [ByteBuffer] 내용을 읽어 대상 [ByteBuffer] 에 씁니다
+ */
+fun ByteBuffer.moveTo(dst: ByteBuffer, limit: Int = Int.MAX_VALUE): Int {
+    limit.assertZeroOrPositiveNumber("limit")
+
+    val size = minOf(limit, remaining(), dst.remaining())
+    if (size == remaining()) {
+        dst.put(this)
+    } else {
+        val l = limit()
+        limit(position() + size)
+        dst.put(this)
+        limit(l)
+    }
+    return size
+}
+
+/**
+ * [java.nio.ByteBuffer]를 읽어 문자열로 빌드합니다
  */
 fun ByteBuffer.getString(cs: Charset = UTF_8): String = cs.decode(this).toString()
 
 /**
- * 현 ByteBuffer의 나머지 사이즈를 읽어서, 새로운 ByteBuffer를 만든다.
- * @receiver ByteBuffer
- * @param size Int
- * @return ByteBuffer
+ * Moves all bytes in `this` buffer to a newly created buffer with the optionally specified [size]
  */
 @JvmOverloads
 fun ByteBuffer.copy(size: Int = remaining()): ByteBuffer {
-    val newSize = minOf(size, remaining())
-    return ByteBuffer.allocate(newSize)
-        .also {
-            this.putTo(it, newSize)
-            it.flip()
-        }
+    return ByteBuffer.allocate(size).apply {
+        this@copy.slice().moveTo(this@apply)
+        clear()
+    }
 }
 
 /**
- * ByteArray를 읽어 새로운 ByteBuffer를 빌드합니다.
+ * [java.nio.ByteBuffer]를 읽어 새로운 ByteBuffer를 빌드합니다.
  */
 fun ByteArray.toByteBuffer(): ByteBuffer = ByteBuffer.wrap(this)
 
 /**
- * ByteArray를 읽어 새로운 direct ByteBuffer를 빌드합니다.
+ * [ByteArray]를 읽어 새로운 direct [java.nio.ByteBuffer]를 빌드합니다.
  */
 fun ByteArray.toByteBufferDirect(): ByteBuffer {
-    return ByteBuffer.allocateDirect(this.size)
-        .also {
+    return ByteBuffer.allocateDirect(this.size).also {
             it.put(this@toByteBufferDirect)
             it.flip()
         }

@@ -5,11 +5,15 @@ import java.lang.reflect.Type
 
 fun Type.actualIteratorTypeArgument(): Type {
     val self = this
-    if (self !is ParameterizedType) {
-        throw IllegalArgumentException("Not supported type $self")
+
+    return when {
+        self !is ParameterizedType           ->
+            throw IllegalArgumentException("Not supported type $self")
+
+        self.rawType != Iterator::class.java ->
+            throw IllegalArgumentException("Not an iterator type ${self.rawType}")
+
+        else                                 ->
+            self.actualTypeArguments[0]
     }
-    if (self.rawType != Iterator::class.java) {
-        throw IllegalArgumentException("Not an iterator type ${self.rawType}")
-    }
-    return self.actualTypeArguments[0]
 }

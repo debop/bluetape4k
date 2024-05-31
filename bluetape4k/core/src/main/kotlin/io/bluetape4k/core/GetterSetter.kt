@@ -1,7 +1,8 @@
 package io.bluetape4k.core
 
+
 /**
- * (T) -> V 를 나타내는 getter 기능을 표현한 interface 입니다.
+ * `(K) -> V` 를 나타내는 getter 기능을 표현한 interface 입니다.
  * @property getter Function1<K, V>
  */
 interface GetterOperator<in K, out V> {
@@ -16,6 +17,12 @@ fun <K, V> getterOperator(func: (K) -> V): GetterOperator<K, V> {
     }
 }
 
+/**
+ * `(K, V) -> Unit` 으로 Setter 를 표현하는 interface 입니다.
+ *
+ * @param K key type
+ * @param V value type
+ */
 interface SetterOperator<in K, in V> {
     val setter: (K, V) -> Unit
     operator fun set(key: K, value: V) {
@@ -29,3 +36,18 @@ fun <K, V> setterOperator(func: (K, V) -> Unit): SetterOperator<K, V> {
             get() = func
     }
 }
+
+/**
+ * Getter, Setter 작업을 Kotlin 스타일로 표현할 수 있도록 했습니다
+ *
+ * @see systemProperty
+ *
+ * @param K  key type
+ * @param V     value type
+ * @property getter getter 함수
+ * @property setter setter 함수
+ */
+class GetterSetterOperator<in K, V>(
+    override val getter: (K) -> V,
+    override val setter: (K, V) -> Unit,
+): GetterOperator<K, V>, SetterOperator<K, V>

@@ -1,7 +1,7 @@
 package io.bluetape4k.support
 
 import java.math.BigDecimal
-
+import java.math.RoundingMode
 
 /**
  * [Number]를 [BigDecimal]로 변환합니다.
@@ -45,4 +45,8 @@ fun Iterable<BigDecimal>.average(): BigDecimal {
         count++
     }
     return sum / count
+}
+
+fun BigDecimal.roundUp(scale: Int = 0, roundingMode: RoundingMode = RoundingMode.HALF_UP): BigDecimal {
+    return this.setScale(scale, roundingMode)
 }

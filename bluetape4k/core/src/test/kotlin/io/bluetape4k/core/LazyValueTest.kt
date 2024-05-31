@@ -14,13 +14,15 @@ class LazyValueTest {
 
     @Test
     fun `값 계산은 지연되어야 한다`() {
-        val x = LazyValue { System.currentTimeMillis() }
+        val lv = LazyValue { System.currentTimeMillis() }
         val createdTime = System.currentTimeMillis()
 
-        x.isInitialized.shouldBeFalse()
+        lv.isInitialized.shouldBeFalse()
         Thread.sleep(1L)
-        x.value shouldBeGreaterThan createdTime
-        x.isInitialized.shouldBeTrue()
+
+        // value 조회 시 계산이 수행된다.
+        lv.value shouldBeGreaterThan createdTime
+        lv.isInitialized.shouldBeTrue()
     }
 
     @RepeatedTest(5)

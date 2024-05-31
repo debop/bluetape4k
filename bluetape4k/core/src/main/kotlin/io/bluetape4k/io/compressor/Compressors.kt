@@ -1,23 +1,49 @@
 package io.bluetape4k.io.compressor
 
+import io.bluetape4k.support.unsafeLazy
+
 /**
  * Compressors
  */
 object Compressors {
 
-    val BZip2: BZip2Compressor by lazy { BZip2Compressor() }
+    /**
+     * [BZip2Compressor]
+     */
+    val BZip2: BZip2Compressor by unsafeLazy { BZip2Compressor() }
 
-    val Deflate: DeflateCompressor by lazy { DeflateCompressor() }
+    /**
+     * [DeflateCompressor]
+     */
+    val Deflate: DeflateCompressor by unsafeLazy { DeflateCompressor() }
 
-    val GZip: GZipCompressor by lazy { GZipCompressor() }
+    /**
+     * [GZipCompressor]
+     */
+    val GZip: GZipCompressor by unsafeLazy { GZipCompressor() }
 
-    val LZ4: LZ4Compressor by lazy { LZ4Compressor() }
+    /**
+     * [LZ4Compressor]
+     */
+    val LZ4: LZ4Compressor by unsafeLazy { LZ4Compressor() }
 
-    val Snappy: SnappyCompressor by lazy { SnappyCompressor() }
+    /**
+     * [SnappyCompressor]
+     */
+    val Snappy: SnappyCompressor by unsafeLazy { SnappyCompressor() }
 
-    val XZ: XZCompressor by lazy { XZCompressor() }
+    /**
+     * [XZCompressor]
+     */
+    val XZ: XZCompressor by unsafeLazy { XZCompressor() }
 
-    val Zstd: ZstdCompressor by lazy { ZstdCompressor() }
+    /**
+     * [ZstdCompressor]
+     */
+    val Zstd: ZstdCompressor by unsafeLazy { ZstdCompressor() }
 
-    val Brotli: BrotliCompressor by lazy { BrotliCompressor() }
+    /**
+     * [BrotliCompressor]
+     */
+    val Brotli: BrotliCompressor by unsafeLazy { BrotliCompressor() }
 }

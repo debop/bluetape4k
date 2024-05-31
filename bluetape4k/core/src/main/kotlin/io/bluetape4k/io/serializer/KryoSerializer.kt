@@ -1,17 +1,20 @@
 package io.bluetape4k.io.serializer
 
+import io.bluetape4k.io.ApacheByteArrayOutputStream
+import io.bluetape4k.logging.KLogging
 import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 
 /**
- * Kryo Serializer
+ * Kryo 라이브리러를 사용하는 Serializer
  */
 class KryoSerializer(
     private val bufferSize: Int = DEFAULT_BUFFER_SIZE,
 ): AbstractBinarySerializer() {
 
+    companion object: KLogging()
+
     override fun doSerialize(graph: Any): ByteArray {
-        return ByteArrayOutputStream(bufferSize).use { bos ->
+        return ApacheByteArrayOutputStream(bufferSize).use { bos ->
             withKryoOutput { output ->
                 output.outputStream = bos
                 withKryo {

@@ -35,4 +35,15 @@ class BigDecimalSupportTest {
         val numbers = List(100) { it.toBigDecimal() }
         numbers.sum() shouldBeEqualTo (0 until 100).sum().toBigDecimal()
     }
+
+    @Test
+    fun `roud up bigdecimal`() {
+        val n = 2.45.toBigDecimal()
+
+        n.roundUp(0) shouldBeEqualTo 2.toBigDecimal()
+        n.roundUp(1) shouldBeEqualTo 2.5.toBigDecimal()
+        n.roundUp(2) shouldBeEqualTo 2.45.toBigDecimal()
+
+        n.roundUp(-1) shouldBeEqualTo 0.toBigDecimal()
+    }
 }

@@ -26,8 +26,14 @@ inline fun <V> futureOf(executor: Executor = ForkJoinExecutor, crossinline block
 inline fun <V> immediateFutureOf(crossinline block: () -> V): CompletableFuture<V> =
     futureOf(DirectExecutor, block)
 
+/**
+ * [value] 값을 가진 [CompletableFuture]를 생성합니다.
+ */
 fun <V> completableFutureOf(value: V): CompletableFuture<V> = CompletableFuture.completedFuture(value)
 
+/**
+ * [cause] 예외를 가진 [CompletableFuture]를 생성합니다.
+ */
 fun <V> failedCompletableFutureOf(cause: Throwable): CompletableFuture<V> = CompletableFuture.failedFuture(cause)
 
 /**
@@ -36,11 +42,11 @@ fun <V> failedCompletableFutureOf(cause: Throwable): CompletableFuture<V> = Comp
  * ```
  * val future:CompletableFuture<Unit> = futureWithTimeout(Duration.ofSeconds(1)) {
  *   // 1초 이내에 종료되지 않으면 실패로 간주하고, 작업을 중단합니다.
- *   // async task()
+ *   // coroutines task()
  * }
  * ```
  *
- * @param V
+ * @param V 결과값 수형
  * @param timeout 최대 수행 시간
  * @param block 수행할 코드 블럭
  * @return [block]의 실행 결과, [timeout] 시간 내에 종료되지 않으면 null 을 반환하는 [CompletableFuture] 인스턴스
@@ -55,7 +61,7 @@ inline fun <V> futureWithTimeout(timeout: Duration, crossinline block: () -> V):
  * ```
  * val future:CompletableFuture<Unit> = futureWithTimeout(1000L) {
  *   // 1초 이내에 종료되지 않으면 실패로 간주하고, 작업을 중단합니다.
- *   // async task()
+ *   // coroutines task()
  * }
  * ```
  *
@@ -120,7 +126,7 @@ inline fun <V> CompletableFuture<V>.filter(
 ): CompletableFuture<V> {
     return map(executor) {
         if (predicate(it)) it
-        else throw NoSuchElementException("CompletableFuture.filter predicate is not satisfied. result=$it")
+        else throw NoSuchElementException("CompletableFuture.filters predicate is not satisfied. result=$it")
     }
 }
 
@@ -183,7 +189,9 @@ inline fun <V> CompletableFuture<V>.recoverWith(
  * @param mapper Function1<E, Throwable>
  * @return CompletableFuture<V>
  */
-inline fun <V, reified E: Throwable> CompletableFuture<V>.mapError(crossinline mapper: (error: E) -> Throwable): CompletableFuture<V> =
+inline fun <V, reified E: Throwable> CompletableFuture<V>.mapError(
+    crossinline mapper: (error: E) -> Throwable,
+): CompletableFuture<V> =
     exceptionally {
         when (val error = it.cause ?: it) {
             is E -> throw mapper(error)
@@ -209,6 +217,14 @@ inline fun <V> CompletableFuture<V>.fallbackTo(
     recoverWith(executor) { fallback() }
 
 
+/**
+ * [CompletableFuture]가 실패하면 [errorHandler]를 실행합니다.
+ *
+ * @receiver CompletableFuture<V>
+ * @param executor Executor
+ * @param errorHandler Function1<Throwable, Unit>
+ * @return CompletableFuture<V>
+ */
 inline fun <V> CompletableFuture<V>.onFailure(
     executor: Executor = ForkJoinExecutor,
     crossinline errorHandler: (error: Throwable) -> Unit,
@@ -222,6 +238,14 @@ inline fun <V> CompletableFuture<V>.onFailure(
         executor
     )
 
+/**
+ * [CompletableFuture]가 완료되면 [successHandler]를 실행합니다.
+ *
+ * @receiver CompletableFuture<V>
+ * @param executor Executor
+ * @param successHandler Function1<V, Unit>
+ * @return CompletableFuture<V>
+ */
 inline fun <V> CompletableFuture<V>.onSuccess(
     executor: Executor = ForkJoinExecutor,
     crossinline successHandler: (result: V) -> Unit,
@@ -231,7 +255,15 @@ inline fun <V> CompletableFuture<V>.onSuccess(
         executor
     )
 
-
+/**
+ * [CompletableFuture]가 완료되면 [successHandler]를 실행하고, 실패하면 [failureHandler]를 실행합니다.
+ *
+ * @receiver CompletableFuture<V>
+ * @param executor Executor
+ * @param successHandler Function1<V, Unit>
+ * @param failureHandler Function1<Throwable, Unit>
+ * @return CompletableFuture<V>
+ */
 inline fun <V> CompletableFuture<V>.onComplete(
     executor: Executor = ForkJoinExecutor,
     crossinline successHandler: (result: V) -> Unit,
@@ -245,6 +277,14 @@ inline fun <V> CompletableFuture<V>.onComplete(
         executor
     )
 
+/**
+ * [CompletableFuture]가 완료되면 [completionHandler]를 실행합니다.
+ *
+ * @receiver CompletableFuture<V>
+ * @param executor Executor
+ * @param completionHandler Function2<V?, Throwable?, Unit>
+ * @return CompletableFuture<V>
+ */
 inline fun <V> CompletableFuture<V>.onComplete(
     executor: Executor = ForkJoinExecutor,
     crossinline completionHandler: (result: V?, error: Throwable?) -> Unit,
@@ -258,6 +298,9 @@ inline fun <V> CompletableFuture<V>.onComplete(
 val <V> CompletableFuture<V>.isFailed: Boolean get() = this.isCompletedExceptionally
 val <V> CompletableFuture<V>.isSuccess: Boolean get() = this.isDone
 
+/**
+ * 제한된 사간안에 [CompletableFuture]의 결과값을 반환합니다.
+ */
 fun <V> CompletableFuture<V>.join(duration: Duration): V {
     return try {
         get(duration.inWholeNanoseconds, TimeUnit.NANOSECONDS)
@@ -266,8 +309,14 @@ fun <V> CompletableFuture<V>.join(duration: Duration): V {
     }
 }
 
+/**
+ * 제한된 사간안에 [CompletableFuture]의 결과값을 반환하거나, [defaultValue]를 반환합니다.
+ */
 fun <V> CompletableFuture<V>.join(duration: Duration, defaultValue: V): V =
     runCatching { join(duration) ?: defaultValue }.getOrDefault(defaultValue)
 
+/**
+ * 제한된 사간안에 [CompletableFuture]의 결과값을 반환하거나, null을 반환합니다.
+ */
 fun <V> CompletableFuture<V>.joinOrNull(duration: Duration): V? =
     runCatching { get(duration.inWholeNanoseconds, TimeUnit.NANOSECONDS) }.getOrNull()

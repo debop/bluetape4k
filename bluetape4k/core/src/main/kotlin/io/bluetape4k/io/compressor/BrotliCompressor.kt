@@ -4,16 +4,18 @@ import com.aayushatharva.brotli4j.Brotli4jLoader
 import com.aayushatharva.brotli4j.decoder.BrotliInputStream
 import com.aayushatharva.brotli4j.encoder.BrotliOutputStream
 import com.aayushatharva.brotli4j.encoder.Encoder
+import io.bluetape4k.io.ApacheByteArrayOutputStream
+import io.bluetape4k.io.compressor.BrotliCompressor.BrotliOptions
+import io.bluetape4k.io.compressor.BrotliCompressor.BrotliOptions.Companion.DEFAULT_BUFFER_SIZE
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.classIsPresent
 import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 
 /**
- * Brotli compressor
+ * Brotli 알고리즘을 사용한 압축기
  *
- * @property options
+ * @property options [BrotliOptions] 인스턴스
  */
 class BrotliCompressor private constructor(
     private val options: BrotliOptions,
@@ -42,16 +44,13 @@ class BrotliCompressor private constructor(
             }
         }
 
-        @JvmField
-        val DefaultBrotliOptions: BrotliOptions = BrotliOptions()
-
-        operator fun invoke(options: BrotliOptions = DefaultBrotliOptions): BrotliCompressor {
+        operator fun invoke(options: BrotliOptions = BrotliOptions.defaults()): BrotliCompressor {
             return BrotliCompressor(options)
         }
     }
 
     override fun doCompress(plain: ByteArray): ByteArray {
-        return ByteArrayOutputStream(options.bufferSize).use { bos ->
+        return ApacheByteArrayOutputStream(options.bufferSize).use { bos ->
             val params = Encoder.Parameters().setQuality(options.quality)
             BrotliOutputStream(bos, params).use { brotli ->
                 brotli.write(plain)
@@ -69,8 +68,21 @@ class BrotliCompressor private constructor(
         }
     }
 
+    /**
+     * Brotli 압축을 위한 옵션
+     *
+     * @property bufferSize 버퍼 크기 (기본: [DEFAULT_BUFFER_SIZE] = 8192)
+     * @property quality    품질 (기본: 4)
+     * @constructor Create empty Brotli options
+     */
     data class BrotliOptions(
         val bufferSize: Int = DEFAULT_BUFFER_SIZE,
         val quality: Int = 4,
-    )
+    ) {
+        companion object {
+            const val DEFAULT_BUFFER_SIZE: Int = 8192
+
+            fun defaults(): BrotliOptions = BrotliOptions()
+        }
+    }
 }
