@@ -4,6 +4,7 @@ import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
@@ -20,13 +21,13 @@ class ConcatArrayEagerTest: AbstractFlowTest() {
         val state1 = atomic(0)
         val state2 = atomic(0)
 
-        val flow1 = range(1, 5).log("flow1")
+        val flow1 = flowRangeOf(1, 5).log("#1")
             .onStart {
                 delay(200)
                 state1.value = 1
             }
 
-        val flow2 = range(6, 5).log("flow2")
+        val flow2 = flowRangeOf(6, 5).log("#2")
             .onStart { state2.value = state1.value }
 
         concatArrayEager(flow1, flow2)
@@ -38,15 +39,15 @@ class ConcatArrayEagerTest: AbstractFlowTest() {
 
     @Test
     fun `concat one flow`() = runTest {
-        concatArrayEager(range(1, 5).log("1"))
+        concatArrayEager(flowRangeOf(1, 5).log("#1"))
             .assertResult(1, 2, 3, 4, 5)
     }
 
     @Test
     fun `concat with take`() = runTest {
         concatArrayEager(
-            range(1, 5).onStart { delay(100) }.log(1),
-            range(6, 5).log(2),
+            flowRangeOf(1, 5).onStart { delay(100) }.log("#1"),
+            flowRangeOf(6, 5).log("#2"),
         )
             .take(6)
             .assertResult(1, 2, 3, 4, 5, 6)
@@ -57,7 +58,7 @@ class ConcatArrayEagerTest: AbstractFlowTest() {
         var counter = 0
 
         concatArrayEager(
-            range(1, 5).log(1)
+            flowRangeOf(1, 5).log("#1")
                 .onEach {
                     delay(200)
                     counter++
@@ -67,5 +68,27 @@ class ConcatArrayEagerTest: AbstractFlowTest() {
             .assertResult(1, 2, 3)
 
         counter shouldBeEqualTo 3
+    }
+
+    @Test
+    fun `concat list of flows`() = runTest {
+        listOf(
+            flowRangeOf(1, 5).onStart { delay(100) }.log("#1"),
+            flowRangeOf(6, 5).log("#2"),
+        )
+            .concatFlows()
+            .take(6)
+            .assertResult(1, 2, 3, 4, 5, 6)
+    }
+
+    @Test
+    fun `concat flow of flows`() = runTest {
+        flowOf(
+            flowRangeOf(1, 5).onStart { delay(100) }.log("#1"),
+            flowRangeOf(6, 5).log("#2"),
+        )
+            .concatFlows()
+            .take(6)
+            .assertResult(1, 2, 3, 4, 5, 6)
     }
 }

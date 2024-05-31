@@ -1,6 +1,6 @@
 package io.bluetape4k.utils.idgenerators
 
-import io.bluetape4k.core.assertPositiveNumber
+import io.bluetape4k.support.assertPositiveNumber
 
 /**
  * [Long] 수형의 Unique Identifier를 생성하는 Generator

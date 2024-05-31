@@ -19,7 +19,7 @@ class PairwiseTest: AbstractFlowTest() {
 
     @Test
     fun `pairwise basic`() = runTest {
-        range(0, 4)
+        flowRangeOf(0, 4)
             .pairwise()
             .test {
                 awaitItem() shouldBeEqualTo Pair(0, 1)
@@ -28,7 +28,7 @@ class PairwiseTest: AbstractFlowTest() {
                 awaitComplete()
             }
 
-        range(0, 4)
+        flowRangeOf(0, 4)
             .sliding(2)
             .mapNotNull {
                 if (it.size < 2) null
@@ -45,7 +45,7 @@ class PairwiseTest: AbstractFlowTest() {
     @Test
     fun `pairwise nullable`() = runTest {
         // 0 - null - 2 - null
-        range(0, 4)
+        flowRangeOf(0, 4)
             .map { it.takeIf { it % 2 == 0 } }
             .pairwise()
             .test {
@@ -83,7 +83,7 @@ class PairwiseTest: AbstractFlowTest() {
 
     @Test
     fun `pairwise with cancellation`() = runTest {
-        range(1, 100)
+        flowRangeOf(1, 100)
             .pairwise()
             .take(2)
             .test {

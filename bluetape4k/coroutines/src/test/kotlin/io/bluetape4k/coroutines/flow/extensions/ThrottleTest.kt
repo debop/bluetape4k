@@ -40,22 +40,22 @@ class ThrottleTest: AbstractFlowTest() {
     fun `compare throttling methods`() = runTest {
         //-----1-----2-----3-----4-----5-----6-----7-----8-----9-----10
         //--------------|--------------|----------------|--------------|
-        range(1, 10)
+        flowRangeOf(1, 10)
             .onEach { delay(200) }.log("source")
             .debounce(501L).log("debounce")
             .assertResult(10)                       // debounce 는 timeout 안에 emit 되는 값이 있다면 overwrite 한다 
 
-        range(1, 10)
+        flowRangeOf(1, 10)
             .onEach { delay(200) }.log("source")
             .sample(501L).log("sample")
             .assertResult(2, 5, 7)
 
-        range(1, 10)
+        flowRangeOf(1, 10)
             .onEach { delay(200) }.log("source")
             .throttleLeading(501L).log("leading")
             .assertResult(1, 4, 7, 10)
 
-        range(1, 10)
+        flowRangeOf(1, 10)
             .onEach { delay(200) }.log("source")
             .throttleTrailing(501L).log("trailing")
             .assertResult(3, 6, 9, 10)
@@ -131,7 +131,7 @@ class ThrottleTest: AbstractFlowTest() {
         fun `sampling flow item by timer`() = runTest {
             //-----1-----2-----3-----4-----5-----6-----7-----8-----9-----10
             //--------------|--------------|----------------|--------------|
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .sample(501L).log("sample")
                 .assertResult(2, 5, 7)
@@ -210,7 +210,7 @@ class ThrottleTest: AbstractFlowTest() {
             // 9 - skip    (1800)
             // 10 - deliver (2000)
             // ---------------------------- 2004
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .throttleLeading(501).log("leading")
                 .assertResult(1, 4, 7, 10)
@@ -218,7 +218,7 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle with complete and no delay`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .throttleLeading(0).log("leading")
                 .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -226,7 +226,7 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle with complete and no duration`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .throttleLeading { Duration.ZERO }.log("leading")
                 .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -234,7 +234,7 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle with complete and no time`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .throttleLeading(0L).log("leading")
                 .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -242,7 +242,7 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle with null value`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .map { it.takeIf { it % 2 == 0 } }.log("leading")
                 .throttleLeading(500L)
@@ -321,7 +321,7 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle with timer which raise exception`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .log("source")
                 .throttleLeading { throw RuntimeException("Boom!") }.log("leading")
                 .test {
@@ -352,13 +352,13 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle take`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .throttleLeading(500).log("leading")
                 .take(1)
                 .assertResult(1)
 
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .throttleLeading { throw RuntimeException("Boom!") }.log("leading")
                 .take(1)
@@ -369,7 +369,7 @@ class ThrottleTest: AbstractFlowTest() {
         fun `throttle cancellation`() = runTest {
             var count = 0
 
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .throttleLeading {
                     if (count++ % 2 == 0) {
@@ -380,7 +380,7 @@ class ThrottleTest: AbstractFlowTest() {
                 }.log("leading")
                 .materialize()
                 .test {
-                    awaitItem() shouldBeEqualTo Event.Value(1)
+                    awaitItem() shouldBeEqualTo FlowEvent.Value(1)
                     awaitItem().errorOrThrow() shouldBeInstanceOf CancellationException::class
                     awaitComplete()
                 }
@@ -447,7 +447,7 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle with complete and no delay A`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .throttleTrailing(0).log("trailing")
                 .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -455,14 +455,14 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle with complete and no delay B`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .throttleTrailing(0)
                 .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
         }
 
         @Test
         fun `throttle with complete and no delay C`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(100) }.log("source")
                 .throttleTrailing(Duration.ZERO).log("trailing")
                 .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -470,7 +470,7 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle with complete and no delay D`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(100) }.log("source")
                 .throttleTrailing { Duration.ZERO }.log("trailing")
                 .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -478,19 +478,19 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle with complete and no delay E`() = runTest {
-            range(1, 10).log("source")
+            flowRangeOf(1, 10).log("source")
                 .throttleTrailing { _ -> Duration.ZERO }.log("trailing")
                 .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
         }
 
         @Test
         fun `throttle with null value`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .throttleTrailing(500L).log("trailing")
                 .assertResult(3, 6, 9, 10)
 
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .map { it.takeIf { it % 2 == 0 } }.log("even")
                 .throttleTrailing(500L).log("trailing")
@@ -569,7 +569,7 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle with timer which raise exception`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .throttleTrailing { throw RuntimeException("Boom!") }
                 .test {
                     awaitError()
@@ -622,13 +622,13 @@ class ThrottleTest: AbstractFlowTest() {
 
         @Test
         fun `throttle take`() = runTest {
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .throttleTrailing(500).log("trailing")
                 .take(1)
                 .assertResult(3)
 
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .concatWith(flow<Int> { throw RuntimeException("Boom!") }.log("concat"))
                 .throttleTrailing(500).log("trailing")
@@ -641,7 +641,7 @@ class ThrottleTest: AbstractFlowTest() {
             // --1--2--3--4--5--6--7--8--9--10
             var count = 1
 
-            range(1, 10)
+            flowRangeOf(1, 10)
                 .onEach { delay(200) }.log("source")
                 .throttleTrailing {
                     if (count++ % 2 == 0) {

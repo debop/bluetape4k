@@ -6,31 +6,24 @@ package io.bluetape4k.coroutines.flow.extensions
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Merges multiple sources in an unbounded manner.
  */
-fun <T> Iterable<Flow<T>>.mergeFlows(): Flow<T> = mergeFlowsInternal(this.toList())
-// FlowMergeArray(this.toList())
+fun <T> Iterable<Flow<T>>.merge(): Flow<T> = mergeInternal(this.toList())
 
 /**
  * Merges multiple sources in an unbounded manner.
  */
-suspend fun <T> Flow<Flow<T>>.mergeFlows(): Flow<T> = mergeFlowsInternal(this.toList()) // FlowMergeArray(this.toList())
-
-/**
- * Merges multiple sources in an unbounded manner.
- */
-fun <T> mergeFlows(vararg sources: Flow<T>): Flow<T> = mergeFlowsInternal(sources.asList())// FlowMergeArray(*sources)
+fun <T> merge(vararg sources: Flow<T>): Flow<T> = mergeInternal(sources.asList())
 
 /**
  * Merges an array of Flow instances in an unbounded manner.
  */
-internal fun <T> mergeFlowsInternal(sources: List<Flow<T>>): Flow<T> = flow {
+internal fun <T> mergeInternal(sources: List<Flow<T>>): Flow<T> = channelFlow {
     val queue = ConcurrentLinkedQueue<T>()
     val done = atomic(sources.size)
     val ready = Resumable()
@@ -57,7 +50,7 @@ internal fun <T> mergeFlowsInternal(sources: List<Flow<T>>): Flow<T> = flow {
 
             when {
                 isDone && value == null -> break
-                value != null           -> emit(value)
+                value != null           -> send(value)
                 else                    -> ready.await()
             }
         }

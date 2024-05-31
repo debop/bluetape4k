@@ -1,6 +1,6 @@
 package io.bluetape4k.utils.idgenerators.hashids
 
-import io.bluetape4k.core.assertNotBlank
+import io.bluetape4k.support.assertNotBlank
 import io.bluetape4k.support.toLongArray
 import io.bluetape4k.support.toUUID
 import java.util.*

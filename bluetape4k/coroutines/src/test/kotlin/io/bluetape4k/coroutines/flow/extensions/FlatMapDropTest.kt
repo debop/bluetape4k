@@ -2,6 +2,7 @@ package io.bluetape4k.coroutines.flow.extensions
 
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
+
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
@@ -16,10 +17,10 @@ class FlatMapDropTest: AbstractFlowTest() {
 
     @Test
     fun `flat map drop`() = runTest {
-        range(1, 10)
+        flowRangeOf(1, 10)
             .onEach { delay(100) }.log("source")
             .flatMapDrop {
-                range(it * 100, 5).onEach { delay(20) }.log("inner")
+                flowRangeOf(it * 100, 5).onEach { delay(20) }.log("inner")
             }
             .assertResult(
                 100, 101, 102, 103, 104,
@@ -34,11 +35,11 @@ class FlatMapDropTest: AbstractFlowTest() {
     fun `flat map drop with take`() = runTest {
         val item = atomic(0)
 
-        range(1, 10)
+        flowRangeOf(1, 10)
             .onEach { delay(100) }.log("source")
             .flatMapDrop {
                 item.value = it
-                range(it * 100, 5)
+                flowRangeOf(it * 100, 5)
                     .onEach { delay(30) }.log("inner")
             }
             .take(7).log("take 7")

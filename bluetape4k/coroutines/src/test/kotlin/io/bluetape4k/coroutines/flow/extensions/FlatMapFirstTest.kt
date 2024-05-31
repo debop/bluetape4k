@@ -32,11 +32,11 @@ class FlatMapFirstTest: AbstractFlowTest() {
 
     @Test
     fun `flatMapFirst for range`() = runTest {
-        range(1, 10)
+        flowRangeOf(1, 10)
             .onEach { delay(100) }.log("source")
             .flatMapFirst {
                 log.trace { "source item=$it" }
-                range(it * 100, 5)
+                flowRangeOf(it * 100, 5)
                     .onEach { delay(20) }.log("transform")
             }
             .log("flatMapFirst")
@@ -53,18 +53,19 @@ class FlatMapFirstTest: AbstractFlowTest() {
     fun `flat map first with take`() = runTest {
         val item = atomic(0)
 
-        range(1, 10)
+        // flatMapFirst 동작 시 collect 작업 후에 emit 된 것 중 가장 최신 것만 선택한다
+        flowRangeOf(1, 10)
             .onEach { delay(100) }.log("source")
             .flatMapFirst {
                 item.value = it
-                range(it * 100, 5)
+                flowRangeOf(it * 100, 5)
                     .onEach { delay(30) }.log("iner")
             }
             .take(7).log("take")
             .assertResult(
                 100, 101, 102, 103, 104,
                 300, 301,
-            )
+            )  // 200 이 없는 이유는 1 -> 100 은 flatMapFirst에서 작업할 때, 2, 3이 송출되고, 가장 최근인 300 대가 송출된다
 
         item.value shouldBeEqualTo 3
     }

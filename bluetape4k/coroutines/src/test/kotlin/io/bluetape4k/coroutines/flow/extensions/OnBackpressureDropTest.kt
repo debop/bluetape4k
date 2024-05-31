@@ -14,7 +14,7 @@ class OnBackpressureDropTest: AbstractFlowTest() {
 
     @Test
     fun `drop backpressure items`() = runTest {
-        range(0, 10)
+        flowRangeOf(0, 10)
             .onEach { delay(100L) }.log("source")
             .buffer()
             .onBackpressureDrop()

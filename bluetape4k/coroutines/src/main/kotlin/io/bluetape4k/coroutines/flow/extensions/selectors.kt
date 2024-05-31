@@ -4,8 +4,8 @@
 
 package io.bluetape4k.coroutines.flow.extensions
 
-import io.bluetape4k.core.requireNotEmpty
 import io.bluetape4k.coroutines.flow.extensions.utils.NULL_VALUE
+import io.bluetape4k.support.requireNotEmpty
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow

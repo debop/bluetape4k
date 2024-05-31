@@ -4,7 +4,6 @@ import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.eclipse.toUnifiedSet
-import io.bluetape4k.collections.toFastList
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging
@@ -65,11 +64,11 @@ class TimebasedUuidGeneratorTest {
     fun `generate timebased uuids as parallel`() {
         val uuids = TEST_LIST.parallelStream()
             .map { uuidGenerator.nextUUID() }
-            .toFastList()
-            .sortThis()
+            .toList()
+            .sorted()
 
         // 중복 발행은 없어야 한다
-        uuids.toUnifiedSet().size shouldBeEqualTo uuids.size
+        uuids.distinct().size shouldBeEqualTo uuids.size
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -102,7 +101,7 @@ class TimebasedUuidGeneratorTest {
     fun `convert timebaed uuids to hashids`() {
         val hashids = Hashids()
 
-        val uuids = TEST_LIST.parallelStream().map { uuidGenerator.nextUUID() }.toFastList()
+        val uuids = TEST_LIST.parallelStream().map { uuidGenerator.nextUUID() }.toList()
         val encodeds = uuids.map { hashids.encode(*it.toLongArray()) }
 
         val decodeds = encodeds.map { hashids.decode(it).toUUID() }

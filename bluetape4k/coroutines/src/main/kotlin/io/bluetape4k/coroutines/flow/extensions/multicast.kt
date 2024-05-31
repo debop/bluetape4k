@@ -23,7 +23,6 @@ fun <T, R> Flow<T>.multicast(
     transform: suspend (Flow<T>) -> Flow<R>,
 ): Flow<R> =
     multicastInternal(this, subjectSupplier, transform)
-// FlowMulticastFunction(this, subjectSupplier, transform)
 
 
 internal fun <T, R> multicastInternal(

@@ -37,7 +37,7 @@ class FlowFromSuspendTest: AbstractFlowTest() {
 
         flowFromSuspend<Int> { throw exception }
             .materialize()
-            .assertResult(Event.Error(exception))
+            .assertResult(FlowEvent.Error(exception))
     }
 
     @Test

@@ -1,6 +1,5 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
-import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
 import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
@@ -73,7 +72,7 @@ class BehaviorSubjectTest {
     fun `일반적인 Subject 작동 예`() = runTest {
         withSingleThread { executor ->
             val subject = BehaviorSubject<Int>()
-            val result = intArrayListOf()
+            val result = mutableListOf<Int>()
 
             val job = launch(executor) {
                 subject
@@ -91,7 +90,7 @@ class BehaviorSubjectTest {
             subject.complete()
             job.join()
 
-            result shouldBeEqualTo intArrayListOf(1, 2, 3, 4, 5)
+            result shouldBeEqualTo listOf(1, 2, 3, 4, 5)
         }
     }
 

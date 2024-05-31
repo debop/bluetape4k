@@ -28,9 +28,9 @@ class CombineTest: AbstractFlowTest() {
         )
     }
 
-    private fun flow1(): Flow<Int> = flowOf(1, 2, 3).log("flow1")
-    private fun flow2(): Flow<String> = flowOf("a", "b", "c").log("flow2")
-    private fun flow3(): Flow<Boolean> = flowOf(true, false, true).log("flow3")
-    private fun flow4(): Flow<Char> = flowOf('a', 'b', 'c').log("flow4")
+    private fun flow1(): Flow<Int> = flowOf(1, 2, 3).log("#1")
+    private fun flow2(): Flow<String> = flowOf("a", "b", "c").log("#2")
+    private fun flow3(): Flow<Boolean> = flowOf(true, false, true).log("#3")
+    private fun flow4(): Flow<Char> = flowOf('a', 'b', 'c').log("#4")
 
 }

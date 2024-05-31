@@ -3,8 +3,8 @@ package io.bluetape4k.utils.idgenerators.snowflake
 import io.bluetape4k.collections.asParallelStream
 import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.collections.eclipse.primitives.longArrayList
+import io.bluetape4k.collections.eclipse.primitives.toFastList
 import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.collections.toFastList
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging
@@ -172,9 +172,9 @@ abstract class AbstractSnowflakeTest {
         val ids = snowflake.nextIds(TEST_COUNT).toFastList()
         val snowflakeIds = ids.asParallelStream()
             .map { snowflake.parse(it) }
-            .toFastList()
+            .toList()
 
-        snowflakeIds.collect { it.value } shouldBeEqualTo ids
+        snowflakeIds.map { it } shouldBeEqualTo ids
     }
 
     @RepeatedTest(REPEAT_SIZE)

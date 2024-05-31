@@ -18,7 +18,7 @@ class TakeUntilTest: AbstractFlowTest() {
 
     @Test
     fun basic() = runTest {
-        range(1, 10).log("source")
+        flowRangeOf(1, 10).log("source")
             .onEach { delay(100) }
             .takeUntil(550.milliseconds).log("takeUntil")
             .assertResult(1, 2, 3, 4, 5)
@@ -26,7 +26,7 @@ class TakeUntilTest: AbstractFlowTest() {
 
     @Test
     fun `takeUntil has longer timeout`() = runTest {
-        range(1, 10).log("source")
+        flowRangeOf(1, 10).log("source")
             .onEach { delay(100) }
             .takeUntil(1500.milliseconds).log("takeUntil")
             .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -34,7 +34,7 @@ class TakeUntilTest: AbstractFlowTest() {
 
     @Test
     fun `takeUntil with single value flow`() = runTest {
-        range(1, 5).log("source")
+        flowRangeOf(1, 5).log("source")
             .takeUntil(flowOf(1)).log("takeUntil")
             .assertResult()
     }
@@ -43,7 +43,7 @@ class TakeUntilTest: AbstractFlowTest() {
     fun `source flow is completed after untifier start`() = runTest {
         //-----1-----2-----3-----4-----5
         //--------------------|
-        range(1, 5).log("source")
+        flowRangeOf(1, 5).log("source")
             .onEach { delay(100) }
             .takeUntil(delayedFlow(350)).log("takeUntil")
             .assertResult(1, 2, 3)
@@ -53,7 +53,7 @@ class TakeUntilTest: AbstractFlowTest() {
     fun `source flow is completed before untifier start`() = runTest {
         //-----1-----2-----3-----4-----5
         //----------------------------------|
-        range(1, 5).log("source")
+        flowRangeOf(1, 5).log("source")
             .onEach { delay(100) }
             .takeUntil(delayedFlow(6000)).log("takeUntil")
             .assertResult(1, 2, 3, 4, 5)
@@ -63,7 +63,7 @@ class TakeUntilTest: AbstractFlowTest() {
     fun `source flow is complete after duration`() = runTest {
         //-----1-----2-----3-----4-----5
         //--------------------|
-        range(1, 5).log("source")
+        flowRangeOf(1, 5).log("source")
             .onEach { delay(100) }
             .takeUntil(350.milliseconds).log("takeUntil")
             .assertResult(1, 2, 3)
@@ -73,7 +73,7 @@ class TakeUntilTest: AbstractFlowTest() {
     fun `source flow is complete before duration`() = runTest {
         //-----1-----2-----3-----4-----5
         //----------------------------------|
-        range(1, 5).log("source")
+        flowRangeOf(1, 5).log("source")
             .onEach { delay(100) }
             .takeUntil(600.milliseconds).log("takeUntil")
             .assertResult(1, 2, 3, 4, 5)

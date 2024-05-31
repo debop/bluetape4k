@@ -14,20 +14,49 @@ import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.yield
 
 /**
- * Starts collecting all source [Flow]s and relays the items of the first one to emit an item,
- * cancelling the rest.
- * @param sources the [Iterable] sequence of [Flow]s
+ * 모든 소스 [Flow]들을 수집하고 첫 번째 요소를 발행하는 Flow를 시작하며, 나머지는 취소합니다.
+ *
+ * ```
+ * val flow1 = flowRangeOf(1, 5).onStart { delay(1000) }
+ * val flow2 = flowRangeOf(6, 5).onStart { delay(100) }
+ *
+ * amb(flow1, flow2)  // 6, 7, 8, 9, 10
+ * ```
  */
-fun <T> Iterable<Flow<T>>.amb(): Flow<T> = ambInternal(this)
-// FlowAmbIterable(this)
+fun <T> amb(flow1: Flow<T>, flow2: Flow<T>, vararg flows: Flow<T>): Flow<T> =
+    ambInternal(
+        buildList(capacity = 2 + flows.size) {
+            add(flow1)
+            add(flow2)
+            addAll(flows)
+        }
+    )
 
 /**
- * Starts collecting all source [Flow]s and relays the items of the first one to emit an item,
- * cancelling the rest.
- * @param sources the array of [Flow]s
+ * 모든 소스 [Flow]들을 수집하고 첫 번째 요소를 발행하는 Flow를 시작하며, 나머지는 취소합니다.
+ *
+ * ```
+ * val flow1 = flowRangeOf(1, 5).onStart { delay(1000) }
+ * val flow2 = flowRangeOf(6, 5).onStart { delay(100) }
+ *
+ * listOf(flow1, flow2).amb()   // 6, 7, 8, 9, 10
+ * ```
+ *
+ * @receiver the [Iterable] sequence of [Flow]s
  */
-fun <T> amb(vararg sources: Flow<T>): Flow<T> = ambInternal(sources.asIterable())
-// FlowAmbIterable(*sources)
+fun <T> Iterable<Flow<T>>.amb(): Flow<T> = ambInternal(this)
+
+/**
+ * 모든 소스 [Flow]들을 수집하고 첫 번째 요소를 발행하는 Flow를 시작하며, 나머지는 취소합니다.
+ *
+ * ```
+ * val flow1 = flowRangeOf(1, 5).onStart { delay(1000) }
+ * val flow2 = flowRangeOf(6, 5).onStart { delay(100) }
+ *
+ * flow1.ambWith(flow2)  // 6, 7, 8, 9, 10
+ * ```
+ */
+fun <T> Flow<T>.ambWith(flow1: Flow<T>, vararg flows: Flow<T>): Flow<T> = amb(this, flow1, *flows)
 
 internal fun <T> ambInternal(sources: Iterable<Flow<T>>): Flow<T> = flow {
     coroutineScope {

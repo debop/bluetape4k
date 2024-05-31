@@ -5,6 +5,7 @@ import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.single
@@ -35,7 +36,7 @@ class RingBufferTest {
 
     @Test
     fun `push items in multi-jobs`() = runTest {
-        val buffer = io.bluetape4k.coroutines.RingBuffer(16, Double.NaN)
+        val buffer = RingBuffer(16, Double.NaN)
         val counter = atomic(0)
 
         MultiJobTester()
@@ -56,7 +57,7 @@ class RingBufferTest {
             while (true) emit(i++)
         }
 
-        val windowed = flow.bufferedSliding(10)
+        val windowed: Flow<List<Int>> = flow.bufferedSliding(10)
 
         // flow를 중복 사용할 시에 초기 설정을 유지하는지 확인하기 위해 사용해본다.
         windowed.take(1).single()

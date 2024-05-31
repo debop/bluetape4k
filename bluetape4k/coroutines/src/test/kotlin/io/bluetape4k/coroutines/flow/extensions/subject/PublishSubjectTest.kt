@@ -1,7 +1,5 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
-import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
-import io.bluetape4k.collections.eclipse.primitives.toIntArrayList
 import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
@@ -32,8 +30,8 @@ class PublishSubjectTest {
     fun `multicast values to one or more flow collectors`() = runTest {
         val subject = PublishSubject<Int>()
 
-        val result1 = intArrayListOf()
-        val result2 = intArrayListOf()
+        val result1 = mutableListOf<Int>()
+        val result2 = mutableListOf<Int>()
 
         coroutineScope {
             launch {
@@ -60,15 +58,15 @@ class PublishSubjectTest {
             subject.complete()
         }
 
-        val expected = (1..10).toIntArrayList()
+        val expected = (1..10).toList()
         result1 shouldBeEqualTo expected
         result2 shouldBeEqualTo expected
     }
 
     @Test
     fun `basic create`() = runTest {
-        val result1 = intArrayListOf()
-        val result2 = intArrayListOf()
+        val result1 = mutableListOf<Int>()
+        val result2 = mutableListOf<Int>()
 
         withSingleThread { dispatcher ->
             val subject = PublishSubject<Int>()
@@ -99,7 +97,7 @@ class PublishSubjectTest {
             job1.join()
             job2.join()
         }
-        val expected = intArrayListOf(1, 2, 3, 4, 5)
+        val expected = listOf(1, 2, 3, 4, 5)
         result1 shouldBeEqualTo expected
         result2 shouldBeEqualTo expected
     }

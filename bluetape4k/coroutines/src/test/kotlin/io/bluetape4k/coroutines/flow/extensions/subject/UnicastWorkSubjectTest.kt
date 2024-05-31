@@ -1,16 +1,14 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.coroutines.flow.eclipse.toFastList
+import io.bluetape4k.coroutines.flow.extensions.flowRangeOf
 import io.bluetape4k.coroutines.flow.extensions.log
-import io.bluetape4k.coroutines.flow.extensions.range
 import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
@@ -22,11 +20,11 @@ class UnicastWorkSubjectTest {
 
     companion object: KLogging() {
         private const val BUFFER_SIZE = 500_000
-        private val expectedList = (0..4).toFastList()
+        private val expectedList = (0..4).toList()
     }
 
     private suspend fun generateInts(uws: UnicastWorkSubject<Int>, start: Int, count: Int) {
-        range(start, count).collect { uws.emit(it) }
+        flowRangeOf(start, count).collect { uws.emit(it) }
         uws.complete()
     }
 
@@ -38,15 +36,15 @@ class UnicastWorkSubjectTest {
             generateInts(subject, 1, 15)
 
             // emit 1..5
-            val result1 = subject.take(5).log("#1").toFastList()
+            val result1 = subject.take(5).log("#1").toList()
             result1 shouldBeEqualTo listOf(1, 2, 3, 4, 5)
 
             // emit 6..10
-            val result2 = subject.take(5).log("#2").toFastList()
+            val result2 = subject.take(5).log("#2").toList()
             result2 shouldBeEqualTo listOf(6, 7, 8, 9, 10)
 
             // emit 11..15
-            val result3 = subject.take(5).log("#3").toFastList()
+            val result3 = subject.take(5).log("#3").toList()
             result3 shouldBeEqualTo listOf(11, 12, 13, 14, 15)
         }
     }
@@ -58,7 +56,7 @@ class UnicastWorkSubjectTest {
             us.emit(it)
         }
         us.complete()
-        us.log("#1").toFastList() shouldBeEqualTo expectedList
+        us.log("#1").toList() shouldBeEqualTo expectedList
     }
 
     @Test
@@ -73,7 +71,7 @@ class UnicastWorkSubjectTest {
         val result = us
             .catch { it shouldBeInstanceOf RuntimeException::class }
             .log("#1")
-            .toFastList()
+            .toList()
         result shouldBeEqualTo listOf(0, 1, 2, 3, 4, 6)
     }
 
@@ -85,11 +83,11 @@ class UnicastWorkSubjectTest {
         }
         us.complete()
 
-        val result = us.take(3).log("#1").toFastList()
-        result shouldBeEqualTo fastListOf(0, 1, 2)
+        val result = us.take(3).log("#1").toList()
+        result shouldBeEqualTo listOf(0, 1, 2)
 
-        val result2 = us.log("#2").toFastList()
-        result2 shouldBeEqualTo fastListOf(3, 4)
+        val result2 = us.log("#2").toList()
+        result2 shouldBeEqualTo listOf(3, 4)
     }
 
     @Test
@@ -100,7 +98,7 @@ class UnicastWorkSubjectTest {
         }
         us.complete()
 
-        val result = us.take(3).log("#1").toFastList()
+        val result = us.take(3).log("#1").toList()
         result shouldBeEqualTo listOf(0, 1, 2)
     }
 
@@ -119,7 +117,7 @@ class UnicastWorkSubjectTest {
             }.log("job")
             yield()
 
-            val result = us.log("#1").toFastList()
+            val result = us.log("#1").toList()
             result shouldBeEqualTo expectedList
         }
     }

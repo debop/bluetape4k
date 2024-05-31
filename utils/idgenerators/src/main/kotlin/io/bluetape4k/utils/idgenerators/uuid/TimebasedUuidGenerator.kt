@@ -3,7 +3,7 @@ package io.bluetape4k.utils.idgenerators.uuid
 import com.fasterxml.uuid.Generators
 import com.fasterxml.uuid.NoArgGenerator
 import io.bluetape4k.codec.Url62
-import io.bluetape4k.core.assertPositiveNumber
+import io.bluetape4k.support.assertPositiveNumber
 import java.util.*
 
 /**

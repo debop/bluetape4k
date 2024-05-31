@@ -23,7 +23,7 @@ open class Resumable {
     private val continuation by continuationRef
 
     suspend fun await() {
-        suspendCancellableCoroutine<Any> { cont ->
+        suspendCancellableCoroutine { cont ->
             while (true) {
                 val current = continuation
                 if (current == READLY) {

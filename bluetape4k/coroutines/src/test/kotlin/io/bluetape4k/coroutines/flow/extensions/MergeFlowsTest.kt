@@ -16,23 +16,23 @@ class MergeFlowsTest: AbstractFlowTest() {
 
     @Test
     fun `merge flows`() = runTest {
-        mergeFlows(
-            range(6, 5).log(6),
-            range(1, 5).log(1),
+        merge(
+            flowRangeOf(6, 5).log(6),
+            flowRangeOf(1, 5).log(1),
         )
             .assertResultSet(6, 7, 8, 9, 10, 1, 2, 3, 4, 5)
     }
 
     @Test
     fun `one source`() = runTest {
-        mergeFlows(range(1, 5))
+        merge(flowRangeOf(1, 5))
             .assertResultSet(1, 2, 3, 4, 5)
     }
 
     @Test
     fun `no source`() = runTest {
         emptyList<Flow<Int>>()
-            .mergeFlows()
+            .merge()
             .assertResult()
     }
 
@@ -40,9 +40,9 @@ class MergeFlowsTest: AbstractFlowTest() {
     fun `many async`() = runTest {
         val n = 1_000
 
-        mergeFlows(
-            range(0, n / 2).startCollectOn(Dispatchers.Default).log(1),
-            range(0, n / 2).startCollectOn(Dispatchers.Unconfined).log(2),
+        merge(
+            flowRangeOf(0, n / 2).startCollectOn(Dispatchers.Default).log("#1"),
+            flowRangeOf(0, n / 2).startCollectOn(Dispatchers.Unconfined).log("#2"),
         )
             .count() shouldBeEqualTo n
     }

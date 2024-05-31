@@ -1,8 +1,8 @@
 package io.bluetape4k.coroutines.flow.extensions.parallel
 
 import app.cash.turbine.test
+import io.bluetape4k.coroutines.flow.extensions.flowRangeOf
 import io.bluetape4k.coroutines.flow.extensions.log
-import io.bluetape4k.coroutines.flow.extensions.range
 import io.bluetape4k.coroutines.tests.assertError
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.coroutines.tests.assertResultSet
@@ -24,7 +24,7 @@ class ParallelFlowMapTest {
         withParallels(1) { execs ->
             execs shouldHaveSize 1
 
-            range(1, 5).log("source")
+            flowRangeOf(1, 5).log("source")
                 .parallel(execs.size) { execs[it] }
                 .map { it + 1 }
                 .sequential().log("sequential")
@@ -35,7 +35,7 @@ class ParallelFlowMapTest {
     @Test
     fun map2() = runSuspendTest {
         withParallels(2) { execs ->
-            range(1, 5).log("source")
+            flowRangeOf(1, 5).log("source")
                 .parallel(execs.size) { execs[it] }
                 .map { it + 1 }
                 .sequential().log("sequential")

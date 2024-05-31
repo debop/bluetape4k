@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.FlowCollector
 internal class FlowParallelReduce<T, R>(
     private val source: ParallelFlow<T>,
     private val seed: suspend () -> R,
-    private val combine: suspend (R, T) -> R
+    private val combine: suspend (R, T) -> R,
 ): ParallelFlow<R> {
     override val parallelism: Int
         get() = source.parallelism

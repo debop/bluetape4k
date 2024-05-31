@@ -9,25 +9,51 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentLinkedQueue
+import kotlin.experimental.ExperimentalTypeInference
 
-private val log = KotlinLogging.logger { }
+private val log by lazy { KotlinLogging.logger { } }
 
 /**
- * Maps the upstream values into [Flow]s and launches them all at once, then
- * emits items from a source before items of the next are emitted.
- * Note that the upstream and each source is consumed in an unbounded manner and thus,
- * depending on the speed of the current source and the collector, the operator may retain
- * items longer and may use more memory during its execution.
- * @param transform the suspendable function to turn an upstream item into a [Flow]
+ * 업스트림 값을 [Flow]로 매핑하고 한번에 모두 시작한 다음, 다음 소스의 항목이 발행되기 전에 소스에서 모든 항목을 발행합니다.
+ * 각 소스는 무제한으로 소비되므로 현재 소스와 수집기의 속도에 따라 연산자가 항목을 더 오래 유지하고 실행 중에 더 많은 메모리를 사용할 수 있습니다.
+ *
+ * ```
+ * flowRangeOf(1, 5)              // 1,2,3,4,5
+ *     .concatMapEager {
+ *         flowRangeOf(it * 10, 5).delay(100)   // 10,11,12,13,14
+ *     }                                        // 20,21,22,23,24 ...
+ *     .take(7)
+ *     .assertResult(
+ *         10, 11, 12, 13, 14,
+ *         20, 21
+ *     )
+ * ```
+ *
+ * @param transform 업스트림 요소를 [Flow]로 변환하는 suspendable 함수
+ *
+ * @return a [Flow] that emits items from the sources
  */
 fun <T, R> Flow<T>.concatMapEager(transform: suspend (T) -> Flow<R>): Flow<R> =
     concatMapEagerInternal(transform)
 
-internal fun <T, R> Flow<T>.concatMapEagerInternal(transform: suspend (T) -> Flow<R>): Flow<R> = flow {
+/**
+ * 업스트림 값을 [Flow]로 매핑하고 한번에 모두 시작한 다음, 다음 소스의 항목이 발행되기 전에 소스에서 모든 항목을 발행합니다.
+ * 각 소스는 무제한으로 소비되므로 현재 소스와 수집기의 속도에 따라 연산자가 항목을 더 오래 유지하고 실행 중에 더 많은 메모리를 사용할 수 있습니다.
+ *
+ * @param T 소스 요소 타입
+ * @param R 변환된 요소 타입
+ * @param transform 업스트림 요소를 [Flow]로 변환하는 suspendable 함수
+ * @receiver source flow
+ * @return 변환된 요소를 발행하는 Flow
+ */
+@OptIn(ExperimentalTypeInference::class)
+internal fun <T, R> Flow<T>.concatMapEagerInternal(
+    @BuilderInference transform: suspend (T) -> Flow<R>,
+): Flow<R> = channelFlow {
     coroutineScope {
         val resumeOutput = Resumable()
         val innerQueues = ConcurrentLinkedQueue<ConcatMapEagerInnerQueue<R>>()
@@ -79,7 +105,7 @@ internal fun <T, R> Flow<T>.concatMapEagerInternal(transform: suspend (T) -> Flo
                     continue
                 }
                 if (value != null) {
-                    emit(value)
+                    send(value)
                     continue
                 }
             }

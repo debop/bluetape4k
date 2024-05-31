@@ -1,13 +1,13 @@
 package io.bluetape4k.coroutines.tests
 
-import io.bluetape4k.core.requirePositiveNumber
 import io.bluetape4k.support.forEachCatching
+import io.bluetape4k.support.requirePositiveNumber
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.asCoroutineDispatcher
 import java.util.concurrent.Executors
 
 /**
- * Coroutines 작업을 이해하기 쉽고, 테스트하기 쉽게 1개의 Thread에서 실행되도록 합니다.
+ * Coroutines 작업을 이해하기 쉽고, 테스트하기 쉽게 Single Thread에서 실행되도록 합니다.
  *
  * ```
  * withSingleThread { dispatcher ->

@@ -1,6 +1,5 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
-import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
 import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
@@ -27,7 +26,7 @@ class ReplaySubjectUnboundedTest {
     fun `basic online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
-            val result = intArrayListOf()
+            val result = mutableListOf<Int>()
 
             val job = launch {
                 replay
@@ -44,7 +43,7 @@ class ReplaySubjectUnboundedTest {
             replay.complete()
             job.join()
 
-            result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+            result shouldBeEqualTo listOf(0, 1, 2, 3, 4)
         }
     }
 
@@ -58,13 +57,13 @@ class ReplaySubjectUnboundedTest {
         replay.complete()
 
 
-        val result = intArrayListOf()
+        val result = mutableListOf<Int>()
         replay
             .onEach { delay(10) }
             .log("#1")
             .collect { result.add(it) }
 
-        result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+        result shouldBeEqualTo mutableListOf(0, 1, 2, 3, 4)
     }
 
     @Test
@@ -72,7 +71,7 @@ class ReplaySubjectUnboundedTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
 
-            val result = intArrayListOf()
+            val result = mutableListOf<Int>()
             val exc = atomic<Throwable?>(null)
 
             val job = launch {
@@ -94,7 +93,7 @@ class ReplaySubjectUnboundedTest {
 
             job.join()
 
-            result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+            result shouldBeEqualTo mutableListOf(0, 1, 2, 3, 4)
             exc.value shouldBeInstanceOf RuntimeException::class
         }
     }
@@ -103,7 +102,7 @@ class ReplaySubjectUnboundedTest {
     fun `error offline`() = runTest {
         val replay = ReplaySubject<Int>()
 
-        val result = intArrayListOf()
+        val result = mutableListOf<Int>()
         val exc = atomic<Throwable?>(null)
 
         repeat(5) {
@@ -119,7 +118,7 @@ class ReplaySubjectUnboundedTest {
             exc.value = e
         }
 
-        result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+        result shouldBeEqualTo mutableListOf<Int>(0, 1, 2, 3, 4)
         exc.value shouldBeInstanceOf RuntimeException::class
     }
 
@@ -127,7 +126,7 @@ class ReplaySubjectUnboundedTest {
     fun `take online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
-            val result = intArrayListOf()
+            val result = mutableListOf<Int>()
 
             val job = launch {
                 replay
@@ -144,7 +143,7 @@ class ReplaySubjectUnboundedTest {
             replay.complete()
             job.join()
 
-            result shouldBeEqualTo intArrayListOf(0, 1, 2)
+            result shouldBeEqualTo mutableListOf(0, 1, 2)
         }
     }
 
@@ -157,13 +156,13 @@ class ReplaySubjectUnboundedTest {
         }
         replay.complete()
 
-        val result = intArrayListOf()
+        val result = mutableListOf<Int>()
         replay
             .take(3)
             .log("#1")
             .collect { result.add(it) }
 
-        result shouldBeEqualTo intArrayListOf(0, 1, 2)
+        result shouldBeEqualTo mutableListOf(0, 1, 2)
     }
 
     @Test
@@ -171,7 +170,7 @@ class ReplaySubjectUnboundedTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
 
-            val result1 = intArrayListOf()
+            val result1 = mutableListOf<Int>()
             val job1 = launch {
                 replay
                     .onEach { delay(50) }
@@ -179,7 +178,7 @@ class ReplaySubjectUnboundedTest {
                     .collect { result1.add(it) }
             }.log("job1")
 
-            val result2 = intArrayListOf()
+            val result2 = mutableListOf<Int>()
             val job2 = launch {
                 replay
                     .onEach { delay(100) }
@@ -197,8 +196,8 @@ class ReplaySubjectUnboundedTest {
             job1.join()
             job2.join()
 
-            result1 shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
-            result2 shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+            result1 shouldBeEqualTo mutableListOf(0, 1, 2, 3, 4)
+            result2 shouldBeEqualTo mutableListOf(0, 1, 2, 3, 4)
         }
     }
 
@@ -207,7 +206,7 @@ class ReplaySubjectUnboundedTest {
         withSingleThread {
             val replay = ReplaySubject<Int>()
 
-            val result1 = intArrayListOf()
+            val result1 = mutableListOf<Int>()
             val job1 = launch {
                 replay
                     .onEach { delay(50) }
@@ -215,7 +214,7 @@ class ReplaySubjectUnboundedTest {
                     .collect { result1.add(it) }
             }.log("job1")
 
-            val result2 = intArrayListOf()
+            val result2 = mutableListOf<Int>()
             val job2 = launch {
                 replay
                     .onEach { delay(100) }
@@ -234,8 +233,8 @@ class ReplaySubjectUnboundedTest {
             job1.join()
             job2.join()
 
-            result1 shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
-            result2 shouldBeEqualTo intArrayListOf(0, 1, 2)
+            result1 shouldBeEqualTo mutableListOf<Int>(0, 1, 2, 3, 4)
+            result2 shouldBeEqualTo mutableListOf<Int>(0, 1, 2)
         }
     }
 

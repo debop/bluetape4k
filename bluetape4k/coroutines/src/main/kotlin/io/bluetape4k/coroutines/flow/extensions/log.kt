@@ -12,27 +12,28 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.toList
+import org.slf4j.Logger
 
-internal val logger = KotlinLogging.logger {}
+internal val logger by lazy { KotlinLogging.logger {} }
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
-fun <T> Flow<T>.log(tag: Any): Flow<T> =
-    onStart { logger.debug { "[$tag] Start " } }
+fun <T> Flow<T>.log(tag: Any, log: Logger = logger): Flow<T> =
+    onStart { log.debug { "[$tag] Start " } }
         .onEach {
             val item = when (it) {
                 is Flow<*> -> it.toList()
                 else       -> it
             }
-            logger.debug { "[$tag] emit $item" }
+            log.debug { "[$tag] emit $item" }
         }
         .onCompletion {
             if (it == null) {
-                logger.debug { "[$tag] Completed" }
+                log.debug { "[$tag] Completed" }
             } else {
                 when (it) {
-                    is CancellationException -> logger.debug { "[$tag] Canceled" }
-                    else                     -> logger.debug(it) { "[$tag] Completed by exception" }
+                    is CancellationException -> log.debug { "[$tag] Canceled" }
+                    else                     -> log.debug(it) { "[$tag] Completed by exception" }
                 }
             }
         }
-        .onEmpty { logger.debug { "[$tag] Flow is empty" } }
+        .onEmpty { log.debug { "[$tag] Flow is empty" } }

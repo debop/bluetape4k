@@ -14,24 +14,26 @@ import kotlin.random.Random
 
 class SuspendLazyTest {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        private const val TEST_NUMBER = 42
+    }
 
     @Test
     fun `get suspend lazy value in coroutine scope`() = runTest {
         val callCounter = atomic(0)
 
         val lazyValue = suspendLazy {
-            delay(Random.nextLong(10))
+            delay(Random.nextLong(100))
             log.trace { "Calculate lazy value in suspend function." }
             callCounter.incrementAndGet()
-            42
+            TEST_NUMBER
         }
         callCounter.value shouldBeEqualTo 0
 
         yield()
 
-        lazyValue() shouldBeEqualTo 42
-        lazyValue() shouldBeEqualTo 42
+        lazyValue() shouldBeEqualTo TEST_NUMBER
+        lazyValue() shouldBeEqualTo TEST_NUMBER
 
         callCounter.value shouldBeEqualTo 1
     }
@@ -41,10 +43,10 @@ class SuspendLazyTest {
         val callCounter = atomic(0)
 
         val lazyValue = suspendLazy {
-            delay(Random.nextLong(10))
+            delay(Random.nextLong(100))
             log.trace { "Calculate lazy value in suspend function." }
             callCounter.incrementAndGet()
-            42
+            TEST_NUMBER
         }
         callCounter.value shouldBeEqualTo 0
 
@@ -52,10 +54,10 @@ class SuspendLazyTest {
             .numJobs(16)
             .roundsPerJob(1)
             .add {
-                lazyValue() shouldBeEqualTo 42
+                lazyValue() shouldBeEqualTo TEST_NUMBER
             }
             .add {
-                lazyValue() shouldBeEqualTo 42
+                lazyValue() shouldBeEqualTo TEST_NUMBER
             }
             .run()
 
@@ -67,17 +69,17 @@ class SuspendLazyTest {
         val callCounter = atomic(0)
 
         val lazyValue = suspendBlockingLazy {
-            Thread.sleep(Random.nextLong(10))
+            Thread.sleep(Random.nextLong(100))
             log.trace { "Calculate lazy value in blocking mode." }
             callCounter.incrementAndGet()
-            42
+            TEST_NUMBER
         }
         callCounter.value shouldBeEqualTo 0
 
         yield()
 
-        lazyValue() shouldBeEqualTo 42
-        lazyValue() shouldBeEqualTo 42
+        lazyValue() shouldBeEqualTo TEST_NUMBER
+        lazyValue() shouldBeEqualTo TEST_NUMBER
 
         callCounter.value shouldBeEqualTo 1
     }
@@ -87,10 +89,10 @@ class SuspendLazyTest {
         val callCounter = atomic(0)
 
         val lazyValue = suspendBlockingLazyIO {
-            Thread.sleep(Random.nextLong(10))
+            Thread.sleep(Random.nextLong(100))
             log.trace { "Calculate lazy value in blocking mode with IO dispatchers" }
             callCounter.incrementAndGet()
-            42
+            TEST_NUMBER
         }
         callCounter.value shouldBeEqualTo 0
 
@@ -101,8 +103,8 @@ class SuspendLazyTest {
 
         yield()
 
-        lazy1.await() shouldBeEqualTo 42
-        lazy2.await() shouldBeEqualTo 42
+        lazy1.await() shouldBeEqualTo TEST_NUMBER
+        lazy2.await() shouldBeEqualTo TEST_NUMBER
 
         callCounter.value shouldBeEqualTo 1
     }
@@ -112,10 +114,10 @@ class SuspendLazyTest {
         val callCounter = atomic(0)
 
         val lazyValue = suspendBlockingLazyIO {
-            Thread.sleep(Random.nextLong(10))
+            Thread.sleep(Random.nextLong(100))
             log.trace { "Calculate lazy value in blocking mode with IO dispatchers" }
             callCounter.incrementAndGet()
-            42
+            TEST_NUMBER
         }
         callCounter.value shouldBeEqualTo 0
 
@@ -124,7 +126,7 @@ class SuspendLazyTest {
                 .numJobs(16)
                 .roundsPerJob(1)
                 .add {
-                    lazyValue.invoke() shouldBeEqualTo 42
+                    lazyValue() shouldBeEqualTo TEST_NUMBER
                 }
                 .run()
         }

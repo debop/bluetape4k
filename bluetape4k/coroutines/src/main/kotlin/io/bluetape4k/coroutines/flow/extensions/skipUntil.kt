@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration
 
 /**
@@ -20,7 +19,6 @@ import kotlin.time.Duration
  * @param notifier 소스 [Flow]의 흐름을 제어하는 [Flow]
  */
 fun <T> Flow<T>.skipUntil(notifier: Flow<Any?>): Flow<T> = skipUntilInternal(this, notifier)
-// FlowSkipUntil(this, notifier)
 
 /**
  * [delay] 동안 소스 [Flow]에서 방출된 항목을 건너뛰는 [Flow]를 반환합니다.
@@ -62,25 +60,16 @@ internal fun <T> skipUntilInternal(source: Flow<T>, notifier: Flow<Any?>): Flow<
         val gate = atomic(false)
 
         val job = launch(start = CoroutineStart.UNDISPATCHED) {
-            try {
-                notifier.take(1).collect()
-            } catch (e: CancellationException) {
-                // Nothing to do
-            } finally {
-                gate.value = true
+            notifier.take(1).collect()
+            gate.value = true
+        }
+
+        source.collect {
+            if (gate.value) {
+                emit(it)
             }
         }
 
-        try {
-            source.collect {
-                if (gate.value) {
-                    emit(it)
-                }
-            }
-        } catch (e: CancellationException) {
-            // Nothing to do
-        } finally {
-            job.cancel()
-        }
+        job.cancel()
     }
 }

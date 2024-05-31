@@ -1,9 +1,9 @@
 package io.bluetape4k.coroutines.flow.extensions
 
 import app.cash.turbine.test
-import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flowOf
@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeLessOrEqualTo
 import org.amshove.kluent.shouldBeTrue
@@ -30,14 +31,14 @@ class SlidingTest: AbstractFlowTest() {
         val slidingCount by slidingCounter
         val slidingSize = 5
 
-        val sliding = range(1, 20)
+        val sliding = flowRangeOf(1, 20)
             .sliding(slidingSize)
             .log("sliding")
             .onEach { slide ->
                 slide.size shouldBeLessOrEqualTo slidingSize
                 slidingCounter.incrementAndGet()
             }
-            .toFastList()
+            .toList()
 
         slidingCount shouldBeEqualTo 20
         sliding shouldHaveSize 20
@@ -83,7 +84,7 @@ class SlidingTest: AbstractFlowTest() {
 
     @Test
     fun `sliding with cancellation`() = runTest {
-        range(0, 10)
+        flowRangeOf(0, 10)
             .sliding(4).log("sliding")
             .take(2)
             .test {
@@ -98,23 +99,25 @@ class SlidingTest: AbstractFlowTest() {
         val flow = MutableSharedFlow<Int>(extraBufferCapacity = 64)
         val results = mutableListOf<List<Int>>()
 
-        val job1 = flow.sliding(3).log("job1")
+        flow.sliding(3).log("job1")
             .onEach {
                 results += it
                 if (it == listOf(1, 2, 3)) {
                     flow.tryEmit(4).shouldBeTrue()
                 }
-            }.launchIn(this)
+            }
+            .launchIn(this)
+        yield()
 
-        val job2 = launch {
+        launch {
             flow.tryEmit(1).shouldBeTrue()
             flow.tryEmit(2).shouldBeTrue()
             flow.tryEmit(3).shouldBeTrue()
         }
-
+        yield()
         advanceUntilIdle()
-        job1.cancel()
-        job2.cancel()
+
+        this.coroutineContext.cancelChildren()
 
         results shouldBeEqualTo listOf(
             listOf(1, 2, 3),

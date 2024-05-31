@@ -73,4 +73,28 @@ class TestSupportTest {
         }
         log.trace { "Done" }
     }
+
+    @RepeatedTest(REPEAT_SIZE)
+    fun `run many coroutines with many threads`() = runTest {
+        // 4개의 Thread 에서 2000개의 코루틴을 실행합니다.
+        withParallels(4) { executors ->
+            val jobs1 = List(1000) {
+                val dispatcher = executors[it % executors.size]
+                launch(dispatcher) {
+                    delay(Random.nextLong(1, 5))
+                    log.trace { "Job1[$it]" }
+                }
+            }
+            val jobs2 = List(1000) {
+                val dispatcher = executors[it % executors.size]
+                launch(dispatcher) {
+                    delay(Random.nextLong(1, 5))
+                    log.trace { "Job2[$it]" }
+                }
+            }
+            jobs1.joinAll()
+            jobs2.joinAll()
+        }
+        log.trace { "Done" }
+    }
 }

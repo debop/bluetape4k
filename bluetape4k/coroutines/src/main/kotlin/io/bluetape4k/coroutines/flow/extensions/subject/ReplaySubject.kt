@@ -44,8 +44,11 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
 
     constructor(maxTime: Long, unit: TimeUnit): this(Int.MAX_VALUE, maxTime, unit)
 
-    constructor(maxSize: Int, maxTime: Long, unit: TimeUnit):
-        this(maxSize, maxTime, unit, { it.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS) })
+    constructor(maxSize: Int, maxTime: Long, unit: TimeUnit): this(
+        maxSize,
+        maxTime,
+        unit,
+        { it.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS) })
 
     constructor(maxSize: Int, maxTime: Long, unit: TimeUnit, timeSource: (TimeUnit) -> Long) {
         buffer = TimeAndSizeBoundReplayBuffer(maxSize, maxTime, unit, timeSource)
@@ -82,8 +85,7 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
         done.value = true
         buffer.error(ex)
 
-        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>)
-            .forEach { collector ->
+        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>).forEach { collector ->
                 collector.resume()
             }
     }
@@ -96,8 +98,7 @@ class ReplaySubject<T>: AbstractFlow<T>, SubjectApi<T> {
         done.value = true
         buffer.complete()
 
-        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>)
-            .forEach { collector ->
+        collectorsRef.getAndSet(TERMINATED as Array<InnerCollector<T>>).forEach { collector ->
                 collector.resume()
             }
     }

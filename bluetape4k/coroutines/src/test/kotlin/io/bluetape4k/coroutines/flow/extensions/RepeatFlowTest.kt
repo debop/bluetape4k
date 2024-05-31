@@ -18,15 +18,15 @@ class RepeatFlowTest: AbstractFlowTest() {
 
     companion object: KLogging()
 
-    private val dispatcher = newFixedThreadPoolContext(8, "flowext")
+    private val testDispatcher = newFixedThreadPoolContext(8, "flowext")
 
     @Test
     fun `repeatFlow operator`() = runTest {
         var result = 42
         repeatFlow(4) { result++ }
-            .onEach { delay(Random.nextLong(5)) }.log("repeat")
-            .flowOn(dispatcher)
-            .assertResult(42, 43, 44, 45)
+            .onEach { delay(Random.nextLong(5)) }
+            .log("repeat")
+            .assertResult(result, result + 1, result + 2, result + 3)
     }
 
     @Test
@@ -36,7 +36,6 @@ class RepeatFlowTest: AbstractFlowTest() {
             if (it == 2) throw RuntimeException("Boom!")
             else result++
         }.log("repeat")
-            .flowOn(dispatcher)
             .test {
                 awaitItem() shouldBeEqualTo 42
                 awaitItem() shouldBeEqualTo 43
@@ -46,34 +45,36 @@ class RepeatFlowTest: AbstractFlowTest() {
 
     @Test
     fun `repeatFlow with cancellation before flowOn`() = runTest {
-        var result = 42
+        val initValue = 42
+        var currValue = initValue
         repeatFlow(4) {
             if (it == 2) throw RuntimeException("Boom!")
-            else result++
+            else currValue++
         }
             .log("repeat")
-            .take(2)
-            .flowOn(dispatcher)
+            .take(2)                // cancellation before flowOn
+            .flowOn(testDispatcher)
             .test {
-                awaitItem() shouldBeEqualTo 42
-                awaitItem() shouldBeEqualTo 43
+                awaitItem() shouldBeEqualTo initValue
+                awaitItem() shouldBeEqualTo initValue + 1
                 awaitComplete()
             }
     }
 
     @Test
     fun `repeatFlow with cancellation after flowOn`() = runTest {
-        var result = 42
+        val initValue = 42
+        var currValue = initValue
         repeatFlow(4) {
             if (it == 2) throw RuntimeException("Boom!")
-            else result++
+            else currValue++
         }
             .log("repeat")
-            .flowOn(dispatcher)
-            .take(2)
+            .flowOn(testDispatcher)
+            .take(2)            // cancellation after flowOn
             .test {
-                awaitItem() shouldBeEqualTo 42
-                awaitItem() shouldBeEqualTo 43
+                awaitItem() shouldBeEqualTo initValue
+                awaitItem() shouldBeEqualTo initValue + 1
                 awaitError() shouldBeInstanceOf RuntimeException::class
             }
     }

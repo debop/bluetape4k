@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.selects.select
 
 /**
  * 두 개의 [Deferred]의 값을 하나의 [Deferred]로 만듭니다.
@@ -19,10 +20,9 @@ inline fun <T1, T2, R> CoroutineScope.zip(
     src2: Deferred<T2>,
     coroutineStart: CoroutineStart = CoroutineStart.DEFAULT,
     crossinline zipper: (T1, T2) -> R,
-): Deferred<R> =
-    async(start = coroutineStart) {
-        zipper(src1.await(), src2.await())
-    }
+): Deferred<R> = async(start = coroutineStart) {
+    zipper(src1.await(), src2.await())
+}
 
 /**
  * Deferred 의 값을 [transform]로 변환하여 새로운 Deferred 를 만듭니다.
@@ -55,4 +55,29 @@ suspend inline fun <K, T: Collection<K>, R> Deferred<T>.concatMap(
     async(start = coroutineStart) {
         self.await().map { transform(it) }
     }
+}
+
+suspend fun <T> awaitAny(vararg args: Deferred<T>): T {
+    require(args.isNotEmpty())
+    return select { args.forEach { it.onAwait { it } } }
+}
+
+suspend fun <T> Collection<Deferred<T>>.awaitAny(): T {
+    require(this.isNotEmpty())
+    return select { forEach { it.onAwait { it } } }
+}
+
+suspend fun <T> Collection<Deferred<T>>.awaitAnyAndCancelOthers(): T {
+    require(this.isNotEmpty())
+    val firstAwaited = select {
+        forEachIndexed { index, deferred ->
+            deferred.onAwait { IndexedValue(index, it) }
+        }
+    }
+    val firstAwaitedIndex = firstAwaited.index
+    forEachIndexed { index, deferred ->
+        if (index != firstAwaitedIndex)
+            runCatching { deferred.cancel() }
+    }
+    return firstAwaited.value
 }

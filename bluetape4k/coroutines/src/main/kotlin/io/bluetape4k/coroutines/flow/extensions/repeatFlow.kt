@@ -3,7 +3,7 @@
 
 package io.bluetape4k.coroutines.flow.extensions
 
-import io.bluetape4k.core.assertPositiveNumber
+import io.bluetape4k.support.assertPositiveNumber
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

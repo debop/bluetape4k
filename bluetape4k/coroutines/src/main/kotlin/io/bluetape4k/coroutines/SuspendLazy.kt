@@ -7,6 +7,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.experimental.ExperimentalTypeInference
 
 /**
  * lazy operation의 실행 블럭에 suspend 함수를 사용하도록 하는 interface
@@ -17,9 +19,10 @@ fun interface SuspendLazy<out T> {
     suspend operator fun invoke(): T
 }
 
+@OptIn(ExperimentalTypeInference::class)
 @PublishedApi
 internal class SuspendLazyBlockImpl<out T>(
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
+    private val dispatcher: CoroutineContext = EmptyCoroutineContext,
     @BuilderInference initializer: () -> T,
 ): SuspendLazy<T> {
 
@@ -30,6 +33,7 @@ internal class SuspendLazyBlockImpl<out T>(
     }
 }
 
+@OptIn(ExperimentalTypeInference::class)
 @PublishedApi
 internal class SuspendLazySuspendingImpl<out T>(
     coroutineScope: CoroutineScope,
@@ -62,8 +66,9 @@ internal class SuspendLazySuspendingImpl<out T>(
  * @param initializer 지연된 계산을 수행하는 함수
  * @return
  */
+@OptIn(ExperimentalTypeInference::class)
 fun <T> suspendBlockingLazy(
-    dispatcher: CoroutineDispatcher = Dispatchers.Default,
+    dispatcher: CoroutineContext = EmptyCoroutineContext,
     @BuilderInference initializer: () -> T,
 ): SuspendLazy<T> =
     SuspendLazyBlockImpl(dispatcher, initializer)
@@ -85,6 +90,7 @@ fun <T> suspendBlockingLazy(
  * @param initializer 지연된 계산을 수행하는 함수
  * @return
  */
+@OptIn(ExperimentalTypeInference::class)
 inline fun <T> suspendBlockingLazyIO(
     @BuilderInference crossinline initializer: () -> T,
 ): SuspendLazy<T> =
@@ -108,8 +114,9 @@ inline fun <T> suspendBlockingLazyIO(
  * @param initializer 지연된 계산을 수행하는 함수
  * @return
  */
+@OptIn(ExperimentalTypeInference::class)
 inline fun <T> CoroutineScope.suspendLazy(
-    context: CoroutineContext = Dispatchers.Default,
+    context: CoroutineContext = EmptyCoroutineContext,
     @BuilderInference crossinline initializer: suspend CoroutineScope.() -> T,
 ): SuspendLazy<T> {
     return SuspendLazySuspendingImpl(this, context) { initializer() }

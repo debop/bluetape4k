@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
  *
  * Note that due to how coroutines/[Flow] are implemented, it is not guaranteed
  * the [transform] function connects the upstream with the downstream in time,
- * causing item loss or even run-to-completion without any single upstream item
+ * causing item loss or even run-to-completions without any single upstream item
  * being collected and transformed. To avoid such scenarios, use the
  * `publish(expectedCollectors)` overload.
  */
@@ -28,7 +28,7 @@ fun <T, R> Flow<T>.publish(transform: suspend (Flow<T>) -> Flow<R>): Flow<R> =
  *
  * Note that due to how coroutines/[Flow] are implemented, it is not guaranteed
  * the [transform] function connects the upstream with the downstream in time,
- * causing item loss or even run-to-completion without any single upstream item
+ * causing item loss or even run-to-completions without any single upstream item
  * being collected and transformed. To avoid such scenarios, specify the
  * [expectedCollectors] to delay the collection of the upstream until the number
  * of inner collectors has reached the specified number.

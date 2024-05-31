@@ -3,7 +3,7 @@
 
 package io.bluetape4k.coroutines.flow.extensions
 
-import io.bluetape4k.core.requireGt
+import io.bluetape4k.support.requireGt
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 
@@ -32,13 +32,13 @@ fun <T> Flow<T>.sliding(size: Int): Flow<List<T>> = windowed(size, 1)
  */
 fun <T> Flow<T>.bufferedSliding(size: Int): Flow<List<T>> = channelFlow {
     size.requireGt(1, "sliding size")
-    val queue = ArrayDeque<T>()
+    val queue = ArrayList<T>(size)
 
     this@bufferedSliding.collect { element ->
         if (queue.size >= size) {
             queue.removeFirst()
         }
-        queue.addLast(element)
+        queue.add(element)
         send(queue.toList())
     }
 

@@ -31,27 +31,27 @@ class RaceTest: AbstractFlowTest() {
 
     @Test
     fun `race single flow`() = runTest {
-        listOf(flowOf(1, 2, 3))
-            .race()
+        flowOf(1, 2, 3).raceWith(emptyFlow())
             .assertResult(1, 2, 3)
     }
 
     @Test
     fun `race 2 flow without delay`() = runTest {
-        race(
+        listOf(
             flowOf(1, 2).log(1),
             flowOf(3, 4).log(2)
-        ).assertResult(1, 2)
+        )
+            .race()
+            .assertResult(1, 2)
     }
 
     @Test
     fun `race 3 flow with delay`() = runTest {
-        listOf(
+        race(
             flowOf(1, 2).onEach { delay(200L) }.log(1),
             flowOf(3, 4).onEach { delay(100L) }.log(2),
             flowOf(5, 6).onEach { delay(50L) }.log(3),
         )
-            .race()
             .test {
                 awaitItem() shouldBeEqualTo 5
                 awaitItem() shouldBeEqualTo 6
@@ -61,11 +61,10 @@ class RaceTest: AbstractFlowTest() {
 
     @Test
     fun `race 2 flow with start delay`() = runTest {
-        listOf(
+        race(
             flowOf(1, 2, 3).onStart { delay(100L) }.log(1),
             flowOf(2, 3, 4).onStart { delay(200L) }.log(2),
         )
-            .race()
             .test {
                 awaitItem() shouldBeEqualTo 1
                 awaitItem() shouldBeEqualTo 2
@@ -76,20 +75,18 @@ class RaceTest: AbstractFlowTest() {
 
     @Test
     fun `race with complete`() = runTest {
-        listOf(
+        race(
             flow<Int> { delay(100); }.log(1),
             flow { delay(200); emit(1) }.log(2)
         )
-            .race()
             .test {
                 awaitComplete()
             }
 
-        listOf(
+        race(
             flow { delay(200); emit(1) }.log(1),
             flow<Int> { delay(100) }.log(2),
         )
-            .race()
             .test {
                 awaitComplete()
             }
@@ -97,7 +94,7 @@ class RaceTest: AbstractFlowTest() {
 
     @Test
     fun `race with failure in upstream`() = runTest {
-        listOf(
+        race(
             flow {
                 delay(100)
                 emit(1)
@@ -112,14 +109,13 @@ class RaceTest: AbstractFlowTest() {
                 emit(4)
             }.log(2)
         )
-            .race()
             .test {
                 awaitItem() shouldBeEqualTo 1
                 awaitError()
             }
 
 
-        listOf(
+        race(
             flow {
                 delay(1000)
                 emit(1)
@@ -131,7 +127,6 @@ class RaceTest: AbstractFlowTest() {
                 throw RuntimeException("Boom!")
             }.log(2)
         )
-            .race()
             .test {
                 awaitError()
             }
@@ -139,25 +134,23 @@ class RaceTest: AbstractFlowTest() {
 
     @Test
     fun `race with take`() = runTest {
-        listOf(
+        race(
             flowOf(1).log(1),
             flowOf(2).log(2)
         )
-            .race()
             .take(1)
             .test {
                 awaitItem() shouldBeEqualTo 1
                 awaitComplete()
             }
 
-        listOf(
+        race(
             flow {
                 emit(1)
                 throw RuntimeException("Boom!")
             }.onStart { delay(100) }.log(1),
             flowOf(2).onStart { delay(200) }.log(2)
         )
-            .race()
             .take(1)
             .test {
                 awaitItem() shouldBeEqualTo 1
@@ -169,7 +162,7 @@ class RaceTest: AbstractFlowTest() {
     fun `race with cancellation`() = runTest {
         val message = "test"
 
-        listOf(
+        race(
             flow {
                 delay(50)
                 emit(1)
@@ -182,7 +175,6 @@ class RaceTest: AbstractFlowTest() {
                 emit(3)
             }.log("flow2")
         )
-            .race()
             .test {
                 awaitItem() shouldBeEqualTo 1
                 awaitError().message shouldBeEqualTo message

@@ -16,16 +16,16 @@ class MulticastTest: AbstractFlowTest() {
 
     @Test
     fun `multicast to one consumer`() = runTest {
-        range(1, 5)
+        flowRangeOf(1, 5)
             .publish { shared -> shared.filter { it % 2 == 0 } }.log("filter")
             .assertResult(2, 4)
     }
 
     @Test
     fun `publish to multiple consumers`() = runTest {
-        range(1, 5)
+        flowRangeOf(1, 5)
             .publish(2) { shared ->
-                mergeFlows(
+                merge(
                     shared.filter { it % 2 == 1 }.log("odd"),
                     shared.filter { it % 2 == 0 }.log("even")
                 )
@@ -33,9 +33,9 @@ class MulticastTest: AbstractFlowTest() {
             .assertResult(1, 2, 3, 4, 5)
 
         // expectedCollectors 가 2개여야 작동합니다
-        range(1, 5)
+        flowRangeOf(1, 5)
             .publish { shared ->
-                mergeFlows(
+                merge(
                     shared.filter { it % 2 == 1 }.log("odd"),
                     shared.filter { it % 2 == 0 }.log("even")
                 )
@@ -45,18 +45,18 @@ class MulticastTest: AbstractFlowTest() {
 
     @Test
     fun `publish multiple consumer custom merge`() = runTest {
-        range(1, 5)
+        flowRangeOf(1, 5)
             .publish(2) { shared ->
-                mergeFlows(
+                merge(
                     shared.filter { it % 2 == 1 }.log("odd"),
                     shared.filter { it % 2 == 0 }.log("even")
                 )
             }
             .assertResult(1, 2, 3, 4, 5)
 
-        range(1, 5)
+        flowRangeOf(1, 5)
             .publish { shared ->
-                mergeFlows(
+                merge(
                     shared.filter { it % 2 == 1 }.log("odd"),
                     shared.filter { it % 2 == 0 }.log("even")
                 )
@@ -66,9 +66,9 @@ class MulticastTest: AbstractFlowTest() {
 
     @Test
     fun `multicast multiple consumers custom merge`() = runTest {
-        range(1, 5)
+        flowRangeOf(1, 5)
             .publish(2) { shared ->
-                mergeFlows(
+                merge(
                     shared.filter { it % 2 == 1 }.log("odd"),
                     shared.filter { it % 2 == 0 }.log("even")
                 )
@@ -78,7 +78,7 @@ class MulticastTest: AbstractFlowTest() {
 
     @Test
     fun `replay one consumer`() = runTest {
-        range(1, 5)
+        flowRangeOf(1, 5)
             .replay { shared ->
                 shared.filter { it % 2 == 0 }.log("filtered")
             }
@@ -87,9 +87,9 @@ class MulticastTest: AbstractFlowTest() {
 
     @Test
     fun `replay multiple consumers`() = runTest {
-        range(1, 5)
+        flowRangeOf(1, 5)
             .replay { shared ->
-                mergeFlows(
+                merge(
                     shared.filter { it % 2 == 1 }.log("odd"),
                     shared.filter { it % 2 == 0 }.log("even")
                 )
@@ -99,21 +99,21 @@ class MulticastTest: AbstractFlowTest() {
 
     @Test
     fun `replay size bound`() = runTest {
-        range(1, 5)
+        flowRangeOf(1, 5)
             .replay(2) { shared ->
                 shared
                     .log("filter")                          // 1,2,3,4,5
                     .filter { it % 2 == 0 }                       // 2, 4
                     .concatWith(shared.log("replay 2"))     // 4, 5 (replay : 마지막 2개)
             }
-            .assertResult(2, 4, 4, 5)    // filter: 2, 4   || concatWith : 4, 5
+            .assertResult(2, 4, 4, 5)    // filters: 2, 4   || concatWith : 4, 5
     }
 
     @Test
     fun `replay time bound`() = runTest {
         val timeout = 1.minutes
 
-        range(1, 5)
+        flowRangeOf(1, 5)
             .onEach { delay(100) }
             .replay(timeout) { shared ->
                 shared
@@ -121,21 +121,21 @@ class MulticastTest: AbstractFlowTest() {
                     .filter { it % 2 == 0 }              // 2, 4
                     .concatWith(shared.log("replay timeout[$timeout]"))  // 1,2,3,4,5 (replay : timeout 만)
             }
-            .assertResult(2, 4, 1, 2, 3, 4, 5) // filter : 2, 4 || concatWith : 1,2,3,4,5
+            .assertResult(2, 4, 1, 2, 3, 4, 5) // filters : 2, 4 || concatWith : 1,2,3,4,5
     }
 
     @Test
     fun `replay size and time bound`() = runTest {
         val timeout = 1.minutes
 
-        range(1, 5)
+        flowRangeOf(1, 5)
             .replay(2, timeout) { shared ->
                 shared
                     .log("filter")  // 1,2,3,4,5
                     .filter { it % 2 == 0 }              // 2, 4
                     .concatWith(shared.log("replay 2"))  // 4, 5 (replay : 마지막 2개)
             }
-            .assertResult(2, 4, 4, 5)    // filter: 2, 4   || concatWith : 4, 5
+            .assertResult(2, 4, 4, 5)    // filters: 2, 4   || concatWith : 4, 5
     }
 
     @Test
@@ -143,13 +143,13 @@ class MulticastTest: AbstractFlowTest() {
         val timeout = 1.minutes
         val timeSource: (TimeUnit) -> Long = { System.currentTimeMillis() }
 
-        range(1, 5)
+        flowRangeOf(1, 5)
             .replay(2, timeout, timeSource) { shared ->
                 shared
                     .log("filter")
                     .filter { it % 2 == 0 }                  // 2, 4
                     .concatWith(shared.log("replay 2"))  // 4, 5 (replay : 마지막 2개)
             }
-            .assertResult(2, 4, 4, 5)    // filter: 2, 4   || concatWith : 4, 5
+            .assertResult(2, 4, 4, 5)    // filters: 2, 4   || concatWith : 4, 5
     }
 }

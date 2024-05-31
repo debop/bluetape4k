@@ -4,7 +4,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-suspend fun CoroutineContext.getOrCurrent(): CoroutineContext = when (this) {
+suspend inline fun CoroutineContext.getOrCurrent(): CoroutineContext = when (this) {
     is EmptyCoroutineContext -> currentCoroutineContext()
     else                     -> this
 }

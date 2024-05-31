@@ -16,9 +16,9 @@ class ConcatMapEagerTest: AbstractFlowTest() {
 
     @Test
     fun `concat map eagerly`() = runTest {
-        range(1, 5).log("source")
+        flowRangeOf(1, 5).log("source")
             .concatMapEager {
-                range(it * 10, 5).onEach { delay(100) }.log("inner")
+                flowRangeOf(it * 10, 5).onEach { delay(100) }.log("inner")
             }
             .assertResult(
                 10, 11, 12, 13, 14,
@@ -31,9 +31,9 @@ class ConcatMapEagerTest: AbstractFlowTest() {
 
     @Test
     fun `concat map with take`() = runTest {
-        range(1, 5).log("source")
+        flowRangeOf(1, 5).log("source")
             .concatMapEager {
-                range(it * 10, 5).onEach { delay(100) }.log("inner")
+                flowRangeOf(it * 10, 5).onEach { delay(100) }.log("inner")
             }
             .take(7)
             .assertResult(
@@ -44,7 +44,7 @@ class ConcatMapEagerTest: AbstractFlowTest() {
 
     @Test
     fun `concat map with crash mapper`() = runTest {
-        range(1, 5)
+        flowRangeOf(1, 5)
             .concatMapEager<Int, Int> {
                 throw RuntimeException("Boom!")
             }
@@ -53,7 +53,7 @@ class ConcatMapEagerTest: AbstractFlowTest() {
 
     @Test
     fun `concat map with crash in flow`() = runTest {
-        range(1, 5)
+        flowRangeOf(1, 5)
             .concatMapEager<Int, Int> {
                 flow {
                     throw RuntimeException("Boom!")

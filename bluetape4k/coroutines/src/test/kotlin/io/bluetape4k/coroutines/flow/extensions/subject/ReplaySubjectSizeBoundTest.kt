@@ -1,6 +1,5 @@
 package io.bluetape4k.coroutines.flow.extensions.subject
 
-import io.bluetape4k.collections.eclipse.primitives.intArrayListOf
 import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.tests.withSingleThread
@@ -27,7 +26,7 @@ class ReplaySubjectSizeBoundTest {
     fun `basic online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(10)
-            val result = intArrayListOf()
+            val result = mutableListOf<Int>()
 
             val job = launch {
                 replay
@@ -44,7 +43,7 @@ class ReplaySubjectSizeBoundTest {
             replay.complete()
             job.join()
 
-            result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+            result shouldBeEqualTo listOf(0, 1, 2, 3, 4)
         }
     }
 
@@ -57,13 +56,13 @@ class ReplaySubjectSizeBoundTest {
         }
         replay.complete()
 
-        val result = intArrayListOf()
+        val result = mutableListOf<Int>()
         replay
             .onEach { delay(10) }
             .log("#1")
             .collect { result.add(it) }
 
-        result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+        result shouldBeEqualTo listOf(0, 1, 2, 3, 4)
     }
 
     @Test
@@ -71,7 +70,7 @@ class ReplaySubjectSizeBoundTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(10)
 
-            val result = intArrayListOf()
+            val result = mutableListOf<Int>()
             val exc = atomic<Throwable?>(null)
 
             val job = launch {
@@ -96,7 +95,7 @@ class ReplaySubjectSizeBoundTest {
 
             job.join()
 
-            result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+            result shouldBeEqualTo listOf(0, 1, 2, 3, 4)
             exc.value shouldBeInstanceOf RuntimeException::class
         }
     }
@@ -105,7 +104,7 @@ class ReplaySubjectSizeBoundTest {
     fun `error offline`() = runTest {
         val replay = ReplaySubject<Int>(10)
 
-        val result = intArrayListOf()
+        val result = mutableListOf<Int>()
         val exc = atomic<Throwable?>(null)
 
         repeat(5) {
@@ -123,7 +122,7 @@ class ReplaySubjectSizeBoundTest {
             exc.value = e
         }
 
-        result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+        result shouldBeEqualTo listOf(0, 1, 2, 3, 4)
         exc.value shouldBeInstanceOf RuntimeException::class
     }
 
@@ -131,7 +130,7 @@ class ReplaySubjectSizeBoundTest {
     fun `take online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(10)
-            val result = intArrayListOf()
+            val result = mutableListOf<Int>()
 
             val job = launch {
                 replay.take(3)
@@ -147,7 +146,7 @@ class ReplaySubjectSizeBoundTest {
             replay.complete()
             job.join()
 
-            result shouldBeEqualTo intArrayListOf(0, 1, 2)
+            result shouldBeEqualTo listOf(0, 1, 2)
         }
     }
 
@@ -160,21 +159,21 @@ class ReplaySubjectSizeBoundTest {
         }
         replay.complete()
 
-        val result = intArrayListOf()
+        val result = mutableListOf<Int>()
         replay.take(3)
             .log("#1")
             .collect {
                 result.add(it)
             }
 
-        result shouldBeEqualTo intArrayListOf(0, 1, 2)
+        result shouldBeEqualTo listOf(0, 1, 2)
     }
 
     @Test
     fun `bounded online`() = runTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(2)
-            val result = intArrayListOf()
+            val result = mutableListOf<Int>()
 
             val job = launch {
                 replay
@@ -191,7 +190,7 @@ class ReplaySubjectSizeBoundTest {
             replay.complete()
             job.join()
 
-            result shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+            result shouldBeEqualTo listOf(0, 1, 2, 3, 4)
 
             // replay -------------------------
 
@@ -202,7 +201,7 @@ class ReplaySubjectSizeBoundTest {
                 .collect {
                     result.add(it)
                 }
-            result shouldBeEqualTo intArrayListOf(3, 4)
+            result shouldBeEqualTo listOf(3, 4)
         }
     }
 
@@ -216,13 +215,13 @@ class ReplaySubjectSizeBoundTest {
         }
         replay.complete()
 
-        val result = intArrayListOf()
+        val result = mutableListOf<Int>()
         replay
             .onEach { delay(10) }
             .log("#1")
             .collect { result.add(it) }
 
-        result shouldBeEqualTo intArrayListOf(3, 4)
+        result shouldBeEqualTo listOf(3, 4)
     }
 
     @Test
@@ -230,8 +229,8 @@ class ReplaySubjectSizeBoundTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(10)
 
-            val result1 = intArrayListOf()
-            val result2 = intArrayListOf()
+            val result1 = mutableListOf<Int>()
+            val result2 = mutableListOf<Int>()
 
             val job1 = launch {
                 replay
@@ -257,8 +256,8 @@ class ReplaySubjectSizeBoundTest {
             job1.join()
             job2.join()
 
-            result1 shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
-            result2 shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
+            result1 shouldBeEqualTo listOf(0, 1, 2, 3, 4)
+            result2 shouldBeEqualTo listOf(0, 1, 2, 3, 4)
         }
     }
 
@@ -267,7 +266,7 @@ class ReplaySubjectSizeBoundTest {
         withSingleThread {
             val replay = ReplaySubject<Int>(10)
 
-            val result1 = intArrayListOf()
+            val result1 = mutableListOf<Int>()
             val job1 = launch {
                 replay
                     .onEach { delay(10) }
@@ -275,7 +274,7 @@ class ReplaySubjectSizeBoundTest {
                     .collect { result1.add(it) }
             }.log("job1")
 
-            val result2 = intArrayListOf()
+            val result2 = mutableListOf<Int>()
             val job2 = launch {
                 replay.take(3)
                     .onEach { delay(20) }
@@ -293,8 +292,8 @@ class ReplaySubjectSizeBoundTest {
             job1.join()
             job2.join()
 
-            result1 shouldBeEqualTo intArrayListOf(0, 1, 2, 3, 4)
-            result2 shouldBeEqualTo intArrayListOf(0, 1, 2)
+            result1 shouldBeEqualTo listOf(0, 1, 2, 3, 4)
+            result2 shouldBeEqualTo listOf(0, 1, 2)
         }
     }
 

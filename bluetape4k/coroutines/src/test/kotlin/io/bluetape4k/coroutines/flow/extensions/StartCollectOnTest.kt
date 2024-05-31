@@ -25,7 +25,7 @@ class StartCollectOnTest: AbstractFlowTest() {
 
     @Test
     fun `use start collect on with custom dispatcher`() = runTest {
-        range(1, 10)
+        flowRangeOf(1, 10)
             .log("four")
             .startCollectOn(four)
             .log("single")
@@ -35,7 +35,7 @@ class StartCollectOnTest: AbstractFlowTest() {
 
     @Test
     fun `use start collect on with custom dispatcher and buffer`() = runTest {
-        range(1, 10)
+        flowRangeOf(1, 10)
             .buffer(4)
             .log("four")
             .startCollectOn(four)

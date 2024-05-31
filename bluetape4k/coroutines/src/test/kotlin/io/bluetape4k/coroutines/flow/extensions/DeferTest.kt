@@ -20,31 +20,31 @@ class DeferTest: AbstractFlowTest() {
         val flow = defer {
             delay(count)
             flowOf(count)
-        }.log("source")
+        }.log("defer")
 
-        flow.assertResult(0L)
-
-        count++
-        flow.assertResult(1L)
+        flow.assertResult(count)
 
         count++
-        flow.assertResult(2L)
+        flow.assertResult(count)
+
+        count++
+        flow.assertResult(count)
     }
 
     @Test
-    fun `defer with exception`() = runTest {
+    fun `defer 내부 flow에서 예외를 emit하는 경우 예외가 전파되어야 한다`() = runTest {
         val exception = FlowException("Boom!")
 
-        defer { flow<Int> { throw exception }.log(1) }
+        defer { flow<Int> { throw exception }.log("#1") }
             .assertError<FlowException>()
 
-        defer { flow<Int> { throw exception }.log(2) }
+        defer { flow<Int> { throw exception }.log("#2") }
             .materialize()
-            .assertResult(Event.Error(exception))
+            .assertResult(FlowEvent.Error(exception))
     }
 
     @Test
-    fun `defer with value supplier raise exception`() = runTest {
+    fun `defer 내부 전체가 예외 시 예외가 전파된다`() = runTest {
         val exception = FlowException("Boom!")
 
         defer<Int> { throw exception }

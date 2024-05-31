@@ -11,7 +11,9 @@ import kotlinx.coroutines.runBlocking
  *
  * @property factory 값 계산을 수행하는 함수
  */
-data class DeferredValue<T>(internal inline val factory: suspend () -> T): DefaultCoroutineScope(), ValueObject {
+data class DeferredValue<T>(
+    internal val factory: suspend () -> T,
+): DefaultCoroutineScope(), ValueObject {
 
     private val deferredValue: Deferred<T> = async { factory() }
 
@@ -42,7 +44,8 @@ data class DeferredValue<T>(internal inline val factory: suspend () -> T): Defau
  * @param valueSupplier 값을 생성하는 suspend 함수
  * @return [DeferredValue] 인스턴스
  */
-fun <T> deferredValueOf(valueSupplier: suspend () -> T): DeferredValue<T> = DeferredValue(valueSupplier)
+fun <T> deferredValueOf(valueSupplier: suspend () -> T): DeferredValue<T> =
+    DeferredValue(valueSupplier)
 
 inline fun <T, S> DeferredValue<T>.map(crossinline transform: suspend (T) -> S): DeferredValue<S> =
     DeferredValue { transform(await()) }

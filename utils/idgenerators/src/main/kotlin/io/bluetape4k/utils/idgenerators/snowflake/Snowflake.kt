@@ -1,6 +1,6 @@
 package io.bluetape4k.utils.idgenerators.snowflake
 
-import io.bluetape4k.core.assertNotBlank
+import io.bluetape4k.support.assertNotBlank
 import io.bluetape4k.utils.idgenerators.ALPHA_NUMERIC_BASE
 import io.bluetape4k.utils.idgenerators.IdGenerator
 import io.bluetape4k.utils.idgenerators.parseAsLong

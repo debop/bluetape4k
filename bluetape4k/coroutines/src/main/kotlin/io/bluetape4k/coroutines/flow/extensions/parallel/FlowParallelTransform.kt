@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.FlowCollector
  */
 internal class FlowParallelTransform<T, R>(
     private val source: ParallelFlow<T>,
-    private val callback: suspend FlowCollector<R>.(T) -> Unit
+    private val callback: suspend FlowCollector<R>.(T) -> Unit,
 ): ParallelFlow<R> {
 
     override val parallelism: Int
@@ -22,7 +22,7 @@ internal class FlowParallelTransform<T, R>(
 
     class OnEachCollector<T, R>(
         val collector: FlowCollector<R>,
-        val callback: suspend FlowCollector<R>.(T) -> Unit
+        val callback: suspend FlowCollector<R>.(T) -> Unit,
     ): FlowCollector<T> {
         override suspend fun emit(value: T) {
             callback(collector, value)

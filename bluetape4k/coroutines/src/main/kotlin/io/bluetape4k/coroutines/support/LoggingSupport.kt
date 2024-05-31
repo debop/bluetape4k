@@ -5,10 +5,11 @@ import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlin.coroutines.coroutineContext
 
-private val logger = KotlinLogging.logger {}
+private val logger by lazy { KotlinLogging.logger {} }
 
 suspend fun logging(msg: String) {
     logging { msg }
@@ -30,12 +31,7 @@ suspend fun logging(msg: suspend () -> Any?) {
     }
 }
 
-//fun Job.log(tag: Any): Job = apply {
-//    invokeOnCompletion {
-//        logger.debug(it) { "[$tag] onCompletion" }
-//    }
-//}
-
+@InternalCoroutinesApi
 fun <T: Job> T.log(tag: Any): T = apply {
     invokeOnCompletion(onCancelling = true, invokeImmediately = true) {
         // CancellationException 은 무시합니다.

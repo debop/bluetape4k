@@ -112,7 +112,7 @@ class SelectorsTest: AbstractFlowTest() {
         var itemsCount = 0
         var projectorCount = 0
 
-        val flow = range(0, 6)
+        val flow = flowRangeOf(0, 6)
             .flowOnStandardTestDispatcher(this)
             .onEach { delay(100) }
             .log("source")
@@ -155,7 +155,7 @@ class SelectorsTest: AbstractFlowTest() {
         var titleCount = 0
         var projectorCount = 0
 
-        val flow = range(0, 8)
+        val flow = flowRangeOf(0, 8)
             .flowOnStandardTestDispatcher(this)
             .onEach { delay(100) }
             .log("source")
@@ -208,7 +208,7 @@ class SelectorsTest: AbstractFlowTest() {
         var subtitleCount = 0
         var projectorCount = 0
 
-        val flow = range(0, 11)
+        val flow = flowRangeOf(0, 11)
             .flowOnStandardTestDispatcher(this)
             .onEach { delay(100) }
             .log("source")
@@ -270,7 +270,7 @@ class SelectorsTest: AbstractFlowTest() {
         var unreadCountCount = 0
         var projectorCount = 0
 
-        val flow = range(0, 16)
+        val flow = flowRangeOf(0, 16)
             .flowOnStandardTestDispatcher(this)
             .onEach { delay(100) }
             .log("source")

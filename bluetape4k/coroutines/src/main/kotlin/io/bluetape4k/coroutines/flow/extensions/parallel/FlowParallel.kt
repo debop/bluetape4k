@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 internal class FlowParallel<T>(
     private val source: Flow<T>,
     override val parallelism: Int,
-    private val runOn: (Int) -> CoroutineDispatcher
+    private val runOn: (Int) -> CoroutineDispatcher,
 ): ParallelFlow<T> {
 
     override suspend fun collect(vararg collectors: FlowCollector<T>) {

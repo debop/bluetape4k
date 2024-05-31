@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import io.bluetape4k.coroutines.tests.assertError
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.take
@@ -18,7 +19,7 @@ class MapIndexedTest: AbstractFlowTest() {
 
     @Test
     fun `mapIndexed simple usecase`() = runTest {
-        flowOf(1, 2, 3, 4)
+        flowRangeOf(1, 4)
             .mapIndexed { index, value -> index to value }
             .assertResult(
                 0 to 1,
@@ -32,11 +33,15 @@ class MapIndexedTest: AbstractFlowTest() {
     fun `when upstream error`() = runTest {
         val ex = RuntimeException("Boom!")
 
+        flowOf(ex)
+            .mapIndexed { index, value -> index to value }
+            .assertError<RuntimeException>()
+
         flow<Int> { throw ex }
             .mapIndexed { index, value -> index to value }
             .assertError<RuntimeException>()
 
-        flowOf(1, 2)
+        flowRangeOf(1, 2)
             .concatWith(flow { throw ex })
             .mapIndexed { index, value -> index to value }
             .test {
@@ -48,10 +53,10 @@ class MapIndexedTest: AbstractFlowTest() {
 
     @Test
     fun `when cancel flow`() = runTest {
-        flow {
+        channelFlow {
             repeat(5) {
                 if (it == 2) throw CancellationException("")
-                else emit(it)
+                else send(it)
             }
         }
             .mapIndexed { index, value -> index to value }
@@ -63,7 +68,7 @@ class MapIndexedTest: AbstractFlowTest() {
             }
 
 
-        flowOf(0, 1, 2, 3, 4, 5)
+        flowRangeOf(0, 6)
             .mapIndexed { index, value -> index to value }
             .take(2)
             .test {

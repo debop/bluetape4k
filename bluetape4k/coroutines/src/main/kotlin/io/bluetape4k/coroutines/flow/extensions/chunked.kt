@@ -12,6 +12,11 @@ import kotlinx.coroutines.flow.Flow
  * val flow = flowOf(1,2,3,4,5)
  * val chunked = flow.chunked(3)   // {1,2,3}, {4,5}
  * ```
+ *
+ * ```
+ * val flow = flowRangeOf(1, 10)   // 1,2,3,4,5,6,7,8,9,10
+ * val chunked = flow.chunked(3)   // {1,2,3}, {4,5,6}, {7,8,9}, {10}
+ * ```
 
  *
  * @param size chunk size. (require greater than 0)

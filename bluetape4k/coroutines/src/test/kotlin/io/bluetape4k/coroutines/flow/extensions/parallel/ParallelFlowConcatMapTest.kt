@@ -1,7 +1,7 @@
 package io.bluetape4k.coroutines.flow.extensions.parallel
 
+import io.bluetape4k.coroutines.flow.extensions.flowRangeOf
 import io.bluetape4k.coroutines.flow.extensions.log
-import io.bluetape4k.coroutines.flow.extensions.range
 import io.bluetape4k.coroutines.tests.assertError
 import io.bluetape4k.coroutines.tests.assertFailure
 import io.bluetape4k.coroutines.tests.assertResult
@@ -24,7 +24,7 @@ class ParallelFlowConcatMapTest {
         withParallels(1) { execs ->
             execs shouldHaveSize 1
 
-            range(1, 5).log("source")
+            flowRangeOf(1, 5).log("source")
                 .parallel(execs.size) { execs[it] }
                 .concatMap {
                     log.trace { "item=$it" }
@@ -40,7 +40,7 @@ class ParallelFlowConcatMapTest {
         withParallels(2) { execs ->
             execs shouldHaveSize 2
 
-            range(1, 5).log("source")
+            flowRangeOf(1, 5).log("source")
                 .parallel(execs.size) { execs[it] }
                 .concatMap {
                     log.trace { "item=$it" }

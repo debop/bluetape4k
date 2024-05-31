@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.FlowCollector
  */
 internal class FlowParallelMap<T, R>(
     private val source: ParallelFlow<T>,
-    private val mapper: suspend (T) -> R
+    private val mapper: suspend (T) -> R,
 ): ParallelFlow<R> {
 
     override val parallelism: Int
@@ -22,7 +22,7 @@ internal class FlowParallelMap<T, R>(
 
     private class MapperCollector<T, R>(
         val collector: FlowCollector<R>,
-        val mapper: suspend (T) -> R
+        val mapper: suspend (T) -> R,
     ): FlowCollector<T> {
         override suspend fun emit(value: T) {
             collector.emit(mapper(value))

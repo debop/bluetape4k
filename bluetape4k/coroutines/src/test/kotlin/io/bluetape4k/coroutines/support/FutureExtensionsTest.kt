@@ -6,7 +6,6 @@ import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import java.util.concurrent.FutureTask
@@ -20,23 +19,21 @@ class FutureExtensionsTest {
     }
 
     @Test
-    fun `Massive Futre as CompletaboeFuture in Multiple Thread`() = runSuspendTest {
+    fun `Massive Future as CompletaboeFuture in Multiple Thread`() {
         val counter = atomic(0)
 
         MultithreadingTester()
             .numThreads(16)
             .roundsPerThread(ITEM_COUNT / 4)
             .add {
-                runBlocking {
-                    val task: FutureTask<Int> = FutureTask {
-                        Thread.sleep(Random.nextLong(10))
-                        log.trace { "counter=${counter.value}" }
-                        counter.incrementAndGet()
-                    }
-                    task.run()
-                    val result = task.awaitSuspending()
-                    log.trace { "result=$result" }
+                val task: FutureTask<Int> = FutureTask {
+                    Thread.sleep(Random.nextLong(10))
+                    log.trace { "counter=${counter.value}" }
+                    counter.incrementAndGet()
                 }
+                task.run()
+                val result = task.get()
+                log.trace { "result=$result" }
             }
             .run()
 
@@ -44,7 +41,7 @@ class FutureExtensionsTest {
     }
 
     @Test
-    fun `Massive Futre as CompletaboeFuture in Multiple Coroutines`() = runSuspendTest {
+    fun `Massive Future as CompletaboeFuture in Multiple Coroutines`() = runSuspendTest {
         val counter = atomic(0)
 
         MultiJobTester()
@@ -57,7 +54,7 @@ class FutureExtensionsTest {
                     counter.incrementAndGet()
                 }
                 task.run()
-                val result = task.awaitSuspending()
+                val result = task.coAwait()
                 log.trace { "result=$result" }
             }
             .run()

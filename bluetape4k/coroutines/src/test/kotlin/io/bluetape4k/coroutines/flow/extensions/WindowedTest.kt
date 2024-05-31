@@ -1,6 +1,5 @@
 package io.bluetape4k.coroutines.flow.extensions
 
-import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.onEach
@@ -25,13 +24,13 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 1
 
-            val windowed = range(1, 20).log("source")
+            val windowed = flowRangeOf(1, 20).log("source")
                 .windowed(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
                     windowed.size shouldBeLessOrEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }
-                .toFastList()
+                .toList()
 
             windowedCounter.value shouldBeEqualTo 20
             windowed shouldHaveSize 20
@@ -45,13 +44,13 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 4
 
-            val windowed = range(1, 20).log("source")
+            val windowed = flowRangeOf(1, 20).log("source")
                 .windowed(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
                     windowed.size shouldBeLessOrEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }
-                .toFastList()
+                .toList()
 
             windowedCounter.value shouldBeEqualTo 5
             windowed shouldHaveSize 5
@@ -65,13 +64,13 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 5
 
-            val windowed = range(1, 20).log("source")
+            val windowed = flowRangeOf(1, 20).log("source")
                 .windowed(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
                     windowed.size shouldBeEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }
-                .toFastList()
+                .toList()
 
             windowedCounter.value shouldBeEqualTo 4
             windowed shouldHaveSize 4
@@ -88,14 +87,14 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 1
 
-            val windowed = range(1, 20).log("source")
+            val windowed = flowRangeOf(1, 20).log("source")
                 .windowedFlow(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
                     val items = windowed.toList()
                     items.size shouldBeLessOrEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }
-                .toFastList()
+                .toList()
 
             windowedCounter.value shouldBeEqualTo 20
             windowed shouldHaveSize 20
@@ -109,14 +108,14 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 4
 
-            val windowed = range(1, 20).log("source")
+            val windowed = flowRangeOf(1, 20).log("source")
                 .windowedFlow(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
                     val items = windowed.toList()
                     items.size shouldBeLessOrEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }
-                .toFastList()
+                .toList()
 
             windowedCounter.value shouldBeEqualTo 5
             windowed shouldHaveSize 5
@@ -130,14 +129,14 @@ class WindowedTest: AbstractFlowTest() {
             val windowedSize = 5
             val windowedStep = 5
 
-            val windowed = range(1, 20).log("source")
+            val windowed = flowRangeOf(1, 20).log("source")
                 .windowedFlow(windowedSize, windowedStep).log("windowed")
                 .onEach { windowed ->
                     val items = windowed.toList()
                     items.size shouldBeEqualTo windowedSize
                     windowedCounter.incrementAndGet()
                 }
-                .toFastList()
+                .toList()
 
             windowedCounter.value shouldBeEqualTo 4
             windowed shouldHaveSize 4

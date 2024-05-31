@@ -24,21 +24,21 @@ class DematerializeTest: AbstractFlowTest() {
             .assertResult(1, 2, 3)
 
         flowOf(
-            Event.Value(1),
-            Event.Value(2),
-            Event.Value(3),
+            FlowEvent.Value(1),
+            FlowEvent.Value(2),
+            FlowEvent.Value(3),
         )
             .dematerialize()
             .assertResult(1, 2, 3)
 
         flowOf(
-            Event.Value(1),
-            Event.Value(2),
-            Event.Value(3),
-            Event.Complete,
-            Event.Value(4),
-            Event.Value(5),
-            Event.Value(6),
+            FlowEvent.Value(1),
+            FlowEvent.Value(2),
+            FlowEvent.Value(3),
+            FlowEvent.Complete,
+            FlowEvent.Value(4),
+            FlowEvent.Value(5),
+            FlowEvent.Value(6),
         ).log("source")
             .dematerialize().log("dematerialized")
             .assertResult(1, 2, 3)
@@ -46,14 +46,14 @@ class DematerializeTest: AbstractFlowTest() {
 
     @Test
     fun `dematerialize Event Complete`() = runTest {
-        flowOf(Event.Complete).dematerialize().test {
+        flowOf(FlowEvent.Complete).dematerialize().test {
             awaitComplete()
         }
     }
 
     @Test
     fun `dematerialize Event of Nothing`() = runTest {
-        emptyFlow<Event<Nothing>>().dematerialize().test {
+        emptyFlow<FlowEvent<Nothing>>().dematerialize().test {
             awaitComplete()
         }
     }
@@ -88,16 +88,16 @@ class DematerializeTest: AbstractFlowTest() {
     fun `dematerialize first item is Event Error`() = runTest {
         val ex = FlowException("Boom!")
 
-        flowOf(Event.Error(ex))
+        flowOf(FlowEvent.Error(ex))
             .dematerialize()
             .assertError<FlowException>()
 
 
-        flowOf(Event.Error(ex), Event.Value(1))
+        flowOf(FlowEvent.Error(ex), FlowEvent.Value(1))
             .dematerialize()
             .assertError<FlowException>()
 
-        flowOf(Event.Error(ex), Event.Complete)
+        flowOf(FlowEvent.Error(ex), FlowEvent.Complete)
             .dematerialize()
             .assertError<FlowException>()
     }

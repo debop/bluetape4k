@@ -3,13 +3,13 @@
 
 package io.bluetape4k.coroutines.flow.extensions
 
-import io.bluetape4k.core.requireGe
-import io.bluetape4k.core.requireGt
+import io.bluetape4k.support.requireGe
+import io.bluetape4k.support.requireGt
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 
 /**
@@ -22,30 +22,8 @@ import kotlinx.coroutines.flow.flow
  * @param size window size (require positive number)
  * @param step step (require positive number)
  */
-fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> = flow {
-    size.requireGt(0, "size")
-    step.requireGt(0, "step")
-    size.requireGe(step, "step")
-
-
-    var elements = mutableListOf<T>()
-    val counter = atomic(0)
-
-    this@windowed.collect { element ->
-        elements.add(element)
-        if (counter.incrementAndGet() == size) {
-            emit(elements.toList())
-            elements = elements.drop(step).toMutableList()
-            counter.addAndGet(-step)
-        }
-    }
-
-    while (counter.value > 0) {
-        emit(elements.toList())
-        elements = elements.drop(step).toMutableList()
-        counter.addAndGet(-step)
-    }
-}
+fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> =
+    windowedInternal(size, step)
 
 /**
  * Flow 요소들을 windowing 을 수행하여 `Flow<Flow<T>>` 로 변환합니다.
@@ -59,25 +37,28 @@ fun <T> Flow<T>.windowed(size: Int, step: Int): Flow<List<T>> = flow {
  * @param size window size (require positive number)
  * @param step step (require positive number)
  */
-fun <T> Flow<T>.windowedFlow(size: Int, step: Int): Flow<Flow<T>> = channelFlow {
+fun <T> Flow<T>.windowedFlow(size: Int, step: Int): Flow<Flow<T>> =
+    windowedInternal(size, step).map { it.asFlow() }
+
+private fun <T> Flow<T>.windowedInternal(size: Int, step: Int): Flow<List<T>> = channelFlow {
     size.requireGt(0, "size")
     step.requireGt(0, "step")
     size.requireGe(step, "step")
 
-    var elements = mutableListOf<T>()
+    var elements: MutableList<T> = ArrayList(size)
     val counter = atomic(0)
 
-    this@windowedFlow.collect { element ->
+    this@windowedInternal.collect { element ->
         elements.add(element)
         if (counter.incrementAndGet() == size) {
-            send(elements.asFlow())
+            send(elements)
             elements = elements.drop(step).toMutableList()
             counter.addAndGet(-step)
         }
     }
 
     while (counter.value > 0) {
-        send(elements.take(step).asFlow())
+        send(elements.take(step))
         elements = elements.drop(step).toMutableList()
         counter.addAndGet(-step)
     }

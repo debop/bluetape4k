@@ -11,6 +11,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
+/**
+ * Merges two [Flow]s into one [Flow] by combining each value from self with the latest value from the second [Flow], if any.
+ * Values emitted by self before the second [Flow] has emitted any values will be omitted.
+ *
+ * @param other Second [Flow]
+ * @param transform A transform function to apply to each value from self combined with the latest value from the second [Flow], if any.
+ */
 fun <A, B, R> Flow<A>.withLatestFrom(
     other: Flow<B>,
     transform: suspend (A, B) -> R,

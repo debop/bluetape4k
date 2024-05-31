@@ -14,43 +14,43 @@ class IntervalTest: AbstractFlowTest() {
 
     @Test
     fun `interval operator with time millis`() = runTest {
-        range(0, 10).log("source")
+        flowRangeOf(0, 10).log("source")
             .interval(100, 100).log("interval")
-            .assertResult(range(0, 10))
+            .assertResult(flowRangeOf(0, 10))
     }
 
     @Test
     fun `interval with default time millis`() = runTest {
-        range(0, 10)
+        flowRangeOf(0, 10)
             .interval()
-            .assertResult(range(0, 10))
+            .assertResult(flowRangeOf(0, 10))
     }
 
     @Test
     fun `interval operator with duration`() = runTest {
-        range(0, 10)
+        flowRangeOf(0, 10)
             .interval(200.milliseconds, 100.milliseconds)
-            .assertResult(range(0, 10))
+            .assertResult(flowRangeOf(0, 10))
     }
 
     @Test
     fun `interval with initial duration`() = runTest {
-        range(0, 10)
+        flowRangeOf(0, 10)
             .interval(Duration.ZERO)
-            .assertResult(range(0, 10))
+            .assertResult(flowRangeOf(0, 10))
     }
 
     @Test
     fun `create interval by millis`() = runTest {
         intervalFlowOf(200, 100)
             .take(20)
-            .assertResult(range(0L, 20))
+            .assertResult(flowRangeOf(0L, 20))
     }
 
     @Test
     fun `create interval by duration`() = runTest {
         intervalFlowOf(200.milliseconds, 100.milliseconds)
             .take(20)
-            .assertResult(range(0L, 20))
+            .assertResult(flowRangeOf(0L, 20))
     }
 }

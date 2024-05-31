@@ -14,12 +14,25 @@ import kotlinx.coroutines.flow.mapNotNull
  * // returns [Pair(1,2), Pair(2,3), Pair(3,4), Pair(4,5)]
  * ```
  */
-fun <T> Flow<T>.pairwise(): Flow<Pair<T, T>> {
-    return this@pairwise.sliding(2)
+fun <T> Flow<T>.pairwise(): Flow<Pair<T, T>> =
+    pairwiseInternal { a, b -> a to b }
+
+/**
+ * 요소들의 collect 해서, `Pair((n)-th, (n+1)th)` 를 요소로 emit 하는 Flow 를 빌드합니다.
+ *
+ * ```
+ * val pairs = flowOf(1,2,3,4,5).pairwise { a, b -> a to b }.toList()
+ * // returns [Pair(1,2), Pair(2,3), Pair(3,4), Pair(4,5)]
+ * ```
+ */
+fun <T, R> Flow<T>.pairwise(transform: suspend (a: T, b: T) -> R): Flow<R> =
+    pairwiseInternal(transform)
+
+private fun <T, R> Flow<T>.pairwiseInternal(transform: suspend (a: T, b: T) -> R): Flow<R> =
+    sliding(2)
         .mapNotNull {
             when (it.size) {
-                2    -> Pair(it[0], it[1])
+                2    -> transform(it[0], it[1])
                 else -> null
             }
         }
-}
