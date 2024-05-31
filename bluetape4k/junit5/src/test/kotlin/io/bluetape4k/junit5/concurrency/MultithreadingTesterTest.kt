@@ -3,11 +3,10 @@ package io.bluetape4k.junit5.concurrency
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.trace
-import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeLessOrEqualTo
+import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
@@ -24,64 +23,50 @@ class MultithreadingTesterTest {
     }
 
     @Test
-    fun `항상 예외를 발생시키는 코드 블럭은 항상 실패한다`() {
-        val ra = { fail("foo") }
+    fun `항상 예외를 발생시키는 코드는 항상 실패한다`() {
+        val block = { fail("foo") }
 
         runCatching {
-            MultithreadingTester().add(ra).run()
-        }
-            .isSuccess.shouldBeFalse()
+            MultithreadingTester().numThreads(2).roundsPerThread(1).add(block).run()
+        }.isFailure.shouldBeTrue()
     }
 
     @Test
-    fun `긴 실행 시간을 가지는 코드블럭 실행`() {
+    fun `thread 수가 복수이면 실행시간은 테스트 코드의 실행 시간의 총합보다 작아야 한다`() {
         measureTimeMillis {
-            MultithreadingTester()
-                .numThreads(2)
-                .roundsPerThread(1)
-                .add {
-                    Thread.sleep(100)
-                }
-                .run()
+            MultithreadingTester().numThreads(2).roundsPerThread(1).add {
+                Thread.sleep(100)
+            }.add {
+                Thread.sleep(100)
+            }.run()
         } shouldBeLessOrEqualTo 200
     }
 
     @Test
-    fun `하나의 RunnableAssert 실행`() {
-        val ra1 = CountingRunnableAssert()
-        MultithreadingTester()
-            .numThreads(11)
-            .roundsPerThread(13)
-            .add(ra1)
-            .run()
+    fun `하나의 코드 블럭을 여러번 수행 시 수행 횟수는 같아야 한다`() {
+        val block = CountingTestBlock()
 
-        ra1.count shouldBeEqualTo 11 * 13
+        MultithreadingTester().numThreads(11).roundsPerThread(13).add(block).run()
+
+        block.counter.value shouldBeEqualTo 11 * 13
     }
 
     @Test
-    fun `두개의 RunnableAssert 실행`() {
-        val ra1 = CountingRunnableAssert()
-        val ra2 = CountingRunnableAssert()
+    fun `두 개의 코드 블럭을 병렬로 실행`() {
+        val block1 = CountingTestBlock()
+        val block2 = CountingTestBlock()
 
-        MultithreadingTester()
-            .numThreads(3)
-            .roundsPerThread(1)
-            .addAll(ra1, ra2)
-            .run()
+        MultithreadingTester().numThreads(3).roundsPerThread(1).addAll(block1, block2).run()
 
-        ra1.count shouldBeEqualTo 2
-        ra2.count shouldBeEqualTo 1
+        block1.counter.value shouldBeEqualTo 2
+        block2.counter.value shouldBeEqualTo 1
     }
 
     @Test
-    fun `numThreads 보다 많은 runnable을 등록하면 예외가 발생한다`() {
-        val ra = CountingRunnableAssert()
-        val mt = MultithreadingTester()
-            .numThreads(2)
-            .roundsPerThread(1)
-            .add(ra)
-            .add(ra)
-            .add(ra)
+    fun `thread 수보다 많은 코드블럭을 등록하면 예외가 발생한다`() {
+        val block = CountingTestBlock()
+
+        val mt = MultithreadingTester().numThreads(2).roundsPerThread(1).addAll(block, block, block)
 
         assertFailsWith<IllegalStateException> {
             mt.run()
@@ -89,10 +74,8 @@ class MultithreadingTesterTest {
     }
 
     @Test
-    fun `runnable을 비어있으면 예외가 발생한다`() {
-        val mt = MultithreadingTester()
-            .numThreads(2)
-            .roundsPerThread(1)
+    fun `실행할 코드 블럭을 등록하지 않으면 예외가 발생한다`() {
+        val mt = MultithreadingTester().numThreads(2).roundsPerThread(1)
 
         assertFailsWith<IllegalStateException> {
             mt.run()
@@ -100,33 +83,30 @@ class MultithreadingTesterTest {
     }
 
     @Test
-    fun `deadlock 이 있는 코드 실행`() {
+    fun `deadlock 이 있는 코드를 실행하면 예외가 발생한다`() {
         try {
             val lock1 = ReentrantLock()
             val latch1 = CountDownLatch(1)
             val lock2 = ReentrantLock()
             val latch2 = CountDownLatch(1)
 
-            MultithreadingTester().numThreads(2).roundsPerThread(1)
-                .add {
-                    lock1.withLock {
-                        latch2.countDown()
-                        latch1.await()
-                        lock2.withLock {
-                            fail("Reached unreachable code")
-                        }
-                    }
-                }
-                .add {
+            MultithreadingTester().numThreads(2).roundsPerThread(1).add {
+                lock1.withLock {
+                    latch2.countDown()
+                    latch1.await()
                     lock2.withLock {
-                        latch1.countDown()
-                        latch2.await()
-                        lock1.withLock {
-                            fail("Reached unreachable code")
-                        }
+                        fail("Reached unreachable code")
                     }
                 }
-                .run()
+            }.add {
+                lock2.withLock {
+                    latch1.countDown()
+                    latch2.await()
+                    lock1.withLock {
+                        fail("Reached unreachable code")
+                    }
+                }
+            }.run()
             fail("RuntimeException expected.")
         } catch (expected: RuntimeException) {
             log.error(expected) { "Expected" }
@@ -134,16 +114,15 @@ class MultithreadingTesterTest {
         }
     }
 
-    private class CountingRunnableAssert: () -> Unit { // RunnableAssert("CountingRunnableAssert") {
 
+    private class CountingTestBlock: () -> Unit {
         companion object: KLogging()
 
-        val counter: AtomicInt = atomic(0)
-        val count: Int by counter
+        val counter = atomic(0)
 
         override fun invoke() {
             counter.incrementAndGet()
-            log.trace { "count: $count" }
+            log.trace { "count: ${counter.value}" }
         }
     }
 }

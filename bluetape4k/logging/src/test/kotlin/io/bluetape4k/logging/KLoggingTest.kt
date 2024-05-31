@@ -51,6 +51,7 @@ class KLoggingTest {
     @Test
     fun `logger by name`() {
         val logger = KotlinLogging.logger("Foo")
+
         logger.name shouldBeEqualTo "Foo"
         logger.info { "logger is Foo" }
         logger.warn(error) { "logger is Foo" }

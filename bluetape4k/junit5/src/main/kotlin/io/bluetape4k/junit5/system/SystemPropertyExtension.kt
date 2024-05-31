@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.platform.commons.util.AnnotationUtils
 import java.lang.reflect.AnnotatedElement
 
+
 /**
  * 테스트 시 시스템 속성 정보를 임시로 설정하고, 테스트 후에는 원래 시스템 속성 값으로 복구시키는 기능을 제공합니다.
  *
@@ -19,10 +20,10 @@ import java.lang.reflect.AnnotatedElement
 class SystemPropertyExtension: BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback {
 
     companion object: KLogging() {
-        private const val KEY_PREFIX = "io.bluetape4k.junit5.restoreContext."
-
+        private const val KEY_PREFIX = "io.wrtn.kommons.junit5.restoreContext."
         private fun makeKey(key: String): String = KEY_PREFIX + key
     }
+
 
     override fun beforeAll(context: ExtensionContext) {
         val systemProperties = getSystemProperties(context.requiredTestClass)
@@ -31,11 +32,6 @@ class SystemPropertyExtension: BeforeAllCallback, BeforeEachCallback, AfterEachC
             writeRestoreContextInClass(context, restoreContext)
         }
     }
-
-    override fun afterAll(context: ExtensionContext) {
-        readRestoreContextInClass(context)?.restore()
-    }
-
 
     override fun beforeEach(context: ExtensionContext) {
         val systemProperties = getSystemProperties(context.requiredTestMethod)
@@ -47,6 +43,10 @@ class SystemPropertyExtension: BeforeAllCallback, BeforeEachCallback, AfterEachC
 
     override fun afterEach(context: ExtensionContext) {
         readRestoreContextInMethod(context)?.restore()
+    }
+
+    override fun afterAll(context: ExtensionContext) {
+        readRestoreContextInClass(context)?.restore()
     }
 
     private fun buildRestoreContext(systemProperties: List<SystemProperty>): SystemPropertyRestoreContext {

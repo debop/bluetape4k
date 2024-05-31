@@ -19,8 +19,8 @@ class Base64StringEncoder: StringEncoder {
     /**
      * [bytes]를 Base64 문자열로 인코딩합니다.
      *
-     * @param bytes
-     * @return
+     * @param bytes 인코딩할 바이트 배열
+     * @return Base64로 인코딩된 문자열
      */
     override fun encode(bytes: ByteArray?): String {
         return bytes?.run { encoder.encodeToString(this) } ?: EMPTY_STRING
@@ -29,8 +29,8 @@ class Base64StringEncoder: StringEncoder {
     /**
      * [encoded]를 디코딩하여 [ByteArray]로 만든다
      *
-     * @param encoded
-     * @return
+     * @param encoded 디코딩할 Base64 인코딩된 문자열
+     * @return 디코딩된 바이트 배열
      */
     override fun decode(encoded: String?): ByteArray {
         return encoded?.takeIf { it.isNotBlank() }?.run { decoder.decode(this.toUtf8Bytes()) }

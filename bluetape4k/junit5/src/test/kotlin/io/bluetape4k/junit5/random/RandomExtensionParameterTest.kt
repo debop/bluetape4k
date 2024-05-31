@@ -12,7 +12,7 @@ import org.junit.jupiter.api.TestInstance
 import java.util.stream.Stream
 
 @RandomizedTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class RandomExtensionParameterTest {
 
     companion object: KLogging() {

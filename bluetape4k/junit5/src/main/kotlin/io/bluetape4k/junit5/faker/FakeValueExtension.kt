@@ -2,6 +2,7 @@ package io.bluetape4k.junit5.faker
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import io.bluetape4k.logging.warn
 import net.datafaker.Faker
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor
 import java.util.stream.Stream
 
 /**
- * [Faker]를 이용해 [FakeValue]를 제공하는 테스트를 수행하도록 합니다.
+ * [net.datafaker.Faker]를 이용해 [FakeValue]를 제공하는 테스트를 수행하도록 합니다.
  *
  * @see net.datafaker.Faker
  */
@@ -24,20 +25,25 @@ class FakeValueExtension: TestInstancePostProcessor, ParameterResolver {
             log.trace { "targetType=$targetType, annotation=$annotation" }
 
             return when {
-                targetType.isAssignableFrom(List::class.java) || targetType.isAssignableFrom(Collection::class.java) ->
-                    faker.getValues(annotation).toList()
+                targetType.isAssignableFrom(List::class.java) || targetType.isAssignableFrom(Collection::class.java) -> faker.getValues(
+                    annotation
+                ).toList()
 
-                targetType.isAssignableFrom(Set::class.java)                                                         ->
-                    faker.getValues(annotation).toSet()
+                targetType.isAssignableFrom(Set::class.java)                                                         -> faker.getValues(
+                    annotation
+                ).toSet()
 
-                targetType.isAssignableFrom(Stream::class.java)                                                      ->
-                    faker.getValues(annotation).toList().stream()
+                targetType.isAssignableFrom(Stream::class.java)                                                      -> faker.getValues(
+                    annotation
+                ).toList().stream()
 
-                targetType.isAssignableFrom(Sequence::class.java)                                                    ->
-                    faker.getValues(annotation)
+                targetType.isAssignableFrom(Sequence::class.java)                                                    -> faker.getValues(
+                    annotation
+                )
 
-                else                                                                                                 ->
-                    faker.getValues(annotation).first()
+                else                                                                                                 -> faker.getValues(
+                    annotation
+                ).first()
             }
         }
 
@@ -52,8 +58,7 @@ class FakeValueExtension: TestInstancePostProcessor, ParameterResolver {
             val providerMethod = javaClass.methods.find { it.name == providerName && it.parameterCount == 0 }!!
             val provider = providerMethod.invoke(this@getValues)
 
-            val valueMethod =
-                provider.javaClass.methods.find { it.name == labelName && it.parameterCount == 0 }!!
+            val valueMethod = provider.javaClass.methods.find { it.name == labelName && it.parameterCount == 0 }!!
 
             return sequence {
                 repeat(annotation.size) {
@@ -76,10 +81,14 @@ class FakeValueExtension: TestInstancePostProcessor, ParameterResolver {
     override fun postProcessTestInstance(testInstance: Any, context: ExtensionContext) {
         testInstance.javaClass.declaredFields.forEach { field ->
             val annotation = field.getAnnotation(FakeValue::class.java)
-            if (annotation != null) {
-                field.isAccessible = true
-                val fakeValue = resolve(field.type, annotation)
-                field.set(testInstance, fakeValue)
+            annotation?.let {
+                runCatching {
+                    field.isAccessible = true
+                    val fakeValue = resolve(field.type, annotation)
+                    field[testInstance] = fakeValue
+                }.onFailure {
+                    log.warn(it) { "failed to inject fake value to field: $field" }
+                }
             }
         }
     }

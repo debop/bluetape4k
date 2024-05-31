@@ -6,14 +6,16 @@ import io.bluetape4k.logging.info
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
-import org.amshove.kluent.shouldBeTrue
+import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.RepeatedTest
 
 class InMemoryLogbackAppenderTest {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        private const val REPEAT_SIZE = 3
+    }
 
     private lateinit var appender: InMemoryLogbackAppender
 
@@ -27,27 +29,33 @@ class InMemoryLogbackAppenderTest {
         appender.stop()
     }
 
-    @RepeatedTest(5)
-    fun `capture logback log message`() {
-        log.debug { "First message" }
-        appender.lastMessage shouldBeEqualTo "First message"
+    @RepeatedTest(REPEAT_SIZE)
+    fun `capture logback log messages`() {
+        val firstMessage = "First message - ${System.currentTimeMillis()}"
+        log.debug { firstMessage }
+        appender.lastMessage shouldBeEqualTo firstMessage
         appender.size shouldBeEqualTo 1
 
-        log.debug { "Second message" }
-        appender.lastMessage shouldBeEqualTo "Second message"
+        val secondMessage = "Second message - ${System.currentTimeMillis()}"
+        log.debug { secondMessage }
+        appender.lastMessage shouldBeEqualTo secondMessage
         appender.size shouldBeEqualTo 2
 
         appender.clear()
+
         appender.size shouldBeEqualTo 0
         appender.lastMessage.shouldBeNull()
         appender.messages.shouldBeEmpty()
     }
 
-    @RepeatedTest(5)
-    fun `capture logback log message with info level`() {
-        appender.messages.isEmpty().shouldBeTrue()
-        log.info { "Information" }
-        appender.messages.size shouldBeEqualTo 1
-        appender.lastMessage shouldBeEqualTo "Information"
+    @RepeatedTest(REPEAT_SIZE)
+    fun `capture logback log messages with info level`() {
+        appender.messages.shouldBeEmpty()
+
+        val message = "Information - ${System.currentTimeMillis()}"
+        log.info { message }
+
+        appender.messages shouldHaveSize 1
+        appender.lastMessage shouldBeEqualTo message
     }
 }

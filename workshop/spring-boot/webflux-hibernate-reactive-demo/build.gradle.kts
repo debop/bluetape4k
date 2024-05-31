@@ -57,7 +57,7 @@ dependencies {
     // Validator
     implementation(Libs.hibernate_validator)
     implementation(Libs.jakarta_validation_api)
-    implementation(Libs.jakarta_el)
+    implementation(Libs.jakarta_el_api)
 
     // Spring Boot
     implementation(Libs.springBoot("autoconfigure"))

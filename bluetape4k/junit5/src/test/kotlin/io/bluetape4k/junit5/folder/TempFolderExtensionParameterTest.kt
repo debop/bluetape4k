@@ -1,7 +1,7 @@
 package io.bluetape4k.junit5.folder
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
@@ -21,29 +21,26 @@ class TempFolderExtensionParameterTest {
         private const val REPEAT_SIZE = 3
     }
 
-    private val tempFilenames = HashSet<String>()
-    private val tempDirnames = HashSet<String>()
+    private val tempFileNames = mutableSetOf<String>()
+    private val tempDirNames = mutableSetOf<String>()
 
     @AfterAll
-    fun `모든 임시 파일이 삭제됨`() {
-        tempFilenames.filter { Files.exists(Paths.get(it)) }.shouldBeEmpty()
-    }
-
-    @AfterAll
-    fun `모든 임시 폴더가 삭제됨`() {
-        tempDirnames.filter { Files.exists(Paths.get(it)) }.shouldBeEmpty()
+    fun alterAll() {
+        tempFileNames.filter { Files.exists(Paths.get(it)) }.shouldBeEmpty()
+        tempDirNames.filter { Files.exists(Paths.get(it)) }.shouldBeEmpty()
     }
 
     @Test
     @ExtendWith(TempFolderExtension::class)
     fun `인자로 temporary folder를 받을 수 있다`(tempFolder: TempFolder) {
+        tempFolder.root.exists().shouldBeTrue()
         tempFolder.createFile("foo.txt").exists().shouldBeTrue()
-        tempFolder.createDirectory("bar").exists().shouldBeTrue()
+        tempFolder.createDirectory("dir").exists().shouldBeTrue()
     }
 
     @Test
     @TempFolderTest
-    fun `새로 생성된 폴더의 부모 폴더는 root 폴더입니다`(tempFolder: TempFolder) {
+    fun `새로 생성된 임시 폴더의 부모 폴더는 root 폴더입니다`(tempFolder: TempFolder) {
         val root = tempFolder.root
         root.exists().shouldBeTrue()
 
@@ -51,16 +48,17 @@ class TempFolderExtensionParameterTest {
         dir.parentFile shouldBeEqualTo root
     }
 
+
     @RepeatedTest(REPEAT_SIZE)
     @ExtendWith(TempFolderExtension::class)
     fun `반복 수행되는 메소드에 대해 매번 temporary file이 생성됩니다`(tempFolder: TempFolder) {
         val file = tempFolder.createFile("foo.txt")
         file.exists().shouldBeTrue()
 
-        log.debug { "Temp file=${file.absolutePath}" }
+        log.trace { "Temp file=${file.absolutePath}" }
 
-        tempFilenames shouldNotContain file.absolutePath
-        tempFilenames.add(file.absolutePath)
+        tempFileNames shouldNotContain file.absolutePath
+        tempFileNames.add(file.absolutePath)
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -69,9 +67,9 @@ class TempFolderExtensionParameterTest {
         val dir = tempFolder.createDirectory("bar")
         dir.exists().shouldBeTrue()
 
-        log.debug { "Temp dir=${dir.absolutePath}" }
+        log.trace { "Temp dir=${dir.absolutePath}" }
 
-        tempDirnames shouldNotContain dir.absolutePath
-        tempDirnames.add(dir.absolutePath)
+        tempDirNames shouldNotContain dir.absolutePath
+        tempDirNames.add(dir.absolutePath)
     }
 }

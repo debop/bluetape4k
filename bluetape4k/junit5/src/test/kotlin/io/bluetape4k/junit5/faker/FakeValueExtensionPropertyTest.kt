@@ -10,15 +10,16 @@ import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.TestInstance
 
+
 @FakeValueTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class FakeValueExtensionPropertyTest {
 
     companion object: KLogging() {
-        private const val TEST_COUNT = 5
+        private const val REPEAT_SIZE = 5
     }
 
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `inject fake value by provider`(
         @FakeValue(provider = FakeValueProvider.Name.FullName) fullName: String,
         @FakeValue(provider = FakeValueProvider.Name.FirstName) firstName: String,
@@ -33,7 +34,7 @@ class FakeValueExtensionPropertyTest {
         log.trace { "lastName=$lastName" }
     }
 
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `inject fake value by random provider`(
         @FakeValue(provider = "number.randomDigit") intValue: Int,
         @FakeValue(provider = "number.randomDigitNotZero") nonZero: Int,
@@ -46,7 +47,7 @@ class FakeValueExtensionPropertyTest {
         log.trace { "double value = $doubleValue" }
     }
 
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `inject fake credit card`(
         @FakeValue(provider = "finance.creditCard") creditCard: String,
         @FakeValue(provider = "finance.bic") bic: String,
@@ -59,7 +60,7 @@ class FakeValueExtensionPropertyTest {
         log.trace { "bic=$bic" }
     }
 
-    @RepeatedTest(TEST_COUNT)
+    @RepeatedTest(REPEAT_SIZE)
     fun `inject multiple usernames`(
         @FakeValue(provider = FakeValueProvider.Name.Username, type = String::class, size = 20) usernames: List<String>,
     ) {

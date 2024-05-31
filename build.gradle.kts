@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
     base
     `maven-publish`
@@ -46,7 +49,8 @@ subprojects {
 
     apply {
         plugin<JavaLibraryPlugin>()
-        // plugin<KotlinPlatformJvmPlugin>()
+
+        // Kotlin 1.9.20 부터는 pluginId 를 지정해줘야 합니다.
         plugin("org.jetbrains.kotlin.jvm")
 
         // plugin("jacoco")
@@ -68,6 +72,30 @@ subprojects {
         jvmToolchain {
             languageVersion.set(JavaLanguageVersion.of(21))
         }
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+            languageVersion.set(KotlinVersion.KOTLIN_1_9)
+            apiVersion.set(KotlinVersion.KOTLIN_1_9)
+            freeCompilerArgs = listOf(
+                "-Xjsr305=strict",
+                "-Xjvm-default=all",
+                "-Xinline-classes",
+                "-Xstring-concat=indy",         // since Kotlin 1.4.20 for JVM 9+
+                "-Xenable-builder-inference",   // since Kotlin 1.6
+                "-Xcontext-receivers"           // since Kotlin 1.6
+            )
+            val experimentalAnnotations = listOf(
+                "kotlin.RequiresOptIn",
+                "kotlin.ExperimentalStdlibApi",
+                "kotlin.contracts.ExperimentalContracts",
+                "kotlin.experimental.ExperimentalTypeInference",
+                "kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "kotlinx.coroutines.InternalCoroutinesApi",
+                "kotlinx.coroutines.FlowPreview",
+                "kotlinx.coroutines.DelicateCoroutinesApi",
+            )
+            freeCompilerArgs.addAll(experimentalAnnotations.map { "-opt-in=$it" })
+        }
     }
 
 //    val javaVersion = JavaVersion.VERSION_21.toString()
@@ -76,69 +104,6 @@ subprojects {
     tasks {
         compileJava {
             options.isIncremental = true
-        }
-
-        compileKotlin {
-            kotlinOptions {
-                incremental = true
-                javaParameters = true
-                languageVersion = kotlinVersion
-                apiVersion = kotlinVersion
-                freeCompilerArgs = listOf(
-                    "-Xjsr305=strict",
-                    "-Xjvm-default=all",
-                    "-Xinline-classes",
-                    "-Xallow-result-return-type",
-                    "-Xstring-concat=indy",         // since Kotlin 1.4.20 for JVM 9+
-                    "-progressive",                 // since Kotlin 1.6
-                    "-Xenable-builder-inference",   // since Kotlin 1.6
-                    "-Xbackend-threads=0",          // since 1.6.20 (0 means one thread per CPU core)
-                )
-
-                val experimentalAnnotations = listOf(
-                    "kotlin.RequiresOptIn",
-                    "kotlin.contracts.ExperimentalContracts",
-                    "kotlin.experimental.ExperimentalTypeInference",
-                    "kotlinx.coroutines.ExperimentalCoroutinesApi",
-                    "kotlinx.coroutines.InternalCoroutinesApi",
-                    "kotlinx.coroutines.FlowPreview",
-                    "kotlinx.coroutines.DelicateCoroutinesApi",
-                )
-                freeCompilerArgs = freeCompilerArgs.plus(experimentalAnnotations.map { "-opt-in=$it" })
-            }
-        }
-
-        compileTestKotlin {
-            kotlinOptions {
-                incremental = true
-                javaParameters = true
-                languageVersion = kotlinVersion
-                apiVersion = kotlinVersion
-                freeCompilerArgs = listOf(
-                    "-Xjsr305=strict",
-                    "-Xjvm-default=all",
-                    "-Xinline-classes",
-                    "-Xallow-result-return-type",
-                    "-Xstring-concat=indy",         // since Kotlin 1.4.20 for JVM 9+
-                    "-progressive",                 // since Kotlin 1.6
-                    "-Xenable-builder-inference",   // since Kotlin 1.6
-                    "-Xbackend-threads=0",          // since 1.6.20 (0 means one thread per CPU core)
-                )
-
-                val experimentalAnnotations = listOf(
-                    "kotlin.RequiresOptIn",
-                    "kotlin.Experimental",
-                    "kotlin.ExperimentalStdlibApi",
-                    "kotlin.time.ExperimentalTime",
-                    "kotlin.contracts.ExperimentalContracts",
-                    // "kotlin.experimental.ExperimentalTypeInference",
-                    "kotlinx.coroutines.ExperimentalCoroutinesApi",
-                    "kotlinx.coroutines.InternalCoroutinesApi",
-                    "kotlinx.coroutines.FlowPreview",
-                    "kotlinx.coroutines.DelicateCoroutinesApi",
-                )
-                freeCompilerArgs = freeCompilerArgs.plus(experimentalAnnotations.map { "-opt-in=$it" })
-            }
         }
 
         test {
@@ -236,7 +201,9 @@ subprojects {
 
         // https://kotlin.github.io/dokka/1.6.0/user_guide/gradle/usage/
         withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
-            outputDirectory.set(buildDir.resolve("javadoc"))
+            val javadocDir = layout.buildDirectory.asFile.get().resolve("javadoc")
+            outputDirectory.set(javadocDir)
+            // outputDirectory.set(layout.buildDirectory.asFile.get().resolve("javadoc"))
             dokkaSourceSets {
                 configureEach {
                     includes.from("README.md")
@@ -245,7 +212,9 @@ subprojects {
         }
 
         dokkaHtml.configure {
-            outputDirectory.set(buildDir.resolve("dokka"))
+            val dokkaDir = layout.buildDirectory.asFile.get().resolve("dokka")
+            outputDirectory.set(dokkaDir)
+            // outputDirectory.set(layout.buildDirectory.asFile.get().resolve("dokka"))
         }
 
         clean {
@@ -259,14 +228,14 @@ subprojects {
 
     dependencyManagement {
         imports {
+            mavenBom(Libs.spring_boot_dependencies)
+            mavenBom(Libs.spring_cloud_dependencies)
             mavenBom(Libs.feign_bom)
             mavenBom(Libs.micrometer_bom)
             mavenBom(Libs.micrometer_tracing_bom)
             mavenBom(Libs.opentelemetry_bom)
             mavenBom(Libs.opentelemetry_alpha_bom)
             mavenBom(Libs.opentelemetry_instrumentation_bom_alpha)
-            mavenBom(Libs.spring_cloud_dependencies)
-            mavenBom(Libs.spring_boot_dependencies)
             mavenBom(Libs.vertx_dependencies)
             mavenBom(Libs.log4j_bom)
             mavenBom(Libs.testcontainers_bom)
@@ -343,7 +312,6 @@ subprojects {
             dependency(Libs.jakarta_activation_api)
             dependency(Libs.jakarta_annotation_api)
             dependency(Libs.jakarta_el_api)
-            dependency(Libs.jakarta_el)
             dependency(Libs.jakarta_inject_api)
             dependency(Libs.jakarta_interceptor_api)
             dependency(Libs.jakarta_jms_api)
@@ -530,8 +498,11 @@ subprojects {
         testImplementation(Libs.log4j_over_slf4j)
 
         testImplementation(Libs.junit_jupiter)
-        testImplementation(Libs.junit_jupiter_migrationsupport)
         testRuntimeOnly(Libs.junit_platform_engine)
+
+        testImplementation(Libs.kluent)
+        testImplementation(Libs.mockk)
+        testImplementation(Libs.awaitility_kotlin)
     }
 
     tasks.withType<Jar> {
@@ -558,7 +529,10 @@ subprojects {
      */
     publishing {
         publications {
-            if (!project.path.contains("sample")) {
+            if (!project.path.contains("workshop") &&
+                !project.path.contains("examples") &&
+                !project.path.contains("-demo")
+            ) {
                 create<MavenPublication>("Maven") {
                     val binaryJar = components["java"]
 
@@ -569,7 +543,8 @@ subprojects {
 
                     val javadocJar by tasks.creating(Jar::class) {
                         archiveClassifier.set("javadoc")
-                        from("$buildDir/javadoc")
+                        val javadocDir = layout.buildDirectory.asFile.get().resolve("javadoc")
+                        from(javadocDir.path)
                     }
 
                     from(binaryJar)

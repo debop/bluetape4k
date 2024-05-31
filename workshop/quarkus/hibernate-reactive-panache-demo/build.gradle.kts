@@ -28,6 +28,10 @@ dependencies {
 
     implementation(project(":bluetape4k-core"))
     implementation(project(":bluetape4k-quarkus-kotlin"))
+    implementation("io.quarkus:quarkus-opentelemetry:3.3.2")
+    implementation("io.quarkus:quarkus-opentelemetry:3.3.2")
+    implementation("io.quarkus:quarkus-opentelemetry:3.3.2")
+    implementation("io.quarkus:quarkus-opentelemetry:3.3.2")
     testImplementation(project(":bluetape4k-junit5"))
 
     implementation(Libs.quarkus("hibernate-reactive-panache"))

@@ -18,7 +18,7 @@ inline fun runSuspendTest(
     crossinline testBody: suspend CoroutineScope.() -> Unit,
 ) {
     runBlocking(context) {
-        testBody()
+        testBody.invoke(this)
     }
 }
 
@@ -30,6 +30,6 @@ inline fun runSuspendTest(
  */
 inline fun runSuspendWithIO(crossinline testBody: suspend CoroutineScope.() -> Unit) {
     runBlocking(Dispatchers.IO) {
-        testBody()
+        testBody.invoke(this)
     }
 }

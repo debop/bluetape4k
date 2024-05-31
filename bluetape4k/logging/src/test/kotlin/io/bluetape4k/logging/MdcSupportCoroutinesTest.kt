@@ -1,7 +1,5 @@
-package io.bluetape4k.logging.coroutines
+package io.bluetape4k.logging
 
-import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNullOrEmpty
@@ -15,7 +13,7 @@ import org.slf4j.MDC
  * %d{HH:mm:ss.SSS} %highlight(%-5level)[traceId=%X{traceId}][%.24thread] %logger{36}:%line: %msg%n%throwable
  * ```
  */
-class CoroutineLoggingContextTest {
+class MdcSupportCoroutinesTest {
 
     companion object: KLogging()
 

@@ -1,7 +1,4 @@
-import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.id
-import com.google.protobuf.gradle.protobuf
-import com.google.protobuf.gradle.protoc
 
 plugins {
     idea
@@ -11,12 +8,11 @@ plugins {
 
 idea {
     module {
-        sourceDirs.plus(file("$buildDir/generated/source/proto/main"))
-        testSources.plus(file("$buildDir/generated/source/proto/test"))
+        sourceDirs.plus(file("${layout.buildDirectory.asFile.get()}/generated/source/proto/main"))
+        testSources.plus(file("${layout.buildDirectory.asFile.get()}/generated/source/proto/test"))
     }
 }
-
-// Protobuf Message를 Redis에 저장하는 예제를 위해  
+// Protobuf Message를 Redis에 저장하는 예제를 위해
 // 참고: https://github.com/grpc/grpc-kotlin/blob/master/compiler/README.md
 protobuf {
     protoc {

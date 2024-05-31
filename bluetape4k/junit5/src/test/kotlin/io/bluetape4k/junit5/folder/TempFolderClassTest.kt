@@ -1,23 +1,27 @@
 package io.bluetape4k.junit5.folder
 
 import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertFailsWith
+
 
 class TempFolderClassTest {
 
     @Test
     fun `임시 폴더 생성 후 close 시에 임시폴더는 삭제된다`() {
         val tempFolder = TempFolder()
-        val rootFile = tempFolder.root
+        val root = tempFolder.root
+
+        root.exists().shouldBeTrue()
 
         tempFolder.createDirectory("tempDir")
         tempFolder.createFile("tempFile")
-        tempFolder.createFile()
+        val tempFile = tempFolder.createFile()
+        tempFile.exists().shouldBeTrue()
 
         tempFolder.close()
-
-        rootFile.exists().shouldBeFalse()
+        root.exists().shouldBeFalse()
     }
 
     @Test
@@ -25,7 +29,7 @@ class TempFolderClassTest {
         val invalidDirName = "\\\\/:*?\\\"<>|/:"
 
         TempFolder().use { folder ->
-            assertThrows<TempFolder.TempFolderException> {
+            assertFailsWith<TempFolderException> {
                 folder.createDirectory(invalidDirName)
             }
         }

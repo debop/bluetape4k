@@ -6,17 +6,15 @@ import io.bluetape4k.logging.trace
 import org.junit.platform.engine.TestDescriptor
 import org.junit.platform.engine.TestExecutionResult
 import org.junit.platform.engine.reporting.ReportEntry
+import java.io.Serializable
 import kotlin.reflect.KClass
 
 
-/**
- * JUnit 테스트 코드 실행 정보를 담은 이벤트
- */
 data class ExecutionEvent(
     val type: EventType,
     val testDescriptor: TestDescriptor,
     val payload: Any? = null,
-) {
+): Serializable {
 
     enum class EventType {
         DYNAMIC_TEST_REGISTERED,
@@ -26,13 +24,12 @@ data class ExecutionEvent(
         REPORTING_ENTRY_PUBLISHED
     }
 
-    fun <T: Any> getPayload(payloadClass: Class<T>): T? {
-        return if (payload != null && payloadClass.isInstance(payload)) payloadClass.cast(payload)
-        else null
+    fun <T: Any> getPayload(payloadClass: Class<T>): T? = when {
+        payload != null && payloadClass.isInstance(payload) -> payloadClass.cast(payload)
+        else                                                -> null
     }
 
     companion object: KLogging() {
-
         fun reportingEntryPublished(testDescriptor: TestDescriptor, entry: ReportEntry): ExecutionEvent {
             log.trace { "reporting entry published. entry=$entry" }
             return ExecutionEvent(EventType.REPORTING_ENTRY_PUBLISHED, testDescriptor, entry)
@@ -69,5 +66,6 @@ data class ExecutionEvent(
 
         fun <T: Any> byPayload(payloadClass: KClass<T>, predicate: (T) -> Boolean) =
             { evt: ExecutionEvent -> evt.getPayload(payloadClass.java)?.run { predicate(this) } ?: false }
+
     }
 }

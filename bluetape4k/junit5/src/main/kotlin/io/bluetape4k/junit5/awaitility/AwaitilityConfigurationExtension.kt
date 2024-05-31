@@ -5,7 +5,9 @@ import io.bluetape4k.logging.trace
 import org.awaitility.Awaitility
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
-import java.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 class AwaitilityConfigurationExtension: BeforeAllCallback {
 
@@ -14,9 +16,9 @@ class AwaitilityConfigurationExtension: BeforeAllCallback {
     override fun beforeAll(context: ExtensionContext?) {
         log.trace { "Setup Awaitility configuration ..." }
         Awaitility.catchUncaughtExceptions()
-        Awaitility.waitAtMost(Duration.ofSeconds(5))
-        Awaitility.setDefaultPollInterval(Duration.ofMillis(10))
-        Awaitility.setDefaultPollDelay(Duration.ofMillis(10))
-        Awaitility.pollInSameThread()
+        Awaitility.waitAtMost(5.seconds.toJavaDuration())
+        Awaitility.setDefaultPollInterval(10.milliseconds.toJavaDuration())
+        Awaitility.setDefaultPollDelay(10.milliseconds.toJavaDuration())
+        // Awaitility.pollInSameThread()
     }
 }

@@ -25,24 +25,17 @@ class CaptureOutputExtension: BeforeEachCallback, AfterEachCallback, ParameterRe
         getOutputCapturer(context).finishCapture()
     }
 
-    override fun supportsParameter(
-        parameterContext: ParameterContext,
-        extensionContext: ExtensionContext,
-    ): Boolean {
+    override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         return extensionContext.testMethod.isPresent &&
-            parameterContext.parameter.type == OutputCapturer::class.java
+                parameterContext.parameter.type == OutputCapturer::class.java
     }
 
-    override fun resolveParameter(
-        parameterContext: ParameterContext,
-        extensionContext: ExtensionContext,
-    ): Any {
+    override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
         return getOutputCapturer(extensionContext)
     }
 
     private fun getOutputCapturer(context: ExtensionContext): OutputCapturer {
-        return context
-            .getStore(NAMESPACE)
+        return context.getStore(NAMESPACE)
             .getOrComputeIfAbsent(
                 OutputCapturer::class.java,
                 { ReflectionSupport.newInstance(it) },

@@ -9,19 +9,20 @@ import java.util.*
 
 
 /**
- * [Data Faker](https://github.com/datafaker-net/datafaker) 를 이용하여 테스트용 램덤 데이터를 생성합니다.
+ * [Data FakeValue](https://github.com/datafaker-net/datafaker) 를 이용하여 테스트용 램덤 데이터를 생성합니다.
  */
 object Fakers: KLogging() {
-    /**
-     * Faker
-     */
+
     val faker: Faker = Faker()
 
-    /**
-     * Fake 값을 제공하는 난수발생기
-     */
-    val random: RandomService = faker.random()
+    val random: RandomService by unsafeLazy { faker.random() }
 
+    private val timeBasedUuidGenerator: NoArgGenerator by unsafeLazy {
+        Generators.timeBasedReorderedGenerator()
+    }
+
+    private inline fun <reified T> unsafeLazy(noinline initializer: () -> T): Lazy<T> =
+        lazy(LazyThreadSafetyMode.NONE, initializer)
 
     /**
      * 임의의 길이의 fake 문자열을 생성합니다.
@@ -55,6 +56,7 @@ object Fakers: KLogging() {
     ): String =
         randomString(length, length, includeUppercase, includeSpecial, includeDigit)
 
+
     /**
      * [format]에 `#`을 임의의 숫자(0~9)로 치환하는 문자열을 빌드합니다.
      *
@@ -65,7 +67,7 @@ object Fakers: KLogging() {
      * @param format 원하는 문자열 포맷
      * @return 랜덤 수로 치환된 문자열
      */
-    fun numberString(format: String): String = faker.numerify(format)
+    fun numberString(format: String = "#,##0"): String = faker.numerify(format)
 
     /**
      * [format]에 `?`를 임의의 character(`a`~`z`)로 치환한 문자열을 빌드합니다.
@@ -95,10 +97,6 @@ object Fakers: KLogging() {
     fun alphaNumericString(format: String, isUpper: Boolean = false): String =
         faker.bothify(format, isUpper)
 
-
-    private val timeBasedUuidGenerator: NoArgGenerator by lazy {
-        Generators.timeBasedReorderedGenerator()
-    }
 
     /**
      * Time-based UUID를 생성합니다.

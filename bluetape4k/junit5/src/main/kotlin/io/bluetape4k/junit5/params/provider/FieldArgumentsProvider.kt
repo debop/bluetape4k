@@ -40,8 +40,9 @@ class FieldArgumentsProvider: ArgumentsProvider, AnnotationConsumer<FieldSource>
         variableName = fieldSource.value
     }
 
-    private fun getField(clazz: Class<*>): Field? =
-        runCatching { clazz.getDeclaredField(variableName) }.getOrNull()
+    private fun getField(clazz: Class<*>): Field? {
+        return runCatching { clazz.getDeclaredField(variableName) }.getOrNull()
+    }
 
     @Suppress("UNCHECKED_CAST")
     private fun getValue(field: Field?, instance: Any): Stream<Arguments>? {

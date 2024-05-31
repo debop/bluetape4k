@@ -2,13 +2,15 @@ package io.bluetape4k.junit5.coroutines
 
 import io.bluetape4k.junit5.utils.MultiException
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
+import kotlinx.coroutines.yield
 
 /**
  * suspend 함수를 제한된 스레드 수에서 동시에 실행시키고, 모든 suspend 함수가 종료되기를 기다린다.
@@ -28,35 +30,38 @@ import kotlinx.coroutines.newFixedThreadPoolContext
  * block2.count shouldBeEqualTo 1
  * ```
  */
-@Suppress("OPT_IN_USAGE")
 class MultiJobTester {
 
     companion object: KLogging() {
         const val DEFAULT_NUM_JOBS: Int = 64
-        const val DEFAULT_ROUNDS_PER_THREADS: Int = 10
+        const val MIN_NUM_JOBS: Int = 2
+        const val MAX_NUM_JOBS: Int = 1000
+
+        const val DEFAULT_ROUNDS_PER_JOB: Int = 10
+        const val MIN_ROUNDS_PER_JOB: Int = 1
+        const val MAX_ROUNDS_PER_JOB: Int = Int.MAX_VALUE
     }
 
-    private var numThreads = DEFAULT_NUM_JOBS
-    private var roundsPerThreads = DEFAULT_ROUNDS_PER_THREADS
+    private var numJobs = DEFAULT_NUM_JOBS
+    private var roundsPerJob = DEFAULT_ROUNDS_PER_JOB
+
     private val suspendBlocks = mutableListOf<suspend () -> Unit>()
 
-    // Coroutines 에서는 사용하지 않는다.
-    // private lateinit var monitorThread: Thread
-    // private val idsOfDeadlockThreads = CopyOnWriteArraySet<Long>()
-
-    private lateinit var workerDispatcher: ExecutorCoroutineDispatcher
+    private lateinit var workerDispather: ExecutorCoroutineDispatcher
     private lateinit var workerJobs: List<Job>
 
-    fun numJobs(numThreads: Int): MultiJobTester = apply {
-        check(numThreads in 2..2000) { "Invalid numThreads: $numThreads -- must be range in 2..2000" }
-        this.numThreads = numThreads
+    fun numJobs(value: Int) = apply {
+        check(value in MIN_NUM_JOBS..MAX_NUM_JOBS) {
+            "Invalid numJobs: $value -- must be range in $MIN_NUM_JOBS..$MAX_NUM_JOBS"
+        }
+        this.numJobs = value
     }
 
-    fun roundsPerJob(roundsPerThreads: Int) = apply {
-        check(roundsPerThreads in 1..Int.MAX_VALUE) {
-            "Invalid roundsPerThreads: $roundsPerThreads -- must be range in 1..${Int.MAX_VALUE}"
+    fun roundsPerJob(value: Int) = apply {
+        check(value in MIN_ROUNDS_PER_JOB..MAX_ROUNDS_PER_JOB) {
+            "Invalid roundsPerJob: $value -- must be range in $MIN_ROUNDS_PER_JOB..$MAX_ROUNDS_PER_JOB"
         }
-        this.roundsPerThreads = roundsPerThreads
+        this.roundsPerJob = value
     }
 
     fun add(block: suspend () -> Unit) = apply {
@@ -73,44 +78,42 @@ class MultiJobTester {
 
     suspend fun run() {
         check(suspendBlocks.isNotEmpty()) { "No suspend blocks to run" }
-        check(numThreads >= suspendBlocks.size) {
-            "numThreads($numThreads) must be greater than suspendBlocks.size(${suspendBlocks.size})"
+        check(numJobs >= suspendBlocks.size) {
+            "numJobs[$numJobs] must be greater than or equal to the number of suspend blocks[${suspendBlocks.size}]"
         }
 
         val me = MultiException()
-
-        startWorkerJobs(me)
-        awaitWorkerJobs()
-
-        me.throwIfNotEmpty()
+        try {
+            startWorkerJobs(me)
+            yield()
+            awaitWorkerJobs()
+        } finally {
+            me.throwIfNotEmpty()
+        }
     }
 
-    private suspend fun startWorkerJobs(me: MultiException) = coroutineScope {
-        log.debug { "Start worker jobs ..." }
+    private suspend fun startWorkerJobs(me: MultiException): Unit = coroutineScope {
+        log.trace { "Start multi job testing ..." }
 
-        var iter = suspendBlocks.iterator()
+        val sequence = atomic(0)
 
-        workerDispatcher = newFixedThreadPoolContext(numThreads, "coroutine-tester")
-        workerJobs = List(numThreads) {
-            if (!iter.hasNext()) {
-                iter = suspendBlocks.iterator()
-            }
-            val block = iter.next()
-            launch(workerDispatcher) {
-                repeat(roundsPerThreads) {
-                    runCatching {
-                        block()
-                    }.onFailure {
-                        me.add(it)
-                    }
+        workerDispather = newFixedThreadPoolContext(numJobs, "multi-job-tester")
+
+        workerJobs = List(numJobs * roundsPerJob) {
+            val block = suspendBlocks[sequence.getAndIncrement() % suspendBlocks.size]
+            launch(workerDispather) {
+                try {
+                    block()
+                } catch (e: Throwable) {
+                    me.add(e)
                 }
             }
         }
     }
 
     private suspend fun awaitWorkerJobs() {
-        log.debug { "Await worker jobs ..." }
-        workerJobs.joinAll()
-        runCatching { workerDispatcher.close() }
+        log.trace { "Await multi testing jobs..." }
+        runCatching { workerJobs.joinAll() }
+        runCatching { workerDispather.close() }
     }
 }

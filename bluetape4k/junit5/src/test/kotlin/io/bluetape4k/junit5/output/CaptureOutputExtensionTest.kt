@@ -46,7 +46,7 @@ class CaptureOutputExtensionTest {
     }
 
     private fun verifyOutput(output: OutputCapturer, expected: String) {
-        output.toString() shouldNotContain expected
+        output.capture() shouldNotContain expected
 
         println(expected)
 
@@ -55,7 +55,7 @@ class CaptureOutputExtensionTest {
     }
 
     private fun verifyError(output: OutputCapturer, expected: String) {
-        output.toString() shouldNotContain expected
+        output.capture() shouldNotContain expected
 
         System.err.println(expected)
 

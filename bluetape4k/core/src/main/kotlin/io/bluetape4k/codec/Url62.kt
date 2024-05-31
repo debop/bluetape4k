@@ -6,6 +6,11 @@ import java.util.*
 
 /**
  * [Base62] 를 이용하여 [UUID]를 문자열로 encoding/decoding 합니다.
+ *
+ * ```
+ * val uuid = UUID.randomUUID()      // uuid=24738134-9d88-6645-4ec8-d63aa2031015
+ * val encoded = Url62.encode(uuid)  // encoded=16mVan3wbAXR6tQwIbfS5d
+ * ```
  */
 object Url62 {
 

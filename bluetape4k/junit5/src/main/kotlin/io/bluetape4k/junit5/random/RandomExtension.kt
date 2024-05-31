@@ -13,7 +13,7 @@ class RandomExtension: TestInstancePostProcessor, ParameterResolver {
 
     companion object: KLogging() {
 
-        private val randomizer: EnhancedRandom by lazy { DefaultEnhancedRandom }
+        private val randomizer: EnhancedRandom by lazy(LazyThreadSafetyMode.NONE) { DefaultEnhancedRandom }
 
         private fun resolve(targetType: Class<*>, annotation: RandomValue): Any = when {
             targetType.isAssignableFrom(List::class.java) || targetType.isAssignableFrom(Collection::class.java) ->
@@ -40,7 +40,6 @@ class RandomExtension: TestInstancePostProcessor, ParameterResolver {
             else                                                                                                 ->
                 randomizer.nextObject(targetType, *annotation.excludes)
         }
-
     }
 
     override fun postProcessTestInstance(testInstance: Any, context: ExtensionContext) {
@@ -48,7 +47,7 @@ class RandomExtension: TestInstancePostProcessor, ParameterResolver {
             field.getAnnotation(RandomValue::class.java)?.let { annotation ->
                 field.isAccessible = true
                 val randomObj = resolve(field.type, annotation)
-                field.set(testInstance, randomObj)
+                field[testInstance] = randomObj
             }
         }
     }

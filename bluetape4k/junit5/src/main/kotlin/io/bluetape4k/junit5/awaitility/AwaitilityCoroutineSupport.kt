@@ -10,7 +10,7 @@ import org.awaitility.core.ConditionFactory
  *
  * @param block 판단을 위한 코드 블럭
  */
-suspend inline infix fun ConditionFactory.await(crossinline block: suspend () -> Unit) =
+suspend inline infix fun ConditionFactory.awaiting(crossinline block: suspend () -> Unit) =
     untilSuspending { block(); true }
 
 /**
@@ -26,29 +26,5 @@ suspend inline infix fun ConditionFactory.untilSuspending(
             break
         }
         delay(10)
-    }
-}
-
-/**
- * suspend 함수가 true 를 반환할 때까지 대기한다
- *
- * @param block [predicate]가 판단할 수 있는 값을 제공합니다
- * @param predicate 대기 판단을 수행합니다
- */
-@Deprecated("use untilSuspend(block)")
-@Suppress("UNCHECKED_CAST")
-suspend inline fun <T> ConditionFactory.untilSuspending(
-    crossinline block: suspend () -> T,
-    crossinline predicate: (T) -> Boolean,
-): T {
-    return coroutineScope {
-        while (isActive) {
-            val result = block()
-            if (predicate(result)) {
-                return@coroutineScope result
-            }
-            delay(10)
-        }
-        null as T
     }
 }

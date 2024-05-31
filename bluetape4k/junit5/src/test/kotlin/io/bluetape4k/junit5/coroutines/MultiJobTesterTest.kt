@@ -1,14 +1,12 @@
 package io.bluetape4k.junit5.coroutines
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.trace
-import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeFalse
+import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import kotlin.test.assertFailsWith
@@ -20,36 +18,33 @@ class MultiJobTesterTest {
     }
 
     @Test
-    fun `항상 예외를 발생시키는 코드는 실패해야 한다`() = runTest {
+    fun `항상 예외를 발생시키는 코드블럭은 실패한다`() = runTest {
         val block: suspend () -> Unit = { fail("foo") }
 
         runCatching {
-            MultiJobTester().add(block).run()
-        }.isSuccess.shouldBeFalse()
+            MultiJobTester()
+                .add(block)
+                .run()
+        }.isFailure.shouldBeTrue()
     }
 
     @Test
-    fun `긴 실행 시간을 가지는 코드블럭 실행`() = runTest {
-        val counter = atomic(0)
-        val count by counter
+    fun `긴 실행 시간을 가진 코드블럭 실행`() = runTest {
+        val job = CountingJob()
 
         MultiJobTester()
-            .numJobs(2)
-            .roundsPerJob(2)
-            .add {
-                log.trace { "Run suspend block ${counter.value}" }
-                delay(10)
-                counter.incrementAndGet()
-            }
+            .numJobs(3)
+            .roundsPerJob(4)
+            .add(job)
             .run()
 
         yield()
-        count shouldBeEqualTo 4
+        job.counter.value shouldBeEqualTo 3 * 4
     }
 
     @Test
     fun `하나의 suspend 함수 실행하기`() = runTest {
-        val block = CountingSuspendBlock()
+        val block = CountingJob()
 
         MultiJobTester()
             .numJobs(11)
@@ -57,13 +52,13 @@ class MultiJobTesterTest {
             .add(block)
             .run()
 
-        block.count shouldBeEqualTo 11 * 13
+        block.counter.value shouldBeEqualTo 11 * 13
     }
 
     @Test
     fun `복수의 suspend 함수 실행하기`() = runTest {
-        val block1 = CountingSuspendBlock()
-        val block2 = CountingSuspendBlock()
+        val block1 = CountingJob()
+        val block2 = CountingJob()
 
         MultiJobTester()
             .numJobs(3)
@@ -71,39 +66,40 @@ class MultiJobTesterTest {
             .addAll(block1, block2)
             .run()
 
-        block1.count shouldBeEqualTo 2
-        block2.count shouldBeEqualTo 1
+        block1.counter.value shouldBeEqualTo 2
+        block2.counter.value shouldBeEqualTo 1
     }
 
     @Test
-    fun `numThread 보다 많은 runnable을 등록하면 예외가 발생한다`() = runTest {
-        val block = CountingSuspendBlock()
+    fun `numJob 보다 많은 코드블럭을 등록하면 예외가 발생한다`() = runTest {
+        val block = CountingJob()
+
+        val mjt = MultiJobTester()
+            .numJobs(2)
+            .roundsPerJob(1)
+            .add(block)
+            .add(block)
+            .add(block)
 
         assertFailsWith<IllegalStateException> {
-            MultiJobTester()
-                .numJobs(2)
-                .roundsPerJob(1)
-                .add(block)
-                .add(block)
-                .add(block)
-                .run()
+            mjt.run()
         }
     }
 
     @Test
-    fun `실행할 block 이 없으면 예외가 발생한다`() = runTest {
+    fun `실행할 코드블럭이 없으면 예외가 발생한다`() = runTest {
         assertFailsWith<IllegalStateException> {
             MultiJobTester().run()
         }
     }
 
-    private inner class CountingSuspendBlock: suspend () -> Unit {
-        val counter: AtomicInt = atomic(0)
-        var count: Int by counter
+    private class CountingJob: suspend () -> Unit {
+        val counter = atomic(0)
 
         override suspend fun invoke() {
+            delay(3)
             counter.incrementAndGet()
-            yield()
+            // log.trace { "count: ${counter.value}" }
         }
     }
 }

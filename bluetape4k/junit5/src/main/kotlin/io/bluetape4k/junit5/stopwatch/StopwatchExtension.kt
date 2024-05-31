@@ -19,7 +19,7 @@ import java.time.Duration
  * }
  * ```
  */
-class StopwatchExtension(val logger: Logger = log): BeforeTestExecutionCallback, AfterTestExecutionCallback {
+class StopwatchExtension(private val logger: Logger = log): BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
     companion object: KLogging()
 
@@ -32,13 +32,14 @@ class StopwatchExtension(val logger: Logger = log): BeforeTestExecutionCallback,
     override fun afterTestExecution(context: ExtensionContext) {
         val testMethod = context.requiredTestMethod
         val startNano = context.store(this.javaClass).get(testMethod, Long::class.java)
-        val duration = Duration.ofNanos(System.nanoTime() - startNano)
+        val nanos = Duration.ofNanos(System.nanoTime() - startNano)
 
-        val millis = duration.toMillis()
-        if (millis == 0L) {
-            logger.info { "Completed test [${testMethod.name}] took $duration" }
+        val millis = nanos.toMillis()
+        if (millis <= 0L) {
+            logger.info { "Completed test [${testMethod.name}] took $nanos nanos" }
         } else {
             logger.info { "Completed test [${testMethod.name}] took $millis msecs." }
         }
+
     }
 }

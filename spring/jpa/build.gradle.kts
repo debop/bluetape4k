@@ -64,7 +64,6 @@ dependencies {
 //    api(Libs.javax_el_api)
 //    api(Libs.javax_el)
     api(Libs.jakarta_el_api)
-    api(Libs.jakarta_el)
 
     // Validator
     // api(Libs.javax_validation_api)

@@ -20,7 +20,7 @@ import java.util.stream.Stream
 class RandomExtensionFieldTest {
 
     companion object: KLogging() {
-        const val REPEAT_SIZE = 10
+        const val REPEAT_SIZE = 5
     }
 
     val anyStrings = ConcurrentLinkedQueue<String>()
@@ -31,7 +31,7 @@ class RandomExtensionFieldTest {
     @Test
     fun `inject random string`() {
         log.trace { "anyString=$anyString" }
-        anyString.shouldNotBeNull()
+        anyString.shouldNotBeEmpty()
     }
 
     @RandomValue

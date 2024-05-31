@@ -1,7 +1,5 @@
-package io.bluetape4k.logging.coroutines
+package io.bluetape4k.logging
 
-import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.logMessageSafe
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +11,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.slf4j.event.Level
+import java.io.Serializable
 import kotlin.concurrent.thread
 
 /**
@@ -48,11 +47,12 @@ open class KLoggingChannel: KLogging() {
     }
 
     private fun listen() {
-        if (job != null)
+        if (job != null) {
             return
+        }
 
         job = scope.launch {
-            log.info("Start logging channel.")
+            log.info { "Start logging channel." }
 
             sharedFlow
                 .onEach { event ->
@@ -62,7 +62,6 @@ open class KLoggingChannel: KLogging() {
                         Level.INFO  -> log.info(event.msg, event.error)
                         Level.WARN  -> log.warn(event.msg, event.error)
                         Level.ERROR -> log.error(event.msg, event.error)
-                        else        -> log.debug(event.msg, event.error)
                     }
                 }
                 .collect()
@@ -107,5 +106,5 @@ open class KLoggingChannel: KLogging() {
         val level: Level = Level.DEBUG,
         val msg: String? = null,
         val error: Throwable? = null,
-    )
+    ): Serializable
 }

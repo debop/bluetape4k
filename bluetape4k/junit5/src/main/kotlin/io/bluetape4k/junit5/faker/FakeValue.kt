@@ -3,7 +3,7 @@ package io.bluetape4k.junit5.faker
 import kotlin.reflect.KClass
 
 /**
- * FakeValue
+ * 변수에 Fake 값을 주입하도록 합니다.
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(

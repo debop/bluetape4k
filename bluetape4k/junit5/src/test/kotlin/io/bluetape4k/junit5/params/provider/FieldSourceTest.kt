@@ -8,7 +8,7 @@ class FieldSourceTest {
     val arguments = listOf(
         argumentOf(null, true),
         argumentOf("", true),
-        argumentOf("  ", true),
+        argumentOf(" ", true),
         argumentOf("not blank", false)
     )
 

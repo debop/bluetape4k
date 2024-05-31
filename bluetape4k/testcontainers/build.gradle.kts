@@ -33,6 +33,9 @@ dependencies {
     compileOnly(Libs.r2dbc_postgresql)
     compileOnly(Libs.springBootStarter("data-r2dbc"))
 
+    // Milvus
+    compileOnly(Libs.milvus_sdk_java)
+
     // Redis
     compileOnly(Libs.redisson)
     compileOnly(Libs.lettuce_core)
@@ -46,7 +49,6 @@ dependencies {
 
     // Hazelcast
     compileOnly(Libs.hazelcast)
-    compileOnly(Libs.hazelcast_client)
 
     // MongoDB
     compileOnly(Libs.testcontainers_mongodb)
@@ -71,8 +73,11 @@ dependencies {
     compileOnly(Libs.testcontainers_pulsar)
     compileOnly(Libs.pulsar_client)
 
+    // Redpanda
+    compileOnly(Libs.testcontainers_redpanda)
+
     // NATS
-    testImplementation(Libs.jnats)
+    compileOnly(Libs.jnats)
 
     // RabbitMQ
     compileOnly(Libs.testcontainers_rabbitmq)
@@ -113,10 +118,45 @@ dependencies {
 
     // K3s
     compileOnly(Libs.testcontainers_k3s)
-
     testImplementation(Libs.fabric8_kubernetes_client)
     testImplementation(Libs.kubernetes_client_java)
 
-    testImplementation(Libs.kotlinx_coroutines_jdk8)
+    // Minio
+    compileOnly(Libs.minio)
+    compileOnly(Libs.testcontainers_minio)
+
+    // Immudb
+    compileOnly(Libs.immudb4j)
+
+    // Curator framework for Zookeeper
+    compileOnly(Libs.curator_framework)
+
+    // Ollama
+    compileOnly(Libs.testcontainers_ollama)
+    testImplementation(Libs.rest_assured)
+    testImplementation(Libs.rest_assured_kotlin)
+
+    // Nginx
+    compileOnly(Libs.testcontainers_nginx)
+
+    // ClickHouse
+    compileOnly(Libs.testcontainers_clickhouse)
+    testImplementation(Libs.clickhouse_jdbc)
+    testImplementation(Libs.httpclient5)
+
+    // Weaviate
+    compileOnly(Libs.testcontainers_weaviate)
+    compileOnly(Libs.weaviate_client)
+
+    // ChromaDB
+    compileOnly(Libs.testcontainers_chromadb)
+
+    // TiDB
+    compileOnly(Libs.testcontainers_tidb)
+    testImplementation(Libs.mysql_connector_j)
+
+    testImplementation(Libs.kotlinx_coroutines_core)
     testImplementation(Libs.kotlinx_coroutines_test)
+
+    testImplementation(Libs.netty_all)
 }

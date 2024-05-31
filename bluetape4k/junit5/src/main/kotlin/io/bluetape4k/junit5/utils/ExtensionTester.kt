@@ -17,11 +17,11 @@ object ExtensionTester {
      * ```
      * ExtensionTester.execute(selectClass(SystemPropertyExtensionClassTest::class.java))
      * ```
+     *
      * @param selectors Array<out DiscoverySelector>
      * @return RecordingExecutionListener
      */
     fun execute(vararg selectors: DiscoverySelector): RecordingExecutionListener {
-
         val testEngine = JupiterTestEngine()
 
         // 요청된 테스트 리소스를 찾습니다.

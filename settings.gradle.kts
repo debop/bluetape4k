@@ -4,6 +4,9 @@ pluginManagement {
         mavenCentral()
         google()
     }
+    plugins {
+        id("org.gradle.toolchains.foojay-resolver-convention") version ("0.7.0")
+    }
 }
 
 val PROJECT_NAME = "bluetape4k"

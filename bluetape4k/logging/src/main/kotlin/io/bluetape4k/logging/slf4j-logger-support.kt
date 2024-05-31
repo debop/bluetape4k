@@ -4,7 +4,9 @@ import org.slf4j.Logger
 import org.slf4j.Marker
 
 
-inline fun logMessageSafe(msg: () -> Any?, fallbackMessage: String = "로그 생성에 실패했습니다"): String {
+const val LOG_FALLBACK_MSG = "로그 메시지 생성에 실패했습니다."
+
+inline fun logMessageSafe(msg: () -> Any?, fallbackMessage: String = LOG_FALLBACK_MSG): String {
     return try {
         msg().toString()
     } catch (e: Exception) {
@@ -24,11 +26,13 @@ inline fun Logger.trace(cause: Throwable?, msg: () -> Any?) {
     }
 }
 
+
 inline fun Logger.trace(marker: Marker?, cause: Throwable?, msg: () -> Any?) {
     if (isTraceEnabled) {
         trace(marker, logMessageSafe(msg), cause)
     }
 }
+
 
 inline fun Logger.debug(msg: () -> Any?) {
     if (isDebugEnabled) {

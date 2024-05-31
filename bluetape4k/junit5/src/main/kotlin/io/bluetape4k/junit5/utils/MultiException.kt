@@ -1,24 +1,22 @@
 package io.bluetape4k.junit5.utils
 
-import org.junit.runner.notification.RunListener.ThreadSafe
+import io.bluetape4k.logging.KLogging
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 /**
  * Allows multiple exceptions to be thrown as a single exception -- adapted from Jetty.
- *
- * @constructor Create empty Multi exception
  */
-@ThreadSafe
 class MultiException: RuntimeException("Multiple exceptions") {
 
-    companion object {
-        private const val serialVersionUID = 1L
-        private const val EXCEPTION_SEPARATOR =
-            "\n\t______________________________________________________________________\n"
+    companion object: KLogging() {
+        private const val EXCEPTION_SEPARATOR = "\n\t______________________________________\n"
     }
 
     private val nested = mutableListOf<Throwable>()
+    private val lock = ReentrantLock()
 
     /**
      * 예외 정보를 추가합니다.
@@ -26,24 +24,22 @@ class MultiException: RuntimeException("Multiple exceptions") {
      * @param throwable 추가할 예외 정보. null 이면 추가하지 않습니다.
      */
     fun add(throwable: Throwable?) {
-        if (throwable != null) {
-            synchronized(nested) {
-                if (throwable is MultiException) {
-                    val otherNested = throwable.nested
+        throwable?.let { error ->
+            lock.withLock {
+                if (error is MultiException) {
+                    val otherNested = error.nested
                     synchronized(otherNested) {
                         nested.addAll(otherNested)
                     }
                 } else {
-                    nested.add(throwable)
+                    nested.add(error)
                 }
             }
         }
     }
 
-    fun isEmpty(): Boolean {
-        return synchronized(nested) {
-            nested.isEmpty()
-        }
+    fun isEmpty(): Boolean = lock.withLock {
+        nested.isEmpty()
     }
 
     /**
@@ -52,7 +48,7 @@ class MultiException: RuntimeException("Multiple exceptions") {
      * 추가된 예외가 볷수개라면 [MultiException]을 던집니다.
      */
     fun throwIfNotEmpty() {
-        synchronized(nested) {
+        lock.withLock {
             when {
                 nested.size == 1 -> throw nested[0]
                 nested.size > 1  -> throw this
@@ -62,27 +58,25 @@ class MultiException: RuntimeException("Multiple exceptions") {
         }
     }
 
-    override val message: String by lazy { buildMessage() }
+    override val message: String get() = buildMessage()
 
-    private fun buildMessage(): String {
-        return synchronized(nested) {
-            if (nested.isEmpty()) {
-                "<no nested exceptions>"
-            } else {
-                buildString {
-                    val n = nested.size
-                    append(n).append(if (n == 1) " nested exception:" else " nested exceptions:")
-                    nested.forEach { t ->
-                        appendLine(EXCEPTION_SEPARATOR)
-                        StringWriter().use { sw ->
-                            PrintWriter(sw).use { pw ->
-                                t.printStackTrace(pw)
-                            }
-                            append(sw.toString().replace("\n", "\n\t").trim())
-                        }
-                    }
+    private fun buildMessage(): String = lock.withLock {
+        if (nested.isEmpty()) {
+            "<no nested exceptions>"
+        } else {
+            buildString {
+                val n = nested.size
+                append(n).append(if (n == 1) " nested exception:" else " nested exceptions:")
+                nested.forEach { t ->
                     appendLine(EXCEPTION_SEPARATOR)
+                    StringWriter().use { sw ->
+                        PrintWriter(sw).use { pw ->
+                            t.printStackTrace(pw)
+                        }
+                        append(sw.toString().replace("\n", "\n\t").trim())
+                    }
                 }
+                appendLine(EXCEPTION_SEPARATOR)
             }
         }
     }

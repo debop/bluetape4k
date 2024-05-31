@@ -4,7 +4,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.AppenderBase
 import io.bluetape4k.logging.KLogging
 import org.slf4j.LoggerFactory
-import java.util.*
 import kotlin.reflect.KClass
 
 /**
@@ -20,7 +19,7 @@ class InMemoryLogbackAppender private constructor(private val name: String): App
         operator fun invoke(name: String = "root"): InMemoryLogbackAppender = InMemoryLogbackAppender(name)
 
         @JvmStatic
-        operator fun invoke(clazz: Class<*>): InMemoryLogbackAppender = invoke(clazz.name)
+        operator fun invoke(clazz: Class<*>): InMemoryLogbackAppender = invoke(clazz.canonicalName)
 
         @JvmStatic
         operator fun invoke(kclazz: KClass<*>): InMemoryLogbackAppender = invoke(kclazz.qualifiedName!!)
@@ -35,7 +34,7 @@ class InMemoryLogbackAppender private constructor(private val name: String): App
         LoggerFactory.getLogger(name) as ch.qos.logback.classic.Logger
     }
 
-    private val events = LinkedList<ILoggingEvent>()
+    private val events = mutableListOf<ILoggingEvent>()
 
     val size: Int get() = events.size
     val lastMessage: String? get() = events.lastOrNull()?.message

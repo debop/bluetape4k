@@ -25,6 +25,11 @@ class OutputCapturer {
         return copy?.toString(Charsets.UTF_8) ?: ""
     }
 
+    fun flush() {
+        captureOut?.run { flush() }
+        captureErr?.run { flush() }
+    }
+
     override fun toString(): String {
         return capture()
     }
@@ -39,24 +44,20 @@ class OutputCapturer {
     }
 
     internal fun finishCapture() {
-        System.setOut(this.captureOut?.original)
-        System.setErr(this.captureErr?.original)
-        this.copy?.close()
-        this.captureOut?.close()
-        this.captureErr?.close()
+        System.setOut(captureOut?.origin)
+        System.setErr(captureErr?.origin)
+
+        copy?.close()
+        captureOut?.close()
+        captureErr?.close()
     }
 
-    private fun flush() {
-        captureOut?.let { runCatching { it.flush() } }
-        captureErr?.let { runCatching { it.flush() } }
-    }
-
-    private class CaptureOutputStream(val original: PrintStream, val copy: OutputStream): OutputStream() {
+    private class CaptureOutputStream(val origin: PrintStream, val copy: OutputStream): OutputStream() {
 
         override fun write(b: Int) {
             copy.write(b)
-            original.write(b)
-            original.flush()
+            origin.write(b)
+            origin.flush()
         }
 
         override fun write(b: ByteArray) {
@@ -65,18 +66,19 @@ class OutputCapturer {
 
         override fun write(b: ByteArray, off: Int, len: Int) {
             copy.write(b, off, len)
-            original.write(b, off, len)
-            original.flush()
+            origin.write(b, off, len)
+            origin.flush()
         }
 
         override fun flush() {
-            runCatching { copy.flush() }
-            runCatching { original.flush() }
+            origin.flush()
+            copy.flush()
         }
 
         override fun close() {
-            runCatching { copy.close() }
-            runCatching { original.close() }
+            origin.close()
+            copy.close()
         }
+
     }
 }

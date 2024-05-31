@@ -12,7 +12,7 @@ import org.slf4j.MDC
  * %d{HH:mm:ss.SSS} %highlight(%-5level)[traceId=%X{traceId}][%.24thread] %logger{36}:%line: %msg%n%throwable
  * ```
  */
-class MDCSupportTest {
+class MdcSupportTest {
 
     companion object: KLogging()
 

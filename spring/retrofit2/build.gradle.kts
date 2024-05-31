@@ -81,7 +81,7 @@ dependencies {
     compileOnly(Libs.spring_cloud_starter_bootstrap)
 
     compileOnly(Libs.hibernate_validator)
-    compileOnly(Libs.jakarta_el)
+    compileOnly(Libs.jakarta_el_api)
 
     // Spring Boot
     compileOnly(Libs.springBoot("autoconfigure"))

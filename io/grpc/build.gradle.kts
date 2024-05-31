@@ -1,8 +1,4 @@
-import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.id
-import com.google.protobuf.gradle.plugins
-import com.google.protobuf.gradle.protobuf
-import com.google.protobuf.gradle.protoc
 
 plugins {
     `java-library`
@@ -12,10 +8,11 @@ plugins {
 
 idea {
     module {
-        sourceDirs.plus(file("$buildDir/generated/source/proto/main"))
-        testSources.plus(file("$buildDir/generated/source/proto/test"))
+        sourceDirs.plus(file("${layout.buildDirectory.asFile.get()}/generated/source/proto/main"))
+        testSources.plus(file("${layout.buildDirectory.asFile.get()}/generated/source/proto/test"))
     }
 }
+
 
 // 참고: https://github.com/grpc/grpc-kotlin/blob/master/compiler/README.md
 protobuf {
@@ -75,6 +72,7 @@ dependencies {
 
     api(Libs.protobuf_java)
     api(Libs.protobuf_java_util)
+    compileOnly(Libs.protobuf_kotlin)
 
     // grpc-kotlin
     // 참고: https://github.com/grpc/grpc-kotlin/blob/master/compiler/README.md
@@ -82,7 +80,7 @@ dependencies {
     api(Libs.protobuf_kotlin)
 
     // Coroutines
-    implementation(Libs.kotlinx_coroutines_jdk8)
+    implementation(Libs.kotlinx_coroutines_core)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     testImplementation(Libs.eclipse_collections)

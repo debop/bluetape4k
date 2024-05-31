@@ -43,6 +43,10 @@ dependencies {
     api(project(":bluetape4k-core"))
     api(project(":bluetape4k-utils-mutiny"))
     api(project(":bluetape4k-vertx-core"))
+    implementation("io.quarkus:quarkus-opentelemetry:3.3.2")
+    implementation("io.quarkus:quarkus-opentelemetry:3.3.2")
+    implementation("io.quarkus:quarkus-opentelemetry:3.3.2")
+    implementation("io.quarkus:quarkus-opentelemetry:3.3.2")
     compileOnly(project(":bluetape4k-testcontainers"))
     compileOnly(project(":bluetape4k-junit5"))
 

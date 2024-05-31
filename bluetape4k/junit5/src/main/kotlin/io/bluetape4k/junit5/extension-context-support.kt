@@ -9,7 +9,6 @@ internal fun ExtensionContext.namespace(clazz: Class<*>): ExtensionContext.Names
 internal fun ExtensionContext.namespace(kclazz: KClass<*>): ExtensionContext.Namespace =
     ExtensionContext.Namespace.create(kclazz.java, this)
 
-
 internal fun ExtensionContext.store(clazz: Class<*>): ExtensionContext.Store =
     getStore(namespace(clazz))
 

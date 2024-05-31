@@ -24,17 +24,15 @@ inline fun <T> withLoggingContext(
     pair: Pair<String, Any?>,
     restorePrevious: Boolean = true,
     block: () -> T,
-): T {
-    return if (pair.second == null) {
-        block()
-    } else if (!restorePrevious) {
-        MDC.putCloseable(pair.first, pair.second.toString()).use { block() }
-    } else {
-        val previousValue = MDC.get(pair.first)
+): T = when {
+    pair.second == null -> block()
+    !restorePrevious    -> MDC.putCloseable(pair.first, pair.second.toString()).use { block() }
+    else                -> {
+        val prevValue = MDC.get(pair.first)
         try {
             MDC.putCloseable(pair.first, pair.second.toString()).use { block() }
         } finally {
-            previousValue?.run { MDC.put(pair.first, this) }
+            prevValue?.run { MDC.put(pair.first, this) }
         }
     }
 }
@@ -57,9 +55,8 @@ inline fun <T> withLoggingContext(
     vararg pairs: Pair<String, Any?>,
     restorePrevious: Boolean = true,
     block: () -> T,
-): T {
-    return withLoggingContext(pairs.filter { it.second != null }.toMap(), restorePrevious, block)
-}
+): T =
+    withLoggingContext(pairs.filter { it.second != null }.toMap(), restorePrevious, block)
 
 /**
  * MDC를 사용하여 로깅 컨텍스트를 설정합니다.
@@ -81,10 +78,10 @@ inline fun <T> withLoggingContext(
     block: () -> T,
 ): T {
     val mdcMap = map.filter { it.value != null }
-    val cleanupCallback: List<() -> Unit> = mdcMap.keys.map { key ->
-        val previousValue = MDC.get(key)
-        if (previousValue != null && restorePrevious) {
-            { MDC.put(key, previousValue) }
+    val cleanupCallbacks: List<() -> Unit> = mdcMap.keys.map { key ->
+        val prevValue = MDC.get(key)
+        if (prevValue != null && restorePrevious) {
+            { MDC.put(key, prevValue) }
         } else {
             { MDC.remove(key) }
         }
@@ -96,6 +93,8 @@ inline fun <T> withLoggingContext(
         }
         block()
     } finally {
-        cleanupCallback.forEach { it.invoke() }
+        cleanupCallbacks.forEach { callback ->
+            runCatching { callback() }
+        }
     }
 }

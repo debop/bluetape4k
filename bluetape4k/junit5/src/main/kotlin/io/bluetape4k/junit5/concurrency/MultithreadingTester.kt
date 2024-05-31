@@ -42,36 +42,44 @@ class MultithreadingTester {
     companion object: KLogging() {
         const val DEFAULT_THREAD_SIZE: Int = 100
         const val DEFAULT_ROUNDS_PER_THREADS: Int = 1000
+
+        const val MIN_THREAD_SIZE: Int = 2
+        const val MAX_THREAD_SIZE: Int = 2000
+        const val MAX_ROUNDS_PER_THREAD: Int = Int.MAX_VALUE
     }
 
     private var numThreads = DEFAULT_THREAD_SIZE
-    private var roundsPerThreads = DEFAULT_ROUNDS_PER_THREADS
+    private var roundsPerThread = DEFAULT_ROUNDS_PER_THREADS
     private val runnables = LinkedList<() -> Unit>()
 
     private lateinit var monitorThread: Thread
-    private lateinit var workerThreads: Array<Thread>
+    private lateinit var workerThreads: List<Thread>
     private val idsOfDeadlockThreads = CopyOnWriteArraySet<Long>()
 
-    fun numThreads(numThreads: Int): MultithreadingTester = apply {
-        check(numThreads in 2..2000) { "Invalid numThreads: $numThreads -- must be range in 2..2000" }
-        this.numThreads = numThreads
+    fun numThreads(value: Int): MultithreadingTester = apply {
+        check(value in MIN_THREAD_SIZE..MAX_THREAD_SIZE) {
+            "Invalid numThreads: $value -- must be range in $MIN_THREAD_SIZE..$MAX_THREAD_SIZE"
+        }
+        this.numThreads = value
     }
 
-    fun roundsPerThread(roundsPerThreads: Int) = apply {
-        check(roundsPerThreads in 1..Int.MAX_VALUE) { "Invalid roundsPerThreads: $roundsPerThreads -- must be range in 1..${Int.MAX_VALUE}" }
-        this.roundsPerThreads = roundsPerThreads
+    fun roundsPerThread(value: Int) = apply {
+        check(value in 1..MAX_ROUNDS_PER_THREAD) {
+            "Invalid roundsPerThread: $value -- must be range in 1..$MAX_ROUNDS_PER_THREAD"
+        }
+        this.roundsPerThread = value
     }
 
-    fun add(runnable: () -> Unit) = apply {
-        this.runnables.add(runnable)
+    fun add(testBlock: () -> Unit) = apply {
+        this.runnables.add(testBlock)
     }
 
-    fun addAll(vararg runnables: () -> Unit) = apply {
-        this.runnables.addAll(runnables)
+    fun addAll(vararg testBlocks: () -> Unit) = apply {
+        this.runnables.addAll(testBlocks)
     }
 
-    fun addAll(runnables: Collection<() -> Unit>) = apply {
-        this.runnables.addAll(runnables)
+    fun addAll(testBlocks: Collection<() -> Unit>) = apply {
+        this.runnables.addAll(testBlocks)
     }
 
 
@@ -87,7 +95,7 @@ class MultithreadingTester {
             "No RunnableAsserts added. Please add at least one RunnableAssert."
         }
         check(numThreads >= runnables.size) {
-            "numThreads($numThreads) < runnableAsserts.size(${runnables.size})"
+            "Number of threads[$numThreads] must be greater than or equal to the number of test blocks[${runnables.size}]."
         }
 
         val me = MultiException()
@@ -97,8 +105,8 @@ class MultithreadingTester {
             joinWorkerThreads()
         } finally {
             stopMonitorThread()
+            me.throwIfNotEmpty()
         }
-        me.throwIfNotEmpty()
     }
 
     private fun startMonitorThread(me: MultiException) {
@@ -149,7 +157,7 @@ class MultithreadingTester {
         var iter = runnables.iterator()
         val latch = CountDownLatch(numThreads)
 
-        workerThreads = Array(numThreads) {
+        workerThreads = List(numThreads) {
             // thread 수만큼 runnableAssert를 반복해서 사용한다
             if (!iter.hasNext()) {
                 iter = runnables.iterator()
@@ -159,7 +167,7 @@ class MultithreadingTester {
                 try {
                     latch.countDown()
                     latch.await()
-                    repeat(roundsPerThreads) {
+                    repeat(roundsPerThread) {
                         runnableAssert.invoke()
                     }
                 } catch (t: Throwable) {
@@ -179,12 +187,14 @@ class MultithreadingTester {
                 try {
                     val workerThread = workerThreads[it]
                     workerThread.join(100)
-                    if (workerThread.isAlive && !idsOfDeadlockThreads.contains(workerThread.id)) {
+                    if (workerThread.isAlive && !idsOfDeadlockThreads.contains(workerThread.threadId())) {
                         foundAliveWorkerThread = true
                     }
                 } catch (e: InterruptedException) {
-                    workerThreads.forEach { it.interrupt() }
-                    Thread.currentThread().interrupt()
+                    workerThreads.forEach { thread ->
+                        runCatching { thread.interrupt() }
+                    }
+                    runCatching { Thread.currentThread().interrupt() }
                     throw RuntimeException("Get interrupted", e)
                 }
             }

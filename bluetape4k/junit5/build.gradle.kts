@@ -25,7 +25,6 @@ dependencies {
     compileOnly(Libs.logback)
 
     compileOnly(Libs.kotlinx_coroutines_core)
-    compileOnly(Libs.kotlinx_coroutines_jdk8)
     compileOnly(Libs.kotlinx_coroutines_debug)
     compileOnly(Libs.kotlinx_coroutines_test)
 }

@@ -2,36 +2,36 @@ package io.bluetape4k.logging.internal
 
 import io.bluetape4k.logging.KLogging
 import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 internal object KLoggerFactory {
 
     /**
-     * [org.slf4j.Logger]를 생성합니다.
+     * logger name이 [name]인 [org.slf4j.Logger]를 생성합니다.
      *
-     * @param name Logger name
+     * @param name logger name
+     * @return slf4j Logger instance
      */
-    fun logger(name: String): Logger = org.slf4j.LoggerFactory.getLogger(name)
+    fun logger(name: String): Logger = LoggerFactory.getLogger(name)
 
     /**
-     * [org.slf4j.Logger]를 생성합니다.
-     *
-     * @param action 해당 action 이 속한 package name이 logger name이 됩니다.
+     * 해당 함수가 호출되는 package name을 logger의 name으로 하는 [org.slf4j.Logger]를 생성합니다.
      */
     fun logger(action: () -> Unit): Logger = logger(KLoggerNameResolver.name(action))
 
     /**
-     * [org.slf4j.Logger]를 생성합니다.
+     * [clazz]의 qualified name을 logger name으로 하는 [org.slf4j.Logger]를 생성합니다.
      *
-     * @param clazz clazz 의 qualified name이 logger name이 됩니다.
-     * @return
+     * @param clazz clazz의 qualified name이 logger name이 됩니다.
+     * @return slf4j Logger instance
      */
     fun logger(clazz: Class<*>): Logger = logger(KLoggerNameResolver.name(clazz))
 
     /**
-     * [org.slf4j.Logger]를 생성합니다.
+     * Logger
      *
-     * @param klogging [KLogging] 인스턴스
-     * @return
+     * @param klogging [KLogging] instance
+     * @return slf4j Logger instance
      */
     fun logger(klogging: KLogging): Logger = logger(KLoggerNameResolver.name(klogging.javaClass))
 }

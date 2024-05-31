@@ -1,4 +1,4 @@
-package io.bluetape4k.logging.coroutines
+package io.bluetape4k.logging
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

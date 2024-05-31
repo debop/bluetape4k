@@ -4,6 +4,7 @@ import io.bluetape4k.core.requireNotEmpty
 import org.redisson.api.RStream
 import org.redisson.api.StreamMessageId
 import org.redisson.api.stream.StreamAddArgs
+import org.redisson.api.stream.StreamReadGroupArgs
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
@@ -37,8 +38,7 @@ fun <K, V> RStream<K, V>.claimAllAsync(
         idleTime.toMillis(),
         TimeUnit.MILLISECONDS,
         *ids.toTypedArray(),
-    )
-        .toCompletableFuture()
+    ).toCompletableFuture()
 }
 
 
@@ -54,41 +54,17 @@ fun <K, V> RStream<K, V>.fastClaimAllAsync(
         idleTime.toMillis(),
         TimeUnit.MILLISECONDS,
         *ids.toTypedArray(),
-    )
-        .toCompletableFuture()
+    ).toCompletableFuture()
 }
 
 
 fun <K, V> RStream<K, V>.readGroupAllAsync(
     groupName: String,
     consumerName: String,
+    id: StreamMessageId,
     count: Int = 0,
     timeout: Duration = Duration.ZERO,
-    vararg ids: StreamMessageId,
 ): CompletableFuture<Map<StreamMessageId, Map<K, V>>> {
-    return readGroupAsync(
-        groupName,
-        consumerName,
-        count,
-        timeout.toMillis(),
-        TimeUnit.MILLISECONDS,
-        *ids,
-    ).toCompletableFuture()
-}
-
-fun <K, V> RStream<K, V>.readGroupAllAsync(
-    groupName: String,
-    consumerName: String,
-    count: Int = 0,
-    timeout: Duration = Duration.ZERO,
-    ids: Collection<StreamMessageId>,
-): CompletableFuture<Map<StreamMessageId, Map<K, V>>> {
-    return readGroupAsync(
-        groupName,
-        consumerName,
-        count,
-        timeout.toMillis(),
-        TimeUnit.MILLISECONDS,
-        *ids.toTypedArray(),
-    ).toCompletableFuture()
+    val args = StreamReadGroupArgs.greaterThan(id).count(count).timeout(timeout)
+    return readGroupAsync(groupName, consumerName, args).toCompletableFuture()
 }

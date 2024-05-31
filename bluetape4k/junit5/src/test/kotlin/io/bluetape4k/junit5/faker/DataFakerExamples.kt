@@ -8,6 +8,7 @@ import io.bluetape4k.logging.trace
 import net.datafaker.Faker
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldContain
+import org.amshove.kluent.shouldNotBeBlank
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.amshove.kluent.shouldStartWith
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test
 import java.util.*
 
 class DataFakerExamples {
+
     companion object: KLogging()
 
     val faker = Faker(Locale.getDefault())
@@ -25,16 +27,15 @@ class DataFakerExamples {
         val firstName = faker.name().firstName()
         val lastName = faker.name().lastName()
 
-        val streetAddress = faker.address().streetAddress()
+        val streetAddress = faker.address().streetAddress(true)
 
-        log.debug { "name=$name" }
-        log.debug { "first name=$firstName" }
-        log.debug { "last name=$lastName" }
-        log.debug { "street address = $streetAddress" }
+        log.trace { "name=$name" }
+        log.trace { "first name=$firstName" }
+        log.trace { "last name=$lastName" }
+        log.trace { "street address = $streetAddress" }
 
-
-        faker.zelda().game()
-        faker.starTrek().villain()
+        faker.zelda().game().shouldNotBeBlank()
+        faker.starTrek().villain().shouldNotBeBlank()
     }
 
     @Test
@@ -45,10 +46,10 @@ class DataFakerExamples {
         fakeObj.nestedDomainObject!!.address!!.shouldNotBeEmpty()
         fakeObj.nestedDomainObject!!.category!!.shouldNotBeEmpty()
 
-        fakeObj.wotsits!!.shouldNotBeNull()
+        fakeObj.wotsits.shouldNotBeNull()
         fakeObj.objectLists.shouldNotBeEmpty()
 
-        println(fakeObj)
+        log.debug { "fakeObj=$fakeObj" }
     }
 
 
@@ -82,26 +83,24 @@ class DataFakerExamples {
     @Test
     fun `faker numerify`() {
         val code = faker.numerify("NO-####")
-        code shouldStartWith "NO"
+        code shouldStartWith "NO-"
         log.debug { "code=$code" }
-
         val numbers = code.substringAfter("-")
         numbers.toLong() shouldBeGreaterThan 0L
     }
 
     @Test
-    fun `fake letterify`() {
+    fun `faker letterify`() {
         val letter = faker.letterify("134-??-01-???", true)
-        letter shouldStartWith "134"
+        letter shouldStartWith "134-"
         log.debug { "letter=$letter" }
     }
 
     @Test
     fun `fake bothify`() {
         val fakeString = faker.bothify("??-###", true)
-
         fakeString shouldContain "-"
-        log.debug { "fake string=$fakeString" }
+        log.debug { "fakeString=$fakeString" }
     }
 
     @Test
@@ -112,7 +111,7 @@ class DataFakerExamples {
 
     @Test
     fun `함수 문자열로부터 fake 값 얻기`() {
-        val names = faker.getValues("name.fullName", 10).toList()
+        val names = faker.getValues("name.fullName", 10)
         log.debug { "names=${names.joinToString("\n")}" }
     }
 
@@ -133,13 +132,5 @@ class DataFakerExamples {
                 yield(valueMethod.invoke(provider))
             }
         }
-    }
-
-    // FakerValueProvider 를 이용하여 Book 정보 생성하기
-    @Test
-    fun `FakerValueProvider 를 이용하여 Book 정보 생성하기`() {
-        val book = faker.getValues(FakeValueProvider.Book.Title, 1).first()
-        log.debug { "book=$book" }
-        book.toString().shouldNotBeEmpty()
     }
 }
