@@ -3,6 +3,7 @@ package io.bluetape4k.testcontainers.storage
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
 import io.bluetape4k.logging.trace
+import io.bluetape4k.support.requireNotBlank
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
@@ -41,21 +42,19 @@ class RedisClusterServer private constructor(
         const val IMAGE = "tommy351/redis-cluster"
         const val TAG = "6.2"
 
-// 테스트에 실패한 다른 이미지들
-//        const val IMAGE = "bitnami/redis-cluster"
-//        const val TAG = "7.0"
-//        const val IMAGE = "grokzen/redis-cluster"
-//        const val TAG = "6.2.1"
+        // 테스트에 실패한 다른 이미지들
+        //        const val IMAGE = "bitnami/redis-cluster"
+        //        const val TAG = "7.0"
+        //        const val IMAGE = "grokzen/redis-cluster"
+        //        const val TAG = "6.2.1"
 
         const val NAME = "redis.cluster"
 
         val PORTS = intArrayOf(7000, 7001, 7002, 7003, 7004, 7005)
 
-        val DEFAULT_IMAGE_NAME: DockerImageName = DockerImageName.parse(IMAGE).withTag(TAG)
-
         @JvmStatic
         operator fun invoke(
-            imageName: DockerImageName = DEFAULT_IMAGE_NAME,
+            imageName: DockerImageName,
             useDefaultPort: Boolean = false,
             reuse: Boolean = false,
         ): RedisClusterServer {
@@ -64,11 +63,15 @@ class RedisClusterServer private constructor(
 
         @JvmStatic
         operator fun invoke(
-            tag: String,
+            image: String = IMAGE,
+            tag: String = TAG,
             useDefaultPort: Boolean = false,
             reuse: Boolean = false,
         ): RedisClusterServer {
-            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
+            image.requireNotBlank("image")
+            tag.requireNotBlank("tag")
+
+            val imageName = DockerImageName.parse(image).withTag(tag)
             return RedisClusterServer(imageName, useDefaultPort, reuse)
         }
     }
@@ -92,10 +95,10 @@ class RedisClusterServer private constructor(
         // addEnv("IP", "0.0.0.0")
 
         // https://hub.docker.com/r/bitnami/redis-cluster
-//        addEnv("ALLOW_EMPTY_PASSWORD", "yes")
-//        addEnv("REDIS_NODES", PORTS.joinToString(" ") { "locahost:$it" })
-//        addEnv("REDIS_CLUSTER_SLEEP_BEFORE_DNS_LOOKUP", "30")
-//        addEnv("REDIS_CLUSTER_DNS_LOOKUP_SLEEP", "5")
+        //        addEnv("ALLOW_EMPTY_PASSWORD", "yes")
+        //        addEnv("REDIS_NODES", PORTS.joinToString(" ") { "locahost:$it" })
+        //        addEnv("REDIS_CLUSTER_SLEEP_BEFORE_DNS_LOOKUP", "30")
+        //        addEnv("REDIS_CLUSTER_DNS_LOOKUP_SLEEP", "5")
 
         if (useDefaultPort) {
             exposeCustomPorts(*PORTS)
@@ -186,21 +189,21 @@ class RedisClusterServer private constructor(
     }
 
     // Redisson 을 이용하여 Redis Cluster 구성이 완료된 것을 확인하는 것은 불완전합니다. 그래서 Lettuce 를 사용합니다.
-//    private fun awaitClusterByRedisson() {
-//        await atMost Duration.ofSeconds(30) until {
-//            var clusterStarted = false
-//            var redisson: RedissonClient? = null
-//            try {
-//                redisson = Launcher.RedissonLib.getRedisson(this)
-//                clusterStarted = redisson.getRedisNodes(RedisNodes.CLUSTER).pingAll()
-//            } catch(e:Throwable) {
-//                clusterStarted = false
-//            } finally {
-//                runCatching { redisson?.shutdown() }
-//            }
-//            clusterStarted
-//        }
-//    }
+    //    private fun awaitClusterByRedisson() {
+    //        await atMost Duration.ofSeconds(30) until {
+    //            var clusterStarted = false
+    //            var redisson: RedissonClient? = null
+    //            try {
+    //                redisson = Launcher.RedissonLib.getRedisson(this)
+    //                clusterStarted = redisson.getRedisNodes(RedisNodes.CLUSTER).pingAll()
+    //            } catch(e:Throwable) {
+    //                clusterStarted = false
+    //            } finally {
+    //                runCatching { redisson?.shutdown() }
+    //            }
+    //            clusterStarted
+    //        }
+    //    }
 
 
     object Launcher {

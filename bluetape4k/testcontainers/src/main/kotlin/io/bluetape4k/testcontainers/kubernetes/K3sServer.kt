@@ -1,10 +1,12 @@
 package io.bluetape4k.testcontainers.kubernetes
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.requireNotBlank
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
+import org.testcontainers.containers.Network
 import org.testcontainers.k3s.K3sContainer
 import org.testcontainers.utility.DockerImageName
 
@@ -17,7 +19,6 @@ import org.testcontainers.utility.DockerImageName
  * @param useDefaultPort
  * @param reuse
  */
-@Deprecated("실행이 안된다")
 class K3sServer private constructor(
     imageName: DockerImageName,
     useDefaultPort: Boolean,
@@ -28,12 +29,13 @@ class K3sServer private constructor(
 
         const val IMAGE = "rancher/k3s"
         const val NAME = "k3s"
-        const val TAG = "v1.23.6-k3s1"
+        const val TAG = "v1.21.3-k3s1"  // https://hub.docker.com/r/rancher/k3s/tags
 
         // K3s Ports : https://rancher.com/docs/rancher/v2.5/en/installation/requirements/ports/#commonly-used-ports
         const val KUBE_SECURE_PORT = 6443
         const val RANCHER_WEBHOOK_PORT = 8443
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,
@@ -42,12 +44,16 @@ class K3sServer private constructor(
             return K3sServer(imageName, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
+            image: String = IMAGE,
             tag: String = TAG,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): K3sServer {
-            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
+            image.requireNotBlank("image")
+            tag.requireNotBlank("tag")
+            val imageName = DockerImageName.parse(image).withTag(tag)
             return invoke(imageName, useDefaultPort, reuse)
         }
     }
@@ -58,9 +64,8 @@ class K3sServer private constructor(
     val rancherWebhookPort: Int get() = getMappedPort(RANCHER_WEBHOOK_PORT)
 
     init {
-        addExposedPorts(KUBE_SECURE_PORT, RANCHER_WEBHOOK_PORT)
         withReuse(reuse)
-        // withLogConsumer(Slf4jLogConsumer(log))
+        withNetwork(Network.SHARED).withNetworkAliases("k3s")
 
         if (useDefaultPort) {
             exposeCustomPorts(KUBE_SECURE_PORT, RANCHER_WEBHOOK_PORT)

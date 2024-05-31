@@ -9,7 +9,6 @@ import org.springframework.data.elasticsearch.client.ClientConfiguration
 import org.testcontainers.elasticsearch.ElasticsearchContainer
 import org.testcontainers.utility.DockerImageName
 
-
 /**
  * Elasticsearch Server 를 Docker container 로 실행해주는 클래스입니다.
  *

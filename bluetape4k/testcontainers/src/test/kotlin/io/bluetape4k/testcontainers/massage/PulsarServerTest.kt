@@ -5,11 +5,13 @@ import io.bluetape4k.support.toUtf8String
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.apache.pulsar.client.api.PulsarClient
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import java.util.concurrent.TimeUnit
 
+@Disabled("Pulsar Server is not working on Apple Silicon")
 @Execution(ExecutionMode.SAME_THREAD)
 class PulsarServerTest {
 

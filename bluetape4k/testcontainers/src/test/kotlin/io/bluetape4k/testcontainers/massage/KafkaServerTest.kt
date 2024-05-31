@@ -10,6 +10,7 @@ import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
+import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecords
@@ -30,8 +31,8 @@ import kotlin.coroutines.suspendCoroutine
 class KafkaServerTest {
 
     companion object: KLogging() {
-        private const val TOPIC_NAME = "bluetape4k-test-topic-1"
-        private const val TOPIC_NAME_CORUTINE = "bluetape4k-test-topic-coroutines-1"
+        private const val TOPIC_NAME = "kommons-test-topic-1"
+        private const val TOPIC_NAME_CORUTINE = "kommons-test-topic-coroutines-1"
     }
 
     @AfterAll
@@ -46,9 +47,10 @@ class KafkaServerTest {
         log.debug { "bootstrapServers=${kafka.bootstrapServers}" }
         log.debug { "boundPortNumbers=${kafka.boundPortNumbers}" }
 
-        kafka.bootstrapServers.shouldNotBeNull()
+        kafka.bootstrapServers.shouldNotBeEmpty()
         kafka.isRunning.shouldBeTrue()
     }
+
 
     @Test
     fun `launch kafka server with default port`() {
@@ -59,6 +61,7 @@ class KafkaServerTest {
             log.debug { "bootstrapServers=${kafka.bootstrapServers}" }
             log.debug { "boundPortNumbers=${kafka.boundPortNumbers}" }
 
+            kafka.port shouldBeEqualTo KafkaServer.PORT
             kafka.bootstrapServers.shouldNotBeNull()
             kafka.isRunning.shouldBeTrue()
         }

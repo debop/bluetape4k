@@ -1,12 +1,12 @@
 package io.bluetape4k.testcontainers.http
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.requireNotBlank
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.GenericContainer
-import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
 /**
@@ -39,11 +39,14 @@ class HttpbinServer private constructor(
 
         @JvmStatic
         operator fun invoke(
+            image: String = IMAGE,
             tag: String = TAG,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): HttpbinServer {
-            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
+            image.requireNotBlank("image")
+            tag.requireNotBlank("tag")
+            val imageName = DockerImageName.parse(image).withTag(tag)
             return invoke(imageName, useDefaultPort, reuse)
         }
     }
@@ -55,7 +58,8 @@ class HttpbinServer private constructor(
         withExposedPorts(PORT)
         withReuse(reuse)
 
-        setWaitStrategy(Wait.forListeningPort())
+        // 대기전략을 쓰니, port 설정이 안되었다는 예외가 발생한다.
+        // waitingFor(Wait.forHttp("/"))
 
         if (useDefaultPort) {
             exposeCustomPorts(PORT)

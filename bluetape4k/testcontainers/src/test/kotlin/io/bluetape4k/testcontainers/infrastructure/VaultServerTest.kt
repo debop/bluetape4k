@@ -20,18 +20,13 @@ class VaultServerTest {
     private fun createVaultServer(): VaultServer {
         return VaultServer()
             .withVaultToken(VAULT_TOKEN)
-            .withSecretInVault(
-                "secret/testing1",
-                "top_secret=top_password123",
-                "db_password=db_password123"
+            .withInitCommand(
+                "kv put secret/testing1 top_secret=top_password123 db_password=db_password123"
             )
-            .withSecretInVault(
-                "secret/testing2",
-                "secret_one=password1",
-                "secret_two=password2",
-                "secret_three=password3",
-                "secret_four=password4",
-            ).apply {
+            .withInitCommand(
+                "kv put secret/testing2 secret_one=password1 secret_two=password2 secret_three=password3 secret_four=password4",
+            )
+            .apply {
                 start()
             }
     }

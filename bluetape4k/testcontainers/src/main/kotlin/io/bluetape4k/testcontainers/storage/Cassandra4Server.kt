@@ -5,7 +5,6 @@ import com.datastax.oss.driver.api.core.CqlSessionBuilder
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder
 import com.github.dockerjava.api.command.InspectContainerResponse
-import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.exceptions.BluetapeException
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -13,6 +12,7 @@ import io.bluetape4k.logging.error
 import io.bluetape4k.logging.info
 import io.bluetape4k.logging.warn
 import io.bluetape4k.support.EMPTY_STRING
+import io.bluetape4k.support.requireNotBlank
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
@@ -143,9 +143,7 @@ class Cassandra4Server private constructor(
     }
 
     fun newCqlSessionBuilder(): CqlSessionBuilder =
-        CqlSessionBuilder()
-            .addContactPoint(contactPoint)
-            .withLocalDatacenter(LOCAL_DATACENTER1)
+        CqlSessionBuilder().addContactPoint(contactPoint).withLocalDatacenter(LOCAL_DATACENTER1)
             .withConfigLoader(DriverConfigLoader.fromClasspath("application.conf"))
 
 
@@ -171,9 +169,7 @@ class Cassandra4Server private constructor(
          * @return [CqlSessionBuilder] 인스턴스
          */
         fun newCqlSessionBuilder(localDataCenter: String = LOCAL_DATACENTER1): CqlSessionBuilder {
-            return CqlSessionBuilder()
-                .addContactPoint(cassandra4.contactPoint)
-                .withLocalDatacenter(localDataCenter)
+            return CqlSessionBuilder().addContactPoint(cassandra4.contactPoint).withLocalDatacenter(localDataCenter)
                 .withConfigLoader(DriverConfigLoader.fromClasspath("application.conf"))
         }
 
@@ -185,14 +181,10 @@ class Cassandra4Server private constructor(
 
             recreateKeyspace(keyspace)
 
-            return newCqlSessionBuilder()
-                .apply { withKeyspace(keyspace) }
-                .apply(initializer)
-                .build()
-                .apply {
-                    // 혹시 제대로 닫지 않아도, JVM 종료 시 닫아준다.
-                    ShutdownQueue.register(this)
-                }
+            return newCqlSessionBuilder().apply { withKeyspace(keyspace) }.apply(initializer).build().apply {
+                // 혹시 제대로 닫지 않아도, JVM 종료 시 닫아준다.
+                ShutdownQueue.register(this)
+            }
         }
 
         fun recreateKeyspace(keyspace: String) {
@@ -212,10 +204,8 @@ class Cassandra4Server private constructor(
             keyspace: String,
             replicationFactor: Int = DEFAULT_REPLICATION_FACTOR,
         ): Boolean {
-            val createKeyspaceStmt = SchemaBuilder.createKeyspace(keyspace)
-                .ifNotExists()
-                .withSimpleStrategy(replicationFactor)
-                .build()
+            val createKeyspaceStmt =
+                SchemaBuilder.createKeyspace(keyspace).ifNotExists().withSimpleStrategy(replicationFactor).build()
 
             log.info { "Create keyspace. statement=${createKeyspaceStmt.query}" }
             return session.execute(createKeyspaceStmt).wasApplied()

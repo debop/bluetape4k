@@ -26,7 +26,7 @@ class RedisClusterServerTest {
     }
 
     // Mac AirPlay 가 Port 5000, 7000 을 사용해서 충돌이 생길 경우 AirPlay 를 끄세요 :)
-    //    @Disabled("Mac AirPlay 사용 시 Port 5000, 7000를 사용해서 충돌이 생깁니다")
+    // @Disabled("Mac AirPlay 사용 시 Port 5000, 7000를 사용해서 충돌이 생깁니다")
     @Test
     fun `create redis server with default port`() {
         RedisClusterServer(useDefaultPort = true).use { redisCluster ->
@@ -60,7 +60,7 @@ class RedisClusterServerTest {
             redisson.getRedisNodes(RedisNodes.CLUSTER).masters.all { it.ping() }.shouldBeTrue()
             redisson.getRedisNodes(RedisNodes.CLUSTER).pingAll().shouldBeTrue()
 
-            val map = redisson.getMap<String, String>("bluetape4k:map")
+            val map = redisson.getMap<String, String>("kommons:map")
             map["key"] = "value"
             map["key"] shouldBeEqualTo "value"
         } finally {

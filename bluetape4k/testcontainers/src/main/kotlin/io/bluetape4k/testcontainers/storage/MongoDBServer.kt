@@ -19,7 +19,7 @@ class MongoDBServer private constructor(
 
     companion object: KLogging() {
         const val IMAGE = "mongo"
-        const val TAG = "6"
+        const val TAG = "7"
         const val NAME = "mongo"
         const val PORT = 27017
         const val DATABASE_NAME = "test"

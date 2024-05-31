@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import java.net.HttpURLConnection
-import java.net.URL
+import java.net.URI
 
 @Execution(ExecutionMode.SAME_THREAD)
 class HttpbinServerTest {
@@ -40,7 +40,7 @@ class HttpbinServerTest {
 
     private fun callHttpbinServer(httpbin: HttpbinServer) {
         val baseUrl = httpbin.url
-        val url = URL("$baseUrl/ip")
+        val url = URI("$baseUrl/ip").toURL()
 
         val conn = url.openConnection() as HttpURLConnection
         try {

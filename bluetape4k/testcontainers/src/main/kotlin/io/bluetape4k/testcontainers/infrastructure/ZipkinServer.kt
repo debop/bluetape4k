@@ -9,6 +9,15 @@ import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
+/**
+ * zipkin 서버의 docker image를 testcontainers 환경 하에서 실행하는 클래스입니다.
+ *
+ * 참고: [Zipkin Docker image](https://hub.docker.com/r/openzipkin/zipkin/tags)
+ *
+ * @param imageName
+ * @param useDefaultPort
+ * @param reuse
+ */
 class ZipkinServer private constructor(
     imageName: DockerImageName,
     useDefaultPort: Boolean,
@@ -18,7 +27,7 @@ class ZipkinServer private constructor(
     companion object: KLogging() {
         const val IMAGE = "openzipkin/zipkin"
         const val NAME = "zipkin"
-        const val TAG = "2"
+        const val TAG = "3"
         const val PORT = 9411
 
         @JvmStatic
@@ -63,6 +72,13 @@ class ZipkinServer private constructor(
     object Launcher {
         val zipkin: ZipkinServer by lazy {
             ZipkinServer().apply {
+                start()
+                ShutdownQueue.register(this)
+            }
+        }
+
+        val defaultZipkin: ZipkinServer by lazy {
+            ZipkinServer(useDefaultPort = true).apply {
                 start()
                 ShutdownQueue.register(this)
             }

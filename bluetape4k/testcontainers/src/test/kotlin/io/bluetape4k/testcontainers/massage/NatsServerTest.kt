@@ -3,14 +3,10 @@ package io.bluetape4k.testcontainers.massage
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
-import io.nats.client.Connection
-import io.nats.client.Nats
 import io.nats.client.Subscription
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldBeTrue
-import org.awaitility.kotlin.await
-import org.awaitility.kotlin.until
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
@@ -42,13 +38,13 @@ class NatsServerTest {
     }
 
     private fun connectToNats(nats: NatsServer) {
-        Nats.connect(nats.url).use { client ->
-            await until { client.status == Connection.Status.CONNECTED }
+        withNats(nats.url) {
+            // await until { this.status == Connection.Status.CONNECTED }
 
-            val subscription: Subscription = client.subscribe("subject")
+            val subscription: Subscription = this.subscribe("subject")
             subscription.isActive.shouldBeTrue()
 
-            client.publish("subject", "Hello world".toUtf8Bytes())
+            this.publish("subject", "Hello world".toUtf8Bytes())
             val message = subscription.nextMessage(Duration.ofMillis(500))
 
             message.subject shouldBeEqualTo "subject"

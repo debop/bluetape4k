@@ -1,6 +1,7 @@
 package io.bluetape4k.testcontainers.storage
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.requireNotBlank
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
@@ -16,6 +17,8 @@ import org.redisson.config.Config
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.utility.DockerImageName
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 
 /**
@@ -44,12 +47,14 @@ class RedisServer private constructor(
 
         @JvmStatic
         operator fun invoke(
+            image: String = IMAGE,
             tag: String = TAG,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): RedisServer {
-            require(tag.isNotBlank()) { "tag must not be blank." }
-            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
+            image.requireNotBlank("image")
+            tag.requireNotBlank("tag")
+            val imageName = DockerImageName.parse(image).withTag(tag)
             return RedisServer(imageName, useDefaultPort, reuse)
         }
 
@@ -113,16 +118,32 @@ class RedisServer private constructor(
 
             private val redisClients = ConcurrentHashMap<String, RedisClient>()
 
-            fun getRedisURI(host: String, port: Int): RedisURI =
-                RedisURI.Builder.redis(host, port).build()
+            fun getRedisURI(host: String, port: Int): RedisURI {
+                return RedisURI.builder()
+                    .withHost(host)
+                    .withPort(port)
+                    .withTimeout(30.seconds.toJavaDuration())
+                    .build()
+            }
 
-            fun getRedisClient(host: String = redis.host, port: Int = redis.port): RedisClient =
-                redisClients.computeIfAbsent("$host:$port") {
+            fun getRedisClient(host: String = redis.host, port: Int = redis.port): RedisClient {
+                val uri = getRedisURI(host, port)
+                return redisClients.computeIfAbsent(uri.toString()) {
                     RedisClient.create(getRedisURI(host, port))
                         .also { redisClient ->
                             ShutdownQueue.register { redisClient.shutdown() }
                         }
                 }
+            }
+
+            fun getRedisClient(url: String): RedisClient {
+                return redisClients.computeIfAbsent(url) {
+                    RedisClient.create(RedisURI.create(url))
+                        .also { redisClient ->
+                            ShutdownQueue.register { redisClient.shutdown() }
+                        }
+                }
+            }
 
             fun getRedisCommands(
                 host: String = redis.host,

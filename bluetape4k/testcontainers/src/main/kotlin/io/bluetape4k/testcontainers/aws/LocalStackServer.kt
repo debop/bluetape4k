@@ -1,6 +1,7 @@
 package io.bluetape4k.testcontainers.aws
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.requireNotBlank
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
@@ -39,18 +40,24 @@ class LocalStackServer private constructor(
     companion object: KLogging() {
         const val IMAGE = "localstack/localstack"
         const val NAME = "localstack"
-        const val TAG = "3.0"
+        const val TAG = "3.3"
         const val PORT = 4566
 
+        @JvmStatic
         operator fun invoke(
+            image: String = IMAGE,
             tag: String = TAG,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): LocalStackServer {
-            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
+            image.requireNotBlank("image")
+            tag.requireNotBlank("tag")
+
+            val imageName = DockerImageName.parse(image).withTag(tag)
             return LocalStackServer(imageName, useDefaultPort, reuse)
         }
 
+        @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
             useDefaultPort: Boolean = false,

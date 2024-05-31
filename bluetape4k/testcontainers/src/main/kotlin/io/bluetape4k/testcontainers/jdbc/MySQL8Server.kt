@@ -19,15 +19,16 @@ class MySQL8Server private constructor(
 
     companion object: KLogging() {
         const val IMAGE = "mysql"
-        const val TAG = "8.0"
+        const val TAG = "8.3"
         const val NAME = "mysql"
         const val PORT: Int = 3306
-        private const val USERNAME = "test"
-        private const val PASSWORD = "test"
+        const val USERNAME = "test"
+        const val PASSWORD = "test"
         const val DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver"
 
         @JvmStatic
         operator fun invoke(
+            image: String = IMAGE,
             tag: String = TAG,
             useDefaultPort: Boolean = true,
             configuration: String = "",
@@ -35,7 +36,7 @@ class MySQL8Server private constructor(
             password: String = PASSWORD,
             reuse: Boolean = true,
         ): MySQL8Server {
-            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
+            val imageName = DockerImageName.parse(image).withTag(tag)
             return invoke(imageName, useDefaultPort, configuration, username, password, reuse)
         }
 

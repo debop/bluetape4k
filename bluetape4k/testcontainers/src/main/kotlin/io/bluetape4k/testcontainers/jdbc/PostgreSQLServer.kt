@@ -5,7 +5,6 @@ import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
 class PostgreSQLServer private constructor(
@@ -18,27 +17,32 @@ class PostgreSQLServer private constructor(
 
     companion object: KLogging() {
         const val IMAGE = "postgres"
-        const val TAG: String = "14"
+        const val TAG: String = "16"
         const val NAME = "postgresql"
         const val PORT = 5432
+        const val USERNAME = "test"
+        const val PASSWORD = "test"
+
+        const val DRIVER_CLASS_NAME = "org.postgresql.Driver"
 
         @JvmStatic
         operator fun invoke(
+            image: String = IMAGE,
             tag: String = TAG,
-            username: String = "test",
-            password: String = "test",
+            username: String = USERNAME,
+            password: String = PASSWORD,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): PostgreSQLServer {
-            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
-            return PostgreSQLServer(imageName, username, password, useDefaultPort, reuse)
+            val imageName = DockerImageName.parse(image).withTag(tag)
+            return invoke(imageName, username, password, useDefaultPort, reuse)
         }
 
         @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
-            username: String = "test",
-            password: String = "test",
+            username: String = USERNAME,
+            password: String = PASSWORD,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): PostgreSQLServer {
@@ -46,17 +50,15 @@ class PostgreSQLServer private constructor(
         }
     }
 
+    override fun getDriverClassName(): String = DRIVER_CLASS_NAME
     override val port: Int get() = getMappedPort(PORT)
     override val url: String get() = jdbcUrl
 
     init {
-        addExposedPorts(PORT)
-
         withUsername(username)
         withPassword(password)
 
         withReuse(reuse)
-        setWaitStrategy(Wait.forListeningPort())
 
         if (useDefaultPort) {
             exposeCustomPorts(PORT)

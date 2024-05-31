@@ -12,6 +12,7 @@ import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldNotBeNull
 import org.amshove.kluent.shouldNotBeNullOrBlank
 import org.bson.Document
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
@@ -20,30 +21,36 @@ import org.junit.jupiter.api.parallel.ExecutionMode
 class MongoDBServerTest {
 
     companion object: KLogging() {
-        private const val DATABASE_NAME = "bluetape4k"
+        private const val DATABASE_NAME = "testcontainers-database"
     }
 
-    @Test
-    fun `launch mongodb 4+ server`() {
-        MongoDBServer(databaseName = DATABASE_NAME).use { mongo ->
-            mongo.start()
-            mongo.isRunning.shouldBeTrue()
-            mongo.replicaSetUrl.shouldNotBeNullOrBlank()
+    @Nested
+    inner class UseDockerPort {
+        @Test
+        fun `launch mongodb 4+ server`() {
+            MongoDBServer(databaseName = DATABASE_NAME).use { mongo ->
+                mongo.start()
+                mongo.isRunning.shouldBeTrue()
+                mongo.replicaSetUrl.shouldNotBeNullOrBlank()
 
-            verifyMongo(mongo)
-            crudWithTransaction(mongo)
+                verifyMongo(mongo)
+                crudWithTransaction(mongo)
+            }
         }
     }
 
-    @Test
-    fun `launch mongodb 4+ server with default port`() {
-        MongoDBServer(useDefaultPort = true, databaseName = DATABASE_NAME).use { mongo ->
-            mongo.start()
-            mongo.isRunning.shouldBeTrue()
-            mongo.replicaSetUrl.shouldNotBeNullOrBlank()
+    @Nested
+    inner class UseDefaultPort {
+        @Test
+        fun `launch mongodb 4+ server with default port`() {
+            MongoDBServer(useDefaultPort = true, databaseName = DATABASE_NAME).use { mongo ->
+                mongo.start()
+                mongo.isRunning.shouldBeTrue()
+                mongo.replicaSetUrl.shouldNotBeNullOrBlank()
 
-            verifyMongo(mongo)
-            crudWithTransaction(mongo)
+                verifyMongo(mongo)
+                crudWithTransaction(mongo)
+            }
         }
     }
 

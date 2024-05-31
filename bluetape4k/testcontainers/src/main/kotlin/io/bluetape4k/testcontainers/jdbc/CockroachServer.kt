@@ -7,6 +7,12 @@ import io.bluetape4k.utils.ShutdownQueue
 import org.testcontainers.containers.CockroachContainer
 import org.testcontainers.utility.DockerImageName
 
+/**
+ * 분산형 RDBMS인 CockroachDB를 테스트용으로 사용할 수 있는 컨테이너를 제공한다.
+ * Postgres 와 호환됩니다.
+ *
+ * 참고: [Cockroach Labs](https://www.cockroachlabs.com/)
+ */
 class CockroachServer private constructor(
     imageName: DockerImageName,
     username: String,
@@ -22,24 +28,29 @@ class CockroachServer private constructor(
         const val DB_PORT = 26257
         const val REST_API_PORT = 8080
         const val DATABASE_NAME = "defaultdb"
+        const val USERNAME = "test"
+        const val PASSWORD = "test"
+
+        const val DRIVER_CLASS_NAME = "org.postgresql.Driver"
 
         @JvmStatic
         operator fun invoke(
+            image: String = IMAGE,
             tag: String = TAG,
-            username: String = "test",
-            password: String = "test",
+            username: String = USERNAME,
+            password: String = PASSWORD,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): CockroachServer {
-            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
-            return CockroachServer(imageName, username, password, useDefaultPort, reuse)
+            val imageName = DockerImageName.parse(image).withTag(tag)
+            return invoke(imageName, username, password, useDefaultPort, reuse)
         }
 
         @JvmStatic
         operator fun invoke(
             imageName: DockerImageName,
-            username: String = "test",
-            password: String = "test",
+            username: String = USERNAME,
+            password: String = PASSWORD,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): CockroachServer {
@@ -49,6 +60,10 @@ class CockroachServer private constructor(
 
     override val port: Int get() = getMappedPort(DB_PORT)
     override val url: String get() = jdbcUrl
+    override fun getDriverClassName(): String = DRIVER_CLASS_NAME
+
+    val dbPort: Int get() = getMappedPort(DB_PORT)
+    val restApiPort: Int get() = getMappedPort(REST_API_PORT)
 
     init {
         // CockroachContainer에서 이미 수행한다
@@ -61,7 +76,7 @@ class CockroachServer private constructor(
         withReuse(reuse)
 
         if (useDefaultPort) {
-            exposeCustomPorts(REST_API_PORT, DB_PORT)
+            exposeCustomPorts(DB_PORT, REST_API_PORT)
         }
     }
 

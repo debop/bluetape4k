@@ -5,10 +5,8 @@ import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
 import io.bluetape4k.utils.ShutdownQueue
-import org.springframework.data.elasticsearch.client.ClientConfiguration
 import org.testcontainers.elasticsearch.ElasticsearchContainer
 import org.testcontainers.utility.DockerImageName
-
 
 /**
  * Elasticsearch Open Source 용 Server 를 Docker container 로 실행해주는 클래스입니다.
@@ -65,20 +63,6 @@ class ElasticsearchOss private constructor(
                 start()
                 ShutdownQueue.register(this)
             }
-        }
-
-
-        /**
-         * Spring Data Elasticsearch 를 사용 할 때 사용할 클라이언트 설정을 제공합니다.
-         *
-         * @param elasticsearch [ElasticsearchServer] 인스턴스
-         * @return Spring Data Elasticsearch에서 제공하는 [ClientConfiguration] 인스턴스
-         */
-        fun getClientConfiguration(elasticsearch: ElasticsearchOss): ClientConfiguration {
-            return ClientConfiguration.builder()
-                .connectedTo(elasticsearch.url)
-                .usingSsl(elasticsearch.createSslContextFromCa())
-                .build()
         }
     }
 }

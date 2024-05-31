@@ -18,7 +18,7 @@ class HazelcastServer private constructor(
 
     companion object: KLogging() {
         const val IMAGE = "hazelcast/hazelcast"
-        const val TAG = "5.2"
+        const val TAG = "5.3-slim"
         const val NAME = "hazelcast"
         const val PORT = 5701
 

@@ -33,16 +33,17 @@ class MySQL5Server private constructor(
 ): MySQLContainer<MySQL5Server>(imageName), JdbcServer {
 
     companion object: KLogging() {
-        const val IMAGE = "biarms/mysql"
+        const val IMAGE = "mysql"
         const val TAG = "5.7"
         const val NAME = "mysql"
         const val PORT: Int = 3306
-        private const val USERNAME = "test"
-        private const val PASSWORD = "test"
+        const val USERNAME = "test"
+        const val PASSWORD = "test"
         const val DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver"
 
         @JvmStatic
         operator fun invoke(
+            image: String = IMAGE,
             tag: String = TAG,
             useDefaultPort: Boolean = true,
             configuration: String = "",
@@ -50,7 +51,7 @@ class MySQL5Server private constructor(
             password: String = PASSWORD,
             reuse: Boolean = true,
         ): MySQL5Server {
-            val imageName = DockerImageName.parse(IMAGE).withTag(tag).asCompatibleSubstituteFor(NAME)
+            val imageName = DockerImageName.parse(image).withTag(tag)
             return invoke(imageName, useDefaultPort, configuration, username, password, reuse)
         }
 

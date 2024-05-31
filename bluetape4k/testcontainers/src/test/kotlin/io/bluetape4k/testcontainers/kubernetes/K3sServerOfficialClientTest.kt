@@ -5,19 +5,15 @@ import io.bluetape4k.logging.debug
 import io.kubernetes.client.openapi.apis.CoreV1Api
 import io.kubernetes.client.util.Config
 import org.amshove.kluent.shouldHaveSize
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import java.io.StringReader
 
-@Disabled("Apple Silicon 에서는 K3s를 사용할 수 없다")
 @Execution(ExecutionMode.SAME_THREAD)
-class K3sServerOfficialClientTest {
+class K3sServerOfficialClientTest: AbstractK3sTest() {
 
     companion object: KLogging()
-
-    private val k3s: K3sServer by lazy { K3sServer.Launcher.k3s }
 
     @Test
     fun ` k3s should start and list node`() {
@@ -26,11 +22,7 @@ class K3sServerOfficialClientTest {
         val client = Config.fromConfig(StringReader(kubeConfigYml))
         val api = CoreV1Api(client)
 
-        val nodes = api.listNode(
-            null, null, null, null,
-            null, null, null, null,
-            null, null
-        )
+        val nodes = api.listNode().execute()
         nodes.items.forEach {
             log.debug { "node=$it" }
         }

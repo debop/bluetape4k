@@ -49,18 +49,20 @@ class KafkaServer private constructor(
 ): KafkaContainer(imageName), GenericServer {
 
     companion object: KLogging() {
-        val IMAGE = "confluentinc/cp-kafka"
-        val NAME = "kafka"
-        val TAG = "7.5.2"
+        const val IMAGE = "confluentinc/cp-kafka"
+        const val NAME = "kafka"
+        const val TAG = "7.5.2"
+        const val PORT = KAFKA_PORT
 
         @JvmStatic
         operator fun invoke(
+            image: String = IMAGE,
             tag: String = TAG,
             useTransaction: Boolean = false,
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): KafkaServer {
-            val imageName = DockerImageName.parse(IMAGE).withTag(tag)
+            val imageName = DockerImageName.parse(image).withTag(tag)
             return KafkaServer(imageName, useTransaction, useDefaultPort, reuse)
         }
 
@@ -75,15 +77,17 @@ class KafkaServer private constructor(
         }
     }
 
-    override val port: Int get() = getMappedPort(KAFKA_PORT)
+    override val port: Int get() = getMappedPort(PORT)
 
     init {
-        addExposedPorts(KAFKA_PORT)
+        addExposedPorts(PORT)
         withReuse(reuse)
 
         // Kafka 7.4.0 이상부터는 Zookeeper 대신에 Kraft를 사용할 수 있습니다.
         // 기본 port 사용을 위해 Kraft를 사용합니다.
         withKraft()
+        // withEmbeddedZookeeper()
+
 
         // HINT: Transaction 관련 테스트를 위해서는 다음과 같은 값을 넣어줘야 합니다.
         // HINT: 테스트 시에는 transaction log replica 를 1로 설정해야 합니다. (기본은 3)
@@ -94,7 +98,7 @@ class KafkaServer private constructor(
         }
 
         if (useDefaultPort) {
-            exposeCustomPorts(KAFKA_PORT)
+            exposeCustomPorts(PORT)
         }
     }
 
@@ -110,7 +114,7 @@ class KafkaServer private constructor(
 
     object Launcher {
 
-        const val DEFAULT_TOPIC = "bluetape4k.test-topic.1"
+        const val DEFAULT_TOPIC = "kommons.test-topic.1"
 
         val kafka: KafkaServer by lazy {
             KafkaServer().apply {
@@ -119,8 +123,8 @@ class KafkaServer private constructor(
             }
         }
 
-        private val stringSerializer = StringSerializer()
-        private val stringDeserializer = StringDeserializer()
+        private val stringSerializer by lazy { StringSerializer() }
+        private val stringDeserializer by lazy { StringDeserializer() }
 
         fun getProducerProperties(kafkaServer: KafkaServer = kafka): MutableMap<String, Any?> {
             return mutableMapOf(
@@ -153,22 +157,15 @@ class KafkaServer private constructor(
             return KafkaConsumer(props, stringDeserializer, stringDeserializer)
         }
 
+
         fun createBinaryProducer(kafkaServer: KafkaServer = kafka): KafkaProducer<ByteArray?, ByteArray?> {
             val props = getProducerProperties(kafkaServer)
-            props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer::class.java)
-            props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer::class.java)
-
-            return KafkaProducer(props)
+            return KafkaProducer(props, ByteArraySerializer(), ByteArraySerializer())
         }
 
-        fun createBinaryConsumer(
-            kafkaServer: KafkaServer = kafka,
-        ): KafkaConsumer<ByteArray?, ByteArray?> {
+        fun createBinaryConsumer(kafkaServer: KafkaServer = kafka): KafkaConsumer<ByteArray?, ByteArray?> {
             val props = getConsumerProperties(kafkaServer)
-            props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer::class.java)
-            props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer::class.java)
-
-            return KafkaConsumer(props)
+            return KafkaConsumer(props, ByteArrayDeserializer(), ByteArrayDeserializer())
         }
 
         object Spring {

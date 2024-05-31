@@ -1,6 +1,7 @@
 package io.bluetape4k.testcontainers.infrastructure
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.requireNotBlank
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
 import io.bluetape4k.testcontainers.writeToSystemProperties
@@ -31,7 +32,7 @@ class PrometheusServer private constructor(
 
     companion object: KLogging() {
         const val IMAGE = "bitnami/prometheus"
-        const val TAG = "2.43.0"
+        const val TAG = "2.51.1"
         const val NAME = "prometheus"
 
         const val PORT = 9090
@@ -47,6 +48,9 @@ class PrometheusServer private constructor(
             useDefaultPort: Boolean = false,
             reuse: Boolean = true,
         ): PrometheusServer {
+            image.requireNotBlank("image")
+            tag.requireNotBlank("tag")
+
             val imageName = DockerImageName.parse(image).withTag(tag)
             return PrometheusServer(imageName, useDefaultPort, reuse)
         }
@@ -92,6 +96,22 @@ class PrometheusServer private constructor(
     object Launch {
         val prometheus: PrometheusServer by lazy {
             PrometheusServer().apply {
+                start()
+                ShutdownQueue.register(this)
+            }
+        }
+    }
+
+    object Launcher {
+        val prometheus: PrometheusServer by lazy {
+            PrometheusServer().apply {
+                start()
+                ShutdownQueue.register(this)
+            }
+        }
+
+        val defaultPrometheus: PrometheusServer by lazy {
+            PrometheusServer(useDefaultPort = true).apply {
                 start()
                 ShutdownQueue.register(this)
             }

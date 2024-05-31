@@ -1,6 +1,5 @@
 package io.bluetape4k.testcontainers.aws.services
 
-import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.testcontainers.aws.LocalStackServer
@@ -93,7 +92,7 @@ class DynamoDBTest {
     @Test
     @Order(1)
     fun `insert data`() {
-        val item = unifiedMapOf(
+        val item = mutableMapOf(
             "id" to AttributeValue.builder().s("1").build(),
             "name" to AttributeValue.builder().s("debop").build(),
             "age" to AttributeValue.builder().n("51").build()

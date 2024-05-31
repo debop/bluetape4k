@@ -5,7 +5,7 @@ import io.bluetape4k.logging.info
 import org.testcontainers.containers.ContainerState
 
 
-private val log = KotlinLogging.logger {}
+private val log by lazy { KotlinLogging.logger {} }
 
 internal const val SERVER_PREFIX = "testcontainers"
 
