@@ -1,13 +1,12 @@
-package io.bluetape4k.infra.graphql.dgs
+package io.bluetape4k.graphql.dgs
 
 import com.netflix.graphql.dgs.reactive.DgsReactiveCustomContextBuilderWithRequest
-import io.bluetape4k.infra.graphql.LoggingContextProvider
 import kotlinx.coroutines.reactor.mono
 import org.springframework.http.HttpHeaders
 import org.springframework.web.reactive.function.server.ServerRequest
 import reactor.core.publisher.Mono
 
-abstract class AbstractDgsCoroutineContextBuilder<T: LoggingContextProvider>
+abstract class AbstractDgsCoroutineContextBuilder<T: io.bluetape4k.graphql.LoggingContextProvider>
     : DgsReactiveCustomContextBuilderWithRequest<T> {
 
     override fun build(

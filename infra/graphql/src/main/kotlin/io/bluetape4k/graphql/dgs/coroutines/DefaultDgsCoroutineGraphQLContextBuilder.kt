@@ -1,9 +1,9 @@
-package io.bluetape4k.infra.graphql.dgs.coroutines
+package io.bluetape4k.graphql.dgs.coroutines
 
 import com.netflix.graphql.dgs.context.DgsContext
 import com.netflix.graphql.dgs.context.ReactiveDgsContext
 import com.netflix.graphql.dgs.reactive.internal.DgsReactiveRequestData
-import io.bluetape4k.infra.graphql.dgs.AbstractDgsCoroutineContextBuilder
+import io.bluetape4k.graphql.dgs.AbstractDgsCoroutineContextBuilder
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.http.HttpHeaders

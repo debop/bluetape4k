@@ -1,10 +1,9 @@
-package io.bluetape4k.infra.graphql.coroutines
+package io.bluetape4k.graphql.coroutines
 
 import com.netflix.graphql.dgs.context.DgsContext
 import graphql.schema.DataFetchingEnvironment
 import io.bluetape4k.coroutines.context.getOrCurrent
-import io.bluetape4k.infra.graphql.LoggingContextProvider
-import io.bluetape4k.infra.graphql.getCopyOfLoggingContextMapOrEmpty
+import io.bluetape4k.graphql.getCopyOfLoggingContextMapOrEmpty
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.slf4j.MDCContext
@@ -13,17 +12,17 @@ import org.dataloader.BatchLoaderEnvironment
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-fun <T: LoggingContextProvider> BatchLoaderEnvironment.getLoggingContext(): MDCContext {
+fun <T: io.bluetape4k.graphql.LoggingContextProvider> BatchLoaderEnvironment.getLoggingContext(): MDCContext {
     val dgsContext = DgsContext.getCustomContext<T>(this)
     return MDCContext(dgsContext.contextMapOrEmpty + getCopyOfLoggingContextMapOrEmpty())
 }
 
-fun <T: LoggingContextProvider> DataFetchingEnvironment.getLoggingContext(): MDCContext {
+fun <T: io.bluetape4k.graphql.LoggingContextProvider> DataFetchingEnvironment.getLoggingContext(): MDCContext {
     val dgsContext = DgsContext.getCustomContext<T>(this)
     return MDCContext(dgsContext.contextMapOrEmpty + getCopyOfLoggingContextMapOrEmpty())
 }
 
-suspend fun <T: LoggingContextProvider> BatchLoaderEnvironment.withLoggingContext(
+suspend fun <T: io.bluetape4k.graphql.LoggingContextProvider> BatchLoaderEnvironment.withLoggingContext(
     block: suspend CoroutineScope.() -> T,
 ): T = coroutineScope {
     val context = coroutineContext.getOrCurrent() + getLoggingContext<T>()
@@ -32,7 +31,7 @@ suspend fun <T: LoggingContextProvider> BatchLoaderEnvironment.withLoggingContex
     }
 }
 
-suspend fun <T: LoggingContextProvider> DataFetchingEnvironment.withLoggingContext(
+suspend fun <T: io.bluetape4k.graphql.LoggingContextProvider> DataFetchingEnvironment.withLoggingContext(
     block: suspend CoroutineScope.() -> T,
 ): T = coroutineScope {
     val context = coroutineContext.getOrCurrent() + getLoggingContext<T>()
@@ -43,7 +42,7 @@ suspend fun <T: LoggingContextProvider> DataFetchingEnvironment.withLoggingConte
 
 suspend fun <T> withGraphqlLoggingContext(
     coroutineContext: CoroutineContext = EmptyCoroutineContext,
-    loggingContext: LoggingContextProvider,
+    loggingContext: io.bluetape4k.graphql.LoggingContextProvider,
     block: suspend CoroutineScope.() -> T,
 ): T = coroutineScope {
     val mdcContext = MDCContext(loggingContext.contextMapOrEmpty + getCopyOfLoggingContextMapOrEmpty())

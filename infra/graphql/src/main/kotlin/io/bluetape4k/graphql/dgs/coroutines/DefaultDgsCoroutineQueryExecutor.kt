@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.graphql.dgs.coroutines
+package io.bluetape4k.graphql.dgs.coroutines
 
 import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
@@ -21,7 +21,7 @@ import graphql.execution.NonNullableFieldWasNullError
 import graphql.execution.instrumentation.Instrumentation
 import graphql.execution.preparsed.PreparsedDocumentProvider
 import graphql.schema.GraphQLSchema
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import kotlinx.atomicfu.AtomicRef

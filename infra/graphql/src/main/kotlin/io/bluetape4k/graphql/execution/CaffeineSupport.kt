@@ -1,7 +1,7 @@
-package io.bluetape4k.infra.graphql.execution
+package io.bluetape4k.graphql.execution
 
 import com.github.benmanes.caffeine.cache.AsyncCache
-import io.bluetape4k.infra.cache.caffeine.caffeine
+import io.bluetape4k.cache.caffeine.caffeine
 import java.util.concurrent.TimeUnit
 
 internal fun <K, V> caffeineAsyncCacheOf(

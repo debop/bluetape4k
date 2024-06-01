@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.graphql.dgs.scalars
+package io.bluetape4k.graphql.dgs.scalars
 
 import com.netflix.graphql.dgs.DgsScalar
 import graphql.schema.Coercing
@@ -22,6 +22,7 @@ class InstantScalar: Coercing<Instant, Long> {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun serialize(dataFetcherResult: Any): Long {
         return when (dataFetcherResult) {
             is Instant -> dataFetcherResult.toEpochMilli()
@@ -29,6 +30,7 @@ class InstantScalar: Coercing<Instant, Long> {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun parseValue(input: Any): Instant {
         val epochMilli = input.asLongOrNull()
             ?: throw CoercingParseValueException("Fail to parse value[$input] as Long")
@@ -36,6 +38,7 @@ class InstantScalar: Coercing<Instant, Long> {
         return Instant.ofEpochMilli(epochMilli)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun parseLiteral(input: Any): Instant {
         val epochMilli = input.asLongOrNull()
             ?: throw CoercingParseValueException("Fail to parse literal value[$input] as Long")

@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.graphql.dgs.scalars
+package io.bluetape4k.graphql.dgs.scalars
 
 import com.netflix.graphql.dgs.DgsScalar
 import graphql.schema.Coercing
@@ -24,15 +24,18 @@ class ZonedDateTimeScalar: Coercing<ZonedDateTime, String> {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun serialize(dataFetcherResult: Any): String = when (dataFetcherResult) {
         is ZonedDateTime -> dataFetcherResult.format(IsoZonedDateTimeFormatter)
         else             -> throw IllegalArgumentException("Not a valid java.time.ZonedDateTime [$dataFetcherResult]")
     }
 
+    @Deprecated("Deprecated in Java")
     override fun parseValue(input: Any): ZonedDateTime {
         return ZonedDateTime.parse(input.toString(), IsoZonedDateTimeFormatter)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun parseLiteral(input: Any): ZonedDateTime {
         return ZonedDateTime.parse(input.toString(), IsoZonedDateTimeFormatter)
     }

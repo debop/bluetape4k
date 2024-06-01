@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.graphql.execution
+package io.bluetape4k.graphql.execution
 
 import com.github.benmanes.caffeine.cache.AsyncCache
 import graphql.ExecutionInput

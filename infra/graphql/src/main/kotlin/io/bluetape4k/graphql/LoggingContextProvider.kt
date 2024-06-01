@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.graphql
+package io.bluetape4k.graphql
 
 import java.io.Serializable
 

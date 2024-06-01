@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.graphql.execution
+package io.bluetape4k.graphql.execution
 
 import com.netflix.graphql.dgs.exceptions.DgsException
 import com.netflix.graphql.types.errors.TypedGraphQLError
@@ -13,13 +13,13 @@ import io.bluetape4k.support.classIsPresent
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionException
 
-class BluetapeDataFetcherExceptionHandler: DataFetcherExceptionHandler {
+class KommonsDataFetcherExceptionHandler: DataFetcherExceptionHandler {
 
     companion object: KLogging() {
         private val springSecurityAvailable: Boolean by lazy {
             classIsPresent(
                 "org.springframework.security.access.AccessDeniedException",
-                BluetapeDataFetcherExceptionHandler::class.java.classLoader
+                KommonsDataFetcherExceptionHandler::class.java.classLoader
             )
         }
 

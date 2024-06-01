@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.graphql.dgs.scalars
+package io.bluetape4k.graphql.dgs.scalars
 
 import com.netflix.graphql.dgs.DgsScalar
 import graphql.schema.Coercing
@@ -24,15 +24,18 @@ class OffsetDateTimeScalar: Coercing<OffsetDateTime, String> {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun serialize(dataFetcherResult: Any): String = when (dataFetcherResult) {
         is OffsetDateTime -> dataFetcherResult.format(IsoOffsetDateTimeFormatter)
         else              -> throw IllegalArgumentException("Not a valid java.time.OffsetDateTime [$dataFetcherResult]")
     }
 
+    @Deprecated("Deprecated in Java")
     override fun parseValue(input: Any): OffsetDateTime {
         return OffsetDateTime.parse(input.toString(), IsoOffsetDateTimeFormatter)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun parseLiteral(input: Any): OffsetDateTime {
         return OffsetDateTime.parse(input.toString(), IsoOffsetDateTimeFormatter)
     }
