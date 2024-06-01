@@ -6,14 +6,14 @@
         <immediateFlush>true</immediateFlush>
         <encoder>
             <!-- @formatter:off -->
-            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%blue(%.24t)] %yellow(%logger{36}):%line: %msg%n%throwable</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%blue(%24.24t)] %yellow(%logger{36}):%line: %msg%n%throwable</pattern>
             <!-- @formatter:on -->
             <charset>UTF-8</charset>
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.io.http" level="DEBUG"/>
-    <logger name="io.bluetape4k.io.http.hc5" level="TRACE"/>
+    <logger name="io.bluetape4k.http" level="DEBUG"/>
+    <logger name="io.bluetape4k.http.hc5" level="TRACE"/>
 
     <root level="INFO">
         <appender-ref ref="Console"/>
