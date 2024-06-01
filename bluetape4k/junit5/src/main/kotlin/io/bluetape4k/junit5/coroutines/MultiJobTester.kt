@@ -97,7 +97,7 @@ class MultiJobTester {
 
         val sequence = atomic(0)
 
-        workerDispather = newFixedThreadPoolContext(numJobs, "multi-job-tester")
+        workerDispather = newFixedThreadPoolContext(numJobs, "multi-job")
 
         workerJobs = List(numJobs * roundsPerJob) {
             val block = suspendBlocks[sequence.getAndIncrement() % suspendBlocks.size]

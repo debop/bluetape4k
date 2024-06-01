@@ -31,6 +31,7 @@ class VirtualFuture<T>(
          * @param callable 비동기로 수행할 작업
          * @return [VirtualFuture] 인스턴스
          */
+        @Deprecated("Use virtualFuture(callable: () -> T) instead", ReplaceWith("virtualFuture(callable)"))
         @JvmName("asyncForCallable")
         fun <T> async(callable: () -> T): VirtualFuture<T> {
             return VirtualFuture(executor.submit<T>(callable))
@@ -42,6 +43,7 @@ class VirtualFuture<T>(
          * @param runnable 비동기로 수행할 작업
          * @return [VirtualFuture] 인스턴스
          */
+        @Deprecated("Use virtualFuture(runnable: () -> Unit) instead", ReplaceWith("virtualFuture(runnable)"))
         @JvmName("asyncForRunnable")
         fun async(runnable: () -> Unit): VirtualFuture<Unit> {
             return VirtualFuture(executor.submit<Unit>(runnable))
@@ -52,10 +54,9 @@ class VirtualFuture<T>(
          *
          * @param tasks 비동기로 수행할 작업 목록
          */
+        @Deprecated("Use virtualFutureAll(tasks: Collection<() -> T>) instead", ReplaceWith("virtualFutureAll(tasks)"))
         fun <T> asyncAll(tasks: Collection<() -> T>): VirtualFuture<List<T>> {
-            val future = executor
-                .invokeAll(tasks.map { Callable { it.invoke() } })
-                .map { it.asCompletableFuture() }
+            val future = executor.invokeAll(tasks.map { Callable { it.invoke() } }).map { it.asCompletableFuture() }
                 .sequence(executor)
 
             return VirtualFuture(future)
@@ -69,15 +70,14 @@ class VirtualFuture<T>(
          * @param timeout
          * @return
          */
+        @Deprecated(
+            "Use virtualFutureAll(tasks: Collection<() -> T>, timeout) instead",
+            ReplaceWith("virtualFutureAll(tasks, timeout)")
+        )
         fun <T> asyncAll(tasks: Collection<() -> T>, timeout: Duration): VirtualFuture<List<T>> {
-            val future = executor
-                .invokeAll(
-                    tasks.map { Callable { it.invoke() } },
-                    timeout.toMillis(),
-                    TimeUnit.MILLISECONDS
-                )
-                .map { it.asCompletableFuture() }
-                .sequence(executor)
+            val future = executor.invokeAll(
+                tasks.map { Callable { it.invoke() } }, timeout.toMillis(), TimeUnit.MILLISECONDS
+            ).map { it.asCompletableFuture() }.sequence(executor)
 
             return VirtualFuture(future)
         }

@@ -2,8 +2,10 @@ package io.bluetape4k.concurrent
 
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.concurrency.VirtualthreadTester
+import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
@@ -60,7 +62,7 @@ class AtomicRoundrobinTest {
     }
 
     @Test
-    fun `increment round robine in multi-thread`() {
+    fun `increment round robin in multi-thread`() {
         val atomic = AtomicIntRoundrobin(16)
 
         MultithreadingTester()
@@ -77,12 +79,29 @@ class AtomicRoundrobinTest {
     }
 
     @Test
-    fun `increment round robine in virtual threads`() {
+    fun `increment round robin in virtual threads`() {
         val atomic = AtomicIntRoundrobin(16)
 
         VirtualthreadTester()
             .numThreads(8)
             .roundsPerThread(4)
+            .add {
+                atomic.next().apply {
+                    log.debug { "atomic=$this" }
+                }
+            }
+            .run()
+
+        atomic.get() shouldBeEqualTo 0
+    }
+
+    @Test
+    fun `increment round robin in multi jobs`() = runTest {
+        val atomic = AtomicIntRoundrobin(16)
+
+        MultiJobTester()
+            .numJobs(8)
+            .roundsPerJob(4)
             .add {
                 atomic.next().apply {
                     log.debug { "atomic=$this" }
