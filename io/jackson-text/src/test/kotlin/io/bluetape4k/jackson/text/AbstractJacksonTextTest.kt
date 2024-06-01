@@ -1,4 +1,4 @@
-package io.bluetape4k.io.jackson.text
+package io.bluetape4k.jackson.text
 
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging

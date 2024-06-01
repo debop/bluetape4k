@@ -1,4 +1,4 @@
-package io.bluetape4k.io.jackson.text.properties
+package io.bluetape4k.jackson.text.properties
 
 @Suppress("UNCHECKED_CAST")
 fun Map<Any, Any?>.getNode(path: String, delimiter: String = "."): Map<Any, Any?> {

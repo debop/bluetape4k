@@ -1,6 +1,6 @@
-package io.bluetape4k.io.jackson.text.yaml
+package io.bluetape4k.jackson.text.yaml
 
-import io.bluetape4k.io.jackson.text.AbstractJacksonTextTest
+import io.bluetape4k.jackson.text.AbstractJacksonTextTest
 import io.bluetape4k.logging.KLogging
 
 abstract class AbstractYamlExample: AbstractJacksonTextTest() {

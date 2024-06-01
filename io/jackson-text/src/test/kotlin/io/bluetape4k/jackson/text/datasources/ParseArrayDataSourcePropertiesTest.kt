@@ -1,12 +1,13 @@
-package io.bluetape4k.io.jackson.text.datasources
+package io.bluetape4k.jackson.text.datasources
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonTypeName
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.bluetape4k.io.jackson.text.AbstractJacksonTextTest
-import io.bluetape4k.io.jackson.text.properties.JacksonProps
-import io.bluetape4k.io.jackson.text.yaml.JacksonYaml
+import io.bluetape4k.jackson.text.AbstractJacksonTextTest
+import io.bluetape4k.jackson.text.properties.JacksonProps
+import io.bluetape4k.jackson.text.yaml.JacksonYaml
+import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainAll
@@ -14,6 +15,8 @@ import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
 
 class ParseArrayDataSourcePropertiesTest: AbstractJacksonTextTest() {
+
+    companion object: KLogging()
 
     val yamlMapper by lazy { JacksonYaml.defaultYamlMapper }
     val propsMapper by lazy { JacksonProps.defaultPropsMapper }
@@ -110,9 +113,9 @@ class ParseArrayDataSourcePropertiesTest: AbstractJacksonTextTest() {
         dbcp2.lifo!! shouldBeEqualTo true
     }
 
-    data class RootProperty(val bluetape4k: Bluetape4kProperty)
+    data class RootProperty(val bluetape4k: KommonsProperty)
 
-    data class Bluetape4kProperty(val datasources: List<DataSourceProperty> = emptyList())
+    data class KommonsProperty(val datasources: List<DataSourceProperty> = emptyList())
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "connectionPool")
     @JsonSubTypes(

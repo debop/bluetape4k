@@ -1,4 +1,4 @@
-package io.bluetape4k.io.jackson.text
+package io.bluetape4k.jackson.text
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import java.util.*

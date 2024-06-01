@@ -1,4 +1,4 @@
-package io.bluetape4k.io.jackson.text.yaml
+package io.bluetape4k.jackson.text.yaml
 
 fun String.trimYamlDocMarker(): String {
     var doc = this.trim()

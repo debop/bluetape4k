@@ -1,17 +1,20 @@
-package io.bluetape4k.io.jackson.text.yaml
+package io.bluetape4k.jackson.text.yaml
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.bluetape4k.io.jackson.text.DataSource
-import io.bluetape4k.io.jackson.text.Database
-import io.bluetape4k.io.jackson.text.FiveMinuteUser
-import io.bluetape4k.io.jackson.text.Gender
-import io.bluetape4k.io.jackson.text.Name
-import io.bluetape4k.io.jackson.text.Outer
+import io.bluetape4k.jackson.text.DataSource
+import io.bluetape4k.jackson.text.Database
+import io.bluetape4k.jackson.text.FiveMinuteUser
+import io.bluetape4k.jackson.text.Gender
+import io.bluetape4k.jackson.text.Name
+import io.bluetape4k.jackson.text.Outer
+import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
 class SerializationExample: AbstractYamlExample() {
+
+    companion object: KLogging()
 
     @Test
     fun `serialize and deserialize simple POJO`() {

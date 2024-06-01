@@ -1,17 +1,17 @@
-package io.bluetape4k.io.jackson.text.properties
+package io.bluetape4k.jackson.text.properties
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsFactory
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.bluetape4k.io.jackson.text.AbstractJacksonTextTest
-import io.bluetape4k.io.jackson.text.Box
-import io.bluetape4k.io.jackson.text.Container
-import io.bluetape4k.io.jackson.text.FiveMinuteUser
-import io.bluetape4k.io.jackson.text.Gender
-import io.bluetape4k.io.jackson.text.Point
-import io.bluetape4k.io.jackson.text.Points
-import io.bluetape4k.io.jackson.text.Rectangle
+import io.bluetape4k.jackson.text.AbstractJacksonTextTest
+import io.bluetape4k.jackson.text.Box
+import io.bluetape4k.jackson.text.Container
+import io.bluetape4k.jackson.text.FiveMinuteUser
+import io.bluetape4k.jackson.text.Gender
+import io.bluetape4k.jackson.text.Point
+import io.bluetape4k.jackson.text.Points
+import io.bluetape4k.jackson.text.Rectangle
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
@@ -167,7 +167,7 @@ class PropertiesExample: AbstractJacksonTextTest() {
         @Test
         fun `deserialize nested map`() {
             val input = "root.comparison.source.database=test\n" +
-                        "root.comparison.target.database=test2\n"
+                    "root.comparison.target.database=test2\n"
 
             val result = propsMapper.readValue<Map<Any, Any?>>(input)
             result.shouldNotBeNull()

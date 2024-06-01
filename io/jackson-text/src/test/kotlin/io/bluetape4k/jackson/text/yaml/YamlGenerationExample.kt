@@ -1,6 +1,7 @@
-package io.bluetape4k.io.jackson.text.yaml
+package io.bluetape4k.jackson.text.yaml
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
+import io.bluetape4k.json.jackson.writeValue
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
@@ -32,9 +33,9 @@ class YamlGenerationExample: AbstractYamlExample() {
     }
 
     private fun YAMLGenerator.writeBradDoc() {
-        writeStartObject()
-        writeStringField("name", "Brad")
-        writeNumberField("age", 39)
-        writeEndObject()
+        writeValue {
+            writeStringField("name", "Brad")
+            writeNumberField("age", 39)
+        }
     }
 }

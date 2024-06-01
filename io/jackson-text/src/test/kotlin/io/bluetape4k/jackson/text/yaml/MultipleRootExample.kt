@@ -1,6 +1,6 @@
-package io.bluetape4k.io.jackson.text.yaml
+package io.bluetape4k.jackson.text.yaml
 
-import io.bluetape4k.io.json.jackson.jacksonTypeRef
+import io.bluetape4k.json.jackson.jacksonTypeRef
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
