@@ -1,16 +1,16 @@
 package io.bluetape4k.vertx.sqlclient
 
-import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
+import io.bluetape4k.support.requireNotBlank
 import io.bluetape4k.testcontainers.jdbc.MySQL8Server
 import io.bluetape4k.utils.Resourcex
 import io.vertx.core.Vertx
 import io.vertx.jdbcclient.JDBCConnectOptions
 import io.vertx.jdbcclient.JDBCPool
 import io.vertx.junit5.VertxExtension
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.kotlin.coroutines.dispatcher
 import io.vertx.kotlin.jdbcclient.jdbcConnectOptionsOf
 import io.vertx.kotlin.mysqlclient.mySQLConnectOptionsOf
@@ -85,7 +85,7 @@ abstract class AbstractVertxSqlClientTest {
         pool.withTransactionSuspending { conn ->
             schemaFileNames.forEach { path ->
                 val query = Resourcex.getString("mybatis/schema/$dbType/$path")
-                conn.query(query).execute().await()
+                conn.query(query).execute().coAwait()
             }
         }
     }
@@ -93,7 +93,7 @@ abstract class AbstractVertxSqlClientTest {
     @AfterAll
     fun afterAll() {
         if (this::pool.isInitialized) {
-            runBlocking { pool.close().await() }
+            runBlocking { pool.close().coAwait() }
         }
     }
 }

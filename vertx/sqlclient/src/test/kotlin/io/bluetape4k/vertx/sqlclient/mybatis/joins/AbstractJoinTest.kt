@@ -682,11 +682,11 @@ abstract class AbstractJoinTest: AbstractVertxSqlClientTest() {
                 }.renderForVertx()
 
                 selectProvider.selectStatement shouldBeEqualTo
-                    "select p1.* " +
-                    "from Person p1 " +
-                    "join (select p2.id from Person p2 where p2.address_id = #{p1} order by id) p2 " +
-                    "on p1.id = p2.id " +
-                    "where p1.id < #{p2}"
+                        "select p1.* " +
+                        "from Person p1 " +
+                        "join (select p2.id from Person p2 where p2.address_id = #{p1} order by id) p2 " +
+                        "on p1.id = p2.id " +
+                        "where p1.id < #{p2}"
 
                 val persons = conn.selectList(selectProvider, PersonMapper)
                 persons.forEach { log.debug { it } }

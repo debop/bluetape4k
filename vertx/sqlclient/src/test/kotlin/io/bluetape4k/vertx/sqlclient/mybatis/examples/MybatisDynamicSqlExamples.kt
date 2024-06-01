@@ -10,7 +10,7 @@ import io.bluetape4k.vertx.sqlclient.schema.PersonSchema.person
 import io.bluetape4k.vertx.sqlclient.tests.testWithTransactionSuspending
 import io.vertx.core.Vertx
 import io.vertx.junit5.VertxTestContext
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.sqlclient.templates.SqlTemplate
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
@@ -44,7 +44,7 @@ class MybatisDynamicSqlExamples: AbstractVertxSqlClientTest() {
             val rows = SqlTemplate.forQuery(conn, sql)
                 .mapTo(PersonMapper)
                 .execute(mapOf("p1" to 1))
-                .await()
+                .coAwait()
 
             testContext.verify {
                 rows.size() shouldBeEqualTo 1

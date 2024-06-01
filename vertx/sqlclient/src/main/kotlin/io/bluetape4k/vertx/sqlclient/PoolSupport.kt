@@ -1,6 +1,6 @@
 package io.bluetape4k.vertx.sqlclient
 
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.sqlclient.Pool
 import io.vertx.sqlclient.SqlConnection
 import io.vertx.sqlclient.TransactionRollbackException
@@ -25,20 +25,20 @@ import java.sql.SQLException
 suspend fun <T> Pool.withTransactionSuspending(
     action: suspend (conn: SqlConnection) -> T,
 ): T {
-    val conn = connection.await()
-    val tx = conn.begin().await()
+    val conn = connection.coAwait()
+    val tx = conn.begin().coAwait()
 
     return try {
         val result = action(conn)
-        tx.commit().await()
+        tx.commit().coAwait()
         result
     } catch (e: TransactionRollbackException) {
         throw (e)
     } catch (e: Throwable) {
-        runCatching { tx.rollback().await() }
+        runCatching { tx.rollback().coAwait() }
         throw SQLException(e)
     } finally {
-        conn.close().await()
+        conn.close().coAwait()
     }
 }
 
@@ -52,18 +52,18 @@ suspend fun <T> Pool.withTransactionSuspending(
 suspend fun <T> Pool.withRollbackSuspending(
     action: suspend (conn: SqlConnection) -> T,
 ): T {
-    val conn = connection.await()
-    val tx = conn.begin().await()
+    val conn = connection.coAwait()
+    val tx = conn.begin().coAwait()
     return try {
         val result = action(conn)
-        tx.rollback().await()
+        tx.rollback().coAwait()
         result
     } catch (e: TransactionRollbackException) {
         throw (e)
     } catch (e: Throwable) {
-        runCatching { tx.rollback().await() }
+        runCatching { tx.rollback().coAwait() }
         throw SQLException(e)
     } finally {
-        conn.close().await()
+        conn.close().coAwait()
     }
 }

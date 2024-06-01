@@ -4,7 +4,7 @@ import io.bluetape4k.vertx.sqlclient.SqlLogger
 import io.bluetape4k.vertx.sqlclient.templates.LONG_ROW_MAPPER
 import io.bluetape4k.vertx.sqlclient.templates.toParameters
 import io.bluetape4k.vertx.sqlclient.templates.tupleMapperOfRecord
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.sqlclient.Row
 import io.vertx.sqlclient.RowSet
 import io.vertx.sqlclient.SqlClient
@@ -51,7 +51,7 @@ suspend fun SqlClient.count(
     return SqlTemplate.forQuery(this, countProvider.selectStatement)
         .mapTo(LONG_ROW_MAPPER)
         .execute(countProvider.parameters)
-        .await()
+        .coAwait()
         .firstOrNull() ?: -1L
 }
 
@@ -90,7 +90,7 @@ suspend fun SqlClient.delete(deleteProvider: DeleteStatementProvider): SqlResult
 
     return SqlTemplate.forUpdate(this, deleteProvider.deleteStatement)
         .execute(deleteProvider.parameters)
-        .await()
+        .coAwait()
 }
 
 suspend fun SqlClient.deleteFrom(table: SqlTable, completer: DeleteCompleter): SqlResult<Void> {
@@ -115,7 +115,7 @@ suspend fun <T: Any> SqlClient.insertBatch(batchInsert: BatchInsert<T>): SqlResu
     return SqlTemplate.forUpdate(this, batchInsert.insertStatementSQL)
         .mapFrom<T>(tupleMapperOfRecord())
         .executeBatch(batchInsert.records)
-        .await()
+        .coAwait()
 }
 
 suspend fun <T: Any> SqlClient.insertBatch(
@@ -144,7 +144,7 @@ suspend fun <T: Any> SqlClient.insert(insertProvider: InsertStatementProvider<T>
     return SqlTemplate.forUpdate(this, insertProvider.insertStatement)
         .mapFrom(tupleMapperOfRecord<T>())
         .execute(insertProvider.row)
-        .await()
+        .coAwait()
 }
 
 suspend fun <T: Any> SqlClient.insert(entity: T, completer: KotlinInsertCompleter<T>): SqlResult<Void> {
@@ -158,7 +158,7 @@ suspend fun SqlClient.generalInsert(insertProvider: GeneralInsertStatementProvid
 
     return SqlTemplate.forUpdate(this, insertProvider.insertStatement)
         .execute(insertProvider.parameters)
-        .await()
+        .coAwait()
 }
 
 suspend fun SqlClient.generalInsert(table: SqlTable, completer: GeneralInsertCompleter): SqlResult<Void> {
@@ -192,7 +192,7 @@ suspend fun <T: Any> SqlClient.insertMultiple(insertProvider: MultiRowInsertStat
 
     return SqlTemplate.forUpdate(this, insertProvider.insertStatement)
         .execute(insertProvider.records.toParameters())
-        .await()
+        .coAwait()
 }
 
 //
@@ -203,7 +203,7 @@ suspend fun SqlClient.insertSelect(provider: InsertSelectStatementProvider): Sql
 
     return SqlTemplate.forUpdate(this, provider.insertStatement)
         .execute(provider.parameters)
-        .await()
+        .coAwait()
 }
 
 suspend fun SqlClient.insertSelect(completer: InsertSelectCompleter): SqlResult<Void> {
@@ -220,7 +220,7 @@ suspend fun SqlClient.select(provider: SelectStatementProvider): RowSet<Row> {
 
     return SqlTemplate.forQuery(this, provider.selectStatement)
         .execute(provider.parameters)
-        .await()
+        .coAwait()
 }
 
 suspend fun SqlClient.select(vararg columns: BasicColumn, completer: SelectCompleter): RowSet<Row> {
@@ -239,7 +239,7 @@ suspend fun <T: Any> SqlClient.select(provider: SelectStatementProvider, rowMapp
     return SqlTemplate.forQuery(this, provider.selectStatement)
         .mapTo(rowMapper)
         .execute(provider.parameters)
-        .await()
+        .coAwait()
 }
 
 suspend fun <T: Any> SqlClient.select(
@@ -259,7 +259,7 @@ suspend inline fun <reified T: Any> SqlClient.selectAs(provider: SelectStatement
     return SqlTemplate.forQuery(this, provider.selectStatement)
         .mapTo(T::class.java)
         .execute(provider.parameters)
-        .await()
+        .coAwait()
 }
 
 suspend inline fun <reified T: Any> SqlClient.selectAs(
@@ -277,7 +277,7 @@ internal suspend fun SqlClient.selectDistinct(provider: SelectStatementProvider)
 
     return SqlTemplate.forQuery(this, provider.selectStatement)
         .execute(provider.parameters)
-        .await()
+        .coAwait()
 }
 
 suspend fun SqlClient.selectDistinct(vararg columns: BasicColumn, completer: SelectCompleter): RowSet<Row> {
@@ -294,7 +294,7 @@ suspend inline fun <reified T: Any> SqlClient.selectListAs(provider: SelectState
     return SqlTemplate.forQuery(this, provider.selectStatement)
         .mapTo(T::class.java)
         .execute(provider.parameters)
-        .await()
+        .coAwait()
         .map { it }
 }
 
@@ -304,7 +304,7 @@ suspend fun <T> SqlClient.selectList(provider: SelectStatementProvider, mapper: 
     return SqlTemplate.forQuery(this, provider.selectStatement)
         .mapTo(mapper)
         .execute(provider.parameters)
-        .await()
+        .coAwait()
         .map { it }
 }
 
@@ -323,7 +323,7 @@ suspend fun SqlClient.selectOne(provider: SelectStatementProvider): Row? {
 
     return SqlTemplate.forQuery(this, provider.selectStatement)
         .execute(provider.parameters)
-        .await()
+        .coAwait()
         .firstOrNull()
 }
 
@@ -343,7 +343,7 @@ suspend fun <T: Any> SqlClient.selectOne(provider: SelectStatementProvider, mapp
     return SqlTemplate.forQuery(this, provider.selectStatement)
         .mapTo(mapper)
         .execute(provider.parameters)
-        .await()
+        .coAwait()
         .firstOrNull()
 }
 
@@ -352,7 +352,7 @@ suspend inline fun <reified T: Any> SqlClient.selectOneAs(provider: SelectStatem
     return SqlTemplate.forQuery(this, provider.selectStatement)
         .mapTo(T::class.java)
         .execute(provider.parameters)
-        .await()
+        .coAwait()
         .firstOrNull()
 }
 
@@ -372,7 +372,7 @@ suspend fun SqlClient.update(provider: UpdateStatementProvider): SqlResult<Void>
 
     return SqlTemplate.forUpdate(this, provider.updateStatement)
         .execute(provider.parameters)
-        .await()
+        .coAwait()
 }
 
 suspend fun SqlClient.update(table: SqlTable, completer: UpdateCompleter): SqlResult<Void> {

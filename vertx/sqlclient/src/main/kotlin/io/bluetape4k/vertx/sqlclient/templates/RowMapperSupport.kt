@@ -2,7 +2,7 @@ package io.bluetape4k.vertx.sqlclient.templates
 
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.vertx.sqlclient.Row
 import io.vertx.sqlclient.templates.RowMapper
 

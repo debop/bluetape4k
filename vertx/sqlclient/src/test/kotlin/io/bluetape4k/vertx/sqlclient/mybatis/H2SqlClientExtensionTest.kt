@@ -34,9 +34,9 @@ class H2SqlClientExtensionTest: AbstractSqlClientExtensionsTest() {
             }.renderForVertx()
 
             updateProvider.updateStatement shouldBeEqualTo
-                "update Person " +
-                "set address_id = (select (max(address_id) + 1) from Person) " +
-                "where id = #{p1}"
+                    "update Person " +
+                    "set address_id = (select (max(address_id) + 1) from Person) " +
+                    "where id = #{p1}"
 
             updateProvider.parameters shouldContainSame mapOf("p1" to 3)
 

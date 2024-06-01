@@ -1,6 +1,5 @@
 package io.bluetape4k.vertx.sqlclient.schema
 
-import io.bluetape4k.collections.eclipse.fastListOf
 import org.mybatis.dynamic.sql.AliasableSqlTable
 import java.io.Serializable
 import java.time.LocalDate
@@ -50,7 +49,7 @@ data class OrderMaster(
     val orderId: Int? = null,
     var orderDate: LocalDate? = null,
 ): Comparable<OrderMaster>, java.io.Serializable {
-    val details: MutableList<OrderDetail> = fastListOf()
+    val details: MutableList<OrderDetail> = mutableListOf()
 
     override fun compareTo(other: OrderMaster): Int {
         return orderId?.compareTo(other.orderId ?: 0) ?: 0
