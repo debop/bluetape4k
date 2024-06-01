@@ -69,8 +69,12 @@ dependencies {
     compileOnly(Libs.marshalling)
     compileOnly(Libs.marshalling_river)
     compileOnly(Libs.marshalling_serial)
+    compileOnly(Libs.fury)
 
     compileOnly(Libs.jackson_dataformat_protobuf)
+
+    // Json
+    compileOnly(project(":bluetape4k-json"))
     compileOnly(Libs.jackson_module_kotlin)
 
     // Compressor
@@ -88,7 +92,6 @@ dependencies {
     compileOnly(Libs.caffeine_jcache)
 
     compileOnly(Libs.kotlinx_coroutines_core)
-    compileOnly(Libs.kotlinx_coroutines_jdk8)
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 
