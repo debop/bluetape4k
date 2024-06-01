@@ -1,6 +1,6 @@
 package io.bluetape4k.math.special
 
-import io.bluetape4k.infra.cache.memorizer.inmemory.InMemoryMemorizer
+import io.bluetape4k.cache.memorizer.inmemory.InMemoryMemorizer
 import io.bluetape4k.support.assertZeroOrPositiveNumber
 import org.apache.commons.math3.special.Gamma.logGamma
 import java.util.concurrent.ConcurrentHashMap
