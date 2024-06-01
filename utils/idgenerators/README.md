@@ -1,4 +1,4 @@
-# Module bluetape4k-utils-idgenerators
+# Module bluetape4k-idgenerators
 
 Unique 한 ID 값을 다양한 방식으로 제공하는 라이브러리입니다.
 
@@ -9,7 +9,7 @@ Unique 한 ID 값을 다양한 방식으로 제공하는 라이브러리입니�
 
 ```kotlin
 val snowflake = DefaultSnowflake(1)     // DefaultSnowflake 생성
-val id1: Long = snowflake.nextId()      
+val id1: Long = snowflake.nextId()
 val id2: Long = snowflake.nextId()
 ```
 
@@ -19,7 +19,7 @@ snowflake 알고리즘보다 더 많은 ID를 생성할 수 있습니다.
 
 ```kotlin
 val snowflake = UnifiedSnowflake()      // GlobalSnowflake 생성
-val id1: Long = snowflake.nextId()      
+val id1: Long = snowflake.nextId()
 val id2: Long = snowflake.nextId()
 ```
 
