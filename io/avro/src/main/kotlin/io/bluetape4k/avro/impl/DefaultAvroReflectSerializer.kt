@@ -1,7 +1,7 @@
-package io.bluetape4k.io.avro.impl
+package io.bluetape4k.avro.impl
 
-import io.bluetape4k.io.avro.AvroReflectSerializer
-import io.bluetape4k.io.avro.DEFAULT_CODEC_FACTORY
+import io.bluetape4k.avro.AvroReflectSerializer
+import io.bluetape4k.avro.DEFAULT_CODEC_FACTORY
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import org.apache.avro.file.CodecFactory

@@ -89,7 +89,7 @@ class SpringCacheUsingNearCacheTest {
     /**
      * NearCache 를 통해 Spring Cache를 사용하는 SpringBootApplication 입니다.
      *
-     * ** `spring.cache.jcache.provider` 프로퍼티가 [io.wrtn.kommons.cache.nearcache.redis.RedisNearCachingProvider] 로 설정되어야 합니다.**
+     * ** `spring.cache.jcache.provider` 프로퍼티가 [io.bluetape4k.cache.nearcache.redis.RedisNearCachingProvider] 로 설정되어야 합니다.**
      *
      * (이 테스트에서의 @SpringBootTest 어노테이션에서 정의해 두었습니다)
      */

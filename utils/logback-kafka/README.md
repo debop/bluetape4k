@@ -11,7 +11,7 @@
         <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- Appender to log to Kafka -->
-    <appender name="Kafka" class="io.wrtn.kommons.logback.kafka.KafkaAppender">
+    <appender name="Kafka" class="io.bluetape4k.logback.kafka.KafkaAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [${HOSTNAME}] %level [%thread] %logger: %msg\n%throwable</pattern>
         </encoder>
@@ -25,9 +25,9 @@
         <producerConfig>linger.ms=100</producerConfig>
 
         <!-- 로그 정보를 기준으로 Key를 생성하여 Partitioning 을 할 수 있다. 기본값은 NullKafkaKeyProvider 를 사용하세요. -->
-        <keyProvider class="io.wrtn.kommons.logback.kafka.keyprovider.HostnameKafkaKeyProvider"/>
+        <keyProvider class="io.bluetape4k.logback.kafka.keyprovider.HostnameKafkaKeyProvider"/>
         <!-- 로그를 비동기 방식으로 Kafka 로 Export 하는 KafkaExporter 입니다. -->
-        <exporter class="io.wrtn.kommons.logback.kafka.exporter.DefaultKafkaExporter"/>
+        <exporter class="io.bluetape4k.logback.kafka.exporter.DefaultKafkaExporter"/>
     </appender>
 
     <!-- Appender to log to console -->
@@ -45,7 +45,7 @@
         <appender-ref ref="Kafka"/>
     </logger>
 
-    <logger name="io.wrtn.kommons" level="DEBUG"/>
+    <logger name="io.bluetape4k" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="Console"/>

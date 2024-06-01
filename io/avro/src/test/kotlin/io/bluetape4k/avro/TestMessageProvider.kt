@@ -1,12 +1,11 @@
-package io.bluetape4k.io.avro
+package io.bluetape4k.avro
 
-import io.bluetape4k.collections.eclipse.fastList
-import io.bluetape4k.io.avro.message.examples.Employee
-import io.bluetape4k.io.avro.message.examples.EmployeeList
-import io.bluetape4k.io.avro.message.examples.EventType
-import io.bluetape4k.io.avro.message.examples.ProductProperty
-import io.bluetape4k.io.avro.message.examples.ProductRoot
-import io.bluetape4k.io.avro.message.examples.Suit
+import io.bluetape4k.avro.message.examples.Employee
+import io.bluetape4k.avro.message.examples.EmployeeList
+import io.bluetape4k.avro.message.examples.EventType
+import io.bluetape4k.avro.message.examples.ProductProperty
+import io.bluetape4k.avro.message.examples.ProductRoot
+import io.bluetape4k.avro.message.examples.Suit
 import io.bluetape4k.junit5.faker.Fakers
 
 object TestMessageProvider {
@@ -30,13 +29,13 @@ object TestMessageProvider {
 
     fun createEmployeeList(count: Int = COUNT): EmployeeList =
         EmployeeList.newBuilder()
-            .setEmps(fastList(count) { createEmployee() })
+            .setEmps(List(count) { createEmployee() })
             .build()
 
 
     private fun getValues() = mapOf(
         "name" to faker.name().fullName(),
-        "nick" to faker.name().username(),
+        "nick" to faker.funnyName().name(),
     )
 
     fun createProductProperty(id: Long = 1L, valid: Boolean = true): ProductProperty =

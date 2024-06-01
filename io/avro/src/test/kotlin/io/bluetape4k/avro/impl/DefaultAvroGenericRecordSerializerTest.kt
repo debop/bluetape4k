@@ -1,10 +1,10 @@
-package io.bluetape4k.io.avro.impl
+package io.bluetape4k.avro.impl
 
-import io.bluetape4k.io.avro.AbstractAvroTest
-import io.bluetape4k.io.avro.TestMessageProvider
-import io.bluetape4k.io.avro.message.examples.Employee
-import io.bluetape4k.io.avro.message.examples.EmployeeList
-import io.bluetape4k.io.avro.message.examples.ProductRoot
+import io.bluetape4k.avro.AbstractAvroTest
+import io.bluetape4k.avro.TestMessageProvider
+import io.bluetape4k.avro.message.examples.Employee
+import io.bluetape4k.avro.message.examples.EmployeeList
+import io.bluetape4k.avro.message.examples.ProductRoot
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import org.amshove.kluent.shouldBeEqualTo

@@ -1,4 +1,4 @@
-@namespace("io.bluetape4k.io.avro.message.examples")
+@namespace("io.bluetape4k.avro.message.examples")
 protocol SampleEventProtocol {
 
 	record SampleEventRoot {

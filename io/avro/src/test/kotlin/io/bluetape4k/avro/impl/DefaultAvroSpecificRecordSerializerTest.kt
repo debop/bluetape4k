@@ -1,8 +1,8 @@
-package io.bluetape4k.io.avro.impl
+package io.bluetape4k.avro.impl
 
-import io.bluetape4k.io.avro.AbstractAvroTest
-import io.bluetape4k.io.avro.TestMessageProvider
-import io.bluetape4k.io.avro.deserialize
+import io.bluetape4k.avro.AbstractAvroTest
+import io.bluetape4k.avro.TestMessageProvider
+import io.bluetape4k.avro.deserialize
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
@@ -10,27 +10,31 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
+import org.apache.avro.file.CodecFactory
+import org.apache.avro.specific.SpecificRecord
 import org.junit.jupiter.api.RepeatedTest
-import io.bluetape4k.io.avro.message.examples.v1.VersionedItem as ItemV1
-import io.bluetape4k.io.avro.message.examples.v2.VersionedItem as ItemV2
+import io.bluetape4k.avro.message.examples.v1.VersionedItem as ItemV1
+import io.bluetape4k.avro.message.examples.v2.VersionedItem as ItemV2
 
 @RandomizedTest
-class DefaultAvroReflectSerializerTest: AbstractAvroTest() {
+class DefaultAvroSpecificRecordSerializerTest: AbstractAvroTest() {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 5
     }
 
     private val serializers = listOf(
-        DefaultAvroReflectSerializer(),
+        DefaultAvroSpecificRecordSerializer(),
+        DefaultAvroSpecificRecordSerializer(CodecFactory.deflateCodec(6)),
+        DefaultAvroSpecificRecordSerializer(CodecFactory.zstandardCodec(3)),
     )
 
-    private inline fun <reified T: Any> verifySerialization(avroObject: T) {
+    private inline fun <reified T: SpecificRecord> verifySerialization(avroObject: T) {
         serializers.forEach { serializer ->
             val bytes = serializer.serialize(avroObject)!!
             bytes.shouldNotBeEmpty()
 
-            val converted = serializer.deserialize(bytes, T::class.java)
+            val converted = serializer.deserialize<T>(bytes)
             converted.shouldNotBeNull()
             converted shouldBeEqualTo avroObject
         }
@@ -60,7 +64,6 @@ class DefaultAvroReflectSerializerTest: AbstractAvroTest() {
         verifySerialization(item)
     }
 
-    // @Disabled("Reflection에서는 Subclass 로 casting 하지 못한다")
     @RepeatedTest(REPEAT_SIZE)
     fun `serialize v1 and deserialize as v2`(@RandomValue item: ItemV1) {
         serializers.forEach { serializer ->

@@ -1,4 +1,4 @@
-@namespace("io.bluetape4k.io.avro.message.examples.v1")
+@namespace("io.bluetape4k.avro.message.examples.v1")
 protocol SchemaEvolutionProtocol {
 
 	record VersionedItem {

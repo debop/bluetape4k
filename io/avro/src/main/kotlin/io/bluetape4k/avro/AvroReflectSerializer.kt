@@ -1,4 +1,4 @@
-package io.bluetape4k.io.avro
+package io.bluetape4k.avro
 
 import io.bluetape4k.codec.decodeBase64ByteArray
 import io.bluetape4k.codec.encodeBase64String

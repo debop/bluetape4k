@@ -35,7 +35,7 @@ Gradle Build 에서 `kommons-bloomfilter` 라이브러를 참조에 추가하시
 .Setup dependencies
 ----
 dependencies {
-    compile "io.wrtn.kommons:kommons-bloomfilter:${kommons_version}"
+    compile "io.bluetape4k:kommons-bloomfilter:${kommons_version}"
 }
 ----
 

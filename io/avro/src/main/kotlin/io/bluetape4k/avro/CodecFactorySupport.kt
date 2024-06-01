@@ -1,4 +1,4 @@
-package io.bluetape4k.io.avro
+package io.bluetape4k.avro
 
 import org.apache.avro.file.CodecFactory
 
