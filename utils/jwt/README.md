@@ -1,4 +1,4 @@
-# Module bluetape4k-utils-jwt
+# Module bluetape4k-jwt
 
 ## TODO
 
