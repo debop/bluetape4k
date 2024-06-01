@@ -1,4 +1,4 @@
-# Module Bluetape4k Spring R2DBC
+# Module Bluetape4k R2DBC
 
 ## 참고 자료
 
