@@ -1,15 +1,15 @@
-package io.wrtn.kommons.bloomfilter.inmemory
+package io.bluetape4k.bloomfilter.inmemory
 
-import io.wrtn.kommons.bloomfilter.DEFAULT_ERROR_RATE
-import io.wrtn.kommons.bloomfilter.DEFAULT_MAX_NUM
-import io.wrtn.kommons.bloomfilter.Hasher
-import io.wrtn.kommons.bloomfilter.MutableBloomFilter
-import io.wrtn.kommons.bloomfilter.optimalK
-import io.wrtn.kommons.bloomfilter.optimalM
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.support.assertPositiveNumber
-import io.wrtn.kommons.support.requireNotBlank
-import io.wrtn.kommons.support.setAll
+import io.bluetape4k.bloomfilter.DEFAULT_ERROR_RATE
+import io.bluetape4k.bloomfilter.DEFAULT_MAX_NUM
+import io.bluetape4k.bloomfilter.Hasher
+import io.bluetape4k.bloomfilter.MutableBloomFilter
+import io.bluetape4k.bloomfilter.optimalK
+import io.bluetape4k.bloomfilter.optimalM
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.assertPositiveNumber
+import io.bluetape4k.support.requireNotBlank
+import io.bluetape4k.support.setAll
 import kotlinx.atomicfu.AtomicBoolean
 import kotlinx.atomicfu.atomic
 import java.util.concurrent.locks.ReentrantLock

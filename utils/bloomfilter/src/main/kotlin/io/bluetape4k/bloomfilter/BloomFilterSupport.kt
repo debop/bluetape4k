@@ -1,4 +1,4 @@
-package io.wrtn.kommons.bloomfilter
+package io.bluetape4k.bloomfilter
 
 import kotlin.math.ceil
 import kotlin.math.ln

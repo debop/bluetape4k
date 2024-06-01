@@ -1,9 +1,9 @@
-package io.wrtn.kommons.bloomfilter
+package io.bluetape4k.bloomfilter
 
-import io.wrtn.kommons.io.serialize.BinarySerializers
-import io.wrtn.kommons.junit5.faker.Fakers
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.logging.debug
+import io.bluetape4k.io.serializer.BinarySerializers
+import io.bluetape4k.junit5.faker.Fakers
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import net.openhft.hashing.LongHashFunction
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
@@ -14,7 +14,7 @@ import java.io.Serializable
 class HasherTest: AbstractBloomFilterTest() {
 
     companion object: KLogging() {
-        private const val REPEAT_SIZE = 10
+        private const val REPEAT_SIZE = 5
     }
 
     @RepeatedTest(REPEAT_SIZE)

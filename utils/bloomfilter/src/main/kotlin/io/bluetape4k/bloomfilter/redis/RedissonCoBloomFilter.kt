@@ -1,14 +1,14 @@
-package io.wrtn.kommons.bloomfilter.redis
+package io.bluetape4k.bloomfilter.redis
 
-import io.wrtn.kommons.bloomfilter.CoBloomFilter
-import io.wrtn.kommons.bloomfilter.DEFAULT_ERROR_RATE
-import io.wrtn.kommons.bloomfilter.DEFAULT_MAX_NUM
-import io.wrtn.kommons.bloomfilter.Hasher
-import io.wrtn.kommons.bloomfilter.optimalK
-import io.wrtn.kommons.bloomfilter.optimalM
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.logging.info
-import io.wrtn.kommons.redis.redisson.coroutines.coAwait
+import io.bluetape4k.bloomfilter.CoBloomFilter
+import io.bluetape4k.bloomfilter.DEFAULT_ERROR_RATE
+import io.bluetape4k.bloomfilter.DEFAULT_MAX_NUM
+import io.bluetape4k.bloomfilter.Hasher
+import io.bluetape4k.bloomfilter.optimalK
+import io.bluetape4k.bloomfilter.optimalM
+import io.bluetape4k.coroutines.support.coAwait
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.info
 import org.redisson.api.RedissonClient
 
 class RedissonCoBloomFilter<T: Any> private constructor(

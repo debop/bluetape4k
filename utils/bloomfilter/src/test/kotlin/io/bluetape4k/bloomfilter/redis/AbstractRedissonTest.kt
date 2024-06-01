@@ -1,7 +1,7 @@
-package io.wrtn.kommons.bloomfilter.redis
+package io.bluetape4k.bloomfilter.redis
 
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.testcontainers.storage.RedisServer
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.testcontainers.storage.RedisServer
 import org.redisson.api.RedissonClient
 
 abstract class AbstractRedissonTest {

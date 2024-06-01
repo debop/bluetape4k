@@ -1,10 +1,10 @@
-package io.wrtn.kommons.bloomfilter.inmemory
+package io.bluetape4k.bloomfilter.inmemory
 
-import io.wrtn.kommons.bloomfilter.AbstractBloomFilterTest
-import io.wrtn.kommons.bloomfilter.DEFAULT_ERROR_RATE
-import io.wrtn.kommons.junit5.faker.Fakers
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.logging.debug
+import io.bluetape4k.bloomfilter.AbstractBloomFilterTest
+import io.bluetape4k.bloomfilter.DEFAULT_ERROR_RATE
+import io.bluetape4k.junit5.faker.Fakers
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
@@ -20,7 +20,10 @@ class InMemoryMutableBloomFilterTest: AbstractBloomFilterTest() {
         private const val ITEM_SIZE = 1000
     }
 
-    private val bloomFilter = InMemoryMutableBloomFilter(2_000_000L, DEFAULT_ERROR_RATE)
+    private val bloomFilter = InMemoryMutableBloomFilter(
+        2_000_000L,
+        DEFAULT_ERROR_RATE
+    )
 
     @BeforeEach
     fun beforeEach() {

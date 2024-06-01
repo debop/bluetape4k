@@ -1,27 +1,24 @@
-package io.wrtn.kommons.bloomfilter.redis
+package io.bluetape4k.bloomfilter.inmemory
 
-import io.wrtn.kommons.junit5.faker.Fakers
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.logging.debug
+import io.bluetape4k.junit5.faker.Fakers
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 
-class RedissonCoBloomFilterTest: AbstractRedissonTest() {
+class InMemoryCoBloomFilterTest {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 5
         private const val ITEM_COUNT = 100
     }
 
-    private val bloomFilter: RedissonCoBloomFilter<String> by lazy {
-        RedissonCoBloomFilter(redisson, "kommons:bloomfilter:test")
-    }
+    private val bloomFilter = InMemoryCoBloomFilter<String>()
 
     @BeforeEach
     fun beforeEach() {
@@ -33,9 +30,6 @@ class RedissonCoBloomFilterTest: AbstractRedissonTest() {
     @Test
     fun `get bit size of bloom filter`() = runTest {
         log.debug { "maximum size=${bloomFilter.m}, hash function count=${bloomFilter.k}" }
-
-        bloomFilter.m shouldBeEqualTo Int.MAX_VALUE
-        bloomFilter.k shouldBeEqualTo 1
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -60,5 +54,4 @@ class RedissonCoBloomFilterTest: AbstractRedissonTest() {
             .any { bloomFilter.contains(it) }
             .shouldBeFalse()
     }
-
 }

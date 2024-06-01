@@ -1,4 +1,4 @@
-package io.wrtn.kommons.bloomfilter
+package io.bluetape4k.bloomfilter
 
 interface MutableBloomFilter<T: Any>: BloomFilter<T> {
 

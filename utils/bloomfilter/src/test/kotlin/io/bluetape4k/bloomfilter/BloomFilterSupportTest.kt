@@ -1,7 +1,7 @@
-package io.wrtn.kommons.bloomfilter
+package io.bluetape4k.bloomfilter
 
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.logging.debug
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 

@@ -1,7 +1,7 @@
-package io.wrtn.kommons.bloomfilter
+package io.bluetape4k.bloomfilter
 
-import io.wrtn.kommons.io.serialize.BinarySerializers
-import io.wrtn.kommons.logging.KLogging
+import io.bluetape4k.io.serializer.BinarySerializers
+import io.bluetape4k.logging.KLogging
 import net.openhft.hashing.LongHashFunction
 import java.io.Serializable
 import kotlin.math.absoluteValue

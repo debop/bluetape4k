@@ -1,6 +1,6 @@
-package io.wrtn.kommons.bloomfilter
+package io.bluetape4k.bloomfilter
 
-import io.wrtn.kommons.logging.KLogging
+import io.bluetape4k.logging.KLogging
 
 abstract class AbstractBloomFilterTest {
 
