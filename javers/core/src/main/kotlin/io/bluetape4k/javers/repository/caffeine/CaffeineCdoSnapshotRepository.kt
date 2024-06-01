@@ -1,7 +1,7 @@
 package io.bluetape4k.javers.repository.caffeine
 
 import com.github.benmanes.caffeine.cache.Cache
-import io.bluetape4k.infra.cache.caffeine.caffeine
+import io.bluetape4k.cache.caffeine.caffeine
 import io.bluetape4k.javers.codecs.GsonCodec
 import io.bluetape4k.javers.codecs.GsonCodecs
 import io.bluetape4k.javers.repository.AbstractCdoSnapshotRepository

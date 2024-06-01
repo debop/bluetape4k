@@ -1,7 +1,5 @@
 package io.bluetape4k.javers.persistence.redis.repository
 
-import io.bluetape4k.data.redis.lettuce.LettuceClients
-import io.bluetape4k.data.redis.lettuce.codec.LettuceBinaryCodecs
 import io.bluetape4k.javers.codecs.GsonCodec
 import io.bluetape4k.javers.codecs.GsonCodecs
 import io.bluetape4k.javers.repository.AbstractCdoSnapshotRepository
@@ -9,6 +7,8 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
 import io.bluetape4k.logging.trace
+import io.bluetape4k.redis.lettuce.LettuceClients
+import io.bluetape4k.redis.lettuce.codec.LettuceBinaryCodecs
 import io.bluetape4k.support.asByteArray
 import io.bluetape4k.support.asInt
 import io.bluetape4k.support.asLongOrNull

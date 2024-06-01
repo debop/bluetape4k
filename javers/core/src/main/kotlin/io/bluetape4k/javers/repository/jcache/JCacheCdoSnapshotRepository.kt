@@ -1,6 +1,6 @@
 package io.bluetape4k.javers.repository.jcache
 
-import io.bluetape4k.infra.cache.jcache.getOrCreate
+import io.bluetape4k.cache.jcache.getOrCreate
 import io.bluetape4k.javers.codecs.GsonCodec
 import io.bluetape4k.javers.codecs.GsonCodecs
 import io.bluetape4k.javers.repository.AbstractCdoSnapshotRepository

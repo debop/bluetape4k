@@ -40,6 +40,7 @@ dependencies {
 
     // Codec
     compileOnly(Libs.kryo)
+    compileOnly(Libs.fury)
     compileOnly(Libs.snappy_java)
     compileOnly(Libs.lz4_java)
     compileOnly(Libs.zstd_jni)

@@ -4,7 +4,7 @@
         <immediateFlush>true</immediateFlush>
         <encoder>
             <!-- @formatter:off -->
-            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%blue(%.24t)] %yellow(%logger{36}):%line: %msg%n%throwable</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%blue(%24.24t)] %yellow(%logger{36}):%line: %msg%n%throwable</pattern>
             <!-- @formatter:on -->
             <charset>UTF-8</charset>
         </encoder>
@@ -17,7 +17,7 @@
     <logger name="org.javers.JQL" level="DEBUG"/>
     <logger name="org.javers.TypeMapper" level="DEBUG"/>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="Console"/>
     </root>
 </configuration>

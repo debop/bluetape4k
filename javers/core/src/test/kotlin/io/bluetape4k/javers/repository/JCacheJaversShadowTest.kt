@@ -1,6 +1,6 @@
 package io.bluetape4k.javers.repository
 
-import io.bluetape4k.infra.cache.jcache.JCaching
+import io.bluetape4k.cache.jcache.JCaching
 import io.bluetape4k.javers.repository.jcache.JCacheCdoSnapshotRepository
 import org.javers.repository.api.JaversRepository
 import org.javers.repository.jql.AbstractJaversShadowTest
