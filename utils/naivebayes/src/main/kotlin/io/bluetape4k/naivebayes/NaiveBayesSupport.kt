@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.naivebayes
+package io.bluetape4k.naivebayes
 
 data class BayesInput<F: Any, C: Any>(val category: C, val features: Set<F>)
 

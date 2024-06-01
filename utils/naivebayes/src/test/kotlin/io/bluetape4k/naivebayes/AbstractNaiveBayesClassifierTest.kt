@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.naivebayes
+package io.bluetape4k.naivebayes
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanTokenizer

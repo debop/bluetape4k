@@ -1,9 +1,5 @@
-package io.bluetape4k.utils.naivebayes
+package io.bluetape4k.naivebayes
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.toUnifiedMap
-import io.bluetape4k.collections.eclipse.toUnifiedSet
-import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
@@ -14,9 +10,6 @@ import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
-import org.eclipse.collections.api.list.ImmutableList
-import org.eclipse.collections.impl.list.mutable.FastList
-import org.eclipse.collections.impl.map.mutable.UnifiedMap
 import kotlin.math.exp
 import kotlin.math.ln
 
@@ -43,10 +36,10 @@ class NaiveBayesClassifier<F: Any, C: Any>(
     }
 
     @Volatile
-    private var probabilities: UnifiedMap<FeatureProbability.Key<F, C>, FeatureProbability<F, C>> = unifiedMapOf()
+    private var probabilities: Map<FeatureProbability.Key<F, C>, FeatureProbability<F, C>> = mutableMapOf()
 
-    private val _population: FastList<BayesInput<F, C>> = fastListOf()
-    val population: ImmutableList<BayesInput<F, C>> get() = _population.toImmutable()
+    private val _population: MutableList<BayesInput<F, C>> = mutableListOf()
+    val population: List<BayesInput<F, C>> get() = _population.toList()
 
     private val modelStaler = atomic(false)
     private var modelStaled: Boolean by modelStaler
@@ -58,7 +51,7 @@ class NaiveBayesClassifier<F: Any, C: Any>(
         if (_population.size == observationLimit) {
             _population.removeAt(0)
         }
-        _population += BayesInput(category, features.toUnifiedSet())
+        _population += BayesInput(category, features.toSet())
         modelStaler.value = true
     }
 
@@ -80,7 +73,7 @@ class NaiveBayesClassifier<F: Any, C: Any>(
                     .map { c -> FeatureProbability.Key(f, c) }
             }
             .map { it to FeatureProbability(it.feature, it.category, this) }
-            .toUnifiedMap()
+            .toMap()
 
         modelStaler.value = false
     }
@@ -89,7 +82,7 @@ class NaiveBayesClassifier<F: Any, C: Any>(
      * Returns the categories that have been captured by the model so far.
      */
     val categories: Set<C>
-        get() = probabilities.keys.map { it.category }.toUnifiedSet()
+        get() = probabilities.keys.map { it.category }.toSet()
 
     /**
      *  Predicts a category `C` for a given set of `F` features
@@ -160,11 +153,11 @@ class NaiveBayesClassifier<F: Any, C: Any>(
 
         val probability: Double =
             (nbc.k1 + nbc.population.count { it.category == category && feature in it.features }) /
-                (nbc.k2 + nbc.population.count { it.category == category })
+                    (nbc.k2 + nbc.population.count { it.category == category })
 
         val notProbability: Double =
             (nbc.k1 + nbc.population.count { it.category != category && feature in it.features }) /
-                (nbc.k2 + nbc.population.count { it.category != category })
+                    (nbc.k2 + nbc.population.count { it.category != category })
 
         val key: Key<F, C> get() = Key(feature, category)
     }
