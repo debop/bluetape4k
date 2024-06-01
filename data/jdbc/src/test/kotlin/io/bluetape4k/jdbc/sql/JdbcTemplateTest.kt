@@ -1,4 +1,4 @@
-package io.bluetape4k.data.jdbc.sql
+package io.bluetape4k.jdbc.sql
 
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
@@ -73,9 +73,10 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
     @Test
     fun `query by resultset extractor`() {
         val actual = dataSource.withStatement { stmt ->
-            stmt.executeQuery(SELECT1).extract {
-                string["description"]
-            }
+            stmt.executeQuery(SELECT1)
+                .extract {
+                    string["description"]
+                }
         }
         actual.firstOrNull() shouldBeEqualTo EXPECTED_DESC
     }
@@ -93,9 +94,13 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
 
     @Test
     fun `query by statement with arguments`() {
-        val ids = jdbcTemplate.query(SELECT_ID_BY_DESCRIPTION,
-            PreparedStatementSetter { ps -> ps.arguments { string[1] = EXPECTED_DESC } },
-            ResultSetExtractor { rs -> rs.extract { int["id"] } })
+        val ids = jdbcTemplate
+            .query(
+                SELECT_ID_BY_DESCRIPTION,
+                PreparedStatementSetter { ps -> ps.arguments { string[1] = EXPECTED_DESC } },
+                ResultSetExtractor { rs -> rs.extract { int["id"] }.toList() }
+            )
+
         ids?.firstOrNull() shouldBeEqualTo 1
     }
 
@@ -108,11 +113,11 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
             rsFunction
         )?.firstOrNull() shouldBeEqualTo 1
 
-//        jdbcTemplate.query(
-//            SELECT_ID_BY_DESCRIPTION,
-//            arrayOf("python"),
-//            rsFunction
-//        )?.firstOrNull() shouldBeEqualTo 1
+        //        jdbcTemplate.query(
+        //            SELECT_ID_BY_DESCRIPTION,
+        //            arrayOf("python"),
+        //            rsFunction
+        //        )?.firstOrNull() shouldBeEqualTo 1
 
         jdbcTemplate.query(
             { conn: Connection -> conn.prepareStatement(SELECT) },
@@ -149,11 +154,11 @@ class JdbcTemplateTest: AbstractJdbcSqlTest() {
             mapperFunction
         )?.description shouldBeEqualTo EXPECTED_DESC
 
-//        jdbcTemplate.queryForObject(
-//            SELECT_BY_ID,
-//            arrayOf(1),
-//            mapperFunction
-//        )?.description shouldBeEqualTo expected
+        //        jdbcTemplate.queryForObject(
+        //            SELECT_BY_ID,
+        //            arrayOf(1),
+        //            mapperFunction
+        //        )?.description shouldBeEqualTo expected
     }
 
     @Test

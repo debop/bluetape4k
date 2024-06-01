@@ -1,6 +1,6 @@
-package io.bluetape4k.data.jdbc.sql
+package io.bluetape4k.jdbc.sql
 
-import io.bluetape4k.core.assertNotBlank
+import io.bluetape4k.support.assertNotBlank
 import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.Statement

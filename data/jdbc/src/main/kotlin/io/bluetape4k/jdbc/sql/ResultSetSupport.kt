@@ -1,6 +1,6 @@
-package io.bluetape4k.data.jdbc.sql
+package io.bluetape4k.jdbc.sql
 
-import io.bluetape4k.collections.eclipse.toFastList
+import io.bluetape4k.collections.toList
 import java.io.InputStream
 import java.io.Reader
 import java.math.BigDecimal
@@ -79,8 +79,17 @@ inline fun <T> ResultSet.iterator(crossinline mapper: (ResultSet) -> T): Iterato
     }
 }
 
-inline fun <T> ResultSet.map(crossinline mapper: ResultSet.() -> T): List<T> =
-    Iterable { this@map.iterator(mapper) }.toFastList()
+inline fun <T> ResultSet.sequence(crossinline mapper: (ResultSet) -> T): Sequence<T> {
+    return iterator(mapper).asSequence()
+}
+
+inline fun <T> ResultSet.map(crossinline mapper: ResultSet.() -> T): List<T> {
+    return this@map.iterator(mapper).toList()
+}
+
+inline fun <T> ResultSet.mapAsSequence(crossinline mapper: ResultSet.() -> T): Sequence<T> {
+    return this@mapAsSequence.sequence(mapper)
+}
 
 val ResultSet.columnNames: List<String>
     get() {

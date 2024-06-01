@@ -1,4 +1,4 @@
-package io.bluetape4k.data.jdbc
+package io.bluetape4k.jdbc
 
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging

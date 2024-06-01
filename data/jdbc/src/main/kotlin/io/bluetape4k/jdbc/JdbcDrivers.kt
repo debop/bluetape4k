@@ -1,5 +1,4 @@
-package io.bluetape4k.data.jdbc
-
+package io.bluetape4k.jdbc
 
 /**
  * Jdbc Driver Constants
@@ -110,8 +109,8 @@ object JdbcDrivers {
     @JvmStatic
     fun isMySQL(driverClassName: String? = null): Boolean {
         return driverClassName != null &&
-            (driverClassName == DRIVER_CLASS_MYSQL ||
-                driverClassName == DRIVER_CLASS_MARIADB)
+                (driverClassName == DRIVER_CLASS_MYSQL ||
+                        driverClassName == DRIVER_CLASS_MARIADB)
     }
 
     /** driverClass 가 PostgreSQL 인가? */

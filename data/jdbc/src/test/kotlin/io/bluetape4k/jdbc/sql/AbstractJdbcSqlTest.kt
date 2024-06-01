@@ -1,7 +1,7 @@
-package io.bluetape4k.data.jdbc.sql
+package io.bluetape4k.jdbc.sql
 
-import io.bluetape4k.data.jdbc.AbstractJdbcTest
-import io.bluetape4k.data.jdbc.model.TestBean
+import io.bluetape4k.jdbc.AbstractJdbcTest
+import io.bluetape4k.jdbc.model.TestBean
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeTrue
@@ -38,9 +38,7 @@ abstract class AbstractJdbcSqlTest: AbstractJdbcTest() {
         }
 
         val rsFunction: (ResultSet) -> List<Int> = { rs ->
-            rs.extract {
-                int["id"]!!
-            }
+            rs.extract { int["id"]!! }
         }
 
         val action: (PreparedStatement) -> List<Int> = { ps ->

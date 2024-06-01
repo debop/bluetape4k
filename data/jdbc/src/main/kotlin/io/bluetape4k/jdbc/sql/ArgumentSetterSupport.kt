@@ -1,4 +1,4 @@
-package io.bluetape4k.data.jdbc.sql
+package io.bluetape4k.jdbc.sql
 
 import java.io.InputStream
 import java.io.Reader
@@ -25,12 +25,12 @@ interface ArgumentSetter2<in T, in A> {
     }
 }
 
-open class DefaultArgumentSetter<in T>(override inline val setter: (Int, T) -> Unit): ArgumentSetter<T>
+open class DefaultArgumentSetter<in T>(override val setter: (Int, T) -> Unit): ArgumentSetter<T>
 
 open class ArgumentWithLengthSetter<in T>(
-    override inline val setter: (Int, T) -> Unit,
-    override inline val setter2: (Int, T, Int) -> Unit,
-    inline val setterWithLong: (Int, T, Long) -> Unit,
+    override val setter: (Int, T) -> Unit,
+    override val setter2: (Int, T, Int) -> Unit,
+    val setterWithLong: (Int, T, Long) -> Unit,
 ): ArgumentSetter<T>, ArgumentSetter2<T, Int> {
 
     operator fun set(columnIndex: Int, length: Long, value: T) {
@@ -39,14 +39,14 @@ open class ArgumentWithLengthSetter<in T>(
 }
 
 abstract class AbstractBlobArgumentSetter<in R>(
-    override inline val setter: (Int, R) -> Unit,
-    override inline val setter2: (Int, R, Long) -> Unit,
+    override val setter: (Int, R) -> Unit,
+    override val setter2: (Int, R, Long) -> Unit,
 ): ArgumentSetter<R>, ArgumentSetter2<R, Long>
 
 class BlobArgumentSetter(
-    inline val blobSetter: (Int, Blob) -> Unit,
-    override inline val setter: (Int, InputStream) -> Unit,
-    override inline val setter2: (Int, InputStream, Long) -> Unit,
+    val blobSetter: (Int, Blob) -> Unit,
+    setter: (Int, InputStream) -> Unit,
+    setter2: (Int, InputStream, Long) -> Unit,
 ): AbstractBlobArgumentSetter<InputStream>(setter, setter2) {
 
     operator fun set(columnIndex: Int, blob: Blob) {
@@ -55,9 +55,9 @@ class BlobArgumentSetter(
 }
 
 class ClobArgumentSetter(
-    inline val clobSetter: (Int, Clob) -> Unit,
-    override inline val setter: (Int, Reader) -> Unit,
-    override inline val setter2: (Int, Reader, Long) -> Unit,
+    val clobSetter: (Int, Clob) -> Unit,
+    setter: (Int, Reader) -> Unit,
+    setter2: (Int, Reader, Long) -> Unit,
 ): AbstractBlobArgumentSetter<Reader>(setter, setter2) {
 
     operator fun set(columnIndex: Int, clob: Clob) {
@@ -66,9 +66,9 @@ class ClobArgumentSetter(
 }
 
 class NClobArgumentSetter(
-    inline val nClobSetter: (Int, NClob) -> Unit,
-    override inline val setter: (Int, Reader) -> Unit,
-    override inline val setter2: (Int, Reader, Long) -> Unit,
+    val nClobSetter: (Int, NClob) -> Unit,
+    setter: (Int, Reader) -> Unit,
+    setter2: (Int, Reader, Long) -> Unit,
 ): AbstractBlobArgumentSetter<Reader>(setter, setter2) {
 
     operator fun set(columnIndex: Int, nClob: NClob) {
@@ -77,14 +77,14 @@ class NClobArgumentSetter(
 }
 
 open class CombinedArgumentSetter<in T, in A>(
-    override inline val setter: (Int, T) -> Unit,
-    override inline val setter2: (Int, T, A) -> Unit,
+    override val setter: (Int, T) -> Unit,
+    override val setter2: (Int, T, A) -> Unit,
 ): ArgumentSetter<T>, ArgumentSetter2<T, A>
 
 class ObjectArgumentSetter(
-    override inline val setter: (Int, Any) -> Unit,
-    override inline val setter2: (Int, Any, Int) -> Unit,
-    inline val setter3: (Int, Any, Int, Int) -> Unit,
+    setter: (Int, Any) -> Unit,
+    setter2: (Int, Any, Int) -> Unit,
+    val setter3: (Int, Any, Int, Int) -> Unit,
 ): CombinedArgumentSetter<Any, Int>(setter, setter2) {
 
     operator fun set(columnIndex: Int, targetSqlType: Int, scaleOrLength: Int, value: Any) {

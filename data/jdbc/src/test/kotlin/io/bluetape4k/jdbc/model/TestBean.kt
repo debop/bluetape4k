@@ -1,4 +1,4 @@
-package io.bluetape4k.data.jdbc.model
+package io.bluetape4k.jdbc.model
 
 import java.io.Serializable
 import java.sql.Timestamp

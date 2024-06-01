@@ -1,11 +1,11 @@
-package io.bluetape4k.data.jdbc.sql
+package io.bluetape4k.jdbc.sql
 
 /**
  * [java.sql.ResultSet]으로부터 Column 값을 얻기 위한 코드를 담는 클래스입니다.
  */
 class GetColumnToken<out T: Any>(
-    inline val withColumnLabel: (String) -> T?,
-    inline val withColumnIndex: (Int) -> T?,
+    val withColumnLabel: (String) -> T?,
+    val withColumnIndex: (Int) -> T?,
 ) {
 
     /**
