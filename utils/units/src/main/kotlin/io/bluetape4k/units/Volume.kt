@@ -1,26 +1,20 @@
-package io.bluetape4k.utils.units
+package io.bluetape4k.units
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.unsafeLazy
-import io.bluetape4k.utils.units.VolumeUnit.CC
-import io.bluetape4k.utils.units.VolumeUnit.CENTIMETER_3
-import io.bluetape4k.utils.units.VolumeUnit.DECILITER
-import io.bluetape4k.utils.units.VolumeUnit.LITER
-import io.bluetape4k.utils.units.VolumeUnit.METER_3
-import io.bluetape4k.utils.units.VolumeUnit.MILLILETER
 import java.io.Serializable
 import kotlin.math.absoluteValue
 
-fun volumeOf(volumn: Number = 0.0, unit: VolumeUnit = LITER): Volume = Volume(volumn, unit)
+fun volumeOf(volumn: Number = 0.0, unit: VolumeUnit = VolumeUnit.LITER): Volume = Volume(volumn, unit)
 
 fun <T: Number> T.volumeBy(unit: VolumeUnit): Volume = Volume(this, unit)
 
-fun <T: Number> T.cc(): Volume = volumeBy(CC)
-fun <T: Number> T.milliliter(): Volume = volumeBy(MILLILETER)
-fun <T: Number> T.deciliter(): Volume = volumeBy(DECILITER)
-fun <T: Number> T.liter(): Volume = volumeBy(LITER)
-fun <T: Number> T.centimeter3(): Volume = volumeBy(CENTIMETER_3)
-fun <T: Number> T.meter3(): Volume = volumeBy(METER_3)
+fun <T: Number> T.cc(): Volume = volumeBy(VolumeUnit.CC)
+fun <T: Number> T.milliliter(): Volume = volumeBy(VolumeUnit.MILLILETER)
+fun <T: Number> T.deciliter(): Volume = volumeBy(VolumeUnit.DECILITER)
+fun <T: Number> T.liter(): Volume = volumeBy(VolumeUnit.LITER)
+fun <T: Number> T.centimeter3(): Volume = volumeBy(VolumeUnit.CENTIMETER_3)
+fun <T: Number> T.meter3(): Volume = volumeBy(VolumeUnit.METER_3)
 
 operator fun <T: Number> T.times(volume: Volume): Volume = volume * this
 
@@ -29,11 +23,10 @@ operator fun <T: Number> T.times(volume: Volume): Volume = volume * this
  */
 enum class VolumeUnit(val unitName: String, val factor: Double) {
 
-    CC("cc", 1.0e-9),
-    CENTIMETER_3("cm^3", 1.0e-3),
-    MILLILETER("ml", 1.0e-3),
-    DECILITER("dl", 1.0e-2),
-    LITER("l", 1.0),
+    CC("cc", 1.0e-9), CENTIMETER_3("cm^3", 1.0e-3), MILLILETER("ml", 1.0e-3), DECILITER("dl", 1.0e-2), LITER(
+        "l",
+        1.0
+    ),
     METER_3("m^3", 1.0e3);
 
     // 영국 부피 단위는 따로 클래스를 만들 예정입니다.
@@ -42,17 +35,12 @@ enum class VolumeUnit(val unitName: String, val factor: Double) {
     //    FLUID_OUNCE("oz", 1.0 / 33.814022);
 
     companion object {
-
-        @JvmField
-        val VALS = values()
-
         @JvmStatic
         fun parse(unitStr: String): VolumeUnit {
             var lower = unitStr.lowercase()
-            if (lower.endsWith("s"))
-                lower = lower.dropLast(1)
+            if (lower.endsWith("s")) lower = lower.dropLast(1)
 
-            return VALS.find { it.unitName == lower }
+            return entries.find { it.unitName == lower }
                 ?: throw NumberFormatException("Unknown Volume unit. unitStr=$unitStr")
         }
     }
@@ -77,26 +65,25 @@ value class Volume(val value: Double = 0.0): Comparable<Volume>, Serializable {
     operator fun div(length: Length): Area = Area(inCC() / length.value)
     operator fun unaryMinus(): Volume = Volume(-value)
 
-    fun inCC() = value / CC.factor
-    fun inMilliLiter() = value / MILLILETER.factor
-    fun inDeciLiter() = value / DECILITER.factor
-    fun inLiter() = value / LITER.factor
-    fun inCentiMeter3() = value / CENTIMETER_3.factor
-    fun inMeter3() = value / METER_3.factor
+    fun inCC() = value / VolumeUnit.CC.factor
+    fun inMilliLiter() = value / VolumeUnit.MILLILETER.factor
+    fun inDeciLiter() = value / VolumeUnit.DECILITER.factor
+    fun inLiter() = value / VolumeUnit.LITER.factor
+    fun inCentiMeter3() = value / VolumeUnit.CENTIMETER_3.factor
+    fun inMeter3() = value / VolumeUnit.METER_3.factor
 
     override fun compareTo(other: Volume): Int = value.compareTo(other.value)
 
-    override fun toString(): String = toHuman(CC)
+    override fun toString(): String = toHuman(VolumeUnit.CC)
 
     fun toHuman(): String {
         val absValue = value.absoluteValue
-        val displayUnit = VolumeUnit.VALS.lastOrNull { absValue / it.factor > 1.0 } ?: CC
+        val displayUnit = VolumeUnit.entries.lastOrNull { absValue / it.factor > 1.0 } ?: VolumeUnit.CC
 
-        return "%.1f %s".format(value / displayUnit.factor, displayUnit.unitName)
+        return formatUnit(value / displayUnit.factor, displayUnit.unitName)
     }
 
-    fun toHuman(unit: VolumeUnit = LITER): String =
-        "%.1f %s".format(value / unit.factor, unit.unitName)
+    fun toHuman(unit: VolumeUnit = VolumeUnit.LITER): String = formatUnit(value / unit.factor, unit.unitName)
 
     companion object: KLogging() {
 
@@ -118,12 +105,11 @@ value class Volume(val value: Double = 0.0): Comparable<Volume>, Serializable {
         @JvmStatic
         val NaN: Volume by unsafeLazy { Volume(Double.NaN) }
 
-        operator fun invoke(volumn: Number, unit: VolumeUnit = LITER): Volume =
+        operator fun invoke(volumn: Number, unit: VolumeUnit = VolumeUnit.LITER): Volume =
             Volume(volumn.toDouble() * unit.factor)
 
         fun parse(expr: String?): Volume {
-            if (expr.isNullOrBlank())
-                return NaN
+            if (expr.isNullOrBlank()) return NaN
 
             try {
                 val (vol, unit) = expr.trim().split(" ", limit = 2)

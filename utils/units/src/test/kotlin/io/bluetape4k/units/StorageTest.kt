@@ -1,10 +1,10 @@
-package io.bluetape4k.utils.units
+package io.bluetape4k.units
 
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.utils.units.Storage.Companion.KBYTES
-import io.bluetape4k.utils.units.Storage.Companion.MBYTES
+import io.bluetape4k.units.Storage.Companion.KBYTES
+import io.bluetape4k.units.Storage.Companion.MBYTES
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

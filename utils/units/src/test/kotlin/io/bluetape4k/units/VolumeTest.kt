@@ -1,10 +1,9 @@
-package io.bluetape4k.utils.units
+package io.bluetape4k.units
 
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-
 
 class VolumeTest {
 

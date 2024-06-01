@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.units
+package io.bluetape4k.units
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.unsafeLazy
@@ -30,13 +30,10 @@ enum class WeightUnit(val unitName: String, val factor: Double) {
     TON("ton", 1e6);
 
     companion object {
-        @JvmField
-        val VALS = values()
-
         @JvmStatic
         fun parse(unitStr: String): WeightUnit {
             val lower = unitStr.lowercase().dropLastWhile { it == 's' }
-            return VALS.find { it.unitName == lower }
+            return entries.find { it.unitName == lower }
                 ?: throw NumberFormatException("Unknown Weight unit. unitStr=$unitStr")
         }
     }
@@ -71,7 +68,7 @@ value class Weight(val value: Double = 0.0): Comparable<Weight>, Serializable {
         if (display > WeightUnit.TON.factor) {
             display /= WeightUnit.TON.factor
             unit = WeightUnit.TON
-            return "%.1f %s".format(display * value.sign, unit.unitName)
+            return formatUnit(display * value.sign, unit.unitName)
         }
         if (display < WeightUnit.GRAM.factor) {
             unit = WeightUnit.MILLIGRAM
@@ -80,11 +77,11 @@ value class Weight(val value: Double = 0.0): Comparable<Weight>, Serializable {
             unit = WeightUnit.KILOGRAM
             display /= WeightUnit.KILOGRAM.factor
         }
-        return "%.1f %s".format(display * value.sign, unit.unitName)
+        return formatUnit(display * value.sign, unit.unitName)
     }
 
     fun toHuman(unit: WeightUnit): String =
-        "%.1f %s".format(value / unit.factor, unit.unitName)
+        formatUnit(value / unit.factor, unit.unitName)
 
     override fun compareTo(other: Weight): Int = value.compareTo(other.value)
 

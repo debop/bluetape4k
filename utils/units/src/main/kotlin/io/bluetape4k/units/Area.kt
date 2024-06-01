@@ -1,10 +1,10 @@
-package io.bluetape4k.utils.units
+package io.bluetape4k.units
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.unsafeLazy
-import io.bluetape4k.utils.units.AreaUnit.CENTI_METER_2
-import io.bluetape4k.utils.units.AreaUnit.METER_2
-import io.bluetape4k.utils.units.AreaUnit.MILLI_METER_2
+import io.bluetape4k.units.AreaUnit.CENTI_METER_2
+import io.bluetape4k.units.AreaUnit.METER_2
+import io.bluetape4k.units.AreaUnit.MILLI_METER_2
 import java.io.Serializable
 import kotlin.math.absoluteValue
 
@@ -37,16 +37,13 @@ enum class AreaUnit(val unitName: String, val factor: Double) {
     // ACRE("ac", 4046.8564224);
 
     companion object {
-        @JvmField
-        val VALS = entries.toTypedArray()
-
         @JvmStatic
         fun parse(unitName: String): AreaUnit {
             var lower = unitName.lowercase()
             if (lower.endsWith("s"))
                 lower = lower.dropLast(1)
 
-            return VALS.find { it.unitName == lower }
+            return entries.find { it.unitName == lower }
                 ?: throw NumberFormatException("Unknown Area unit. unitName=$unitName")
         }
     }
@@ -80,12 +77,12 @@ value class Area(val value: Double = 0.0): Comparable<Area>, Serializable {
 
     fun toHuman(): String {
         val absValue = value.absoluteValue
-        val displayUnit = AreaUnit.VALS.lastOrNull { absValue / it.factor > 1.0 } ?: MILLI_METER_2
-        return "%.1f %s".format(value / displayUnit.factor, displayUnit.unitName)
+        val displayUnit = AreaUnit.entries.lastOrNull { absValue / it.factor > 1.0 } ?: MILLI_METER_2
+        return formatUnit(value / displayUnit.factor, displayUnit.unitName)
     }
 
     fun toHuman(unit: AreaUnit): String {
-        return "%.1f %s".format(value / unit.factor, unit.unitName)
+        return formatUnit(value / unit.factor, unit.unitName)
     }
 
     companion object: KLogging() {

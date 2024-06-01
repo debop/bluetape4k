@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.units
+package io.bluetape4k.units
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.unsafeLazy
@@ -41,9 +41,6 @@ enum class StorageUnit(val abbrName: String, val factor: Double) {
     YBYTE("YB", Storage.KBYTES.pow(8));
 
     companion object {
-        @JvmField
-        val VALS = values()
-
         @JvmStatic
         fun parse(unitStr: String): StorageUnit {
             assert(unitStr.isNotBlank()) { "unitStr must not be blank." }
@@ -52,7 +49,7 @@ enum class StorageUnit(val abbrName: String, val factor: Double) {
             if (upper.endsWith("S")) {
                 upper = upper.dropLast(1)
             }
-            return VALS.find { it.abbrName == upper }
+            return entries.find { it.abbrName == upper }
                 ?: throw NumberFormatException("Unknown Storage unit. unitStr=$unitStr")
         }
     }
@@ -103,8 +100,8 @@ value class Storage(val value: Double = 0.0): Comparable<Storage>, Serializable 
             dispalay /= KBYTES
         }
 
-        return if (order == 0) "%d %s".format(value.toLong(), StorageUnit.BYTE.abbrName)
-        else "%.1f %s".format(dispalay * value.sign, StorageUnit.VALS[order].abbrName)
+        return if (order == 0) formatUnit(value.toLong(), StorageUnit.BYTE.abbrName)
+        else formatUnit(dispalay * value.sign, StorageUnit.entries[order].abbrName)
     }
 
     fun toHuman(unit: StorageUnit): String = "%.1f %s".format(getBytesBy(unit), unit.abbrName)

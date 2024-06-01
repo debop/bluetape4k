@@ -1,5 +1,4 @@
-package io.bluetape4k.utils.units
-
+package io.bluetape4k.units
 
 object UnitPrefix {
 

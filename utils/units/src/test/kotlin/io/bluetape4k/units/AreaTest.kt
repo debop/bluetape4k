@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.units
+package io.bluetape4k.units
 
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test

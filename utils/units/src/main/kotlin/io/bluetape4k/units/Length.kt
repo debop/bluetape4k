@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.units
+package io.bluetape4k.units
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.unsafeLazy
@@ -29,13 +29,10 @@ enum class LengthUnit(val abbrName: String, val factor: Double) {
     KILOMETER("km", 1.0e3);
 
     companion object {
-        @JvmField
-        val VALS = values()
-
         @JvmStatic
         fun parse(unitStr: String): LengthUnit {
             val lower = unitStr.lowercase().dropLastWhile { it == 's' }
-            return VALS.find { it.abbrName == lower }
+            return entries.find { it.abbrName == lower }
                 ?: throw NumberFormatException("Unknown Length unit. unitStr=$unitStr")
         }
     }
@@ -67,12 +64,12 @@ value class Length(val value: Double = 0.0): Comparable<Length>, Serializable {
 
     fun toHuman(): String {
         val display = value.absoluteValue
-        val displayUnit = LengthUnit.VALS.lastOrNull { display / it.factor > 1.0 } ?: LengthUnit.MILLIMETER
-        return "%.1f %s".format(value / displayUnit.factor, displayUnit.abbrName)
+        val displayUnit = LengthUnit.entries.lastOrNull { display / it.factor > 1.0 } ?: LengthUnit.MILLIMETER
+        return formatUnit(value / displayUnit.factor, displayUnit.abbrName)
     }
 
     fun toUnit(unit: LengthUnit): String =
-        "%.1f %s".format(value / unit.factor, unit.abbrName)
+        formatUnit(value / unit.factor, unit.abbrName)
 
     companion object: KLogging() {
 
