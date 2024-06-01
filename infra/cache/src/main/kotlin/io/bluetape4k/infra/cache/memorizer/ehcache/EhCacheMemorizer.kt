@@ -9,7 +9,7 @@ import org.ehcache.Cache
  * @property cache 실행한 값을 저장할 Cache
  * @property evaluator 캐시 값을 생성하는 메소드
  */
-class EhCacheMemorizer<in T: Any, out R: Any>(
+class EhCacheMemorizer<T: Any, R: Any>(
     private val cache: Cache<T, R>,
     private val evaluator: (T) -> R,
 ): Memorizer<T, R> {

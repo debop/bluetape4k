@@ -8,7 +8,7 @@ import io.bluetape4k.infra.cache.memorizer.Memorizer
  *
  * @param evaluator    수행할 함수
  */
-class InMemoryMemorizer<in T, out R>(private val evaluator: (T) -> R): Memorizer<T, R> {
+class InMemoryMemorizer<T, R>(private val evaluator: (T) -> R): Memorizer<T, R> {
 
     private val resultCache: MutableMap<T, R> = unifiedMapOf()
     private val synchronizedObject = Any()

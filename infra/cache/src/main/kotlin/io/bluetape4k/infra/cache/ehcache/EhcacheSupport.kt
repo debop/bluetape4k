@@ -1,6 +1,6 @@
 package io.bluetape4k.infra.cache.ehcache
 
-import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.support.requireNotBlank
 import io.bluetape4k.utils.ShutdownQueue
 import org.ehcache.Cache
 import org.ehcache.CacheManager

@@ -1,8 +1,8 @@
 package io.bluetape4k.infra.cache.jcache
 
-import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.logging.KotlinLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.support.requireNotBlank
 import java.util.concurrent.locks.ReentrantLock
 import javax.cache.Cache
 import javax.cache.CacheManager

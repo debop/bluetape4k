@@ -10,7 +10,7 @@ import javax.cache.Cache
  * @property jcache 실행한 값을 저장할 Cache
  * @property evaluator 캐시 값을 생성하는 메소드
  */
-class JCacheMemorizer<in T: Any, out R: Any>(
+class JCacheMemorizer<T: Any, R: Any>(
     private val jcache: Cache<T, R>,
     private val evaluator: (T) -> R,
 ): Memorizer<T, R> {

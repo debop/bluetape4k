@@ -31,9 +31,9 @@ fun <T: Any, R: Any> ((T) -> R).withMemorizer(cache: Cache<T, R>): Memorizer<T, 
  *
 
  */
-class Cache2kMemorizer<in T: Any, out R: Any>(
+class Cache2kMemorizer<T: Any, R: Any>(
     private val cache: Cache<T, R>,
-    private inline val evaluator: (T) -> R,
+    private val evaluator: (T) -> R,
 ): Memorizer<T, R> {
 
     override fun invoke(input: T): R {

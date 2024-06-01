@@ -1,8 +1,8 @@
 package io.bluetape4k.infra.cache.jcache.coroutines
 
-import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.infra.cache.jcache.JCaching
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.requireNotBlank
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map

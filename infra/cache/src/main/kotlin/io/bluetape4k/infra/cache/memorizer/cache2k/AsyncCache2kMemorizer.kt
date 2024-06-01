@@ -39,7 +39,7 @@ fun <T: Any, R: Any> ((T) -> CompletableFuture<R>).withMemorizer(cache: Cache<T,
  */
 class Cache2kAsyncMemorizer<T: Any, R: Any>(
     private val cache: Cache<T, R>,
-    private inline val asyncEvaluator: (T) -> CompletableFuture<R>,
+    private val asyncEvaluator: (T) -> CompletableFuture<R>,
 ): AsyncMemorizer<T, R> {
 
     companion object: KLogging()

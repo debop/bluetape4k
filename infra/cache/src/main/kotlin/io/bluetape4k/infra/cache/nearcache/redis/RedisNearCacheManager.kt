@@ -1,7 +1,5 @@
 package io.bluetape4k.infra.cache.nearcache.redis
 
-import io.bluetape4k.core.requireNotBlank
-import io.bluetape4k.core.requireNotNull
 import io.bluetape4k.infra.cache.jcache.JCaching
 import io.bluetape4k.infra.cache.nearcache.NearCache
 import io.bluetape4k.infra.cache.nearcache.NearCacheConfig
@@ -11,6 +9,8 @@ import io.bluetape4k.infra.cache.nearcache.management.NearCacheStatisticsMXBean
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
+import io.bluetape4k.support.requireNotBlank
+import io.bluetape4k.support.requireNotNull
 import kotlinx.atomicfu.atomic
 import org.redisson.Redisson
 import org.redisson.jcache.configuration.JCacheConfiguration
@@ -415,8 +415,8 @@ class RedisNearCacheManager(
 
     private fun getName(name: String, cache: NearCache<*, *>): String {
         return "javax.cache:type=NearCache$name" +
-               ",CacheManager=${cache.cacheManager.uri.toString().replace(",|:|=|\n", ".")}" +
-               ",Cache=${cache.name.replace(",|:|=|\n", ".")}"
+                ",CacheManager=${cache.cacheManager.uri.toString().replace(",|:|=|\n", ".")}" +
+                ",Cache=${cache.name.replace(",|:|=|\n", ".")}"
     }
 
     /**
