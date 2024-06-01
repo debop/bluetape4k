@@ -4,8 +4,9 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.bluetape4k.geocode.AbstractGeocodeTest
 import io.bluetape4k.geocode.Geocode
 import io.bluetape4k.geocode.bing.BingMapModel.toBingAddress
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
+import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.Resourcex
 import org.amshove.kluent.shouldBeEqualTo
@@ -16,6 +17,8 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 
 class BingMapServiceTest: AbstractGeocodeTest() {
+
+    companion object: KLogging()
 
     private val client = BingMapService.getBingMapFeignClient()
     private val coroutineClient = BingMapService.getBingMapFeignCoroutineClient()

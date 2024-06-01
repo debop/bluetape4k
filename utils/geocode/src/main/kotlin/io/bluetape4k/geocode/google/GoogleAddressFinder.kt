@@ -3,13 +3,13 @@ package io.bluetape4k.geocode.google
 import com.google.maps.GeocodingApi
 import com.google.maps.PendingResult
 import com.google.maps.model.GeocodingResult
-import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.geocode.Address
 import io.bluetape4k.geocode.Geocode
 import io.bluetape4k.geocode.GeocodeAddressFinder
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.warn
+import io.bluetape4k.support.requireNotBlank
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
 import kotlin.coroutines.resumeWithException

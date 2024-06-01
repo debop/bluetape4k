@@ -10,9 +10,9 @@ import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 
-class BingAddressFinderTest : AbstractGeocodeTest() {
+class BingAddressFinderTest: AbstractGeocodeTest() {
 
-    companion object : KLogging()
+    companion object: KLogging()
 
     private val addressFinder = BingAddressFinder()
 

@@ -1,4 +1,4 @@
-# Module bluetape4k-utils-geocode
+# Module bluetape4k-geocode
 
 ## 개요
 

@@ -1,6 +1,6 @@
 package io.bluetape4k.geocode
 
-import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.support.requireNotBlank
 import java.io.Serializable
 import java.math.BigDecimal
 import java.math.MathContext

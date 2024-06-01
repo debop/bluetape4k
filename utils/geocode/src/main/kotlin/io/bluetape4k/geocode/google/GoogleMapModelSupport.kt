@@ -53,9 +53,9 @@ val GeocodingResult.city: String?
  */
 val GeocodingResult.detailAddress: String
     get() = addressComponents.find { it.types.contains(AddressComponentType.PREMISE) }?.longName + " " +
-        addressComponents
-            .filter { it.types.contains(AddressComponentType.SUBLOCALITY) }
-            .joinToString(" ") { it.longName }
+            addressComponents
+                .filter { it.types.contains(AddressComponentType.SUBLOCALITY) }
+                .joinToString(" ") { it.longName }
 
 
 val GeocodingResult.zipCode: String?

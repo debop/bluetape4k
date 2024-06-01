@@ -10,7 +10,7 @@ class BingAddress(
     val detailAddress: String? = null,
     val zipCode: String? = null,
     val formattedAddress: String? = null,
-) : Address(country, city) {
+): Address(country, city) {
 
     override fun buildStringHelper(): ToStringBuilder {
         return super.buildStringHelper()

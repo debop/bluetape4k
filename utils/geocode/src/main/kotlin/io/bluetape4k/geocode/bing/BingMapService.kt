@@ -9,12 +9,11 @@ import feign.hc5.ApacheHttp5Client
 import feign.hc5.AsyncApacheHttp5Client
 import feign.kotlin.CoroutineFeign
 import feign.slf4j.Slf4jLogger
-import io.bluetape4k.io.feign.client
-import io.bluetape4k.io.feign.codec.JacksonDecoder2
-import io.bluetape4k.io.feign.codec.JacksonEncoder2
-import io.bluetape4k.io.feign.coroutines.client
-import io.bluetape4k.io.feign.coroutines.coroutineFeignBuilder
-import io.bluetape4k.io.feign.feignBuilder
+import io.bluetape4k.feign.client
+import io.bluetape4k.feign.codec.JacksonDecoder2
+import io.bluetape4k.feign.codec.JacksonEncoder2
+import io.bluetape4k.feign.coroutines.client
+import io.bluetape4k.feign.coroutines.coroutineFeignBuilder
 import io.bluetape4k.utils.Resourcex
 
 /**
@@ -31,7 +30,7 @@ object BingMapService {
     val apiKey: String by lazy { Resourcex.getString("BingGeocodeApi.key") }
 
     internal fun newFeignBuilder(): Feign.Builder {
-        return feignBuilder {
+        return io.bluetape4k.feign.feignBuilder {
             client(ApacheHttp5Client())
             encoder(JacksonEncoder2())
             decoder(JacksonDecoder2())
