@@ -6,13 +6,13 @@
         <immediateFlush>true</immediateFlush>
         <encoder>
             <!-- @formatter:off -->
-            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%blue(%.24t)] %yellow(%logger{36}):%line: %msg%n%throwable</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%blue(%24.24t)] %yellow(%logger{36}):%line: %msg%n%throwable</pattern>
             <!-- @formatter:on -->
             <charset>UTF-8</charset>
         </encoder>
     </appender>
 
-    <logger name="io.bluetape4k.data.hibernate" level="DEBUG"/>
+    <logger name="io.bluetape4k.hibernate" level="DEBUG"/>
 
     <!-- HQL 실행 통계를 로그에 출력합니다.-->
     <!-- eg. HHH000117: HQL: select generatedAlias0 from Article as generatedAlias0 order by generatedAlias0.addedAt desc, time: 1ms, rows: 2-->

@@ -28,8 +28,8 @@ idea {
 }
 
 kapt {
-//    correctErrorTypes = true
-//    showProcessorStats = true
+    correctErrorTypes = true
+    showProcessorStats = true
     arguments {
         arg("spring.jpa.open-in-view", "false")
     }
@@ -39,6 +39,7 @@ configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
     create("testJar")
 }
+
 
 // 테스트 코드를 Jar로 만들어서 다른 프로젝트에서 참조할 수 있도록 합니다.
 tasks.register<Jar>("testJar") {
@@ -116,6 +117,7 @@ dependencies {
     // Caching 테스트
     testImplementation(project(":bluetape4k-cache"))
     testImplementation(Libs.hibernate_jcache)
+    testImplementation(Libs.caffeine_jcache)
 
     // JDBC 와 같이 사용
     testImplementation(project(":bluetape4k-jdbc"))
