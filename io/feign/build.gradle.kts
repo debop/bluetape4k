@@ -15,7 +15,6 @@ configurations {
 dependencies {
     api(project(":bluetape4k-http"))
     api(project(":bluetape4k-netty"))
-    api(project(":bluetape4k-resilience4j"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Coroutines

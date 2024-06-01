@@ -1,4 +1,4 @@
-# Module bluetape4k-io-cryptography
+# Module bluetape4k-cryptography
 
 ## 개요
 
