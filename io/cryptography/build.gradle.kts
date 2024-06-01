@@ -50,7 +50,6 @@ dependencies {
 
     // Coroutines
     compileOnly(Libs.kotlinx_coroutines_core)
-    compileOnly(Libs.kotlinx_coroutines_jdk8)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // Benchmark
