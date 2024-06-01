@@ -1,7 +1,7 @@
-package io.bluetape4k.data.hibernate.reactive.examples.mutiny
+package io.bluetape4k.hibernate.reactive.examples.mutiny
 
-import io.bluetape4k.data.hibernate.reactive.AbstractHibernateReactiveTest
-import io.bluetape4k.data.hibernate.reactive.mutiny.asMutinySessionFactory
+import io.bluetape4k.hibernate.reactive.AbstractHibernateReactiveTest
+import io.bluetape4k.hibernate.reactive.mutiny.asMutinySessionFactory
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.closeSafe

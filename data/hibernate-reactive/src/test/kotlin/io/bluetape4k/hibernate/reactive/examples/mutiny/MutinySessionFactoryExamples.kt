@@ -1,19 +1,20 @@
-package io.bluetape4k.data.hibernate.reactive.examples.stage
+package io.bluetape4k.hibernate.reactive.examples.mutiny
 
-import io.bluetape4k.data.hibernate.reactive.examples.model.Author
-import io.bluetape4k.data.hibernate.reactive.examples.model.Author_
-import io.bluetape4k.data.hibernate.reactive.examples.model.Book
-import io.bluetape4k.data.hibernate.reactive.examples.model.Book_
-import io.bluetape4k.data.hibernate.reactive.stage.findAs
-import io.bluetape4k.data.hibernate.reactive.stage.withSessionSuspending
-import io.bluetape4k.data.hibernate.reactive.stage.withTransactionSuspending
+import io.bluetape4k.hibernate.reactive.examples.model.Author
+import io.bluetape4k.hibernate.reactive.examples.model.Author_
+import io.bluetape4k.hibernate.reactive.examples.model.Book
+import io.bluetape4k.hibernate.reactive.examples.model.Book_
+import io.bluetape4k.hibernate.reactive.mutiny.findAs
+import io.bluetape4k.hibernate.reactive.mutiny.withSessionSuspending
+import io.bluetape4k.hibernate.reactive.mutiny.withTransactionSuspending
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
-import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.smallrye.mutiny.coroutines.awaitSuspending
 import jakarta.persistence.criteria.CriteriaQuery
-import kotlinx.coroutines.future.await
+import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldHaveSize
+import org.amshove.kluent.shouldNotBeNull
 import org.hibernate.graph.RootGraph
+import org.hibernate.reactive.mutiny.Mutiny
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
@@ -22,9 +23,7 @@ import java.time.LocalDate
 import java.time.Month
 
 @Execution(ExecutionMode.SAME_THREAD)
-class StageSessionFactoryExamples: AbstractStageTest() {
-
-    companion object: KLogging()
+class MutinySessionFactoryExamples: AbstractMutinyTest() {
 
     private val author1 = Author(faker.name().name())
     private val author2 = Author(faker.name().name())
@@ -45,47 +44,36 @@ class StageSessionFactoryExamples: AbstractStageTest() {
     )
 
     @BeforeAll
-    fun beforeAll() {
+    fun beforeAll() = runSuspendWithIO {
         author1.addBook(book1)
         author2.addBook(book2)
         author2.addBook(book3)
 
-        runSuspendWithIO {
-            sf.withTransactionSuspending { session ->
-                session.persist(author1, author2).await()
-            }
+        sf.withTransactionSuspending { session ->
+            session.persistAll(author1, author2).awaitSuspending()
         }
     }
 
     @Test
-    fun `load entity with stage session`() = runSuspendWithIO {
-        sf.withSessionSuspending { session ->
-            // NOTE: many-to-one 을 lazy로 fetch 하기 위해서 EntityGraph나 @FetchProfile 을 사용해야 합니다.
-            val book = session.enableFetchProfile("withAuthor").findAs<Book>(book1.id).await()
-            val authors = session.findAs<Author>(author1.id, author2.id).await()
+    fun `mutiny session example`() = runSuspendWithIO {
+        sf.withSessionSuspending { session -> // NOTE: many-to-one 을 lazy로 fetch 하기 위해서 EntityGraph나 @FetchProfile 을 사용해야 합니다.
+            val book = session.enableFetchProfile("withAuthor").findAs<Book>(book2.id).awaitSuspending()
 
-            log.debug { "book=${book}" }
-            log.debug { "authors=${authors.joinToString()}" }
+            book.shouldNotBeNull()
+            book.author.shouldNotBeNull()
         }
-    }
 
-    @Test
-    fun `find author and fetch books`() = runSuspendWithIO {
-        sf.withSessionSuspending { session ->
-            val author = session.findAs<Author>(author2.id).await()
-            val books = session.fetch(author.books).await()
-            log.debug { "${author.name} wrote ${books.size} books." }
-            books.forEach { book ->
-                log.debug { "book title:${book.title}" }
-            }
+        val authors = sf.withSessionSuspending { session ->
+            session.findAs<Author>(author1.id, author2.id).awaitSuspending()
         }
+        authors shouldBeEqualTo listOf(author1, author2)
     }
 
     @Test
     fun `find all book with fetch join`() = runSuspendWithIO {
         val sql = "SELECT b FROM Book b LEFT JOIN FETCH b.author a"
         val books = sf.withSessionSuspending { session ->
-            session.createQuery<Book>(sql).resultList.await()
+            session.createSelectionQuery(sql, Book::class.java).resultList.awaitSuspending()
         }
         books.forEach {
             println(it)
@@ -105,10 +93,10 @@ class StageSessionFactoryExamples: AbstractStageTest() {
             val graph = session.createEntityGraph(Book::class.java)
             graph.addAttributeNodes(Book::author.name)
 
-            val query = session.createQuery(criteria)
+            val query: Mutiny.SelectionQuery<Book> = session.createQuery(criteria)
             query.setPlan(graph)
 
-            query.resultList.await()
+            query.resultList.awaitSuspending()
         }
         books.forEach {
             println(it)
@@ -131,7 +119,7 @@ class StageSessionFactoryExamples: AbstractStageTest() {
 
             val query = session.createQuery(criteria)
             query.setPlan(graph)
-            query.resultList.await()
+            query.resultList.awaitSuspending()
         }
         books.forEach {
             println(it)
@@ -148,11 +136,10 @@ class StageSessionFactoryExamples: AbstractStageTest() {
         criteria.select(author).where(cb.equal(book.get(Book_.isbn), book1.isbn))
 
         val authors = sf.withSessionSuspending { session ->
-            session.createQuery(criteria).resultList.await()
+            session.createQuery(criteria).resultList.awaitSuspending()
         } // NOTE: author 만 로딩했으므로, books 에 접근하면 lazy initialization 예외가 발생합니다.
         authors.forEach {
-            println(it)
-            //            it.books.forEach { book ->
+            println(it) //            it.books.forEach { book ->
             //                println("book=$book")
             //            }
         }
@@ -174,7 +161,7 @@ class StageSessionFactoryExamples: AbstractStageTest() {
                 addAttributeNodes(Author_.books)
             } as RootGraph<Author>
 
-            session.createQuery(criteria).setPlan(graph).resultList.await()
+            session.createQuery(criteria).setPlan(graph).resultList.awaitSuspending()
         }
 
         authors.forEach { a ->
@@ -185,7 +172,7 @@ class StageSessionFactoryExamples: AbstractStageTest() {
         }
         authors shouldHaveSize 1
         authors.forEach {
-            it.books shouldHaveSize 2
+            it.books shouldHaveSize 1
         }
     }
 
@@ -200,9 +187,9 @@ class StageSessionFactoryExamples: AbstractStageTest() {
         criteria.select(author).where(cb.equal(book.get(Book_.isbn), book2.isbn))
 
         val authors = sf.withSessionSuspending { session ->
-            session.createQuery(criteria).resultList.await().apply {
+            session.createQuery(criteria).resultList.awaitSuspending().apply {
                 forEach { author ->
-                    session.fetch(author.books).await()
+                    session.fetch(author.books).awaitSuspending()
                 }
             }
         }

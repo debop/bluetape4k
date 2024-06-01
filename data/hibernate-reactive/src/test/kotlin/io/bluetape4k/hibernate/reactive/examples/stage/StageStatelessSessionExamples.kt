@@ -1,29 +1,30 @@
-package io.bluetape4k.data.hibernate.reactive.examples.mutiny
+package io.bluetape4k.hibernate.reactive.examples.stage
 
-import io.bluetape4k.data.hibernate.reactive.examples.model.Author
-import io.bluetape4k.data.hibernate.reactive.examples.model.Author_
-import io.bluetape4k.data.hibernate.reactive.examples.model.Book
-import io.bluetape4k.data.hibernate.reactive.examples.model.Book_
-import io.bluetape4k.data.hibernate.reactive.mutiny.findAs
-import io.bluetape4k.data.hibernate.reactive.mutiny.withSessionSuspending
-import io.bluetape4k.data.hibernate.reactive.mutiny.withStatelessSessionSuspending
-import io.bluetape4k.data.hibernate.reactive.mutiny.withTransactionSuspending
+import io.bluetape4k.hibernate.reactive.examples.model.Author
+import io.bluetape4k.hibernate.reactive.examples.model.Author_
+import io.bluetape4k.hibernate.reactive.examples.model.Book
+import io.bluetape4k.hibernate.reactive.examples.model.Book_
+import io.bluetape4k.hibernate.reactive.stage.findAs
+import io.bluetape4k.hibernate.reactive.stage.getAs
+import io.bluetape4k.hibernate.reactive.stage.withSessionSuspending
+import io.bluetape4k.hibernate.reactive.stage.withStatelessSessionSuspending
+import io.bluetape4k.hibernate.reactive.stage.withTransactionSuspending
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
-import io.smallrye.mutiny.coroutines.awaitSuspending
-import org.amshove.kluent.shouldBeEqualTo
+import io.bluetape4k.logging.debug
+import jakarta.persistence.criteria.CriteriaQuery
+import kotlinx.coroutines.future.await
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldHaveSize
-import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import java.time.LocalDate
 import java.time.Month
-import jakarta.persistence.criteria.CriteriaQuery
 
 @Execution(ExecutionMode.SAME_THREAD)
-class MutinyStatelessSessionExamples: AbstractMutinyTest() {
+class StageStatelessSessionExamples: AbstractStageTest() {
 
     companion object: KLogging()
 
@@ -46,37 +47,49 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
     )
 
     @BeforeAll
-    fun beforeAll() = runSuspendWithIO {
+    fun beforeAll() {
         author1.addBook(book1)
         author2.addBook(book2)
         author2.addBook(book3)
 
-        sf.withTransactionSuspending { session ->
-            session.persistAll(author1, author2).awaitSuspending()
+        runSuspendWithIO {
+            sf.withTransactionSuspending { session ->
+                session.persist(author1, author2).await()
+            }
         }
     }
 
     @Test
-    fun `mutiny session example`() = runSuspendWithIO {
-        // enableFetchProfile 은 statelessSession 에서는 지원하지 않습니다.
-        val book = sf.withSessionSuspending { session ->
+    fun `load entity with stage session`() = runSuspendWithIO {
+        sf.withSessionSuspending { session ->
             // NOTE: many-to-one 을 lazy로 fetch 하기 위해서 EntityGraph나 @FetchProfile 을 사용해야 합니다.
-            session.enableFetchProfile("withAuthor").findAs<Book>(book2.id).awaitSuspending()
-        }
-        book.shouldNotBeNull()
-        book.author.shouldNotBeNull()
+            //
+            val book = session.enableFetchProfile("withAuthor").findAs<Book>(book1.id).await()
+            val authors = session.findAs<Author>(author1.id, author2.id).await()
 
-        val authors = sf.withSessionSuspending { session ->
-            session.findAs<Author>(author1.id, author2.id).awaitSuspending()
+            log.debug { "book=${book}" }
+            log.debug { "authors=${authors.joinToString()}" }
         }
-        authors shouldBeEqualTo listOf(author1, author2)
     }
+
+    @Test
+    fun `find author and fetch books`() = runTest {
+        sf.withStatelessSessionSuspending { session ->
+            val author = session.getAs<Author>(author2.id).await()
+            val books = session.fetch(author.books).await()
+            log.debug { "${author.name} wrote ${books.size} books." }
+            books.forEach { book ->
+                log.debug { "title:${book.title}" }
+            }
+        }
+    }
+
 
     @Test
     fun `find all book with fetch join`() = runSuspendWithIO {
         val sql = "SELECT b FROM Book b LEFT JOIN FETCH b.author a"
         val books = sf.withStatelessSessionSuspending { session ->
-            session.createQuery<Book>(sql).resultList.awaitSuspending()
+            session.createQuery<Book>(sql).resultList.await()
         }
         books.forEach {
             println(it)
@@ -98,7 +111,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
             val query = session.createQuery(criteria)
             query.setPlan(graph)
 
-            query.resultList.awaitSuspending()
+            query.resultList.await()
         }
         books.forEach {
             println(it)
@@ -119,7 +132,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
             val graph = session.createEntityGraph(Book::class.java)
             graph.addAttributeNodes(Book_.author)
 
-            session.createQuery(criteria).setPlan(graph).resultList.awaitSuspending()
+            session.createQuery(criteria).setPlan(graph).resultList.await()
         }
         books.forEach {
             println(it)
@@ -137,7 +150,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
             .where(cb.equal(book.get(Book_.isbn), book1.isbn))
 
         val authors = sf.withStatelessSessionSuspending { session ->
-            session.createQuery(criteria).resultList.awaitSuspending()
+            session.createQuery(criteria).resultList.await()
         }
         // NOTE: author 만 로딩했으므로, books 에 접근하면 lazy initialization 예외가 발생합니다.
         authors.forEach {
@@ -168,7 +181,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
             session.createQuery(criteria)
                 .setPlan(graph)
                 .resultList
-                .awaitSuspending()
+                .await()
         }
         authors.forEach { a ->
             println(a)
@@ -178,7 +191,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
         }
         authors shouldHaveSize 1
         authors.forEach {
-            it.books shouldHaveSize 2
+            it.books shouldHaveSize 1
         }
     }
 }

@@ -1,4 +1,4 @@
-package io.bluetape4k.data.hibernate.reactive.mutiny
+package io.bluetape4k.hibernate.reactive.mutiny
 
 import io.bluetape4k.vertx.currentVertxDispatcher
 import io.smallrye.mutiny.coroutines.asUni

@@ -1,4 +1,4 @@
-package io.bluetape4k.data.hibernate.reactive
+package io.bluetape4k.hibernate.reactive
 
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging

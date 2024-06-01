@@ -1,4 +1,4 @@
-package io.bluetape4k.data.hibernate.reactive.stage
+package io.bluetape4k.hibernate.reactive.stage
 
 import io.bluetape4k.vertx.currentVertxDispatcher
 import kotlinx.coroutines.async

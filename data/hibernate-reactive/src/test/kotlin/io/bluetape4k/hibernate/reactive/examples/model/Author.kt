@@ -1,8 +1,8 @@
-package io.bluetape4k.data.hibernate.reactive.examples.model
+package io.bluetape4k.hibernate.reactive.examples.model
 
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.core.ToStringBuilder
-import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.support.requireNotBlank
 import jakarta.persistence.Access
 import jakarta.persistence.AccessType
 import jakarta.persistence.CascadeType
@@ -36,7 +36,7 @@ class Author private constructor(
     var id: Long = 0L
 
     @OneToMany(mappedBy = "author", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
-    val books: MutableList<Book> = mutableListOf()
+    var books: MutableList<Book> = mutableListOf()
 
     fun addBook(book: Book) {
         if (books.add(book)) {

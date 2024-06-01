@@ -1,11 +1,8 @@
-package io.bluetape4k.data.hibernate.reactive.examples.model
+package io.bluetape4k.hibernate.reactive.examples.model
 
 import io.bluetape4k.core.AbstractValueObject
 import io.bluetape4k.core.ToStringBuilder
 import io.bluetape4k.support.hashOf
-import org.hibernate.annotations.FetchMode
-import org.hibernate.annotations.FetchProfile
-import java.time.LocalDate
 import jakarta.persistence.Access
 import jakarta.persistence.AccessType
 import jakarta.persistence.Entity
@@ -16,6 +13,9 @@ import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import jakarta.validation.constraints.Past
+import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.FetchProfile
+import java.time.LocalDate
 
 
 // NOTE: author 를 lazy 로 얻기 위해서는 @FetchProfile 을 이용해야 합니다.

@@ -1,4 +1,4 @@
-package io.bluetape4k.data.hibernate.reactive
+package io.bluetape4k.hibernate.reactive
 
 import io.bluetape4k.testcontainers.jdbc.MySQL8Server
 import org.hibernate.tool.schema.Action
@@ -12,7 +12,7 @@ object MySQLLauncher {
 
         // for JPA 2.x (JPA 3.x 에서는 jakarta.xxxx 를 사용해야 함)
         // docker-run-mysql.sh로 미리 실행시켰을 때 사용합니다.
-        // props["javax.persistence.jdbc.url"] = "jdbc:mysql://localhost:3306/bluetape4k"
+        // props["javax.persistence.jdbc.url"] = "jdbc:mysql://localhost:3306/kommons"
         // props["javax.persistence.jdbc.user"] = "root"
         // props["javax.persistence.jdbc.password"] = "test"
 

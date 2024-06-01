@@ -1,12 +1,12 @@
-package io.bluetape4k.data.hibernate.reactive.stage
+package io.bluetape4k.hibernate.reactive.stage
 
+import jakarta.persistence.EntityGraph
 import org.hibernate.LockMode
 import org.hibernate.reactive.common.AffectedEntities
 import org.hibernate.reactive.common.Identifier
 import org.hibernate.reactive.common.ResultSetMapping
 import org.hibernate.reactive.stage.Stage
 import java.util.concurrent.CompletionStage
-import jakarta.persistence.EntityGraph
 
 inline fun <reified T> Stage.Session.findAs(id: java.io.Serializable): CompletionStage<T> =
     find(T::class.java, id)
