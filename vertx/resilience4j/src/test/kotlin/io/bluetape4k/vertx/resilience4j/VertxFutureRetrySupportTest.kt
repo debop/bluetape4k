@@ -13,126 +13,132 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.concurrent.Executors
 
+@Suppress("UNUSED_PARAMETER")
 class VertxFutureRetrySupportTest: AbstractVertxFutureTest() {
 
     private val scheduler = Executors.newSingleThreadScheduledExecutor()
 
     @Test
-    fun `성공한 함수는 retry를 하지 않습니다`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val service = VertxHelloWorldService()
-        val retry = Retry.ofDefaults("test").applyEventPublisher()
-        val metrics = retry.metrics
+    fun `성공한 함수는 retry를 하지 않습니다`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val service = VertxHelloWorldService()
+            val retry = Retry.ofDefaults("test").applyEventPublisher()
+            val metrics = retry.metrics
 
-        val future = retry.executeVertxFuture(scheduler) { service.returnHelloWorld() }
-        val result = runCatching { future.toCompletableFuture().get() }
+            val future = retry.executeVertxFuture(scheduler) { service.returnHelloWorld() }
+            val result = runCatching { future.toCompletableFuture().get() }
 
-        result.isSuccess.shouldBeTrue()
-        result.getOrNull() shouldBeEqualTo "Hello world"
+            result.isSuccess.shouldBeTrue()
+            result.getOrNull() shouldBeEqualTo "Hello world"
 
-        metrics.numberOfSuccessfulCallsWithoutRetryAttempt shouldBeEqualTo 1
-        metrics.numberOfSuccessfulCallsWithRetryAttempt shouldBeEqualTo 0
-        metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
-        metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfSuccessfulCallsWithoutRetryAttempt shouldBeEqualTo 1
+            metrics.numberOfSuccessfulCallsWithRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
 
-        service.invocationCount shouldBeEqualTo 1
-    }
-
-    @Test
-    fun `예외가 발생하면 재시도합니다`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val service = VertxHelloWorldService()
-        val retry = Retry.of("test") {
-            RetryConfig {
-                maxAttempts(3)
-                waitDuration(Duration.ofMillis(10))
-            }
-        }.applyEventPublisher()
-        val metrics = retry.metrics
-
-        val future = retry.executeVertxFuture(scheduler) {
-            when (service.invocationCount) {
-                0    -> service.throwException()
-                else -> service.returnHelloWorld()
-            }
+            service.invocationCount shouldBeEqualTo 1
         }
 
-        val result = runCatching { future.toCompletableFuture().get() }
-
-        result.isSuccess.shouldBeTrue()
-
-        metrics.numberOfSuccessfulCallsWithoutRetryAttempt shouldBeEqualTo 0
-        metrics.numberOfSuccessfulCallsWithRetryAttempt shouldBeEqualTo 1
-        metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
-        metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
-
-        service.invocationCount shouldBeEqualTo 2
-    }
-
     @Test
-    fun `retryOnResult 를 기준으로 재시도를 수행합니다`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val service = VertxHelloWorldService()
-        val retry = Retry.of("test") {
-            RetryConfig {
-                waitDuration(Duration.ofMillis(10))
-                retryOnResult {
-                    log.debug { "invocation count=${service.invocationCounter}" }
-                    service.invocationCount < 2
+    fun `예외가 발생하면 재시도합니다`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val service = VertxHelloWorldService()
+            val retry = Retry.of("test") {
+                RetryConfig {
+                    maxAttempts(3)
+                    waitDuration(Duration.ofMillis(10))
+                }
+            }.applyEventPublisher()
+            val metrics = retry.metrics
+
+            val future = retry.executeVertxFuture(scheduler) {
+                when (service.invocationCount) {
+                    0    -> service.throwException()
+                    else -> service.returnHelloWorld()
                 }
             }
-        }.applyEventPublisher()
-        val metrics = retry.metrics
 
-        val future = retry.executeVertxFuture(scheduler) { service.returnHelloWorld() }
-        val result = runCatching { future.toCompletableFuture().get() }
+            val result = runCatching { future.toCompletableFuture().get() }
 
-        result.isSuccess.shouldBeTrue()
+            result.isSuccess.shouldBeTrue()
 
-        metrics.numberOfSuccessfulCallsWithoutRetryAttempt shouldBeEqualTo 0
-        metrics.numberOfSuccessfulCallsWithRetryAttempt shouldBeEqualTo 1
-        metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
-        metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfSuccessfulCallsWithoutRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfSuccessfulCallsWithRetryAttempt shouldBeEqualTo 1
+            metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
 
-        service.invocationCount shouldBeEqualTo 2
-    }
+            service.invocationCount shouldBeEqualTo 2
+        }
 
     @Test
-    fun `반복된 예외 시에는 함수 실행이 실패한다`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val service = VertxHelloWorldService()
-        val retry = Retry.of("test") {
-            RetryConfig {
-                waitDuration(Duration.ofMillis(10))
-            }
-        }.applyEventPublisher()
-        val metrics = retry.metrics
+    fun `retryOnResult 를 기준으로 재시도를 수행합니다`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val service = VertxHelloWorldService()
+            val retry = Retry.of("test") {
+                RetryConfig {
+                    waitDuration(Duration.ofMillis(10))
+                    retryOnResult {
+                        log.debug { "invocation count=${service.invocationCounter}" }
+                        service.invocationCount < 2
+                    }
+                }
+            }.applyEventPublisher()
+            val metrics = retry.metrics
 
-        val future = retry.executeVertxFuture(scheduler) { service.throwException() }
-        val result = runCatching { future.toCompletableFuture().get() }
+            val future = retry.executeVertxFuture(scheduler) { service.returnHelloWorld() }
+            val result = runCatching { future.toCompletableFuture().get() }
 
-        result.isFailure.shouldBeTrue()
-        metrics.numberOfSuccessfulCallsWithoutRetryAttempt shouldBeEqualTo 0
-        metrics.numberOfSuccessfulCallsWithRetryAttempt shouldBeEqualTo 0
-        metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
-        metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 1
+            result.isSuccess.shouldBeTrue()
 
-        service.invocationCount shouldBeEqualTo retry.retryConfig.maxAttempts
-    }
+            metrics.numberOfSuccessfulCallsWithoutRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfSuccessfulCallsWithRetryAttempt shouldBeEqualTo 1
+            metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
+
+            service.invocationCount shouldBeEqualTo 2
+        }
 
     @Test
-    fun `decorate future function`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val service = VertxHelloWorldService()
-        val retry = Retry.ofDefaults("test").applyEventPublisher()
-        val metrics = retry.metrics
+    fun `반복된 예외 시에는 함수 실행이 실패한다`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val service = VertxHelloWorldService()
+            val retry = Retry.of("test") {
+                RetryConfig {
+                    waitDuration(Duration.ofMillis(10))
+                }
+            }.applyEventPublisher()
+            val metrics = retry.metrics
 
-        val decorated = retry.decorateVertxFuture(scheduler) { service.returnHelloWorld() }
-        val result = runCatching { decorated().toCompletableFuture().get() }
+            val future = retry.executeVertxFuture(scheduler) { service.throwException() }
+            val result = runCatching { future.toCompletableFuture().get() }
 
-        result.isSuccess.shouldBeTrue()
-        result.getOrNull() shouldBeEqualTo "Hello world"
+            result.isFailure.shouldBeTrue()
+            metrics.numberOfSuccessfulCallsWithoutRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfSuccessfulCallsWithRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 1
 
-        metrics.numberOfSuccessfulCallsWithoutRetryAttempt shouldBeEqualTo 1
-        metrics.numberOfSuccessfulCallsWithRetryAttempt shouldBeEqualTo 0
-        metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
-        metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
+            service.invocationCount shouldBeEqualTo retry.retryConfig.maxAttempts
+        }
 
-        service.invocationCount shouldBeEqualTo 1
-    }
+    @Test
+    fun `decorate future function`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val service = VertxHelloWorldService()
+            val retry = Retry.ofDefaults("test").applyEventPublisher()
+            val metrics = retry.metrics
+
+            val decorated = retry.decorateVertxFuture(scheduler) { service.returnHelloWorld() }
+            val result = runCatching { decorated().toCompletableFuture().get() }
+
+            result.isSuccess.shouldBeTrue()
+            result.getOrNull() shouldBeEqualTo "Hello world"
+
+            metrics.numberOfSuccessfulCallsWithoutRetryAttempt shouldBeEqualTo 1
+            metrics.numberOfSuccessfulCallsWithRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfFailedCallsWithoutRetryAttempt shouldBeEqualTo 0
+            metrics.numberOfFailedCallsWithRetryAttempt shouldBeEqualTo 0
+
+            service.invocationCount shouldBeEqualTo 1
+        }
 }

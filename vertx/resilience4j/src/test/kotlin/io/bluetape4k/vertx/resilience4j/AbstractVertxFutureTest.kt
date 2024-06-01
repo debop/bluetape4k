@@ -16,7 +16,7 @@ abstract class AbstractVertxFutureTest {
     protected fun CircuitBreaker.applyEventPublisher() = apply {
         eventPublisher
             .onSuccess { log.debug { "Success to execute." } }
-            .onError { log.error(it.throwable) { "Fail to execute in retry context" } }
+            .onError { log.error(it.throwable) { "Fail to execute in circuit-breaker context" } }
     }
 
     protected fun Retry.applyEventPublisher() = apply {

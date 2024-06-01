@@ -11,6 +11,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 
+@Suppress("UNUSED_PARAMETER")
 class VertxDecoratorsTest: AbstractVertxFutureTest() {
 
     private val retry = Retry.ofDefaults("coDecorator").applyEventPublisher()
@@ -18,29 +19,28 @@ class VertxDecoratorsTest: AbstractVertxFutureTest() {
     private val rateLimiter = RateLimiter.ofDefaults("coDecorator")
 
     @Test
-    fun `성공하는 함수에 retry decorate 하기`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val service = VertxHelloWorldService()
+    fun `성공하는 함수에 retry decorate 하기`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val service = VertxHelloWorldService()
 
-        val decorated = VertxDecorators
-            .ofSupplier { service.returnHelloWorld() }
-            .withRetry(retry)
-            .decorate()
+            val decorated = VertxDecorators.ofSupplier { service.returnHelloWorld() }
+                .withRetry(retry)
+                .decorate()
 
-        val result = runCatching { decorated().toCompletableFuture().get() }
+            val result = runCatching { decorated().toCompletableFuture().get() }
 
-        result.isSuccess.shouldBeTrue()
-        result.getOrNull() shouldBeEqualTo "Hello world"
+            result.isSuccess.shouldBeTrue()
+            result.getOrNull() shouldBeEqualTo "Hello world"
 
-        service.invocationCount shouldBeEqualTo 1
-    }
+            service.invocationCount shouldBeEqualTo 1
+        }
 
     @Test
     fun `성공하는 함수에 retry와 circuit breaker decorate 하기`(vertx: Vertx, testContext: VertxTestContext) =
         withTestContext(testContext) {
             val service = VertxHelloWorldService()
 
-            val decorated = VertxDecorators
-                .ofSupplier { service.returnHelloWorld() }
+            val decorated = VertxDecorators.ofSupplier { service.returnHelloWorld() }
                 .withRetry(retry)
                 .withCircuitBreaker(circuitBreaker)
                 .decorate()
@@ -54,44 +54,43 @@ class VertxDecoratorsTest: AbstractVertxFutureTest() {
         }
 
     @Test
-    fun `성공하는 함수에 fallback decorate 하기`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val service = VertxHelloWorldService()
+    fun `성공하는 함수에 fallback decorate 하기`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val service = VertxHelloWorldService()
 
-        val decorated = VertxDecorators
-            .ofSupplier { service.returnHelloWorld() }
-            .withFallback({ it == "Hello world" }, { "fallback" })
-            .decorate()
+            val decorated = VertxDecorators.ofSupplier { service.returnHelloWorld() }
+                .withFallback({ it == "Hello world" }, { "fallback" })
+                .decorate()
 
-        val result = runCatching { decorated().toCompletableFuture().get() }
+            val result = runCatching { decorated().toCompletableFuture().get() }
 
-        result.isSuccess.shouldBeTrue()
-        result.getOrNull() shouldBeEqualTo "fallback"
+            result.isSuccess.shouldBeTrue()
+            result.getOrNull() shouldBeEqualTo "fallback"
 
-        service.invocationCount shouldBeEqualTo 1
-    }
+            service.invocationCount shouldBeEqualTo 1
+        }
 
     @Test
-    fun `실패하는 함수에 retry decorate 하기`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val service = VertxHelloWorldService()
+    fun `실패하는 함수에 retry decorate 하기`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val service = VertxHelloWorldService()
 
-        val decorated = VertxDecorators
-            .ofSupplier { service.throwException() }
-            .withRetry(retry)
-            .decorate()
+            val decorated = VertxDecorators.ofSupplier { service.throwException() }
+                .withRetry(retry)
+                .decorate()
 
-        val result = runCatching { decorated().toCompletableFuture().get() }
+            val result = runCatching { decorated().toCompletableFuture().get() }
 
-        result.isFailure.shouldBeTrue()
-        service.invocationCount shouldBeEqualTo retry.retryConfig.maxAttempts
-    }
+            result.isFailure.shouldBeTrue()
+            service.invocationCount shouldBeEqualTo retry.retryConfig.maxAttempts
+        }
 
     @Test
     fun `실패하는 함수에 retry 와 circuit breaker decorate 하기`(vertx: Vertx, testContext: VertxTestContext) =
         withTestContext(testContext) {
             val service = VertxHelloWorldService()
 
-            val decorated = VertxDecorators
-                .ofSupplier { service.throwException() }
+            val decorated = VertxDecorators.ofSupplier { service.throwException() }
                 .withRetry(retry)
                 .withCircuitBreaker(circuitBreaker)
                 .decorate()

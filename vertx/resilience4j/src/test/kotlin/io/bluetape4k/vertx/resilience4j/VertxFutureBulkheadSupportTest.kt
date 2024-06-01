@@ -17,6 +17,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertFailsWith
 
+@Suppress("UNUSED_PARAMETER")
 class VertxFutureBulkheadSupportTest: AbstractVertxFutureTest() {
 
     companion object: KLogging()
@@ -50,23 +51,24 @@ class VertxFutureBulkheadSupportTest: AbstractVertxFutureTest() {
     }
 
     @Test
-    fun `bulkhead가 허용하면 성공 함수가 실행된다`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val bulkhead = Bulkhead.ofDefaults("test").registerEventListener()
-        val service = VertxHelloWorldService()
+    fun `bulkhead가 허용하면 성공 함수가 실행된다`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val bulkhead = Bulkhead.ofDefaults("test").registerEventListener()
+            val service = VertxHelloWorldService()
 
-        val future = bulkhead.executeVertxFuture {
-            service.returnHelloWorld()
+            val future = bulkhead.executeVertxFuture {
+                service.returnHelloWorld()
+            }
+
+            val result = future.toCompletableFuture().get()
+
+            result shouldBeEqualTo "Hello world"
+            permittedEvents shouldBeEqualTo 1
+            rejectedEvents shouldBeEqualTo 0
+            finishedEvents shouldBeEqualTo 1
+
+            service.invocationCount shouldBeEqualTo 1
         }
-
-        val result = future.toCompletableFuture().get()
-
-        result shouldBeEqualTo "Hello world"
-        permittedEvents shouldBeEqualTo 1
-        rejectedEvents shouldBeEqualTo 0
-        finishedEvents shouldBeEqualTo 1
-
-        service.invocationCount shouldBeEqualTo 1
-    }
 
     @Test
     fun `bulkhead가 허용되지 않으면 함수 실행을 하지 않습니다`(vertx: Vertx, testContext: VertxTestContext) =
@@ -106,42 +108,44 @@ class VertxFutureBulkheadSupportTest: AbstractVertxFutureTest() {
         }
 
     @Test
-    fun `bulkhead가 허용하면 예외 함수도 실행된다`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val bulkhead = Bulkhead.ofDefaults("test").registerEventListener()
-        val service = VertxHelloWorldService()
+    fun `bulkhead가 허용하면 예외 함수도 실행된다`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val bulkhead = Bulkhead.ofDefaults("test").registerEventListener()
+            val service = VertxHelloWorldService()
 
-        val future = bulkhead.executeVertxFuture {
-            service.throwException()
+            val future = bulkhead.executeVertxFuture {
+                service.throwException()
+            }
+
+            assertFailsWith<RuntimeException> {
+                future.toCompletableFuture().join()
+            }
+
+            future.failed().shouldBeTrue()
+            permittedEvents shouldBeEqualTo 1
+            rejectedEvents shouldBeEqualTo 0
+            finishedEvents shouldBeEqualTo 1
+
+            service.invocationCount shouldBeEqualTo 1
         }
-
-        assertFailsWith<RuntimeException> {
-            future.toCompletableFuture().join()
-        }
-
-        future.failed().shouldBeTrue()
-        permittedEvents shouldBeEqualTo 1
-        rejectedEvents shouldBeEqualTo 0
-        finishedEvents shouldBeEqualTo 1
-
-        service.invocationCount shouldBeEqualTo 1
-    }
 
     @Test
-    fun `decorate vertx future`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val bulkhead = Bulkhead.ofDefaults("test").registerEventListener()
-        val service = VertxHelloWorldService()
+    fun `decorate vertx future`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val bulkhead = Bulkhead.ofDefaults("test").registerEventListener()
+            val service = VertxHelloWorldService()
 
-        val decorated = bulkhead.decorateVertxFuture {
-            service.returnHelloWorld()
+            val decorated = bulkhead.decorateVertxFuture {
+                service.returnHelloWorld()
+            }
+            val future = decorated.invoke()
+            val result = future.toCompletableFuture().get()
+
+            result shouldBeEqualTo "Hello world"
+            permittedEvents shouldBeEqualTo 1
+            rejectedEvents shouldBeEqualTo 0
+            finishedEvents shouldBeEqualTo 1
+
+            service.invocationCount shouldBeEqualTo 1
         }
-        val future = decorated.invoke()
-        val result = future.toCompletableFuture().get()
-
-        result shouldBeEqualTo "Hello world"
-        permittedEvents shouldBeEqualTo 1
-        rejectedEvents shouldBeEqualTo 0
-        finishedEvents shouldBeEqualTo 1
-
-        service.invocationCount shouldBeEqualTo 1
-    }
 }

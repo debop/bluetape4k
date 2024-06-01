@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
+@Suppress("UNUSED_PARAMETER")
 class VertxFutureCircuitBreakerSupportTest: AbstractVertxFutureTest() {
 
     companion object: KLogging()

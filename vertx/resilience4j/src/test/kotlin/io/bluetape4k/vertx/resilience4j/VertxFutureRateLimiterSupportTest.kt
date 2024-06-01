@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import java.time.Duration
 
+@Suppress("UNUSED_PARAMETER")
 class VertxFutureRateLimiterSupportTest: AbstractVertxFutureTest() {
 
     companion object: KLogging() {
@@ -28,44 +29,46 @@ class VertxFutureRateLimiterSupportTest: AbstractVertxFutureTest() {
     private fun RateLimiter.applyEventPublishing() = apply {
         eventPublisher
             .onSuccess { log.debug { "Success" } }
-            .onEvent { log.debug { "Event. permits=${it.numberOfPermits}" } }
+            .onEvent { log.debug { "FlowEvent. permits=${it.numberOfPermits}" } }
     }
 
     @Test
-    fun `메소드 호출 성공 시 Permission은 1 감소`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val rateLimiter = RateLimiter.of("test", noWaitConfig()).applyEventPublishing()
-        val metrics = rateLimiter.metrics
-        val service = VertxHelloWorldService()
+    fun `메소드 호출 성공 시 Permission은 1 감소`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val rateLimiter = RateLimiter.of("test", noWaitConfig()).applyEventPublishing()
+            val metrics = rateLimiter.metrics
+            val service = VertxHelloWorldService()
 
-        val result = rateLimiter.executeVertxFuture {
-            service.returnHelloWorld()
-        }.toCompletableFuture().get()
-
-        result shouldBeEqualTo "Hello world"
-        metrics.availablePermissions shouldBeEqualTo RATE_LIMIT - 1
-        metrics.numberOfWaitingThreads shouldBeEqualTo 0
-        service.invocationCount shouldBeEqualTo 1
-    }
-
-    @Test
-    fun `메소드 실행 실패 시에도 Permission은 1 감소`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val rateLimiter = RateLimiter.of("test", noWaitConfig()).applyEventPublishing()
-        val metrics = rateLimiter.metrics
-        val service = VertxHelloWorldService()
-
-        try {
-            rateLimiter.executeVertxFuture {
-                service.throwException()
+            val result = rateLimiter.executeVertxFuture {
+                service.returnHelloWorld()
             }.toCompletableFuture().get()
-            fail("예외가 발생해야 합니다")
-        } catch (e: Throwable) {
-            // no op
+
+            result shouldBeEqualTo "Hello world"
+            metrics.availablePermissions shouldBeEqualTo RATE_LIMIT - 1
+            metrics.numberOfWaitingThreads shouldBeEqualTo 0
+            service.invocationCount shouldBeEqualTo 1
         }
 
-        metrics.availablePermissions shouldBeEqualTo RATE_LIMIT - 1
-        metrics.numberOfWaitingThreads shouldBeEqualTo 0
-        service.invocationCount shouldBeEqualTo 1
-    }
+    @Test
+    fun `메소드 실행 실패 시에도 Permission은 1 감소`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val rateLimiter = RateLimiter.of("test", noWaitConfig()).applyEventPublishing()
+            val metrics = rateLimiter.metrics
+            val service = VertxHelloWorldService()
+
+            try {
+                rateLimiter.executeVertxFuture {
+                    service.throwException()
+                }.toCompletableFuture().get()
+                fail("예외가 발생해야 합니다")
+            } catch (e: Throwable) {
+                // no op
+            }
+
+            metrics.availablePermissions shouldBeEqualTo RATE_LIMIT - 1
+            metrics.numberOfWaitingThreads shouldBeEqualTo 0
+            service.invocationCount shouldBeEqualTo 1
+        }
 
     @Test
     fun `rate limit 에 걸리면 메소드 실행이 안되고 즉시 예외를 발생합니다`(vertx: Vertx, testContext: VertxTestContext) =
@@ -96,19 +99,20 @@ class VertxFutureRateLimiterSupportTest: AbstractVertxFutureTest() {
         }
 
     @Test
-    fun `decorate successful function`(vertx: Vertx, testContext: VertxTestContext) = withTestContext(testContext) {
-        val rateLimiter = RateLimiter.of("test", noWaitConfig()).applyEventPublishing()
-        val metrics = rateLimiter.metrics
-        val service = VertxHelloWorldService()
+    fun `decorate successful function`(vertx: Vertx, testContext: VertxTestContext) =
+        withTestContext(testContext) {
+            val rateLimiter = RateLimiter.of("test", noWaitConfig()).applyEventPublishing()
+            val metrics = rateLimiter.metrics
+            val service = VertxHelloWorldService()
 
-        val decorated = rateLimiter.decorateVertxFuture {
-            service.returnHelloWorld()
+            val decorated = rateLimiter.decorateVertxFuture {
+                service.returnHelloWorld()
+            }
+            val result = decorated().toCompletableFuture().get()
+
+            result shouldBeEqualTo "Hello world"
+            metrics.availablePermissions shouldBeEqualTo RATE_LIMIT - 1
+            metrics.numberOfWaitingThreads shouldBeEqualTo 0
+            service.invocationCount shouldBeEqualTo 1
         }
-        val result = decorated().toCompletableFuture().get()
-
-        result shouldBeEqualTo "Hello world"
-        metrics.availablePermissions shouldBeEqualTo RATE_LIMIT - 1
-        metrics.numberOfWaitingThreads shouldBeEqualTo 0
-        service.invocationCount shouldBeEqualTo 1
-    }
 }
