@@ -1,7 +1,7 @@
 package org.springframework.kafka.annotation
 
-import io.bluetape4k.infra.kafka.spring.test.utils.consumerProps
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
+import io.bluetape4k.kafka.spring.test.utils.consumerProps
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.uninitialized
 import org.amshove.kluent.shouldBeEqualTo

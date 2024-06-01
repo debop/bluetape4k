@@ -1,4 +1,4 @@
-# Module bluetape4k-infra-kafka
+# Module bluetape4k-kafka
 
 Kafka 를 사용하기 위한 유용한 함수들을 제공합니다.
 

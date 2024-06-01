@@ -1,8 +1,8 @@
 package org.springframework.kafka.streams
 
-import io.bluetape4k.infra.kafka.streams.kstream.consumedOf
-import io.bluetape4k.infra.kafka.streams.kstream.groupedOf
-import io.bluetape4k.infra.kafka.streams.kstream.materializedOf
+import io.bluetape4k.kafka.streams.kstream.consumedOf
+import io.bluetape4k.kafka.streams.kstream.groupedOf
+import io.bluetape4k.kafka.streams.kstream.materializedOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.uninitialized
 import org.amshove.kluent.shouldContainSame

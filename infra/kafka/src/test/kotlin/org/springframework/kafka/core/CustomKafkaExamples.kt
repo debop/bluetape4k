@@ -1,7 +1,7 @@
 package org.springframework.kafka.core
 
-import io.bluetape4k.infra.kafka.codec.JacksonKafkaCodec
-import io.bluetape4k.infra.kafka.codec.StringKafkaCodec
+import io.bluetape4k.kafka.codec.JacksonKafkaCodec
+import io.bluetape4k.kafka.codec.StringKafkaCodec
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.testcontainers.massage.KafkaServer
@@ -21,9 +21,9 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
-import org.springframework.kafka.core.SimpleKafkaExamples.Companion.SIMPLE_TOPIC_NAME
 import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.messaging.handler.annotation.Header
+import org.springframework.messaging.handler.annotation.Headers
 import org.springframework.messaging.handler.annotation.Payload
 
 @SpringBootTest
@@ -99,11 +99,11 @@ class CustomKafkaExamples {
         val key = "custom key"
         val message = Greeting("debop", "hello, ")
 
-        val result = kafkaTemplate.send(SIMPLE_TOPIC_NAME, key, message).await()
+        val result = kafkaTemplate.send(CUSTOM_TOPIC_NAME, key, message).await()
         log.debug { "produceRecord=${result.producerRecord}" }
         log.debug { "recordMetadata=${result.recordMetadata}" }
 
-        await until { receiveCounter.value < 2 }
+        await until { receiveCounter.value >= 2 }
     }
 
     @KafkaListener(topics = [CUSTOM_TOPIC_NAME], groupId = "custom")
@@ -117,8 +117,9 @@ class CustomKafkaExamples {
         @Payload message: Greeting,
         @Header(KafkaHeaders.RECEIVED_PARTITION) partition: Int,
         @Header(KafkaHeaders.OFFSET) offset: Long,
+        @Headers headers: Map<String, Any?>,
     ) {
-        log.debug { "Received message: [$message], partition=$partition, offset=$offset" }
+        log.debug { "Received message: [$message], partition=$partition, offset=$offset, headers=$headers" }
         receiveCounter.incrementAndGet()
     }
 }

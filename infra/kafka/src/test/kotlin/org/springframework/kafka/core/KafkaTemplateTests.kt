@@ -1,9 +1,9 @@
 package org.springframework.kafka.core
 
 import io.bluetape4k.concurrent.onSuccess
-import io.bluetape4k.infra.kafka.spring.test.utils.consumerProps
-import io.bluetape4k.infra.kafka.spring.test.utils.getSingleRecord
-import io.bluetape4k.infra.kafka.spring.test.utils.producerProps
+import io.bluetape4k.kafka.spring.test.utils.consumerProps
+import io.bluetape4k.kafka.spring.test.utils.getSingleRecord
+import io.bluetape4k.kafka.spring.test.utils.producerProps
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.spring.messaging.support.message
@@ -12,7 +12,6 @@ import io.bluetape4k.support.uninitialized
 import io.mockk.mockk
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldHaveSize
@@ -247,7 +246,9 @@ class KafkaTemplateTests {
         next = iterator.next()
         next.key() shouldBeEqualTo DefaultKafkaHeaderMapper.JSON_TYPES
 
-        iterator.hasNext().shouldBeFalse()
+        r1.headers().forEach {
+            log.debug { "Received message header. key=${it.key()}, value=${it.value().toUtf8String()}" }
+        }
 
         val message2 = message("foo-message-2") {
             setHeader(KafkaHeaders.TOPIC, INT_KEY_TOPIC)

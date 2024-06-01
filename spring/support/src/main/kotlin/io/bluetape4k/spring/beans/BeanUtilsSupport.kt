@@ -1,7 +1,7 @@
 package io.bluetape4k.spring.beans
 
-import io.bluetape4k.core.assertNotBlank
 import io.bluetape4k.logging.KotlinLogging
+import io.bluetape4k.support.assertNotBlank
 import io.bluetape4k.utils.KotlinDelegates
 import org.springframework.beans.BeanInstantiationException
 import org.springframework.beans.BeanUtils
@@ -34,7 +34,7 @@ fun <T: Any> Constructor<T>.instantiateClass(vararg args: Any?): T {
             KotlinDetector.isKotlinType(this.declaringClass) ->
                 KotlinDelegates.instantiateClass(this, *args)!!
 
-            else ->
+            else                                             ->
                 BeanUtils.instantiateClass(this, *args)
         }
     } catch (e: Exception) {

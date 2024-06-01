@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import io.bluetape4k.io.json.jackson.uuid.JsonUuidModule
+import io.bluetape4k.json.jackson.uuid.JsonUuidModule
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import java.time.ZoneId

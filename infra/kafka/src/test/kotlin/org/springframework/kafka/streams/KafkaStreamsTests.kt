@@ -1,6 +1,6 @@
 package org.springframework.kafka.streams
 
-import io.bluetape4k.infra.kafka.spring.test.utils.getPropertyValue
+import io.bluetape4k.kafka.spring.test.utils.getPropertyValue
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.support.toUtf8Bytes
@@ -209,7 +209,6 @@ class KafkaStreamsTests {
             headers["foo"] = LiteralExpression("bar")
             val parser = SpelExpressionParser()
             headers["spel"] = parser.parseExpression("context.timestamp() + key + value")
-            val enricher = HeaderEnricher<Int?, String?>(headers)
 
             stream.mapValues<String>(ValueMapper<String, String> { it.uppercase() })
                 .mapValues { name: String? -> Foo(name!!) }
@@ -225,8 +224,8 @@ class KafkaStreamsTests {
                 .map { windowedId: Windowed<Int>, value: String ->
                     KeyValue(windowedId.key(), value)
                 }
-                .filter { i: Int?, s: String -> s.length > 40 }
-                .transform<Int, String>({ enricher })
+                .filter { _: Int?, s: String -> s.length > 40 }
+                .process<Int, String>({ HeaderEnricherProcessor(headers) })
                 .to(streamingTopic2)
             stream.print(Printed.toSysOut())
             return stream

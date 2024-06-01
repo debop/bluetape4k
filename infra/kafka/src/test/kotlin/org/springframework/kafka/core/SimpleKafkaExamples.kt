@@ -113,7 +113,7 @@ class SimpleKafkaExamples {
         result2.recordMetadata.partition() shouldBeEqualTo result.recordMetadata.partition()
         result2.recordMetadata.offset() shouldBeGreaterThan result.recordMetadata.offset()
 
-        await until { consumed.value < 2 * 3 }
+        await until { consumed.value >= 2 * 3 }
         log.debug { "all consumer has been consumed." }
     }
 
