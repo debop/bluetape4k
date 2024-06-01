@@ -17,9 +17,9 @@ import io.bluetape4k.data.cassandra.data.setValue
 import io.bluetape4k.data.cassandra.querybuilder.bindMarker
 import io.bluetape4k.data.cassandra.querybuilder.inValues
 import io.bluetape4k.data.cassandra.querybuilder.literal
-import io.bluetape4k.io.json.jackson.Jackson
-import io.bluetape4k.io.json.jackson.readValueOrNull
-import io.bluetape4k.io.json.jackson.writeAsString
+import io.bluetape4k.json.jackson.Jackson
+import io.bluetape4k.json.jackson.readValueOrNull
+import io.bluetape4k.json.jackson.writeAsString
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
