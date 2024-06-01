@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.maxmind.geoip2.model.CityResponse
 import com.maxmind.geoip2.model.CountryResponse
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 
 abstract class AbstractGeoipTest {
@@ -21,7 +21,12 @@ abstract class AbstractGeoipTest {
     }
 
     protected fun getIpAddresses() = listOf(
-        "8.8.8.8", "172.217.161.174", "116.126.87.92", "15.165.181.38", "210.89.164.90", "172.30.1.22"
+        "8.8.8.8",              // Google
+        "104.28.211.28",        // Wrtn
+        "172.217.161.174",
+        "116.126.87.92",
+        "15.165.181.38",
+        "210.89.164.90",
     )
 
     protected fun CountryResponse.prettyPrint(): String = buildString {

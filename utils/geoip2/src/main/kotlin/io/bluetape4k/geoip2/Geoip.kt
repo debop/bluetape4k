@@ -2,9 +2,9 @@ package io.bluetape4k.geoip2
 
 import com.maxmind.db.CHMCache
 import com.maxmind.geoip2.DatabaseReader
-import io.bluetape4k.core.requireNotNull
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
+import io.bluetape4k.support.requireNotNull
 import io.bluetape4k.utils.Resourcex
 import io.bluetape4k.utils.ShutdownQueue
 import java.io.InputStream

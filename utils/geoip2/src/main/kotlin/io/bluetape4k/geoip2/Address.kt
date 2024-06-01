@@ -13,8 +13,9 @@ data class Address(
     val continent: String? = null,
     val geoLocation: GeoLocation? = null,
     val countryIsoCode: String? = null,
-    val traits: Traits? = null,
 ): Serializable {
+
+    internal var traits: Traits? = null
 
     companion object {
 
@@ -27,8 +28,9 @@ data class Address(
                 continent = cityResponse.continent.name,
                 geoLocation = GeoLocation.fromLocation(cityResponse.location),
                 countryIsoCode = cityResponse.country.isoCode,
+            ).apply {
                 traits = cityResponse.traits
-            )
+            }
         }
 
         @JvmStatic
@@ -38,8 +40,9 @@ data class Address(
                 country = countryResponse.country.name,
                 continent = countryResponse.continent.name,
                 countryIsoCode = countryResponse.country.isoCode,
+            ).apply {
                 traits = countryResponse.traits
-            )
+            }
         }
     }
 }

@@ -6,6 +6,9 @@ import io.bluetape4k.logging.KLogging
 import java.net.InetAddress
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * IP Address 정보로부터 City 단위의 행정 주소 [Address] 를 찾습니다.
+ */
 class GeoipCityFinder: GeoipFinder {
 
     companion object: KLogging()

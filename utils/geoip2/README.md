@@ -1,4 +1,4 @@
-# Module bluetape4k-utils-geoip2
+# Module bluetape4k-geoip2
 
 ## 개요
 

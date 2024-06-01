@@ -9,4 +9,6 @@ dependencies {
 
     // MaxMind GeoIP2
     api("com.maxmind.geoip2:geoip2:4.0.1")
+
+    testImplementation(Libs.kotlinx_coroutines_test)
 }
