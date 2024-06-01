@@ -74,8 +74,8 @@ subprojects {
         }
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_21)
-            languageVersion.set(KotlinVersion.KOTLIN_1_9)
-            apiVersion.set(KotlinVersion.KOTLIN_1_9)
+            languageVersion.set(KotlinVersion.KOTLIN_2_0)
+            apiVersion.set(KotlinVersion.KOTLIN_2_0)
             freeCompilerArgs = listOf(
                 "-Xjsr305=strict",
                 "-Xjvm-default=all",
@@ -97,9 +97,6 @@ subprojects {
             freeCompilerArgs.addAll(experimentalAnnotations.map { "-opt-in=$it" })
         }
     }
-
-//    val javaVersion = JavaVersion.VERSION_21.toString()
-    val kotlinVersion = "1.9"
 
     tasks {
         compileJava {

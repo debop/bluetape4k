@@ -1,6 +1,6 @@
-package io.bluetape4k.utils.money
+package io.bluetape4k.money
 
-import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.support.requireNotBlank
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import javax.money.CurrencyUnit

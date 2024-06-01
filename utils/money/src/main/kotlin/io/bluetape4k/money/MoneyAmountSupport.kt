@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package io.bluetape4k.utils.money
+package io.bluetape4k.money
 
 import java.math.BigDecimal
 import java.math.BigInteger

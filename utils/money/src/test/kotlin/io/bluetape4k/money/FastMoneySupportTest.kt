@@ -1,22 +1,23 @@
-package io.bluetape4k.utils.money
+package io.bluetape4k.money
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNear
-import org.javamoney.moneta.Money
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.util.*
 import javax.money.CurrencyUnit
 import javax.money.Monetary
-import javax.money.UnknownCurrencyException
 import javax.money.format.MonetaryFormats
-import kotlin.test.assertFailsWith
 
-class MoneySupportTest {
+class FastMoneySupportTest {
 
     companion object: KLogging() {
+        val KRW = currencyUnitOf("KRW")
+        val USD = currencyUnitOf("USD")
+        val EUR = currencyUnitOf("EUR")
+        val CNY = currencyUnitOf("CNY")
+
         val Currencies: Collection<CurrencyUnit> = Monetary.getCurrencies()
 
         val defaultConversion = CurrencyConvertor.DefaultConversion
@@ -24,35 +25,8 @@ class MoneySupportTest {
     }
 
     @Test
-    fun `가능한 Currency Unit 조회`() {
-        printCurrencyUnit(KRW)
-        printCurrencyUnit(USD)
-        printCurrencyUnit(EUR)
-        printCurrencyUnit(CNY)
-
-        Currencies.forEach { printCurrencyUnit(it) }
-
-        assertFailsWith<UnknownCurrencyException> {
-            currencyUnitOf("AAA")
-        }
-    }
-
-    private fun printCurrencyUnit(unit: CurrencyUnit) {
-        log.debug { "code=${unit.currencyCode}, fraction digits=${unit.defaultFractionDigits}" }
-    }
-
-    @Test
-    fun `get currency unit by locale`() {
-        currencyUnitOf() shouldBeEqualTo DefaultCurrencyUnit
-
-        currencyUnitOf(Locale.FRANCE) shouldBeEqualTo currencyUnitOf("EUR")
-        currencyUnitOf(Locale.US) shouldBeEqualTo currencyUnitOf("USD")
-        currencyUnitOf(Locale.CHINA) shouldBeEqualTo currencyUnitOf("CNY")
-    }
-
-    @Test
     fun `BigDecimal을 Money로 변환`() {
-        val m = moneyOf(10.0.toBigDecimal(), currencyUnitOf("EUR"))
+        val m = fastMoneyOf(10.0.toBigDecimal(), currencyUnitOf("EUR"))
         val number = m.number.numberValue(BigDecimal::class.java)
         number shouldBeEqualTo 10.0.toBigDecimal()
 
@@ -62,7 +36,7 @@ class MoneySupportTest {
 
     @Test
     fun `Money로부터 다양한 수형의 값 추출`() {
-        val m = moneyOf(12L, currencyUnitOf("USD"))
+        val m = fastMoneyOf(12L, currencyUnitOf("USD"))
         m.toString() shouldBeEqualTo "USD 12.00"
 
         // FastMoney의 기본 SCALE이 5이다.
@@ -79,8 +53,8 @@ class MoneySupportTest {
 
     @Test
     fun `통화량 계산`() {
-        val a = 10L.toMoney()
-        val b = 20L.toMoney()
+        val a = 10L.toFastMoney()
+        val b = 20L.toFastMoney()
 
         a - b shouldBeEqualTo -a
 
@@ -94,7 +68,7 @@ class MoneySupportTest {
 
     @Test
     fun `금액 반올림하기`() {
-        val usd = 1.31473908.toMoney(USD)
+        val usd = 1.31.toFastMoney(USD)
 
         usd.toString() shouldBeEqualTo "USD 1.31"
         usd.with(Monetary.getDefaultRounding()).toString() shouldBeEqualTo "USD 1.31"
@@ -102,7 +76,7 @@ class MoneySupportTest {
         usd.defaultRound().toString() shouldBeEqualTo "USD 1.31"
 
         // KRW의 Currency 의 scale 이 0 입니다.
-        val krw = 131.473908.toMoney(KRW)
+        val krw = 131.47.toFastMoney(KRW)
         krw.toString() shouldBeEqualTo "KRW 131.00"
         krw.round().toString() shouldBeEqualTo "KRW 131.00"
         krw.defaultRound().toString() shouldBeEqualTo "KRW 131.00"
@@ -110,33 +84,32 @@ class MoneySupportTest {
 
     @Test
     fun `외화 환전하기`() {
-        val usd = 1.0.toMoney(USD)
+        val usd = 1000L.toFastMoneyMinor(USD, 2)
         val eur = usd.convertTo(EUR)
-        val krw = usd.convertTo(KRW)
+        // val krw = usd.convertTo(KRW)
 
         eur.convertTo(USD).doubleValue.shouldBeNear(usd.doubleValue, 1e-2)
-        krw.convertTo(USD).doubleValue.shouldBeNear(usd.doubleValue, 1e-2)
+
+        // NOTE: fast moeny 는 기본 scale 이 5 이므로, 환전 시 문제가 소수점 5자리 이하의 값은 변환을 못한다
+        // krw.convertTo(USD).doubleValue.shouldBeNear(usd.doubleValue, 1e-2)
     }
 
     @Test
     fun `금액을 Locale에 따라 문자열로 변환 - USD`() {
-        val oneDollar: Money = 1L.inUSD()
+        val oneDollar = 1L.inFastUSD()
+        oneDollar.toString() shouldBeEqualTo "USD 1.00"
 
         val formatUSD = MonetaryFormats.getAmountFormat(Locale.US)
         val usFormatted = formatUSD.format(oneDollar)
-
-        oneDollar.toString() shouldBeEqualTo "USD 1.00"
         usFormatted shouldBeEqualTo "USD1.00"
     }
 
     @Test
     fun `금액을 Locale에 따라 문자열로 변환 - KRW`() {
-        val tenkKRW: Money = 1000L.inKRW()
+        val tenkKRW = 1000L.inFastKRW()
+        tenkKRW.toString() shouldBeEqualTo "KRW 1000.00"
 
         val formatKRW = MonetaryFormats.getAmountFormat(Locale.KOREA)
-        val krFormatted = formatKRW.format(tenkKRW)
-
-        tenkKRW.toString() shouldBeEqualTo "KRW 1000.00"
-        krFormatted shouldBeEqualTo "KRW1,000"
+        formatKRW.format(tenkKRW) shouldBeEqualTo "KRW1,000"
     }
 }

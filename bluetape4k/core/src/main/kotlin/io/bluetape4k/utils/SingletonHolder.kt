@@ -18,7 +18,7 @@ import kotlin.concurrent.withLock
  * manager.doStuff()
  * ````
  */
-open class SingletonHolder<out T: Any>(factory: () -> T) {
+open class SingletonHolder<T: Any>(factory: () -> T) {
 
     private var _factory: (() -> T)? = factory
     private val instance = atomic<T?>(null)

@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.money
+package io.bluetape4k.money
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug

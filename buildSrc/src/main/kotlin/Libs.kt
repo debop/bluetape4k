@@ -340,8 +340,8 @@ object Libs {
     const val javax_json = "org.glassfish:javax.json:1.1.4"
 
     // Java Money
-    const val javax_money_api = "javax.money:money-api:1.1"
-    const val javamoney_moneta = "org.javamoney:moneta:1.4.2"
+    const val javax_money_api = "javax.money:money-api:1.1"    // https://mvnrepository.com/artifact/javax.money/money-api
+    const val javamoney_moneta = "org.javamoney:moneta:1.4.2"  // https://mvnrepository.com/artifact/org.javamoney/moneta
 
     // jakarta
     const val jakarta_activation_api = "jakarta.activation:jakarta.activation-api:2.1.2"
@@ -358,8 +358,7 @@ object Libs {
     const val jakarta_validation_api = "jakarta.validation:jakarta.validation-api:3.0.2"
     const val jakarta_ws_rs_api = "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"
     const val jakarta_xml_bind = "jakarta.xml.bind:jakarta.xml.bind-api:4.0.0"
-
-
+    
     // Apache Commons
     const val commons_beanutils = "commons-beanutils:commons-beanutils:1.9.4"     // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
     const val commons_compress = "org.apache.commons:commons-compress:1.26.1"     // https://mvnrepository.com/artifact/org.apache.commons/commons-compress

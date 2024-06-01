@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.money
+package io.bluetape4k.money
 
 import org.javamoney.moneta.FastMoney
 import javax.money.CurrencyUnit
