@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.micrometer.instrument.retrofit2
+package io.bluetape4k.micrometer.instrument.retrofit2
 
 enum class Outcome(private val code: Int) {
     UNKNOWN(0),

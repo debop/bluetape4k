@@ -1,6 +1,6 @@
-package io.bluetape4k.infra.micrometer.instrument.cache
+package io.bluetape4k.micrometer.instrument.cache
 
-import io.bluetape4k.infra.cache.cache2k.getOrCreateCache2k
+import io.bluetape4k.cache.cache2k.getOrCreateCache2k
 import io.bluetape4k.logging.KLogging
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Tag

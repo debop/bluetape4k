@@ -1,4 +1,4 @@
-# Module bluetape4k-infra-micrometer
+# Module bluetape4k-micrometer
 
 ## 개요
 
@@ -19,7 +19,7 @@ private fun createRetrofit(factory: CallAdapter.Factory): Retrofit {
     return retrofitOf(TestService.BintrayApiBaseUrl) {
         callFactory(asyncClientCallFactoryOf())
         addConverterFactory(getDefaultConverterFactory())
-        addCallAdapterFactory(factory)                           
+        addCallAdapterFactory(factory)
 
         if (isPresentRetrofitAdapterRxJava2()) {
             addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())

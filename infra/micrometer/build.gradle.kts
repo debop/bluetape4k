@@ -18,12 +18,18 @@ dependencies {
     // Micrometer
     api(Libs.micrometer_core)
     compileOnly(Libs.micrometer_registry_prometheus)
+    compileOnly(Libs.micrometer_registry_datadog)
     testImplementation(Libs.micrometer_test)
+
+    compileOnly(Libs.micrometer_observation)
+    compileOnly(Libs.micrometer_observation_test)
 
     // Micrometer Tracing
     compileOnly(Libs.micrometer_tracing_bridge_otel)
     testImplementation(Libs.micrometer_tracing_test)
     testImplementation(Libs.micrometer_tracing_integeration_test)
+
+    compileOnly(Libs.micrometer_context_propagation)  // thread local <-> reactor 등 상이한 환경에서 context 전파를 위해 사용
 
     // Instrumentations
     compileOnly(Libs.cache2k_core)
@@ -48,6 +54,7 @@ dependencies {
 
     // Coroutines
     compileOnly(project(":bluetape4k-coroutines"))
-    testImplementation(Libs.kotlinx_coroutines_reactor)
+    compileOnly(Libs.kotlinx_coroutines_core)
+    compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
 }

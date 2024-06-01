@@ -1,18 +1,17 @@
-package io.bluetape4k.infra.micrometer.instrument.retrofit2
+package io.bluetape4k.micrometer.instrument.retrofit2
 
 import com.jakewharton.retrofit2.adapter.reactor.ReactorCallAdapterFactory
-import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.concurrent.sequence
-import io.bluetape4k.infra.micrometer.AbstractMicrometerTest
-import io.bluetape4k.io.retrofit2.clients.vertx.vertxCallFactoryOf
-import io.bluetape4k.io.retrofit2.defaultJsonConverterFactory
-import io.bluetape4k.io.retrofit2.executeAsync
-import io.bluetape4k.io.retrofit2.retrofit
-import io.bluetape4k.io.retrofit2.service
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
+import io.bluetape4k.micrometer.instrument.AbstractMicrometerTest
+import io.bluetape4k.retrofit2.clients.vertx.vertxCallFactoryOf
+import io.bluetape4k.retrofit2.defaultJsonConverterFactory
+import io.bluetape4k.retrofit2.executeAsync
+import io.bluetape4k.retrofit2.retrofit
+import io.bluetape4k.retrofit2.service
 import io.bluetape4k.support.classIsPresent
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +30,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.http.GET
 import java.io.Serializable
-import java.util.*
 
 class Retrofit2MetricsTest: AbstractMicrometerTest() {
 
@@ -91,7 +89,7 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
         posts.shouldNotBeNull()
         log.trace { "posts=$posts" }
 
-        fastList(REPEAT_SIZE) { api.getPosts().executeAsync() }.sequence().await()
+        List(REPEAT_SIZE) { api.getPosts().executeAsync() }.sequence().await()
 
         registry.meters.forEach { meter ->
             log.debug { "id=${meter.id}, tags=${meter.measure().joinToString()}" }
@@ -108,7 +106,7 @@ class Retrofit2MetricsTest: AbstractMicrometerTest() {
         val posts = api.getPosts()
         log.trace { "posts=$posts" }
 
-        fastList(REPEAT_SIZE) {
+        List(REPEAT_SIZE) {
             launch(Dispatchers.IO) {
                 api.getPosts()
             }

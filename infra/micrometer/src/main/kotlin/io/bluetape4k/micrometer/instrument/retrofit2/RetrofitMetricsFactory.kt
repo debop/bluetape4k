@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.micrometer.instrument.retrofit2
+package io.bluetape4k.micrometer.instrument.retrofit2
 
 import io.bluetape4k.logging.KLogging
 import retrofit2.Call

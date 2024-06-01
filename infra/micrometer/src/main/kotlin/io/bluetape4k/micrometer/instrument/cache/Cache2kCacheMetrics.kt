@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.micrometer.instrument.cache
+package io.bluetape4k.micrometer.instrument.cache
 
 import io.bluetape4k.logging.KLogging
 import io.micrometer.core.instrument.FunctionCounter

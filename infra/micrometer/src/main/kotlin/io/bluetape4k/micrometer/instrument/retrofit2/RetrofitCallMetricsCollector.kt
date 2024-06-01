@@ -1,4 +1,4 @@
-package io.bluetape4k.infra.micrometer.instrument.retrofit2
+package io.bluetape4k.micrometer.instrument.retrofit2
 
 import okhttp3.Request
 import retrofit2.Response
@@ -18,7 +18,7 @@ class RetrofitCallMetricsCollector(
     fun measureRequestDuration(duration: Duration, request: Request, response: Response<*>, async: Boolean = false) {
         val tags = mutableMapOf(
             "method" to request.method,
-            "async" to async.toString(),
+            "coroutines" to async.toString(),
             "outcome" to Outcome.fromHttpStatus(response.code()).name,
             "status_code" to response.code().toString()
         )
@@ -34,7 +34,7 @@ class RetrofitCallMetricsCollector(
     fun measureRequestException(duration: Duration, request: Request, error: Throwable, async: Boolean = false) {
         val tags = mutableMapOf(
             "method" to request.method,
-            "async" to async.toString(),
+            "coroutines" to async.toString(),
             "exception" to error.javaClass.simpleName
         )
         tags.putAll(baseTags)
