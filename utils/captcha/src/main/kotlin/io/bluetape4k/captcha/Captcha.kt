@@ -1,4 +1,4 @@
-package io.wrtn.kommons.captcha
+package io.bluetape4k.captcha
 
 import java.io.Serializable
 

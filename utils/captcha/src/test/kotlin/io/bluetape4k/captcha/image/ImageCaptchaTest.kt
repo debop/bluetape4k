@@ -1,7 +1,7 @@
-package io.wrtn.kommons.captcha.image
+package io.bluetape4k.captcha.image
 
 import com.sksamuel.scrimage.ImmutableImage
-import io.wrtn.kommons.captcha.AbstractCaptchaTest
+import io.bluetape4k.captcha.AbstractCaptchaTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.Test

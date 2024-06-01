@@ -1,6 +1,6 @@
-package io.wrtn.kommons.captcha
+package io.bluetape4k.captcha
 
-import io.wrtn.kommons.captcha.config.CaptchaConfig
+import io.bluetape4k.captcha.config.CaptchaConfig
 
 interface CaptchaGenerator<T> {
 

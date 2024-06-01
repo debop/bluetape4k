@@ -1,8 +1,8 @@
-package io.wrtn.kommons.captcha.utils
+package io.bluetape4k.captcha.utils
 
-import io.wrtn.kommons.captcha.AbstractCaptchaTest
-import io.wrtn.kommons.captcha.config.CaptchaConfig
-import io.wrtn.kommons.logging.KLogging
+import io.bluetape4k.captcha.AbstractCaptchaTest
+import io.bluetape4k.captcha.config.CaptchaConfig
+import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.RepeatedTest

@@ -1,14 +1,14 @@
-package io.wrtn.kommons.captcha.image
+package io.bluetape4k.captcha.image
 
 import com.sksamuel.scrimage.ImmutableImage
-import io.wrtn.kommons.captcha.CaptchaCodeGenerator
-import io.wrtn.kommons.captcha.CaptchaGenerator
-import io.wrtn.kommons.captcha.config.CaptchaConfig
-import io.wrtn.kommons.captcha.utils.FontProvider
-import io.wrtn.kommons.images.useGraphics
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.logging.debug
-import io.wrtn.kommons.logging.warn
+import io.bluetape4k.captcha.CaptchaCodeGenerator
+import io.bluetape4k.captcha.CaptchaGenerator
+import io.bluetape4k.captcha.config.CaptchaConfig
+import io.bluetape4k.captcha.utils.FontProvider
+import io.bluetape4k.images.useGraphics
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.warn
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics

@@ -1,7 +1,7 @@
-package io.wrtn.kommons.captcha
+package io.bluetape4k.captcha
 
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.support.requirePositiveNumber
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.requirePositiveNumber
 import java.security.SecureRandom
 import java.util.*
 

@@ -1,13 +1,16 @@
-package io.wrtn.kommons.captcha.config
+package io.bluetape4k.captcha.config
 
-import io.wrtn.kommons.captcha.AbstractCaptchaTest
-import io.wrtn.kommons.logging.debug
+import io.bluetape4k.captcha.AbstractCaptchaTest
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 
 class CaptchaConfigTest: AbstractCaptchaTest() {
+
+    companion object: KLogging()
 
     @Test
     fun `default captcha config`() {

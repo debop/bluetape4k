@@ -1,7 +1,7 @@
-package io.wrtn.kommons.captcha
+package io.bluetape4k.captcha
 
-import io.wrtn.kommons.junit5.faker.Fakers
-import io.wrtn.kommons.logging.KLogging
+import io.bluetape4k.junit5.faker.Fakers
+import io.bluetape4k.logging.KLogging
 
 abstract class AbstractCaptchaTest {
 

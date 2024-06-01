@@ -1,7 +1,7 @@
-package io.wrtn.kommons.captcha.image
+package io.bluetape4k.captcha.image
 
 import com.sksamuel.scrimage.ImmutableImage
-import io.wrtn.kommons.captcha.Captcha
+import io.bluetape4k.captcha.Captcha
 
 /**
  * 이미지 형태의 Captcha

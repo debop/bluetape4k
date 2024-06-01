@@ -3,7 +3,7 @@ configurations {
 }
 
 dependencies {
-    // api(project(":bluetape4k-images"))
+    api(project(":bluetape4k-images"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Images

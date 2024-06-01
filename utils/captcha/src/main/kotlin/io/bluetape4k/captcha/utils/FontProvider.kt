@@ -1,6 +1,6 @@
-package io.wrtn.kommons.captcha.utils
+package io.bluetape4k.captcha.utils
 
-import io.wrtn.kommons.utils.Resourcex
+import io.bluetape4k.utils.Resourcex
 import java.awt.Font
 
 object FontProvider {

@@ -1,7 +1,7 @@
-package io.wrtn.kommons.captcha
+package io.bluetape4k.captcha
 
-import io.wrtn.kommons.logging.KLogging
-import io.wrtn.kommons.logging.debug
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.RepeatedTest

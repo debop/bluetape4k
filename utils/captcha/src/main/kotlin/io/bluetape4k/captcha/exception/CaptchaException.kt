@@ -1,4 +1,4 @@
-package io.wrtn.kommons.captcha.exception
+package io.bluetape4k.captcha.exception
 
 /**
  * Captcha 관련 기본 예외 클래스

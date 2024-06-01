@@ -1,4 +1,4 @@
-package io.wrtn.kommons.captcha.config
+package io.bluetape4k.captcha.config
 
 import java.awt.Color
 import java.awt.Font

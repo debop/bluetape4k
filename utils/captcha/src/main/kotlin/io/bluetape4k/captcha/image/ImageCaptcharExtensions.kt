@@ -1,4 +1,4 @@
-package io.wrtn.kommons.captcha.image
+package io.bluetape4k.captcha.image
 
 import com.sksamuel.scrimage.nio.ImageWriter
 import com.sksamuel.scrimage.nio.JpegWriter

@@ -1,13 +1,13 @@
-package io.wrtn.kommons.captcha.image
+package io.bluetape4k.captcha.image
 
+import io.bluetape4k.captcha.AbstractCaptchaTest
+import io.bluetape4k.captcha.CaptchaCodeGenerator
+import io.bluetape4k.captcha.config.CaptchaConfig
+import io.bluetape4k.captcha.config.CaptchaTheme
+import io.bluetape4k.logging.KLogging
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.wrtn.kommons.captcha.AbstractCaptchaTest
-import io.wrtn.kommons.captcha.CaptchaCodeGenerator
-import io.wrtn.kommons.captcha.config.CaptchaConfig
-import io.wrtn.kommons.captcha.config.CaptchaTheme
-import io.wrtn.kommons.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.BeforeEach
