@@ -1,29 +1,31 @@
-package io.bluetape4k.io.csv
+package io.bluetape4k.csv
 
-import com.univocity.parsers.csv.CsvWriter
-import com.univocity.parsers.csv.CsvWriterSettings
+import com.univocity.parsers.tsv.TsvWriter
+import com.univocity.parsers.tsv.TsvWriterSettings
 import io.bluetape4k.logging.KLogging
 import java.io.Writer
 
 /**
- * CSV 포맷으로 데이터를 출력하는 Writer 입니다.
+ * TSV 포맷으로 데이터를 파일로 쓰는 [RecordWriter] 입니다.
+ *
+ * @property writer
  */
-class CsvRecordWriter private constructor(
-    private val writer: CsvWriter,
+class TsvRecordWriter private constructor(
+    private val writer: TsvWriter,
 ): RecordWriter {
 
     companion object: KLogging() {
         @JvmStatic
-        operator fun invoke(csvWriter: CsvWriter): CsvRecordWriter {
-            return CsvRecordWriter(csvWriter)
+        operator fun invoke(tsvWriter: TsvWriter): TsvRecordWriter {
+            return TsvRecordWriter(tsvWriter)
         }
 
         @JvmStatic
         operator fun invoke(
             writer: Writer,
-            settings: CsvWriterSettings = DefaultCsvWriterSettings,
-        ): CsvRecordWriter {
-            return invoke(CsvWriter(writer, settings))
+            settings: TsvWriterSettings = DefaultTsvWriterSettings,
+        ): TsvRecordWriter {
+            return invoke(TsvWriter(writer, settings))
         }
     }
 

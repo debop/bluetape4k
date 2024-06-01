@@ -1,4 +1,4 @@
-package io.bluetape4k.io.csv.coroutines
+package io.bluetape4k.csv.coroutines
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

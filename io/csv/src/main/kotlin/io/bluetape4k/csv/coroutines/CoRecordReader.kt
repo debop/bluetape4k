@@ -1,4 +1,4 @@
-package io.bluetape4k.io.csv.coroutines
+package io.bluetape4k.csv.coroutines
 
 import com.univocity.parsers.common.record.Record
 import kotlinx.coroutines.flow.Flow

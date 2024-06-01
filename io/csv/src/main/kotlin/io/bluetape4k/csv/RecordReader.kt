@@ -1,4 +1,4 @@
-package io.bluetape4k.io.csv
+package io.bluetape4k.csv
 
 import com.univocity.parsers.common.record.Record
 import java.io.Closeable

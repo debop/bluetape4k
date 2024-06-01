@@ -1,8 +1,8 @@
-package io.bluetape4k.io.csv.coroutines
+package io.bluetape4k.csv.coroutines
 
 import com.univocity.parsers.csv.CsvWriter
 import com.univocity.parsers.csv.CsvWriterSettings
-import io.bluetape4k.io.csv.DefaultCsvWriterSettings
+import io.bluetape4k.csv.DefaultCsvWriterSettings
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer

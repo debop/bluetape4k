@@ -1,4 +1,4 @@
-package io.bluetape4k.io.csv.model
+package io.bluetape4k.csv.model
 
 data class ProductType(
     val tagFamily: String,

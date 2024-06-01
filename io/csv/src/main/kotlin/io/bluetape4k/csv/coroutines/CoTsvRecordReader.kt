@@ -1,9 +1,9 @@
-package io.bluetape4k.io.csv.coroutines
+package io.bluetape4k.csv.coroutines
 
 import com.univocity.parsers.common.record.Record
 import com.univocity.parsers.tsv.TsvParser
 import com.univocity.parsers.tsv.TsvParserSettings
-import io.bluetape4k.io.csv.DefaultTsvParserSettings
+import io.bluetape4k.csv.DefaultTsvParserSettings
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -32,13 +32,11 @@ class CoTsvRecordReader(
         parser.iterateRecords(input, encoding)
             .drop(if (skipHeaders) 1 else 0)
             .forEach { record ->
-                runCatching { recordMapper(record) }.onSuccess { emit(it) }
+                emit(recordMapper(record))
             }
     }
 
     override fun close() {
-        // 뭘 close 해야지?
-
         // Nothing to do
     }
 }

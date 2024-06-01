@@ -1,7 +1,7 @@
-package io.bluetape4k.io.csv
+package io.bluetape4k.csv
 
 import com.univocity.parsers.common.record.Record
-import io.bluetape4k.io.csv.model.ProductType
+import io.bluetape4k.csv.model.ProductType
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.Resourcex

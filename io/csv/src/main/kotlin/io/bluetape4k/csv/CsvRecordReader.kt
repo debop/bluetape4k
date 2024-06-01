@@ -1,17 +1,17 @@
-package io.bluetape4k.io.csv
+package io.bluetape4k.csv
 
 import com.univocity.parsers.common.record.Record
-import com.univocity.parsers.tsv.TsvParser
-import com.univocity.parsers.tsv.TsvParserSettings
+import com.univocity.parsers.csv.CsvParser
+import com.univocity.parsers.csv.CsvParserSettings
 import io.bluetape4k.logging.KLogging
 import java.io.InputStream
 import java.nio.charset.Charset
 
 /**
- * TSV 포맷의 파일을 읽어드리는 [RecordReader] 입니다.
+ * CSV 파일 포맷을 읽어드리는 [RecordReader] 입니다.
  */
-class TsvRecordReader(
-    private val settings: TsvParserSettings = DefaultTsvParserSettings,
+class CsvRecordReader(
+    private val settings: CsvParserSettings = DefaultCsvParserSettings,
 ): RecordReader {
 
     companion object: KLogging()
@@ -22,11 +22,10 @@ class TsvRecordReader(
         skipHeaders: Boolean,
         recordMapper: (Record) -> T,
     ): Sequence<T> = sequence {
-        val parser = TsvParser(settings)
-        parser.iterateRecords(input, encoding)
+        CsvParser(settings).iterateRecords(input, encoding)
             .drop(if (skipHeaders) 1 else 0)
             .forEach { record ->
-                runCatching { recordMapper(record) }.onSuccess { yield(it) }
+                yield(recordMapper(record))
             }
     }
 }

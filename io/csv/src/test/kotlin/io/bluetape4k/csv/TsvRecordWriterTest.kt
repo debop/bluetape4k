@@ -1,4 +1,4 @@
-package io.bluetape4k.io.csv
+package io.bluetape4k.csv
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace

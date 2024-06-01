@@ -1,9 +1,9 @@
-package io.bluetape4k.io.csv.coroutines
+package io.bluetape4k.csv.coroutines
 
 import com.univocity.parsers.common.record.Record
 import com.univocity.parsers.csv.CsvParser
 import com.univocity.parsers.csv.CsvParserSettings
-import io.bluetape4k.io.csv.DefaultCsvParserSettings
+import io.bluetape4k.csv.DefaultCsvParserSettings
 import io.bluetape4k.logging.KLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -22,8 +22,6 @@ class CoCsvRecordReader(
 
     companion object: KLogging()
 
-    // private val job = Job()
-
     override fun <T: Any> read(
         input: InputStream,
         encoding: Charset,
@@ -34,11 +32,11 @@ class CoCsvRecordReader(
         parser.iterateRecords(input, encoding)
             .drop(if (skipHeaders) 1 else 0)
             .forEach { record ->
-                runCatching { recordMapper(record) }.onSuccess { emit(it) }
+                emit(recordMapper(record))
             }
     }
 
     override fun close() {
-        // job.cancel()
+        // Nothing to do.
     }
 }

@@ -1,13 +1,12 @@
-package io.bluetape4k.io.csv.coroutines
+package io.bluetape4k.csv.coroutines
 
 import com.univocity.parsers.common.record.Record
-import io.bluetape4k.io.csv.model.ProductType
-import io.bluetape4k.junit5.coroutines.runSuspendWithIO
+import io.bluetape4k.csv.model.ProductType
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.Resourcex
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldNotBeBlank
 import org.amshove.kluent.shouldNotBeEmpty
@@ -45,7 +44,7 @@ abstract class AbstractCoRecordReaderTest {
     }
 
     @Test
-    fun `read record from csv file with number types`() = runSuspendWithIO {
+    fun `read record from csv file with number types`() = runTest {
         Resourcex.getInputStream(productTypePath)!!.buffered().use { input ->
             reader
                 .read(input, UTF_8, true)
@@ -59,11 +58,10 @@ abstract class AbstractCoRecordReaderTest {
                     row[1]!!.shouldNotBeBlank()
                 }
         }
-        coroutineContext.cancelChildren()
     }
 
     @Test
-    fun `read product type from csv file with mapper`() = runSuspendWithIO {
+    fun `read product type from csv file with mapper`() = runTest {
         Resourcex.getInputStream(productTypePath)!!.buffered().use { input ->
             reader
                 .read(input, UTF_8, true, mapper)
@@ -75,11 +73,10 @@ abstract class AbstractCoRecordReaderTest {
                     productType.representative.shouldNotBeBlank()
                 }
         }
-        coroutineContext.cancelChildren()
     }
 
     @Test
-    fun `read extra words from csv file `() = runSuspendWithIO {
+    fun `read extra words from csv file `() = runTest {
         Resourcex.getInputStream(extraWordsPath)!!.buffered().use { input ->
 
             reader
@@ -94,6 +91,5 @@ abstract class AbstractCoRecordReaderTest {
                     row[4]!!.shouldNotBeBlank()
                 }
         }
-        coroutineContext.cancelChildren()
     }
 }

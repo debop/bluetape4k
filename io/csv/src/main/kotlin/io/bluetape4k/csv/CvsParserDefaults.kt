@@ -1,4 +1,4 @@
-package io.bluetape4k.io.csv
+package io.bluetape4k.csv
 
 import com.univocity.parsers.csv.CsvParserSettings
 import com.univocity.parsers.csv.CsvWriterSettings
