@@ -2,7 +2,6 @@ plugins {
     kotlin("kapt")
     kotlin("plugin.noarg")
     kotlin("plugin.allopen")
-
 }
 allOpen {
     annotation("com.datastax.oss.driver.api.mapper.annotations.Entity")
