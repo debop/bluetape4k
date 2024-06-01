@@ -22,7 +22,7 @@ class SampleVerticle: AbstractVerticle() {
             }
             .listen(11981)
             .onSuccess { server ->
-                log.info { "Server is now listening!" }
+                log.info { "Server is now listening! server=$server" }
                 startPromise.complete()
             }
             .onFailure { error ->

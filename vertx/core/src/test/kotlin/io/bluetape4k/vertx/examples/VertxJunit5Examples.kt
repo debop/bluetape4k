@@ -8,7 +8,7 @@ import io.vertx.core.Vertx
 import io.vertx.core.http.HttpMethod
 import io.vertx.junit5.VertxExtension
 import io.vertx.junit5.VertxTestContext
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
@@ -124,7 +124,7 @@ class VertxJunit5Examples {
         @BeforeEach
         fun `deploy verticle`(vertx: Vertx, testContext: VertxTestContext) {
             runBlocking(vertx.dispatcher()) {
-                vertx.deployVerticle(HttpServerVerticle()).await()
+                vertx.deployVerticle(HttpServerVerticle()).coAwait()
                 testContext.completeNow()
             }
         }
@@ -135,10 +135,10 @@ class VertxJunit5Examples {
             testContext: VertxTestContext,
         ) = runSuspendTest(vertx.dispatcher()) {
             val client = vertx.createHttpClient()
-            val request = client.request(HttpMethod.GET, 9999, "localhost", "/").await()
+            val request = client.request(HttpMethod.GET, 9999, "localhost", "/").coAwait()
 
-            val response = request.send().await()
-            val buffer = response.body().await()
+            val response = request.send().coAwait()
+            val buffer = response.body().coAwait()
 
             testContext.verify {
                 val responseText = buffer.toString()

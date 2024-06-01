@@ -9,7 +9,7 @@ import io.vertx.junit5.VertxExtension
 import io.vertx.junit5.VertxTestContext
 import io.vertx.kotlin.core.file.fileSystemOptionsOf
 import io.vertx.kotlin.core.vertxOptionsOf
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.AfterEach
@@ -68,11 +68,11 @@ class LifecycleExample {
         vertx.withTestContextSuspending(testContext) {
             val webClient = WebClient.create(vertx)
 
-            vertx.deployVerticle(SampleVerticle()).await()
+            vertx.deployVerticle(SampleVerticle()).coAwait()
             val response = webClient.get(11981, "localhost", "/yo")
                 .`as`(BodyCodec.string())
                 .send()
-                .await()
+                .coAwait()
 
             testContext.verify {
                 response.statusCode() shouldBeEqualTo 200

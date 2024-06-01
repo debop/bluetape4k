@@ -16,6 +16,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.fail
 
 @ExtendWith(VertxExtension::class)
 class SampleVerticleTest {
@@ -64,6 +65,9 @@ class SampleVerticleTest {
                                 resp.body() shouldContain "Yo!"
                                 requestCheckpoint.flag()
                             }
+                        }
+                        .onFailure {
+                            fail(it)
                         }
                 }
             }
