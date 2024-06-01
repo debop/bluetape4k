@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.mutiny
+package io.bluetape4k.mutiny
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug

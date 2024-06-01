@@ -1,4 +1,4 @@
-package io.bluetape4k.utils.mutiny
+package io.bluetape4k.mutiny
 
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.converters.UniConverter

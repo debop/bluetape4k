@@ -1,22 +1,17 @@
-package io.bluetape4k.utils.mutiny
+package io.bluetape4k.mutiny
 
-import io.bluetape4k.collections.asSequence
-import io.bluetape4k.collections.asStream
-import io.bluetape4k.collections.eclipse.primitives.asIterable
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.groups.MultiRepetition
 import io.smallrye.mutiny.groups.UniRepeat
-import org.eclipse.collections.api.DoubleIterable
-import org.eclipse.collections.api.FloatIterable
-import org.eclipse.collections.api.IntIterable
-import org.eclipse.collections.api.LongIterable
 import java.util.concurrent.CompletionStage
 import java.util.function.Supplier
 import java.util.stream.DoubleStream
 import java.util.stream.IntStream
 import java.util.stream.LongStream
 import java.util.stream.Stream
+import kotlin.streams.asSequence
+import kotlin.streams.asStream
 
 /**
  * [items]를 제공하는 [Multi]를 생성합니다.
@@ -62,11 +57,6 @@ fun IntArray.asMulti(): Multi<Int> = asIterable().asMulti()
 fun LongArray.asMulti(): Multi<Long> = asIterable().asMulti()
 fun FloatArray.asMulti(): Multi<Float> = asIterable().asMulti()
 fun DoubleArray.asMulti(): Multi<Double> = asIterable().asMulti()
-
-fun IntIterable.asMulti(): Multi<Int> = asIterable().asMulti()
-fun LongIterable.asMulti(): Multi<Long> = asIterable().asMulti()
-fun FloatIterable.asMulti(): Multi<Float> = asIterable().asMulti()
-fun DoubleIterable.asMulti(): Multi<Double> = asIterable().asMulti()
 
 fun <T> MultiRepetition.deferUni(supplier: () -> Uni<T>): UniRepeat<T> {
     return this.uni(Supplier { supplier() })
