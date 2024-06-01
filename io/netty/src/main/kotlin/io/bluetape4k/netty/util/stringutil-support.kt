@@ -1,7 +1,6 @@
-package io.bluetape4k.io.netty.util
+package io.bluetape4k.netty.util
 
 import io.netty.util.internal.StringUtil
-
 
 fun <T: Appendable> T.byteToHexStringPadded(value: Int): T =
     StringUtil.byteToHexStringPadded(this, value)
@@ -51,5 +50,5 @@ val Char.isDoubleQuote: Boolean get() = StringUtil.DOUBLE_QUOTE == this
 
 fun CharSequence.trimOws(): CharSequence = StringUtil.trimOws(this)
 
-fun <T: CharSequence> Iterable<T>.join(separator: CharSequence): CharSequence =
+fun <T: CharSequence> Iterable<T>.join(separator: CharSequence = ","): CharSequence =
     StringUtil.join(separator, this)

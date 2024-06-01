@@ -1,8 +1,9 @@
-package io.bluetape4k.io.netty.buffer
+package io.bluetape4k.netty.buffer
 
-import io.bluetape4k.io.netty.AbstractNettyTest
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.netty.AbstractNettyTest
+import io.bluetape4k.netty.util.use
 import io.netty.buffer.ByteBufAllocator
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.params.ParameterizedTest
@@ -27,33 +28,27 @@ class ByteBufStringTest: AbstractNettyTest() {
         Charset.forName("CESU-8"),
     )
 
-    @ParameterizedTest(name = "read write string. charset={0}")
+    @ParameterizedTest(name = "read/write string. charset={0}")
     @MethodSource("getCharsets")
     fun `read write string`(charset: Charset) {
-        val buf = ByteBufAllocator.DEFAULT.buffer()
-        try {
+        ByteBufAllocator.DEFAULT.buffer().use { buf ->
             testData.forEach { expected -> buf.writeString(expected, charset) }
             testData.forEach { expected ->
                 val actual = buf.readString(charset)
                 actual shouldBeEqualTo expected
             }
-        } finally {
-            buf.release()
         }
     }
 
-    @ParameterizedTest(name = "read write versioned string. charset={0}")
+    @ParameterizedTest(name = "read/write versioned string. charset={0}")
     @MethodSource("getCharsets")
     fun `read write versioned string`(charset: Charset) {
-        val buf = ByteBufAllocator.DEFAULT.buffer()
-        try {
+        ByteBufAllocator.DEFAULT.buffer().use { buf ->
             testData.forEach { expected -> buf.writeVersionedString(expected, charset) }
             testData.forEach { expected ->
                 val actual = buf.readVersionedString(charset)
                 actual shouldBeEqualTo expected
             }
-        } finally {
-            buf.release()
         }
     }
 }

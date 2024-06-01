@@ -1,4 +1,4 @@
-package io.bluetape4k.io.netty.buffer
+package io.bluetape4k.netty.buffer
 
 import io.netty.buffer.ByteBuf
 import io.netty.util.ReferenceCounted

@@ -1,7 +1,7 @@
-package io.bluetape4k.io.netty.buffer
+package io.bluetape4k.netty.buffer
 
-import io.bluetape4k.core.requireInRange
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.requireInRange
 import io.netty.buffer.ByteBuf
 import io.netty.util.ReferenceCounted
 import kotlin.math.ceil
@@ -81,7 +81,7 @@ class BitBufImpl internal constructor(override val byteBuf: ByteBuf): BitBuf {
             val shift = (BITS_SIZE - (relBitIndex + bitsToSet)) and (BITS_SIZE - 1)
             val mask = (1 shl bitsToSet) - 1
             val iValue = (byteBuf.getUnsignedByte(byteIndex).toInt() and (mask shl shift).inv()) or
-                (((value shr (remBits - bitsToSet)) and mask) shl shift)
+                    (((value shr (remBits - bitsToSet)) and mask) shl shift)
             byteBuf.setByte(byteIndex, iValue)
             remBits -= bitsToSet
             relBitIndex = 0

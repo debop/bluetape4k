@@ -1,6 +1,7 @@
-package io.bluetape4k.io.netty.buffer
+package io.bluetape4k.netty.buffer
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.netty.util.use
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufAllocator
 import org.amshove.kluent.shouldBeEqualTo
@@ -87,61 +88,49 @@ class ByteBufByteTest {
 
     private fun doByteGSTest(setter: ByteBuf.(Int, Int) -> ByteBuf, getter: ByteBuf.(Int) -> Byte) {
         val testData = Random.nextBytes(DATA_SIZE)
-        val buf = ByteBufAllocator.DEFAULT.buffer(testData.size * Byte.SIZE_BYTES)
-        try {
+        ByteBufAllocator.DEFAULT.buffer(testData.size * Byte.SIZE_BYTES).use { buf ->
             testData.forEachIndexed { i, expected -> buf.setter(i, expected.toInt()) }
             testData.forEachIndexed { i, expected ->
                 val get = buf.getter(i)
                 get shouldBeEqualTo expected
             }
-        } finally {
-            buf.release()
         }
     }
 
     private fun doByteRWTest(writer: ByteBuf.(Int) -> ByteBuf, reader: ByteBuf.() -> Byte) {
         val testData = Random.nextBytes(DATA_SIZE)
-        val buf = ByteBufAllocator.DEFAULT.buffer(testData.size * Byte.SIZE_BYTES)
-        try {
+        ByteBufAllocator.DEFAULT.buffer(testData.size * Byte.SIZE_BYTES).use { buf ->
             testData.forEach { expected -> buf.writer(expected.toInt()) }
             testData.forEach { expected ->
                 val read = buf.reader()
                 read shouldBeEqualTo expected
             }
-        } finally {
-            buf.release()
         }
     }
 
     @Suppress("OPT_IN_USAGE")
     private fun doUByteGSTest(setter: ByteBuf.(Int, Int) -> ByteBuf, getter: ByteBuf.(Int) -> UByte) {
         val testData = Random.nextUBytes(DATA_SIZE)
-        val buf = ByteBufAllocator.DEFAULT.buffer(testData.size * UByte.SIZE_BYTES)
-        try {
+        ByteBufAllocator.DEFAULT.buffer(testData.size * UByte.SIZE_BYTES).use { buf ->
             testData.forEachIndexed { i, expected -> buf.setter(i, expected.toInt()) }
             testData.forEachIndexed { i, expected ->
                 val get = buf.getter(i)
                 get shouldBeEqualTo expected
                 get.toInt() shouldBeGreaterOrEqualTo 0
             }
-        } finally {
-            buf.release()
         }
     }
 
     @Suppress("OPT_IN_USAGE")
     private fun doUByteRWTest(writer: ByteBuf.(Int) -> ByteBuf, reader: ByteBuf.() -> UByte) {
         val testData = Random.nextUBytes(DATA_SIZE)
-        val buf = ByteBufAllocator.DEFAULT.buffer(testData.size * UByte.SIZE_BYTES)
-        try {
+        ByteBufAllocator.DEFAULT.buffer(testData.size * UByte.SIZE_BYTES).use { buf ->
             testData.forEach { expected -> buf.writer(expected.toInt()) }
             testData.forEach { expected ->
                 val read = buf.reader()
                 read shouldBeEqualTo expected
                 read.toInt() shouldBeGreaterOrEqualTo 0
             }
-        } finally {
-            buf.release()
         }
     }
 }

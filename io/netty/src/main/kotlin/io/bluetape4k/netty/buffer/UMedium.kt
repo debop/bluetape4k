@@ -1,4 +1,4 @@
-package io.bluetape4k.io.netty.buffer
+package io.bluetape4k.netty.buffer
 
 object UMedium {
     const val SIZE_BYTES: Int = Medium.SIZE_BYTES

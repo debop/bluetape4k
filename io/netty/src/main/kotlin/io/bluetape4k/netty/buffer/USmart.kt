@@ -1,4 +1,4 @@
-package io.bluetape4k.io.netty.buffer
+package io.bluetape4k.netty.buffer
 
 object USmart {
     const val MAX_BYTE_VALUE: Int = Byte.MAX_VALUE.toInt()

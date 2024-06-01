@@ -1,4 +1,4 @@
-package io.bluetape4k.io.netty
+package io.bluetape4k.netty
 
 import io.bluetape4k.support.classIsPresent
 

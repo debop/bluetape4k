@@ -1,7 +1,8 @@
-package io.bluetape4k.io.netty.buffer
+package io.bluetape4k.netty.buffer
 
-import io.bluetape4k.io.netty.AbstractNettyTest
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.netty.AbstractNettyTest
+import io.bluetape4k.netty.util.use
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufAllocator
 import io.netty.buffer.Unpooled
@@ -96,9 +97,9 @@ class ByteBufByteArrayTest: AbstractNettyTest() {
         getter: ByteBuf.(Int, Int) -> ByteArray,
     ) {
         val testData = byteArrayList
-        val buf = ByteBufAllocator.DEFAULT.buffer(testData.sumOf { it.size } * Byte.SIZE_BYTES)
         var sizeSum = 0
-        try {
+
+        ByteBufAllocator.DEFAULT.buffer(testData.sumOf { it.size } * Byte.SIZE_BYTES).use { buf ->
             testData.forEach { expected ->
                 buf.setter(sizeSum, expected)
                 sizeSum += expected.size
@@ -109,8 +110,6 @@ class ByteBufByteArrayTest: AbstractNettyTest() {
                 get shouldBeEqualTo expected
                 sizeSum += expected.size
             }
-        } finally {
-            buf.release()
         }
     }
 
@@ -119,9 +118,9 @@ class ByteBufByteArrayTest: AbstractNettyTest() {
         getter: ByteBuf.(Int, Int) -> ByteArray,
     ) {
         val testData = byteArrayList
-        val buf = ByteBufAllocator.DEFAULT.buffer(testData.sumOf { it.size } * Byte.SIZE_BYTES)
         var sizeSum = 0
-        try {
+
+        ByteBufAllocator.DEFAULT.buffer(testData.sumOf { it.size } * Byte.SIZE_BYTES).use { buf ->
             testData.forEach { expected ->
                 val bufExpected = Unpooled.wrappedBuffer(expected)
                 buf.setter(sizeSum, bufExpected)
@@ -133,29 +132,23 @@ class ByteBufByteArrayTest: AbstractNettyTest() {
                 get shouldBeEqualTo expected
                 sizeSum += expected.size
             }
-        } finally {
-            buf.release()
         }
     }
 
     private fun doByteArrayRWTest(writer: ByteBuf.(ByteArray) -> ByteBuf, reader: ByteBuf.(Int) -> ByteArray) {
         val testData = byteArrayList
-        val buf = ByteBufAllocator.DEFAULT.buffer(testData.sumOf { it.size } * Byte.SIZE_BYTES)
-        try {
+        ByteBufAllocator.DEFAULT.buffer(testData.sumOf { it.size } * Byte.SIZE_BYTES).use { buf ->
             testData.forEach { expected -> buf.writer(expected) }
             testData.forEachIndexed { i, expected ->
                 val read = buf.reader(testData[i].size)
                 read shouldBeEqualTo expected
             }
-        } finally {
-            buf.release()
         }
     }
 
     private fun doByteArrayByteBufRWTest(writer: ByteBuf.(ByteBuf) -> ByteBuf, reader: ByteBuf.(Int) -> ByteArray) {
         val testData = byteArrayList
-        val buf = ByteBufAllocator.DEFAULT.buffer(testData.sumOf { it.size } * Byte.SIZE_BYTES)
-        try {
+        ByteBufAllocator.DEFAULT.buffer(testData.sumOf { it.size } * Byte.SIZE_BYTES).use { buf ->
             testData.forEach { expected ->
                 val bufExpected = Unpooled.wrappedBuffer(expected)
                 buf.writer(bufExpected)
@@ -164,8 +157,6 @@ class ByteBufByteArrayTest: AbstractNettyTest() {
                 val read = buf.reader(testData[i].size)
                 read shouldBeEqualTo expected
             }
-        } finally {
-            buf.release()
         }
     }
 }

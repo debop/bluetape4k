@@ -1,4 +1,4 @@
-package io.bluetape4k.io.netty.buffer
+package io.bluetape4k.netty.buffer
 
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufUtil
@@ -19,59 +19,59 @@ fun ByteBuf.getUByteSub(index: Int): UByte = (HALF_BYTE - getByte(index)).toUByt
 
 fun ByteBuf.getShortAdd(index: Int): Short =
     ((getByte(index).toInt() shl Byte.SIZE_BITS) or
-        ((getByte(index + 1) - HALF_BYTE) and 0xFF)).toShort()
+            ((getByte(index + 1) - HALF_BYTE) and 0xFF)).toShort()
 
 fun ByteBuf.getShortLEAdd(index: Int): Short =
     (((getByte(index) - HALF_BYTE) and 0xFF) or
-        (getByte(index + 1).toInt() shl Byte.SIZE_BITS)).toShort()
+            (getByte(index + 1).toInt() shl Byte.SIZE_BITS)).toShort()
 
 fun ByteBuf.getUShortAdd(index: Int): UShort =
     ((getUnsignedByte(index).toInt() shl Byte.SIZE_BITS) or
-        ((getByte(index + 1) - HALF_BYTE) and 0xFF)).toUShort()
+            ((getByte(index + 1) - HALF_BYTE) and 0xFF)).toUShort()
 
 fun ByteBuf.getUShortLEAdd(index: Int): UShort =
     (((getByte(index) - HALF_BYTE) and 0xFF) or
-        (getUnsignedByte(index + 1).toInt() shl Byte.SIZE_BITS)).toUShort()
+            (getUnsignedByte(index + 1).toInt() shl Byte.SIZE_BITS)).toUShort()
 
 fun ByteBuf.getMediumLME(index: Int): Int =
     (getShortLE(index).toInt() shl Byte.SIZE_BITS) or
-        getUnsignedByte(index + Short.SIZE_BYTES).toInt()
+            getUnsignedByte(index + Short.SIZE_BYTES).toInt()
 
 fun ByteBuf.getMediumRME(index: Int): Int =
     (getByte(index).toInt() shl Short.SIZE_BITS) or
-        getUnsignedShortLE(index + Byte.SIZE_BYTES)
+            getUnsignedShortLE(index + Byte.SIZE_BYTES)
 
 fun ByteBuf.getUMediumLME(index: Int): Int =
     (getUnsignedShortLE(index) shl Byte.SIZE_BITS) or
-        getUnsignedByte(index + Short.SIZE_BYTES).toInt()
+            getUnsignedByte(index + Short.SIZE_BYTES).toInt()
 
 fun ByteBuf.getUMediumRME(index: Int): Int =
     (getUnsignedByte(index).toInt() shl Short.SIZE_BITS) or
-        getUnsignedShortLE(index + Byte.SIZE_BYTES)
+            getUnsignedShortLE(index + Byte.SIZE_BYTES)
 
 fun ByteBuf.getIntME(index: Int): Int =
     (getShortLE(index).toInt() shl Short.SIZE_BITS) or
-        getUnsignedShortLE(index + Short.SIZE_BYTES)
+            getUnsignedShortLE(index + Short.SIZE_BYTES)
 
 fun ByteBuf.getIntIME(index: Int): Int =
     getUnsignedShort(index) or
-        (getShort(index + Short.SIZE_BYTES).toInt() shl Short.SIZE_BITS)
+            (getShort(index + Short.SIZE_BYTES).toInt() shl Short.SIZE_BITS)
 
 fun ByteBuf.getUIntME(index: Int): Long =
     (getUnsignedShortLE(index).toLong() shl Short.SIZE_BITS) or
-        getUnsignedShortLE(index + Short.SIZE_BYTES).toLong()
+            getUnsignedShortLE(index + Short.SIZE_BYTES).toLong()
 
 fun ByteBuf.getUIntIME(index: Int): Long =
     getUnsignedShort(index).toLong() or
-        (getUnsignedShort(index + Short.SIZE_BYTES).toLong() shl Short.SIZE_BITS)
+            (getUnsignedShort(index + Short.SIZE_BYTES).toLong() shl Short.SIZE_BITS)
 
 fun ByteBuf.getSmallLong(index: Int): Long =
     (getMedium(index).toLong() shl Medium.SIZE_BITS) or
-        getUnsignedMedium(index + Medium.SIZE_BYTES).toLong()
+            getUnsignedMedium(index + Medium.SIZE_BYTES).toLong()
 
 fun ByteBuf.getUSmallLong(index: Int): Long =
     (getUnsignedMedium(index).toLong() shl Medium.SIZE_BITS) or
-        getUnsignedMedium(index + Medium.SIZE_BYTES).toLong()
+            getUnsignedMedium(index + Medium.SIZE_BYTES).toLong()
 
 fun ByteBuf.getBytes(
     start: Int = readerIndex(),
@@ -398,13 +398,13 @@ fun ByteBuf.writeSmallLong(value: Long): ByteBuf {
 }
 
 fun ByteBuf.writeShortSmart(value: Int): ByteBuf = when (value) {
-    in Smart.MIN_BYTE_VALUE..Smart.MAX_BYTE_VALUE ->
+    in Smart.MIN_BYTE_VALUE..Smart.MAX_BYTE_VALUE   ->
         writeByte(value + Smart.BYTE_MOD)
 
     in Smart.MIN_SHORT_VALUE..Smart.MAX_SHORT_VALUE ->
         writeShort((Short.MAX_VALUE + 1) or (value + Smart.SHORT_MOD))
 
-    else                                          ->
+    else                                            ->
         throw IllegalArgumentException(
             "Value should be between ${Smart.MIN_SHORT_VALUE} and ${Smart.MAX_SHORT_VALUE}, but was $value."
         )
@@ -432,11 +432,11 @@ fun ByteBuf.writeIntSmart(value: Int): ByteBuf = when (value) {
     in Smart.MIN_SHORT_VALUE..Smart.MAX_SHORT_VALUE ->
         writeShort(value + Smart.SHORT_MOD)
 
-    in Smart.MIN_INT_VALUE..Smart.MAX_INT_VALUE -> {
+    in Smart.MIN_INT_VALUE..Smart.MAX_INT_VALUE     -> {
         writeInt(Int.MIN_VALUE or (value + Smart.INT_MOD))
     }
 
-    else                                        ->
+    else                                            ->
         throw IllegalArgumentException(
             "Value should be between ${Smart.MIN_INT_VALUE} and ${Smart.MAX_INT_VALUE}, but was $value."
         )

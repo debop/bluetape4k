@@ -1,4 +1,4 @@
-package io.bluetape4k.io.netty.util
+package io.bluetape4k.netty.util
 
 import io.netty.util.internal.ThrowableUtil
 
