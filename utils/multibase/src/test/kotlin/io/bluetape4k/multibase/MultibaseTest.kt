@@ -6,7 +6,6 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.support.toUtf8Bytes
 import io.bluetape4k.support.toUtf8String
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeTrue
 import org.apache.commons.codec.binary.Hex
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -206,23 +205,30 @@ class MultibaseTest {
     fun `multibase encode`(base: Multibase.Base, raw: ByteArray, encoded: String) {
         val output = Multibase.encode(base, raw)
         output shouldBeEqualTo encoded
+
+        val decoded = Multibase.decode(output)
+        decoded shouldBeEqualTo raw
     }
 
     @ParameterizedTest(name = "{index}: {0}, {2}")
     @MethodSource("getArguments")
     fun `multibase decode`(base: Multibase.Base, raw: ByteArray, encoded: String) {
-        val actual = Multibase.decode(encoded)
-        actual.contentEquals(raw).shouldBeTrue()
+        val output = Multibase.encode(base, raw)
+        output shouldBeEqualTo encoded
+
+        val decoded = Multibase.decode(output)
+        decoded shouldBeEqualTo raw
     }
 
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("getArguments")
     fun `multibase encode decode`(base: Multibase.Base, raw: ByteArray, encoded: String) {
         val output = Multibase.encode(base, raw)
-        val decoded = Multibase.decode(output)
-        decoded.contentEquals(raw).shouldBeTrue()
-    }
+        output shouldBeEqualTo encoded
 
+        val decoded = Multibase.decode(output)
+        decoded shouldBeEqualTo raw
+    }
 
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("getArguments")

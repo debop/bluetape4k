@@ -140,8 +140,7 @@ class Base64(
             '8'.code.toByte(),
             '9'.code.toByte(),
             '+'.code.toByte(),
-            '/'
-                .code.toByte()
+            '/'.code.toByte()
         )
 
         /**
@@ -213,8 +212,7 @@ class Base64(
             '8'.code.toByte(),
             '9'.code.toByte(),
             '-'.code.toByte(),
-            '_'
-                .code.toByte()
+            '_'.code.toByte()
         )
 
         /**
@@ -595,8 +593,8 @@ class Base64(
             val buffer = ensureBufferSize(encodeSize, context)!!
             val savedPos = context.pos
             when (context.modulus) {
-                0 -> {}
-                1 -> {
+                0    -> {}
+                1    -> {
                     // top 6 bits:
                     buffer[context.pos++] = encodeTable[(context.ibitWorkArea shr 2) and MASK_6BITS]
                     // remaining 2:
@@ -608,7 +606,7 @@ class Base64(
                     }
                 }
 
-                2 -> {
+                2    -> {
                     buffer[context.pos++] = encodeTable[(context.ibitWorkArea shr 10) and MASK_6BITS]
                     buffer[context.pos++] = encodeTable[(context.ibitWorkArea shr 4) and MASK_6BITS]
                     buffer[context.pos++] = encodeTable[(context.ibitWorkArea shl 2) and MASK_6BITS]

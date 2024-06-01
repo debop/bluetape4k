@@ -1,12 +1,12 @@
 package io.bluetape4k.multibase
 
-import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.multibase.binary.Base32
 import io.bluetape4k.multibase.binary.Base64
 import io.bluetape4k.multibase.internal.Base16
 import io.bluetape4k.multibase.internal.Base36
 import io.bluetape4k.multibase.internal.Base58
+import io.bluetape4k.support.requireNotBlank
 import io.bluetape4k.support.toUtf8String
 import java.util.*
 
@@ -105,7 +105,7 @@ object Multibase: KLogging() {
             Base.Base64, Base.Base64Url, Base.Base64Pad, Base.Base64UrlPad -> Base64.decodeBase64(rest)
 
             else                                                           ->
-                throw java.lang.UnsupportedOperationException("Unsupported base encoding: ${b.name}")
+                throw UnsupportedOperationException("Unsupported base encoding: ${b.name}")
         }
     }
 }

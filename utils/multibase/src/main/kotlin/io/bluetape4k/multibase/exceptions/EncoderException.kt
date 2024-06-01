@@ -1,6 +1,6 @@
 package io.bluetape4k.multibase.exceptions
 
-class EncoderException: MultibaseException {
+open class EncoderException: MultibaseException {
     constructor(): super()
     constructor(message: String): super(message)
     constructor(message: String, cause: Throwable?): super(message, cause)

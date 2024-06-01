@@ -1,6 +1,6 @@
 package io.bluetape4k.multibase.exceptions
 
-class DecoderException: MultibaseException {
+open class DecoderException: MultibaseException {
     constructor(): super()
     constructor(message: String): super(message)
     constructor(message: String, cause: Throwable?): super(message, cause)

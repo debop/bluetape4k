@@ -271,24 +271,24 @@ class Base32(
             //  we ignore partial bytes, i.e. only multiples of 8 count
             when (context.modulus) {
 
-                2 -> {
+                2    -> {
                     // 10 bits, drop 2 and output one byte
                     buffer[context.pos++] = ((context.lbitWorkArea shr 2) and MASK_8BITS.toLong()).toByte()
                 }
 
-                3 -> {
+                3    -> {
                     // 15 bits, drop 7 and output 1 byte
                     buffer[context.pos++] = ((context.lbitWorkArea shr 7) and MASK_8BITS.toLong()).toByte()
                 }
 
-                4 -> {
+                4    -> {
                     // 20 bits = 2*8 + 4
                     context.lbitWorkArea = context.lbitWorkArea shr 4 // drop 4 bits
                     buffer[context.pos++] = ((context.lbitWorkArea shr 8) and MASK_8BITS.toLong()).toByte()
                     buffer[context.pos++] = (context.lbitWorkArea and MASK_8BITS.toLong()).toByte()
                 }
 
-                5 -> {
+                5    -> {
                     // 25bits = 3*8 + 1
                     context.lbitWorkArea = context.lbitWorkArea shr 1
                     buffer[context.pos++] = ((context.lbitWorkArea shr 16) and MASK_8BITS.toLong()).toByte()
@@ -296,7 +296,7 @@ class Base32(
                     buffer[context.pos++] = (context.lbitWorkArea and MASK_8BITS.toLong()).toByte()
                 }
 
-                6 -> {
+                6    -> {
                     // 30bits = 3*8 + 6
                     context.lbitWorkArea = context.lbitWorkArea shr 6
                     buffer[context.pos++] = ((context.lbitWorkArea shr 16) and MASK_8BITS.toLong()).toByte()
@@ -304,7 +304,7 @@ class Base32(
                     buffer[context.pos++] = (context.lbitWorkArea and MASK_8BITS.toLong()).toByte()
                 }
 
-                7 -> {
+                7    -> {
                     // 35 = 4*8 +3
                     context.lbitWorkArea = context.lbitWorkArea shr 3
                     buffer[context.pos++] = ((context.lbitWorkArea shr 24) and MASK_8BITS.toLong()).toByte()
@@ -349,11 +349,11 @@ class Base32(
             val savedPos = context.pos
 
             when (context.modulus) {
-                0 -> {
+                0    -> {
                     // Nothing to do
                 }
 
-                1 -> {
+                1    -> {
                     // Only 1 octet; take top 5 bits then remainder
                     buffer[context.pos++] =
                         encodeTable[((context.lbitWorkArea shr 3) and MASK_5BITS).toInt()] // 8-1*5 = 3
@@ -366,7 +366,7 @@ class Base32(
                     buffer[context.pos++] = pad
                 }
 
-                2 -> {
+                2    -> {
                     // 2 octets = 16 bits to use
                     buffer[context.pos++] =
                         encodeTable[((context.lbitWorkArea shr 11) and MASK_5BITS).toInt()] // 16-1*5=11
@@ -382,7 +382,7 @@ class Base32(
                     buffer[context.pos++] = pad
                 }
 
-                3 -> {
+                3    -> {
                     // 3 octets = 24 bits to use
                     buffer[context.pos++] =
                         encodeTable[((context.lbitWorkArea shr 19) and MASK_5BITS).toInt()] // 24-1*5=19
@@ -399,7 +399,7 @@ class Base32(
                     buffer[context.pos++] = pad
                 }
 
-                4 -> {
+                4    -> {
                     // 4 octets = 32 bits to use
                     buffer[context.pos++] =
                         encodeTable[((context.lbitWorkArea shr 27) and MASK_5BITS).toInt()] // 32-1*5=27
