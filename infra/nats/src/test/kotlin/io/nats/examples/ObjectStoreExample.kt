@@ -32,7 +32,6 @@ class ObjectStoreExample: AbstractNatsTest() {
         private const val CHUNK_SIZE = 8 * 1024
     }
 
-
     fun createDataFiles(tempFolder: TempFolder): Array<DataFile> {
         return arrayOf(
             DataFile(1024, true, tempFolder),

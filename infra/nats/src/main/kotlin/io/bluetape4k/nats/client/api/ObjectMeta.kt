@@ -1,6 +1,6 @@
 package io.bluetape4k.nats.client.api
 
-import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.support.requireNotBlank
 import io.nats.client.api.ObjectMeta
 
 inline fun objectMeta(

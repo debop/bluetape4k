@@ -158,7 +158,7 @@ class SimplicationMigrationExample: AbstractNatsTest() {
             // The `StreamContext` can be created from the `Connection` similar to
             // the legacy API.
             println("\nD. Simplicafication StreamContext")
-            val streamContext = nc.streamContext(streamName)
+            val streamContext = nc.getStreamContext(streamName)
             val streamInfo = streamContext.getStreamInfo(StreamInfoOptions.allSubjects())
 
             println("    Stream Name: ${streamInfo.configuration.name}")
@@ -183,11 +183,11 @@ class SimplicationMigrationExample: AbstractNatsTest() {
             // If your consumer already exists as a durable, you can create a
             // `ConsumerContext` for that consumer from the stream context or directly
             // from the connection by providing the stream and consumer name.
-            var consumerContext = streamContext.consumerContext(consumerName)
+            var consumerContext = streamContext.getConsumerContext(consumerName)
             consumerInfo = consumerContext.cachedConsumerInfo
             println("    The ConsumerContext for `${consumerName}` was loaded from the StreamContext for `${consumerInfo.streamName}`")
 
-            consumerContext = nc.consumerContext(streamName, consumerName)
+            consumerContext = nc.getConsumerContext(streamName, consumerName)
             consumerInfo = consumerContext.cachedConsumerInfo
             println("    The ConsumerContext for `${consumerName}` was loaded from the Connection on the stream `${consumerInfo.streamName}`")
 
@@ -237,7 +237,7 @@ class SimplicationMigrationExample: AbstractNatsTest() {
             // delete the consumer.
             // However, the consumer will be automatically deleted by the server when the
             // `inactiveThreshold` is reached.
-            messageConsumer.stop(100)
+            messageConsumer.stop()
             println("   stop was called.")
 
             // #### IterableConsumer
@@ -258,10 +258,10 @@ class SimplicationMigrationExample: AbstractNatsTest() {
             // operations. For instance, it is possible, but unlikely, that the consumer
             // could be deleted by another application in your ecosystem and if that happens
             // in the middle of the consumer, the exception would be thrown.
-            val iterableConsumer = consumerContext.consume()
+            val iterableConsumer = consumerContext.fetchMessages(100)
             try {
                 for (x in 0 until 3) {
-                    val msg = iterableConsumer.nextMessage(100)
+                    val msg = iterableConsumer.nextMessage()
                     println("    Received: ${msg.subject}")
                     msg.ack()
                 }

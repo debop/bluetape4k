@@ -43,7 +43,7 @@ class SimplePublishExample: AbstractNatsTest() {
     @Test
     fun `use dispatcher`() {
         getConnection().use { conn ->
-            val dispatcher = conn.createDispatcher { msg: Message? -> }
+            val dispatcher = conn.createDispatcher { _: Message? -> }
 
             val latch = CountDownLatch(1)
             val subscription = dispatcher.subscribe(TEST_SUBJECT) { msg ->

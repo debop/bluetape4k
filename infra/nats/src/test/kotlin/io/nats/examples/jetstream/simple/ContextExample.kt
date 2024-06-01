@@ -23,15 +23,15 @@ class ContextExample: AbstractNatsTest() {
             nc.createOrReplaceStream(STREAM, SUBJECT)
 
             // get a stream context from the connection
-            var streamContext = nc.streamContext(STREAM)
+            var streamContext = nc.getStreamContext(STREAM)
             log.debug { "S1. ${streamContext.streamInfo}" }
 
             // get a stream context from the connection, supplying custom JetStreamOptions
-            streamContext = nc.streamContext(STREAM, JetStreamOptions.DEFAULT_JS_OPTIONS)
+            streamContext = nc.getStreamContext(STREAM, JetStreamOptions.DEFAULT_JS_OPTIONS)
             log.debug { "S2. ${streamContext.streamInfo}" }
 
             // get a stream context from the JetStream context
-            streamContext = js.streamContext(STREAM)
+            streamContext = js.getStreamContext(STREAM)
             log.debug { "S3. ${streamContext.streamInfo}" }
 
             // when you create a consumer from the stream context you get a ConsumerContext in return
@@ -39,15 +39,15 @@ class ContextExample: AbstractNatsTest() {
             log.debug { "C1. ${consumerContext.cachedConsumerInfo}" }
 
             // get a ConsumerContext from the connection for a pre-existing consumer
-            consumerContext = nc.consumerContext(STREAM, CONSUMER_NAME)
+            consumerContext = nc.getConsumerContext(STREAM, CONSUMER_NAME)
             log.debug { "C2. ${consumerContext.cachedConsumerInfo}" }
 
             // get a ConsumerContext from the connection for a pre-existing consumer, supplying custom JetStreamOptions
-            consumerContext = nc.consumerContext(STREAM, CONSUMER_NAME, JetStreamOptions.DEFAULT_JS_OPTIONS)
+            consumerContext = nc.getConsumerContext(STREAM, CONSUMER_NAME, JetStreamOptions.DEFAULT_JS_OPTIONS)
             log.debug { "C3. ${consumerContext.cachedConsumerInfo}" }
 
             // get a ConsumerContext from the stream context for a pre-existing consumer
-            consumerContext = streamContext.consumerContext(CONSUMER_NAME)
+            consumerContext = streamContext.getConsumerContext(CONSUMER_NAME)
             log.debug { "C4. ${consumerContext.cachedConsumerInfo}" }
         }
     }

@@ -49,11 +49,12 @@ class FetchMessagesExample: AbstractSimpleExample() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun simpleFetch(nc: Connection, js: JetStream, label: String, maxMessages: Int) {
         val consumerName = "$CONSUMER_NAME_PREFIX-$maxMessages-messages"
 
         // get stream context, create consumer and get the consumer context
-        val streamContext = nc.streamContext(STREAM)
+        val streamContext = nc.getStreamContext(STREAM)
         val consumerContext = streamContext.createOrUpdateConsumer(consumerConfiguration { durable(consumerName) })
 
         val fetchOptions = fetchConsumeOptionsOf(maxMessages, EXPIRES_SECONDS * 1000L)

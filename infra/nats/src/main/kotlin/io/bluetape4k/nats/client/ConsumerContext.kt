@@ -22,6 +22,6 @@ fun consumerContextOf(
     consumerCfg: ConsumerConfiguration,
 ): ConsumerContext {
     return conn
-        .streamContext(streamName)
+        .getStreamContext(streamName)
         .createOrUpdateConsumer(consumerCfg)
 }

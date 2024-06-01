@@ -32,7 +32,7 @@ class MessageConsumerExample: AbstractSimpleExample() {
             publish(js, SUBJECT, MESSAGE_TEXT, 2500)
 
             // get stream context, create consumer and get the consumer context
-            val streamContext = nc.streamContext(STREAM)
+            val streamContext = nc.getStreamContext(STREAM)
             val consumerContext = streamContext.createOrUpdateConsumer(consumerConfiguration { durable(CONSUMER_NAME) })
 
             val latch = CountDownLatch(1)
@@ -53,7 +53,7 @@ class MessageConsumerExample: AbstractSimpleExample() {
             val consumer: MessageConsumer = consumerContext.consume(handler)
             latch.await()
             log.debug { "Stop the consumer ..." }
-            consumer.stop(1000)
+            consumer.stop()
             Thread.sleep(1000)
 
             report("Final", startTime, counter.value)

@@ -43,8 +43,8 @@ class RequestReplyExample: AbstractNatsTest() {
 
             try {
                 val future = nc.request("greet.pam", null)
-                val m = future.get(1, TimeUnit.SECONDS)
-                log.debug { "Response received: ${m.data.toUtf8String()}" } // hello pam
+                val m1 = future.get(1, TimeUnit.SECONDS)
+                log.debug { "Response received: ${m1.data.toUtf8String()}" } // hello pam
             } catch (e: ExecutionException) {
                 log.error(e) { "Somthing went wrong with the execution of the request." }
             } catch (e: TimeoutException) {
@@ -65,8 +65,8 @@ class RequestReplyExample: AbstractNatsTest() {
             // we get a cancellation exception.
             try {
                 val future = nc.request("greet.sue", null)
-                val m2 = future.get(1, TimeUnit.SECONDS)
-                log.debug { "Response received: ${m2.data.toUtf8String()}" } // hello pam
+                val m3 = future.get(1, TimeUnit.SECONDS)
+                log.debug { "Response received: ${m3.data.toUtf8String()}" } // hello pam
             } catch (e: ExecutionException) {
                 log.error(e) { "Somthing went wrong with the execution of the request." }
             } catch (e: TimeoutException) {

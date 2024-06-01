@@ -1,6 +1,7 @@
 package io.nats.examples
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
 import io.bluetape4k.nats.AbstractNatsTest
 import io.bluetape4k.nats.client.api.keyValueConfiguration
@@ -35,6 +36,7 @@ class KeyValueIntroExamples: AbstractNatsTest() {
                 this.name(KEY_VALUE_NAME)
             }
             val kvStatus: KeyValueStatus = kvm.create(kvc)
+            log.debug { "kv status=$kvStatus" }
 
             // Retrieve the Key Value context once the bucket is created.
             val kv: KeyValue = nc.keyValue(KEY_VALUE_NAME)

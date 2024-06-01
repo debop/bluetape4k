@@ -3,10 +3,12 @@ package io.nats.examples.jetstream.simple
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.nats.client.api.consumerConfiguration
+import io.bluetape4k.nats.client.api.fetchConsumeOptions
 import io.bluetape4k.nats.client.createOrReplaceStream
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import kotlin.concurrent.thread
+import kotlin.time.Duration.Companion.seconds
 
 class IterableConsumerExample: AbstractSimpleExample() {
 
@@ -21,23 +23,23 @@ class IterableConsumerExample: AbstractSimpleExample() {
     }
 
     @Test
-    fun `use IterableConsumer`() = runTest {
+    fun `use IterableConsumer`() = runTest(timeout = 30.seconds) {
         getConnection().use { nc ->
             val js = nc.jetStream()
             nc.createOrReplaceStream(STREAM, SUBJECT)
 
             // get stream context, create consumer and get the consumer context
-            val streamContext = nc.streamContext(STREAM)
+            val streamContext = nc.getStreamContext(STREAM)
             val consumerContext = streamContext.createOrUpdateConsumer(consumerConfiguration { durable(CONSUMER_NAME) })
 
             val consumeThread = thread(start = false) {
                 var count = 0
                 val start = System.currentTimeMillis()
 
-                consumerContext.consume().use { consumer ->
+                consumerContext.fetch(fetchConsumeOptions { }).use { consumer ->
                     log.debug { "Starting consuming ..." }
                     while (count < STOP_COUNT) {
-                        val msg = consumer.nextMessage(1000)
+                        val msg = consumer.nextMessage()
                         msg?.let {
                             it.ack()
                             if (++count % REPORT_EVERY == 0) {
@@ -49,14 +51,14 @@ class IterableConsumerExample: AbstractSimpleExample() {
 
                     log.debug { "Pausing for effect...allow more messages come across." }
                     Thread.sleep((JITTER * 2).toLong()) // allows more messages to come across
-                    consumer.stop(1000)
+                    consumer.stop()
 
                     println("Starting post-stop loop.")
-                    var msg = consumer.nextMessage(1000)
+                    var msg = consumer.nextMessage()
                     while (msg != null) {
                         msg.ack()
                         report("Post-stop loop running", System.currentTimeMillis() - start, ++count)
-                        msg = consumer.nextMessage(1000)
+                        msg = consumer.nextMessage()
                     }
                 }
             }
