@@ -1,19 +1,18 @@
-package io.bluetapek4.aws.ses.examples
+package io.bluetape4k.aws.ses.examples
 
+import io.bluetape4k.aws.ses.AbstractSesTest
+import io.bluetape4k.aws.ses.model.bodyOf
+import io.bluetape4k.aws.ses.model.contentOf
+import io.bluetape4k.aws.ses.model.destinationOf
+import io.bluetape4k.aws.ses.model.sendEmailRequest
+import io.bluetape4k.aws.ses.send
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetapek4.aws.ses.AbstractSesTest
-import io.bluetapek4.aws.ses.model.bodyOf
-import io.bluetapek4.aws.ses.model.contentOf
-import io.bluetapek4.aws.ses.model.destinationOf
-import io.bluetapek4.aws.ses.model.sendEmailRequest
-import io.bluetapek4.aws.ses.send
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
-
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class SesClientExamples: AbstractSesTest() {
@@ -27,7 +26,7 @@ class SesClientExamples: AbstractSesTest() {
             it.identities(domain, senderEmail)
         }
         val attrs = response.verificationAttributes()
-        attrs.forEach { key, attr ->
+        attrs.forEach { (key, attr) ->
             log.debug { "key=$key, attr=$attr" }
         }
     }

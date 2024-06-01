@@ -3,9 +3,9 @@ package io.bluetape4k.aws.dynamodb.query
 import io.bluetape4k.aws.dynamodb.model.DynamoDbEntity
 import io.bluetape4k.aws.dynamodb.model.dynamoDbKeyOf
 import io.bluetape4k.aws.dynamodb.model.queryEnhancedRequest
-import io.bluetape4k.core.requireNotNull
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.support.requireNotNull
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
@@ -41,22 +41,28 @@ class EnhancedQueryBuilderKt<T: Any> {
                     is BeginsWith          -> QueryConditional.sortBeginsWith(
                         dynamoDbKeyOf(primaryKey!!.equals.right, sk.comparisonOperator.right)
                     )
+
                     is GreaterThan         -> QueryConditional.sortGreaterThan(
                         dynamoDbKeyOf(primaryKey!!.equals.right, sk.comparisonOperator.right)
                     )
+
                     is GreaterThanOrEquals -> QueryConditional.sortGreaterThanOrEqualTo(
                         dynamoDbKeyOf(primaryKey!!.equals.right, sk.comparisonOperator.right)
                     )
+
                     is LessThan            -> QueryConditional.sortLessThan(
                         dynamoDbKeyOf(primaryKey!!.equals.right, sk.comparisonOperator.right)
                     )
+
                     is LessThanOrEquals    -> QueryConditional.sortLessThanOrEqualTo(
                         dynamoDbKeyOf(primaryKey!!.equals.right, sk.comparisonOperator.right)
                     )
+
                     is Between             -> QueryConditional.sortBetween(
                         dynamoDbKeyOf(sk.sortKeyName, sk.comparisonOperator.left.toString()),
                         dynamoDbKeyOf(sk.sortKeyName, sk.comparisonOperator.right.toString())
                     )
+
                     else                   ->
                         throw UnsupportedOperationException("Unknown comparison operator: ${sk.comparisonOperator}")
                 }

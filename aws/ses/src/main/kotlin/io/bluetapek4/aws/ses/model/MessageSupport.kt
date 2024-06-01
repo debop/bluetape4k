@@ -1,4 +1,4 @@
-package io.bluetapek4.aws.ses.model
+package io.bluetape4k.aws.ses.model
 
 import software.amazon.awssdk.services.ses.model.Body
 import software.amazon.awssdk.services.ses.model.Content

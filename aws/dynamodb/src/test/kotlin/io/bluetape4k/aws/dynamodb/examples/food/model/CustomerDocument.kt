@@ -1,8 +1,8 @@
 package io.bluetape4k.aws.dynamodb.examples.food.model
 
 import io.bluetape4k.aws.dynamodb.model.makeKey
-import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.support.requireNotBlank
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean
 import java.time.Instant
 

@@ -27,7 +27,7 @@ class DynamoDbEnhancedDslTest {
 
             filtering {
                 attribute("state") { eq(FoodState.COOKING) } and
-                    attribute("updatedAt") { lt(Instant.now()) }
+                        attribute("updatedAt") { lt(Instant.now()) }
             }
         }
 

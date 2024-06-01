@@ -96,9 +96,9 @@ fun queryEhnahcedRequestOf(
 fun QueryEnhancedRequest.describe(): String = buildString {
     appendLine()
     append("queryConditional: ").appendLine(queryConditional())
-    append("filter expression: ").appendLine(filterExpression().expression())
-    append("filter expression names: ").appendLine(filterExpression().expressionNames())
-    append("filter expression values: ").appendLine(filterExpression().expressionValues())
+    append("filters expression: ").appendLine(filterExpression().expression())
+    append("filters expression names: ").appendLine(filterExpression().expressionNames())
+    append("filters expression values: ").appendLine(filterExpression().expressionValues())
     append("limit: ").appendLine(limit() ?: -1)
     append("scanIndexForward: ").appendLine(scanIndexForward())
     append("attributesToProject: ").appendLine(attributesToProject())

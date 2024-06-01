@@ -1,7 +1,7 @@
 package io.bluetape4k.aws.dynamodb.query
 
-import io.bluetape4k.core.requireNotBlank
-import io.bluetape4k.core.requireNotNull
+import io.bluetape4k.support.requireNotBlank
+import io.bluetape4k.support.requireNotNull
 import software.amazon.awssdk.services.dynamodb.model.QueryRequest
 
 // @DynamoDslMarker

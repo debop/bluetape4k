@@ -2,7 +2,7 @@ package io.bluetape4k.aws.s3
 
 import io.bluetape4k.aws.s3.model.getObjectRequest
 import io.bluetape4k.aws.s3.model.putObjectRequest
-import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.support.requireNotBlank
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.core.sync.ResponseTransformer
 import software.amazon.awssdk.services.s3.S3Client
@@ -93,7 +93,7 @@ fun S3Client.getAsString(
 }
 
 /**
- * S3 Object 를 download 한 후, [path]에 저장한다
+ * S3 Object 를 download 한 후, [file]로 저장한다
  *
  * @param requestInitializer 요청 정보 Builder
  * @return 다운받은 S3 Object의 정보

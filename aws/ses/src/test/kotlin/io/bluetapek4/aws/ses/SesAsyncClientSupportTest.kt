@@ -6,24 +6,17 @@ import io.bluetape4k.aws.ses.model.destinationOf
 import io.bluetape4k.aws.ses.model.sendEmailRequest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.coroutines.future.await
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.Test
 
-/**
- * Email 전송을 위해서는 AWS SES 에 email을 등록해야 합니다.
- *
- * https://github.com/localstack/localstack/issues/339
- *
- * ```
- * $ aws ses verify-email-identity --email-address sunghyouk.bae@gmail.com --profile localstack --endpoint-url=http://localhost:4566
- * ```
- */
-class SesClientSupportTest: AbstractSesTest() {
+class SesAsyncClientSupportTest: AbstractSesTest() {
 
     companion object: KLogging()
 
     @Test
-    fun `send email`() {
+    fun `send email asynchronously`() = runTest {
         client.verifyEmailAddress { it.emailAddress(senderEmail) }
         client.verifyEmailAddress { it.emailAddress(receiverEamil) }
 
@@ -36,7 +29,8 @@ class SesClientSupportTest: AbstractSesTest() {
             }
         }
 
-        val response = client.send(request)
+
+        val response = asyncClient.send(request).await()
         response.messageId().shouldNotBeEmpty()
         log.debug { "response=$response" }
     }

@@ -269,7 +269,7 @@ fun QueryRequest.describe(): String = buildString {
     appendLine()
     append("keyConditions: ").appendLine(keyConditions())
     append("keyConditionExpression: ").appendLine(keyConditionExpression())
-    append("filter Expressin: ").appendLine(this@describe.filterExpression())
+    append("filters Expressin: ").appendLine(this@describe.filterExpression())
 
     append("expression names: ").appendLine(this@describe.expressionAttributeNames())
     append("expression values: ").appendLine(this@describe.expressionAttributeValues())

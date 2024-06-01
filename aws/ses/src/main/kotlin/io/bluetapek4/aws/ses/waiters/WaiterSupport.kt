@@ -1,4 +1,4 @@
-package io.bluetapek4.aws.ses.waiters
+package io.bluetape4k.aws.ses.waiters
 
 import software.amazon.awssdk.core.retry.backoff.BackoffStrategy
 import software.amazon.awssdk.core.waiters.WaiterOverrideConfiguration

@@ -1,6 +1,6 @@
 package io.bluetape4k.aws.s3.model
 
-import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.support.requireNotBlank
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
 
 inline fun getObjectRequest(

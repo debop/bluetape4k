@@ -1,5 +1,6 @@
 package io.bluetape4k.aws.sqs
 
+import io.bluetape4k.aws.sqs.model.sendMessageBatchRequestEntry
 import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import software.amazon.awssdk.services.sqs.model.DeleteQueueResponse
-import software.amazon.awssdk.services.sqs.model.SendMessageBatchRequestEntry
 import java.util.*
 
 @Execution(ExecutionMode.SAME_THREAD)
@@ -24,7 +24,7 @@ import java.util.*
 class SqsAsyncClientSupport: AbstractSqsTest() {
 
     companion object: KLogging() {
-        private const val QUEUE_PREFIX = "async-queue"
+        private const val QUEUE_PREFIX = "coroutines-queue"
         private val QUEUE_NAME = "$QUEUE_PREFIX-${UUID.randomUUID().encodeBase62().lowercase()}"
     }
 
@@ -35,9 +35,9 @@ class SqsAsyncClientSupport: AbstractSqsTest() {
     fun `create queue`() = runSuspendWithIO {
         val url = asyncClient.createQueue(QUEUE_NAME).await()
         queueUrl = asyncClient.getQueueUrl(QUEUE_NAME).await().queueUrl()
-        log.debug { "queue url=$queueUrl for queue name=$QUEUE_NAME" }
 
         queueUrl shouldBeEqualTo url
+        log.debug { "queue url=$queueUrl" }
     }
 
     @Test
@@ -65,11 +65,11 @@ class SqsAsyncClientSupport: AbstractSqsTest() {
         // NOTE: The total size of all messages that you send in a single SendMessageBatch call can't exceed 262,144 bytes (256 KB).
         // https://stackoverflow.com/questions/40489815/checking-size-of-sqs-message-batches
         // 이 것 계산하려면 Jdk Serializer를 통해서 bytes 를 계산해야 한다
-        val entries = List(10) {
-            SendMessageBatchRequestEntry.builder()
-                .id("id-$it")
-                .messageBody("Hello, world $it")
-                .build()
+        val entries = List(10) { index ->
+            sendMessageBatchRequestEntry {
+                id("id-$index")
+                messageBody("Hello, world $index")
+            }
         }
         val response = asyncClient.sendBatch(queueUrl, entries).await()
         response.successful() shouldHaveSize entries.size

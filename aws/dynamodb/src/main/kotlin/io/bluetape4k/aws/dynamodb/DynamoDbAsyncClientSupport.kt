@@ -19,7 +19,7 @@ inline fun dynamoDbAsyncClient(
         }
 }
 
-fun dynamoDbAsyncClientOf(
+inline fun dynamoDbAsyncClientOf(
     endpoint: URI,
     region: Region,
     credentialsProvider: AwsCredentialsProvider,
@@ -38,7 +38,7 @@ inline fun dynamoDbStreamsAsyncClient(
     return DynamoDbStreamsAsyncClient.builder().apply(initializer).build()
 }
 
-fun dynamoDbStreamsAsyncClientOf(
+inline fun dynamoDbStreamsAsyncClientOf(
     endpoint: URI,
     region: Region,
     credentialsProvider: AwsCredentialsProvider,

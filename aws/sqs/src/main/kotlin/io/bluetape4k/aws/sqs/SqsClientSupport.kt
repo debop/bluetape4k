@@ -2,8 +2,7 @@ package io.bluetape4k.aws.sqs
 
 import io.bluetape4k.aws.http.SdkHttpClientProvider
 import io.bluetape4k.aws.sqs.model.sendMessageRequestOf
-import io.bluetape4k.core.requireNotBlank
-import io.bluetape4k.utils.ShutdownQueue
+import io.bluetape4k.support.requireNotBlank
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sqs.SqsClient
@@ -26,9 +25,6 @@ import java.net.URI
 
 inline fun sqsClient(initializer: SqsClientBuilder.() -> Unit): SqsClient {
     return SqsClient.builder().apply(initializer).build()
-        .apply {
-            ShutdownQueue.register(this)
-        }
 }
 
 fun sqsClientOf(
@@ -56,9 +52,9 @@ fun SqsClient.listQueues(
     maxResults: Int? = null,
 ): ListQueuesResponse {
     return listQueues {
-        it.queueNamePrefix(prefix)
-        it.nextToken(nextToken)
-        it.maxResults(maxResults)
+        prefix?.run { it.queueNamePrefix(prefix) }
+        nextToken?.run { it.nextToken(nextToken) }
+        maxResults?.run { it.maxResults(maxResults) }
     }
 }
 
@@ -75,6 +71,7 @@ fun SqsClient.sendBatch(
     queueUrl: String,
     vararg entries: SendMessageBatchRequestEntry,
 ): SendMessageBatchResponse {
+    queueUrl.requireNotBlank("queueUrl")
     return sendMessageBatch {
         it.queueUrl(queueUrl)
         it.entries(*entries)
@@ -85,6 +82,7 @@ fun SqsClient.sendBatch(
     queueUrl: String,
     entries: Collection<SendMessageBatchRequestEntry>,
 ): SendMessageBatchResponse {
+    queueUrl.requireNotBlank("queueUrl")
     return sendMessageBatch {
         it.queueUrl(queueUrl)
         it.entries(entries)
@@ -96,9 +94,10 @@ fun SqsClient.receiveMessages(
     maxResults: Int? = null,
     requestInitializer: ReceiveMessageRequest.Builder.() -> Unit = {},
 ): ReceiveMessageResponse {
+    queueUrl.requireNotBlank("queueUrl")
     return receiveMessage {
         it.queueUrl(queueUrl)
-        it.maxNumberOfMessages(maxResults)
+        maxResults?.run { it.maxNumberOfMessages(this) }
         it.requestInitializer()
     }
 }
@@ -108,10 +107,11 @@ fun SqsClient.changeMessageVisibility(
     receiptHandle: String? = null,
     visibilityTimeout: Int? = null,
 ): ChangeMessageVisibilityResponse {
+    queueUrl.requireNotBlank("queueUrl")
     return changeMessageVisibility {
         it.queueUrl(queueUrl)
-        it.receiptHandle(receiptHandle)
-        it.visibilityTimeout(visibilityTimeout)
+        receiptHandle?.run { it.receiptHandle(this) }
+        visibilityTimeout?.run { it.visibilityTimeout(this) }
     }
 }
 
@@ -119,6 +119,7 @@ fun SqsClient.changeMessageVisibilityBatch(
     queueUrl: String,
     vararg entries: ChangeMessageVisibilityBatchRequestEntry,
 ): ChangeMessageVisibilityBatchResponse {
+    queueUrl.requireNotBlank("queueUrl")
     return changeMessageVisibilityBatch {
         it.queueUrl(queueUrl)
         it.entries(*entries)
@@ -129,6 +130,7 @@ fun SqsClient.changeMessageVisibilityBatch(
     queueUrl: String,
     entries: Collection<ChangeMessageVisibilityBatchRequestEntry>,
 ): ChangeMessageVisibilityBatchResponse {
+    queueUrl.requireNotBlank("queueUrl")
     return changeMessageVisibilityBatch {
         it.queueUrl(queueUrl)
         it.entries(entries)
@@ -139,9 +141,10 @@ fun SqsClient.deleteMessage(
     queueUrl: String,
     receiptHandle: String? = null,
 ): DeleteMessageResponse {
+    queueUrl.requireNotBlank("queueUrl")
     return deleteMessage {
         it.queueUrl(queueUrl)
-        it.receiptHandle(receiptHandle)
+        receiptHandle?.run { it.receiptHandle(this) }
     }
 }
 
@@ -149,6 +152,7 @@ fun SqsClient.deleteMessageBatch(
     queueUrl: String,
     vararg entries: DeleteMessageBatchRequestEntry,
 ): DeleteMessageBatchResponse {
+    queueUrl.requireNotBlank("queueUrl")
     return deleteMessageBatch {
         it.queueUrl(queueUrl)
         it.entries(*entries)
@@ -159,6 +163,7 @@ fun SqsClient.deleteMessageBatch(
     queueUrl: String,
     entries: Collection<DeleteMessageBatchRequestEntry>,
 ): DeleteMessageBatchResponse {
+    queueUrl.requireNotBlank("queueUrl")
     return deleteMessageBatch {
         it.queueUrl(queueUrl)
         it.entries(entries)
@@ -166,6 +171,7 @@ fun SqsClient.deleteMessageBatch(
 }
 
 fun SqsClient.deleteQueue(queueUrl: String): DeleteQueueResponse {
+    queueUrl.requireNotBlank("queueUrl")
     return deleteQueue {
         it.queueUrl(queueUrl)
     }

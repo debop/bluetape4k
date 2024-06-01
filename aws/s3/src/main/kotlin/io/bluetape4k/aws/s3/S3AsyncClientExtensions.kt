@@ -2,7 +2,7 @@ package io.bluetape4k.aws.s3
 
 import io.bluetape4k.aws.s3.model.getObjectRequest
 import io.bluetape4k.aws.s3.model.putObjectRequest
-import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.support.requireNotBlank
 import software.amazon.awssdk.core.async.AsyncRequestBody
 import software.amazon.awssdk.core.async.AsyncResponseTransformer
 import software.amazon.awssdk.services.s3.S3AsyncClient

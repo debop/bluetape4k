@@ -1,4 +1,4 @@
-package io.bluetapek4.aws.ses
+package io.bluetape4k.aws.ses
 
 import io.bluetape4k.aws.http.SdkHttpClientProvider
 import io.bluetape4k.utils.ShutdownQueue

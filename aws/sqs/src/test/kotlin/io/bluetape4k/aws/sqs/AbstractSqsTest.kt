@@ -21,7 +21,7 @@ abstract class AbstractSqsTest {
 
         @JvmStatic
         private val endpoint by lazy {
-            AwsSQS.getEndpointOverride(LocalStackContainer.Service.S3)
+            AwsSQS.getEndpointOverride(LocalStackContainer.Service.SQS)
         }
 
         @JvmStatic
@@ -34,7 +34,7 @@ abstract class AbstractSqsTest {
             get() = Region.of(AwsSQS.region)
 
         @JvmStatic
-        val client: SqsClient by lazy {
+        protected val client: SqsClient by lazy {
             sqsClient {
                 credentialsProvider(credentialsProvider)
                 endpointOverride(endpoint)
@@ -45,7 +45,7 @@ abstract class AbstractSqsTest {
         }
 
         @JvmStatic
-        val asyncClient: SqsAsyncClient by lazy {
+        protected val asyncClient: SqsAsyncClient by lazy {
             sqsAsyncClient {
                 credentialsProvider(credentialsProvider)
                 endpointOverride(endpoint)

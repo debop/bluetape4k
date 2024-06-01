@@ -1,4 +1,4 @@
-package io.bluetapek4.aws.ses.model
+package io.bluetape4k.aws.ses.model
 
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo

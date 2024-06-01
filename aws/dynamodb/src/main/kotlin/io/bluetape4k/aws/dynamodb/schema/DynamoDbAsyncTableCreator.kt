@@ -40,8 +40,10 @@ class DynamoDbAsyncTableCreator {
             log.info { "Table [${asyncTable.tableName()}] created." }
         } catch (e: Throwable) {
             when (e.cause) {
-                is ResourceInUseException ->
+                is ResourceInUseException -> {
                     log.warn(e) { "Table [${asyncTable.tableName()}] already exists. Skipping creation." }
+                }
+
                 else                      -> {
                     log.error(e) { "Fail to create table [${asyncTable.tableName()}]" }
                     throw e
