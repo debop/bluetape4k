@@ -61,7 +61,7 @@ class MongoDBServerTest {
 
             val document = Document().apply {
                 put("name", "Debop")
-                put("commany", "HyperConnect")
+                put("commany", "Self Employeed")
             }
             val result = customers.insertOne(document)
             result.insertedId.shouldNotBeNull()
