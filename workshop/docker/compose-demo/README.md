@@ -16,6 +16,6 @@
 를 참고해서, `~/.testcontainers.properties` 파일에 `socat.container.image=alpine/socat:latest` 를 추가하면 됩니다.
 
 ```shell
-$grep socat ~/.testcontainers.properties
+$ grep socat ~/.testcontainers.properties
 socat.container.image=alpine/socat:latest
 ```

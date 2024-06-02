@@ -1,45 +1,56 @@
 package io.bluetape4k.tokenizer.model
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.writeAsString
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.tokenizer.AbstractCoreTest
 import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
+import kotlin.test.assertFailsWith
 
-class BlockMessageTest {
+class BlockMessageTest: AbstractCoreTest() {
 
-    companion object: KLogging() {
-        val faker = Fakers.faker
-    }
-
-    private val mapper = Jackson.defaultJsonMapper
+    companion object: KLogging()
 
     private fun newRequest(severity: Severity = Severity.MIDDLE): BlockwordRequest {
-        return BlockwordRequest(
-            Fakers.randomString(16, 1024, true),
+        return blockwordRequestOf(
+            Fakers.randomString(16, 1024),
             BlockwordOptions(severity = severity)
         )
     }
 
     @Test
-    fun `convert request to json`() {
-        val origin = newRequest()
-
-        val jsonText = mapper.writeValueAsString(origin)
-        val actual = mapper.readValue<BlockwordRequest>(jsonText)
-
-        actual shouldBeEqualTo origin
+    fun `create request with empty text`() {
+        assertFailsWith<IllegalArgumentException> {
+            blockwordRequestOf("")
+        }
+        assertFailsWith<IllegalArgumentException> {
+            blockwordRequestOf(" ")
+        }
+        assertFailsWith<IllegalArgumentException> {
+            blockwordRequestOf("\t")
+        }
     }
 
-    @Test
+    @RepeatedTest(REPEAT_SIZE)
+    fun `convert request to json`() {
+        val expected = newRequest()
+        val jsonText = mapper.writeAsString(expected)!!
+        val actual = mapper.readValue<BlockwordRequest>(jsonText)
+
+        actual shouldBeEqualTo expected
+    }
+
+    @RepeatedTest(REPEAT_SIZE)
     fun `convert response to json`() {
         val request = newRequest()
-        val origin = BlockwordResponse(request, "Masked 문자열", emptySet())
+        val expected = BlockwordResponse(request, "Masked 문자열", listOf("욕설", "비속어"))
 
-        val jsonText = mapper.writeValueAsString(origin)
+        val jsonText = mapper.writeAsString(expected)!!
         val actual = mapper.readValue<BlockwordResponse>(jsonText)
 
-        actual shouldBeEqualTo origin
+        actual shouldBeEqualTo expected
     }
 }

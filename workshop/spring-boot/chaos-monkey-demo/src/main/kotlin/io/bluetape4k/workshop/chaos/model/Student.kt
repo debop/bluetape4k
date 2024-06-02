@@ -5,5 +5,5 @@ import java.io.Serializable
 data class Student(
     var id: Int? = null,
     var name: String? = null,
-    var passportNumber: String? = null
+    var passportNumber: String? = null,
 ): Serializable

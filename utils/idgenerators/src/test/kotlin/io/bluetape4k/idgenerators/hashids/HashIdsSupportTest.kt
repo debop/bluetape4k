@@ -24,7 +24,7 @@ class HashIdsSupportTest {
         const val ITEM_SIZE = 1000
     }
 
-    private val hashids = Hashids("wrtn.io")
+    private val hashids = Hashids("bluetape4k.io")
 
     @Nested
     inner class UuidTest {

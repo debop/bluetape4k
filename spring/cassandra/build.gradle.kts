@@ -1,9 +1,8 @@
 plugins {
-//    kotlin("kapt")
     kotlin("plugin.spring")
     kotlin("plugin.noarg")
     kotlin("plugin.allopen")
-
+    kotlin("kapt")
 }
 allOpen {
     annotation("com.datastax.oss.driver.api.mapper.annotations.Entity")
@@ -13,7 +12,6 @@ noArg {
     invokeInitializers = true
 }
 
-// NOTE: implementation 나 runtimeOnly로 지정된 Dependency를 testimplementation 으로도 지정하도록 합니다.
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }
@@ -36,11 +34,16 @@ dependencies {
 //    kapt(Libs.cassandra_java_driver_mapper_processor)
 //    kaptTest(Libs.cassandra_java_driver_mapper_processor)
 
+    compileOnly(Libs.springBoot("autoconfigure"))
+    compileOnly(Libs.springBoot("configuration-processor"))
+    kapt(Libs.springBoot("configuration-processor"))
+
     api(Libs.springBootStarter("data-cassandra"))
     api(Libs.springBootStarter("aop"))
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(group = "org.mockito", module = "mockito-core")
     }
 
     // Coroutines
@@ -51,5 +54,5 @@ dependencies {
 
     compileOnly(Libs.reactor_core)
     compileOnly(Libs.reactor_kotlin_extensions)
-    compileOnly(Libs.reactor_test)
+    testImplementation(Libs.reactor_test)
 }

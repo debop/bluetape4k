@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class StudentService(
-    private val repository: StudentJdbcRepository
+    private val repository: StudentJdbcRepository,
 ) {
     fun findAll() = repository.findAll()
     fun findById(id: Int) = repository.findById(id)

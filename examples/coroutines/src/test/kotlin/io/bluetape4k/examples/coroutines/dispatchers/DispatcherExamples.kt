@@ -1,6 +1,5 @@
 package io.bluetape4k.examples.coroutines.dispatchers
 
-import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.support.logging
 import io.bluetape4k.logging.KLogging
@@ -34,10 +33,10 @@ class DispatcherExamples {
 
     @Test
     fun `default dispatcher 예제`() = runTest {
-        fastList(REPEAT_SIZE) {
+        List(REPEAT_SIZE) {
             // Default dispatcher를 적용
             launch(Dispatchers.Default) {
-                fastList(REPEAT_SIZE) { Random.nextLong() }.maxOrNull()
+                List(REPEAT_SIZE) { Random.nextLong() }.maxOrNull()
 
                 // thread 는 cpu core 수 만큼 사용한다 
                 // thread name 에 @coroutine#number 가 붙는다 
@@ -77,10 +76,10 @@ class DispatcherExamples {
      */
     @Test
     fun `io dispatcher 사용 예`() = runTest {
-        val jobs = fastList(REPEAT_SIZE) {
+        val jobs = List(REPEAT_SIZE) {
             // Dispatchers.IO.limitedParallelism(128)
             launch(Dispatchers.IO) {
-                delay(200)
+                delay(Random.nextLong(100, 200))
 
                 val threadName = Thread.currentThread().name
                 logging { "Running on thread $threadName" }
@@ -92,10 +91,11 @@ class DispatcherExamples {
     @Test
     fun `custom dispatcher 사용 예`() = runTest {
         newFixedThreadPoolContext(4, "custom").use { dispatcher ->
+            // 동시 작업을 2개로 제한합니다.
             val parallel = dispatcher.limitedParallelism(2)
-            fastList(REPEAT_SIZE) {
+            List(REPEAT_SIZE) {
                 launch(parallel) {
-                    delay(200)
+                    delay(Random.nextLong(100, 200))
                     val threadName = Thread.currentThread().name
                     logging { "Running on thread $threadName" }
                 }
@@ -111,7 +111,7 @@ class DispatcherExamples {
         newSingleThreadContext("single").use { dispatcher ->
             val counter = atomic(0)
 
-            val jobs = fastList(REPEAT_SIZE) {
+            val jobs = List(REPEAT_SIZE) {
                 launch(dispatcher) {
                     counter.incrementAndGet()
                     logging { "count=${counter.value}, thread=${Thread.currentThread().name}" }
@@ -132,7 +132,7 @@ class DispatcherExamples {
             var continuation: Continuation<Unit>? = null
 
             val job2 = launch(newSingleThreadContext("Name2")) {
-                delay(200)
+                delay(Random.nextLong(100, 200))
                 continuation?.resume(Unit)
             }.log("job2")
 

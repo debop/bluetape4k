@@ -1,9 +1,9 @@
 package io.bluetape4k.spring.retrofit2.services.httpbin
 
-import io.bluetape4k.infra.micrometer.instrument.retrofit2.MicrometerRetrofitMetricsRecorder
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.micrometer.instrument.retrofit2.MicrometerRetrofitMetricsRecorder
 import io.bluetape4k.support.uninitialized
 import io.micrometer.core.instrument.MeterRegistry
 import kotlinx.coroutines.Dispatchers

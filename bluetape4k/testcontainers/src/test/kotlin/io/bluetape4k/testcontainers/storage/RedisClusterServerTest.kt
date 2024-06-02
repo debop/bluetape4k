@@ -1,5 +1,6 @@
 package io.bluetape4k.testcontainers.storage
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
 import org.amshove.kluent.shouldBeEqualTo
@@ -60,7 +61,7 @@ class RedisClusterServerTest {
             redisson.getRedisNodes(RedisNodes.CLUSTER).masters.all { it.ping() }.shouldBeTrue()
             redisson.getRedisNodes(RedisNodes.CLUSTER).pingAll().shouldBeTrue()
 
-            val map = redisson.getMap<String, String>("kommons:map")
+            val map = redisson.getMap<String, String>("$LibraryName:map")
             map["key"] = "value"
             map["key"] shouldBeEqualTo "value"
         } finally {

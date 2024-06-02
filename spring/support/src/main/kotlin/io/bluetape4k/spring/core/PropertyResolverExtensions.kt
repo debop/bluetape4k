@@ -56,6 +56,22 @@ operator fun <T: Any> PropertyResolver.get(key: String, targetType: KClass<T>): 
     getProperty(key, targetType.java)
 
 /**
+ * 지정한 [key]에 해당하는 속성 값을 반환합니다.
+ *
+ * ```
+ * propertyResolver["num", Int::class] shouldBeEqualTo 5
+ * ```
+ * @typeparam T 속성 값의 수형
+ * @receiver PropertyResolver
+ * @param key the property name to resolve
+ * @return T? 속성 값, 없는 경우에는 null을 반환
+ */
+inline fun <reified T: Any> PropertyResolver.getAs(key: String): T? {
+    return getProperty(key, T::class.java)
+}
+
+
+/**
  * 지정한 [key]에 해당하는 속성 값을 반환합니다. [key]에 해당하는 값이 없는 경우에는 defaultValue를 반환합니다.
  *
  * ```
@@ -73,6 +89,22 @@ operator fun <T: Any> PropertyResolver.get(key: String, targetType: KClass<T>, d
 }
 
 /**
+ * 지정한 [key]에 해당하는 속성 값을 반환합니다.
+ *
+ * ```
+ * propertyResolver["num", Int::class] shouldBeEqualTo 5
+ * ```
+ * @typeparam T 속성 값의 수형
+ * @receiver PropertyResolver
+ * @param key the property name to resolve
+ * @return T? 속성 값, 없는 경우에는 null을 반환
+ */
+inline fun <reified T: Any> PropertyResolver.getAs(key: String, defaultValue: T): T {
+    return getProperty(key, T::class.java, defaultValue)
+}
+
+
+/**
  * Return the property value associated with the given key, converted to the given targetType.
  *
  * @throws IllegalStateException if the given key cannot be resolved
@@ -85,4 +117,8 @@ operator fun <T: Any> PropertyResolver.get(key: String, targetType: KClass<T>, d
 @Throws(IllegalStateException::class)
 fun <T: Any> PropertyResolver.getRequiredProperty(key: String, targetType: KClass<T>): T {
     return getRequiredProperty(key, targetType.java)
+}
+
+inline fun <reified T: Any> PropertyResolver.getRequiredPropertyAs(key: String): T {
+    return getRequiredProperty(key, T::class.java)
 }

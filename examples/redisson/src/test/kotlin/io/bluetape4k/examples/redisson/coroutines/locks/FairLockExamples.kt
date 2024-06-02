@@ -1,13 +1,12 @@
 package io.bluetape4k.examples.redisson.coroutines.locks
 
-
-import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
-import io.bluetape4k.data.redis.redisson.coroutines.getLockId
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
+import io.bluetape4k.redis.redisson.coroutines.coAwait
+import io.bluetape4k.redis.redisson.coroutines.getLockId
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.joinAll
@@ -45,12 +44,12 @@ class FairLockExamples: AbstractRedissonCoroutineTest() {
                 // 나머지 요청은 최대 5초간 대기하다가 요청 중단된다
                 val lockId = redisson.getLockId(lock.name)
                 log.trace { "lockId=$lockId" }
-                val locked = lock.tryLockAsync(5, 10, TimeUnit.SECONDS, lockId).awaitSuspending()
+                val locked = lock.tryLockAsync(5, 10, TimeUnit.SECONDS, lockId).coAwait()
                 if (locked) {
                     lockCounter.incrementAndGet()
                 }
                 delay(10)
-                lock.unlockAsync(lockId).awaitSuspending()
+                lock.unlockAsync(lockId).coAwait()
             }
         }
         jobs.joinAll()

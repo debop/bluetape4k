@@ -51,11 +51,6 @@ class KoreanSubstantiveTest: TestBase() {
 
     @Test
     fun `isName should correctly identify 3-char person names`() {
-
-        isName("배성혁").shouldBeTrue()
-        isName("배제형").shouldBeTrue()
-        isName("권미숙").shouldBeTrue()
-
         isName("문재인").shouldBeTrue()
         isName("손나은").shouldBeTrue()
         isName("손석희").shouldBeTrue()

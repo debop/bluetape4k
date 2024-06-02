@@ -1,6 +1,7 @@
 package io.bluetape4k.testcontainers.massage
 
 import io.bluetape4k.codec.encodeBase62
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
@@ -114,7 +115,7 @@ class KafkaServer private constructor(
 
     object Launcher {
 
-        const val DEFAULT_TOPIC = "kommons.test-topic.1"
+        const val DEFAULT_TOPIC = "$LibraryName.test-topic.1"
 
         val kafka: KafkaServer by lazy {
             KafkaServer().apply {

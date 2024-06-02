@@ -2,7 +2,7 @@ package io.bluetape4k.examples.cassandra
 
 import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader
-import io.bluetape4k.spring.cassandra.domain.model.AllPossibleTypes
+import io.bluetape4k.examples.cassandra.domain.model.AllPossibleTypes
 import io.bluetape4k.testcontainers.storage.Cassandra4Server
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.data.cassandra.config.AbstractReactiveCassandraConfiguration

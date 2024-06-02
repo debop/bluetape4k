@@ -1,6 +1,6 @@
 package io.bluetape4k.workshop.vertx.webclient
 
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -13,7 +13,7 @@ import io.vertx.ext.web.codec.BodyCodec
 import io.vertx.junit5.VertxExtension
 import io.vertx.junit5.VertxTestContext
 import io.vertx.kotlin.coroutines.CoroutineVerticle
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -51,7 +51,7 @@ class ResponseExamples {
             vertx.createHttpServer()
                 .requestHandler(router)
                 .listen(port)
-                .await()
+                .coAwait()
 
             log.debug { "Server started. http://localhost:$port" }
         }
@@ -60,14 +60,14 @@ class ResponseExamples {
     @Test
     fun `response as json object`(vertx: Vertx, testContext: VertxTestContext) = runSuspendTest {
         vertx.withTestContextSuspending(testContext) {
-            vertx.deployVerticle(JsonServer()).await()
+            vertx.deployVerticle(JsonServer()).coAwait()
 
             val client = WebClient.create(vertx)
             val response = client
                 .put(port, "localhost", "/")
                 .`as`(BodyCodec.jsonObject())
                 .send()
-                .await()
+                .coAwait()
 
             log.debug { "Response body=${response.body().encodePrettily()}" }
             response.statusCode() shouldBeEqualTo 200
@@ -77,14 +77,14 @@ class ResponseExamples {
     @Test
     fun `response as custom class`(vertx: Vertx, testContext: VertxTestContext) = runSuspendTest {
         vertx.withTestContextSuspending(testContext) {
-            vertx.deployVerticle(JsonServer()).await()
+            vertx.deployVerticle(JsonServer()).coAwait()
 
             val client = WebClient.create(vertx)
             val response = client
                 .put(port, "localhost", "/")
                 .`as`(BodyCodec.json(User::class.java))
                 .send()
-                .await()
+                .coAwait()
 
             log.debug { "Response body=${response.body()}" }
             response.statusCode() shouldBeEqualTo 200

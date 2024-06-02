@@ -5,10 +5,12 @@ import com.datastax.oss.driver.api.core.config.DriverConfigLoader
 import io.bluetape4k.spring.cassandra.domain.model.AllPossibleTypes
 import io.bluetape4k.testcontainers.storage.Cassandra4Server
 import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.context.annotation.Configuration
 import org.springframework.data.cassandra.config.AbstractReactiveCassandraConfiguration
 import org.springframework.data.cassandra.config.SchemaAction
 import org.springframework.data.cassandra.config.SessionBuilderConfigurer
 
+@Configuration(proxyBeanMethods = false)
 @EntityScan(basePackageClasses = [AllPossibleTypes::class])
 abstract class AbstractReactiveCassandraTestConfiguration: AbstractReactiveCassandraConfiguration() {
 
@@ -21,7 +23,7 @@ abstract class AbstractReactiveCassandraTestConfiguration: AbstractReactiveCassa
 
         init {
             // default keyspace 를 재생성합니다.
-            Cassandra4Server.Launcher.recreateKeyspace(DEFAULT_KEYSPACE)
+            Cassandra4Server.Launcher.recreateKeyspace(io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration.Companion.DEFAULT_KEYSPACE)
         }
     }
 
@@ -29,7 +31,8 @@ abstract class AbstractReactiveCassandraTestConfiguration: AbstractReactiveCassa
 
     override fun getContactPoints(): String = Cassandra4Server.Launcher.cassandra4.host
 
-    override fun getKeyspaceName(): String = DEFAULT_KEYSPACE
+    override fun getKeyspaceName(): String =
+        io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration.Companion.DEFAULT_KEYSPACE
 
     override fun getLocalDataCenter(): String = Cassandra4Server.LOCAL_DATACENTER1
 

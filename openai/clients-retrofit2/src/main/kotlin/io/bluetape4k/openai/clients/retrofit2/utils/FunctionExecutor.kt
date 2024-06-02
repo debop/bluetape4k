@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
-import io.bluetape4k.io.json.jackson.Jackson
-import io.bluetape4k.io.json.jackson.readValueOrNull
+import io.bluetape4k.json.jackson.Jackson
+import io.bluetape4k.json.jackson.readValueOrNull
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.openai.api.annotations.BetaOpenAI
@@ -60,7 +60,7 @@ class FunctionExecutor private constructor() {
         try {
             val result = execute<Any>(call)
             return when (result) {
-                is TextNode -> {
+                is TextNode   -> {
                     val objectNode = mapper.readTree(result.asText())
 
                     if (objectNode.isMissingNode) result
@@ -68,14 +68,14 @@ class FunctionExecutor private constructor() {
                 }
 
                 is ObjectNode -> result
-                is String -> {
+                is String     -> {
                     val objectNode = mapper.readTree(result)
 
                     if (objectNode.isMissingNode) throw RuntimeException("Parsing exception")
                     else objectNode
                 }
 
-                else -> mapper.readValueOrNull<JsonNode>(mapper.writeValueAsString(result))!!
+                else          -> mapper.readValueOrNull<JsonNode>(mapper.writeValueAsString(result))!!
             }
         } catch (e: Exception) {
             throw OpenAIHttpException(e)
@@ -88,7 +88,7 @@ class FunctionExecutor private constructor() {
             val function = functionMap.get(call.name)!!
             val source = when (val arguments = call.arguments!!) {
                 is TextNode -> arguments.asText()
-                else -> arguments.toPrettyString()
+                else        -> arguments.toPrettyString()
             }
             val obj = mapper.readValue(source, function.parametersClass)
 

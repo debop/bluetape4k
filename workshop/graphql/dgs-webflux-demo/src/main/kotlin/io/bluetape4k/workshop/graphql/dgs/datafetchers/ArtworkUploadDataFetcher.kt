@@ -7,6 +7,7 @@ import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.uninitialized
 import io.bluetape4k.workshop.graphql.dgs.generated.types.Image
+import kotlinx.atomicfu.locks.ReentrantLock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.web.WebProperties
 import org.springframework.web.multipart.MultipartFile
@@ -14,6 +15,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
+import kotlin.concurrent.withLock
 
 /**
  * GraphQL Mutation 으로 File Upload 를 처라하기 위한 Data Fetcher
@@ -23,7 +25,7 @@ class ArtworkUploadDataFetcher {
 
     companion object: KLogging() {
         private const val UPLOAD_PATH = "uploaded-images"
-        private val syncObj = Any()
+        private val lock = ReentrantLock()
     }
 
     @Autowired
@@ -45,7 +47,7 @@ class ArtworkUploadDataFetcher {
         @InputArgument showId: Int,
         @InputArgument upload: MultipartFile,
     ): List<Image> {
-        synchronized(syncObj) {
+        lock.withLock {
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath)
             }

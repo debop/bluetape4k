@@ -13,7 +13,6 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPosx.buildTrie
 import org.amshove.kluent.shouldContainSame
 import org.junit.jupiter.api.Test
 
-
 class KoreanPosTest: TestBase() {
 
     companion object {
@@ -31,7 +30,7 @@ class KoreanPosTest: TestBase() {
             NOUN_TRIE
         )
 
-        log.debug { "0 -> 1 : \nactual=  $actual\nexpected=$expected" }
+        log.debug { "0 -> 1 : \nactual=$actual\nexpected=$expected" }
         actual shouldContainSame expected
 
         // * -> +
@@ -45,7 +44,7 @@ class KoreanPosTest: TestBase() {
             NOUN_SELF_NODE
         )
 
-        log.debug { "* -> + : \nactual=  $actual\nexpected=$expected" }
+        log.debug { "* -> + : \nactual=$actual\nexpected=$expected" }
         actual shouldContainSame expected
     }
 
@@ -63,7 +62,7 @@ class KoreanPosTest: TestBase() {
             KoreanPosTrie(Suffix, emptyList(), ending = Noun)
         )
 
-        log.debug { "0 -> 0 -> 1 : \nactual=  $actual\nexpected=$expected" }
+        log.debug { "0 -> 0 -> 1 : \nactual=$actual\nexpected=$expected" }
         actual shouldContainSame expected
     }
 
@@ -72,7 +71,7 @@ class KoreanPosTest: TestBase() {
         // 1 -> +
         var actual = buildTrie("m1N+", Noun)
         var expected = listOf(KoreanPosTrie(Modifier, listOf(NOUN_SELF_NODE), ending = null))
-        log.debug { "1 -> + : \nactual=  $actual\nexpected=$expected" }
+        log.debug { "1 -> + : \nactual=$actual\nexpected=$expected" }
         actual shouldContainSame expected
 
         // + -> 1
@@ -89,13 +88,13 @@ class KoreanPosTest: TestBase() {
         // 1 -> *
         var actual = buildTrie("m1N*", Noun)
         var expected = listOf(KoreanPosTrie(Modifier, listOf(NOUN_SELF_NODE), ending = Noun))
-        log.debug { "1 -> * : \nactual=  $actual\nexpected=$expected" }
+        log.debug { "1 -> * : \nactual=$actual\nexpected=$expected" }
         actual shouldContainSame expected
 
         // + -> 0
         actual = buildTrie("N+s0", Noun)
         expected = listOf(KoreanPosTrie(Noun, listOf(SelfNode, SUFFIX_NOUN), ending = Noun))
-        log.debug { "+ -> 0 : \nactual=  $actual\nexpected=$expected" }
+        log.debug { "+ -> 0 : \nactual=$actual\nexpected=$expected" }
         actual shouldContainSame expected
     }
 
@@ -117,7 +116,7 @@ class KoreanPosTest: TestBase() {
                 ending = null
             )
         )
-        log.debug { "+ -> + -> 0 : \nactual=  $actual\nexpected=$expected" }
+        log.debug { "+ -> + -> 0 : \nactual=$actual\nexpected=$expected" }
         actual shouldContainSame expected
     }
 

@@ -4,7 +4,7 @@ import com.netflix.graphql.dgs.DgsQueryExecutor
 import com.netflix.graphql.dgs.client.codegen.GraphQLQueryRequest
 import com.ninjasquad.springmockk.MockkBean
 import graphql.ExecutionResult
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
 import io.bluetape4k.workshop.graphql.dgs.AbstractDgsTest
@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.CopyOnWriteArrayList
 
 class ReviewSubscriptionTest(
-    @Autowired private val dgsQueryExecutor: DgsQueryExecutor
+    @Autowired private val dgsQueryExecutor: DgsQueryExecutor,
 ): AbstractDgsTest() {
 
     companion object: KLogging() {
@@ -68,7 +68,7 @@ class ReviewSubscriptionTest(
     private fun addReview(): ExecutionResult {
         val queryRequest = GraphQLQueryRequest(
             AddReviewGraphQLQuery.Builder()
-                .review(SubmittedReview(1, faker.name().username(), faker.number().numberBetween(1, 5)))
+                .review(SubmittedReview(1, faker.internet().username(), faker.number().numberBetween(1, 5)))
                 .build(),
             AddReviewProjectionRoot()
                 .username()

@@ -74,7 +74,7 @@ class ReactiveManagedTransitionServiceTest: AbstractMongodbTest() {
                 .map { it.id }
                 .flatMap { managedTransitionService.run(it) }
                 .onErrorReturn(-1).`as`(StepVerifier::create)
-                .consumeNextWith { x -> }
+                .consumeNextWith { _ -> }
                 .verifyComplete()
         }
 

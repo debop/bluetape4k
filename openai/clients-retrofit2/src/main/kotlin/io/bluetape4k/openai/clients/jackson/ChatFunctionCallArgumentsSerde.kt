@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.node.JsonNodeType
 import com.fasterxml.jackson.databind.node.TextNode
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 
@@ -27,7 +27,7 @@ class ChatFunctionCallArgumentsSerde {
             } else {
                 val text = when (value) {
                     is TextNode -> value.asText()
-                    else -> value.toPrettyString()
+                    else        -> value.toPrettyString()
                 }
                 gen.writeString(text)
             }

@@ -19,6 +19,7 @@ dependencies {
 
     // Codecs
     implementation(Libs.kryo)
+    implementation(Libs.fury)
     // Compressor
     implementation(Libs.lz4_java)
 

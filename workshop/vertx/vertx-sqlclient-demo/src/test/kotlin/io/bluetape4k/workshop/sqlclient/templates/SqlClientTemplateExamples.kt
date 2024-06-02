@@ -14,7 +14,7 @@ import io.vertx.core.json.JsonObject
 import io.vertx.junit5.VertxTestContext
 import io.vertx.kotlin.core.json.json
 import io.vertx.kotlin.core.json.obj
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.kotlin.coroutines.dispatcher
 import io.vertx.sqlclient.Row
 import io.vertx.sqlclient.RowSet
@@ -38,20 +38,20 @@ class SqlClientTemplateExamples: AbstractSqlClientTest() {
             val pool = vertx.getH2Pool()
             try {
                 pool.withTransactionSuspending { conn ->
-                    conn.query("DROP TABLE users IF EXISTS").execute().await()
+                    conn.query("DROP TABLE users IF EXISTS").execute().coAwait()
                     conn.query(
                         """
-                    CREATE TABLE IF NOT EXISTS users(
-                         id LONG PRIMARY KEY,
-                         first_name VARCHAR(255),
-                         last_name VARCHAR(255)
-                    )
-                    """.trimIndent()
-                    ).execute().await()
-                    conn.query("INSERT INTO users VALUES (1, 'John', 'Doe'), (2, 'Jane', 'Doe')").execute().await()
+                        CREATE TABLE IF NOT EXISTS users(
+                             id LONG PRIMARY KEY,
+                             first_name VARCHAR(255),
+                             last_name VARCHAR(255)
+                        )
+                        """.trimIndent()
+                    ).execute().coAwait()
+                    conn.query("INSERT INTO users VALUES (1, 'John', 'Doe'), (2, 'Jane', 'Doe')").execute().coAwait()
                 }
             } finally {
-                pool.close().await()
+                pool.close().coAwait()
             }
         }
     }
@@ -64,7 +64,7 @@ class SqlClientTemplateExamples: AbstractSqlClientTest() {
             val rowSet: RowSet<Row> = SqlTemplate
                 .forQuery(pool, "SELECT * FROM users WHERE id = #{ID}")
                 .execute(parameters)
-                .await()
+                .coAwait()
 
             rowSet.forEach { row ->
                 log.debug { row.toJson() }
@@ -76,7 +76,7 @@ class SqlClientTemplateExamples: AbstractSqlClientTest() {
                 log.debug { user }
             }
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 
     @Test
@@ -91,11 +91,11 @@ class SqlClientTemplateExamples: AbstractSqlClientTest() {
             val result: SqlResult<Void> = SqlTemplate
                 .forUpdate(pool, "INSERT INTO users VALUES(#{id}, #{firstName}, #{lastName})")
                 .execute(parameters)
-                .await()
+                .coAwait()
 
             result.rowCount() shouldBeEqualTo 1
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 
     @Test
@@ -107,12 +107,12 @@ class SqlClientTemplateExamples: AbstractSqlClientTest() {
                 .forQuery(pool, "SELECT * FROM users WHERE id = #{id}")
                 .mapTo(USER_ROW_MAPPER)                                             // mapping custom mapper
                 .execute(parameters)
-                .await()
+                .coAwait()
 
             users.size() shouldBeEqualTo 1
             users.forEach { user -> log.debug { user } }
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 
     @Test
@@ -125,14 +125,14 @@ class SqlClientTemplateExamples: AbstractSqlClientTest() {
                 .forQuery(pool, "SELECT * FROM users WHERE id = #{id}")
                 .mapTo(Row::toJson)                                                 // mapping Row -> Json Object
                 .execute(parameters)
-                .await()
+                .coAwait()
 
             users.size() shouldBeEqualTo 1
             users.forEach { user ->
                 log.debug { user.encode() }
             }
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 
     @Test
@@ -151,12 +151,12 @@ class SqlClientTemplateExamples: AbstractSqlClientTest() {
                 // .mapFrom(USER_TUPLE_MAPPER)
                 .mapFrom(tupleMapperOfRecord<User>())
                 .execute(user)
-                .await()
+                .coAwait()
 
             result.rowCount() shouldBeEqualTo 1
 
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 
     @Test
@@ -176,11 +176,11 @@ class SqlClientTemplateExamples: AbstractSqlClientTest() {
                 .forQuery(pool, "INSERT INTO users VALUES (#{id}, #{firstName}, #{lastName})")
                 .mapFrom(TupleMapper.jsonObject())
                 .execute(user)
-                .await()
+                .coAwait()
 
             result.rowCount() shouldBeEqualTo 1
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 
     @Disabled("Vertx Jackson Databind 기능에서 kotlin module 을 등록하지 않아 예외가 발생한다.")
@@ -193,12 +193,12 @@ class SqlClientTemplateExamples: AbstractSqlClientTest() {
                 .forQuery(pool, "SELECT * FROM users WHERE id = #{id}")
                 .mapTo(User::class.java)
                 .execute(mapOf("id" to 1))
-                .await()
+                .coAwait()
 
             users.size() shouldBeEqualTo 1
             users.forEach { user -> log.debug { user } }
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 
     @Test
@@ -211,10 +211,10 @@ class SqlClientTemplateExamples: AbstractSqlClientTest() {
                 .forUpdate(pool, "INSERT INTO users VALUES(#{id}, #{firstName}, #{lastName})")
                 .mapFrom(User::class.java)
                 .execute(user)
-                .await()
+                .coAwait()
 
             result.rowCount() shouldBeEqualTo 1
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 }

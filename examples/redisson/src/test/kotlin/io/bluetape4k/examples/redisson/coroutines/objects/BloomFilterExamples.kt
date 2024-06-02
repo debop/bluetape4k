@@ -1,10 +1,10 @@
 package io.bluetape4k.examples.redisson.coroutines.objects
 
-import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
+import io.bluetape4k.redis.redisson.coroutines.coAwait
 import io.bluetape4k.support.toUtf8Bytes
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
@@ -15,7 +15,7 @@ import java.io.Serializable
 /**
  * BloomFilter 예제
  *
- * Redis based distributed RBloomFilter bloom filter for Java.
+ * Redis based distributed RBloomFilter bloom filters for Java.
  * Number of contained bits is limited to 2^32.
  *
  * 특정 요소가 포함되었는지는 불확실하지만, 포함되지 않았음은 확률적으로 보장하는 방법입니다.
@@ -23,10 +23,10 @@ import java.io.Serializable
  * Must be initialized with capacity size by `tryInit(expectedInsertions, falseProbability)` method before usage.
  *
  * 참고:
- * * [BloomFilter](https://github.com/redisson/redisson/wiki/6.-distributed-objects/#68-bloom-filter)
+ * * [BloomFilter](https://github.com/redisson/redisson/wiki/6.-distributed-objects/#68-bloom-filters)
  * * [블룸 필터 - Wiki](https://ko.wikipedia.org/wiki/%EB%B8%94%EB%A3%B8_%ED%95%84%ED%84%B0)
  *
- * 블룸 필터(Bloom filter)는 원소가 집합에 속하는지 여부를 검사하는데 사용되는 확률적 자료 구조이다.
+ * 블룸 필터(Bloom filters)는 원소가 집합에 속하는지 여부를 검사하는데 사용되는 확률적 자료 구조이다.
  * 1970년 Burton Howard Bloom에 의해 고안되었다.
  * 블룸 필터에 의해 어떤 원소가 집합에 속한다고 판단된 경우 실제로는 원소가 집합에 속하지 않는 긍정 오류가 발생하는 것이 가능하지만,
  * 반대로 원소가 집합에 속하지 않는 것으로 판단되었는데 실제로는 원소가 집합에 속하는 부정 오류는 절대로 발생하지 않는다는 특성이 있다.
@@ -67,6 +67,6 @@ class BloomFilterExamples: AbstractRedissonCoroutineTest() {
         // 존재하지 않는 요소는 false 를 반환한다
         bloomFilter.contains(excludedMessage).shouldBeFalse()
 
-        bloomFilter.deleteAsync().awaitSuspending().shouldBeTrue()
+        bloomFilter.deleteAsync().coAwait().shouldBeTrue()
     }
 }

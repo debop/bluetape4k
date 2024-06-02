@@ -2,11 +2,11 @@ package io.bluetape4k.workshop.webflux.hibernate.reactive.config
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.jdbc.MySQL8Server
+import jakarta.persistence.EntityManagerFactory
+import jakarta.persistence.Persistence
 import org.hibernate.tool.schema.Action
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import jakarta.persistence.EntityManagerFactory
-import jakarta.persistence.Persistence
 
 @Configuration
 class HibernateReactiveConfiguration {

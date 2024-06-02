@@ -60,7 +60,7 @@ class HttpbinRoutes {
                     String::class.java,
                     Hello::class.java,
                     MediaType.APPLICATION_JSON_VALUE
-                ) { exchange: ServerWebExchange, s: String ->
+                ) { _: ServerWebExchange, s: String ->
                     Mono.just(Hello(s.uppercase()))
                 }
             }
@@ -72,7 +72,7 @@ class HttpbinRoutes {
             filters {
                 prefixPath("/httpbin")
                 addResponseHeader(TEST_HEADER, "rewrite_request_upper")
-                modifyRequestBody(String::class.java, String::class.java) { exchange, s ->
+                modifyRequestBody(String::class.java, String::class.java) { _, s ->
                     Mono.just(s.uppercase() + s.uppercase())
                 }
             }
@@ -84,7 +84,7 @@ class HttpbinRoutes {
             filters {
                 prefixPath("/httpbin")
                 addResponseHeader(TEST_HEADER, "rewrite_response_upper")
-                modifyResponseBody(String::class.java, String::class.java) { exchange, s ->
+                modifyResponseBody(String::class.java, String::class.java) { _, s ->
                     log.debug { "response original: $s" }
                     Mono.just(s.uppercase())
                 }
@@ -97,7 +97,7 @@ class HttpbinRoutes {
             filters {
                 prefixPath("/httpbin")
                 addResponseHeader(TEST_HEADER, "rewrite_empty_response")
-                modifyResponseBody(String::class.java, String::class.java) { exchange, s ->
+                modifyResponseBody(String::class.java, String::class.java) { _, s ->
                     if (s == null) {
                         Mono.just("emptybody")
                     } else {
@@ -113,7 +113,7 @@ class HttpbinRoutes {
             filters {
                 prefixPath("/httpbin")
                 addResponseHeader(TEST_HEADER, "rewrite_respnose_fail_supplier")
-                modifyResponseBody(String::class.java, String::class.java) { exchange, s ->
+                modifyResponseBody(String::class.java, String::class.java) { _, s ->
                     if (s == null) {
                         Mono.error(IllegalArgumentException("this should not happen"))
                     } else {
@@ -129,7 +129,7 @@ class HttpbinRoutes {
             filters {
                 prefixPath("/httpbin")
                 addResponseHeader(TEST_HEADER, "rewrite_response_obj")
-                modifyResponseBody(Map::class.java, String::class.java) { exchange, map ->
+                modifyResponseBody(Map::class.java, String::class.java) { _, map ->
                     val data = map["data"]
                     Mono.just(data.toString())
                 }
@@ -143,8 +143,8 @@ class HttpbinRoutes {
             filters {
                 prefixPath("/httpbin")
                 addResponseHeader("X-AnotherHeader", "baz")
-                uri(uri)
             }
+            uri(uri)
         }
 
         route {
@@ -160,7 +160,7 @@ class HttpbinRoutes {
 
     @Bean
     fun testFunRouterFunction(): RouterFunction<ServerResponse> {
-        return RouterFunctions.route(RequestPredicates.path("/testfun")) { request ->
+        return RouterFunctions.route(RequestPredicates.path("/testfun")) { _ ->
             ServerResponse.ok().body(BodyInserters.fromValue("hello"))
         }
     }
@@ -168,7 +168,7 @@ class HttpbinRoutes {
     @Bean
     fun testWhenMetricPathIsNotMeet(): RouterFunction<ServerResponse> {
         val predicate = RequestPredicates.path("/actuator/metrics/spring.cloud.gateway.requests")
-        return RouterFunctions.route(predicate) { request ->
+        return RouterFunctions.route(predicate) { _ ->
             ServerResponse.ok().body(BodyInserters.fromValue(HELLO_FROM_FAKE_ACTUATOR_METRICS_GATEWAY_REQUESTS))
         }
     }

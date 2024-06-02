@@ -8,6 +8,7 @@ import com.fasterxml.jackson.dataformat.javaprop.JavaPropsFactory
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.io.toInputStream
 import io.bluetape4k.jackson.text.AbstractJacksonTextTest
 import io.bluetape4k.jackson.text.properties.JacksonProps
@@ -61,28 +62,28 @@ class ParseNamedDataSourcePropertiesTest: AbstractJacksonTextTest() {
     inner class ParseProperties {
 
         private val properties = """
-        |kommons.datasources.default.connectionPool=dbcp2
-        |kommons.datasources.default.driverClassName=mysql
-        |kommons.datasources.default.url=jdbc:mysql://localhost:3306/test
-        |kommons.datasources.default.username=sa
-        |kommons.datasources.default.password=password
-        |kommons.datasources.default.maxTotal=50
-        |kommons.datasources.default.maxIdle=40
-        |kommons.datasources.default.minIdle=10
-        |kommons.datasources.default.maxWaitMillis=
-        |kommons.datasources.default.lifo=true
-        |kommons.datasources.default.connectionProperties=
-        |kommons.datasources.read.connectionPool=hikari
-        |kommons.datasources.read.driverClassName=mariadb
-        |kommons.datasources.read.url=jdbc:mysql://localhost:3307/test
-        |kommons.datasources.read.username=sa
-        |kommons.datasources.read.password=password
-        |kommons.datasources.read.connectionTimeout=5000
-        |kommons.datasources.read.idleTimeout=
-        |kommons.datasources.read.maxLifetime=60000
-        |kommons.datasources.read.properties.1=cachePropStmts=true
-        |kommons.datasources.read.properties.2=prepStmtCacheSize=250
-        |kommons.datasources.read.properties.3=propStmtCacheSqlLimit=2048
+        |$LibraryName.datasources.default.connectionPool=dbcp2
+        |$LibraryName.datasources.default.driverClassName=mysql
+        |$LibraryName.datasources.default.url=jdbc:mysql://localhost:3306/test
+        |$LibraryName.datasources.default.username=sa
+        |$LibraryName.datasources.default.password=password
+        |$LibraryName.datasources.default.maxTotal=50
+        |$LibraryName.datasources.default.maxIdle=40
+        |$LibraryName.datasources.default.minIdle=10
+        |$LibraryName.datasources.default.maxWaitMillis=
+        |$LibraryName.datasources.default.lifo=true
+        |$LibraryName.datasources.default.connectionProperties=
+        |$LibraryName.datasources.read.connectionPool=hikari
+        |$LibraryName.datasources.read.driverClassName=mariadb
+        |$LibraryName.datasources.read.url=jdbc:mysql://localhost:3307/test
+        |$LibraryName.datasources.read.username=sa
+        |$LibraryName.datasources.read.password=password
+        |$LibraryName.datasources.read.connectionTimeout=5000
+        |$LibraryName.datasources.read.idleTimeout=
+        |$LibraryName.datasources.read.maxLifetime=60000
+        |$LibraryName.datasources.read.properties.1=cachePropStmts=true
+        |$LibraryName.datasources.read.properties.2=prepStmtCacheSize=250
+        |$LibraryName.datasources.read.properties.3=propStmtCacheSqlLimit=2048
         |
         """.trimMargin()
 
@@ -90,18 +91,18 @@ class ParseNamedDataSourcePropertiesTest: AbstractJacksonTextTest() {
         @Disabled("PropsMapper 에 버그가 있다. 미지정 속성은 null 이 되어야 하는데, maxWaitMillis=0 으로 지정된다.")
         @Test
         fun `generate datasource properties to properties format and parse`() {
-            val kommons = kommonsProperty(mapOf("default" to default, "read" to read))
-            val root = RootProperty(kommons)
+            val bluetape4k = Bluetape4kProperty(mapOf("default" to default, "read" to read))
+            val root = RootProperty(bluetape4k)
 
             val propertyString = propsMapper.writeValueAsString(root) // writeValueAsProperties
             log.debug { "properties=\n$propertyString\n------" }
             propertyString shouldBeEqualTo properties
 
             val parsedRoot = propsMapper.readValue<RootProperty>(propertyString)
-            parsedRoot.kommons.datasources.size shouldBeEqualTo 2
+            parsedRoot.bluetape4k.datasources.size shouldBeEqualTo 2
 
-            val parsedDefault = parsedRoot.kommons.datasources["default"]
-            val parsedRead = parsedRoot.kommons.datasources["read"]
+            val parsedDefault = parsedRoot.bluetape4k.datasources["default"]
+            val parsedRead = parsedRoot.bluetape4k.datasources["read"]
 
             parsedDefault shouldBeEqualTo default
             parsedRead shouldBeEqualTo read
@@ -109,18 +110,18 @@ class ParseNamedDataSourcePropertiesTest: AbstractJacksonTextTest() {
 
         @Disabled("PropsMapper 에 버그가 있다. 미지정 속성은 null 이 되어야 하는데, maxWaitMillis=0 으로 지정된다.")
         fun `generate datasource properties to properties and parse`() {
-            val kommons = kommonsProperty(mapOf("default" to default, "read" to read))
-            val root = RootProperty(kommons)
+            val bluetape4k = Bluetape4kProperty(mapOf("default" to default, "read" to read))
+            val root = RootProperty(bluetape4k)
 
             val properties = propsMapper.writeValueAsProperties(root)
             log.debug { "properties=\n$properties\n------" }
             properties shouldBeEqualTo Properties().also { it.load(this.properties.toInputStream()) }
 
             val parsedRoot = propsMapper.readPropertiesAs(properties, RootProperty::class.java)
-            parsedRoot.kommons.datasources.size shouldBeEqualTo 2
+            parsedRoot.bluetape4k.datasources.size shouldBeEqualTo 2
 
-            val parsedDefault = parsedRoot.kommons.datasources["default"]
-            val parsedRead = parsedRoot.kommons.datasources["read"]
+            val parsedDefault = parsedRoot.bluetape4k.datasources["default"]
+            val parsedRead = parsedRoot.bluetape4k.datasources["read"]
 
             parsedDefault shouldBeEqualTo default
             parsedRead shouldBeEqualTo read
@@ -131,7 +132,7 @@ class ParseNamedDataSourcePropertiesTest: AbstractJacksonTextTest() {
     inner class ParseYaml {
         val yaml = """
             |---
-            |kommons:
+            |$LibraryName:
             |  datasources:
             |    default: !<dbcp2>
             |      driverClassName: "mysql"
@@ -161,7 +162,7 @@ class ParseNamedDataSourcePropertiesTest: AbstractJacksonTextTest() {
 
         @Test
         fun `generate datasource properties to yaml format and parse`() {
-            val property = kommonsProperty(mapOf("default" to default, "read" to read))
+            val property = Bluetape4kProperty(mapOf("default" to default, "read" to read))
             val root = RootProperty(property)
 
             val yamlString = yamlMapper.writeValueAsString(root)
@@ -172,10 +173,10 @@ class ParseNamedDataSourcePropertiesTest: AbstractJacksonTextTest() {
             val parsedRoot = yamlMapper.readValue<RootProperty>(yamlString)
 
             parsedRoot.shouldNotBeNull()
-            parsedRoot.kommons.datasources.size shouldBeEqualTo 2
+            parsedRoot.bluetape4k.datasources.size shouldBeEqualTo 2
 
-            val parsedDefault = parsedRoot.kommons.datasources["default"]
-            val parsedRead = parsedRoot.kommons.datasources["read"]
+            val parsedDefault = parsedRoot.bluetape4k.datasources["default"]
+            val parsedRead = parsedRoot.bluetape4k.datasources["read"]
 
             parsedDefault shouldBeEqualTo default
             parsedRead shouldBeEqualTo read
@@ -186,10 +187,10 @@ class ParseNamedDataSourcePropertiesTest: AbstractJacksonTextTest() {
             val parsedRoot = yamlMapper.readValue<RootProperty>(yaml)
 
             parsedRoot.shouldNotBeNull()
-            parsedRoot.kommons.datasources.size shouldBeEqualTo 2
+            parsedRoot.bluetape4k.datasources.size shouldBeEqualTo 2
 
-            val parsedDefault = parsedRoot.kommons.datasources["default"]
-            val parsedRead = parsedRoot.kommons.datasources["read"]
+            val parsedDefault = parsedRoot.bluetape4k.datasources["default"]
+            val parsedRead = parsedRoot.bluetape4k.datasources["read"]
 
             parsedDefault shouldBeEqualTo default
             parsedRead shouldBeEqualTo read
@@ -197,8 +198,8 @@ class ParseNamedDataSourcePropertiesTest: AbstractJacksonTextTest() {
     }
 
 
-    data class RootProperty(val kommons: kommonsProperty)
-    data class kommonsProperty(val datasources: Map<String, DataSourceProperty<out DataSource>> = emptyMap())
+    data class RootProperty(val bluetape4k: Bluetape4kProperty)
+    data class Bluetape4kProperty(val datasources: Map<String, DataSourceProperty<out DataSource>> = emptyMap())
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "connectionPool")
     @JsonSubTypes(

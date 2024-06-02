@@ -26,4 +26,9 @@ dependencies {
     compileOnly(Libs.kotlinx_coroutines_core)
     compileOnly(Libs.kotlinx_coroutines_reactor)
     testImplementation(Libs.kotlinx_coroutines_test)
+
+    // Reactor
+    compileOnly(Libs.reactor_core)
+    compileOnly(Libs.reactor_kotlin_extensions)
+    testImplementation(Libs.reactor_test)
 }

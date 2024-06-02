@@ -15,7 +15,7 @@ class MongoApplication {
     }
 
     /**
-     * MongoDB 관련 Event 를 Log 에 쓰는 Listener 입니다.
+     * MongoDB 관련 EmitValue 를 Log 에 쓰는 Listener 입니다.
      */
     @Bean
     fun mongoEventListener() = LoggingEventListener()

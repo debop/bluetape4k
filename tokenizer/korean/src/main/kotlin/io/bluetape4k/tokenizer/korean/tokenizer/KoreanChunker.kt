@@ -1,10 +1,6 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.tokenizer.korean.isSpaceChar
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Alpha
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.CashTag
@@ -18,12 +14,11 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Punctuation
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.ScreenName
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Space
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.URL
+import io.bluetape4k.tokenizer.korean.utils.isSpaceChar
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
-import org.eclipse.collections.impl.list.mutable.FastList
-import org.eclipse.collections.impl.map.mutable.UnifiedMap
 import java.io.Serializable
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -33,12 +28,12 @@ import java.util.regex.Pattern
  */
 object KoreanChunker: KLogging(), Serializable {
 
-    val POS_PATTERNS: UnifiedMap<KoreanPos, Pattern> = unifiedMapOf(
+    val POS_PATTERNS: Map<KoreanPos, Pattern> = mapOf(
         Korean to """([가-힣]+)""".toRegex().toPattern(),
         Alpha to """(\p{Alpha}+)""".toRegex().toPattern(),
         Number to ("""(\$?\p{Digit}+""" +
-            """(,\p{Digit}{3})*([/~:\.-]\p{Digit}+)?""" +
-            """(천|만|억|조)*(%|원|달러|위안|옌|엔|유로|등|년|월|일|회|시간|시|분|초)?)""").toRegex().toPattern(),
+                """(,\p{Digit}{3})*([/~:\.-]\p{Digit}+)?""" +
+                """(천|만|억|조)*(%|원|달러|위안|옌|엔|유로|등|년|월|일|회|시간|시|분|초)?)""").toRegex().toPattern(),
         KoreanParticle to """([ㄱ-ㅣ]+)""".toRegex().toPattern(),
         Punctuation to """([\p{Punct}·…’]+)""".toRegex().toPattern(),
         URL to com.twitter.twittertext.Regex.VALID_URL,
@@ -49,7 +44,7 @@ object KoreanChunker: KLogging(), Serializable {
         Space to """\s+""".toRegex().toPattern()
     )
 
-    private val CHUNKING_ORDER: FastList<KoreanPos> = fastListOf(
+    private val CHUNKING_ORDER: List<KoreanPos> = listOf(
         URL,
         Email,
         ScreenName,
@@ -63,13 +58,20 @@ object KoreanChunker: KLogging(), Serializable {
     )
 
     suspend fun getChunks(input: String, keepSpace: Boolean = true): List<String> {
-        return chunk(input).map { if (keepSpace) it.text else it.text.trim() }.toFastList()
+        return chunk(input).map { if (keepSpace) it.text else it.text.trim() }.toList()
     }
 
-    data class ChunkMatch(val start: Int, val end: Int, val text: String, val pos: KoreanPos) {
+    data class ChunkMatch(
+        val start: Int,
+        val end: Int,
+        val text: String,
+        val pos: KoreanPos,
+    ) {
+        val range: IntRange = start..end
+
         fun disjoint(that: ChunkMatch): Boolean {
             return (that.start < this.start && that.end <= this.start) ||
-                (that.start >= this.end && that.end > this.end)
+                    (that.start >= this.end && that.end > this.end)
         }
     }
 
@@ -103,7 +105,7 @@ object KoreanChunker: KLogging(), Serializable {
     tailrec fun findAllPatterns(
         m: Matcher,
         pos: KoreanPos,
-        matches: MutableList<ChunkMatch> = fastListOf(),
+        matches: MutableList<ChunkMatch> = mutableListOf(),
     ): List<ChunkMatch> {
         return if (m.find()) {
             matches.add(0, ChunkMatch(m.start(), m.end(), m.group(), pos))
@@ -115,9 +117,9 @@ object KoreanChunker: KLogging(), Serializable {
 
     private suspend fun splitChunks(text: String): List<ChunkMatch> {
         return if (text.isNotEmpty() && text[0].isSpaceChar) {
-            fastListOf(ChunkMatch(0, text.length, text, Space))
+            listOf(ChunkMatch(0, text.length, text, Space))
         } else {
-            val chunksBuf = fastListOf<ChunkMatch>()
+            val chunksBuf = mutableListOf<ChunkMatch>()
             var matchedLen = 0
             CHUNKING_ORDER.forEach { pos ->
                 if (matchedLen < text.length) {
@@ -132,7 +134,7 @@ object KoreanChunker: KLogging(), Serializable {
                 }
             }
 
-            val sorted = chunksBuf.sortThis(compareBy { it.start })
+            val sorted = chunksBuf.sortedBy { it.start }
             fillInUnmatched(text, sorted, Foreign)
         }
     }
@@ -150,7 +152,7 @@ object KoreanChunker: KLogging(), Serializable {
         chunks: List<ChunkMatch>,
         pos: KoreanPos,
     ): List<ChunkMatch> {
-        val chunksWithForeign = fastListOf<ChunkMatch>()
+        val chunksWithForeign = mutableListOf<ChunkMatch>()
         var prevEnd = 0
 
         chunks.forEach { cm ->
@@ -177,7 +179,7 @@ object KoreanChunker: KLogging(), Serializable {
             chunksWithForeign.add(0, cm)
         }
 
-        return chunksWithForeign.reverseThis()
+        return chunksWithForeign.reversed()
     }
 
     /**
@@ -189,7 +191,7 @@ object KoreanChunker: KLogging(), Serializable {
      * @return sequence of Korean chunk strings
      */
     suspend fun getChunksByPos(input: String, pos: KoreanPos): List<KoreanToken> {
-        return chunk(input).toFastList().select { it.pos == pos }
+        return chunk(input).toList().filter { it.pos == pos }
     }
 
     /**
@@ -203,7 +205,7 @@ object KoreanChunker: KLogging(), Serializable {
         val s = input.toString()
 
         // fold 대신 forEach 구문을 이용하여, 메모리를 절약하도록 했다
-        val tokens = fastListOf<KoreanToken>()
+        val tokens = mutableListOf<KoreanToken>()
         var i = 0
 
         splitBySpaceKeepingSpace(s)
@@ -214,6 +216,6 @@ object KoreanChunker: KLogging(), Serializable {
                 i = segStart + m.text.length
             }
 
-        return tokens.reverseThis()
+        return tokens.reversed()
     }
 }

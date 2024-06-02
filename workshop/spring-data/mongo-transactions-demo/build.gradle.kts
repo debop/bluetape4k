@@ -3,6 +3,10 @@ plugins {
     kotlin("kapt")
 }
 
+configurations {
+    testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
+}
+
 dependencies {
     implementation(Libs.springBootStarter("actuator"))
     implementation(Libs.springBootStarter("aop"))
@@ -27,6 +31,7 @@ dependencies {
 
     // MongoDB Testcontainers
     implementation(project(":bluetape4k-testcontainers"))
+    implementation(Libs.testcontainers)
     implementation(Libs.testcontainers_mongodb)
 
     // Coroutines

@@ -4,7 +4,7 @@ import com.datastax.oss.driver.api.core.cql.Row
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder.selectFrom
-import io.bluetape4k.data.cassandra.querybuilder.literal
+import io.bluetape4k.cassandra.querybuilder.literal
 import io.bluetape4k.examples.cassandra.AbstractCassandraTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
@@ -63,7 +63,7 @@ class CassandraOperationsTest(
 
     @Test
     fun `insert and update`() {
-        val user = BasicUser(42L, faker.name().username(), faker.name().firstName(), faker.name().lastName())
+        val user = BasicUser(42L, faker.internet().username(), faker.name().firstName(), faker.name().lastName())
 
         operations.insert(user)
 
@@ -77,7 +77,7 @@ class CassandraOperationsTest(
 
     @Test
     fun `insert asynchronously`() = runSuspendWithIO {
-        val user = BasicUser(42L, faker.name().username(), faker.name().firstName(), faker.name().lastName())
+        val user = BasicUser(42L, faker.internet().username(), faker.name().firstName(), faker.name().lastName())
 
         val asyncTemplate = AsyncCassandraTemplate(session)
 
@@ -89,7 +89,7 @@ class CassandraOperationsTest(
 
     @Test
     fun `select projections`() {
-        val user = BasicUser(42L, faker.name().username(), faker.name().firstName(), faker.name().lastName())
+        val user = BasicUser(42L, faker.internet().username(), faker.name().firstName(), faker.name().lastName())
         operations.insert(user)
 
         val id = operations.selectOne<Long>(selectFrom(USER_TABLE).column("user_id").asCql())

@@ -1,11 +1,6 @@
 package io.bluetape4k.tokenizer.korean.utils
 
-import io.bluetape4k.collections.eclipse.toUnifiedMap
-import io.bluetape4k.collections.eclipse.unifiedMapOf
-import org.eclipse.collections.impl.map.mutable.UnifiedMap
-import java.io.Serializable
-
-object Hangul: Serializable {
+object Hangul {
 
     data class HangulChar(val onset: Char, val vowel: Char, val coda: Char) {
         val codaIsEmpty: Boolean get() = coda == ' '
@@ -35,11 +30,11 @@ object Hangul: Serializable {
         'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
     )
 
-    private val ONSET_MAP: UnifiedMap<Char, Int> = ONSET_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
-    private val VOWEL_MAP: UnifiedMap<Char, Int> = VOWEL_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
-    val CODA_MAP: UnifiedMap<Char, Int> = CODA_LIST.mapIndexed { index, c -> c to index }.toUnifiedMap()
+    private val ONSET_MAP: Map<Char, Int> = ONSET_LIST.mapIndexed { index, c -> c to index }.toMap()
+    private val VOWEL_MAP: Map<Char, Int> = VOWEL_LIST.mapIndexed { index, c -> c to index }.toMap()
+    val CODA_MAP: Map<Char, Int> = CODA_LIST.mapIndexed { index, c -> c to index }.toMap()
 
-    val DOUBLE_CODAS: UnifiedMap<Char, DoubleCoda> = unifiedMapOf(
+    val DOUBLE_CODAS: Map<Char, DoubleCoda> = mapOf(
         'ㄳ' to DoubleCoda('ㄱ', 'ㅅ'),
         'ㄵ' to DoubleCoda('ㄴ', 'ㅈ'),
         'ㄶ' to DoubleCoda('ㄴ', 'ㅎ'),
@@ -71,7 +66,7 @@ object Hangul: Serializable {
     }
 
     /**
-     * 한글에 종송 (받침) 이 있는지 검사
+     * 한글에 종성(받침)이 있는지 검사
      */
     fun hasCoda(c: Char): Boolean = (c.code - HANGUL_BASE) % VOWEL_BASE > 0
 
@@ -85,13 +80,14 @@ object Hangul: Serializable {
         assert(onset != ' ' && vowel != ' ') { "Input characters are not valid" }
 
         return (HANGUL_BASE +
-            ((ONSET_MAP[onset] ?: 0) * ONSET_BASE) +
-            ((VOWEL_MAP[vowel] ?: 0) * VOWEL_BASE) +
-            (CODA_MAP[coda] ?: 0)).toChar()
+                ((ONSET_MAP[onset] ?: 0) * ONSET_BASE) +
+                ((VOWEL_MAP[vowel] ?: 0) * VOWEL_BASE) +
+                (CODA_MAP[coda] ?: 0)).toChar()
     }
 
     /**
      * [HangulChar] 의 초성, 중성, 종성으로 한글을 조합합니다.
      */
-    fun composeHangul(hc: HangulChar): Char = composeHangul(hc.onset, hc.vowel, hc.coda)
+    fun composeHangul(hc: HangulChar): Char =
+        composeHangul(hc.onset, hc.vowel, hc.coda)
 }

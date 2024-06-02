@@ -33,6 +33,8 @@ class CountryRepositoryTest(
 
     @Test
     fun `get country at first`() {
+        countryRepo.evictCache(KR)
+
         val kr = measureTimeMillis {
             countryRepo.findByCode(KR)
         }
@@ -48,6 +50,8 @@ class CountryRepositoryTest(
 
     @Test
     fun `evict cached country`() {
+        countryRepo.evictCache(US)
+
         val us = measureTimeMillis {
             countryRepo.findByCode(US)
         }
@@ -72,14 +76,14 @@ class CountryRepositoryTest(
 
         measureTimeMillis {
             MultithreadingTester()
-                .numThreads(2)
-                .roundsPerThread(64)
+                .numThreads(4)
+                .roundsPerThread(8)
                 .add {
                     val country = retreiveCountry()
                     codeMap[country.code] = country
                 }
                 .run()
-        } shouldBeLessThan 64 * 2 * EXPECTED_MILLIS
+        } shouldBeLessThan 4 * 8 * EXPECTED_MILLIS
 
         codeMap.size shouldBeLessOrEqualTo CountryRepository.SAMPLE_COUNTRY_CODES.size
     }

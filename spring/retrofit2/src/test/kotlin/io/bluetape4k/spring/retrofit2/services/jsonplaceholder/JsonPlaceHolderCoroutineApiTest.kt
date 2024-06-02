@@ -1,10 +1,10 @@
 package io.bluetape4k.spring.retrofit2.services.jsonplaceholder
 
-import io.bluetape4k.infra.resilience4j.CoDecorators
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.resilience4j.CoDecorators
 import io.bluetape4k.support.uninitialized
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.retry.Retry

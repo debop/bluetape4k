@@ -1,10 +1,10 @@
 package io.bluetape4k.workshop.mongo.domain
 
-import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.coroutines.flow.extensions.log
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.workshop.mongo.AbstractMongoTest
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
@@ -51,13 +51,13 @@ class CoroutineRepositoryTest @Autowired constructor(
             repository.save(newPerson())
         }
 
-        val persons = repository.findByLastname("Bae").log("Bae").toFastList()
+        val persons = repository.findByLastname("Bae").log("Bae").toList()
         persons shouldHaveSize 2
         persons shouldBeEqualTo listOf(person1, person2)
 
         val sunghyouk = repository.findAllByFirstname("Sunghyouk")
             .log("Sunghyouk")
-            .toFastList()
+            .toList()
 
         sunghyouk shouldHaveSize 1
         sunghyouk shouldBeEqualTo listOf(person1)

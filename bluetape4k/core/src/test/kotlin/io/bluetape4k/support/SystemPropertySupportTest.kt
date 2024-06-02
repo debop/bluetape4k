@@ -1,5 +1,6 @@
 package io.bluetape4k.support
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
@@ -25,8 +26,8 @@ class SystemPropertySupportTest {
     @Test
     fun `get and set with custom property`() {
         // Custom system property
-        sysProperty["kommons.custom.property"] = "kommons"
-        sysProperty["kommons.custom.property"] shouldBeEqualTo "kommons"
+        sysProperty["$LibraryName.custom.property"] = LibraryName
+        sysProperty["$LibraryName.custom.property"] shouldBeEqualTo LibraryName
     }
 
     @Test

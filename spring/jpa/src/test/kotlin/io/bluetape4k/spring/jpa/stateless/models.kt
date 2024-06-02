@@ -1,9 +1,7 @@
 package io.bluetape4k.spring.jpa.stateless
 
 import io.bluetape4k.core.ToStringBuilder
-import io.bluetape4k.data.hibernate.model.IntJpaEntity
-import org.hibernate.annotations.DynamicInsert
-import org.hibernate.annotations.DynamicUpdate
+import io.bluetape4k.hibernate.model.IntJpaEntity
 import jakarta.persistence.Access
 import jakarta.persistence.AccessType
 import jakarta.persistence.CascadeType
@@ -12,6 +10,8 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
 
 
 @Entity

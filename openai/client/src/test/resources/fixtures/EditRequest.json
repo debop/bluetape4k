@@ -1,0 +1,8 @@
+{
+  "model": "text-davinci-edit-001",
+  "input": "What day of the wek is it?",
+  "instruction": "Fix the spelling mistakes",
+  "n": 1,
+  "temperature": 1.0,
+  "top_p": 1.0
+}

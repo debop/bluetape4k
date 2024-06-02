@@ -1,7 +1,6 @@
 package io.bluetape4k.examples.coroutines.channels
 
 import io.bluetape4k.coroutines.support.log
-import io.bluetape4k.examples.coroutines.massiveRun
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.CompletableDeferred
@@ -45,7 +44,7 @@ class ActorExamples {
         val counter: SendChannel<CounterMsg> = counterActor()
         val times = 100
 
-        massiveRun(Dispatchers.IO, times) {
+        io.bluetape4k.examples.coroutines.massiveRun(Dispatchers.IO, times) {
             counter.send(IntCounter)
         }
 

@@ -1,6 +1,6 @@
 package io.bluetape4k.workshop.graphql.dgs
 
-import io.bluetape4k.infra.graphql.dgs.scalars.InstantScalar
+import io.bluetape4k.graphql.dgs.scalars.InstantScalar
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.ComponentScan

@@ -231,7 +231,7 @@ class ExceptionHandlingExamples {
                 "Text2"
             }.log("#2")
 
-            // supervisorScope 덕분에 str1 용 async 에서 예외가 발생하더라도 str2용 async는 예외 전파없이 실행 된다.
+            // supervisorScope 덕분에 str1 용 coroutines 에서 예외가 발생하더라도 str2용 async는 예외 전파없이 실행 된다.
             try {
                 str1.await()
             } catch (e: Throwable) {

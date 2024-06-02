@@ -4,10 +4,10 @@ import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
-import io.bluetape4k.utils.mutiny.asUni
-import io.bluetape4k.utils.mutiny.multiOf
-import io.bluetape4k.utils.mutiny.multiRangeOf
-import io.bluetape4k.utils.mutiny.uniOf
+import io.bluetape4k.mutiny.asUni
+import io.bluetape4k.mutiny.multiOf
+import io.bluetape4k.mutiny.multiRangeOf
+import io.bluetape4k.mutiny.uniOf
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.asFlow

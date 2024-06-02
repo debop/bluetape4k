@@ -19,7 +19,7 @@ class WatermarkTest: AbstractFilterTest() {
     fun `add repeted wartermark`() {
         val origin = loadResourceImage("debop.jpg")
         val font = getFont(size = 36)
-        val coverWatermark = WatermarkCoverFilter("debop@wrtn.io", font, true, 0.1, Color.WHITE)
+        val coverWatermark = WatermarkCoverFilter("debop@bluetape4k.io", font, true, 0.1, Color.WHITE)
         val marked = origin.filter(coverWatermark)
 
         if (saveResult) {
@@ -33,7 +33,7 @@ class WatermarkTest: AbstractFilterTest() {
     fun `add stamped watermark`() {
         val origin = loadResourceImage("debop.jpg")
         val font = getFont()
-        val stampWatermark = WatermarkStampFilter("debop@wrtn.io", font, false, 0.2, Color.WHITE)
+        val stampWatermark = WatermarkStampFilter("debop@bluetape4k.io", font, false, 0.2, Color.WHITE)
         val marked = origin.filter(stampWatermark)
 
         if (saveResult) {
@@ -48,7 +48,7 @@ class WatermarkTest: AbstractFilterTest() {
         val origin = loadResourceImage("debop.jpg")
         val font = getFont(size = 24)
         val watermark = WatermarkFilter(
-            "debop@wrtn.io",
+            "debop@gmail.com",
             25, origin.height - 15,
             font,
             true,

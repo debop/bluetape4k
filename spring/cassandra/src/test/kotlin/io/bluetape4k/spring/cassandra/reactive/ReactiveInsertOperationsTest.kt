@@ -3,12 +3,9 @@ package io.bluetape4k.spring.cassandra.reactive
 import com.datastax.oss.driver.api.core.uuid.Uuids
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest
-import io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration
 import io.bluetape4k.spring.cassandra.cql.insertOptions
-import io.bluetape4k.spring.cassandra.selectOneByIdSuspending
-import io.bluetape4k.spring.cassandra.truncateSuspending
 import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
@@ -24,12 +21,14 @@ import org.springframework.data.cassandra.core.ReactiveCassandraOperations
 import org.springframework.data.cassandra.core.insert
 import org.springframework.data.cassandra.core.mapping.Indexed
 import org.springframework.data.cassandra.core.mapping.Table
+import org.springframework.data.cassandra.core.selectOneById
+import org.springframework.data.cassandra.core.truncate
 import java.io.Serializable
 
 @SpringBootTest
 class ReactiveInsertOperationsTest(
     @Autowired private val operations: ReactiveCassandraOperations,
-): AbstractCassandraCoroutineTest("insert-op") {
+): io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest("insert-op") {
 
     companion object: KLogging() {
         private const val PERSON_TABLE_NAME = "insert_op_person"
@@ -37,10 +36,10 @@ class ReactiveInsertOperationsTest(
 
     @Configuration
     //@EntityScan(basePackageClasses = [Person::class]) // 내부 엔티티는 Scan 없이도 사용 가능하다
-    class TestConfiguration: AbstractReactiveCassandraTestConfiguration()
+    class TestConfiguration: io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration()
 
     @Table(PERSON_TABLE_NAME)
-    private data class Person(
+    data class Person(
         @field:Id val id: String,
         @field:Indexed var firstName: String,
         @field:Indexed var lastName: String,
@@ -57,7 +56,7 @@ class ReactiveInsertOperationsTest(
     @BeforeEach
     fun beforeEach() {
         runBlocking {
-            operations.truncateSuspending<Person>()
+            operations.truncate<Person>().awaitSingleOrNull()
         }
     }
 
@@ -77,7 +76,7 @@ class ReactiveInsertOperationsTest(
         writeResult.wasApplied().shouldBeTrue()
         writeResult.entity shouldBeEqualTo person
 
-        operations.selectOneByIdSuspending<Person>(person.id) shouldBeEqualTo person
+        operations.selectOneById<Person>(person.id).awaitSingle() shouldBeEqualTo person
     }
 
     @Test

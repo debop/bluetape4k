@@ -1,6 +1,6 @@
 package io.bluetape4k.tokenizer.korean
 
-import io.bluetape4k.tokenizer.korean.block.BlockwordProcessor
+import io.bluetape4k.tokenizer.korean.block.KoreanBlockwordProcessor
 import io.bluetape4k.tokenizer.korean.normalizer.KoreanNormalizer
 import io.bluetape4k.tokenizer.korean.phrase.KoreanPhrase
 import io.bluetape4k.tokenizer.korean.phrase.KoreanPhraseExtractor
@@ -13,7 +13,6 @@ import io.bluetape4k.tokenizer.korean.tokenizer.KoreanTokenizer
 import io.bluetape4k.tokenizer.korean.tokenizer.NounTokenizer
 import io.bluetape4k.tokenizer.korean.tokenizer.Sentence
 import io.bluetape4k.tokenizer.korean.tokenizer.TokenizerProfile
-import io.bluetape4k.tokenizer.korean.utils.CharArraySet
 import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos
 import io.bluetape4k.tokenizer.model.BlockwordRequest
@@ -22,6 +21,7 @@ import io.bluetape4k.tokenizer.model.Severity
 import io.bluetape4k.tokenizer.model.Severity.HIGH
 import io.bluetape4k.tokenizer.model.Severity.LOW
 import io.bluetape4k.tokenizer.model.Severity.MIDDLE
+import io.bluetape4k.tokenizer.utils.CharArraySet
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -35,7 +35,9 @@ object KoreanProcessor {
      * @param text Input text
      * @return Normalized Korean text
      */
-    suspend fun normalize(text: CharSequence): CharSequence = KoreanNormalizer.normalize(text)
+    suspend fun normalize(text: CharSequence): CharSequence {
+        return KoreanNormalizer.normalize(text)
+    }
 
 
     /**
@@ -53,6 +55,7 @@ object KoreanProcessor {
         return KoreanTokenizer.tokenize(text, profile)
     }
 
+    // TODO: NounTokenizer 를 쓰세요 (명사위주로 분석)
     suspend fun tokenizeForNoun(
         text: CharSequence,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
@@ -102,12 +105,15 @@ object KoreanProcessor {
      *
      * @param words 금칙어에 등록할 단어들
      */
-    fun addBlockwords(words: List<String>, severity: Severity = Severity.DEFAULT) {
-        withBlockwordDictionary(severity) {
+    fun addBlockwords(
+        words: List<String>,
+        severity: Severity = Severity.DEFAULT,
+    ) {
+        io.bluetape4k.tokenizer.korean.KoreanProcessor.withBlockwordDictionary(severity) {
             addAll(words)
         }
         // 복합명사의 경우 등록되지 않으면 형태소 분석을 못한다 (예: 분수쑈 -> `분수 + 쑈` 로 분석하면 `분수쑈` 라는 금칙어를 처리할 수 없다)
-        addNounsToDictionary(words)
+        io.bluetape4k.tokenizer.korean.KoreanProcessor.addNounsToDictionary(words)
         KoreanDictionaryProvider.properNouns.addAll(words)
     }
 
@@ -117,18 +123,51 @@ object KoreanProcessor {
      * @param words
      * @param severity
      */
-    fun removeBlockword(words: List<String>, severity: Severity = Severity.DEFAULT) {
-        withBlockwordDictionary(severity) {
+    @Deprecated("Use removeBlockwords instead", replaceWith = ReplaceWith("removeBlockwords(words, severity)"))
+    fun removeBlockword(
+        words: List<String>,
+        severity: Severity = Severity.DEFAULT,
+    ) {
+        io.bluetape4k.tokenizer.korean.KoreanProcessor.withBlockwordDictionary(severity) {
             removeAll(words)
         }
     }
 
-    private inline fun withBlockwordDictionary(severity: Severity, action: CharArraySet.() -> Unit) {
+    /**
+     * 등록된 금칙어를 제외시킵니다
+     *
+     * @param words
+     * @param severity
+     */
+    fun removeBlockwords(
+        words: List<String>,
+        severity: Severity = Severity.DEFAULT,
+    ) {
+        io.bluetape4k.tokenizer.korean.KoreanProcessor.withBlockwordDictionary(severity) {
+            removeAll(words)
+        }
+    }
+
+    /**
+     * 등록된 금칙어를 모두 삭제합니다.
+     *
+     * @param severity
+     */
+    fun clearBlockwords(severity: Severity = Severity.DEFAULT) {
+        io.bluetape4k.tokenizer.korean.KoreanProcessor.withBlockwordDictionary(severity) {
+            clear()
+        }
+    }
+
+    private inline fun withBlockwordDictionary(
+        severity: Severity,
+        action: CharArraySet.() -> Unit,
+    ) {
         when (severity) {
-            LOW  -> {
-                KoreanDictionaryProvider.blockWords[LOW]?.action()
-                KoreanDictionaryProvider.blockWords[MIDDLE]?.action()
-                KoreanDictionaryProvider.blockWords[HIGH]?.action()
+            LOW    -> {
+                KoreanDictionaryProvider.blockWords[Severity.LOW]?.action()
+                KoreanDictionaryProvider.blockWords[Severity.MIDDLE]?.action()
+                KoreanDictionaryProvider.blockWords[Severity.HIGH]?.action()
             }
 
             MIDDLE -> {
@@ -136,7 +175,7 @@ object KoreanProcessor {
                 KoreanDictionaryProvider.blockWords[HIGH]?.action()
             }
 
-            else ->
+            else   ->
                 KoreanDictionaryProvider.blockWords[HIGH]?.action()
         }
     }
@@ -202,8 +241,9 @@ object KoreanProcessor {
      * @param tokens List of words.
      * @return Detokenized string.
      */
-    suspend fun detokenize(tokens: Collection<String>): String =
-        KoreanDetokenizer.detokenize(tokens)
+    suspend fun detokenize(tokens: Collection<String>): String {
+        return KoreanDetokenizer.detokenize(tokens)
+    }
 
     /**
      * 금칙어 (Block words) 를 masking 합니다.
@@ -214,6 +254,6 @@ object KoreanProcessor {
      * @return 금칙어를 처리한 결과 [BlockwordResponse]
      */
     suspend fun maskBlockwords(request: BlockwordRequest): BlockwordResponse {
-        return BlockwordProcessor.maskBlockwords(request)
+        return KoreanBlockwordProcessor.maskBlockwords(request)
     }
 }

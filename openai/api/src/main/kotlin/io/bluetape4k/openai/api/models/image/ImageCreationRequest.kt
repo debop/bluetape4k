@@ -1,9 +1,9 @@
 package io.bluetape4k.openai.api.models.image
 
-import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.openai.api.annotations.BetaOpenAI
 import io.bluetape4k.openai.api.annotations.OpenAIDsl
 import io.bluetape4k.openai.api.models.ModelBuilder
+import io.bluetape4k.support.requireNotBlank
 
 /**
  * A request for OpenAi to create an image based on a prompt

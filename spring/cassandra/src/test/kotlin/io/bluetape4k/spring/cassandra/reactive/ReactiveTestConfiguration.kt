@@ -1,7 +1,6 @@
 package io.bluetape4k.spring.cassandra.reactive
 
-import io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration
 import org.springframework.context.annotation.Configuration
 
-@Configuration
-class ReactiveTestConfiguration: AbstractReactiveCassandraTestConfiguration()
+@Configuration(proxyBeanMethods = false)
+class ReactiveTestConfiguration: io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration()

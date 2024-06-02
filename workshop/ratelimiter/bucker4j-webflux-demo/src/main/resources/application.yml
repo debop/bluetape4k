@@ -1,0 +1,51 @@
+spring:
+    application:
+        name: bucket4j-webflux-demo
+
+    profiles:
+        active: dev
+        default: dev
+    
+    jackson:
+        serialization:
+            indent-output: true
+    codec:
+        max-in-memory-size: 10MB
+
+    data:
+        redis:
+            host: ${testcontainers.redis.host}
+            port: ${testcontainers.redis.port}
+            url: ${testcontainers.redis.url}
+            lettuce:
+                pool:
+                    enabled: true
+
+info:
+    name: ${spring.application.name}
+    description: bucket4j rate limit demo
+    environment: ${spring.profiles.active}
+    version: 0.0.1
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+    endpoint:
+        health:
+            show-details: always
+
+    health:
+        circuitbreakers:
+            enabled: true
+        ratelimiters:
+            enabled: true
+
+    metrics:
+        tags:
+            application: ${spring.application.name}
+        distribution:
+            percentiles-histogram:
+                http.server.requests: true
+                resilience4j.circuitbreaker.calls: true

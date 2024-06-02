@@ -19,7 +19,7 @@ class WatermarkFilterTest: AbstractFilterTest() {
     @Test
     fun `add cover watermark`() = runSuspendWithIO {
         val origin = loadResourceImage("debop.jpg")
-        val coverWatermark = watermarkFilterOf("wrtn.io", type = WatermarkFilterType.COVER, alpha = 0.4)
+        val coverWatermark = watermarkFilterOf("bluetape4k.io", type = WatermarkFilterType.COVER, alpha = 0.4)
         val marked = origin.filter(coverWatermark)
 
         val resultFilename = "debop_watermark_cover.jpg"
@@ -33,7 +33,7 @@ class WatermarkFilterTest: AbstractFilterTest() {
     fun `add stamp watermark`() = runSuspendWithIO {
         val origin = loadResourceImage("debop.jpg")
         val stampWatermark = watermarkFilterOf(
-            "wrtn.io",
+            "bluetape4k.io",
             font = fontOf(size = 48),
             type = WatermarkFilterType.STAMP,
             alpha = 0.4,
@@ -52,7 +52,7 @@ class WatermarkFilterTest: AbstractFilterTest() {
         val origin = loadResourceImage("debop.jpg")
         val font = fontOf(size = 24)
         val watermark = watermarkFilterOf(
-            "created by wrtn.io",
+            "created by bluetape4k.io",
             25,
             origin.height - 15,
             font,

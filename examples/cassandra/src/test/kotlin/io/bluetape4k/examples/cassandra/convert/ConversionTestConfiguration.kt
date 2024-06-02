@@ -1,11 +1,10 @@
 package io.bluetape4k.examples.cassandra.convert
 
 import com.datastax.oss.driver.api.core.cql.Row
-import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.examples.cassandra.AbstractReactiveCassandraTestConfiguration
-import io.bluetape4k.io.json.jackson.Jackson
-import io.bluetape4k.io.json.jackson.readValueOrNull
-import io.bluetape4k.io.json.jackson.writeAsString
+import io.bluetape4k.json.jackson.Jackson
+import io.bluetape4k.json.jackson.readValueOrNull
+import io.bluetape4k.json.jackson.writeAsString
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.core.convert.converter.Converter
@@ -17,7 +16,7 @@ class ConversionTestConfiguration: AbstractReactiveCassandraTestConfiguration() 
 
     @Bean
     override fun customConversions(): CassandraCustomConversions {
-        val converters = fastListOf<Converter<*, *>>(
+        val converters = mutableListOf<Converter<*, *>>(
             ContactWriteConverter(),
             ContactReadConverter(),
             CustomAddressbookReadConverter(),

@@ -1,16 +1,16 @@
 package io.bluetape4k.workshop.webflux.hibernate.reactive.repository
 
-import io.bluetape4k.data.hibernate.reactive.mutiny.asMutinySessionFactory
-import io.bluetape4k.data.hibernate.reactive.mutiny.createQueryAs
-import io.bluetape4k.data.hibernate.reactive.mutiny.getAs
-import io.bluetape4k.data.hibernate.reactive.mutiny.withStatelessSessionSuspending
-import io.bluetape4k.data.hibernate.reactive.mutiny.withTransactionSuspending
+import io.bluetape4k.hibernate.reactive.mutiny.asMutinySessionFactory
+import io.bluetape4k.hibernate.reactive.mutiny.createQueryAs
+import io.bluetape4k.hibernate.reactive.mutiny.getAs
+import io.bluetape4k.hibernate.reactive.mutiny.withStatelessSessionSuspending
+import io.bluetape4k.hibernate.reactive.mutiny.withTransactionSuspending
 import io.bluetape4k.workshop.webflux.hibernate.reactive.model.City
 import io.smallrye.mutiny.coroutines.awaitSuspending
+import jakarta.persistence.EntityManagerFactory
 import org.hibernate.reactive.mutiny.Mutiny
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import jakarta.persistence.EntityManagerFactory
 
 @Repository
 class CityRepository(@Autowired emf: EntityManagerFactory) {

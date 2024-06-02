@@ -1,13 +1,11 @@
 package io.bluetape4k.examples.mutiny
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.utils.mutiny.deferUni
-import io.bluetape4k.utils.mutiny.multiOf
-import io.bluetape4k.utils.mutiny.multiRangeOf
-import io.bluetape4k.utils.mutiny.onEach
+import io.bluetape4k.mutiny.deferUni
+import io.bluetape4k.mutiny.multiOf
+import io.bluetape4k.mutiny.multiRangeOf
+import io.bluetape4k.mutiny.onEach
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.subscription.MultiSubscriber
@@ -51,7 +49,7 @@ class MultiBasicExamples {
         list shouldBeEqualTo listOf(10, 11, 12, 13, 14)
 
         // from Iterable
-        val randomNumbers = generateSequence { Random.nextInt() }.take(5).toFastList()
+        val randomNumbers = generateSequence { Random.nextInt() }.take(5).toList()
         val randoms = Multi.createFrom().iterable(randomNumbers)
             .onItem().invoke { item -> log.debug { "range: $item" } }
             .collect().asList().await().indefinitely()
@@ -93,7 +91,7 @@ class MultiBasicExamples {
         val counter = atomic(0)
         val latch = CountDownLatch(1)
 
-        val captures = fastListOf<String>()
+        val captures = mutableListOf<String>()
 
         Multi.createFrom()
             .emitter { emitter ->
@@ -210,7 +208,7 @@ class MultiBasicExamples {
     @Test
     fun `06 Multi from Resource`() {
         Multi.createFrom()
-            .resource(::MyResource, MyResource::stream)
+            .resource(MultiBasicExamples::MyResource, MyResource::stream)
             .withFinalizer(MyResource::close)
             .subscribe().with(::println)
     }

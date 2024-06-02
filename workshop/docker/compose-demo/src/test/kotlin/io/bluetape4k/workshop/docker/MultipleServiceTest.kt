@@ -2,6 +2,7 @@ package io.bluetape4k.workshop.docker
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.utils.ShutdownQueue
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Disabled
@@ -17,7 +18,7 @@ import java.io.File
 import java.time.Duration
 
 /**
- * Docker Compose Module을 이용하여 여러개의 서비스를 실행하는 테스트
+ * Docker Compose Module을 이용하여 Docker Compose 파일에 정의된 서비스를 실행합니다.
  *
  * 참고 : [Docker Compose Module](https://www.testcontainers.org/modules/docker_compose/)
  */
@@ -26,40 +27,49 @@ class MultipleServiceTest {
 
     companion object: KLogging() {
         private const val REDIS_NAME = "redis_1"
-        private const val REDIS_PORT = 6739
+        const val REDIS_PORT = 6739
 
-        private const val MONGO_NAME = "mongo_1"
-        private const val MONGO_PORT = 27017
+        private const val ELASTICSEARCH_NAME = "elasticsearch_1"
+        const val ELASTICSEARCH_PORT = 9200
 
-        private const val ELASTIC_NAME = "elasticsearch_1"
-        private const val ELASTIC_PORT = 9200
+        private const val POSTGRES_NAME = "postgres"
+        private const val POSTGRES_PORT = 5432
 
         @JvmStatic
         @Container
         private val dockerComposeContainer: DockerComposeContainer<*> =
             DockerComposeContainer(File("src/test/resources/docker/docker-compose-multiple.yml"))
-                // FIXME: Redis 7 이 testcontainers의 docker-compose 로는 실행이 안된다. (docker-compose 로는 실행이 된다.)
-                // 이게 colima 문제인지 모르겠다.
-                // .withExposedService(REDIS_NAME, REDIS_PORT, Wait.forHealthcheck())
-                .withExposedService(MONGO_NAME, MONGO_PORT, Wait.forListeningPort())
+//                .withExposedService(
+//                    REDIS_NAME,
+//                    REDIS_PORT,
+//                    Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(30))
+//                )
                 .withExposedService(
-                    ELASTIC_NAME,
-                    ELASTIC_PORT,
+                    ELASTICSEARCH_NAME,
+                    ELASTICSEARCH_PORT,
                     Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(30))
                 )
-        // .withLocalCompose(true) // docker-compose 가 설치되어 있어야 한다.
+                .withExposedService(
+                    POSTGRES_NAME,
+                    POSTGRES_PORT,
+                    Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(30))
+                )
+                .apply {
+                    ShutdownQueue.register(this)
+                }
     }
 
-    @Disabled("colima 때문인지? Redis 7 이 testcontainers의 docker-compose 로는 실행이 안된다. (docker-compose 로는 실행이 된다.)")
+    @Disabled("Redis is not running")
     @Test
     fun `load redis instance`() {
-        val redisContainer: ContainerState = dockerComposeContainer.getContainerByServiceName(REDIS_NAME).orElseThrow()
+        val redisContainer: ContainerState by lazy {
+            dockerComposeContainer.getContainerByServiceName(REDIS_NAME).orElseThrow()
+        }
+        redisContainer.isRunning.shouldBeTrue()
 
         val host = redisContainer.host
         val port = redisContainer.getMappedPort(REDIS_PORT)
-
         log.debug { "redis host: $host, port: $port" }
-        redisContainer.isRunning.shouldBeTrue()
 
         val redisson = Redisson.create(
             Config().apply {
@@ -75,11 +85,25 @@ class MultipleServiceTest {
 
     @Test
     fun `load elastic instance`() {
-        val elasticContainer = dockerComposeContainer.getContainerByServiceName(ELASTIC_NAME).orElseThrow()
+        val elasticContainer: ContainerState by lazy {
+            dockerComposeContainer.getContainerByServiceName(ELASTICSEARCH_NAME).orElseThrow()
+        }
         val host = elasticContainer.host
-        val port = elasticContainer.getMappedPort(ELASTIC_PORT)
+        val port = elasticContainer.getMappedPort(ELASTICSEARCH_PORT)
 
         log.debug { "elastic host: $host, port: $port" }
         elasticContainer.isRunning.shouldBeTrue()
+    }
+
+    @Test
+    fun `load postgres container`() {
+        val postgresContainer: ContainerState by lazy {
+            dockerComposeContainer.getContainerByServiceName(POSTGRES_NAME).orElseThrow()
+        }
+        postgresContainer.isRunning.shouldBeTrue()
+
+        val host = postgresContainer.host
+        val port = postgresContainer.getMappedPort(POSTGRES_PORT)
+        log.debug { "postgres host=$host, port=$$port" }
     }
 }

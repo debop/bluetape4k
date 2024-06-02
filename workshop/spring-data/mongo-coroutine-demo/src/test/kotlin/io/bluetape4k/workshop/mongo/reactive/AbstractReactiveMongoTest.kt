@@ -1,11 +1,10 @@
 package io.bluetape4k.workshop.mongo.reactive
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.workshop.mongo.AbstractMongoTest
 import io.bluetape4k.workshop.mongo.domain.Person
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingle
@@ -48,13 +47,13 @@ abstract class AbstractReactiveMongoTest(
             documents.countDocuments().awaitSingle() shouldBeEqualTo 0
 
             val insertAll = operations.insertAll(
-                fastListOf(
+                listOf(
                     Person("Walter", "White", 50),
                     Person("Skyler", "White", 45),
                     Person("Saul", "Goodman", 42),
                     Person("Jesse", "Pinkman", 27)
                 )
-            ).asFlow().toFastList()
+            ).asFlow().toList()
 
             insertAll shouldHaveSize 4
         }

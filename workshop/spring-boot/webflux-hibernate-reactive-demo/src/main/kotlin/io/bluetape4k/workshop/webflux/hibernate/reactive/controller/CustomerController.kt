@@ -1,6 +1,6 @@
 package io.bluetape4k.workshop.webflux.hibernate.reactive.controller
 
-import io.bluetape4k.core.requireNotBlank
+import io.bluetape4k.support.requireNotBlank
 import io.bluetape4k.workshop.webflux.hibernate.reactive.model.Customer
 import io.bluetape4k.workshop.webflux.hibernate.reactive.model.CustomerDto
 import io.bluetape4k.workshop.webflux.hibernate.reactive.model.toDto

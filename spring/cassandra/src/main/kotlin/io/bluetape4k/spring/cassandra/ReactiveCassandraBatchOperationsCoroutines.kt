@@ -2,15 +2,9 @@ package io.bluetape4k.spring.cassandra
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.mono
 import org.springframework.data.cassandra.core.ReactiveCassandraBatchOperations
-import org.springframework.data.cassandra.core.WriteResult
 import org.springframework.data.cassandra.core.cql.WriteOptions
-
-suspend fun ReactiveCassandraBatchOperations.executeSuspend(): WriteResult {
-    return execute().awaitSingle()
-}
 
 fun ReactiveCassandraBatchOperations.insertFlow(entities: Flow<*>): ReactiveCassandraBatchOperations {
     return insert(mono { entities.toList() })

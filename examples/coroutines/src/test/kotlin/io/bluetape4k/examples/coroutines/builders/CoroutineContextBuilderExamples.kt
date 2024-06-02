@@ -20,7 +20,7 @@ class CoroutineContextBuilderExamples {
         logging("Started")
         val v1 = async {
             delay(500)
-            logging("Running async")
+            logging("Running coroutines")
             42
         }
 
@@ -38,7 +38,7 @@ class CoroutineContextBuilderExamples {
         logging("Started")
         val v1 = async(CoroutineName("c1")) {
             delay(500)
-            logging("Running async")
+            logging("Running coroutines")
             42
         }
 
@@ -57,7 +57,7 @@ class CoroutineContextBuilderExamples {
             logging("Started")
             val v1 = async(CoroutineName("child") + PropertyCoroutineContext(mapOf("key2" to "value2"))) {
                 delay(500)
-                logging("Running async")
+                logging("Running coroutines")
                 42
             }
 

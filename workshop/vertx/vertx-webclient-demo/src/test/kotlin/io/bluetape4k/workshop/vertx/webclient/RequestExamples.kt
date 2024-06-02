@@ -14,7 +14,7 @@ import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.junit5.VertxExtension
 import io.vertx.junit5.VertxTestContext
 import io.vertx.kotlin.coroutines.CoroutineVerticle
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -41,7 +41,7 @@ class RequestExamples {
             vertx.createHttpServer()
                 .requestHandler(router)
                 .listen(port)
-                .await()
+                .coAwait()
 
             log.debug { "Server started. http://localhost:$port" }
         }
@@ -50,7 +50,7 @@ class RequestExamples {
     @Test
     fun `put simple string as request body`(vertx: Vertx, testContext: VertxTestContext) = runSuspendTest {
         vertx.withTestContextSuspending(testContext) {
-            vertx.deployVerticle(PostStringServer()).await()
+            vertx.deployVerticle(PostStringServer()).coAwait()
 
             val client = WebClient.create(vertx)
             val body = Buffer.buffer("Hello World!")
@@ -58,7 +58,7 @@ class RequestExamples {
                 .put(port, "localhost", "/simple")
                 .`as`(BodyCodec.string())
                 .sendBuffer(body)
-                .await()
+                .coAwait()
 
             log.debug { "Response body=${response.body()}" }
             response.statusCode() shouldBeEqualTo 200

@@ -14,3 +14,9 @@ fun <T: Number> String.parseNumber(targetClass: Class<T>): T =
 
 fun <T: Number> String.parseNumber(targetClass: Class<T>, numberFormat: NumberFormat): T =
     NumberUtils.parseNumber(this, targetClass, numberFormat)
+
+inline fun <reified T: Number> Number.toTargetClass(): T =
+    NumberUtils.convertNumberToTargetClass(this, T::class.java)
+
+inline fun <reified T: Number> Number.convertAs(): T =
+    NumberUtils.convertNumberToTargetClass(this, T::class.java)

@@ -3,12 +3,9 @@ package io.bluetape4k.spring.cassandra.reactive
 import com.datastax.oss.driver.api.core.uuid.Uuids
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest
-import io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration
-import io.bluetape4k.spring.cassandra.insertSuspending
 import io.bluetape4k.spring.cassandra.query.eq
-import io.bluetape4k.spring.cassandra.truncateSuspending
 import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
@@ -28,24 +25,25 @@ import org.springframework.data.cassandra.core.query.Update
 import org.springframework.data.cassandra.core.query.query
 import org.springframework.data.cassandra.core.query.where
 import org.springframework.data.cassandra.core.selectOne
+import org.springframework.data.cassandra.core.truncate
 import org.springframework.data.cassandra.core.update
 import java.io.Serializable
 
 @SpringBootTest
 class ReactiveUpdateOperationsTest(
     @Autowired private val operations: ReactiveCassandraOperations,
-): AbstractCassandraCoroutineTest("update-op") {
+): io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest("update-op") {
 
     companion object: KLogging() {
         private const val PERSON_TABLE_NAME = "update_op_person"
     }
 
-    @Configuration
+    @Configuration(proxyBeanMethods = false)
     //@EntityScan(basePackageClasses = [Person::class]) // 내부 엔티티는 Scan 없이도 사용 가능하다
-    class TestConfiguration: AbstractReactiveCassandraTestConfiguration()
+    class TestConfiguration: io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration()
 
     @Table(PERSON_TABLE_NAME)
-    private data class Person(
+    data class Person(
         @field:Id val id: String,
         @field:Indexed var firstName: String,
         @field:Indexed var lastName: String,
@@ -69,10 +67,10 @@ class ReactiveUpdateOperationsTest(
     @BeforeEach
     fun beforeEach() {
         runBlocking {
-            operations.truncateSuspending<Person>()
+            operations.truncate<Person>().awaitSingleOrNull()
 
-            operations.insertSuspending(han)
-            operations.insertSuspending(luke)
+            operations.insert(han).awaitSingle()
+            operations.insert(luke).awaitSingle()
         }
     }
 

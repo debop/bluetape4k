@@ -15,6 +15,9 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
+/**
+ * 상태를 관리하는 [MutableStateFlow] 에 대한 예제
+ */
 class StateFlowExamples {
 
     companion object: KLogging()
@@ -25,6 +28,7 @@ class StateFlowExamples {
         val changeCounter1 = atomic(0)
         val changeCounter2 = atomic(0)
 
+        // 상태가 변경되면, collect 를 수행합니다.
         launch {
             state
                 .log("#1")
@@ -34,6 +38,8 @@ class StateFlowExamples {
         state.value = 2
 
         delay(10)
+
+        // 상태가 변경되면, collect 를 수행합니다.
         launch {
             state
                 .log("#2")
@@ -43,7 +49,11 @@ class StateFlowExamples {
         state.value = 3
 
         delay(10)
+
+        // collector1 에서는 state 값이 1 -> 2 -> 3 으로 변경되었으므로 3번 호출됩니다.
         changeCounter1.value shouldBeEqualTo 3
+
+        // collector2 에서는 state 값이 2->3으로 변경되었으므로 2번 호출됩니다.
         changeCounter2.value shouldBeEqualTo 2
 
         // 자식 Job 들을 모두 취소한다 
@@ -56,6 +66,7 @@ class StateFlowExamples {
             .onEach { delay(100) }
             .log("source")
 
+        // stateIn 을 이용하여 일반 Flow를 StateFlow로 변환합니다.
         val stateFlow = flow.stateIn(this)
 
         log.info { "Listening" }
@@ -65,11 +76,14 @@ class StateFlowExamples {
 
         launch {
             stateFlow
-                .log("#1")
+                .log("collector")
                 .collect { receivedCounter.incrementAndGet() }
         }
+
         delay(500)
         log.info { "State=${stateFlow.value}" }
+
+        // state 가 A -> B -> C 로 3번 변경되었다 
         receivedCounter.value shouldBeEqualTo 3
 
         coroutineContext.cancelChildren()

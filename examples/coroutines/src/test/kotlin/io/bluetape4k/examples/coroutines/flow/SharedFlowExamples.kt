@@ -26,6 +26,10 @@ class SharedFlowExamples {
 
     companion object: KLogging()
 
+    /**
+     * 복수의 Job에서 SharedFlow 에 Message를 전달할 수도 있고,
+     * 복수의 Collector들이 같은 Message를 수신할 수 있다.
+     */
     @Test
     fun `shared flow 기본 사용법`() = runTest {
         coroutineScope {
@@ -58,6 +62,7 @@ class SharedFlowExamples {
                 mutableSharedFlow.emit("Message2")
                 yield()
 
+                // 자체적으로 collect 를 수행한다.
                 mutableSharedFlow.test {
                     awaitItem() shouldBeEqualTo "Message1"
                     awaitItem() shouldBeEqualTo "Message2"
@@ -66,6 +71,7 @@ class SharedFlowExamples {
             }
             delay(100)
 
+            // 복수의 collector 들도 모두 같은 데이터를 수신한다.
             collected1.value shouldBeEqualTo 2
             collected2.value shouldBeEqualTo 2
 
@@ -114,7 +120,7 @@ class SharedFlowExamples {
                 }
             }
 
-            delay(10)
+            delay(100)
             collectCounter1.value shouldBeEqualTo 2
             collectCounter2.value shouldBeEqualTo 2
 

@@ -12,5 +12,5 @@ class Application {
 }
 
 fun main(vararg args: String) {
-    runApplication<Application>(*args)
+    runApplication<io.bluetape4k.workshop.graphql.dgs.Application>(*args)
 }

@@ -1,13 +1,12 @@
 package io.bluetape4k.workshop.graphql.dgs.service
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import io.bluetape4k.workshop.graphql.dgs.generated.types.Review
 import io.bluetape4k.workshop.graphql.dgs.generated.types.SubmittedReview
 import io.bluetape4k.workshop.graphql.dgs.scalars.DateRange
+import jakarta.annotation.PostConstruct
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import net.datafaker.Faker
@@ -21,7 +20,6 @@ import java.time.LocalTime
 import java.time.ZoneOffset
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
-import jakarta.annotation.PostConstruct
 
 @Service
 class ReviewServiceImpl(private val showService: ShowService): ReviewService {
@@ -64,7 +62,7 @@ class ReviewServiceImpl(private val showService: ShowService): ReviewService {
     override suspend fun reviewsForShow(showId: Int): List<Review> {
         log.debug { "Get reviews for show [$showId]" }
         delay(10L)
-        return showIdReviews.computeIfAbsent(showId) { fastListOf() }
+        return showIdReviews.computeIfAbsent(showId) { mutableListOf() }
     }
 
     override suspend fun reviewsForShows(showIds: Collection<Int>): Map<Int, List<Review>> {
@@ -76,7 +74,7 @@ class ReviewServiceImpl(private val showService: ShowService): ReviewService {
     override suspend fun saveReview(reviewInput: SubmittedReview) {
         log.debug { "Save new review. $reviewInput" }
 
-        val reviewsForShow: MutableList<Review> = showIdReviews.computeIfAbsent(reviewInput.showId) { fastListOf() }
+        val reviewsForShow: MutableList<Review> = showIdReviews.computeIfAbsent(reviewInput.showId) { mutableListOf() }
         val review = Review(
             username = reviewInput.username,
             starScore = reviewInput.starScore,
@@ -108,9 +106,9 @@ class ReviewServiceImpl(private val showService: ShowService): ReviewService {
             .flatMap { it.value }
             .filter {
                 (it.submittedDate?.isAfter(startTime) ?: false) &&
-                (it.submittedDate?.isBefore(endTime) ?: false)
+                        (it.submittedDate?.isBefore(endTime) ?: false)
             }
-            .toFastList()
+            .toList()
             .apply {
                 log.info { "List reviews. dateRange: $dateRange, size: ${this.size}" }
             }

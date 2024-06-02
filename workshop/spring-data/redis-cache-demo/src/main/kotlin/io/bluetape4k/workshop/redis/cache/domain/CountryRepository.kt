@@ -40,14 +40,14 @@ class CountryRepository {
 
     val countrySize: Int get() = SAMPLE_COUNTRY_CODES.size
 
-    @Cacheable
+    @Cacheable(key = "'country:' + #code")
     fun findByCode(code: String): Country {
         Thread.sleep(400)
         log.debug { "----> Loading country with code[$code] and caching in redis ..." }
         return Country(code)
     }
 
-    @CacheEvict
+    @CacheEvict(key = "'country:' + #code")
     fun evictCache(code: String) {
         log.debug { "Evict country cache. code=$code" }
     }

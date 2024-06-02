@@ -1,27 +1,22 @@
 package io.bluetape4k.tokenizer.korean.normalizer
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import io.bluetape4k.support.sliding
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanTokenizer
 import io.bluetape4k.tokenizer.korean.utils.Hangul
-import io.bluetape4k.tokenizer.korean.utils.Hangul.HangulChar
 import io.bluetape4k.tokenizer.korean.utils.Hangul.composeHangul
 import io.bluetape4k.tokenizer.korean.utils.Hangul.decomposeHangul
 import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adverb
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Conjunction
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Eomi
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
+import io.bluetape4k.tokenizer.korean.utils.KoreanPos
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
 import io.bluetape4k.tokenizer.korean.utils.koreanContains
-import java.io.Serializable
 import java.util.regex.Matcher
 
 /**
  * Normalize Korean colloquial text (한글 구어체를 Normailze 합니다)
  */
-object KoreanNormalizer: KLogging(), Serializable {
+object KoreanNormalizer: KLogging() {
 
     private val EXTENTED_KOREAN_REGEX: Regex = """([ㄱ-ㅣ가-힣]+)""".toRegex()
     private val KOREAN_TO_NORMALIZE_REGEX: Regex = """([가-힣]+)(ㅋ+|ㅎ+|[ㅠㅜ]+)""".toRegex()
@@ -37,23 +32,19 @@ object KoreanNormalizer: KLogging(), Serializable {
     private data class Segment(val text: String, val matchData: MatchResult?)
 
     suspend fun normalize(input: CharSequence): CharSequence {
-//        return EXTENTED_KOREAN_REGEX.replace(input) { m ->
-//            runBlocking {
-//                normalizeKoreanChunk(m.groupValues.first())
-//            }
-//        }
-        var match: MatchResult? = EXTENTED_KOREAN_REGEX.find(input) ?: return input.toString()
+        if (input.isBlank()) return input
+        var match: MatchResult = EXTENTED_KOREAN_REGEX.find(input) ?: return input
 
         var lastStart = 0
         val length = input.length
         return buildString(length) {
             do {
-                val foundMatch: MatchResult = match!!
+                val foundMatch: MatchResult = match
                 append(input, lastStart, foundMatch.range.first)
                 append(normalizeKoreanChunk(foundMatch.groupValues.first()))
                 lastStart = foundMatch.range.last + 1
-                match = foundMatch.next()
-            } while (lastStart < length && match != null)
+                match = foundMatch.next() ?: break
+            } while (lastStart < length)
 
             if (lastStart < length) {
                 append(input, lastStart, length)
@@ -90,20 +81,22 @@ object KoreanNormalizer: KLogging(), Serializable {
         val typoCorrected = correctTypo(codaNNormalized)
 
         // Spaces, tabs, new lines are replaced with a single space.
-        return WHITESPACE_REGEX.replace(typoCorrected) { " " }
+        return WHITESPACE_REGEX.replace(typoCorrected, " ")
     }
 
     fun correctTypo(chunk: CharSequence): CharSequence {
         var output = chunk.toString()
 
-        KoreanDictionaryProvider.typoDictionaryByLength.entries.forEach { (wordLen: Int, typoMap: Map<String, String>) ->
-            output.sliding(wordLen).forEach { slice ->
-                if (typoMap.containsKey(slice)) {
-                    log.debug { "Typo check: $slice -> ${typoMap[slice]}" }
-                    output = output.replace(slice, typoMap[slice].toString(), ignoreCase = true)
-                }
+        KoreanDictionaryProvider.typoDictionaryByLength.entries
+            .forEach { (wordLen: Int, typoMap: Map<String, String>) ->
+                output.sliding(wordLen)
+                    .forEach { slice ->
+                        if (typoMap.containsKey(slice)) {
+                            log.trace { "Typo check: $slice -> ${typoMap[slice]}" }
+                            output = output.replace(slice, typoMap[slice].toString(), ignoreCase = true)
+                        }
+                    }
             }
-        }
 
         return output
     }
@@ -117,13 +110,13 @@ object KoreanNormalizer: KLogging(), Serializable {
         val lastTwoHead = lastTwo[0]
 
         fun isExceptional(): Boolean =
-            koreanContains(Noun, chunk) ||
-            koreanContains(Conjunction, chunk) ||
-            koreanContains(Adverb, chunk) ||
-            koreanContains(Noun, lastTwo) ||
-            lastTwoHead < '가' ||
-            lastTwoHead > '힣' ||
-            CODA_N_EXCPETION.contains(lastTwoHead)
+            koreanContains(KoreanPos.Noun, chunk) ||
+                    koreanContains(KoreanPos.Conjunction, chunk) ||
+                    koreanContains(KoreanPos.Adverb, chunk) ||
+                    koreanContains(KoreanPos.Noun, lastTwo) ||
+                    lastTwoHead < '가' ||
+                    lastTwoHead > '힣' ||
+                    CODA_N_EXCPETION.contains(lastTwoHead)
 
         if (isExceptional()) {
             return chunk
@@ -139,9 +132,7 @@ object KoreanNormalizer: KLogging(), Serializable {
             .append(chunk.subSequence(0, chunk.length - 2))
             .append(composeHangul(hc.onset, hc.vowel))
 
-        val needNewHead = hc.coda == 'ㄴ' &&
-                          last in CODA_N_LAST_CHAR &&
-                          koreanContains(Noun, newHead)
+        val needNewHead = hc.coda == 'ㄴ' && last in CODA_N_LAST_CHAR && koreanContains(KoreanPos.Noun, newHead)
         return if (needNewHead) {
             newHead.append("인").append(last).toString()
         } else {
@@ -153,11 +144,12 @@ object KoreanNormalizer: KLogging(), Serializable {
         val chunk = m.groupValues[1]
         val toNormalize = m.groupValues[2]
 
-        val isNormalized = koreanContains(Noun, chunk) ||
-                           koreanContains(Eomi, chunk.takeLast(1)) ||
-                           koreanContains(Eomi, chunk.takeLast(2))
+        val isNormalized = koreanContains(KoreanPos.Noun, chunk) ||
+                koreanContains(KoreanPos.Eomi, chunk.takeLast(1)) ||
+                koreanContains(KoreanPos.Eomi, chunk.takeLast(2))
 
-        val normalizedChunk = if (isNormalized) chunk else normalizeEmotionAttachedChunk(chunk, toNormalize)
+        val normalizedChunk = if (isNormalized) chunk
+        else normalizeEmotionAttachedChunk(chunk, toNormalize)
 
         return normalizedChunk.toString() + toNormalize
     }
@@ -165,28 +157,30 @@ object KoreanNormalizer: KLogging(), Serializable {
     private fun normalizeEmotionAttachedChunk(s: CharSequence, toNormalize: CharSequence): CharSequence {
 
         val init = s.take(s.length - 1)
-        val secondToLastDecomposed: HangulChar? =
+        val secondToLastDecomposed: Hangul.HangulChar? by lazy {
             if (init.isNotEmpty()) {
                 val hc = decomposeHangul(init.last())
                 if (hc.codaIsEmpty) hc else null
             } else {
                 null
             }
+        }
 
         val hc = decomposeHangul(s.last())
 
-        fun hasSecondToLastDecomposed(): Boolean =
+        val hasSecondToLastDecomposed: Boolean by lazy {
             hc.codaIsEmpty &&
-            secondToLastDecomposed != null &&
-            hc.vowel == toNormalize[0] &&
-            Hangul.CODA_MAP.containsKey(hc.onset)
+                    secondToLastDecomposed != null &&
+                    hc.vowel == toNormalize[0] &&
+                    Hangul.CODA_MAP.containsKey(hc.onset)
+        }
 
         if (hc.coda in charArrayOf('ㅋ', 'ㅎ')) {
             return buildString {
                 append(init)
                 append(composeHangul(hc.onset, hc.vowel))
             }
-        } else if (hasSecondToLastDecomposed()) {
+        } else if (hasSecondToLastDecomposed) {
             val shc = secondToLastDecomposed!!
             return buildString {
                 append(init.subSequence(0, init.length - 1))

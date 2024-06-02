@@ -18,14 +18,7 @@ import org.redisson.codec.SerializationCodec
 import org.redisson.codec.SnappyCodecV2
 
 /**
- * Redisson 자체가 Java 21 기준이 아니므로,
- * Kommons 에서 제공하는 FuryCodec, ProtobufCodec 을 Redisson 에서 단독으로 사용하는 것은 가능하지만, Wrapping 해서 사용하지는 못한다.
- * 즉 Kryo5Codec(FuryCodec()) 은 인식하지 못한다.
- *
- * 그래서 Kommons에서 제공하는 FuryCodec, ProtobufCodec 을 사용하려면, ZstdCodec, GzipCodec 와 결합하여 사용하고, LZ, Snappy 와는 사용하면 안된다.
- *
- *
- * @constructor Create empty Redisson codecs
+ * Redisson 용 Codec
  */
 object RedissonCodecs: KLogging() {
 

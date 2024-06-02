@@ -17,21 +17,25 @@ class DateRangeScalar: Coercing<DateRange, String> {
 
     companion object: KLogging()
 
+    @Deprecated("Deprecated in Java")
     override fun serialize(dataFetcherResult: Any): String {
         log.debug { "serialize dataFetcherResult: $dataFetcherResult" }
         val range = dataFetcherResult as DateRange
         return range.toIsoDateString()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun valueToLiteral(input: Any): Value<out Value<*>> {
         return StringValue((input as DateRange).toIsoDateString())
     }
 
+    @Deprecated("Deprecated in Java")
     override fun parseValue(input: Any): DateRange {
         log.debug { "parse value: $input" }
         return DateRange.parse(input.toString())
     }
 
+    @Deprecated("Deprecated in Java")
     override fun parseLiteral(input: Any): DateRange {
         log.debug { "parse literal: $input" }
 

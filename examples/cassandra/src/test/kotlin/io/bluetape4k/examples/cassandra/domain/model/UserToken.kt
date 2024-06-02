@@ -1,4 +1,4 @@
-package io.bluetape4k.spring.cassandra.domain.model
+package io.bluetape4k.examples.cassandra.domain.model
 
 import com.datastax.oss.driver.api.core.uuid.Uuids
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType

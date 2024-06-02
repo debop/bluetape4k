@@ -29,7 +29,7 @@ class RetrofitClientsRegistrar: ImportBeanDefinitionRegistrar {
         val scanner = object: ClassPathScanningCandidateComponentProvider(false) {
             override fun isCandidateComponent(beanDefinition: AnnotatedBeanDefinition): Boolean {
                 return beanDefinition.metadata.isIndependent &&
-                    !beanDefinition.metadata.isAnnotation
+                        !beanDefinition.metadata.isAnnotation
             }
         }
 
@@ -49,7 +49,7 @@ class RetrofitClientsRegistrar: ImportBeanDefinitionRegistrar {
                     val name = attributes["name"].toString()
                     log.debug {
                         "New Retrofit Client BeanDefinition with name=$name, " +
-                            "type=${beanDefinition.beanClassName}, baseUrl=${attributes["baseUrl"]}"
+                                "type=${beanDefinition.beanClassName}, baseUrl=${attributes["baseUrl"]}"
                     }
 
                     val builder = BeanDefinitionBuilder.genericBeanDefinition(RetrofitClientFactoryBean::class.java)
@@ -82,22 +82,21 @@ class RetrofitClientsRegistrar: ImportBeanDefinitionRegistrar {
         val basePackages = mutableSetOf<String>()
         val attributes = importingClassMetadata.getAnnotationAttributes(EnableRetrofitClients::class.java.canonicalName)
 
-        attributes
-            ?.let {
-                (it["value"] as? Array<String>)?.forEach { pkg ->
-                    if (pkg.isNotBlank()) {
-                        basePackages.add(pkg)
-                    }
-                }
-                (it["basePackages"] as? Array<String>)?.forEach { pkg ->
-                    if (pkg.isNotBlank()) {
-                        basePackages.add(pkg)
-                    }
-                }
-                (it["basePackageClasses"] as? Array<Class<*>>)?.forEach { clazz ->
-                    basePackages.add(ClassUtils.getPackageName(clazz))
+        attributes?.let {
+            (it["value"] as? Array<String>)?.forEach { pkg ->
+                if (pkg.isNotBlank()) {
+                    basePackages.add(pkg)
                 }
             }
+            (it["basePackages"] as? Array<String>)?.forEach { pkg ->
+                if (pkg.isNotBlank()) {
+                    basePackages.add(pkg)
+                }
+            }
+            (it["basePackageClasses"] as? Array<Class<*>>)?.forEach { clazz ->
+                basePackages.add(ClassUtils.getPackageName(clazz))
+            }
+        }
 
         if (basePackages.isEmpty()) {
             basePackages.add(ClassUtils.getPackageName(importingClassMetadata.className))

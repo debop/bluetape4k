@@ -2,7 +2,7 @@ package io.bluetape4k.spring.cassandra
 
 import com.datastax.oss.driver.api.core.cql.AsyncResultSet
 import com.datastax.oss.driver.api.core.cql.Statement
-import io.bluetape4k.data.cassandra.cql.statementOf
+import io.bluetape4k.cassandra.cql.statementOf
 import kotlinx.coroutines.future.await
 import org.springframework.data.cassandra.core.AsyncCassandraOperations
 import org.springframework.data.cassandra.core.DeleteOptions

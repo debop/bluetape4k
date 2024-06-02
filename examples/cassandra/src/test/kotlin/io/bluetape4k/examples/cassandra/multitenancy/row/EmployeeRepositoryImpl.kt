@@ -2,8 +2,8 @@ package io.bluetape4k.examples.cassandra.multitenancy.row
 
 import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder
-import io.bluetape4k.data.cassandra.querybuilder.eq
-import io.bluetape4k.data.cassandra.querybuilder.literal
+import io.bluetape4k.cassandra.querybuilder.eq
+import io.bluetape4k.cassandra.querybuilder.literal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.asFlow
 import org.springframework.beans.factory.annotation.Autowired

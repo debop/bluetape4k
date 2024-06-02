@@ -12,7 +12,8 @@ kaptTest(Libs.vertx_codegen)
 ```
 
 2. module에 package-info.java 를 추가한다
-   [package-info.java](src/main/java/io/bluetape4k/workshop/sqlclient/package-info.java)
+
+[package-info.java](src/main/java/io/bluetape4k/workshop/sqlclient/package-info.java)
 
 ```java
 @ModuleGen(name = "vertx-sqlclient-demo", groupPackage = "io.bluetape4k.workshop.sqlclient")

@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.time.OffsetDateTime
 
 class ShowDataFetcherTest(
-    @Autowired private val dgsQueryExecutor: DgsQueryExecutor
+    @Autowired private val dgsQueryExecutor: DgsQueryExecutor,
 ): AbstractDgsTest() {
 
     companion object: KLogging()

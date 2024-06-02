@@ -3,7 +3,6 @@ package io.bluetape4k.spring.cassandra.async
 import com.datastax.oss.driver.api.core.CqlSession
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest
 import io.bluetape4k.spring.cassandra.domain.DomainTestConfiguration
 import io.bluetape4k.spring.cassandra.domain.model.VersionedEntity
 import kotlinx.coroutines.future.await
@@ -26,7 +25,7 @@ import kotlin.test.assertFailsWith
 @SpringBootTest(classes = [DomainTestConfiguration::class])
 class AsyncOptimisticLockingTest(
     @Autowired private val cqlSession: CqlSession,
-): AbstractCassandraCoroutineTest("async-optimistic-locking") {
+): io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest("coroutines-optimistic-locking") {
 
     companion object: KLogging()
 

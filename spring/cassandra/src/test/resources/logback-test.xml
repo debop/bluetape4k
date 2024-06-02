@@ -22,6 +22,7 @@
     <!-- formatter:on -->
 
     <logger name="io.bluetape4k.spring" level="TRACE"/>
+    <logger name="org.springframework.data.cassandra" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="console"/>

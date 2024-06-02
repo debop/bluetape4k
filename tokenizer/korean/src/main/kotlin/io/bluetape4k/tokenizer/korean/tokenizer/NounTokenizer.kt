@@ -1,9 +1,5 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
-import io.bluetape4k.collections.eclipse.emptyFastList
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
 import io.bluetape4k.tokenizer.korean.stemmer.KoreanStemmer
@@ -16,7 +12,6 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPosTrie
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
 import io.bluetape4k.tokenizer.korean.utils.KoreanSubstantive
 import java.io.Serializable
-
 
 /**
  * Provides Korean tokenization.
@@ -74,7 +69,7 @@ object NounTokenizer: KLogging(), Serializable {
     //      "E+" to Exclamation,
     //      "j1" to Josa)
 
-    private val SequenceDefinition = unifiedMapOf(
+    private val SequenceDefinition = mutableMapOf(
         // Substantive
         "D0m*N1s0" to Noun,
         "C1" to Conjunction
@@ -93,8 +88,8 @@ object NounTokenizer: KLogging(), Serializable {
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<KoreanToken> {
         val tokenized = tokenizeTopN(text, 1, profile)
-            .flatMap { it.firstOrNull() ?: emptyFastList() }
-            .toFastList()
+            .flatMap { it.firstOrNull() ?: emptyList() }
+            .toList()
 
         return KoreanStemmer.stem(tokenized)
     }
@@ -120,10 +115,10 @@ object NounTokenizer: KLogging(), Serializable {
                             val parsed = parseKoreanChunk(it, profile, topN)
 
                             // Collapse sequence of one-char nouns into one unknown noun: (가Noun 회Noun -> 가회Noun*)
-                            parsed.map(KoreanSubstantive::collapseNouns).toFastList()
+                            parsed.map(KoreanSubstantive::collapseNouns).toList()
                         }
 
-                        else   -> fastListOf(fastListOf(it))
+                        else   -> listOf(listOf(it))
                     }
                 }
         } catch (e: Exception) {
@@ -144,21 +139,21 @@ object NounTokenizer: KLogging(), Serializable {
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
         topN: Int = 1,
     ): List<List<KoreanToken>> {
-        return findTopCandidates(chunk, profile).take(topN).toFastList()
+        return findTopCandidates(chunk, profile).take(topN).toList()
     }
 
     private fun findTopCandidates(chunk: KoreanToken, profile: TokenizerProfile): List<List<KoreanToken>> {
         val directMatch: List<List<KoreanToken>> = findDirectMatch(chunk)
 
         // Buffer for solution
-        val solutions = unifiedMapOf<Int, List<CandidateParse>>()
+        val solutions = mutableMapOf<Int, List<CandidateParse>>()
             .apply {
                 val candidateParse = CandidateParse(
-                    parse = ParsedChunk(fastListOf<KoreanToken>(), 1, profile),
+                    parse = ParsedChunk(listOf(), 1, profile),
                     curTrie = koreanPosTrie,
                     ending = null
                 )
-                put(0, fastListOf(candidateParse))
+                put(0, listOf(candidateParse))
             }
 
         // Find N best parses per state
@@ -176,7 +171,7 @@ object NounTokenizer: KLogging(), Serializable {
                     possiblePoses
                         .filter {
                             it.curTrie.curPos == Noun ||
-                                (koreanDictionary[it.curTrie.curPos]?.contains(word.toCharArray()) ?: false)
+                                    (koreanDictionary[it.curTrie.curPos]?.contains(word.toCharArray()) ?: false)
                         }
                         .map { t: PossibleTrie ->
 
@@ -199,7 +194,7 @@ object NounTokenizer: KLogging(), Serializable {
                                         word.length,
                                         unknown = unknown
                                     )
-                                    ParsedChunk(fastListOf(token), t.words, profile)
+                                    ParsedChunk(listOf(token), t.words, profile)
 
                                 } else {
                                     val pos = t.curTrie.curPos ?: Unknown
@@ -210,7 +205,7 @@ object NounTokenizer: KLogging(), Serializable {
                             val nextTrie: List<KoreanPosTrie> =
                                 t.curTrie.nextTrie
                                     ?.map { if (it == KoreanPosx.SelfNode) t.curTrie else it }
-                                    ?: fastListOf()
+                                    ?: emptyList()
 
                             CandidateParse(candateParse.parse + candidateToAdd, nextTrie, t.curTrie.ending)
                         }
@@ -221,17 +216,17 @@ object NounTokenizer: KLogging(), Serializable {
                 solutions[end] = (currentSolutions + candidates)
                     .sortedWith(compareBy({ it.parse.score }, { it.parse.posTieBreaker }))
                     .take(TOP_N_PER_STATE)
-                    .toFastList()
+                    .toList()
             }
         }
 
         val topCandidates = if (solutions[chunk.length]!!.isEmpty()) {
-            fastListOf(fastListOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
+            listOf(listOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
         } else {
             solutions[chunk.length]!!
                 .sortedBy { it.parse.score }
                 .map { it.parse.posNodes }
-                .toFastList()
+                .toList()
         }
 
         return (directMatch + topCandidates).distinct()
@@ -240,9 +235,9 @@ object NounTokenizer: KLogging(), Serializable {
     private fun findDirectMatch(chunk: KoreanToken): List<List<KoreanToken>> {
         for ((pos, dict) in koreanDictionary.entries) {
             if (dict.contains(chunk.text)) {
-                return fastListOf(fastListOf(chunk.copy(pos = pos)))
+                return listOf(listOf(chunk.copy(pos = pos)))
             }
         }
-        return emptyFastList()
+        return emptyList()
     }
 }

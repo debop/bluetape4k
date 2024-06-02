@@ -1,15 +1,12 @@
 package io.bluetape4k.examples.mutiny
 
-import io.bluetape4k.collections.eclipse.fastList
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.primitives.longArrayListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.utils.mutiny.asUni
-import io.bluetape4k.utils.mutiny.onEach
-import io.bluetape4k.utils.mutiny.uniConvertOf
-import io.bluetape4k.utils.mutiny.uniFailureOf
-import io.bluetape4k.utils.mutiny.uniOf
+import io.bluetape4k.mutiny.asUni
+import io.bluetape4k.mutiny.onEach
+import io.bluetape4k.mutiny.uniConvertOf
+import io.bluetape4k.mutiny.uniFailureOf
+import io.bluetape4k.mutiny.uniOf
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.smallrye.mutiny.subscription.UniSubscriber
@@ -84,8 +81,8 @@ class UniBasicExamples {
             it.addAndGet(10)
         }
 
-        val items = fastList(5) { uni.awaitSuspending() }
-        items shouldBeEqualTo fastListOf(10, 20, 30, 40, 50)
+        val items = List(5) { uni.awaitSuspending() }
+        items shouldBeEqualTo listOf(10, 20, 30, 40, 50)
     }
 
     @Test
@@ -94,13 +91,13 @@ class UniBasicExamples {
         val ids = atomic(0L)
         val deferred = Uni.createFrom().deferred { Uni.createFrom().item(ids::incrementAndGet) }
 
-        val results = longArrayListOf()
+        val results = mutableListOf<Long>()
 
         // Uni 지만 하나의 값만 제공하는 게 아니라 deferred 를 이용하면, subscription 요청 때마다 item을 제공한다
         repeat(5) {
             deferred.subscribe().with { results.add(it) }
         }
-        results shouldBeEqualTo longArrayListOf(1, 2, 3, 4, 5)
+        results shouldBeEqualTo listOf(1, 2, 3, 4, 5)
     }
 
     @Test
@@ -132,11 +129,11 @@ class UniBasicExamples {
             emitter.complete(state.addAndGet(10))
         }
 
-        val results = longArrayListOf()
+        val results = mutableListOf<Long>()
         repeat(5) {
             uni.subscribe().with { results.add(it) }
         }
-        results shouldBeEqualTo longArrayListOf(10, 20, 30, 40, 50)
+        results shouldBeEqualTo listOf(10, 20, 30, 40, 50)
     }
 
     // NOTE: 예외가 발생해도, onFailureCallback 이 없다면 예외를 rethrow 하지는 않는다
@@ -235,7 +232,7 @@ class UniBasicExamples {
 
     @Test
     fun `12 Uni disjoint - convert to Multi`() {
-        val list = uniOf(fastListOf(1, 2, 3, 4, 5))
+        val list = uniOf(listOf(1, 2, 3, 4, 5))
             .onItem().disjoint<Int>() // disjoint 는 item을 분해해서 Multi 로 변환시킨다
             .collect().asList()
             .await().indefinitely()

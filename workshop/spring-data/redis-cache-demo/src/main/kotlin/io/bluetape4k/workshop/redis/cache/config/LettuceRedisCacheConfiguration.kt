@@ -1,6 +1,6 @@
 package io.bluetape4k.workshop.redis.cache.config
 
-import io.bluetape4k.data.redis.spring.serializer.RedisBinarySerializers
+import io.bluetape4k.redis.spring.serializer.RedisBinarySerializers
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.cache.CacheManager
@@ -45,9 +45,9 @@ class LettuceRedisCacheConfiguration {
     fun redisTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<Any, Any> {
         return RedisTemplate<Any, Any>().apply {
             setConnectionFactory(connectionFactory)
-            setDefaultSerializer(RedisBinarySerializers.LZ4Kryo)
+            setDefaultSerializer(RedisBinarySerializers.LZ4Fury)
             keySerializer = StringRedisSerializer.UTF_8
-            valueSerializer = RedisBinarySerializers.LZ4Kryo
+            valueSerializer = RedisBinarySerializers.LZ4Fury
         }
     }
 }

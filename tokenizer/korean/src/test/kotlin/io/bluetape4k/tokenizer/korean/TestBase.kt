@@ -4,7 +4,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider
-import kotlinx.coroutines.flow.fold
+import io.bluetape4k.tokenizer.utils.DictionaryProvider
 import org.amshove.kluent.shouldBeFalse
 import org.slf4j.Logger
 import kotlin.system.measureNanoTime
@@ -16,6 +16,8 @@ abstract class TestBase {
 
     companion object: KLogging() {
 
+        const val BASE_PATH = KoreanDictionaryProvider.BASE_PATH
+
         inline fun time(block: () -> Unit): Long = measureTimeMillis(block)
         inline fun timeNano(block: () -> Unit): Long = measureNanoTime(block)
 
@@ -24,11 +26,13 @@ abstract class TestBase {
             log: Logger,
             crossinline func: suspend (String) -> String,
         ) {
-            val input = KoreanDictionaryProvider.readFileByLineFromResources(exampleFiles)
+            val input =
+                DictionaryProvider.readFileByLineFromResources("$BASE_PATH/$exampleFiles")
 
+            var notMatchCount = 0
             val (parseTimes, hasErrors) = input
                 .fold(Pair(listOf<ParseTime>(), true)) { (l, output), line ->
-                    val s = line.split("\t")
+                    val s = line.split("\t", limit = 2).map { it.trim() }
                     val (chunk, parse) = Pair(s[0], if (s.size == 2) s[1] else "")
 
                     val oldTokens = parse
@@ -38,14 +42,15 @@ abstract class TestBase {
 
                     val oldParseMatches = oldTokens == newTokens
                     if (!oldParseMatches) {
+                        notMatchCount++
                         log.debug {
                             """
-                        |
-                        |Example set match error:
-                        |$chunk
-                        |  - EXPECTED: $oldTokens 
-                        |  - ACTUAL  :$newTokens
-                        """.trimMargin()
+                            |
+                            |Example set match error:
+                            |$chunk
+                            |  - EXPECTED:$oldTokens 
+                            |  - ACTUAL  :$newTokens
+                            """.trimMargin()
                         }
                     }
 
@@ -62,6 +67,7 @@ abstract class TestBase {
                 |Total time: ${parseTimes.map { it.time }.sum()} msec,
                 |Average time: $averageTime msec,
                 |Max time: ${maxItem?.time}, ${maxItem?.chunk}
+                |Not Match count: $notMatchCount
                 """.trimMargin()
             }
             hasErrors.shouldBeFalse()

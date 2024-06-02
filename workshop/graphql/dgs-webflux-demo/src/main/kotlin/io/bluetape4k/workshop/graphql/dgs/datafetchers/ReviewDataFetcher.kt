@@ -48,12 +48,12 @@ class ReviewDataFetcher(private val reviewService: ReviewService) {
 
         // Filter 을 모두 Load 후에 수행하므로 비효율적이다. 이 걸 어떻게 해결하나?
         /**
-         * TODO: DataLoader 의 key 를 show.id 를 받는게 아닌, filter 정보도 묶어서 보낼 수 있도록 만들면 된다.
+         * TODO: DataLoader 의 key 를 show.id 를 받는게 아닌, filters 정보도 묶어서 보낼 수 있도록 만들면 된다.
          * TODO: DataLoader<ReviewQuery, List<Review>> 로 만들면 됨
          * ```
          * interface ReviewQuery {
          *     val showId: Int
-         *     val filter: (Review) -> Boolean   // 또는 minScore 를 넣는다 (DB작업 시에는 이게 낫다) JPA Query 를 하던가
+         *     val filters: (Review) -> Boolean   // 또는 minScore 를 넣는다 (DB작업 시에는 이게 낫다) JPA Query 를 하던가
          * }
          * ```
          */

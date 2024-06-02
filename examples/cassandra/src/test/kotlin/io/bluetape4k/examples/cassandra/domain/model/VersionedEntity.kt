@@ -1,4 +1,4 @@
-package io.bluetape4k.spring.cassandra.domain.model
+package io.bluetape4k.examples.cassandra.domain.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.Version

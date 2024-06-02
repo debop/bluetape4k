@@ -1,8 +1,8 @@
 package io.bluetape4k.examples.cassandra.multitenancy.keyspace
 
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder
-import io.bluetape4k.data.cassandra.querybuilder.eq
-import io.bluetape4k.data.cassandra.querybuilder.literal
+import io.bluetape4k.cassandra.querybuilder.eq
+import io.bluetape4k.cassandra.querybuilder.literal
 import io.bluetape4k.support.toOptional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.cassandra.core.CassandraOperations

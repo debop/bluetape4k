@@ -1,6 +1,5 @@
 package io.bluetape4k.examples.coroutines.builders
 
-import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.async
@@ -50,7 +49,7 @@ class CoroutineBuilderExamples {
                 log.debug { "Return result=42" }
                 42
             }
-            log.debug { "Build async and await ..." }
+            log.debug { "Build coroutines and await ..." }
             val result = resultDeferred.await()
             log.debug { "result=$result" }
             log.debug { "result=${resultDeferred.await()}" }
@@ -59,7 +58,7 @@ class CoroutineBuilderExamples {
 
         @Test
         fun `await returns`() = runTest {
-            val results = fastList(10) {
+            val results = List(10) {
                 async {
                     delay(Random.nextLong(50, 100))
                     log.debug { "Return $it" }

@@ -1,5 +1,6 @@
 package io.bluetape4k.testcontainers.storage
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.GenericServer
 import io.bluetape4k.testcontainers.exposeCustomPorts
@@ -26,7 +27,7 @@ class ElasticsearchServer private constructor(
         const val TAG = "8.9.0"
 
         const val NAME = "elasticsearch"
-        const val DEFAULT_PASSWORD = "kommons"
+        const val DEFAULT_PASSWORD = LibraryName
 
         const val PORT = 9200
         const val TCP_PORT = 9300

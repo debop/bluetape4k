@@ -65,13 +65,14 @@ class AspectEventPublisherAspect: ApplicationEventPublisherAware {
     ) {
         val event = when {
             aspectEventEmitter.params.isSpel() -> {
-                // params 를 파싱하여, 원하는 객체를 Publish 하고자 하는 Event 의 인자로 제공합니다.
+                // params 를 파싱하여, 원하는 객체를 Publish 하고자 하는 FlowEvent 의 인자로 제공합니다.
                 val spel = aspectEventEmitter.params.replace(spelRegex, "$1")
                 log.debug { "spel=$spel" }
                 val arg = expressionParser.parseExpression(spel).getValue(result)
                 log.debug { "build event[${aspectEventEmitter.eventType.simpleName}] with arg=$arg, result=$result" }
                 aspectEventEmitter.eventType.constructors.first().call(joinPoint.target, arg)
             }
+
             else                               -> {
                 // 기본적으로 발행하고자 하는 이벤트 타입에 실행한 함수의 반환값을 인자로 제공합니다.
                 log.debug { "build event[${aspectEventEmitter.eventType.simpleName}] with result=$result" }

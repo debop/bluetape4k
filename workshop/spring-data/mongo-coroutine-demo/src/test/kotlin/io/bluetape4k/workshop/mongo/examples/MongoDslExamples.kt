@@ -3,8 +3,8 @@ package io.bluetape4k.workshop.mongo.examples
 import io.bluetape4k.workshop.mongo.AbstractMongoTest
 import io.bluetape4k.workshop.mongo.domain.Person
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldHaveSize
+import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,7 +52,8 @@ class MongoDslExamples(
         )
         val persons = operations.find<Person>(Query(criteria))
 
-        persons.size shouldBeEqualTo 1
-        persons.map { it.firstname }.distinct() shouldContainSame listOf("Sunghyouk")
+        persons shouldHaveSize 1
+        persons.first() shouldBeEqualTo person2
+        persons.first() shouldNotBeEqualTo person1
     }
 }

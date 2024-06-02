@@ -8,6 +8,9 @@ springBoot {
     mainClass.set("io.bluetape4k.workshop.mongo.MongoApplicationKt")
 }
 
+configurations {
+    testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
+}
 
 dependencies {
     implementation(Libs.springBootStarter("actuator"))
@@ -33,6 +36,7 @@ dependencies {
 
     // MongoDB Testcontainers
     implementation(project(":bluetape4k-testcontainers"))
+    implementation(Libs.testcontainers)
     implementation(Libs.testcontainers_mongodb)
 
     // Coroutines
@@ -47,5 +51,6 @@ dependencies {
 
     implementation(project(":bluetape4k-json"))
     implementation(project(":bluetape4k-idgenerators"))
+    implementation(project(":bluetape4k-netty"))
     testImplementation(project(":bluetape4k-junit5"))
 }

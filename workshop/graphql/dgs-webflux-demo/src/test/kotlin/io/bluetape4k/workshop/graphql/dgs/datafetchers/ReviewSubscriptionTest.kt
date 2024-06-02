@@ -4,7 +4,7 @@ import com.netflix.graphql.dgs.DgsQueryExecutor
 import com.netflix.graphql.dgs.client.codegen.GraphQLQueryRequest
 import graphql.ExecutionResult
 import graphql.GraphQLError
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
@@ -27,7 +27,7 @@ import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
 
 class ReviewSubscriptionTest(
-    @Autowired private val dgsQueryExecutor: DgsQueryExecutor
+    @Autowired private val dgsQueryExecutor: DgsQueryExecutor,
 ): AbstractDgsTest() {
 
     companion object: KLogging() {
@@ -100,7 +100,7 @@ class ReviewSubscriptionTest(
     private fun addReview() {
         val request = GraphQLQueryRequest(
             AddReviewGraphQLQuery.newRequest()
-                .review(SubmittedReview(1, faker.name().username(), faker.number().numberBetween(1, 5)))
+                .review(SubmittedReview(1, faker.internet().username(), faker.number().numberBetween(1, 5)))
                 .build(),
             AddReviewProjectionRoot().username().starScore(),
         )

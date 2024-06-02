@@ -1,0 +1,30 @@
+logging:
+    level:
+        io.bluetape4k.workshop.bucket4j: debug
+        com.giffing.bucket4j: debug
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+spring:
+    cache:
+        type: hazelcast
+
+bucket4j:
+    enabled: true
+    filters:
+        -   cache-name: buckets
+            filter-method: webflux
+            url: .*
+            http-content-type: application/json;charset=UTF-8
+            http-response-body: '{ "name": "hello"}'
+            http-response-headers:
+                HELLO: WORLD
+            filter-order: 1
+            rate-limits:
+                -   bandwidths:
+                        -   capacity: 5
+                            time: 10
+                            unit: seconds

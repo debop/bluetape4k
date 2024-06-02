@@ -3,7 +3,7 @@ package io.bluetape4k.examples.mutiny
 import io.bluetape4k.concurrent.NamedThreadFactory
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.utils.mutiny.asUni
+import io.bluetape4k.mutiny.asUni
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.asFlow

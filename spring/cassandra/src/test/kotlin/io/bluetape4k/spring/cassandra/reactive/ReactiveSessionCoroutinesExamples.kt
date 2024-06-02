@@ -6,17 +6,15 @@ import com.datastax.oss.driver.api.querybuilder.QueryBuilder.bindMarker
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder.selectFrom
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder
-import io.bluetape4k.data.cassandra.querybuilder.bindMarker
-import io.bluetape4k.data.cassandra.querybuilder.eq
-import io.bluetape4k.data.cassandra.querybuilder.literal
+import io.bluetape4k.cassandra.querybuilder.bindMarker
+import io.bluetape4k.cassandra.querybuilder.eq
+import io.bluetape4k.cassandra.querybuilder.literal
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest
-import io.bluetape4k.spring.cassandra.executeSuspending
-import io.bluetape4k.spring.cassandra.prepareSuspending
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactor.awaitSingle
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,7 +25,7 @@ import org.springframework.data.cassandra.ReactiveSession
 @SpringBootTest(classes = [ReactiveTestConfiguration::class])
 class ReactiveSessionCoroutinesExamples(
     @Autowired private val reactiveSession: ReactiveSession,
-): AbstractCassandraCoroutineTest("reactive-session") {
+): io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest("reactive-session") {
 
     companion object: KLogging() {
         private const val ACTOR_TABLE_NAME = "reactive_session_coroutines_actor"
@@ -45,9 +43,9 @@ class ReactiveSessionCoroutinesExamples(
         runSuspendWithIO {
             with(reactiveSession) {
                 if (initialized.compareAndSet(false, true)) {
-                    executeSuspending(SchemaBuilder.dropTable(ACTOR_TABLE_NAME).ifExists().build())
+                    execute(SchemaBuilder.dropTable(ACTOR_TABLE_NAME).ifExists().build()).awaitSingle()
 
-                    executeSuspending(
+                    execute(
                         SchemaBuilder.createTable(ACTOR_TABLE_NAME)
                             .ifNotExists()
                             .withPartitionKey("id", DataTypes.BIGINT)
@@ -55,23 +53,24 @@ class ReactiveSessionCoroutinesExamples(
                             .withColumn("first_name", DataTypes.TEXT)
                             .build()
                     )
+                        .awaitSingle()
                 }
 
-                executeSuspending(QueryBuilder.truncate(ACTOR_TABLE_NAME).build())
-                executeSuspending(
+                execute(QueryBuilder.truncate(ACTOR_TABLE_NAME).build()).awaitSingle()
+                execute(
                     insertInto(ACTOR_TABLE_NAME)
                         .value("id", 1212L.literal())
                         .value("first_name", "Joe".literal())
                         .value("last_name", "Biden".literal())
                         .build()
-                )
-                executeSuspending(
+                ).awaitSingle()
+                execute(
                     QueryBuilder.insertInto(ACTOR_TABLE_NAME)
                         .value("id", 4242L.literal())
                         .value("first_name", "Debop".literal())
                         .value("last_name", "Bae".literal())
                         .build()
-                )
+                ).awaitSingle()
             }
         }
     }
@@ -82,7 +81,7 @@ class ReactiveSessionCoroutinesExamples(
             .all()
             .whereColumn("id").eq(bindMarker())
             .asCql()
-        val rrset = reactiveSession.executeSuspending(cql, 1212L)
+        val rrset = reactiveSession.execute(cql, 1212L).awaitSingle()
         val rows = rrset.rows().asFlow().toList()
         rows.size shouldBeEqualTo 1
         val row = rows.first()
@@ -96,7 +95,7 @@ class ReactiveSessionCoroutinesExamples(
             .all()
             .whereColumn("id").eq("id".bindMarker())
             .asCql()
-        val rrset = reactiveSession.executeSuspending(cql, mapOf("id" to 1212L))
+        val rrset = reactiveSession.execute(cql, mapOf("id" to 1212L)).awaitSingle()
         val rows = rrset.rows().asFlow().toList()
         rows.size shouldBeEqualTo 1
         val row = rows.first()
@@ -112,10 +111,10 @@ class ReactiveSessionCoroutinesExamples(
             .limit(10)
             .build()
 
-        val ps = reactiveSession.prepareSuspending(statement)
+        val ps = reactiveSession.prepare(statement).awaitSingle()
         val bs = ps.bind().setLong("id", 1212L)
 
-        val rrset = reactiveSession.executeSuspending(bs)
+        val rrset = reactiveSession.execute(bs).awaitSingle()
         val rows = rrset.rows().asFlow().toList()
         rows.size shouldBeEqualTo 1
         val row = rows.first()

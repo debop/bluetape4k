@@ -1,5 +1,6 @@
 package io.bluetape4k.tokenizer.korean.phrase
 
+import io.bluetape4k.support.unsafeLazy
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanToken
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos
 import java.io.Serializable
@@ -9,15 +10,13 @@ data class KoreanPhrase(
     val pos: KoreanPos = KoreanPos.Noun,
 ): Serializable {
 
-    val offset by lazy(mode = LazyThreadSafetyMode.PUBLICATION) {
-        this.tokens.first().offset
-    }
+    val offset: Int get() = this.tokens[0].offset
 
-    val text by lazy(mode = LazyThreadSafetyMode.PUBLICATION) {
+    val text by unsafeLazy {
         this.tokens.joinToString("") { it.text }
     }
 
-    val length by lazy(mode = LazyThreadSafetyMode.PUBLICATION) {
+    val length by unsafeLazy {
         this.tokens.sumOf { it.text.length }
     }
 

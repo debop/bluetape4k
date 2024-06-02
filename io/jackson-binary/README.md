@@ -1,4 +1,4 @@
-# Module kommons-jackson-binary
+# Module bluetape4k-jackson-binary
 
 [jackson-dataformats-binary](https://github.com/FasterXML/jackson-dataformats-binary) 에서 제공하는
 

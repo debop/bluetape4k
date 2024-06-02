@@ -8,7 +8,7 @@ import io.vertx.core.Vertx
 import io.vertx.junit5.VertxTestContext
 import io.vertx.kotlin.core.json.json
 import io.vertx.kotlin.core.json.obj
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.kotlin.coroutines.dispatcher
 import io.vertx.sqlclient.SqlConnection
 import io.vertx.sqlclient.Tuple
@@ -37,11 +37,11 @@ class JDBCPoolExamples: AbstractSqlClientTest() {
                         )
                         """.trimMargin()
                     )
-                    .execute().await()
+                    .execute().coAwait()
 
-                conn.query("INSERT INTO test VALUES (1, 'Hello'), (2, 'World')").execute().await()
+                conn.query("INSERT INTO test VALUES (1, 'Hello'), (2, 'World')").execute().coAwait()
             }
-            pool.close().await()
+            pool.close().coAwait()
         }
     }
 
@@ -49,7 +49,7 @@ class JDBCPoolExamples: AbstractSqlClientTest() {
     fun `connect to mysql`(vertx: Vertx, testContext: VertxTestContext) = runSuspendWithIO {
         val pool = vertx.getH2Pool()
         vertx.testWithTransactionSuspending(testContext, pool) {
-            val rows = pool.query("SELECT * from test").execute().await()
+            val rows = pool.query("SELECT * from test").execute().coAwait()
 
             val records = rows.map { it.toJson() }
             records shouldHaveSize 2
@@ -57,7 +57,7 @@ class JDBCPoolExamples: AbstractSqlClientTest() {
             records[1] shouldBeEqualTo json { obj("id" to 2, "name" to "World") }
             records.forEach { println(it) }
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 
     @Test
@@ -65,7 +65,7 @@ class JDBCPoolExamples: AbstractSqlClientTest() {
         val pool = vertx.getH2Pool()
 
         vertx.testWithTransactionSuspending(testContext, pool) {
-            val rows = pool.query("SELECT * from test").execute().await()
+            val rows = pool.query("SELECT * from test").execute().coAwait()
             val records = rows.map { it.toJson() }
 
             records.forEach { log.debug { it } }
@@ -73,7 +73,7 @@ class JDBCPoolExamples: AbstractSqlClientTest() {
             records[0] shouldBeEqualTo json { obj("id" to 1, "name" to "Hello") }
             records[1] shouldBeEqualTo json { obj("id" to 2, "name" to "World") }
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 
     @Test
@@ -83,7 +83,7 @@ class JDBCPoolExamples: AbstractSqlClientTest() {
         vertx.testWithTransactionSuspending(testContext, pool) {
             val rows = pool.preparedQuery("SELECT * from test where id = ?")
                 .execute(Tuple.of(1))
-                .await()
+                .coAwait()
 
             val records = rows.map { it.toJson() }
 
@@ -92,7 +92,7 @@ class JDBCPoolExamples: AbstractSqlClientTest() {
             records.first() shouldBeEqualTo json { obj("id" to 1, "name" to "Hello") }
         }
 
-        pool.close().await()
+        pool.close().coAwait()
 
     }
 
@@ -102,7 +102,7 @@ class JDBCPoolExamples: AbstractSqlClientTest() {
 
         vertx.testWithTransactionSuspending(testContext, pool) {
             val rows = pool.withTransactionSuspending { conn ->
-                conn.query("SELECT COUNT(*) FROM test").execute().await()
+                conn.query("SELECT COUNT(*) FROM test").execute().coAwait()
             }
 
             val records = rows.map { it.toJson() }
@@ -111,6 +111,6 @@ class JDBCPoolExamples: AbstractSqlClientTest() {
             records.first() shouldBeEqualTo json { obj("COUNT(*)" to 2) }
         }
 
-        pool.close().await()
+        pool.close().coAwait()
     }
 }

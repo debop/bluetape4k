@@ -1,4 +1,4 @@
-= kommons-bloomfilter
+= bluetape4k-bloomfilter
 :toc:
 :toclevels: 3
 :imagesdir: docs
@@ -29,13 +29,13 @@ NOTE: 즉 집합에 특정 요소가 없다는 판단인 부정오류는 절대 
 
 == 설정
 
-Gradle Build 에서 `kommons-bloomfilter` 라이브러를 참조에 추가하시면 됩니다.
+Gradle Build 에서 `bluetape4k-bloomfilter` 라이브러를 참조에 추가하시면 됩니다.
 
 [source,groovy]
 .Setup dependencies
 ----
 dependencies {
-    compile "io.bluetape4k:kommons-bloomfilter:${kommons_version}"
+    compile "io.bluetape4k:bluetape4k-bloomfilter:${bluetape4k_version}"
 }
 ----
 
@@ -75,7 +75,7 @@ RedisBloomFilter를 사용하기 위해서는 https://github.com/redisson/rediss
 .RedisBloomFilter example
 ----
 private val bloomFilter = RedisBloomFilter(redisson = RedisProvider.redisson,
-                                           bloomKey = "kommons:bloomfilter:test",
+                                           bloomKey = "bluetape4k:bloomfilter:test",
                                            maxNum = DEFAULT_MAX_NUM,
                                            errorRate = DEFAULT_ERROR_RATE)
 repeat(count) {

@@ -1,9 +1,9 @@
 package io.bluetape4k.examples.cassandra.kotlin
 
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto
-import io.bluetape4k.data.cassandra.querybuilder.literal
-import io.bluetape4k.data.cassandra.quote
-import io.bluetape4k.data.cassandra.toCqlIdentifier
+import io.bluetape4k.cassandra.querybuilder.literal
+import io.bluetape4k.cassandra.quote
+import io.bluetape4k.cassandra.toCqlIdentifier
 import io.bluetape4k.examples.cassandra.AbstractCassandraTest
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo

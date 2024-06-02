@@ -1,5 +1,6 @@
 package io.bluetape4k.spring.retrofit2.services.jsonplaceholder
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.spring.retrofit2.Retrofit2Client
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -16,7 +17,7 @@ import retrofit2.http.Query
  *
  * 여기서는 API 통신을 Coroutines 를 이용합니다.
  */
-@Retrofit2Client(name = "jsonPlaceHolderCoroutineApi", baseUrl = "\${bluetape4k.retrofit2.services.jsonPlaceHolder}")
+@Retrofit2Client(name = "jsonPlaceHolderCoroutineApi", baseUrl = "\${$LibraryName.retrofit2.services.jsonPlaceHolder}")
 interface JsonPlaceHolderCoroutineApi {
 
     @GET("/posts")

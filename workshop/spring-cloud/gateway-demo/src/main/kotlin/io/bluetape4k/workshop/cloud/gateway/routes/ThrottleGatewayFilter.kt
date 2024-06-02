@@ -4,7 +4,6 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.github.bucket4j.Bandwidth
 import io.github.bucket4j.Bucket
-import io.github.bucket4j.Refill
 import io.github.bucket4j.local.SynchronizationStrategy
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
@@ -12,6 +11,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 import java.time.Duration
+
 
 class ThrottleGatewayFilter: GatewayFilter {
 
@@ -21,7 +21,7 @@ class ThrottleGatewayFilter: GatewayFilter {
     private val bucket: Bucket = Bucket.builder()
         .withMillisecondPrecision()
         .withSynchronizationStrategy(SynchronizationStrategy.LOCK_FREE)
-        .addLimit(Bandwidth.classic(1, Refill.intervally(1L, Duration.ofSeconds(10))))
+        .addLimit(Bandwidth.builder().capacity(1).refillIntervally(1, Duration.ofSeconds(10)).build())
         .build()
 
     override fun filter(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {

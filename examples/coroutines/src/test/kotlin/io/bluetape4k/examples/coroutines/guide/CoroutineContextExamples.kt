@@ -1,6 +1,5 @@
 package io.bluetape4k.examples.coroutines.guide
 
-import io.bluetape4k.collections.eclipse.fastList
 import io.bluetape4k.coroutines.support.log
 import io.bluetape4k.coroutines.support.logging
 import io.bluetape4k.logging.KLogging
@@ -72,14 +71,14 @@ class CoroutineContextExamples {
                 delay(Random.nextLong(10))
                 logging { "Computing v1" }
                 252
-            }.log("async 1")
+            }.log("coroutines 1")
 
             val v2 = async(CoroutineName("v2")) {
                 logging { "Starting v2" }
                 delay(Random.nextLong(20))
                 logging { "Computing v2" }
                 6
-            }.log("async 2")
+            }.log("coroutines 2")
 
             val result = v1.await() / v2.await()
             logging { "The answer for v1 / v2 = $result" }
@@ -93,7 +92,7 @@ class CoroutineContextExamples {
 
         @Test
         fun `run many coroutines`() = runTest {
-            val jobs = fastList(jobSize) {
+            val jobs = List(jobSize) {
                 launch(Dispatchers.IO) {
                     delay(1000)
                     print(".")
@@ -105,7 +104,7 @@ class CoroutineContextExamples {
         @Test
         fun `run many coroutines with coroutineScope`() = runTest {
             coroutineScope {
-                val jobs = fastList(jobSize) {
+                val jobs = List(jobSize) {
                     launch(Dispatchers.IO) {
                         delay(1000)
                         print(".")

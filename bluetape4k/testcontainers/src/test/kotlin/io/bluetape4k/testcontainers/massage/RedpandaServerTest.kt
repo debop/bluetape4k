@@ -1,5 +1,6 @@
 package io.bluetape4k.testcontainers.massage
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
@@ -14,8 +15,8 @@ import org.junit.jupiter.api.parallel.ExecutionMode
 class RedpandaServerTest {
 
     companion object: KLogging() {
-        private const val TOPIC_NAME = "kommons-test-topic-1"
-        private const val TOPIC_NAME_CORUTINE = "kommons-test-topic-coroutines-1"
+        private const val TOPIC_NAME = "$LibraryName-test-topic-1"
+        private const val TOPIC_NAME_CORUTINE = "$LibraryName-test-topic-coroutines-1"
     }
 
     @Nested

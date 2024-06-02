@@ -22,7 +22,7 @@ abstract class AbstractDynamicUrlSyncTest {
     private val api: DynamicUrlService.DynamicUrlApi by lazy {
         // 동적 Url 사용 시에는 baseUrl 값을 overriding 합니다. (baseUrl은 사용되지 않습니다.)
         // 단 생성 시에 validate 를 하므로, Url 형식의 아무 값이나 사용해도 됩니다.
-        retrofitOf("https://wrtn.ai/", callFactory, defaultJsonConverterFactory).service()
+        retrofitOf("https://nghttp2.org/httpbin/", callFactory, defaultJsonConverterFactory).service()
     }
 
     @Test

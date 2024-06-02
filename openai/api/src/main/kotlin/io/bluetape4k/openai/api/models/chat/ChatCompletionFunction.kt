@@ -2,9 +2,9 @@ package io.bluetape4k.openai.api.models.chat
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import io.bluetape4k.core.requireNotBlank
 import io.bluetape4k.openai.api.annotations.OpenAIDsl
 import io.bluetape4k.openai.api.models.ModelBuilder
+import io.bluetape4k.support.requireNotBlank
 import java.io.Serializable
 import java.util.function.Function
 

@@ -2,7 +2,7 @@ package io.bluetape4k.openai.clients.jackson
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.json.JsonMapper
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.openai.api.models.chat.ChatCompletionFunction
 import io.bluetape4k.openai.api.models.chat.ChatCompletionRequest
 import io.bluetape4k.openai.api.models.chat.ChatFunctionCall

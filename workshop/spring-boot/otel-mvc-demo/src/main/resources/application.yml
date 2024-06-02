@@ -1,0 +1,54 @@
+spring:
+    application.name: otel-mvc-demo
+    codec:
+        max-in-memory-size: 10MB
+    jackson:
+        serialization:
+            indent_output: true
+
+    output:
+        ansi:
+            enabled: always
+
+info:
+    name: ${spring.application.name}
+    description: opentelemetry with spring mvc
+    environment: ${spring.profiles.active}
+    version: 0.0.1
+
+# https://opentelemetry.io/docs/languages/java/automatic/spring-boot/
+otel:
+    traces:
+        sampler:
+            probability: 1.0
+
+    springboot:
+        resource:
+            enabled: true
+    resource:
+        attributes:
+            environment: ${spring.profiles.active:dev}
+            xyz: foo
+
+    exporter:
+        otlp:
+            timeout: 10s
+            endpoint: http://localhost:4317
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+    endpoint:
+        health:
+            show-details: always
+
+    metrics:
+        tags:
+            application: ${spring.application.name}
+        distribution:
+            percentiles-histogram:
+                http.server.requests: true
+    health:
+        diskspace.enabled: false

@@ -38,7 +38,7 @@ class CoroutineScopeExamples {
 
     private suspend fun getUserDetails(): Details {
         // 하나의 CoroutineScope 에서 두 개의 Coroutine 작업이 실행될 때,
-        // 하나가 예외를 일으키면, 다른 하나는 Cancel 된고, 예외가 전파된다.
+        // 하나가 예외를 일으키면, 다른 하나는 Cancel 되고, 예외가 전파된다.
         return coroutineScope {
             val userName = async { getUserName() }
             val follwerNumbers = async { getFollowersNumber() }

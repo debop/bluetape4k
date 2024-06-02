@@ -1,9 +1,8 @@
 package io.bluetape4k.tokenizer.korean.utils
 
-import io.bluetape4k.collections.eclipse.toUnifiedMap
-import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.support.publicLazy
+import io.bluetape4k.tokenizer.korean.utils.KoreanConjugation.conjugatePredicated
 import io.bluetape4k.tokenizer.korean.utils.KoreanConjugation.conjugatePredicatesToCharArraySet
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adjective
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adverb
@@ -18,115 +17,31 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.PreEomi
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Suffix
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.VerbPrefix
-import io.bluetape4k.tokenizer.model.Severity
+import io.bluetape4k.tokenizer.utils.CharArraySet
+import io.bluetape4k.tokenizer.utils.DictionaryProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.Serializable
-import java.util.zip.GZIPInputStream
 
 
 /**
  * Provides a sigleton Korean dictionary
  */
-object KoreanDictionaryProvider: KLogging(), Serializable {
+object KoreanDictionaryProvider: KLogging() {
 
-    private fun readStreamByLine(stream: InputStream): Flow<String> {
-        return channelFlow {
-            InputStreamReader(stream, Charsets.UTF_8).buffered().use { reader ->
-                reader.lineSequence()
-                    .asFlow()
-                    .buffer()
-                    .collect {
-                        if (it.isNotBlank()) {
-                            send(it.trim())
-                        }
-                    }
-            }
-        }
-    }
-
-    fun readFileByLineFromResources(filename: String): Flow<String> {
-        log.debug { "Read a file. filename=[$filename]" }
-
-        val filepath = "koreantext/$filename"
-        var stream = Thread.currentThread().contextClassLoader.getResourceAsStream(filepath)
-        check(stream != null) { "Can't open file. filename=[$filename]" }
-
-        if (filename.endsWith(".gz")) {
-            stream = GZIPInputStream(stream)
-        }
-        return readStreamByLine(stream)
-    }
-
-    private suspend fun readWordFreqs(filename: String): Map<CharSequence, Float> {
-        val freqRange = 0 until 6
-        val map = mutableMapOf<CharSequence, Float>()
-
-        readFileByLineFromResources(filename)
-            .filter { it.contains("\t") }
-            .map {
-                val data = it.split("\t", limit = 2)
-                data[0] to data[1].slice(freqRange).toFloat()
-            }
-            .collect {
-                map[it.first] = it.second
-            }
-        return map
-    }
-
-    private fun readWordMap(filename: String): Flow<Pair<String, String>> {
-        return readFileByLineFromResources(filename)
-            .buffer()
-            .filter { it.contains(" ") }
-            .map {
-                val data = it.split(" ", limit = 2)
-                data[0] to data[1]
-            }
-    }
-
-    fun readWordsAsFlow(filename: String): Flow<String> {
-        return readFileByLineFromResources(filename)
-    }
+    const val BASE_PATH = "koreantext"
 
     suspend fun readWordsAsSet(vararg filenames: String): MutableSet<String> {
-        val set = mutableSetOf<String>()
-        filenames.asFlow()
-            .flatMapMerge {
-                readFileByLineFromResources(it)
-            }
-            .collect {
-                set.add(it)
-            }
-        return set
+        return DictionaryProvider.readWordsAsSet(*filenames.map { "$BASE_PATH/$it" }.toTypedArray())
     }
 
     suspend fun readWords(vararg filenames: String): CharArraySet {
-        val set = newCharArraySet()
-        filenames.asFlow()
-            .buffer()
-            .flatMapMerge { readFileByLineFromResources(it) }
-            .collect {
-                set.add(it)
-            }
-        return set
+        return DictionaryProvider.readWords(*filenames.map { "$BASE_PATH/$it" }.toTypedArray())
     }
-
-    fun newCharArraySet(): CharArraySet = CharArraySet(10_000)
 
     val koreanEntityFreq: Map<CharSequence, Float> by lazy {
         runBlocking(Dispatchers.IO) {
-            readWordFreqs("freq/entity-freq.txt.gz")
+            DictionaryProvider.readWordFreqs("$BASE_PATH/freq/entity-freq.txt.gz")
         }
     }
 
@@ -142,7 +57,7 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
 
     val koreanDictionary: MutableMap<KoreanPos, CharArraySet> by lazy {
         runBlocking(Dispatchers.IO) {
-            unifiedMapOf<KoreanPos, CharArraySet>().apply {
+            mutableMapOf<KoreanPos, CharArraySet>().apply {
                 put(
                     Noun,
                     readWords(
@@ -165,7 +80,8 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
                         "noun/wikipedia_title_nouns.txt",
                         "noun/brand.txt",
                         "noun/fashion.txt",
-                        "noun/neologism.txt"
+                        "noun/commerce.txt",
+                        "noun/neologism.txt",
                     )
                 )
 
@@ -183,11 +99,7 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
                 val suffix = async { readWords("substantives/suffix.txt") }
 
                 put(Verb, conjugatePredicatesToCharArraySet(verbs.await()))
-                put(
-                    Adjective,
-                    conjugatePredicatesToCharArraySet(adjective.await(), true)
-                )
-
+                put(Adjective, conjugatePredicatesToCharArraySet(adjective.await(), true))
                 put(Adverb, adveb.await())
                 put(Determiner, determiner.await())
                 put(Exclamation, exclamation.await())
@@ -202,7 +114,7 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
         }
     }
 
-    val spamNouns by lazy {
+    val spamNouns by publicLazy {
         runBlocking(Dispatchers.IO) {
             readWords(
                 "noun/spam.txt",
@@ -215,21 +127,21 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
     /**
      * 금칙어를 심각도에 따라 분류한 Dictionary 입니다.
      */
-    val blockWords by lazy {
+    val blockWords by publicLazy {
         runBlocking(Dispatchers.IO) {
             val low = async { readWords("block/block_low.txt", "block/block_middle.txt", "block/block_high.txt") }
             val middle = async { readWords("block/block_middle.txt", "block/block_high.txt") }
             val high = async { readWords("block/block_high.txt") }
 
-            unifiedMapOf(
-                Severity.LOW to low.await(),
-                Severity.MIDDLE to middle.await(),
-                Severity.HIGH to high.await(),
+            mapOf(
+                io.bluetape4k.tokenizer.model.Severity.LOW to low.await(),
+                io.bluetape4k.tokenizer.model.Severity.MIDDLE to middle.await(),
+                io.bluetape4k.tokenizer.model.Severity.HIGH to high.await(),
             )
         }
     }
 
-    val properNouns by lazy {
+    val properNouns by publicLazy {
         runBlocking(Dispatchers.IO) {
             readWords(
                 "noun/entities.txt",
@@ -252,12 +164,12 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
         }
     }
 
-    val nameDictionary: Map<String, CharArraySet> by lazy {
+    val nameDictionary: Map<String, CharArraySet> by publicLazy {
         runBlocking(Dispatchers.IO) {
             val familyName = async { readWords("substantives/family_names.txt") }
             val givenName = async { readWords("substantives/given_names.txt") }
             val fullName = async { readWords("noun/kpop.txt", "noun/foreign.txt", "noun/names.txt") }
-            unifiedMapOf(
+            mapOf(
                 "family_name" to familyName.await(),
                 "given_name" to givenName.await(),
                 "full_name" to fullName.await()
@@ -265,32 +177,40 @@ object KoreanDictionaryProvider: KLogging(), Serializable {
         }
     }
 
-    val typoDictionaryByLength: Map<Int, Map<String, String>> by lazy {
+    val typoDictionaryByLength: Map<Int, Map<String, String>> by publicLazy {
         runBlocking(Dispatchers.IO) {
-            val grouped = readWordMap("typos/typos.txt").toList().groupBy { it.first.length }
-            val result = unifiedMapOf<Int, Map<String, String>>()
+            val grouped = DictionaryProvider.readWordMap("$BASE_PATH/typos/typos.txt")
+                .toList()
+                .groupBy { it.first.length }
+            // val grouped = readWordMap("typos/typos.txt").toList().groupBy { it.first.length }
+            val result = mutableMapOf<Int, Map<String, String>>()
 
             grouped.forEach { (index, pair) ->
-                result[index] = pair.map { (k, v) -> k to v }.toUnifiedMap()
+                result[index] = pair.map { (k, v) -> k to v }.toMap()
             }
 
             result
         }
     }
 
-    val predicateStems: Map<KoreanPos, Map<String, String>> by lazy {
+    val predicateStems: Map<KoreanPos, Map<String, String>> by publicLazy {
         fun getConjugationMap(words: Set<String>, isAdjective: Boolean): Map<String, String> {
             return words
                 .flatMap { word ->
-                    KoreanConjugation.conjugatePredicated(hashSetOf(word), isAdjective).map { Pair(it, word + "다") }
+                    conjugatePredicated(setOf(word), isAdjective).map {
+                        //                        if(it.startsWith("가느")) {
+                        //                            log.trace { "활용=$it, 원형=${word + "다"}, 형용사=$isAdjective" }
+                        //                        }
+                        it to word + "다"
+                    }
                 }
-                .toUnifiedMap()
+                .toMap()
         }
 
         runBlocking(Dispatchers.IO) {
             val verb = async { readWordsAsSet("verb/verb.txt") }
             val adjective = async { readWordsAsSet("adjective/adjective.txt") }
-            unifiedMapOf(
+            mapOf(
                 Verb to getConjugationMap(verb.await(), false),
                 Adjective to getConjugationMap(adjective.await(), true)
             )

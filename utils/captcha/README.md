@@ -1,4 +1,4 @@
-# Module kommons-captcha
+# Module bluetape4k-captcha
 
 Captcha 이미지를 생성하는 라이브러리입니다.
 

@@ -2,7 +2,6 @@ package io.bluetape4k.spring.cassandra.convert
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
-import io.bluetape4k.spring.cassandra.AbstractCassandraTest
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.BeforeEach
@@ -14,7 +13,7 @@ import org.springframework.data.cassandra.core.CassandraOperations
 @SpringBootTest(classes = [ConvertTestConfiguration::class])
 class CassandraTypeMappingTest(
     @Autowired private val operations: CassandraOperations,
-): AbstractCassandraTest() {
+): io.bluetape4k.spring.cassandra.AbstractCassandraTest() {
 
     companion object: KLogging() {
         private val initialized = atomic(false)

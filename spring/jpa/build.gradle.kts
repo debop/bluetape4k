@@ -61,8 +61,6 @@ dependencies {
     kapt(Libs.querydsl_apt + ":jakarta")
     kaptTest(Libs.querydsl_apt + ":jakarta")
 
-//    api(Libs.javax_el_api)
-//    api(Libs.javax_el)
     api(Libs.jakarta_el_api)
 
     // Validator

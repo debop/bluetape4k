@@ -2,6 +2,7 @@ package io.bluetape4k.spring.core
 
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -72,5 +73,33 @@ class PropertyResolverExtensionsTest {
 
         testProperties["required.key"] = "required.value"
         propertyResolver.getRequiredProperty("required.key", String::class) shouldBeEqualTo "required.value"
+    }
+
+
+    @Test
+    fun `inline get property value with type`() {
+        propertyResolver.getAs<Any>("foo").shouldBeNull()
+        propertyResolver.getAs<Int>("num").shouldBeNull()
+        propertyResolver.getAs<Boolean>("enabled").shouldBeNull()
+        propertyResolver.getAs<Boolean>("enabld", false).shouldBeFalse()
+
+        testProperties["foo"] = "bar"
+        testProperties["num"] = 5
+        testProperties["enabled"] = true
+
+        propertyResolver.getAs<String>("foo") shouldBeEqualTo "bar"
+        propertyResolver.getAs<Int>("num") shouldBeEqualTo 5
+        propertyResolver.getAs<Boolean>("enabled") shouldBeEqualTo true
+        propertyResolver.getAs<Boolean>("enabled", false) shouldBeEqualTo true
+    }
+
+    @Test
+    fun `inline get reuqired property`() {
+        assertFailsWith<IllegalStateException> {
+            propertyResolver.getRequiredPropertyAs<String>("not-exists")
+        }
+
+        testProperties["required.key"] = "required.value"
+        propertyResolver.getRequiredPropertyAs<String>("required.key") shouldBeEqualTo "required.value"
     }
 }

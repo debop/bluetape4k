@@ -1,6 +1,6 @@
 package io.bluetape4k.spring.jpa.stateless
 
-import io.bluetape4k.data.hibernate.stateless.withStateless
+import io.bluetape4k.hibernate.stateless.withStateless
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug

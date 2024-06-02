@@ -25,7 +25,7 @@ abstract class AbstractLocalBucketProvider(
     protected val keyPrefix: String = DEFAULT_KEY_PREFIX,
 ) {
     companion object: KLogging() {
-        const val DEFAULT_KEY_PREFIX = "wrtn.rate-limit.key."
+        const val DEFAULT_KEY_PREFIX = "bluetape4k.rate-limit.key."
     }
 
     /**

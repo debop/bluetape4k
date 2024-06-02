@@ -3,15 +3,13 @@ package io.bluetape4k.spring.cassandra.reactive
 import com.datastax.oss.driver.api.core.uuid.Uuids
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest
-import io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration
-import io.bluetape4k.spring.cassandra.countSuspending
-import io.bluetape4k.spring.cassandra.insertSuspending
+import io.bluetape4k.spring.cassandra.count
 import io.bluetape4k.spring.cassandra.query.eq
-import io.bluetape4k.spring.cassandra.selectForFlow
-import io.bluetape4k.spring.cassandra.truncateSuspending
+import io.bluetape4k.spring.cassandra.select
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
@@ -31,23 +29,26 @@ import org.springframework.data.cassandra.core.query.Query
 import org.springframework.data.cassandra.core.query.inValues
 import org.springframework.data.cassandra.core.query.query
 import org.springframework.data.cassandra.core.query.where
+import org.springframework.data.cassandra.core.truncate
+import org.springframework.data.cassandra.repository.config.EnableReactiveCassandraRepositories
 import java.io.Serializable
 
-@SpringBootTest
+@SpringBootTest(classes = [ReactiveDeleteOperationsTest.TestConfiguration::class])
+@EnableReactiveCassandraRepositories
 class ReactiveDeleteOperationsTest(
     @Autowired private val operations: ReactiveCassandraOperations,
-): AbstractCassandraCoroutineTest("delete-op") {
+): io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest("delete-op") {
 
     companion object: KLogging() {
         private const val PERSON_TABLE_NAME = "delete_op_person"
     }
 
-    @Configuration
+    @Configuration(proxyBeanMethods = false)
     //@EntityScan(basePackageClasses = [Person::class]) // 내부 엔티티는 Scan 없이도 사용 가능하다
-    class TestConfiguration: AbstractReactiveCassandraTestConfiguration()
+    class TestConfiguration: io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration()
 
     @Table(PERSON_TABLE_NAME)
-    private data class Person(
+    data class Person(
         @field:Id val id: String,
         @field:Indexed var firstName: String,
         @field:Indexed var lastName: String,
@@ -71,9 +72,9 @@ class ReactiveDeleteOperationsTest(
     @BeforeEach
     fun beforeEach() {
         runBlocking {
-            operations.truncateSuspending<Person>()
+            operations.truncate<Person>().awaitSingleOrNull()
 
-            operations.insertSuspending(han)
+            operations.insert(han).awaitSingle()
             operations.insert(luke).awaitSingle()
         }
     }
@@ -100,7 +101,7 @@ class ReactiveDeleteOperationsTest(
 
         writeResult.wasApplied().shouldBeTrue()
 
-        operations.countSuspending<Person>() shouldBeEqualTo 0L
-        operations.selectForFlow<Person>(Query.empty()).toList().shouldBeEmpty()
+        operations.count<Person>().awaitSingle() shouldBeEqualTo 0L
+        operations.select<Person>(Query.empty()).asFlow().toList().shouldBeEmpty()
     }
 }

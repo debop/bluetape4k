@@ -1,19 +1,11 @@
 package io.bluetape4k.tokenizer.korean.block
 
-import io.bluetape4k.collections.eclipse.toFastList
 import io.bluetape4k.collections.sliding
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanChunker
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanToken
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.CashTag
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Email
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Foreign
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Hashtag
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Korean
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.KoreanParticle
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Number
-import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Punctuation
+import io.bluetape4k.tokenizer.korean.utils.KoreanPos
 
 
 /**
@@ -21,20 +13,33 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Punctuation
  *
  * ```
  * 섹.스 -> 섹스
- * 찌~찌~뽕 -> 찌찌뽕
+ * 찌~~~찌~뽕 -> 찌찌뽕
  * ```
  */
 class PunctuationProcessor {
 
     companion object: KLogging() {
-        private val normalPos = arrayOf(Korean, Foreign, Number, KoreanParticle)
-        private val punctuationPos = arrayOf(Punctuation, Email, Hashtag, CashTag)
+        private val normalPos = arrayOf(
+            KoreanPos.Korean,
+            KoreanPos.KoreanParticle,
+            KoreanPos.Foreign,
+            KoreanPos.Number,
+            KoreanPos.Alpha,
+            KoreanPos.Adjective
+        )
+        private val punctuationPos = arrayOf(
+            KoreanPos.Punctuation,
+            KoreanPos.Email,
+            KoreanPos.Hashtag,
+            KoreanPos.CashTag,
+            KoreanPos.URL,
+        )
     }
 
     suspend fun removePunctuation(text: String): String {
-        val tokens = findPunctuation(text).toFastList()
+        val tokens = findPunctuation(text)
         var result = text
-        tokens.reverseThis()
+        tokens.reversed()
             .forEach {
                 val token = it.first
                 log.trace { "remove token. $it" }
@@ -42,19 +47,20 @@ class PunctuationProcessor {
                     result = result.removeRange(token.offset, token.offset + token.length)
                 }
             }
+        log.trace { "chunk removed text=$result" }
         return result
     }
 
     suspend fun findPunctuation(text: String): List<Pair<KoreanToken, Boolean>> {
         val chunks = KoreanChunker.chunk(text)
 
-        return chunks.sliding(3, false)
-            .mapIndexed { index, tokens ->
-                log.trace { "sliding tokens=$tokens" }
-                (index + 1) to canRemovePunctuation(tokens)
-            }
+        return chunks
+            // .filter { it.pos != KoreanPos.Space }
+            .sliding(3, false)
+            .onEach { log.trace { "sliding tokens=$it" } }
+            .mapIndexed { index, tokens -> (index + 1) to canRemovePunctuation(tokens) }
             .map { chunks[it.first] to it.second }
-            .toFastList()
+            .onEach { log.trace { "can remove punctuation=$it" } }
     }
 
 
@@ -66,8 +72,9 @@ class PunctuationProcessor {
         val current = tokens[1]
         val next = tokens[2]
 
-        return prev.pos in normalPos &&
-                current.pos in punctuationPos &&
+        // 중간에 있는 token이 Punctuation이고, 앞뒤로 있는 token이 일반 token이면 Puctuation을 제거할 수 있다고 판단합니다.
+        return current.pos in punctuationPos &&
+                prev.pos in normalPos &&
                 next.pos in normalPos
     }
 }

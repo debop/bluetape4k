@@ -1,0 +1,20 @@
+{
+  "model": "text-davinci-003",
+  "prompt": [
+    "Say this is a test"
+  ],
+  "suffix": null,
+  "max_tokens": 7,
+  "temperature": 0.0,
+  "top_p": null,
+  "n": null,
+  "stream": null,
+  "logprobs": null,
+  "echo": null,
+  "stop": null,
+  "presence_penalty": null,
+  "frequency_penalty": null,
+  "best_of": null,
+  "logit_bias": null,
+  "user": null
+}

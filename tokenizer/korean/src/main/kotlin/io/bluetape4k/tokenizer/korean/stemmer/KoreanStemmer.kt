@@ -1,8 +1,7 @@
 package io.bluetape4k.tokenizer.korean.stemmer
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.trace
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanToken
 import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adjective
@@ -11,22 +10,24 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.PreEomi
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.buffer
-import java.io.Serializable
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import java.util.*
 
 
 /**
  * Stems Adjectives and Verbs: 새로운 스테밍을 추가했었다. -> 새롭다 + 스테밍 + 을 + 추가 + 하다
  */
-object KoreanStemmer: KLogging(), Serializable {
+object KoreanStemmer: KLogging() {
 
     @JvmField
-    val Endings = unifiedSetOf(Eomi, PreEomi)
+    val Endings = setOf(Eomi, PreEomi)
 
     @JvmField
-    val Predicates = unifiedSetOf(Verb, Adjective)
+    val Predicates = setOf(Verb, Adjective)
 
     @JvmField
-    val EndingForNouns = unifiedSetOf("하다", "되다", "없다")
+    val EndingForNouns = setOf("하다", "되다", "없다")
 
 
     /**
@@ -36,15 +37,18 @@ object KoreanStemmer: KLogging(), Serializable {
      * @return A sequence of collapsed Korean tokens
      */
     suspend fun stem(tokens: List<KoreanToken>): List<KoreanToken> {
-        if (!tokens.any { Predicates.contains(it.pos) }) {
+        if (tokens.isEmpty()) {
+            return tokens
+        }
+        if (!tokens.any { it.pos in Predicates }) {
             return tokens
         }
 
-        val stemmed = fastListOf<KoreanToken>()
+        val stemmed = LinkedList<KoreanToken>()
 
         tokens.asFlow()
             .buffer()
-            .collect { token ->
+            .onEach { token ->
                 if (stemmed.isNotEmpty() && Endings.contains(token.pos)) {
                     if (Predicates.contains(stemmed.first().pos)) {
                         val prevToken = stemmed.first()
@@ -56,13 +60,18 @@ object KoreanStemmer: KLogging(), Serializable {
                     } else {
                         stemmed.add(0, token)
                     }
-                } else if (Predicates.contains(token.pos)) {
-                    val token1 = token.copy(stem = KoreanDictionaryProvider.predicateStems[token.pos]?.get(token.text))
-                    stemmed.add(0, token1)
+                } else if (token.pos in Predicates) {
+                    val stem = KoreanDictionaryProvider.predicateStems[token.pos]?.get(token.text)
+                    // val token1 = token.copy(stem = stem)
+                    // log.trace { "동사, 형용사 활용: text=${token.text}, stem=$stem : $token -> $token1" }
+                    stemmed.add(0, token.copy(stem = stem))
                 } else {
+                    log.trace { "not found stem for $token" }
                     stemmed.add(0, token)
                 }
             }
-        return stemmed.reverseThis()
+            .collect()
+
+        return stemmed.reversed()
     }
 }

@@ -1,12 +1,11 @@
 package io.bluetape4k.workshop.stomp.websocket
 
 import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.junit5.awaitility.untilSuspending
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.spring.coroutines.await
 import io.bluetape4k.workshop.stomp.websocket.model.Greeting
 import io.bluetape4k.workshop.stomp.websocket.model.HelloMessage
 import kotlinx.atomicfu.AtomicRef

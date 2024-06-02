@@ -1,7 +1,7 @@
 package io.bluetape4k.openai.api
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.openai.api.annotations.BetaOpenAI

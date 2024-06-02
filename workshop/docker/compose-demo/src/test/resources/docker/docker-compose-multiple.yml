@@ -2,13 +2,20 @@
 version: '3'
 
 services:
-    # redis 가 제대로 실행되지 않는다. (colima 때문인지?, docker-compose 때문인지?)
     #    redis:
-    #        image: redis:7.2
-    mongo:
-        image: mongo:7
-
+    #        image: redis:7
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
         environment:
             - discovery.type=single-node
+    postgres:
+        image: postgres:14
+        environment:
+            POSTGRES_USER: debop
+            POSTGRES_PASSWORD: debop
+            POSTGRES_DB: debop
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U debop" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5

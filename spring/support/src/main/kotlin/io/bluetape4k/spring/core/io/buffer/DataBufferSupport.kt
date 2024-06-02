@@ -66,7 +66,7 @@ fun Resource.readAsDataBuffer(
  * @param outputStream the output stream to write to
  * @return a Flux containing the same buffers as in `source`, that
  * starts the writing process when subscribed to, and that publishes any
- * writing errors and the completion signal
+ * writing errors and the completions signal
  */
 fun Publisher<DataBuffer>.write(outputStream: OutputStream): Flow<DataBuffer> {
     return DataBufferUtils.write(this, outputStream).asFlow()
@@ -88,7 +88,7 @@ suspend fun Publisher<DataBuffer>.write(destination: Path, vararg options: OpenO
  * 주어진 [Publisher]의 버퍼를 총합이 `DataBuffer.readableByteCount()` 바이트 수가 주어진 최대 바이트 수에 도달하거나
  * 도달할 때까지 또는 퍼블리셔가 완료될 때까지 버퍼를 릴레이합니다.
  *
- * @receiver the publisher to filter
+ * @receiver the publisher to filters
  * @param maxByteCount the maximum byte count
  * @return a flow whose maximum byte count is [maxByteCount]
  */
@@ -100,7 +100,7 @@ fun Publisher<out DataBuffer>.takeUntilByteCount(maxByteCount: Long): Flow<DataB
  * 주어진 [Publisher]의 버퍼를 총합이 `DataBuffer.readableByteCount()` 바이트 수가 주어진 최대 바이트 수에 도달하거나
  * 도달할 때까지 또는 퍼블리셔가 완료될 때까지 버퍼를 스킵합니다.
  *
- * @receiver the publisher to filter
+ * @receiver the publisher to filters
  * @param maxByteCount the maximum byte count
  * @return a flux with the remaining part of the given publisher
  */

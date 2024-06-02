@@ -24,8 +24,9 @@ dependencies {
     api(Libs.retrofit2_converter_scalars)
     api(Libs.retrofit2_adapter_java8)
     compileOnly(Libs.retrofit2_adapter_reactor)
-    compileOnly(Libs.retrofit2_adapter_rxjava2)
-    compileOnly(Libs.retrofit2_adapter_rxjava3)
+    // rxjava 는 더 이상 사용하지 않는다. (reactor 를 사용한다)
+    // compileOnly(Libs.retrofit2_adapter_rxjava2)
+    // compileOnly(Libs.retrofit2_adapter_rxjava3)
     testImplementation(Libs.retrofit2_mock)
 
     // OkHttp3

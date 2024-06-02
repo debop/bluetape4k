@@ -1,5 +1,6 @@
 package io.bluetape4k.io.compressor
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.random.RandomizedTest
 import io.bluetape4k.logging.KLogging
@@ -26,7 +27,7 @@ abstract class AbstractCompressorTest {
         init {
             // Snappy 는 이렇게 한 번 초기화 해주어야 제대로 성능을 알 수 있다.
             Snappy.cleanUp()
-            val compressed = Snappy.compress("kommons")
+            val compressed = Snappy.compress(LibraryName)
             Snappy.uncompress(compressed)
         }
 

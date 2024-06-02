@@ -1,9 +1,10 @@
 package io.bluetape4k.examples.redisson.coroutines
 
-import io.bluetape4k.data.redis.redisson.redissonClientOf
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
+import io.bluetape4k.redis.redisson.redissonClientOf
 import io.bluetape4k.testcontainers.storage.RedisServer
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineName
@@ -31,7 +32,7 @@ abstract class AbstractRedissonCoroutineTest {
             Fakers.randomString(1024, 2048)
 
         @JvmStatic
-        protected fun randomName(): String = "bluetape4k:${Fakers.fixedString(32)}"
+        protected fun randomName(): String = "$LibraryName:${Fakers.fixedString(32)}"
 
     }
 

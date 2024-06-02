@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class StudentController(
-    private val service: StudentService
+    private val service: StudentService,
 ) {
     @GetMapping("/students")
     fun findAll() = service.findAll()

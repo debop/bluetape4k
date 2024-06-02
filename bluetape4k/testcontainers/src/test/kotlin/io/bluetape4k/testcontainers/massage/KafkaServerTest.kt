@@ -1,5 +1,6 @@
 package io.bluetape4k.testcontainers.massage
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -31,8 +32,8 @@ import kotlin.coroutines.suspendCoroutine
 class KafkaServerTest {
 
     companion object: KLogging() {
-        private const val TOPIC_NAME = "kommons-test-topic-1"
-        private const val TOPIC_NAME_CORUTINE = "kommons-test-topic-coroutines-1"
+        private const val TOPIC_NAME = "$LibraryName-test-topic-1"
+        private const val TOPIC_NAME_CORUTINE = "$LibraryName-test-topic-coroutines-1"
     }
 
     @AfterAll

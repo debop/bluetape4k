@@ -1,6 +1,5 @@
 package io.bluetape4k.workshop.graphql.dgs.services
 
-import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.workshop.graphql.dgs.generated.types.Show
 import kotlinx.coroutines.delay
@@ -14,7 +13,7 @@ interface ShowService {
 class BasicShowService: ShowService {
 
     companion object: KLogging() {
-        val basicShows = fastListOf(
+        val basicShows = listOf(
             Show(id = 1, title = "Stranger Things", releaseYear = 2016),
             Show(id = 2, title = "Ozark", releaseYear = 2017),
             Show(id = 3, title = "The Crown", releaseYear = 2016),

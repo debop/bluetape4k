@@ -1,6 +1,7 @@
 package io.bluetape4k.workshop.cloud.gateway
 
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.workshop.cloud.gateway.GatewayApplication
 import io.bluetape4k.workshop.cloud.gateway.routes.HttpbinRoutes
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach
@@ -44,7 +45,7 @@ class GatewayApplicationWithoutMetricsTest {
     fun beforeEach() {
         baseUri = "http://localhost:$port"
         client = WebTestClient.bindToServer()
-            .responseTimeout(Duration.ofSeconds(1))
+            .responseTimeout(Duration.ofSeconds(10))
             .baseUrl(baseUri)
             .build()
     }

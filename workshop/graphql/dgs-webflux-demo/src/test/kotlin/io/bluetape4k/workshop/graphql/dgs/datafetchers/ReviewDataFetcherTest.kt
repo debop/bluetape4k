@@ -18,11 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 
 class ReviewDataFetcherTest(
-    @Autowired private val dgsQueryExecutor: DgsQueryExecutor
+    @Autowired private val dgsQueryExecutor: DgsQueryExecutor,
 ): AbstractDgsTest() {
 
     companion object: KLogging()
 
+    @Suppress("DEPRECATION")
     @Test
     fun `get reviews by date range`() {
         val scalars: Map<Class<*>, Coercing<*, *>> = mapOf(DateRange::class.java to DateRangeScalar())

@@ -25,6 +25,6 @@ class ShowDataFetcher(private val showService: ShowService) {
             ?.let {
                 showService.shows().filter { it.title.contains(titleFilter) }
             }
-        ?: showService.shows()
+            ?: showService.shows()
     }
 }

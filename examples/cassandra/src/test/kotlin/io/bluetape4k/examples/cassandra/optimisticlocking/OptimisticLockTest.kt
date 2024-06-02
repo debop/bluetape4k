@@ -4,9 +4,8 @@ import io.bluetape4k.examples.cassandra.AbstractCassandraCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.spring.cassandra.cql.updateOptions
-import io.bluetape4k.spring.cassandra.insertSuspending
 import io.bluetape4k.spring.cassandra.query.eq
-import io.bluetape4k.spring.cassandra.updateSuspending
+import kotlinx.coroutines.reactor.awaitSingle
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeGreaterThan
@@ -99,24 +98,25 @@ class OptimisticLockTest @Autowired constructor(
     fun `update using lightweight transactions in coroutines`() = runSuspendWithIO {
         val person = SimplePerson(42L, "bart")
 
-        reactiveOps.insertSuspending(person)
+        reactiveOps.insert(person).awaitSingle()
 
-        val success = reactiveOps.updateSuspending(
+        val success = reactiveOps.update(
             person,
             updateOptions {
                 ifCondition(Criteria.where("name").eq("bart")).build()
             }
-        )
+        ).awaitSingle()
 
         success.wasApplied().shouldBeTrue()
 
         // person 으로 Update 하려는데, id=42L 이고 name="homer" 인 row 는 없다
-        val failed = reactiveOps.updateSuspending(
+        val failed = reactiveOps.update(
             person,
             updateOptions {
                 ifCondition(Criteria.where("name").eq("homer")).build()
             }
-        )
+        ).awaitSingle()
+
         // Update가 되지 않았음
         failed.wasApplied().shouldBeFalse()
     }

@@ -37,7 +37,7 @@ class JwtComposerTest: AbstractJwtTest() {
     @Test
     fun `JwtComposer 생성하기`() {
         composer.header("x-author", "debop")
-        composer.claim("service", "kommons")
+        composer.claim("service", LibraryName)
         composer.expirationAfterMinutes(60L)
 
         val jwt = composer.compose()

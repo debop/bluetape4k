@@ -5,8 +5,7 @@ import com.datastax.oss.driver.api.core.cql.Row
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder.insertInto
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder.selectFrom
-import io.bluetape4k.collections.eclipse.fastList
-import io.bluetape4k.data.cassandra.querybuilder.literal
+import io.bluetape4k.cassandra.querybuilder.literal
 import io.bluetape4k.examples.cassandra.AbstractCassandraCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
@@ -69,7 +68,7 @@ class CoroutineCassandraOperationsTest(
 
     @Test
     fun `insert and update`() = runSuspendWithIO {
-        val user = BasicUser(42L, faker.name().username(), faker.name().firstName(), faker.name().lastName())
+        val user = BasicUser(42L, faker.internet().username(), faker.name().firstName(), faker.name().lastName())
         operations.insertSuspending(user)
 
         val updated = user.copy(firstname = faker.name().firstName())
@@ -81,7 +80,7 @@ class CoroutineCassandraOperationsTest(
 
     @Test
     fun `insert in coroutines`() = runSuspendWithIO {
-        val users = fastList(100) {
+        val users = List(100) {
             BasicUser(
                 it.toLong(),
                 "uname-$it",
@@ -100,7 +99,7 @@ class CoroutineCassandraOperationsTest(
 
     @Test
     fun `select async projections`() = runSuspendWithIO {
-        val user = BasicUser(42L, faker.name().username(), faker.name().firstName(), faker.name().lastName())
+        val user = BasicUser(42L, faker.internet().username(), faker.name().firstName(), faker.name().lastName())
         operations.insertSuspending(user)
 
         val id = operations.selectOneSuspending<Long>(selectFrom(USER_TABLE).column("user_id").build())!!

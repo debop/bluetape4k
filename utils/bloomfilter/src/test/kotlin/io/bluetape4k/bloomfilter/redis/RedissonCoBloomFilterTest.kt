@@ -1,5 +1,6 @@
 package io.bluetape4k.bloomfilter.redis
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -20,7 +21,7 @@ class RedissonCoBloomFilterTest: AbstractRedissonTest() {
     }
 
     private val bloomFilter: RedissonCoBloomFilter<String> by lazy {
-        RedissonCoBloomFilter(redisson, "kommons:bloomfilter:test")
+        RedissonCoBloomFilter(redisson, "$LibraryName:bloomfilter:test")
     }
 
     @BeforeEach

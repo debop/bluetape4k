@@ -3,10 +3,14 @@ configurations {
 }
 
 dependencies {
-    testImplementation(project(":bluetape4k-core"))
+    implementation(project(":bluetape4k-core"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Jackson
     testImplementation(project(":bluetape4k-json"))
     testImplementation(Libs.jackson_module_kotlin)
+
+    // Coroutines
+    api(Libs.kotlinx_coroutines_core)
+    testImplementation(Libs.kotlinx_coroutines_test)
 }

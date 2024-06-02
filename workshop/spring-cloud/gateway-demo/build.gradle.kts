@@ -33,6 +33,7 @@ dependencies {
     api(project(":bluetape4k-redis"))
     api(Libs.lettuce_core)
     implementation(project(":bluetape4k-testcontainers"))
+    implementation(Libs.testcontainers)
 
     api(Libs.jakarta_servlet_api)
 

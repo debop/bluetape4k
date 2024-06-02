@@ -10,7 +10,7 @@ import io.vertx.ext.web.codec.BodyCodec
 import io.vertx.junit5.VertxExtension
 import io.vertx.junit5.VertxTestContext
 import io.vertx.kotlin.coroutines.CoroutineVerticle
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -29,20 +29,20 @@ class CoroutineExamples {
                     req.response().end("Hello Coroutines!")
                 }
                 .listen(port)
-                .await()
+                .coAwait()
         }
     }
 
     @Test
     fun `use webclient to simple server`(vertx: Vertx, testContext: VertxTestContext) = runSuspendTest {
         vertx.withTestContextSuspending(testContext) {
-            vertx.deployVerticle(CoroutineServer()).await()
+            vertx.deployVerticle(CoroutineServer()).coAwait()
 
             val client = WebClient.create(vertx)
             val response = client.get(port, "localhost", "/")
                 .`as`(BodyCodec.string())
                 .send()
-                .await()
+                .coAwait()
 
             log.debug { "Response body=${response.body()}" }
             response.body() shouldBeEqualTo "Hello Coroutines!"

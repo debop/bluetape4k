@@ -1,13 +1,14 @@
 package io.bluetape4k.spring.retrofit2
 
 import com.fasterxml.jackson.databind.json.JsonMapper
-import io.bluetape4k.infra.micrometer.instrument.retrofit2.MicrometerRetrofitMetricsFactory
-import io.bluetape4k.io.http.vertx.vertxHttpClientOf
-import io.bluetape4k.io.json.jackson.Jackson
-import io.bluetape4k.io.retrofit2.clients.vertx.VertxCallFactory
-import io.bluetape4k.io.retrofit2.clients.vertx.vertxCallFactoryOf
+import io.bluetape4k.http.vertx.vertxHttpClientOf
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.micrometer.instrument.retrofit2.MicrometerRetrofitMetricsFactory
+import io.bluetape4k.retrofit2.clients.ahc.asyncHttpClientCallFactory
+import io.bluetape4k.retrofit2.clients.vertx.VertxCallFactory
+import io.bluetape4k.retrofit2.clients.vertx.vertxCallFactoryOf
 import io.micrometer.core.instrument.MeterRegistry
 import org.asynchttpclient.AsyncHttpClient
 import org.asynchttpclient.Dsl
@@ -47,7 +48,7 @@ class DefaultRetrofitClientConfiguration {
     @ConditionalOnClass(AsyncHttpClientCallFactory::class)
     fun asyncHttpClientCallFactory(asyncHttpClient: AsyncHttpClient): okhttp3.Call.Factory {
         log.debug { "Create AsyncHttpClientCallFactory" }
-        return io.bluetape4k.io.retrofit2.clients.ahc.asyncHttpClientCallFactory {
+        return asyncHttpClientCallFactory {
             httpClientSupplier { asyncHttpClient }
         }
     }

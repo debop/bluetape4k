@@ -2,11 +2,11 @@ package io.bluetape4k.openai.api.models.image
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import io.bluetape4k.core.requireNotNull
 import io.bluetape4k.openai.api.annotations.BetaOpenAI
 import io.bluetape4k.openai.api.annotations.OpenAIDsl
 import io.bluetape4k.openai.api.models.ModelBuilder
 import io.bluetape4k.openai.api.models.file.FileSource
+import io.bluetape4k.support.requireNotNull
 import java.io.Serializable
 
 @BetaOpenAI

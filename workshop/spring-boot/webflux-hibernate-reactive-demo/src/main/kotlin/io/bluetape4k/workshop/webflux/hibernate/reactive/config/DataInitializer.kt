@@ -1,21 +1,21 @@
 package io.bluetape4k.workshop.webflux.hibernate.reactive.config
 
-import io.bluetape4k.data.hibernate.reactive.mutiny.asMutinySessionFactory
-import io.bluetape4k.data.hibernate.reactive.mutiny.createQueryAs
-import io.bluetape4k.data.hibernate.reactive.mutiny.withSessionSuspending
-import io.bluetape4k.data.hibernate.reactive.mutiny.withTransactionSuspending
+import io.bluetape4k.hibernate.reactive.mutiny.asMutinySessionFactory
+import io.bluetape4k.hibernate.reactive.mutiny.createQueryAs
+import io.bluetape4k.hibernate.reactive.mutiny.withSessionSuspending
+import io.bluetape4k.hibernate.reactive.mutiny.withTransactionSuspending
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import io.bluetape4k.workshop.webflux.hibernate.reactive.model.City
 import io.bluetape4k.workshop.webflux.hibernate.reactive.model.Customer
 import io.smallrye.mutiny.coroutines.awaitSuspending
+import jakarta.persistence.EntityManagerFactory
 import kotlinx.coroutines.runBlocking
 import org.hibernate.reactive.mutiny.Mutiny
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.stereotype.Component
-import jakarta.persistence.EntityManagerFactory
 
 @Component
 class DataInitializer(

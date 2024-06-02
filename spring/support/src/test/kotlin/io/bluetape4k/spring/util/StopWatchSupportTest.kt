@@ -25,7 +25,7 @@ class StopWatchSupportTest {
 
     @Test
     fun `run with StopWatch with coroutines`() = runSuspendTest {
-        val sw = withStopWatch("async") {
+        val sw = withStopWatch("coroutines") {
             delay(100)
             print("block")
         }

@@ -1,6 +1,5 @@
 package io.bluetape4k.examples.cassandra.auditing
 
-import io.bluetape4k.examples.cassandra.AbstractCassandraCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import org.amshove.kluent.shouldBeAfter
@@ -16,7 +15,7 @@ import java.time.Instant
 @SpringBootTest(classes = [AuditingTestConfiguration::class])
 class AuditingTest(
     @Autowired private val repository: AuditedPersonRepository,
-): AbstractCassandraCoroutineTest("auditing") {
+): io.bluetape4k.examples.cassandra.AbstractCassandraCoroutineTest("auditing") {
 
     companion object: KLogging() {
         const val ACTOR = AuditingTestConfiguration.ACTOR

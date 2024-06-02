@@ -1,5 +1,6 @@
 package io.bluetape4k.jwt.provider.cache
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.jwt.provider.AbstractJwtProviderTest
 import io.bluetape4k.jwt.provider.JwtProvider
 import io.bluetape4k.jwt.provider.JwtProviderFactory
@@ -17,7 +18,7 @@ class RedissonJwtProviderTest: AbstractJwtProviderTest() {
     }
 
     private val readerCache by lazy {
-        redissonClient.getMapCache<String, JwtReaderDto>("kommons:jwt:reaer", LZ4Codec())
+        redissonClient.getMapCache<String, JwtReaderDto>("$LibraryName:jwt:reaer", LZ4Codec())
     }
 
     private val delegate = JwtProviderFactory.default(keyChainRepository = repository)

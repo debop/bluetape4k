@@ -1,8 +1,5 @@
 package io.bluetape4k.workshop.graphql.dgs.services
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
@@ -36,14 +33,14 @@ interface ReviewService {
  */
 @Service
 class DefaultReviewService(
-    @Autowired private val showService: ShowService
+    @Autowired private val showService: ShowService,
 ): ReviewService, InitializingBean {
 
     companion object: KLogging() {
         val faker = Faker()
     }
 
-    private val reviews: MutableMap<Int, MutableList<Review>> = unifiedMapOf()
+    private val reviews: MutableMap<Int, MutableList<Review>> = mutableMapOf()
     private lateinit var reviewStream: FluxSink<Review>
     private lateinit var reviewPublisher: Publisher<Review>
 
@@ -52,7 +49,7 @@ class DefaultReviewService(
      */
     override fun reviewsForShow(showId: Int): List<Review> {
         log.debug { "Reviews for show [$showId]" }
-        return reviews.computeIfAbsent(showId) { fastListOf() }
+        return reviews.computeIfAbsent(showId) { mutableListOf() }
     }
 
     /**
@@ -67,7 +64,7 @@ class DefaultReviewService(
     override fun saveReview(reviewInput: SubmittedReview) {
         log.debug { "Save review request. submitted review=$reviewInput" }
 
-        val reviewsForMoview = reviews.getOrPut(reviewInput.showId) { fastListOf() }
+        val reviewsForMoview = reviews.computeIfAbsent(reviewInput.showId) { mutableListOf() }
         val review = Review(
             username = reviewInput.username,
             starScore = reviewInput.starScore,
@@ -89,21 +86,22 @@ class DefaultReviewService(
             // 모든 Show에 대해 랜덤한 수의 Review를 생성해둔다
             showService.shows().forEach { show ->
                 val range = 0..faker.number().numberBetween(1, 20)
-                val generatedReviews = range.map {
-                    val date = faker.date().past(300, TimeUnit.DAYS).toLocalDateTime()
-                    Review(
-                        username = faker.name().username(),
-                        starScore = faker.number().numberBetween(0, 6),
-                        submittedDate = OffsetDateTime.of(date, ZoneOffset.UTC)
-                    )
+                val generatedReviews = {
+                    range.map {
+                        val date = faker.date().past(300, TimeUnit.DAYS).toLocalDateTime()
+                        Review(
+                            username = faker.internet().username(),
+                            starScore = faker.number().numberBetween(0, 6),
+                            submittedDate = OffsetDateTime.of(date, ZoneOffset.UTC)
+                        )
+                    }.toMutableList()
                 }
-                    .toFastList()
 
-                reviews.getOrPut(show.id) { generatedReviews }
+                reviews.computeIfAbsent(show.id) { generatedReviews() }
             }
 
             // reviewStream 에 Review를 추가하면, reviewPublisher에서 해당 Review를 받을 수 있다.
-            val publisher = Flux.create<Review> { emitter ->
+            val publisher = Flux.create { emitter ->
                 reviewStream = emitter
             }
             reviewPublisher = publisher.publish().autoConnect()

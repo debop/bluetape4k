@@ -7,7 +7,7 @@ import io.bluetape4k.vertx.sqlclient.tests.testWithTransactionSuspending
 import io.bluetape4k.workshop.sqlclient.AbstractSqlClientTest
 import io.vertx.core.Vertx
 import io.vertx.junit5.VertxTestContext
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.kotlin.coroutines.dispatcher
 import io.vertx.sqlclient.RowSet
 import io.vertx.sqlclient.SqlConnection
@@ -49,8 +49,8 @@ class DataObjectMappingExamples: AbstractSqlClientTest() {
                     .compose {
                         conn.query("INSERT INTO users VALUES (1, 'John', 'Doe'), (2, 'Jane', 'Doe')").execute()
                     }
-            }.await()
-            pool.close().await()
+            }.coAwait()
+            pool.close().coAwait()
         }
     }
 
@@ -61,18 +61,17 @@ class DataObjectMappingExamples: AbstractSqlClientTest() {
     ) = runSuspendWithIO {
         val pool = vertx.getH2Pool()
         vertx.testWithTransactionSuspending(testContext, pool) {
-
             val users: RowSet<UserDataObject> = SqlTemplate
                 .forQuery(pool, "SELECT * FROM users WHERE id=#{id}")
                 .mapTo(UserDataObjectRowMapper.INSTANCE)
                 .execute(mapOf("id" to 1L))
-                .await()
+                .coAwait()
 
             users.size() shouldBeEqualTo 1
             val user = users.first()
             log.debug { "User id=${user.id}, firstName=${user.firstName}, lastName=${user.lastName}" }
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 
     @Disabled("Kotlin 에서 @ParametersMapped 를 이용한 Parrameter Mapping 코드 생성에 문제가 있다.")
@@ -85,20 +84,20 @@ class DataObjectMappingExamples: AbstractSqlClientTest() {
         val pool = vertx.getH2Pool()
         vertx.testWithTransactionSuspending(testContext, pool) {
 
-//            val user = UserDataObject().apply {
-//                id = 42
-//                firstName = "Alien"
-//                lastName = "Lukas"
-//            }
+            //            val user = UserDataObject().apply {
+            //                id = 42
+            //                firstName = "Alien"
+            //                lastName = "Lukas"
+            //            }
 
             // FIXME: Kotlin 에서 @ParametersMapped 를 이용한 Parrameter Mapping 코드 생성에 문제가 있다.
-//            val result = SqlTemplate
-//                .forUpdate(pool, "INSERT INTO users VALUES (#{id}, #{firstName}, #{lastName})")
-//                .mapFrom(UserDataObjectParametersMapper.INSTANCE)
-//                .execute(user)
-//                .await()
+            //            val result = SqlTemplate
+            //                .forUpdate(pool, "INSERT INTO users VALUES (#{id}, #{firstName}, #{lastName})")
+            //                .mapFrom(UserDataObjectParametersMapper.INSTANCE)
+            //                .execute(user)
+            //                .coAwait()
 
         }
-        pool.close().await()
+        pool.close().coAwait()
     }
 }

@@ -1,14 +1,14 @@
 package io.bluetape4k.examples.redisson.coroutines.readwritethrough
 
-import io.bluetape4k.data.jdbc.sql.extract
-import io.bluetape4k.data.jdbc.sql.runQuery
-import io.bluetape4k.data.jdbc.sql.withConnect
-import io.bluetape4k.data.redis.redisson.coroutines.awaitSuspending
 import io.bluetape4k.examples.redisson.coroutines.AbstractRedissonCoroutineTest
+import io.bluetape4k.jdbc.sql.extract
+import io.bluetape4k.jdbc.sql.runQuery
+import io.bluetape4k.jdbc.sql.withConnect
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
+import io.bluetape4k.redis.redisson.coroutines.coAwait
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import org.amshove.kluent.shouldBeEqualTo
@@ -25,10 +25,10 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.extension.ExtendWith
-import org.redisson.api.MapCacheOptions
-import org.redisson.api.MapOptions
 import org.redisson.api.map.MapLoader
 import org.redisson.api.map.MapWriter
+import org.redisson.api.map.WriteMode
+import org.redisson.api.options.MapCacheOptions
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -118,13 +118,14 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
                     ps.setInt(1, key)
                     val resultSet = ps.executeQuery()
 
-                    resultSet.extract {
-                        Actor(
-                            int[Actor::id.name]!!,
-                            string[Actor::firstname.name]!!,
-                            string[Actor::lastname.name]!!
-                        )
-                    }
+                    resultSet
+                        .extract {
+                            Actor(
+                                int[Actor::id.name]!!,
+                                string[Actor::firstname.name]!!,
+                                string[Actor::lastname.name]!!
+                            )
+                        }
                 }
             }.firstOrNull()
         }
@@ -142,11 +143,12 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
     @Test
     @Order(0)
     fun `read through by redisson map`() {
-        val options = MapCacheOptions.defaults<Int, Actor>()
+        val name = randomName()
+        val options = MapCacheOptions.name<Int, Actor>(name)
             .loader(actorLoader)
 
         // DB에 5개의 record가 있고, Redis에는 아무 것도 없다
-        val map = redisson.getMapCache(randomName(), options)
+        val map = redisson.getMapCache(options)
 
         // Id=1 을 read through 로 메모리에 올린다.
         map[1] shouldBeEqualTo Actor(1, "Sunghyouk", "Bae")
@@ -183,13 +185,14 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
     @Test
     @Order(1)
     fun `write through by redisson map`() {
-        val options = MapCacheOptions.defaults<Int, Actor>()
+        val name = randomName()
+        val options = MapCacheOptions.name<Int, Actor>(name)
             .loader(actorLoader)
             .writer(actorWriter)
-            .writeMode(MapOptions.WriteMode.WRITE_THROUGH)   // 추가될 때마다 즉시 DB에 저장된다.
+            .writeMode(WriteMode.WRITE_THROUGH)   // 추가될 때마다 즉시 DB에 저장된다.
 
         // DB에 5개의 record가 있고, Redis에는 아무 것도 없다
-        val map = redisson.getMapCache(randomName(), options)
+        val map = redisson.getMapCache(options)
 
         // write through 로 redis -> db 로 저장한다
         repeat(ACTOR_SIZE) {
@@ -211,15 +214,16 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
     @Test
     @Order(2)
     fun `write behind by redisson map`() {
-        val options = MapCacheOptions.defaults<Int, Actor>()
+        val name = randomName()
+        val options = MapCacheOptions.name<Int, Actor>(name)
             .loader(actorLoader)
             .writer(actorWriter)
-            .writeMode(MapOptions.WriteMode.WRITE_BEHIND)   // delay를 두고, batch로 insert 한다
+            .writeMode(WriteMode.WRITE_BEHIND)   // delay를 두고, batch로 insert 한다
             .writeBehindBatchSize(20)           // batch size (기본 50)
             .writeBehindDelay(100)  // 기본 delay 는 1초이다
 
         // DB에 5개의 record가 있고, Redis에는 아무 것도 없다
-        val map = redisson.getMapCache(randomName(), options)
+        val map = redisson.getMapCache(options)
 
         // write through 로 redis 에 저장하고, delay 후 batch 로 db에 저장한다
         val prevActorCount = getActorCountFromDB()
@@ -257,20 +261,21 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
     @Test
     @Order(4)
     fun `read write through with coroutines`() = runSuspendWithIO {
-        val options = MapCacheOptions.defaults<Int, Actor>()
+        val name = randomName()
+        val options = MapCacheOptions.name<Int, Actor>(name)
             .loader(actorLoader)
             .writer(actorWriter)
-            .writeMode(MapOptions.WriteMode.WRITE_THROUGH)   // 추가될 때마다 즉시 DB에 저장된다.
+            .writeMode(WriteMode.WRITE_THROUGH)   // 추가될 때마다 즉시 DB에 저장된다.
 
         // DB에 5개의 record가 있고, Redis에는 아무 것도 없다
-        val map = redisson.getMapCache(randomName(), options)
+        val map = redisson.getMapCache(options)
 
         // write through 로 redis -> db 로 저장한다
         val insertJobs = List(ACTOR_SIZE) {
-            scope.launch {
+            launch {
                 val id = 300_000 + it
                 val actor = newActor(id)
-                map.fastPutAsync(id, actor).awaitSuspending().shouldBeTrue()
+                map.fastPutAsync(id, actor).coAwait().shouldBeTrue()
             }
         }
         insertJobs.joinAll()
@@ -279,37 +284,38 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
 
         // 메모리에서 가져온다
         val checkJob = List(ACTOR_SIZE) {
-            scope.launch {
+            launch {
                 val id = 300_000 + it
-                map.getAsync(id).awaitSuspending().shouldNotBeNull()
+                map.getAsync(id).coAwait().shouldNotBeNull()
             }
         }
         checkJob.joinAll()
 
-        map.deleteAsync().awaitSuspending()
+        map.deleteAsync().coAwait()
     }
 
     @Test
     @Order(4)
     fun `read write behind with coroutines`() = runSuspendWithIO {
-        val options = MapCacheOptions.defaults<Int, Actor>()
+        val name = randomName()
+        val options = MapCacheOptions.name<Int, Actor>(name)
             .loader(actorLoader)
             .writer(actorWriter)
-            .writeMode(MapOptions.WriteMode.WRITE_BEHIND)   // delay를 두고, batch로 insert 한다
+            .writeMode(WriteMode.WRITE_BEHIND)   // delay를 두고, batch로 insert 한다
             .writeBehindBatchSize(20)           // batch size (기본 50)
             .writeBehindDelay(100)  // 기본 delay 는 1초이다
 
         // DB에 5개의 record가 있고, Redis에는 아무 것도 없다
-        val map = redisson.getMapCache(randomName(), options)
+        val map = redisson.getMapCache(options)
 
         // write through 로 redis 에 저장하고, delay 후 batch 로 db에 저장한다
         val prevActorCount = getActorCountFromDB()
         // write through 로 redis -> db 로 저장한다
         val insertJobs = List(ACTOR_SIZE) {
-            scope.launch {
+            launch {
                 val id = 400_000 + it
                 val actor = newActor(id)
-                map.fastPutAsync(id, actor).awaitSuspending().shouldBeTrue()
+                map.fastPutAsync(id, actor).coAwait().shouldBeTrue()
             }
         }
         insertJobs.joinAll()
@@ -321,13 +327,13 @@ class MapReadWriteThroughTest: AbstractRedissonCoroutineTest() {
 
         // 메모리에서 가져온다
         val checkJob = List(ACTOR_SIZE) {
-            scope.launch {
+            launch {
                 val id = 400_000 + it
-                map.getAsync(id).awaitSuspending().shouldNotBeNull()
+                map.getAsync(id).coAwait().shouldNotBeNull()
             }
         }
         checkJob.joinAll()
 
-        map.deleteAsync().awaitSuspending()
+        map.deleteAsync().coAwait()
     }
 }

@@ -1,29 +1,23 @@
 package io.bluetape4k.tokenizer.korean.utils
 
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.toUnifiedSet
-import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.tokenizer.korean.init
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanToken
-import io.bluetape4k.tokenizer.korean.utils.Hangul.HangulChar
 import io.bluetape4k.tokenizer.korean.utils.Hangul.composeHangul
 import io.bluetape4k.tokenizer.korean.utils.Hangul.hasCoda
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
-import java.io.Serializable
-
 
 /**
  * 한글 명사와 조사를 위한 Helper Class
  */
-object KoreanSubstantive: KLogging(), Serializable {
+object KoreanSubstantive: KLogging() {
 
-    private val JOSA_HEAD_FOR_CODA = unifiedSetOf('은', '이', '을', '과', '아')
-    private val JOSA_HEAD_FOR_NO_CODA = unifiedSetOf('는', '가', '를', '와', '야', '여', '라')
+    private val JOSA_HEAD_FOR_CODA = setOf('은', '이', '을', '과', '아')
+    private val JOSA_HEAD_FOR_NO_CODA = setOf('는', '가', '를', '와', '야', '여', '라')
 
-    fun isJosaAttachable(prevChar: Char, headChar: Char): Boolean =
-        (hasCoda(prevChar) && headChar !in JOSA_HEAD_FOR_NO_CODA) ||
-            (!hasCoda(prevChar) && headChar !in JOSA_HEAD_FOR_CODA)
+    fun isJosaAttachable(prevChar: Char, headChar: Char): Boolean {
+        return (hasCoda(prevChar) && headChar !in JOSA_HEAD_FOR_NO_CODA) ||
+                (!hasCoda(prevChar) && headChar !in JOSA_HEAD_FOR_CODA)
+    }
 
     //  fun isName(str: String): Boolean = isName(str as CharSequence)
 
@@ -34,17 +28,17 @@ object KoreanSubstantive: KLogging(), Serializable {
 
         return when (chunk.length) {
             3    -> nameDictionaryContains("family_name", chunk[0].toString()) &&
-                nameDictionaryContains("given_name", chunk.subSequence(1, 3).toString())
+                    nameDictionaryContains("given_name", chunk.subSequence(1, 3).toString())
 
             4    -> nameDictionaryContains("family_name", chunk.subSequence(0, 2).toString()) &&
-                nameDictionaryContains("given_name", chunk.subSequence(2, 4).toString())
+                    nameDictionaryContains("given_name", chunk.subSequence(2, 4).toString())
 
             else -> false
         }
     }
 
-    private val NUMBER_CHARS = "일이삼사오육칠팔구천백십해경조억만".map { it.code }.toUnifiedSet()
-    private val NUMBER_LAST_CHARS = "일이삼사오육칠팔구천백십해경조억만원배분초".map { it.code }.toUnifiedSet()
+    private val NUMBER_CHARS = "일이삼사오육칠팔구천백십해경조억만".map { it.code }.toSet()
+    private val NUMBER_LAST_CHARS = "일이삼사오육칠팔구천백십해경조억만원배분초".map { it.code }.toSet()
 
     fun isKoreanNumber(chunk: CharSequence): Boolean =
         (0 until chunk.length).fold(true) { output, i ->
@@ -71,7 +65,7 @@ object KoreanSubstantive: KLogging(), Serializable {
             return false
         }
 
-        val decomposed: List<HangulChar> = s.map(Hangul::decomposeHangul)
+        val decomposed: List<Hangul.HangulChar> = s.map(Hangul::decomposeHangul)
         val lastChar = decomposed.last()
         if (lastChar.onset !in Hangul.CODA_MAP.keys) return false
         if (lastChar.onset == 'ㅇ' || lastChar.vowel != 'ㅣ' || lastChar.coda != ' ') return false
@@ -86,8 +80,7 @@ object KoreanSubstantive: KLogging(), Serializable {
             }
         }.joinToString("")
 
-        return fastListOf(recovered, recovered.init()).anySatisfy(::isName)
-        // return fastListOf(recovered, recovered.init()).any { isName(it) }
+        return listOf(recovered, recovered.init()).any { isName(it) }
     }
 
     /**
@@ -97,7 +90,7 @@ object KoreanSubstantive: KLogging(), Serializable {
      * @return sequence of collapsed KoreanTokens
      */
     fun collapseNouns(posNodes: Iterable<KoreanToken>): List<KoreanToken> {
-        val nodes = fastListOf<KoreanToken>()
+        val nodes = mutableListOf<KoreanToken>()
         var collapsing = false
 
         posNodes.forEach {
@@ -114,6 +107,6 @@ object KoreanSubstantive: KLogging(), Serializable {
                 collapsing = false
             }
         }
-        return nodes.reverseThis()
+        return nodes.reversed()
     }
 }

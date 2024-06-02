@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter
  */
 data class DateRange(
     val start: LocalDate,
-    val end: LocalDate
+    val end: LocalDate,
 ): Serializable {
     companion object: KLogging() {
         const val RANGE_SEPARATOR = ".."

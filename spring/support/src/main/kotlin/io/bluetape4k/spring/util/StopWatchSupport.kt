@@ -11,7 +11,7 @@ private val log = KotlinLogging.logger { }
  * 지정한 body를 실행할 때, [StopWatch]를 이용하여 실행시간을 측정합니다.
  *
  * ```kotlin
- * val sw = withStopWatch("async") {
+ * val sw = withStopWatch("coroutines") {
  *     delay(100)
  * }
  * println(sw.prettyPrint())

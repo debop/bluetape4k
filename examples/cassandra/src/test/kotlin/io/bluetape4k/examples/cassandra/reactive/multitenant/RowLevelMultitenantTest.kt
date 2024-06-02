@@ -1,9 +1,9 @@
 package io.bluetape4k.examples.cassandra.reactive.multitenant
 
-import io.bluetape4k.coroutines.flow.eclipse.toFastList
 import io.bluetape4k.examples.cassandra.AbstractCassandraCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.amshove.kluent.shouldBeEqualTo
@@ -30,7 +30,7 @@ class RowLevelMultitenantTest(
     fun setup() = runSuspendWithIO {
         repository.deleteAll().awaitSingleOrNull()
 
-        val saved = repository.saveAll(employees).asFlow().toFastList()
+        val saved = repository.saveAll(employees).asFlow().toList()
         saved.size shouldBeEqualTo employees.size
     }
 
@@ -41,7 +41,7 @@ class RowLevelMultitenantTest(
         val loaded = repository.findAllByName("Hank")
             .contextWrite(Context.of(Tenant::class.java, Tenant("breaking-bad")))
             .asFlow()
-            .toFastList()
+            .toList()
 
         loaded.size shouldBeEqualTo 2
         loaded.first().tenantId shouldBeEqualTo "breaking-bad"

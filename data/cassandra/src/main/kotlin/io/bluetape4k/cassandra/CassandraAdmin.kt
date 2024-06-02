@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.CqlSession
 import com.datastax.oss.driver.api.core.Version
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
@@ -11,7 +12,7 @@ import io.bluetape4k.support.requireNotBlank
 
 object CassandraAdmin: KLogging() {
 
-    private const val DEFAULT_KEYSPACE = "kommons"
+    private const val DEFAULT_KEYSPACE = LibraryName
     private const val DEFAULT_REPLICATION_FACTOR = 1
 
     fun createKeyspace(

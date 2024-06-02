@@ -3,6 +3,7 @@ package io.bluetape4k.tokenizer.korean.utils
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.tokenizer.korean.TestBase
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
+import io.bluetape4k.tokenizer.utils.CharArraySet
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeEmpty

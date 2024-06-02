@@ -1,4 +1,4 @@
-# mongo-coroutine demo
+# mongo-transactions demo
 
 MongoDB 관련 작업을 `Spring Data Mongo` 와 Kotlin Coroutines 으로 수행하는 예입니다.
 

@@ -1,13 +1,13 @@
 package io.bluetape4k.spring.retrofit2
 
-import io.bluetape4k.core.requireNotBlank
-import io.bluetape4k.core.requireNotNull
-import io.bluetape4k.io.retrofit2.clients.ahc.asyncHttpClientCallFactory
-import io.bluetape4k.io.retrofit2.clients.vertx.vertxCallFactoryOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
+import io.bluetape4k.retrofit2.clients.ahc.asyncHttpClientCallFactory
+import io.bluetape4k.retrofit2.clients.vertx.vertxCallFactoryOf
 import io.bluetape4k.support.classIsPresent
+import io.bluetape4k.support.requireNotBlank
+import io.bluetape4k.support.requireNotNull
 import io.bluetape4k.support.uninitialized
 import okhttp3.Call
 import okhttp3.OkHttpClient

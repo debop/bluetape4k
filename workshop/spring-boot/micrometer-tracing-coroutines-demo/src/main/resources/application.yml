@@ -1,0 +1,43 @@
+spring:
+    application.name: micrometer-tracing-coroutines-demo
+    codec:
+        max-in-memory-size: 10MB
+    jackson:
+        serialization:
+            indent_output: true
+
+    output:
+        ansi:
+            enabled: always
+
+info:
+    name: ${spring.application.name}
+    description: micrometer-tracing-coroutines-demo
+    environment: ${spring.profiles.active}
+    version: 0.0.1
+
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+    endpoint:
+        health:
+            show-details: always
+
+    metrics:
+        tags:
+            application: ${spring.application.name}
+        distribution:
+            percentiles-histogram:
+                http.server.requests: true
+    health:
+        diskspace.enabled: false
+
+    tracing:
+        enabled: true
+        sampling:
+            probability: 1.0
+
+    zipkin.tracing.endpoint: ${testcontainers.zipkin.url}/api/v2/spans

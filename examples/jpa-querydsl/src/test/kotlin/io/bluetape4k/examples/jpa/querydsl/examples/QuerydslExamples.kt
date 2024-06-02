@@ -8,11 +8,6 @@ import com.querydsl.core.types.dsl.CaseBuilder
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
-import io.bluetape4k.data.hibernate.isLoaded
-import io.bluetape4k.data.hibernate.querydsl.core.minus
-import io.bluetape4k.data.hibernate.querydsl.core.numberPathOf
-import io.bluetape4k.data.hibernate.querydsl.core.plus
-import io.bluetape4k.data.hibernate.querydsl.core.simplePathOf
 import io.bluetape4k.examples.jpa.querydsl.AbstractQuerydslTest
 import io.bluetape4k.examples.jpa.querydsl.domain.dto.MemberDto
 import io.bluetape4k.examples.jpa.querydsl.domain.dto.MemberTeamDto
@@ -24,6 +19,11 @@ import io.bluetape4k.examples.jpa.querydsl.domain.model.Member
 import io.bluetape4k.examples.jpa.querydsl.domain.model.QMember
 import io.bluetape4k.examples.jpa.querydsl.domain.model.QTeam
 import io.bluetape4k.examples.jpa.querydsl.domain.model.Team
+import io.bluetape4k.hibernate.isLoaded
+import io.bluetape4k.hibernate.querydsl.core.minus
+import io.bluetape4k.hibernate.querydsl.core.numberPathOf
+import io.bluetape4k.hibernate.querydsl.core.plus
+import io.bluetape4k.hibernate.querydsl.core.simplePathOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import org.amshove.kluent.shouldBeEqualTo
@@ -159,7 +159,7 @@ class QuerydslExamples: AbstractQuerydslTest() {
                 null,
             )
             .orderBy(qmember.id.asc())
-            .fetchFirst()
+            .fetchFirst()!!
 
         member.name shouldBeEqualTo "member-1"
         log.debug { "member=$member" }
@@ -425,7 +425,7 @@ class QuerydslExamples: AbstractQuerydslTest() {
         val member = queryFactory
             .selectFrom(qmember)
             .where(qmember.age.eq(subquery))
-            .fetchFirst()
+            .fetchFirst()!!
 
         member.age shouldBeEqualTo 40
     }

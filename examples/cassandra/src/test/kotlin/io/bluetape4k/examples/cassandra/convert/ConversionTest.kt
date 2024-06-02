@@ -2,15 +2,14 @@ package io.bluetape4k.examples.cassandra.convert
 
 import com.datastax.oss.driver.api.core.cql.Row
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder.selectFrom
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.data.cassandra.data.getList
+import io.bluetape4k.cassandra.data.getList
 import io.bluetape4k.examples.cassandra.AbstractCassandraCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.spring.cassandra.insertSuspending
-import io.bluetape4k.spring.cassandra.selectOneSuspending
-import io.bluetape4k.spring.cassandra.truncateSuspending
+import io.bluetape4k.spring.cassandra.selectOne
+import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldNotBeNull
@@ -19,6 +18,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.cassandra.core.ReactiveCassandraOperations
+import org.springframework.data.cassandra.core.truncate
 import java.util.*
 
 @SpringBootTest(classes = [ConversionTestConfiguration::class])
@@ -35,12 +35,12 @@ class ConversionTest(
         Addressbook(
             id = "private",
             me = Contact(faker.name().firstName(), faker.name().lastName()),
-            friends = fastListOf(newContact(), newContact())
+            friends = mutableListOf(newContact(), newContact())
         )
 
     @BeforeEach
     fun setup() = runSuspendTest {
-        operations.truncateSuspending<Addressbook>()
+        operations.truncate<Addressbook>().awaitSingleOrNull()
     }
 
     @Test
@@ -53,11 +53,11 @@ class ConversionTest(
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),
-            friends = fastListOf(newContact(), newContact())
+            friends = mutableListOf(newContact(), newContact())
         )
-        operations.insertSuspending(addressbook)
+        operations.insert(addressbook).awaitSingle()
 
-        val row = operations.selectOneSuspending<Row>(selectFrom("addressbook").all().build())!!
+        val row = operations.selectOne<Row>(selectFrom("addressbook").all().build()).awaitSingle()
 
         row.getString("id") shouldBeEqualTo "private"
         row.getString("me")!! shouldContain """"firstname":"Debop""""
@@ -69,11 +69,11 @@ class ConversionTest(
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),
-            friends = fastListOf(newContact(), newContact())
+            friends = mutableListOf(newContact(), newContact())
         )
-        operations.insertSuspending(addressbook)
+        operations.insert(addressbook).awaitSingle()
 
-        val loaded = operations.selectOneSuspending<Addressbook>(selectFrom("addressbook").all().build())!!
+        val loaded = operations.selectOne<Addressbook>(selectFrom("addressbook").all().build()).awaitSingle()
 
         loaded.me shouldBeEqualTo addressbook.me
         loaded.friends shouldBeEqualTo addressbook.friends
@@ -84,7 +84,7 @@ class ConversionTest(
         val addressbook = Addressbook(
             id = "private",
             me = Contact("Debop", "Bae"),
-            friends = fastListOf(newContact(), newContact()),
+            friends = mutableListOf(newContact(), newContact()),
             address = Address("165 Misa", "Hanam", "12914"),
             preferredCurrencies = mutableMapOf(
                 1 to Currency.getInstance("USD"),
@@ -92,9 +92,9 @@ class ConversionTest(
             )
         )
 
-        operations.insertSuspending(addressbook)
+        operations.insert(addressbook).awaitSingle()
 
-        val loaded = operations.selectOneSuspending<Addressbook>(selectFrom("addressbook").all().build())!!
+        val loaded = operations.selectOne<Addressbook>(selectFrom("addressbook").all().build()).awaitSingle()
 
         loaded.me shouldBeEqualTo addressbook.me
         loaded.friends shouldBeEqualTo addressbook.friends

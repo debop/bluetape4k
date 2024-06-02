@@ -1,5 +1,6 @@
 package io.bluetape4k.support
 
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.random.RandomValue
 import io.bluetape4k.junit5.random.RandomizedTest
@@ -217,12 +218,12 @@ class StringSupportTest {
 
     @Test
     fun `add prefix if absent`() {
-        val prefix = "kommons."
-        val expected = "kommons.version"
+        val prefix = "$LibraryName."
+        val expected = "$LibraryName.version"
 
         "version".prefixIfAbsent(prefix, true) shouldBeEqualTo expected
-        "kommons.version".prefixIfAbsent(prefix, true) shouldBeEqualTo expected
-        "kommons.version".prefixIfAbsent(prefix, false) shouldBeEqualTo expected
+        "$LibraryName.version".prefixIfAbsent(prefix, true) shouldBeEqualTo expected
+        "$LibraryName.version".prefixIfAbsent(prefix, false) shouldBeEqualTo expected
     }
 
     @Test

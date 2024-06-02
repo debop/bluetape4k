@@ -1,9 +1,9 @@
 package io.bluetape4k.examples.jpa.querydsl.domain.model
 
 import io.bluetape4k.core.ToStringBuilder
-import io.bluetape4k.core.requireNotEmpty
-import io.bluetape4k.data.hibernate.model.LongJpaEntity
+import io.bluetape4k.hibernate.model.LongJpaEntity
 import io.bluetape4k.support.hashOf
+import io.bluetape4k.support.requireNotEmpty
 import jakarta.persistence.Access
 import jakarta.persistence.AccessType
 import jakarta.persistence.Entity
@@ -46,8 +46,8 @@ class Member: LongJpaEntity() {
 
     override fun equalProperties(other: Any): Boolean =
         other is Member &&
-        name == other.name &&
-        age == other.age
+                name == other.name &&
+                age == other.age
 
     override fun equals(other: Any?): Boolean = other != null && super.equals(other)
 

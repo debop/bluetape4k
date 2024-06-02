@@ -41,6 +41,7 @@ dependencies {
     implementation(Libs.webjar("font-awesome", "6.4.0"))
 
     // Coroutines
+    implementation(project(":bluetape4k-coroutines"))
     implementation(Libs.kotlinx_coroutines_core)
     implementation(Libs.kotlinx_coroutines_jdk8)
     implementation(Libs.kotlinx_coroutines_reactor)

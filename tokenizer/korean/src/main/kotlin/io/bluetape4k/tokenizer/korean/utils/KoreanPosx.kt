@@ -1,8 +1,6 @@
 package io.bluetape4k.tokenizer.korean.utils
 
-import io.bluetape4k.collections.eclipse.emptyFastList
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.unifiedSetOf
+import io.bluetape4k.logging.KLogging
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adjective
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adverb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Alpha
@@ -28,10 +26,9 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Suffix
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.URL
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.VerbPrefix
-import java.io.Serializable
 
 
-object KoreanPosx: Serializable {
+object KoreanPosx: KLogging() {
 
     val OtherPoses = hashSetOf(
         Korean,
@@ -69,32 +66,38 @@ object KoreanPosx: Serializable {
         'o' to Others
     )
 
+    private const val PLUS = '+'
+    private const val ANY = '*'
+    private const val ONE = '1'
+    private const val ZERO = '0'
+
     val SelfNode = KoreanPosTrie(curPos = null, nextTrie = null, ending = null)
 
     fun buildTrie(s: String, endingPos: KoreanPos): List<KoreanPosTrie> {
 
         fun isFinal(rest: String): Boolean {
-            fun isNextOptional(): Boolean = rest.fold(true) { output, c ->
-                if (c == '+' || c == '1') false
-                else output
-            }
-            return rest.isEmpty() || isNextOptional()
+            return rest.isEmpty() ||
+                    rest.fold(true) { output, c ->
+                        if (c == '+' || c == '1') false
+                        else output
+                    }
         }
 
+        // 한자라면 Trie 를 빌드하지 않습니다.
         if (s.length < 2) {
-            return emptyFastList()
+            return emptyList()
         }
 
         val pos = shortCut[s[0]]
         val rule = s[1]
-        val rest = s.slice(2 until s.length) // if (s.length > 1) s.slice(2 until s.length) else ""
+        val rest = s.slice(2 until s.length)
         val end = if (isFinal(rest)) endingPos else null
 
         return when (rule) {
-            '+'  -> fastListOf(
+            PLUS -> mutableListOf(
                 KoreanPosTrie(
                     pos,
-                    fastListOf<KoreanPosTrie>().apply {
+                    mutableListOf<KoreanPosTrie>().apply {
                         add(SelfNode)
                         addAll(buildTrie(rest, endingPos))
                     },
@@ -102,28 +105,29 @@ object KoreanPosx: Serializable {
                 )
             )
 
-            '*'  -> fastListOf<KoreanPosTrie>().apply {
-                add(KoreanPosTrie(pos, fastListOf(SelfNode) + buildTrie(rest, endingPos), end))
+            ANY  -> mutableListOf<KoreanPosTrie>().apply {
+                add(KoreanPosTrie(pos, mutableListOf(SelfNode) + buildTrie(rest, endingPos), end))
                 addAll(buildTrie(rest, endingPos))
             }
 
-            '1'  -> fastListOf(KoreanPosTrie(pos, buildTrie(rest, endingPos), end))
-            '0'  -> fastListOf<KoreanPosTrie>().apply {
+            ONE  -> mutableListOf(KoreanPosTrie(pos, buildTrie(rest, endingPos), end))
+            ZERO -> mutableListOf<KoreanPosTrie>().apply {
                 add(KoreanPosTrie(pos, buildTrie(rest, endingPos), end))
                 addAll(buildTrie(rest, endingPos))
             }
 
-            else -> error("Not supported rule. only support [+, *, 1, 0]")
+            else -> error("Not supported rule. only support [$PLUS, $ANY, $ONE, $ZERO]")
         }
     }
 
     internal fun getTrie(sequences: Map<String, KoreanPos>): List<KoreanPosTrie> {
-        val results = fastListOf<KoreanPosTrie>()
+        val results = mutableListOf<KoreanPosTrie>()
         sequences.forEach { (key, value) ->
             results.addAll(0, buildTrie(key, value))
         }
         return results
     }
 
-    val Predicates = unifiedSetOf(Verb, Adjective)
+    @JvmField
+    val Predicates = setOf(Verb, Adjective)
 }

@@ -1,7 +1,6 @@
 package io.bluetape4k.spring.cassandra.schema
 
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.spring.cassandra.AbstractCassandraTest
 import io.bluetape4k.spring.cassandra.domain.model.AllPossibleTypes
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,7 +10,7 @@ import org.springframework.data.cassandra.core.CassandraOperations
 @SpringBootTest(classes = [SchemaGeneratorTestConfiguration::class])
 class SchemaGeneratorTest(
     @Autowired private val operations: CassandraOperations,
-): AbstractCassandraTest() {
+): io.bluetape4k.spring.cassandra.AbstractCassandraTest() {
 
     companion object: KLogging()
 

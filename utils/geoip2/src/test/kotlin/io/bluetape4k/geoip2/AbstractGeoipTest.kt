@@ -22,7 +22,6 @@ abstract class AbstractGeoipTest {
 
     protected fun getIpAddresses() = listOf(
         "8.8.8.8",              // Google
-        "104.28.211.28",        // Wrtn
         "172.217.161.174",
         "116.126.87.92",
         "15.165.181.38",

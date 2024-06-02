@@ -1,6 +1,5 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
-import io.bluetape4k.collections.eclipse.unifiedSetOf
 import io.bluetape4k.collections.sliding
 import io.bluetape4k.tokenizer.korean.utils.Hangul
 import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider
@@ -29,38 +28,48 @@ data class ParsedChunk(
 ): Serializable {
 
     companion object {
-        val suffixes = unifiedSetOf(Suffix, Eomi, Josa, PreEomi)
-        val preferredBeforeHaVerb = unifiedSetOf(Noun, ProperNoun, VerbPrefix)
+        val suffixes = setOf(Suffix, Eomi, Josa, PreEomi)
+        val preferredBeforeHaVerb = setOf(Noun, ProperNoun, VerbPrefix)
+
+        private val josaMatchedSet = hashSetOf("는", "를", "다")
+        private val josaMatchedSet2 = hashSetOf("은", "을", "이")
     }
 
     val score: Float by lazy {
         countTokens * profile.tokenCount +
-            countUnknowns * profile.unknown +
-            words * profile.wordCount +
-            getUnknownCoverage() * profile.unknownCoverage +
-            getFreqScore() * profile.freq +
-            countPos(Unknown) * profile.unknownPosCount +
-            isExactMatch * profile.exactMatch +
-            isAllNouns * profile.allNoun +
-            isPreferredPattern * profile.preferredPattern +
-            countPos(Determiner) * profile.determinerPosCount +
-            countPos(Exclamation) * profile.exclamationPosCount +
-            isInitialPosPosition * profile.initialPostPosition +
-            isNounHa * profile.haVerb +
-            hasSpaceOutOfGuide * profile.spaceGuidePenalty +
-            josaMismatched * profile.josaUnmatchedPenalty
+                countUnknowns * profile.unknown +
+                words * profile.wordCount +
+                getUnknownCoverage() * profile.unknownCoverage +
+                getFreqScore() * profile.freq +
+                countPos(Unknown) * profile.unknownPosCount +
+                isExactMatch * profile.exactMatch +
+                isAllNouns * profile.allNoun +
+                isPreferredPattern * profile.preferredPattern +
+                countPos(Determiner) * profile.determinerPosCount +
+                countPos(Exclamation) * profile.exclamationPosCount +
+                isInitialPosPosition * profile.initialPostPosition +
+                isNounHa * profile.haVerb +
+                hasSpaceOutOfGuide * profile.spaceGuidePenalty +
+                josaMismatched * profile.josaUnmatchedPenalty
     }
 
     val countUnknowns: Int get() = posNodes.count { it.unknown }
     val countTokens: Int get() = posNodes.size
-    val isInitialPosPosition: Int get() = if ((posNodes.firstOrNull()?.pos ?: Unknown) in suffixes) 1 else 0
+
+    val isInitialPosPosition: Int
+        get() = if (posNodes.firstOrNull() != null && suffixes.contains(posNodes.first().pos)) 1 else 0
+    //        get() = if ((posNodes.firstOrNull()?.pos ?: Unknown) in suffixes) 1 else 0
+
     val isExactMatch: Int get() = if (posNodes.size == 1) 0 else 1
 
     val hasSpaceOutOfGuide: Int
         get() = if (profile.spaceGuide.isEmpty()) {
             0
         } else {
-            posNodes.filter { it.pos !in suffixes }.count { it.offset !in profile.spaceGuide }
+            posNodes
+                .filter { it.pos !in suffixes }
+                .count { it.offset !in profile.spaceGuide }
+
         }
 
     val isAllNouns: Int
@@ -72,14 +81,14 @@ data class ParsedChunk(
     val isNounHa: Int
         get() {
             val notNoun = posNodes.size >= 2 &&
-                preferredBeforeHaVerb.contains(posNodes.first().pos) &&
-                posNodes[1].pos == Verb &&
-                (posNodes[1].text.startsWith('하') || posNodes[1].text.startsWith('해'))
+                    preferredBeforeHaVerb.contains(posNodes.first().pos) &&
+                    posNodes[1].pos == Verb &&
+                    (posNodes[1].text.startsWith('하') || posNodes[1].text.startsWith('해'))
 
             return if (notNoun) 0 else 1
         }
 
-    val posTieBreaker: Int get() = posNodes.map { it.pos.ordinal }.sum()
+    val posTieBreaker: Int get() = posNodes.sumOf { it.pos.ordinal }
 
     fun getUnknownCoverage(): Int {
         return posNodes.fold(0) { sum, p ->
@@ -88,24 +97,23 @@ data class ParsedChunk(
     }
 
     fun getFreqScore(): Float {
-        return posNodes.fold(0f) { score, p ->
+        val freqScoreSum = posNodes.sumOf { p ->
             if (p.pos == Noun || p.pos == ProperNoun) {
-                val freq = KoreanDictionaryProvider.koreanEntityFreq.getOrDefault(p.text, 0f)
-                score + (1f - freq)
+                val freq = KoreanDictionaryProvider.koreanEntityFreq.getOrDefault(p.text, 0.0f)
+                1.0 - freq
             } else {
-                score + 1.0f
+                1.0
             }
-        } / posNodes.size
+        }
+        return (freqScoreSum / posNodes.size).toFloat()
     }
 
     operator fun plus(that: ParsedChunk): ParsedChunk {
-        return ParsedChunk(posNodes + that.posNodes, words + that.words, profile)
+        return copy(posNodes = posNodes + that.posNodes, words = words + that.words, profile)
+        // ParsedChunk(posNodes + that.posNodes, words + that.words, profile)
     }
 
     fun countPos(pos: KoreanPos): Int = posNodes.count { it.pos == pos }
-
-    private val josaMatchedSet = hashSetOf("는", "를", "다")
-    private val josaMatchedSet2 = hashSetOf("은", "을", "이")
 
     val josaMismatched: Int
         get() {
@@ -114,7 +122,7 @@ data class ParsedChunk(
                     if (Hangul.hasCoda(tokens.first().text.last())) {
                         val nounEnding = Hangul.decomposeHangul(tokens.first().text.last())
                         (nounEnding.coda != 'ㄹ' && tokens.last().text.first() == '로') ||
-                            tokens.last().text in josaMatchedSet
+                                tokens.last().text in josaMatchedSet
                     } else {
                         tokens.last().text.first() == '으' || tokens.last().text in josaMatchedSet2
                     }

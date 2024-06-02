@@ -1,6 +1,7 @@
 package io.bluetape4k.workshop.coroutines.demo.controller
 
 import com.fasterxml.jackson.databind.JsonNode
+import io.bluetape4k.coroutines.flow.extensions.flowRangeOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
@@ -13,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,7 +34,9 @@ class CoroutineController(
     @Autowired private val builder: WebClient.Builder,
 ): CoroutineScope by CoroutineScope(Dispatchers.IO + CoroutineName("controller")) {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        private const val DEFAULT_DELAY = 1000L
+    }
 
     @Value("\${server.port:8080}")
     private val port: String = uninitialized()
@@ -49,7 +51,7 @@ class CoroutineController(
 
     @GetMapping(value = ["/", "/index"])
     suspend fun render(model: Model): Banner {
-        delay(10)
+        delay(DEFAULT_DELAY)
         return banner
     }
 
@@ -58,7 +60,7 @@ class CoroutineController(
      */
     @GetMapping("/suspend")
     suspend fun suspendingEndpoint(): Banner {
-        delay(10)
+        delay(DEFAULT_DELAY)
         log.debug { "coroutineName=[${currentCoroutineName()}]" }
         log.info { "Suspending... return $banner" }
         return banner
@@ -69,7 +71,7 @@ class CoroutineController(
      */
     @GetMapping("/deferred")
     fun deferredEndpoint(): Deferred<Banner> = async {
-        delay(10)
+        delay(DEFAULT_DELAY)
         log.debug { "coroutineName=[${currentCoroutineName()}]" }
         log.info { "Deferred ... return $banner" }
         banner
@@ -90,7 +92,7 @@ class CoroutineController(
     fun concurrentFlow(): Flow<Banner> {
         log.info { "Get banners in concurrent mode." }
 
-        return (0..3).asFlow()
+        return flowRangeOf(0, 4)
             .flatMapMerge {
                 log.debug { "coroutineName=[${currentCoroutineName()}]" }
                 flow { emit(getBanner()) }

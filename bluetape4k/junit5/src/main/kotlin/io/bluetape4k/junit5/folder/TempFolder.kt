@@ -13,7 +13,7 @@ import java.nio.file.Paths
 class TempFolder: ExtensionContext.Store.CloseableResource, Closeable {
 
     companion object: KLogging() {
-        private const val PREFIX = "wrtn_kommons_"
+        private const val PREFIX = "bluetake4k_"
     }
 
     private val rootPath: Path

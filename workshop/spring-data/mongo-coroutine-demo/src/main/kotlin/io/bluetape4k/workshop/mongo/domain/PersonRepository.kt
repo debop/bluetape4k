@@ -9,4 +9,5 @@ interface PersonRepository: CrudRepository<Person, String> {
     fun findNullableByFirstname(firstname: String): Person?
 
     fun findOneByFirstname(firstname: String): Person
+
 }

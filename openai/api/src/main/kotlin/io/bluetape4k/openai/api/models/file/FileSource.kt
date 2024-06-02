@@ -1,9 +1,9 @@
 package io.bluetape4k.openai.api.models.file
 
 import io.bluetape4k.codec.encodeBase64String
-import io.bluetape4k.core.requireNotBlank
-import io.bluetape4k.core.requireNotNull
 import io.bluetape4k.openai.api.annotations.OpenAIDsl
+import io.bluetape4k.support.requireNotBlank
+import io.bluetape4k.support.requireNotNull
 import io.bluetape4k.support.toUtf8String
 import java.io.Serializable
 import java.nio.file.Files

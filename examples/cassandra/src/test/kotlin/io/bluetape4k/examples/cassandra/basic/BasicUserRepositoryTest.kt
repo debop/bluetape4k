@@ -1,7 +1,7 @@
 package io.bluetape4k.examples.cassandra.basic
 
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder
-import io.bluetape4k.data.cassandra.cql.executeSuspending
+import io.bluetape4k.cassandra.cql.executeSuspending
 import io.bluetape4k.examples.cassandra.AbstractCassandraCoroutineTest
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
@@ -33,7 +33,7 @@ class BasicUserRepositoryTest(
     private fun newBasicUser(): BasicUser {
         return BasicUser(
             faker.random().nextLong(10000, 100000),
-            faker.name().username(),
+            faker.internet().username(),
             faker.name().firstName(),
             faker.name().lastName()
         )

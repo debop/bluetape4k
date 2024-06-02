@@ -1,11 +1,8 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
-import io.bluetape4k.collections.eclipse.emptyFastList
-import io.bluetape4k.collections.eclipse.fastListOf
-import io.bluetape4k.collections.eclipse.toFastList
-import io.bluetape4k.collections.eclipse.unifiedMapOf
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.error
+import io.bluetape4k.logging.trace
 import io.bluetape4k.tokenizer.korean.stemmer.KoreanStemmer
 import io.bluetape4k.tokenizer.korean.utils.KoreanDictionaryProvider.koreanDictionary
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adjective
@@ -19,11 +16,7 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Unknown
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
 import io.bluetape4k.tokenizer.korean.utils.KoreanSubstantive
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import org.eclipse.collections.impl.list.mutable.FastList
-import java.io.Serializable
-
 
 /**
  * Provides Korean tokenization.
@@ -35,7 +28,7 @@ import java.io.Serializable
  * Whenever there is an updates in the behavior of KoreanParser,
  * the initial cache has to be updated by running tools.CreateInitialCache.
  */
-object KoreanTokenizer: KLogging(), Serializable {
+object KoreanTokenizer: KLogging() {
 
     private const val TOP_N_PER_STATE = 5
     private const val MAX_TRACE_BACK = 8
@@ -68,7 +61,7 @@ object KoreanTokenizer: KLogging(), Serializable {
      * v VerbPrefix: 동사 접두어 ('쳐'먹어)
      * s Suffix: 접미사 (~적)
      */
-    private val SequenceDefinition = unifiedMapOf(
+    private val sequenceDefinition = mapOf(
         // Substantive
         "D0m*N1s0j0" to Noun,
         // Predicate 초기뻐하다, 와주세요, 초기뻤었고, 추첨하다, 구경하기힘들다, 기뻐하는, 기쁜, 추첨해서, 좋아하다, 걸려있을
@@ -82,7 +75,9 @@ object KoreanTokenizer: KLogging(), Serializable {
         "j1" to Josa
     )
 
-    private val koreanPosTrie by lazy { KoreanPosx.getTrie(SequenceDefinition) }
+    private val koreanPosTrie by lazy {
+        KoreanPosx.getTrie(sequenceDefinition)
+    }
 
     /**
      * Parse Korean text into a sequence of KoreanTokens with custom parameters
@@ -121,10 +116,10 @@ object KoreanTokenizer: KLogging(), Serializable {
                             val parsed = parseKoreanChunk(it, profile, topN)
 
                             // Collapse sequence of one-char nouns into one unknown noun: (가Noun 회Noun -> 가회Noun*)
-                            parsed.map(KoreanSubstantive::collapseNouns).toFastList()
+                            parsed.map(KoreanSubstantive::collapseNouns).toList()
                         }
 
-                        else   -> fastListOf(fastListOf(it))
+                        else   -> listOf(listOf(it))
                     }
                 }
         } catch (e: Exception) {
@@ -152,62 +147,56 @@ object KoreanTokenizer: KLogging(), Serializable {
         chunk: KoreanToken,
         profile: TokenizerProfile,
     ): List<List<KoreanToken>> = coroutineScope {
-        // val directMatch: List<List<KoreanToken>> = findDirectMatch(chunk)
-        val directMatch = async { findDirectMatch(chunk) }
+        val directMatch = findDirectMatch(chunk)
 
         // Buffer for solution
-        val solutions = unifiedMapOf<Int, List<CandidateParse>>()
-            .apply {
-                val candidateParse = CandidateParse(
-                    parse = ParsedChunk(fastListOf<KoreanToken>(), 1, profile),
-                    curTrie = koreanPosTrie,
-                    ending = null
-                )
-                put(0, listOf(candidateParse))
-            }
+        val candidateParse = listOf(
+            CandidateParse(
+                parse = ParsedChunk(listOf(), 1, profile),
+                curTrie = koreanPosTrie,
+                ending = null
+            )
+        )
+        val solutions = hashMapOf(0 to candidateParse)
 
         // Find N best parses per state
         for (end in 1..chunk.length) {
-            for (start in end - 1 downTo Math.max(end - MAX_TRACE_BACK, 0)) {
+            for (start in end - 1 downTo maxOf(end - MAX_TRACE_BACK, 0)) {
 
                 val word = chunk.text.slice(start until end)
+                // log.trace { "chunk text=${chunk.text}, start=$start, end=$end, word=$word" }
+
+                // Removing unused solutions from solutions hashmap as the chunk is getting processed
+                removeUnusedSolutions(start, end, solutions)
+
                 val curSolutions = solutions[start]!!
+                // log.trace { "chunk=${chunk.text} word=$word, curSolutions=${curSolutions.joinToString()}" }
 
-                val candidates: List<CandidateParse> = curSolutions.flatMap { candateParse: CandidateParse ->
-
-                    val possiblePoses: List<PossibleTrie> = candateParse.ending
-                                                                ?.let {
-                                                                    candateParse.curTrie.map {
-                                                                        PossibleTrie(
-                                                                            it,
-                                                                            0
-                                                                        )
-                                                                    } +
-                                                                    koreanPosTrie.map { PossibleTrie(it, 1) }
-                                                                }
-                                                            ?: candateParse.curTrie.map { PossibleTrie(it, 0) }
+                val candidates: List<CandidateParse> = curSolutions.flatMap { solution: CandidateParse ->
+                    val possiblePoses: List<PossibleTrie> = solution.ending
+                        ?.let {
+                            solution.curTrie.map { PossibleTrie(it, 0) } + koreanPosTrie.map { PossibleTrie(it, 1) }
+                        }
+                        ?: solution.curTrie.map { PossibleTrie(it, 0) }
 
                     possiblePoses
                         .filter {
                             it.curTrie.curPos == Noun ||
-                            (koreanDictionary[it.curTrie.curPos]?.contains(word.toCharArray()) ?: false)
+                                    (koreanDictionary[it.curTrie.curPos]?.contains(word.toCharArray()) == true)
                         }
                         .map { t: PossibleTrie ->
-
+                            // log.trace { "word=$word, trie=${t.curTrie}, pos=${t.curTrie.curPos}" }
                             val candidateToAdd =
-                                if (t.curTrie.curPos == Noun &&
-                                    !koreanDictionary[Noun]!!.contains(word.toCharArray())
-                                ) {
+                                if (t.curTrie.curPos == Noun && koreanDictionary[Noun]?.contains(word.toCharArray()) == false) {
                                     val isWordName: Boolean = KoreanSubstantive.isName(word)
                                     val isKoreanNumber = KoreanSubstantive.isKoreanNumber(word)
-                                    val isWordKoreanNameVariation: Boolean =
-                                        KoreanSubstantive.isKoreanNameVariation(word)
+                                    val isWordKoreanNameVariation = KoreanSubstantive.isKoreanNameVariation(word)
 
-                                    val unknown = !isWordName && !isKoreanNumber && !isWordKoreanNameVariation
+                                    val unknown = !(isWordName || isKoreanNumber || isWordKoreanNameVariation)
                                     val pos = Noun
 
                                     ParsedChunk(
-                                        fastListOf(
+                                        listOf(
                                             KoreanToken(
                                                 word,
                                                 pos,
@@ -219,51 +208,68 @@ object KoreanTokenizer: KLogging(), Serializable {
                                         t.words,
                                         profile
                                     )
-
                                 } else {
                                     val pos = t.curTrie.curPos ?: Unknown
                                     ParsedChunk(
-                                        fastListOf(KoreanToken(word, pos, chunk.offset + start, word.length)),
+                                        listOf(KoreanToken(word, pos, chunk.offset + start, word.length)),
                                         t.words,
                                         profile
                                     )
                                 }
+                            // log.trace { "candidateToAdd=$candidateToAdd" }
 
-                            val nextTrie =
-                                t.curTrie.nextTrie?.map { if (it == KoreanPosx.SelfNode) t.curTrie else it }
-                                    ?.toFastList()
-                                ?: emptyFastList()
+                            val nextTrie = t.curTrie.nextTrie
+                                ?.map { if (it == KoreanPosx.SelfNode) t.curTrie else it }
+                                ?.toList()
+                                ?: emptyList()
 
-                            CandidateParse(candateParse.parse + candidateToAdd, nextTrie, t.curTrie.ending)
+                            CandidateParse(solution.parse + candidateToAdd, nextTrie, t.curTrie.ending)
                         }
                 }
 
-                val currentSolutions = solutions[end] ?: emptyFastList()
+                val currentSolutions = solutions[end] ?: emptyList()
 
                 solutions[end] = (currentSolutions + candidates)
                     .sortedWith(compareBy({ it.parse.score }, { it.parse.posTieBreaker }))
                     .take(TOP_N_PER_STATE)
-                    .toFastList()
+                    .toList()
+
+                //                solutions[end]?.forEach {
+                //                    log.trace { "score=${it.parse.score}, posNodes=${it.parse.posNodes}" }
+                //                }
             }
         }
 
-        val topCandidates = async {
+        val topCandidates =
             if (solutions[chunk.length]!!.isEmpty()) {
-                fastListOf(fastListOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
+                listOf(listOf(KoreanToken(chunk.text, Noun, 0, chunk.length, unknown = true)))
             } else {
-                solutions[chunk.length]!!.sortedBy { it.parse.score }.map { it.parse.posNodes }.toFastList()
+                solutions[chunk.length]!!.sortedBy { it.parse.score }.map { it.parse.posNodes }.toList()
             }
-        }
 
-        (directMatch.await() + topCandidates.await()).distinct()
+        (directMatch + topCandidates).distinct()
     }
 
-    private fun findDirectMatch(chunk: KoreanToken): FastList<FastList<KoreanToken>> {
-        for ((pos, dict) in koreanDictionary.entries) {
-            if (dict.contains(chunk.text)) {
-                return fastListOf(fastListOf(chunk.copy(pos = pos)))
-            }
+    private fun removeUnusedSolutions(
+        start: Int,
+        end: Int,
+        solutions: HashMap<Int, List<CandidateParse>>,
+    ): HashMap<Int, List<CandidateParse>> {
+        // Make sure the solutions hashmap won't have references to unused objects...
+        if (end > MAX_TRACE_BACK && start + 1 == end) {
+            log.trace { "remove solution. index=${end - MAX_TRACE_BACK - 1}" }
+            solutions.remove(end - MAX_TRACE_BACK - 1)
         }
-        return emptyFastList()
+        return solutions
+    }
+
+    private fun findDirectMatch(chunk: KoreanToken): List<List<KoreanToken>> {
+        log.trace { "Find direct match. chunk=$chunk" }
+        return koreanDictionary.entries
+            .firstOrNull { (_, dict) ->
+                dict.contains(chunk.text)
+            }
+            ?.let { (pos, _) -> listOf(listOf(chunk.copy(pos = pos))) }
+            ?: emptyList()
     }
 }

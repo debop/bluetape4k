@@ -1,8 +1,8 @@
 package io.bluetape4k.workshop.webflux.hibernate.reactive.model
 
 import io.bluetape4k.core.ToStringBuilder
-import io.bluetape4k.core.requireNotBlank
-import io.bluetape4k.data.hibernate.model.LongJpaEntity
+import io.bluetape4k.hibernate.model.LongJpaEntity
+import io.bluetape4k.support.requireNotBlank
 import jakarta.persistence.Access
 import jakarta.persistence.AccessType
 import jakarta.persistence.Column

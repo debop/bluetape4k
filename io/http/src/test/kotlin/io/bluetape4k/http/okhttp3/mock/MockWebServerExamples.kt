@@ -1,6 +1,7 @@
 package io.bluetape4k.http.okhttp3.mock
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.bluetape4k.core.LibraryName
 import io.bluetape4k.http.okhttp3.bodyAsString
 import io.bluetape4k.http.okhttp3.execute
 import io.bluetape4k.http.okhttp3.okhttp3Client
@@ -77,7 +78,7 @@ class MockWebServerExamples {
         mockServer.enqueueBody(SUCCESS_RESPONSE_BODY)
 
         val request = okhttp3Request {
-            url(mockServer.baseUrl + "repository?name=kommons")
+            url(mockServer.baseUrl + "repository?name=$LibraryName")
             get()
         }
         assertHttpResponse(request)
@@ -86,8 +87,8 @@ class MockWebServerExamples {
         val recordedRequest = mockServer.takeRequest()
         log.debug { "Recorded Request: $recordedRequest" }
         recordedRequest.method shouldBeEqualTo "GET"
-        recordedRequest.requestUrl.toString() shouldBeEqualTo mockServer.baseUrl + "repository?name=kommons"
-        recordedRequest.path shouldBeEqualTo "/repository?name=kommons"
+        recordedRequest.requestUrl.toString() shouldBeEqualTo mockServer.baseUrl + "repository?name=$LibraryName"
+        recordedRequest.path shouldBeEqualTo "/repository?name=$LibraryName"
     }
 
     private fun assertHttpResponse(request: okhttp3.Request) {

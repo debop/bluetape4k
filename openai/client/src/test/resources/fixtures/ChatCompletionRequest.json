@@ -1,0 +1,32 @@
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant.",
+      "name": null,
+      "function_call": null
+    },
+    {
+      "role": "user",
+      "content": "Hello!",
+      "name": null,
+      "function_call": null
+    }
+  ],
+  "functions": [],
+  "function_call": null,
+  "max_tokens": null,
+  "temperature": null,
+  "top_p": null,
+  "n": null,
+  "stream": null,
+  "logprobs": null,
+  "echo": null,
+  "stop": null,
+  "presence_penalty": null,
+  "frequency_penalty": null,
+  "best_of": null,
+  "logit_bias": null,
+  "user": null
+}

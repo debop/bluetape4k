@@ -3,7 +3,7 @@ package io.bluetape4k.examples.jpa.querydsl.spring
 import com.querydsl.core.types.dsl.PathBuilder
 import com.querydsl.jpa.impl.JPAQuery
 import com.querydsl.jpa.impl.JPAQueryFactory
-import io.bluetape4k.core.assertNotNull
+import io.bluetape4k.support.assertNotNull
 import jakarta.annotation.PostConstruct
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
@@ -45,6 +45,7 @@ class SpringRepositoryQuerydslSupport(private val entityClass: Class<*>) {
     protected fun getQuerydsl(): Querydsl = querydsl!!
     protected fun getQueryFactory(): JPAQueryFactory = queryFactory!!
 
+    @Suppress("DEPRECATION")
     protected fun <T> withPaging(pageable: Pageable, queryAction: (JPAQueryFactory) -> JPAQuery<T>): Page<T> {
         val contentQuery = queryAction(getQueryFactory())
         val content = getQuerydsl().applyPagination(pageable, contentQuery).fetch()
@@ -55,6 +56,7 @@ class SpringRepositoryQuerydslSupport(private val entityClass: Class<*>) {
         return PageableExecutionUtils.getPage(content, pageable) { contentQuery.fetchCount() }
     }
 
+    @Suppress("DEPRECATION")
     protected fun <T> withPaging(
         pageable: Pageable,
         contentQueryAction: (JPAQueryFactory) -> JPAQuery<T>,

@@ -1,6 +1,5 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
-import io.bluetape4k.collections.eclipse.fastListOf
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Eomi
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Josa
@@ -13,21 +12,20 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.VerbPrefix
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.buffer
-import org.eclipse.collections.api.factory.Sets
-import org.eclipse.collections.api.set.ImmutableSet
-import java.io.Serializable
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 
 
 /**
  * Detokenizes a list of tokenized words into a readable sentence.
  */
-object KoreanDetokenizer: Serializable {
+object KoreanDetokenizer {
 
     @JvmField
-    val SuffixPos: ImmutableSet<KoreanPos> = Sets.immutable.of(Josa, Eomi, PreEomi, Suffix, Punctuation)
+    val SuffixPos: Set<KoreanPos> = setOf(Josa, Eomi, PreEomi, Suffix, Punctuation)
 
     @JvmField
-    val PrefixPos: ImmutableSet<KoreanPos> = Sets.immutable.of(Modifier, VerbPrefix)
+    val PrefixPos: Set<KoreanPos> = setOf(Modifier, VerbPrefix)
 
     suspend fun detokenize(input: Collection<String>): String {
         // Space guide prevents tokenizing a word that was not tokenized in the input.
@@ -48,19 +46,19 @@ object KoreanDetokenizer: Serializable {
     }
 
     private suspend fun collapseTokens(tokenized: List<KoreanToken>): List<String> {
-        val output = fastListOf<String>()
+        val output = mutableListOf<String>()
         var isPrefix = false
         var prevToken: KoreanToken? = null
 
         tokenized.asFlow().buffer()
-            .collect { token ->
+            .onEach { token ->
                 if (output.isNotEmpty() && (isPrefix || token.pos in SuffixPos)) {
                     val attached = output.last() + token.text
                     output[output.lastIndex] = attached
                     isPrefix = false
                     prevToken = token
-                } else if (prevToken != null && prevToken!!.pos == Noun && token.pos == Verb) {
-                    val attached = output.last() + token.text
+                } else if (prevToken?.pos == Noun && token.pos == Verb) {
+                    val attached = (output.lastOrNull() ?: "") + token.text
                     output[output.lastIndex] = attached
                     isPrefix = false
                     prevToken = token
@@ -74,6 +72,8 @@ object KoreanDetokenizer: Serializable {
                     prevToken = token
                 }
             }
+            .collect()
+
         return output
     }
 

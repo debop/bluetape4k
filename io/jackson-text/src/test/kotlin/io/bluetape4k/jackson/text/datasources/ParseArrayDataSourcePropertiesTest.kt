@@ -113,9 +113,9 @@ class ParseArrayDataSourcePropertiesTest: AbstractJacksonTextTest() {
         dbcp2.lifo!! shouldBeEqualTo true
     }
 
-    data class RootProperty(val bluetape4k: KommonsProperty)
+    data class RootProperty(val bluetape4k: Bluetape4kProperty)
 
-    data class KommonsProperty(val datasources: List<DataSourceProperty> = emptyList())
+    data class Bluetape4kProperty(val datasources: List<DataSourceProperty> = emptyList())
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "connectionPool")
     @JsonSubTypes(

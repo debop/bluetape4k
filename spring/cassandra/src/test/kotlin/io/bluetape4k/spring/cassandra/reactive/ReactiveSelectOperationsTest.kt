@@ -1,15 +1,11 @@
 package io.bluetape4k.spring.cassandra.reactive
 
 import com.datastax.oss.driver.api.core.uuid.Uuids
-import io.bluetape4k.data.cassandra.cql.simpleStatement
+import io.bluetape4k.cassandra.cql.simpleStatement
 import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest
-import io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration
 import io.bluetape4k.spring.cassandra.cast
-import io.bluetape4k.spring.cassandra.insertSuspending
 import io.bluetape4k.spring.cassandra.query.eq
-import io.bluetape4k.spring.cassandra.truncateSuspending
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactor.awaitSingle
@@ -40,20 +36,21 @@ import org.springframework.data.cassandra.core.query
 import org.springframework.data.cassandra.core.query.Query
 import org.springframework.data.cassandra.core.query.query
 import org.springframework.data.cassandra.core.query.where
+import org.springframework.data.cassandra.core.truncate
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 @SpringBootTest
 class ReactiveSelectOperationsTest(
     @Autowired private val operations: ReactiveCassandraOperations,
-): AbstractCassandraCoroutineTest("reactive-select-op") {
+): io.bluetape4k.spring.cassandra.AbstractCassandraCoroutineTest("reactive-select-op") {
 
     companion object: KLogging() {
         private const val PERSON_TABLE_NAME = "select_op_person"
     }
 
     @Configuration
-    class TestConfiguration: AbstractReactiveCassandraTestConfiguration()
+    class TestConfiguration: io.bluetape4k.spring.cassandra.AbstractReactiveCassandraTestConfiguration()
 
     private lateinit var han: Person
     private lateinit var luke: Person
@@ -61,13 +58,13 @@ class ReactiveSelectOperationsTest(
     @BeforeEach
     fun beforeEach() {
         runBlocking {
-            operations.truncateSuspending<Person>()
+            operations.truncate<Person>().awaitSingleOrNull()
 
             han = newPerson()
             luke = newPerson()
 
-            operations.insertSuspending(han)
-            operations.insertSuspending(luke)
+            operations.insert(han).awaitSingle()
+            operations.insert(luke).awaitSingle()
         }
     }
 
@@ -232,7 +229,7 @@ class ReactiveSelectOperationsTest(
 
     @Test
     fun `레코드가 없는 테이블의 exists`() = runSuspendWithIO {
-        operations.truncateSuspending<Person>()
+        operations.truncate<Person>().awaitSingleOrNull()
         operations.query<Person>().exists().awaitSingle().shouldBeFalse()
     }
 
@@ -244,10 +241,7 @@ class ReactiveSelectOperationsTest(
     @Test
     fun `projection interface를 반환할 때는 구현된 target object 를 반환한다`() = runSuspendWithIO {
         val result = operations.query<Person>().cast<Contact>().all().asFlow()
-
-        assertTrue {
-            result.toList().all { it is Person }
-        }
+        result.toList().all { it is Person }.shouldBeTrue()
     }
 
 
@@ -262,7 +256,7 @@ class ReactiveSelectOperationsTest(
     private interface Contact
 
     @Table(PERSON_TABLE_NAME)
-    private data class Person(
+    data class Person(
         @field:Id val id: String? = null,
         @field:Indexed val firstName: String? = null,
         @field:Indexed val lastName: String? = null,

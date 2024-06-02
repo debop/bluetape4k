@@ -1,8 +1,8 @@
 package io.bluetape4k.openai.api.models.chat
 
-import io.bluetape4k.core.requireNotNull
 import io.bluetape4k.openai.api.annotations.OpenAIDsl
 import io.bluetape4k.openai.api.models.ModelBuilder
+import io.bluetape4k.support.requireNotNull
 import java.io.Serializable
 
 data class ChatMessage(

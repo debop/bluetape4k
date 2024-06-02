@@ -1,11 +1,13 @@
 package io.bluetape4k.tokenizer.korean.phrase
 
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
+import io.bluetape4k.logging.debug
+import io.bluetape4k.tokenizer.korean.KoreanProcessor.tokenize
 import io.bluetape4k.tokenizer.korean.TestBase
 import io.bluetape4k.tokenizer.korean.normalizer.KoreanNormalizer
 import io.bluetape4k.tokenizer.korean.phrase.KoreanPhraseExtractor.collapsePos
 import io.bluetape4k.tokenizer.korean.phrase.KoreanPhraseExtractor.extractPhrases
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanToken
-import io.bluetape4k.tokenizer.korean.tokenizer.KoreanTokenizer.tokenize
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.KoreanParticle
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Modifier
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
@@ -85,13 +87,27 @@ class KoreanPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `should extract the example set`() = runTest {
+    fun `should extract the example set`() = runSuspendWithIO {
         suspend fun phraseExtractor(text: String): String {
             val normalized = KoreanNormalizer.normalize(text)
             val tokens = tokenize(normalized)
             return extractPhrases(tokens).joinToString("/")
         }
         assertExamples("current_phrases.txt", log) { phraseExtractor(it) }
+    }
+
+    @Test
+    fun `문단 구분 예제 - 단문`() = runTest {
+        val text = """"@user: @user 내가 얼굴이 아가쟈나..ㅎ" 동네사람들...!"""
+
+        val normalized = KoreanNormalizer.normalize(text)
+        val tokens = tokenize(normalized)
+        log.debug { "tokens: ${tokens.joinToString()}" }
+
+        val phrases = extractPhrases(tokens).joinToString("/")
+
+        val expected = "얼굴(Noun: 17, 2)/아가(Noun: 21, 2)/동네사람들(Noun: 30, 5)/동네(Noun: 30, 2)/사람들(Noun: 32, 3)"
+        phrases shouldBeEqualTo expected
     }
 
     @Test
@@ -103,6 +119,7 @@ class KoreanPhraseExtractorTest: TestBase() {
             filterSpam = true
         ).joinToString(", ") shouldBeEqualTo "레알(Noun: 0, 2), 저거(Noun: 6, 2)"
     }
+
 
     @Test
     fun `should detect numbers with special chars`() {

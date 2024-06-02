@@ -1,0 +1,39 @@
+# Spring 기본 설정
+spring:
+    application:
+        name: Elasticsearch Webflux Demo
+    info:
+        build:
+            encoding: UTF-8
+    codec:
+        max-in-memory-size: 100MB
+    jackson:
+        serialization:
+            indent-output: true
+
+    elasticsearch:
+        uris: ${testcontainers.elasticsearch.url}
+
+# Server
+server:
+    compression:
+        enabled: true
+        min-response-size: 1KB
+
+# Management (Actuator)
+management:
+    endpoints:
+        web.exposure.include: '*'
+    endpoint:
+        health.show-details: always
+    metrics:
+        tags:
+            application: ${spring.application.name}
+        distribution:
+            percentiles-histogram:
+                http.server.requests: true
+    health:
+        diskspace:
+            enabled: false
+        elasticsearch:
+            enabled: false

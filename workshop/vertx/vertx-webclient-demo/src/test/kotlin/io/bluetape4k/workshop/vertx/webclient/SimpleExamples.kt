@@ -13,7 +13,7 @@ import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.codec.BodyCodec
 import io.vertx.junit5.VertxExtension
 import io.vertx.junit5.VertxTestContext
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -46,13 +46,13 @@ class SimpleExamples {
     @Test
     fun `use webclient to simple server`(vertx: Vertx, testContext: VertxTestContext) = runSuspendTest {
         vertx.withTestContextSuspending(testContext) {
-            vertx.deployVerticle(SimpleServer()).await()
+            vertx.deployVerticle(SimpleServer()).coAwait()
 
             val client = WebClient.create(vertx)
             val response = client.get(port, "localhost", "/")
                 .`as`(BodyCodec.string())
                 .send()
-                .await()
+                .coAwait()
 
             log.debug { "Response body=${response.body()}" }
             response.body() shouldBeEqualTo "Hello World!"

@@ -1,4 +1,4 @@
-# Module kommons-images
+# Module bluetape4k-images
 
 ## 개요
 

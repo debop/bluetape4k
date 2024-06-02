@@ -22,6 +22,7 @@
     <!-- formatter:on -->
 
     <logger name="io.bluetape4k.workshop" level="DEBUG"/>
+    
     <logger name="org.springframework.cloud.gateway" level="DEBUG"/>
     <logger name="org.springframework.http.server.reactive" level="DEBUG"/>
     

@@ -4,11 +4,11 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.info
 import io.bluetape4k.support.uninitialized
 import io.bluetape4k.workshop.webflux.hibernate.reactive.AbstractHibernateReactiveTest
+import jakarta.persistence.EntityManagerFactory
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import jakarta.persistence.EntityManagerFactory
 
 class HibernateReactiveConfigurationTest: AbstractHibernateReactiveTest() {
 

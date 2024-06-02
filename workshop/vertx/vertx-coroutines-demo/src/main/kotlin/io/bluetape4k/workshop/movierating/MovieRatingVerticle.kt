@@ -13,14 +13,14 @@ import io.vertx.kotlin.core.json.Json
 import io.vertx.kotlin.core.json.json
 import io.vertx.kotlin.core.json.obj
 import io.vertx.kotlin.coroutines.CoroutineVerticle
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.kotlin.jdbcclient.jdbcConnectOptionsOf
 import io.vertx.kotlin.sqlclient.poolOptionsOf
 import io.vertx.sqlclient.Tuple
 
-class MovieRatingVerticle : CoroutineVerticle() {
+class MovieRatingVerticle: CoroutineVerticle() {
 
-    companion object : KLogging() {
+    companion object: KLogging() {
         private val statements = listOf(
             "CREATE TABLE MOVIE (ID VARCHAR(16) PRIMARY KEY, TITLE VARCHAR(256) NOT NULL)",
             "CREATE TABLE RATING (ID INT AUTO_INCREMENT PRIMARY KEY, RATE_VALUE INT, MOVIE_ID VARCHAR(16))",
@@ -49,7 +49,7 @@ class MovieRatingVerticle : CoroutineVerticle() {
         // 샘플 데이터 추가
         statements.forEach { stmt ->
             log.info { "Execute statement: $stmt" }
-            pool.query(stmt).execute().await()
+            pool.query(stmt).execute().coAwait()
         }
 
         // Router 설정
@@ -66,7 +66,7 @@ class MovieRatingVerticle : CoroutineVerticle() {
         vertx.createHttpServer()
             .requestHandler(router)
             .listen(config.getInteger("http.port", 8080))
-            .await()
+            .coAwait()
     }
 
     private suspend fun getMovie(ctx: RoutingContext) {
@@ -77,7 +77,7 @@ class MovieRatingVerticle : CoroutineVerticle() {
             .onSuccess {
                 log.debug { "Get Movie. movie=${it.firstOrNull()?.deepToString()}" }
             }
-            .await()
+            .coAwait()
 
         if (rows.size() == 1) {
             val row = rows.first()
@@ -99,12 +99,12 @@ class MovieRatingVerticle : CoroutineVerticle() {
 
         val movies = pool.preparedQuery("SELECT TITLE FROM MOVIE WHERE ID=?")
             .execute(Tuple.of(movieId))
-            .await()
+            .coAwait()
 
         if (movies.size() == 1) {
             pool.preparedQuery("INSERT INTO RATING (RATE_VALUE, MOVIE_ID) VALUES (?, ?)")
                 .execute(Tuple.of(rating, movieId))
-                .await()
+                .coAwait()
             ctx.response().setStatusCode(200).end()
         } else {
             ctx.response().setStatusCode(404).end()
@@ -117,7 +117,7 @@ class MovieRatingVerticle : CoroutineVerticle() {
         val rows = pool
             .preparedQuery("SELECT AVG(RATE_VALUE) AS RATE_VALUE FROM RATING WHERE MOVIE_ID=?")
             .execute(Tuple.of(movieId))
-            .await()
+            .coAwait()
 
         if (rows.size() == 1) {
             val json = Json.obj {

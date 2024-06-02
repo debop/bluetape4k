@@ -6,4 +6,4 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
 
 @EntityScan(basePackageClasses = [Customer::class])
 @EnableCassandraRepositories(basePackageClasses = [CustomerRepository::class])
-class ProjectionTestConfiguration: AbstractReactiveCassandraTestConfiguration() 
+class ProjectionTestConfiguration: AbstractReactiveCassandraTestConfiguration()

@@ -1,10 +1,11 @@
 package io.bluetape4k.workshop.cloud.gateway
 
-import io.bluetape4k.io.json.jackson.Jackson
+import io.bluetape4k.json.jackson.Jackson
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.info
 import io.bluetape4k.support.toUtf8String
+import io.bluetape4k.workshop.cloud.gateway.GatewayApplication
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.AfterAll
@@ -43,10 +44,9 @@ class GatewayApplicationTest: AbstractGatewayTest() {
     companion object: KLogging() {
         private const val TEST_HEADER = "X-TestHeader"
 
-        private var managementPort: String
+        private var managementPort: String = TestSocketUtils.findAvailableTcpPort().toString()
 
         init {
-            managementPort = TestSocketUtils.findAvailableTcpPort().toString()
             log.info { "management port=$managementPort" }
             System.setProperty("test.port", managementPort)
         }
@@ -192,7 +192,7 @@ class GatewayApplicationTest: AbstractGatewayTest() {
     }
 
     @Test
-    fun `comprex predicate`() {
+    fun `complex predicate`() {
         client.get()
             .uri("/anything/png")
             .header("Host", "www.abc.org")
@@ -237,8 +237,8 @@ class GatewayApplicationTest: AbstractGatewayTest() {
                     val actualObj = mapper.readTree(body)
                     log.debug { "body=${mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actualObj)}" }
 
-                    val findValuye = actualObj.findValue("name")
-                    findValuye.asText() shouldBeEqualTo metricName
+                    val findValue = actualObj.findValue("name")
+                    findValue.asText() shouldBeEqualTo metricName
                 } catch (e: IOException) {
                     throw IllegalStateException(e)
                 }
@@ -273,7 +273,7 @@ class GatewayApplicationTest: AbstractGatewayTest() {
 
         @Bean
         fun fixedServiceInstanceListSupplier(env: Environment): ServiceInstanceListSupplier {
-            log.debug { "LocalServerPort=$port" }
+            log.debug { "LocalServerPort=$port, env=$env" }
             return ServiceInstanceListSuppliers.from(
                 "httpbin",
                 DefaultServiceInstance("httpbin-1", "httpbin", "localhost", port, false)

@@ -5,7 +5,7 @@ import com.netflix.graphql.types.errors.ErrorType
 open class PermissionDeniedDgsException(
     message: String = "Permission denied",
     cause: Exception? = null,
-): KommonsDgsException(message, cause, ErrorType.PERMISSION_DENIED) {
+): Bluetape4kDgsException(message, cause, ErrorType.PERMISSION_DENIED) {
 
     constructor(cause: Exception): this(cause.message ?: "Permission denied", cause)
 }
