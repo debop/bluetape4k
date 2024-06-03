@@ -98,8 +98,8 @@ object Versions {
     }
 
     const val resteasy = "6.2.4.Final"
-    const val mutiny = "2.3.1"
-    const val vertx = "4.5.7"               // https://mvnrepository.com/artifact/io.vertx/vertx-core
+    const val mutiny = "2.5.8"              // https://mvnrepository.com/artifact/io.smallrye.reactive/mutiny
+    const val vertx = "4.5.8"               // https://mvnrepository.com/artifact/io.vertx/vertx-core
     const val camel_quarkus = "2.16.0"
     const val agroal = "2.2"
 
@@ -110,7 +110,7 @@ object Versions {
 
     const val bucket4j = "8.10.1"       // https://mvnrepository.com/artifact/com.bucket4j/bucket4j-core
     const val resilience4j = "2.2.0"   // https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-bom
-    const val netty = "4.1.109.Final"  // https://mvnrepository.com/artifact/io.netty/netty-all
+    const val netty = "4.1.110.Final"  // https://mvnrepository.com/artifact/io.netty/netty-all
 
     const val aws = "1.12.727"    // https://mvnrepository.com/artifact/com.amazonaws
     const val aws2 = "2.25.57"   // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
