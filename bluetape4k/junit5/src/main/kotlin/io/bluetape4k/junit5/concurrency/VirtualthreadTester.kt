@@ -23,7 +23,9 @@ class VirtualthreadTester {
     private var roundsPerThread = DEFAULT_ROUNDS_PER_THREAD
     private val runnables = LinkedList<() -> Unit>()
 
-    private val executor = Executors.newVirtualThreadPerTaskExecutor()
+    private val executor = Executors.newThreadPerTaskExecutor(
+        Thread.ofVirtual().name("virtual-tester-", 0).factory()
+    )
     private lateinit var futures: List<Future<Unit>>
 
     fun numThreads(value: Int) = apply {

@@ -3,6 +3,7 @@ package io.bluetape4k.jwt.composer
 import io.bluetape4k.codec.encodeBase62
 import io.bluetape4k.core.LibraryName
 import io.bluetape4k.jwt.AbstractJwtTest
+import io.bluetape4k.jwt.codec.JwtCodecs
 import io.bluetape4k.jwt.keychain.KeyChain
 import io.bluetape4k.jwt.provider.JwtProviderFactory
 import io.bluetape4k.logging.KLogging
@@ -22,11 +23,11 @@ class JwtComposerDslTest: AbstractJwtTest() {
     companion object: KLogging()
 
     private fun getCodecs() = listOf(
-        io.bluetape4k.jwt.codec.JwtCodecs.Lz4,
-        io.bluetape4k.jwt.codec.JwtCodecs.Snappy,
-        io.bluetape4k.jwt.codec.JwtCodecs.Zstd,
-        io.bluetape4k.jwt.codec.JwtCodecs.Gzip,
-        io.bluetape4k.jwt.codec.JwtCodecs.Deflate
+        JwtCodecs.Lz4,
+        JwtCodecs.Snappy,
+        JwtCodecs.Zstd,
+        JwtCodecs.Gzip,
+        JwtCodecs.Deflate
     )
 
     private val keyChain = KeyChain()
