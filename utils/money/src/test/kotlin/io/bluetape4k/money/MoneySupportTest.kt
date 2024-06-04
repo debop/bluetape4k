@@ -17,6 +17,7 @@ import kotlin.test.assertFailsWith
 class MoneySupportTest {
 
     companion object: KLogging() {
+        private const val EPSILON = 1e-2
         val Currencies: Collection<CurrencyUnit> = Monetary.getCurrencies()
 
         val defaultConversion = CurrencyConvertor.DefaultConversion
@@ -73,7 +74,7 @@ class MoneySupportTest {
         Monetary.getDefaultAmountFactory().setCurrency(USD).setNumber(200).create()
 
         val fastMoneyMinor = fastMoneyMinorOf(USD, 200L, 2)
-        fastMoneyMinor.precision
+        fastMoneyMinor.precision shouldBeEqualTo 1
         fastMoneyMinor.toString() shouldBeEqualTo "USD 2.00"
     }
 
@@ -114,8 +115,8 @@ class MoneySupportTest {
         val eur = usd.convertTo(EUR)
         val krw = usd.convertTo(KRW)
 
-        eur.convertTo(USD).doubleValue.shouldBeNear(usd.doubleValue, 1e-2)
-        krw.convertTo(USD).doubleValue.shouldBeNear(usd.doubleValue, 1e-2)
+        eur.convertTo(USD).doubleValue.shouldBeNear(usd.doubleValue, EPSILON)
+        krw.convertTo(USD).doubleValue.shouldBeNear(usd.doubleValue, EPSILON)
     }
 
     @Test

@@ -127,8 +127,8 @@ object Versions {
     const val httpclient5 = "5.3.1"   // https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
     const val httpcore5 = "5.2.4"    // https://mvnrepository.com/artifact/org.apache.httpcomponents.core5/httpcore5
     const val retrofit2 = "2.11.0"   // https://mvnrepository.com/artifact/com.squareup.retrofit2/adapter-rxjava2
-    const val okhttp3 = "4.12.0"    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
-    const val asynchttpclient = "2.12.3"
+    const val okhttp3 = "4.12.0"     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    const val asynchttpclient = "2.12.3"  // https://mvnrepository.com/artifact/org.asynchttpclient/async-http-client
 
     const val jackson = "2.17.1" // https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom
     const val jjwt = "0.11.5"    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
@@ -137,8 +137,8 @@ object Versions {
     const val reflectasm = "1.11.9"     // https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm
 
     const val mongo_driver = "4.11.2"   // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
-    const val lettuce = "6.2.6.RELEASE" // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
-    const val redisson = "3.27.2"       // https://mvnrepository.com/artifact/org.redisson/redisson
+    const val lettuce = "6.3.2.RELEASE" // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
+    const val redisson = "3.31.0"       // https://mvnrepository.com/artifact/org.redisson/redisson
 
     // NOTE: Hibernate 는 jakarta 버전인 경우 orm, validator 등이 group 에 포함됩니다.
     // NOTE: 이 경우 기존 javax 를 사용하는 버전과 충돌이 생길 수 있으니 조심하세요
