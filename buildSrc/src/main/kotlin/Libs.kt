@@ -240,7 +240,7 @@ object Libs {
         }
     }
 
-    const val jetbrains_annotations = "org.jetbrains:annotations:24.0.1"
+    const val jetbrains_annotations = "org.jetbrains:annotations:24.1.0" // https://mvnrepository.com/artifact/org.jetbrains/annotations
 
     // kotlin
     fun kotlin(module: String, version: String = Versions.kotlin) = "org.jetbrains.kotlin:kotlin-$module:$version"
