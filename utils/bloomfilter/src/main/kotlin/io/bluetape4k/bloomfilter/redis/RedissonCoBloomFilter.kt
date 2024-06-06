@@ -50,11 +50,11 @@ class RedissonCoBloomFilter<T: Any> private constructor(
     override suspend fun contains(value: T): Boolean {
         val offsets = Hasher.murmurHashOffset(value, k, m)
         val batch = redisson.createBatch()
+
         val bloomAsync = batch.getBitSet(bloomName)
-
         offsets.forEach { bloomAsync.getAsync(it.toLong()) }
-        val result = batch.executeAsync().coAwait()
 
+        val result = batch.executeAsync().coAwait()
         return result.responses.all { it as Boolean }
     }
 
