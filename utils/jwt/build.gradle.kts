@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.compileOnly
+import org.gradle.kotlin.dsl.testImplementation
+
 plugins {
     kotlin("plugin.spring")
 }
@@ -26,6 +29,7 @@ dependencies {
 
     // Serialization
     compileOnly(Libs.kryo)
+    compileOnly(Libs.fury)
 
     // Caching
     compileOnly(project(":bluetape4k-cache"))
