@@ -18,7 +18,7 @@ object Plugins {
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.10"
 
-        const val spring_boot = "3.2.6"  // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
+        const val spring_boot = "3.2.5"  // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
         const val quarkus = "3.3.2"
         const val apollo = "3.8.2"
         const val dgs = "5.6.9"
@@ -1143,6 +1143,9 @@ object Libs {
 
     const val hibernate_reactive_core = "org.hibernate.reactive:hibernate-reactive-core:${Versions.hibernate_reactive}"
     const val javassist = "org.javassist:javassist:3.29.2-GA"
+
+    const val antlr4_runtime = "org.antlr:antlr4-runtime:4.13.0"    // https://mvnrepository.com/artifact/org.antlr/antlr4-runtime
+    const val antlr4_tool = "org.antlr:antlr4:4.13.0"  // https://mvnrepository.com/artifact/org.antlr/antlr4
 
     // Validators
     const val hibernate_validator = "org.hibernate.validator:hibernate-validator:${Versions.hibernate_validator}"

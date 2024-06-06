@@ -67,16 +67,15 @@ subprojects {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(22))
+            languageVersion.set(JavaLanguageVersion.of(21))
         }
     }
 
     kotlin {
         jvmToolchain {
-            languageVersion.set(JavaLanguageVersion.of(22))
+            languageVersion.set(JavaLanguageVersion.of(21))
         }
         compilerOptions {
-            // jvmTarget.set(JvmTarget.JVM_21)
             languageVersion.set(KotlinVersion.KOTLIN_2_0)
             apiVersion.set(KotlinVersion.KOTLIN_2_0)
             freeCompilerArgs = listOf(
@@ -408,6 +407,9 @@ subprojects {
             dependency(Libs.hibernate_core)
             dependency(Libs.hibernate_jcache)
             dependency(Libs.javassist)
+
+            dependency(Libs.antlr4_runtime)  // https://github.com/spring-projects/spring-data-jpa/issues/3262
+            dependency(Libs.antlr4_tool)
 
             dependency(Libs.querydsl_apt)
             dependency(Libs.querydsl_core)
