@@ -64,16 +64,16 @@ subprojects {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(21))
+            languageVersion.set(JavaLanguageVersion.of(22))
         }
     }
 
     kotlin {
         jvmToolchain {
-            languageVersion.set(JavaLanguageVersion.of(21))
+            languageVersion.set(JavaLanguageVersion.of(22))
         }
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
+            // jvmTarget.set(JvmTarget.JVM_21)
             languageVersion.set(KotlinVersion.KOTLIN_2_0)
             apiVersion.set(KotlinVersion.KOTLIN_2_0)
             freeCompilerArgs = listOf(
