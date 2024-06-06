@@ -10,13 +10,13 @@ dependencies {
     api(Libs.zero_allocation_hashing)
 
     // Redis Drivers
-    api(project(":bluetape4k-redis"))
+    compileOnly(project(":bluetape4k-redis"))
     compileOnly(Libs.lettuce_core)
     compileOnly(Libs.redisson)
 
     // Coroutines
-    api(project(":bluetape4k-coroutines"))
-    api(Libs.kotlinx_coroutines_core)
+    compileOnly(project(":bluetape4k-coroutines"))
+    compileOnly(Libs.kotlinx_coroutines_core)
     testImplementation(Libs.kotlinx_coroutines_test)
 
     // TestContainers
