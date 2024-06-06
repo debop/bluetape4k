@@ -209,14 +209,11 @@ object Versions {
     const val snakeyaml = "2.2"            // https://mvnrepository.com/artifact/org.yaml/snakeyaml
     const val random_beans = "3.9.0"
 
-    // https://mvnrepository.com/artifact/com.github.maricn/logback-slack-appender
-    const val logback_slack_appender = "1.6.1"
+    const val logback_slack_appender = "1.6.1"  // https://mvnrepository.com/artifact/com.github.maricn/logback-slack-appender
 
-    // https://mvnrepository.com/artifact/io.sentry/sentry-logback
-    const val sentry_logback = "7.6.0"
+    const val sentry_logback = "7.6.0"  // https://mvnrepository.com/artifact/io.sentry/sentry-logback
 
-    // https://mvnrepository.com/artifact/com.sksamuel.scrimage/scrimage-core
-    const val scrimage = "4.1.1"
+    const val scrimage = "4.1.3"  // https://mvnrepository.com/artifact/com.sksamuel.scrimage/scrimage-core
 }
 
 object Libs {
