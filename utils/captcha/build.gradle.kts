@@ -8,9 +8,11 @@ dependencies {
 
     // Images
     // https://mvnrepository.com/artifact/com.sksamuel.scrimage/scrimage-core
-    implementation(Libs.scrimage_core)
-    implementation(Libs.scrimage_filters)
-    implementation(Libs.scrimage_webp)
+    api(Libs.scrimage_core)
+    api(Libs.scrimage_filters)
+    api(Libs.scrimage_webp)
 
+    // Coroutines
+    compileOnly(Libs.kotlinx_coroutines_core)
     testImplementation(Libs.kotlinx_coroutines_test)
 }
