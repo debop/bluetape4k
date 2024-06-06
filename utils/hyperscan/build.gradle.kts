@@ -26,7 +26,7 @@ dependencies {
     testImplementation(project(":bluetape4k-junit5"))
 
     // Hyperscan
-    val hyperscanVersion = "5.4.11-2.0.0"
+    val hyperscanVersion = "5.4.11-2.0.0"  // https://mvnrepository.com/artifact/com.gliwka.hyperscan/native
     api("com.gliwka.hyperscan:native:$hyperscanVersion")
     api("com.gliwka.hyperscan:native:$hyperscanVersion:linux-x86_64")
     api("com.gliwka.hyperscan:native:$hyperscanVersion:linux-arm64")

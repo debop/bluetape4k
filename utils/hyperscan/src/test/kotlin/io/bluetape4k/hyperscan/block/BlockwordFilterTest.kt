@@ -1,6 +1,7 @@
 package io.bluetape4k.hyperscan.block
 
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
+import io.bluetape4k.junit5.concurrency.VirtualthreadTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.Runtimex
@@ -72,10 +73,37 @@ class BlockwordFilterTest {
     }
 
     @Test
+    fun `금칙어 필터 - Hyperscan - Virtual threads`() {
+        val text = "느.금~마는 뭐지?, 중국 애들을 짱.깨라고 하지"
+
+        VirtualthreadTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(100)
+            .add {
+                blockwordFilter.filter(text).shouldNotBeEmpty()
+            }
+            .run()
+    }
+
+    @Test
     fun `금칙어 필터 - Kotlin Regex - Multi threading`() {
         val text = "느.금~마는 뭐지?, 중국 애들을 짱.깨라고 하지"
 
         MultithreadingTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(100)
+            .add {
+                val blockwords = filterBlockwords(text)
+                blockwords.shouldNotBeNullOrBlank()
+            }
+            .run()
+    }
+
+    @Test
+    fun `금칙어 필터 - Kotlin Regex - Virtual threads`() {
+        val text = "느.금~마는 뭐지?, 중국 애들을 짱.깨라고 하지"
+
+        VirtualthreadTester()
             .numThreads(2 * Runtimex.availableProcessors)
             .roundsPerThread(100)
             .add {
