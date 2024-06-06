@@ -5,6 +5,7 @@ import io.bluetape4k.idgenerators.flake.Flake
 import io.bluetape4k.idgenerators.snowflake.GlobalSnowflake
 import io.bluetape4k.idgenerators.uuid.TimebasedUuidGenerator
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
+import io.bluetape4k.junit5.concurrency.VirtualthreadTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
@@ -98,6 +99,21 @@ class HashIdsSupportTest {
         fun `encode flake id in multi threading`() {
             val map = ConcurrentHashMap<Long, Int>()
             MultithreadingTester()
+                .numThreads(2 * Runtimex.availableProcessors)
+                .roundsPerThread(ITEM_SIZE)
+                .add {
+                    val id = snowflake.nextId()
+                    verifySnowflakeId(id)
+                    map.putIfAbsent(id, 1).shouldBeNull()
+                }
+                .run()
+        }
+
+        @Test
+        fun `encode flake id in virtual threading`() {
+            val map = ConcurrentHashMap<Long, Int>()
+
+            VirtualthreadTester()
                 .numThreads(2 * Runtimex.availableProcessors)
                 .roundsPerThread(ITEM_SIZE)
                 .add {

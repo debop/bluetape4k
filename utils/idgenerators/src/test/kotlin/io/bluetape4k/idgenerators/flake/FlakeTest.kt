@@ -2,13 +2,12 @@ package io.bluetape4k.idgenerators.flake
 
 import io.bluetape4k.codec.encodeHexString
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
-import io.bluetape4k.junit5.coroutines.runSuspendTest
+import io.bluetape4k.junit5.concurrency.VirtualthreadTester
+import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.Runtimex
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldHaveSize
@@ -31,7 +30,6 @@ class FlakeTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `generate flake id`() {
-
         val ids = List(3) { flake.nextId() }
 
         ids[1] shouldNotBeEqualTo ids[0]
@@ -102,14 +100,38 @@ class FlakeTest {
     }
 
     @Test
-    fun `generate id in corotunes`() = runSuspendTest(Dispatchers.Default) {
-        val tasks = List(ID_SIZE) {
-            async {
-                flake.nextId()
+    fun `generate id in virtual threading`() {
+        val flake = Flake()
+        val idMap = ConcurrentHashMap<String, Int>()
+
+        VirtualthreadTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(100)
+            .add {
+                val id = flake.nextId()
+                val base62 = Flake.asBase62String(id)
+                log.trace { "id=${id.encodeHexString()}, base62=$base62" }
+
+                idMap.putIfAbsent(base62, 1).shouldBeNull()
             }
-        }
-        val ids = tasks.awaitAll()
-        ids shouldHaveSize ID_SIZE
-        ids.distinct() shouldHaveSize ID_SIZE
+            .run()
+    }
+
+    @Test
+    fun `generate id in multi jbos`() = runTest {
+        val flake = Flake()
+        val idMap = ConcurrentHashMap<String, Int>()
+
+        MultiJobTester()
+            .numJobs(2 * Runtimex.availableProcessors)
+            .roundsPerJob(100)
+            .add {
+                val id = flake.nextId()
+                val base62 = Flake.asBase62String(id)
+                log.trace { "id=${id.encodeHexString()}, base62=$base62" }
+
+                idMap.putIfAbsent(base62, 1).shouldBeNull()
+            }
+            .run()
     }
 }

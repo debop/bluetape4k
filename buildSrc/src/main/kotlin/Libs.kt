@@ -183,10 +183,10 @@ object Versions {
     const val elasticsearch = "8.7.0"
 
     const val kafka = "3.7.0"           // https://mvnrepository.com/artifact/org.apache.kafka/kafka
-    const val spring_kafka = "3.0.15"   // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
+    const val spring_kafka = "3.1.5"   // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
 
-    const val eclipse_collections = "11.1.0"
-    const val jctools = "3.3.0"
+    const val eclipse_collections = "11.1.0"  // https://mvnrepository.com/artifact/org.eclipse.collections/eclipse-collections
+    const val jctools = "4.0.5"             // https://mvnrepository.com/artifact/org.jctools/jctools-core
 
     const val ow2_asm = "9.7"               // https://mvnrepository.com/artifact/org.ow2.asm/asm
 
@@ -1238,7 +1238,7 @@ object Libs {
     const val flyway_core = "org.flywaydb:flyway-core:8.5.9"
 
     // UUID Generator
-    const val java_uuid_generator = "com.fasterxml.uuid:java-uuid-generator:4.3.0"
+    const val java_uuid_generator = "com.fasterxml.uuid:java-uuid-generator:5.1.0"
     const val uuid_creator = "com.github.f4b6a3:uuid-creator:5.3.2"
 
     // Cache2K

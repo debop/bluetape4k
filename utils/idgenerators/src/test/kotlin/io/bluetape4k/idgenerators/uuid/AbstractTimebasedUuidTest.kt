@@ -62,8 +62,9 @@ abstract class AbstractTimebasedUuidTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `generate timebased uuids in multi thread`() {
+    fun `generate timebased uuids in multi threads`() {
         val idMap = ConcurrentHashMap<UUID, Int>()
+
         MultithreadingTester()
             .numThreads(2 * Runtimex.availableProcessors)
             .roundsPerThread(TEST_COUNT)
@@ -77,6 +78,7 @@ abstract class AbstractTimebasedUuidTest {
     @RepeatedTest(REPEAT_SIZE)
     fun `generate timebased uuids in virtual threads`() {
         val idMap = ConcurrentHashMap<UUID, Int>()
+
         VirtualthreadTester()
             .numThreads(2 * Runtimex.availableProcessors)
             .roundsPerThread(TEST_COUNT)
@@ -90,6 +92,7 @@ abstract class AbstractTimebasedUuidTest {
     @RepeatedTest(REPEAT_SIZE)
     fun `generate timebased uuids in multi job`() = runTest {
         val idMap = ConcurrentHashMap<UUID, Int>()
+
         MultiJobTester()
             .numJobs(2 * Runtimex.availableProcessors)
             .roundsPerJob(TEST_COUNT)

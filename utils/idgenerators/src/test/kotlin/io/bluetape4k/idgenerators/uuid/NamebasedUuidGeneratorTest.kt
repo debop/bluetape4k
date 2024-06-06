@@ -1,6 +1,7 @@
 package io.bluetape4k.idgenerators.uuid
 
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
+import io.bluetape4k.junit5.concurrency.VirtualthreadTester
 import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
@@ -44,9 +45,24 @@ class NamebasedUuidGeneratorTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `generate timebased uuids in multi thread`() {
+    fun `generate timebased uuids in multi threads`() {
         val idMap = ConcurrentHashMap<UUID, Int>()
+
         MultithreadingTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(TEST_COUNT)
+            .add {
+                val id = uuidGenerator.nextId()
+                idMap.putIfAbsent(id, 1).shouldBeNull()
+            }
+            .run()
+    }
+
+    @RepeatedTest(REPEAT_SIZE)
+    fun `generate timebased uuids in virtual threads`() {
+        val idMap = ConcurrentHashMap<UUID, Int>()
+
+        VirtualthreadTester()
             .numThreads(2 * Runtimex.availableProcessors)
             .roundsPerThread(TEST_COUNT)
             .add {
@@ -59,6 +75,7 @@ class NamebasedUuidGeneratorTest {
     @RepeatedTest(REPEAT_SIZE)
     fun `generate timebased uuids in multi job`() = runTest {
         val idMap = ConcurrentHashMap<UUID, Int>()
+
         MultiJobTester()
             .numJobs(2 * Runtimex.availableProcessors)
             .roundsPerJob(TEST_COUNT)

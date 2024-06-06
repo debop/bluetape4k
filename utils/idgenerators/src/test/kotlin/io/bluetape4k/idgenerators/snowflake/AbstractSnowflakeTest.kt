@@ -5,6 +5,7 @@ import io.bluetape4k.collections.asParallelStream
 import io.bluetape4k.idgenerators.getMachineId
 import io.bluetape4k.idgenerators.parseAsLong
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
+import io.bluetape4k.junit5.concurrency.VirtualthreadTester
 import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
@@ -102,10 +103,24 @@ abstract class AbstractSnowflakeTest {
     }
 
     @Test
-    fun `generate snowflake id in multithread`() {
+    fun `generate snowflake id in multi threads`() {
         val idMap = ConcurrentHashMap<Long, Int>()
 
         MultithreadingTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(TEST_COUNT)
+            .add {
+                val id = snowflake.nextId()
+                idMap.putIfAbsent(id, 1).shouldBeNull()
+            }
+            .run()
+    }
+
+    @Test
+    fun `generate snowflake id in virtual threads`() {
+        val idMap = ConcurrentHashMap<Long, Int>()
+
+        VirtualthreadTester()
             .numThreads(2 * Runtimex.availableProcessors)
             .roundsPerThread(TEST_COUNT)
             .add {
@@ -266,7 +281,7 @@ abstract class AbstractSnowflakeTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `parse snowflake id in multi threading`() = runTest {
+    fun `parse snowflake id in multi threading`() {
         val idMap = ConcurrentHashMap<Long, Int>()
 
         MultithreadingTester()
@@ -284,7 +299,25 @@ abstract class AbstractSnowflakeTest {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `parse snowflake id as base62 in multi threading`() = runTest {
+    fun `parse snowflake id in virtual threading`() {
+        val idMap = ConcurrentHashMap<Long, Int>()
+
+        VirtualthreadTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(16)
+            .add {
+                val id = snowflake.nextId()
+                idMap.putIfAbsent(id, 1).shouldBeNull()
+            }
+            .add {
+                val id = snowflake.nextId()
+                idMap.putIfAbsent(id, 1).shouldBeNull()
+            }
+            .run()
+    }
+
+    @RepeatedTest(REPEAT_SIZE)
+    fun `parse snowflake id as base62 in multi threading`() {
         val idMap = ConcurrentHashMap<String, Int>()
 
         MultithreadingTester()
@@ -303,12 +336,54 @@ abstract class AbstractSnowflakeTest {
             .run()
     }
 
+    @RepeatedTest(REPEAT_SIZE)
+    fun `parse snowflake id as base62 in virtual threads`() {
+        val idMap = ConcurrentHashMap<String, Int>()
+
+        VirtualthreadTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(16)
+            .add {
+                val id = snowflake.nextId().encodeBase62()
+                log.trace { "base62=$id" }
+                idMap.putIfAbsent(id, 1).shouldBeNull()
+            }
+            .add {
+                val id = snowflake.nextId().encodeBase62()
+                log.trace { "base62=$id" }
+                idMap.putIfAbsent(id, 1).shouldBeNull()
+            }
+            .run()
+    }
+
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `parse snowflake ids as sequence in multi threading`() = runTest {
+    fun `parse snowflake ids as sequence in multi threading`() {
         val idMap = ConcurrentHashMap<Long, Int>()
 
         MultithreadingTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(16)
+            .add {
+                val ids = snowflake.nextIds(10)
+                ids.forEach { id ->
+                    idMap.putIfAbsent(id, 1).shouldBeNull()
+                }
+            }
+            .add {
+                val ids = snowflake.nextIds(10)
+                ids.forEach { id ->
+                    idMap.putIfAbsent(id, 1).shouldBeNull()
+                }
+            }
+            .run()
+    }
+
+    @RepeatedTest(REPEAT_SIZE)
+    fun `parse snowflake ids as sequence in virtual threads`() {
+        val idMap = ConcurrentHashMap<Long, Int>()
+
+        VirtualthreadTester()
             .numThreads(2 * Runtimex.availableProcessors)
             .roundsPerThread(16)
             .add {

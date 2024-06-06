@@ -13,7 +13,6 @@ import org.amshove.kluent.shouldBeLessThan
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -91,7 +90,6 @@ abstract class AbstractSequencerTest {
             .run()
     }
 
-    @Disabled("수행이 오래 걸린다")
     @Test
     fun `generate sequence in virtual threads`() {
         val idMap = ConcurrentHashMap<Long, Int>()
