@@ -14,6 +14,7 @@ class WatermarkFilterTest: AbstractFilterTest() {
 
     companion object: KLogging()
 
+    // write 내용이 바뀔 시에 true로 변경한 후 테스트를 실행하면 새로운 이미지 파일이 생성됩니다.
     private val saveResult = false
 
     @Test
