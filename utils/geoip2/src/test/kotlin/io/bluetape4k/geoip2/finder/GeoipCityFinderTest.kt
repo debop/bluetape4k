@@ -2,11 +2,11 @@ package io.bluetape4k.geoip2.finder
 
 import io.bluetape4k.concurrent.AtomicIntRoundrobin
 import io.bluetape4k.geoip2.AbstractGeoipTest
-import io.bluetape4k.junit5.coroutines.MultiJobTester
+import io.bluetape4k.junit5.concurrency.MultithreadingTester
+import io.bluetape4k.junit5.concurrency.VirtualthreadTester
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.utils.Runtimex
-import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
@@ -42,7 +42,7 @@ class GeoipCityFinderTest: AbstractGeoipTest() {
     }
 
     @Test
-    fun `find city in multi job`() = runTest {
+    fun `find city in multi-threading`() {
         val ipAddresses = getIpAddresses()
         val expected = ipAddresses.associateWith {
             cityFinder.findAddress(InetAddress.getByName(it))
@@ -50,9 +50,36 @@ class GeoipCityFinderTest: AbstractGeoipTest() {
 
         val index = AtomicIntRoundrobin(ipAddresses.size)
         val resultMap = ConcurrentHashMap<String, String?>()
-        MultiJobTester()
-            .numJobs(2 * Runtimex.availableProcessors)
-            .roundsPerJob(10)
+
+        MultithreadingTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(10)
+            .add {
+                val ip = ipAddresses[index.next()]
+                val address = cityFinder.findAddress(InetAddress.getByName(ip))!!
+                resultMap.putIfAbsent(ip, address.country)
+            }
+            .run()
+
+        expected.forEach { (ip, address) ->
+            log.debug { "ip=$ip, address=$address" }
+            resultMap[ip]!! shouldBeEqualTo address!!.country
+        }
+    }
+
+    @Test
+    fun `find city in virtual threads`() {
+        val ipAddresses = getIpAddresses()
+        val expected = ipAddresses.associateWith {
+            cityFinder.findAddress(InetAddress.getByName(it))
+        }
+
+        val index = AtomicIntRoundrobin(ipAddresses.size)
+        val resultMap = ConcurrentHashMap<String, String?>()
+
+        VirtualthreadTester()
+            .numThreads(2 * Runtimex.availableProcessors)
+            .roundsPerThread(10)
             .add {
                 val ip = ipAddresses[index.next()]
                 val address = cityFinder.findAddress(InetAddress.getByName(ip))!!

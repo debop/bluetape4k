@@ -4,7 +4,6 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-core"))
-    api(project(":bluetape4k-coroutines"))
     api(project(":bluetape4k-json"))
     api(project(":bluetape4k-resilience4j"))
     testImplementation(project(":bluetape4k-junit5"))
@@ -26,6 +25,7 @@ dependencies {
     api(Libs.httpcore5)
 
     // Coroutines
+    api(project(":bluetape4k-coroutines"))
     api(Libs.kotlinx_coroutines_core)
     testImplementation(Libs.kotlinx_coroutines_test)
 }

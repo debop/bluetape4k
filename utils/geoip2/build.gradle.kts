@@ -8,7 +8,5 @@ dependencies {
     testImplementation(project(":bluetape4k-junit5"))
 
     // MaxMind GeoIP2
-    api("com.maxmind.geoip2:geoip2:4.0.1")
-
-    testImplementation(Libs.kotlinx_coroutines_test)
+    api("com.maxmind.geoip2:geoip2:4.2.0") // https://mvnrepository.com/artifact/com.maxmind.geoip2/geoip2
 }
