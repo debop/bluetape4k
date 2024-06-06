@@ -1142,7 +1142,7 @@ object Libs {
     val hibernate_spatial = hibernate("spatial")
 
     const val hibernate_reactive_core = "org.hibernate.reactive:hibernate-reactive-core:${Versions.hibernate_reactive}"
-    const val javassist = "org.javassist:javassist:3.29.2-GA"
+    const val javassist = "org.javassist:javassist:3.30.2-GA"  // https://mvnrepository.com/artifact/org.javassist/javassist
 
     const val antlr4_runtime = "org.antlr:antlr4-runtime:4.13.0"    // https://mvnrepository.com/artifact/org.antlr/antlr4-runtime
     const val antlr4_tool = "org.antlr:antlr4:4.13.0"  // https://mvnrepository.com/artifact/org.antlr/antlr4
