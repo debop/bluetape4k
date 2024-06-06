@@ -4,6 +4,10 @@ plugins {
     id(Plugins.spring_boot)
 }
 
+springBoot {
+    mainClass.set("io.bluetape4k.workshop.coroutines.demo.CoroutineApplicationKt")
+}
+
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }

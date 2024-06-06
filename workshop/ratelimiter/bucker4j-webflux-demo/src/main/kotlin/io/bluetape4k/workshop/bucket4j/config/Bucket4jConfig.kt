@@ -46,11 +46,16 @@ class Bucket4jConfig {
     @Bean
     fun proxyManager(lettuceClient: RedisClient): ProxyManager<ByteArray> {
         return lettuceBasedProxyManagerOf(lettuceClient) {
-            withExpirationStrategy(
-                ExpirationAfterWriteStrategy.basedOnTimeForRefillingBucketUpToMax(90.seconds.toJavaDuration())
-            )
+//            withExpirationStrategy(
+//                ExpirationAfterWriteStrategy.basedOnTimeForRefillingBucketUpToMax(90.seconds.toJavaDuration())
+//            )
             withClientSideConfig(
                 ClientSideConfig.getDefault()
+                    .withExpirationAfterWriteStrategy(
+                        ExpirationAfterWriteStrategy.basedOnTimeForRefillingBucketUpToMax(
+                            90.seconds.toJavaDuration()
+                        )
+                    )
                     .withExecutionStrategy(ExecutionStrategy.background(VirtualThreadExecutor))
             )
         }

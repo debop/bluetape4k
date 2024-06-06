@@ -1,4 +1,5 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
@@ -15,6 +16,8 @@ plugins {
     kotlin("plugin.serialization") version Versions.kotlin apply false
     kotlin("plugin.atomicfu") version Versions.kotlin
     kotlin("kapt") version Versions.kotlin apply false
+
+    id(Plugins.detekt) version Plugins.Versions.detekt
 
     id(Plugins.dependency_management) version Plugins.Versions.dependency_management
     id(Plugins.spring_boot) version Plugins.Versions.spring_boot apply false
@@ -127,6 +130,17 @@ subprojects {
         testlogger {
             theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
             showFullStackTraces = true
+        }
+
+        val reportMerge by registering(ReportMergeTask::class) {
+            output.set(rootProject.buildDir.resolve("reports/detekt/exposed.xml"))
+        }
+        withType<Detekt>().configureEach detekt@{
+            enabled = this@subprojects.name !== "exposed-tests"
+            finalizedBy(reportMerge)
+            reportMerge.configure {
+                input.from(this@detekt.xmlReportFile)
+            }
         }
 
 //        jacoco {

@@ -3,6 +3,10 @@ plugins {
     id(Plugins.spring_boot)
 }
 
+springBoot {
+    mainClass.set("io.bluetape4k.workshop.r2dbc.WebfluxR2dbcApplicationKt")
+}
+
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())
 }

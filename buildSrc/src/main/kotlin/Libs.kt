@@ -18,7 +18,7 @@ object Plugins {
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.10"
 
-        const val spring_boot = "3.2.5"  // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
+        const val spring_boot = "3.2.6"  // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
         const val quarkus = "3.3.2"
         const val apollo = "3.8.2"
         const val dgs = "5.6.9"
@@ -183,7 +183,7 @@ object Versions {
     const val elasticsearch = "8.7.0"
 
     const val kafka = "3.7.0"           // https://mvnrepository.com/artifact/org.apache.kafka/kafka
-    const val spring_kafka = "3.1.5"   // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
+    const val spring_kafka = "3.2.0"   // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
 
     const val eclipse_collections = "11.1.0"  // https://mvnrepository.com/artifact/org.eclipse.collections/eclipse-collections
     const val jctools = "4.0.5"             // https://mvnrepository.com/artifact/org.jctools/jctools-core

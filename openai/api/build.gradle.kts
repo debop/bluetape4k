@@ -1,11 +1,14 @@
 plugins {
     // Spring 관련 Plugin 은 spring-cloud-openfeign 예제를 위한 것입니다.
     kotlin("plugin.spring")
-    id(Plugins.spring_boot)
+//    id(Plugins.spring_boot)
 }
 
-tasks.bootJar {
-    enabled = false
+//tasks.bootJar {
+//    enabled = false
+//}
+tasks.jar {
+    enabled = true
 }
 
 configurations {

@@ -4,7 +4,7 @@ plugins {
 }
 
 springBoot {
-
+    mainClass.set("io.bluetape4k.workshop.r2dbc.ApplicationKt")
 }
 
 configurations {
