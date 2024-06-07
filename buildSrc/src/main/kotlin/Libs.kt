@@ -73,6 +73,7 @@ object Versions {
 
     const val spring_boot = Plugins.Versions.spring_boot
     const val spring_cloud = "2023.0.0"     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies
+    const val spring_integration = "6.2.5"  // https://mvnrepository.com/artifact/org.springframework.integration/spring-integration-core
     const val reactor_bom = "2023.0.4"      // https://mvnrepository.com/artifact/io.projectreactor/reactor-bom
     const val spring_statemachine = "4.0.0" // https://mvnrepository.com/artifact/org.springframework.statemachine/spring-statemachine-core
 
@@ -434,6 +435,36 @@ object Libs {
     val spring_cloud_commons = springCloud("commons")
     val spring_cloud_stream = springCloud("stream")
     val spring_cloud_starter_bootstrap = springCloudStarter("bootstrap")
+
+    // Spring Integration
+    fun springIntegration(module: String) =
+        "org.springframework.integration:spring-integration-$module:${Versions.spring_integration}"
+
+    val spring_integration_bom = springIntegration("bom")
+
+    val spring_integration_ampq = springIntegration("amqp")
+    val spring_integration_cassandra = springIntegration("cassandra")
+    val spring_integration_core = springIntegration("core")
+    val spring_integration_debezium = springIntegration("debezium")
+    val spring_integration_file = springIntegration("file")
+    val spring_integration_http = springIntegration("http")
+    val spring_integration_jdbc = springIntegration("jdbc")
+    val spring_integration_jms = springIntegration("jms")
+    val spring_integration_jpa = springIntegration("jpa")
+    val spring_integration_kafka = springIntegration("kafka")
+    val spring_integration_mongodb = springIntegration("mongodb")
+    val spring_integration_mqtt = springIntegration("mqtt")
+    val spring_integration_r2dbc = springIntegration("r2dbc")
+    val spring_integration_redis = springIntegration("redis")
+    val spring_integration_security = springIntegration("security")
+    val spring_integration_stomp = springIntegration("stomp")
+    val spring_integration_test = springIntegration("test")
+    val spring_integration_test_support = springIntegration("test-support")
+    val spring_integration_webflux = springIntegration("webflux")
+    val spring_integration_websocket = springIntegration("websocket")
+    val spring_integration_xmpp = springIntegration("xmpp")
+    val spring_integration_zookeeper = springIntegration("zookeeper")
+
 
     fun springStatemachine(module: String) =
         "org.springframework.statemachine:spring-statemachine-$module:${Versions.spring_statemachine}"
