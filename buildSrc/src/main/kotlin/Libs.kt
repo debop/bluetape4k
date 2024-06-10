@@ -195,18 +195,18 @@ object Versions {
     const val junit_platform = "1.10.2"     // https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
     const val assertj_core = "3.24.2"
     const val kluent = "1.73"               // https://mvnrepository.com/artifact/org.amshove.kluent/kluent
-    const val mockk = "1.13.10"             // https://mvnrepository.com/artifact/io.mockk/mockk
+    const val mockk = "1.13.11"             // https://mvnrepository.com/artifact/io.mockk/mockk
     const val springmockk = "4.0.2"         // https://mvnrepository.com/artifact/com.ninja-squad/springmockk
     const val mockito = "5.7.0"
     const val mockito_kotlin = "5.1.0"
     const val awaitility = "4.2.1"          // https://mvnrepository.com/artifact/org.awaitility/awaitility
     const val jmh = "1.37"
-    const val testcontainers = "1.19.7"    // https://mvnrepository.com/artifact/org.testcontainers/testcontainers
+    const val testcontainers = "1.19.8"     // https://mvnrepository.com/artifact/org.testcontainers/testcontainers
     const val jna = "5.13.0"
     const val archunit = "0.21.0"
     const val rest_assured = "5.4.0"        // https://mvnrepository.com/artifact/io.rest-assured/rest-assured
 
-    const val datafaker = "2.1.0"          // https://mvnrepository.com/artifact/net.datafaker/datafaker
+    const val datafaker = "2.2.2"          // https://mvnrepository.com/artifact/net.datafaker/datafaker
     const val snakeyaml = "2.2"            // https://mvnrepository.com/artifact/org.yaml/snakeyaml
     const val random_beans = "3.9.0"
 
@@ -437,8 +437,7 @@ object Libs {
     val spring_cloud_starter_bootstrap = springCloudStarter("bootstrap")
 
     // Spring Integration
-    fun springIntegration(module: String) =
-        "org.springframework.integration:spring-integration-$module:${Versions.spring_integration}"
+    fun springIntegration(module: String) = "org.springframework.integration:spring-integration-$module:${Versions.spring_integration}"
 
     val spring_integration_bom = springIntegration("bom")
 
@@ -551,8 +550,7 @@ object Libs {
         "io.quarkiverse.loggingsentry:quarkus-logging-sentry:${Versions.Quarkiverse.logging_sentry}"
     const val quarkiverse_vault = "io.Quarkiverse.vault:quarkus-vault:${Versions.Quarkiverse.vault}"
 
-    const val quarkiverse_reactivemessaing_http =
-        "io.quarkiverse.reactivemessaging.http:quarkus-reactive-messaging-http:${Versions.Quarkiverse.reactive_messaging_http}"
+    const val quarkiverse_reactivemessaing_http = "io.quarkiverse.reactivemessaging.http:quarkus-reactive-messaging-http:${Versions.Quarkiverse.reactive_messaging_http}"
 
     // Quarkus Blaze Persistence
     const val quarkus_blaze_persistence_bom = "io.quarkus.platform:quarkus-blaze-persistence-bom:${Versions.quarkus}"
@@ -1027,8 +1025,7 @@ object Libs {
     val opentelemetry_instrumentation_bom_alpha =
         opentelemetryInstrumentation("instrumentation-bom-alpha:${Versions.opentelemetryInstrumentationAlpha}")
 
-    const val opentelemetry_javaagent_remote_path =
-        "https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${Versions.opentelemetryJavaAgent}/opentelemetry-javaagent.jar"
+    const val opentelemetry_javaagent_remote_path = "https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${Versions.opentelemetryJavaAgent}/opentelemetry-javaagent.jar"
     const val opentelemetry_javaagent_local_path = "otel/opentelemetry-javaagent.jar"
 
     val opentelemetry_api = opentelemetry("api")
@@ -1373,7 +1370,7 @@ object Libs {
     const val datafaker = "net.datafaker:datafaker:${Versions.datafaker}"
     const val snakeyaml = "org.yaml:snakeyaml:${Versions.snakeyaml}"
 
-    // TODO: https://github.com/j-easy/easy-random 으로 Upgrade 하기
+    // https://github.com/j-easy/easy-random 으로 Upgrade 하기
     const val random_beans = "io.github.benas:random-beans:${Versions.random_beans}"
 
     const val mockserver_netty = "org.mock-server:mockserver-netty:5.10.0"
