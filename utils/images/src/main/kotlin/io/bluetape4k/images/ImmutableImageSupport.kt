@@ -39,7 +39,7 @@ suspend fun loadImageSuspending(path: Path): ImmutableImage {
 }
 
 suspend fun ImmutableImage.bytesSuspending(writer: CoImageWriter): ByteArray {
-    return ByteArrayOutputStream().use { bos ->
+    return ByteArrayOutputStream(DEFAULT_BUFFER_SIZE).use { bos ->
         writer.writeSuspending(this, this.metadata, bos)
         bos.toByteArray()
     }

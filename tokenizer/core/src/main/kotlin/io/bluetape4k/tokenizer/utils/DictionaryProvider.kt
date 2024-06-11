@@ -3,6 +3,7 @@ package io.bluetape4k.tokenizer.utils
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.flatMapMerge
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -18,12 +19,11 @@ object DictionaryProvider: KLogging() {
     private const val SPACE = " "
     private const val TAB = "\t"
 
-    fun readStreamByLine(stream: InputStream): Sequence<String> = sequence {
-        InputStreamReader(stream, Charsets.UTF_8).buffered().use { reader ->
-            reader.lineSequence().forEach { line ->
-                yield(line.trim())
-            }
-        }
+    fun readStreamByLine(stream: InputStream): Sequence<String> {
+        return InputStreamReader(stream, Charsets.UTF_8)
+            .buffered()
+            .lineSequence()
+            .map { it.trim() }
     }
 
     fun readFileByLineFromResources(path: String, classLoader: ClassLoader? = null): Sequence<String> {
@@ -72,6 +72,7 @@ object DictionaryProvider: KLogging() {
     suspend fun readWordsAsSet(vararg paths: String): MutableSet<String> {
         val set = ConcurrentSkipListSet<String>()
         paths.asFlow()
+            .buffer()
             .flatMapMerge { path -> readFileByLineFromResources(path).asFlow() }
             .collect { word -> set.add(word) }
 
@@ -81,6 +82,7 @@ object DictionaryProvider: KLogging() {
     suspend fun readWords(vararg paths: String): CharArraySet {
         val set = newCharArraySet()
         paths.asFlow()
+            .buffer()
             .flatMapMerge { path -> readFileByLineFromResources(path).asFlow() }
             .collect { word -> set.add(word) }
         return set

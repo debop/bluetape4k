@@ -3,6 +3,7 @@ package io.bluetape4k.naivebayes
 import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import kotlinx.coroutines.Dispatchers
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
@@ -36,7 +37,7 @@ class NaiveBayesClassifierEnglishTest: AbstractNaiveBayesClassifierTest() {
     )
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `classify spam`() = runSuspendTest {
+    fun `classify spam`() = runSuspendTest(Dispatchers.Default) {
         val nbc = naiveBayesClassifierOf(
             emails,
             categorySelector = { it.isSpam },
@@ -106,7 +107,7 @@ class NaiveBayesClassifierEnglishTest: AbstractNaiveBayesClassifierTest() {
     )
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `bank transaction example`() = runSuspendTest {
+    fun `bank transaction example`() = runSuspendTest(Dispatchers.Default) {
         val nbc = naiveBayesClassifierOf(
             bankTransactions,
             featuresSelector = { it.memo.splitWords().toSet() },

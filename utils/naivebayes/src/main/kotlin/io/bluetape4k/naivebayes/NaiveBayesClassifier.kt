@@ -2,13 +2,13 @@ package io.bluetape4k.naivebayes
 
 import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlin.math.exp
 import kotlin.math.ln
@@ -106,12 +106,11 @@ class NaiveBayesClassifier<F: Any, C: Any>(
         val f = features.toSet()
 
         categories.asFlow()
-            .buffer()
             .filter { category: C ->
                 population.any { it.category == category } && probabilities.values.any { it.feature in f }
             }
-            .map { category: C ->
-                val probIfCategory = async(Dispatchers.Default) {
+            .flatMapMerge { category: C ->
+                val probIfCategory = async {
                     probabilities.values
                         .filter { it.category == category }
                         .sumOf {
@@ -124,7 +123,7 @@ class NaiveBayesClassifier<F: Any, C: Any>(
                         .run { exp(this) }
                 }
 
-                val probIfNotCategory = async(Dispatchers.Default) {
+                val probIfNotCategory = async {
                     probabilities.values
                         .filter { it.category == category }
                         .sumOf {
@@ -137,11 +136,14 @@ class NaiveBayesClassifier<F: Any, C: Any>(
                         .run { exp(this) }
                 }
 
-                CategoryProbability(
-                    category = category,
-                    probability = probIfCategory.await() / (probIfCategory.await() + probIfNotCategory.await())
+                flowOf(
+                    CategoryProbability(
+                        category = category,
+                        probability = probIfCategory.await() / (probIfCategory.await() + probIfNotCategory.await())
+                    )
                 )
             }
+            .buffer()
             .filter { it.probability >= 0.1 }
             .toList()
             .maxByOrNull { it.probability }
