@@ -10,7 +10,8 @@ import kotlinx.coroutines.yield
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 
 /**
@@ -52,7 +53,7 @@ class SemaphoreExamples: AbstractRedissonCoroutineTest() {
                 val s3 = redisson3.getSemaphore(semaphoreName)
                 yield()
                 // 4개 확보
-                s3.tryAcquireAsync(4, 5, TimeUnit.SECONDS).coAwait().shouldBeTrue()
+                s3.tryAcquireAsync(4, 5.seconds.toJavaDuration()).coAwait().shouldBeTrue()
                 yield()
             } finally {
                 redisson3.shutdown()
@@ -108,7 +109,7 @@ class SemaphoreExamples: AbstractRedissonCoroutineTest() {
                     val s3 = redisson3.getSemaphore(semaphoreName)
                     Thread.sleep(1)
                     // 4개 확보
-                    s3.tryAcquire(2, 5, TimeUnit.SECONDS).shouldBeTrue()
+                    s3.tryAcquire(2, 5.seconds.toJavaDuration()).shouldBeTrue()
                     Thread.sleep(1)
                 } finally {
                     redisson3.shutdown()

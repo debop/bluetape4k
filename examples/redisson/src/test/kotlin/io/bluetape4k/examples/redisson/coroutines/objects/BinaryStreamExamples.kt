@@ -9,6 +9,7 @@ import io.bluetape4k.support.toUtf8String
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.RepeatedTest
+import org.redisson.api.RBinaryStream
 import java.time.Duration
 
 /**
@@ -28,7 +29,7 @@ class BinaryStreamExamples: AbstractRedissonCoroutineTest() {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `RBinaryStream 사용 예`() = runSuspendWithIO {
-        val stream = redisson.getBinaryStream(randomName())
+        val stream: RBinaryStream = redisson.getBinaryStream(randomName())
 
         val contentStr = randomString()
         val contentBytes = contentStr.toUtf8Bytes()

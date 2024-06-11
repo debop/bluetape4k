@@ -99,7 +99,7 @@ object Versions {
     }
 
     const val resteasy = "6.2.4.Final"
-    const val mutiny = "2.5.8"              // https://mvnrepository.com/artifact/io.smallrye.reactive/mutiny
+    const val mutiny = "2.6.0"              // https://mvnrepository.com/artifact/io.smallrye.reactive/mutiny
     const val vertx = "4.5.8"               // https://mvnrepository.com/artifact/io.vertx/vertx-core
     const val camel_quarkus = "2.16.0"
     const val agroal = "2.2"

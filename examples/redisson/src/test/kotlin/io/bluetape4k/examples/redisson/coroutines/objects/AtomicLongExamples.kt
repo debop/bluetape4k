@@ -30,7 +30,7 @@ class AtomicLongExamples: AbstractRedissonCoroutineTest() {
         }
         jobs.joinAll()
 
-        counter.getAsync().coAwait() shouldBeEqualTo TEST_COUNT.toLong()
+        counter.async.coAwait() shouldBeEqualTo TEST_COUNT.toLong()
         counter.deleteAsync().coAwait().shouldBeTrue()
     }
 

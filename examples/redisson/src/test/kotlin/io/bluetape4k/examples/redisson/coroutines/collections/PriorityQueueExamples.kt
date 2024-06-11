@@ -38,7 +38,6 @@ class PriorityQueueExamples: AbstractRedissonCoroutineTest() {
         // 첫번째 요소 가져오기
         queue.pollAsync().coAwait() shouldBeEqualTo Item("a", 3)
 
-
         queue.deleteAsync().coAwait()
     }
 }

@@ -115,7 +115,7 @@ class CompositionTransformationExamples {
         tuple.toList() shouldBeEqualTo listOf(1, 2, 3)
 
         val combined = Uni.combine().all().unis(first, second, third)
-            .combinedWith { a, b, c -> a + b + c }
+            .with { a, b, c -> a + b + c }
             .await().indefinitely()
 
         combined shouldBeEqualTo 6

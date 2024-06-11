@@ -209,7 +209,6 @@ class FailuresExample {
         items shouldBeEqualTo (0..9).toList()
     }
 
-    @Suppress("ReactiveStreamsThrowInOperator")
     private fun safeGuardedOperation(i: Int): Uni<Int> {
         return Uni.createFrom().item(i)
             .onItem().invoke { n ->

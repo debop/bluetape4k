@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test
 import org.redisson.api.GeoEntry
 import org.redisson.api.GeoPosition
 import org.redisson.api.GeoUnit
+import org.redisson.api.RGeo
 import org.redisson.api.geo.GeoSearchArgs
 
 
@@ -25,7 +26,7 @@ class GeoExamples: AbstractRedissonCoroutineTest() {
     @Test
     fun `RGeo example`() = runSuspendWithIO {
 
-        val geo = redisson.getGeo<String>(randomName())
+        val geo: RGeo<String> = redisson.getGeo(randomName())
 
         val palermo = GeoEntry(13.361389, 38.115556, "Palermo")
         val catania = GeoEntry(15.087269, 37.502669, "Catania")

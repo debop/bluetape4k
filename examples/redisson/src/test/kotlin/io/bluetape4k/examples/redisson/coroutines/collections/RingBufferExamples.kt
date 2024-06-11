@@ -29,15 +29,12 @@ class RingBufferExamples: AbstractRedissonCoroutineTest() {
         buffer.remainingCapacityAsync().coAwait() shouldBeEqualTo 0
 
         // buffer contains 1,2,3,4
-
         buffer.addAllAsync(listOf(5, 6)).coAwait().shouldBeTrue()
 
         // buffer contains 3,4,5,6
-
         buffer.pollAsync(2).coAwait() shouldBeEqualTo listOf(3, 4)
 
         // buffer contains 5, 6
-
         buffer.deleteAsync().coAwait()
     }
 }
