@@ -129,6 +129,7 @@ object Versions {
     const val httpcore5 = "5.2.4"    // https://mvnrepository.com/artifact/org.apache.httpcomponents.core5/httpcore5
     const val retrofit2 = "2.11.0"   // https://mvnrepository.com/artifact/com.squareup.retrofit2/adapter-rxjava2
     const val okhttp3 = "4.12.0"     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    const val okio = "3.9.0"         // https://mvnrepository.com/artifact/com.squareup.okio/okio
     const val asynchttpclient = "2.12.3"  // https://mvnrepository.com/artifact/org.asynchttpclient/async-http-client
 
     const val jackson = "2.17.1" // https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom
@@ -847,6 +848,8 @@ object Libs {
     val okhttp3_sse = okhttp("okhttp-sse")
     val okhttp3_urlconnection = okhttp("okhttp-urlconnection")
     val okhttp3_ws = okhttp("okhttp-ws")
+
+    val okio = "com.squareup.okio:okio:${Versions.okio}"
 
     // MapStruct
     const val mapstruct = "org.mapstruct:mapstruct:${Versions.mapstruct}"
