@@ -30,6 +30,11 @@ class TempFolder: ExtensionContext.Store.CloseableResource, Closeable {
         }
     }
 
+    /**
+     * 임시 파일을 생성합니다.
+     *
+     * @return 생성된 임시 [File] 객체
+     */
     fun createFile(): File {
         return try {
             Files.createTempFile(rootPath, PREFIX, null).toFile().apply {
