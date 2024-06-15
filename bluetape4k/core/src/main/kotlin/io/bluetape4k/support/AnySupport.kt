@@ -173,3 +173,11 @@ fun Any?.toStr(): String = try {
 } catch (thr: Throwable) {
     "<error \"$thr\">"
 }
+
+/**
+ * Java Object의 `notify()`을 호출합니다.
+ */
+@Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+fun Any.notify() {
+    (this as java.lang.Object).notify()
+}

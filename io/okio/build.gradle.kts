@@ -4,6 +4,7 @@ configurations {
 
 dependencies {
     api(Libs.okio)
+    testImplementation(Libs.okio_fakefilesystem)
 
     api(project(":bluetape4k-core"))
     testImplementation(project(":bluetape4k-junit5"))

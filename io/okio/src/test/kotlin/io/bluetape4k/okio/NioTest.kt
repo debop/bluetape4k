@@ -1,10 +1,7 @@
-package okio.examples
+package io.bluetape4k.okio
 
 import io.bluetape4k.junit5.folder.TempFolder
 import io.bluetape4k.junit5.folder.TempFolderTest
-import io.bluetape4k.okio.asBufferedSink
-import io.bluetape4k.okio.asBufferedSource
-import io.bluetape4k.okio.buffered
 import io.bluetape4k.support.toUtf8Bytes
 import okio.Buffer
 import okio.BufferedSink
@@ -88,8 +85,7 @@ class NioTest {
 
     @Test
     fun `readable channel buffer`() {
-        val buffer = Buffer()
-        buffer.writeUtf8("abcdefghijklmnopqrstuvwxyz")
+        val buffer = bufferOf("abcdefghijklmnopqrstuvwxyz")
         testReadableByteChannel(buffer)
     }
 

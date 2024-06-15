@@ -1,4 +1,4 @@
-package okio.examples
+package io.bluetape4k.okio
 
 import okio.BufferedSink
 import okio.BufferedSource

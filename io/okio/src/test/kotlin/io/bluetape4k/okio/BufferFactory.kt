@@ -1,4 +1,4 @@
-package okio.examples
+package io.bluetape4k.okio
 
 import io.bluetape4k.okio.tests.TestUtil.bufferWithRandomSegmentLayout
 import io.bluetape4k.okio.tests.TestUtil.bufferWithSegments

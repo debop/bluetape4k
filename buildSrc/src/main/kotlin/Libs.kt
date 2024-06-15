@@ -849,7 +849,9 @@ object Libs {
     val okhttp3_urlconnection = okhttp("okhttp-urlconnection")
     val okhttp3_ws = okhttp("okhttp-ws")
 
-    val okio = "com.squareup.okio:okio:${Versions.okio}"
+    // Okio
+    const val okio = "com.squareup.okio:okio:${Versions.okio}"
+    const val okio_fakefilesystem = "com.squareup.okio:okio-fakefilesystem:${Versions.okio}"
 
     // MapStruct
     const val mapstruct = "org.mapstruct:mapstruct:${Versions.mapstruct}"

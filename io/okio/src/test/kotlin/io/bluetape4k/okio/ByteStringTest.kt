@@ -1,4 +1,4 @@
-package okio.examples
+package io.bluetape4k.okio
 
 import okio.ByteString
 import okio.ByteString.Companion.encode
