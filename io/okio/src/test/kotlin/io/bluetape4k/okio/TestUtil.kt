@@ -1,6 +1,8 @@
-package io.bluetape4k.okio.tests
+package io.bluetape4k.okio
 
 import okio.Buffer
+import okio.ByteString
+import org.amshove.kluent.shouldBeEqualTo
 import kotlin.random.Random
 
 object TestUtil {
@@ -11,6 +13,17 @@ object TestUtil {
     const val REPLACEMENT_BYTE: Byte = '?'.code.toByte()
     const val REPLACEMENT_CHARACTER: Char = '\ufffd'
     const val REPLACEMENT_CODE_POINT: Int = REPLACEMENT_CHARACTER.code
+
+    fun assertByteArraysEquals(a: ByteArray, b: ByteArray) {
+        a.contentToString() shouldBeEqualTo b.contentToString()
+    }
+
+    fun randomBytes(length: Int): ByteString {
+        val random = Random(0)
+        val randomBytes = ByteArray(length)
+        random.nextBytes(randomBytes)
+        return ByteString.of(*randomBytes)
+    }
 
     /**
      * Returns a new buffer containing the contents of `segments`, attempting to isolate each

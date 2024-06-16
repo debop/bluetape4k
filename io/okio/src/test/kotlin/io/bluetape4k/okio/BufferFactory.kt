@@ -1,7 +1,7 @@
 package io.bluetape4k.okio
 
-import io.bluetape4k.okio.tests.TestUtil.bufferWithRandomSegmentLayout
-import io.bluetape4k.okio.tests.TestUtil.bufferWithSegments
+import io.bluetape4k.okio.TestUtil.bufferWithRandomSegmentLayout
+import io.bluetape4k.okio.TestUtil.bufferWithSegments
 import okio.Buffer
 import kotlin.random.Random
 

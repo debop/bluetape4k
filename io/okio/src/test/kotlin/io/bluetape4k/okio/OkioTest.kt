@@ -4,7 +4,6 @@ import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.junit5.folder.TempFolder
 import io.bluetape4k.junit5.folder.TempFolderTest
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.okio.tests.TestUtil
 import io.bluetape4k.support.toUtf8Bytes
 import okio.Buffer
 import okio.appendingSink
