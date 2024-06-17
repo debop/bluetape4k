@@ -37,14 +37,7 @@ fun <T> Future<T>.recover(
     onFailure { error ->
         tryRecover(exceptionType, exceptionHandler, promise, error.cause ?: error)
     }
-//    this.onComplete { ar ->
-//        if (ar.failed()) {
-//            val throwable = ar.cause()
-//            tryRecover(exceptionType, exceptionHandler, promise, throwable.cause ?: throwable)
-//        } else {
-//            promise.complete(ar.result())
-//        }
-//    }
+
     return promise.future()
 }
 
