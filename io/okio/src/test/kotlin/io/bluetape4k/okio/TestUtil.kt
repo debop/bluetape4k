@@ -16,6 +16,7 @@ object TestUtil: KLogging() {
     const val REPLACEMENT_CHARACTER: Char = '\ufffd'
     const val REPLACEMENT_CODE_POINT: Int = REPLACEMENT_CHARACTER.code
 
+
     fun assertByteArraysEquals(a: ByteArray, b: ByteArray) {
         a.contentToString() shouldBeEqualTo b.contentToString()
     }

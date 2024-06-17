@@ -2,7 +2,7 @@ package io.bluetape4k.okio
 
 import okio.ByteString
 
-@JvmName("byteStringOf")
+@JvmName("byteStringOfBytes")
 fun byteStringOf(vararg bytes: Byte): ByteString = ByteString.of(*bytes)
 
 @JvmName("byteStringOfByteArray")

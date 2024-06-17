@@ -4,9 +4,9 @@ import okio.Buffer
 import okio.BufferedSink
 import okio.BufferedSource
 import okio.ByteString
-import okio.ByteString.Companion.toByteString
 import okio.Sink
 import okio.Source
+import java.io.InputStream
 
 /**
  * [Buffer]를 [BufferedSource]로 변환합니다.
@@ -27,12 +27,31 @@ fun Buffer.asBufferedSink(): BufferedSink = (this as Sink).buffered()
 fun bufferOf(text: String): Buffer = Buffer().writeUtf8(text)
 
 /**
+ * [texts]를 새로운 [Buffer]에 순서대로 쓴 후 반환합니다.
+ */
+fun bufferOf(vararg texts: String): Buffer {
+    return Buffer().apply {
+        texts.forEach { writeUtf8(it) }
+    }
+}
+
+/**
  * [bytes]를 담은 [Buffer]를 생성합니다.
  *
  * @param bytes Buffer에 쓸 [ByteArray]
  * @return [Buffer] 인스턴스
  */
-fun bufferOf(bytes: ByteArray): Buffer = Buffer().write(bytes.toByteString())
+@JvmName("bufferOfByteArray")
+fun bufferOf(bytes: ByteArray): Buffer = Buffer().write(bytes)
+
+/**
+ *  [bytes]를 담은 [Buffer]를 생성합니다.
+ */
+@JvmName("bufferOfBytes")
+fun bufferOf(vararg bytes: Byte): Buffer = Buffer().write(bytes)
+
+fun bufferOf(input: InputStream, byteCount: Long = input.available().toLong()): Buffer =
+    Buffer().readFrom(input, byteCount)
 
 /**
  * [byteString]을 담은 [Buffer]를 생성합니다.
