@@ -1,11 +1,13 @@
 package io.bluetape4k.okio
 
+import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import okio.Buffer
 import okio.ByteString
 import org.amshove.kluent.shouldBeEqualTo
 import kotlin.random.Random
 
-object TestUtil {
+object TestUtil: KLogging() {
 
     const val SEGMENT_POOL_MAX_SIZE = 64 * 1024
     const val SEGMENT_SIZE = 8192
@@ -39,7 +41,8 @@ object TestUtil {
                 writeUtf8(segment)
                 skip(offsetInSegment.toLong())
             }
-            result.write(buffer.copy(), buffer.size)
+            log.debug { "buffer=$buffer, buffer.size=${buffer.size}" }
+            result.write(buffer.clone(), buffer.size)
         }
         return result
     }

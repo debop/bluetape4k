@@ -3,7 +3,10 @@ package io.bluetape4k.okio.coroutines.internal
 import okio.Buffer
 import okio.Timeout
 
-internal inline fun <R> Buffer.readUnsafe(
+/**
+ * Buffer의 내용을 `cursor`를 통해 읽기 작업([block]) 수행합니다.
+ */
+inline fun <R> Buffer.readUnsafe(
     cursor: Buffer.UnsafeCursor = Buffer.UnsafeCursor(),
     block: (cursor: Buffer.UnsafeCursor) -> R,
 ): R {
@@ -12,7 +15,10 @@ internal inline fun <R> Buffer.readUnsafe(
     }
 }
 
-internal inline fun <R> Buffer.readAndWriteUnsafe(
+/**
+ * Buffer의 내용을 `cursor`를 통해 읽기/쓰기 작업([block]) 수행합니다.
+ */
+inline fun <R> Buffer.readAndWriteUnsafe(
     cursor: Buffer.UnsafeCursor = Buffer.UnsafeCursor(),
     block: (cursor: Buffer.UnsafeCursor) -> R,
 ): R {
@@ -22,7 +28,7 @@ internal inline fun <R> Buffer.readAndWriteUnsafe(
 }
 
 // TODO: refactoring to Timeout.run
-internal suspend inline fun <R> withTimeout(timeout: Timeout, crossinline block: suspend () -> R): R {
+suspend inline fun <R> withTimeout(timeout: Timeout, crossinline block: suspend () -> R): R {
     if (timeout.timeoutNanos() == 0L && !timeout.hasDeadline()) {
         return block()
     }

@@ -41,3 +41,12 @@ fun bufferOf(bytes: ByteArray): Buffer = Buffer().write(bytes.toByteString())
  * @return [Buffer] 인스턴스
  */
 fun bufferOf(byteString: ByteString): Buffer = Buffer().write(byteString)
+
+/**
+ * [source] 내용을 복사한 [Buffer]를 생성합니다.
+ */
+fun bufferOf(source: Buffer, offset: Long = 0L, size: Long = source.size): Buffer {
+    return Buffer().apply {
+        source.clone().copyTo(this, offset, size)
+    }
+}

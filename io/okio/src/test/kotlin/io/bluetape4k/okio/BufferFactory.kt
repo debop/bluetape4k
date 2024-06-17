@@ -25,17 +25,21 @@ enum class BufferFactory {
     },
     LARGE_BUFFER {
         override fun newBuffer(): Buffer {
+            val dice = Random(0)
             val largeByteArray = ByteArray(512 * 1024)
-            Random.nextBytes(largeByteArray)
+            dice.nextBytes(largeByteArray)
+
             return Buffer().write(largeByteArray)
         }
     },
 
     LARGE_BUFFER_WITH_RANDOM_LAYOUT {
         override fun newBuffer(): Buffer {
+            val dice = Random(0)
             val largeByteArray = ByteArray(512 * 1024)
-            Random.nextBytes(largeByteArray)
-            return bufferWithRandomSegmentLayout(Random.Default, largeByteArray)
+            dice.nextBytes(largeByteArray)
+
+            return bufferWithRandomSegmentLayout(dice, largeByteArray)
         }
     };
 
