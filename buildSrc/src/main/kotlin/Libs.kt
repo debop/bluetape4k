@@ -896,6 +896,7 @@ object Libs {
     val jackson_module_paranamer = jacksonModule("parameter")
     val jackson_module_parameter_names = jacksonModule("parameter-names")
     val jackson_module_afterburner = jacksonModule("afterburner")
+    val jackson_module_blackbird = jacksonModule("blackbird")  // Java 11+ 에서는 afterburner 대신 blackbird를 사용하세요
     val jackson_module_jsonSchema = jacksonModule("jsonSchema")
 
     // Json assertions
@@ -930,16 +931,15 @@ object Libs {
     const val xz = "org.tukaani:xz:1.9"                         // https://mvnrepository.com/artifact/org.tukaani/xz
 
     // Cryptography
-    const val jasypt = "org.jasypt:jasypt:1.9.3"
-    const val bouncycastle_bcprov = "org.bouncycastle:bcprov-jdk15on:1.70"
-    const val bouncycastle_bcpkix = "org.bouncycastle:bcpkix-jdk15on:1.70"
+    const val jasypt = "org.jasypt:jasypt:1.9.3"                              // https://mvnrepository.com/artifact/org.jasypt/jasypt
+    const val bouncycastle_bcprov = "org.bouncycastle:bcprov-jdk15on:1.70"    // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on
+    const val bouncycastle_bcpkix = "org.bouncycastle:bcpkix-jdk15on:1.70"    // https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on
 
     // Hashing
-    // https://mvnrepository.com/artifact/net.openhft/zero-allocation-hashing
-    const val zero_allocation_hashing = "net.openhft:zero-allocation-hashing:0.16"
+    const val zero_allocation_hashing = "net.openhft:zero-allocation-hashing:0.16"  // https://mvnrepository.com/artifact/net.openhft/zero-allocation-hashing
 
     // MVEL
-    const val mvel2 = "org.mvel:mvel2:2.4.12.Final"
+    const val mvel2 = "org.mvel:mvel2:2.5.2.Final"  // https://mvnrepository.com/artifact/org.mvel/mvel2
 
     // Reactor
     const val reactor_bom = "io.projectreactor:reactor-bom:${Versions.reactor_bom}"

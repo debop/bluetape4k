@@ -30,7 +30,8 @@ dependencies {
 
     api(Libs.jackson_module_kotlin)
     api(Libs.jackson_module_parameter_names)
-    compileOnly(Libs.jackson_module_afterburner)
+    api(Libs.jackson_module_blackbird)  // Java 11+ 에서는 afterburner 대신 blackbird 사용
+    // compileOnly(Libs.jackson_module_afterburner)
 
     compileOnly(Libs.jackson_dataformat_properties)
     compileOnly(Libs.jackson_dataformat_yaml)
