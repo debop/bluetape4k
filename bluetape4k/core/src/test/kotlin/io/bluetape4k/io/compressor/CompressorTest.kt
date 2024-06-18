@@ -70,4 +70,10 @@ class CompressorTest {
     inner class LZMACompressorTest: AbstractCompressorTest() {
         override val compressor: Compressor = LZMACompressor()
     }
+
+    @Nested
+    @DisplayName("Brotli")
+    inner class BrotliCompressorTest: AbstractCompressorTest() {
+        override val compressor: Compressor = BrotliCompressor()
+    }
 }

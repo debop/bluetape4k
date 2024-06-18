@@ -7,17 +7,17 @@ import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStre
 class FramedLZ4Compressor: AbstractCompressor() {
 
     override fun doCompress(plain: ByteArray): ByteArray {
-        val buffer = Buffer().buffer()
-        FramedLZ4CompressorOutputStream(buffer.outputStream()).use { lz4 ->
+        val output = Buffer().buffer()
+        FramedLZ4CompressorOutputStream(output.outputStream()).use { lz4 ->
             lz4.write(plain)
             lz4.flush()
         }
-        return buffer.readByteArray()
+        return output.readByteArray()
     }
 
     override fun doDecompress(compressed: ByteArray): ByteArray {
-        val buffer = Buffer().write(compressed).buffer()
-        FramedLZ4CompressorInputStream(buffer.inputStream()).use { lz4 ->
+        val input = Buffer().write(compressed).buffer()
+        FramedLZ4CompressorInputStream(input.inputStream()).use { lz4 ->
             return Buffer().readFrom(lz4).readByteArray()
         }
     }

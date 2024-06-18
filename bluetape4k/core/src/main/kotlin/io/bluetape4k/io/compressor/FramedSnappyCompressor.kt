@@ -8,17 +8,17 @@ class FramedSnappyCompressor: AbstractCompressor() {
 
 
     override fun doCompress(plain: ByteArray): ByteArray {
-        val buffer = Buffer()
-        FramedSnappyCompressorOutputStream(buffer.outputStream()).use { snappy ->
+        val output = Buffer()
+        FramedSnappyCompressorOutputStream(output.outputStream()).use { snappy ->
             snappy.write(plain)
             snappy.flush()
         }
-        return buffer.readByteArray()
+        return output.readByteArray()
     }
 
     override fun doDecompress(compressed: ByteArray): ByteArray {
-        val buffer = Buffer().write(compressed)
-        FramedSnappyCompressorInputStream(buffer.inputStream()).use { snappy ->
+        val input = Buffer().write(compressed)
+        FramedSnappyCompressorInputStream(input.inputStream()).use { snappy ->
             return Buffer().readFrom(snappy).readByteArray()
         }
     }
