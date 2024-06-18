@@ -132,6 +132,13 @@ object Kryox: KLogging() {
             addDefaultSerializer(Enum::class.java, EnumNameSerializer::class.java)
 
             register(java.util.Optional::class.java)
+            register(java.time.Instant::class.java)
+            register(java.time.LocalDateTime::class.java)
+            register(java.time.LocalDate::class.java)
+            register(java.time.LocalTime::class.java)
+            register(java.time.OffsetDateTime::class.java)
+            register(java.time.OffsetTime::class.java)
+            register(java.time.ZonedDateTime::class.java)
         }
     }
 

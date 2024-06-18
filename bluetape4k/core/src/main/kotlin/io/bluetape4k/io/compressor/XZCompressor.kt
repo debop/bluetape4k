@@ -13,6 +13,7 @@ import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
  * ```
  * val xz = XZCompressor()
  * val compresseod = xz.compress(bytes)
+ * val decompressed = xz.decompress(compressed)
  * ```
  * @property preset
  *      The presets 0-3 are fast presets with medium compression.

@@ -1,8 +1,7 @@
 package io.bluetape4k.io.serializer
 
-import io.bluetape4k.io.ApacheByteArrayOutputStream
 import io.bluetape4k.logging.KLogging
-import java.io.ByteArrayInputStream
+import okio.Buffer
 
 /**
  * Kryo 라이브리러를 사용하는 Serializer
@@ -14,16 +13,16 @@ class KryoSerializer(
     companion object: KLogging()
 
     override fun doSerialize(graph: Any): ByteArray {
-        return ApacheByteArrayOutputStream(bufferSize).use { bos ->
-            withKryoOutput { output ->
-                output.outputStream = bos
-                withKryo {
-                    writeClassAndObject(output, graph)
-                }
-                output.flush()
-                bos.toByteArray()
+        val buffer = Buffer()
+
+        withKryoOutput { output ->
+            output.outputStream = buffer.outputStream()
+            withKryo {
+                writeClassAndObject(output, graph)
             }
+            output.flush()
         }
+        return buffer.readByteArray()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -32,10 +31,11 @@ class KryoSerializer(
             return null
         }
 
-        return withKryoInput { input ->
-            input.inputStream = ByteArrayInputStream(bytes).buffered(bufferSize)
+        val buffer = Buffer().write(bytes)
+        withKryoInput { input ->
+            input.inputStream = buffer.inputStream()
             withKryo {
-                readClassAndObject(input) as? T
+                return readClassAndObject(input) as? T
             }
         }
     }

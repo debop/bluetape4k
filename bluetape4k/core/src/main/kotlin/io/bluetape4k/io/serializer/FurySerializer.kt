@@ -22,8 +22,9 @@ class FurySerializer(
             Fury.builder()
                 .withLanguage(Language.JAVA)
                 .requireClassRegistration(false)
-                .withCompatibleMode(CompatibleMode.COMPATIBLE)
-                .buildThreadSafeFuryPool(2, 2 * Runtimex.availableProcessors)
+                .withAsyncCompilation(true)
+                .withCompatibleMode(CompatibleMode.SCHEMA_CONSISTENT)
+                .buildThreadSafeFuryPool(4, 2 * Runtimex.availableProcessors)
         }
     }
 

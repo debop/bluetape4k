@@ -67,7 +67,7 @@ dependencies {
     compileOnly(Libs.marshalling)
     compileOnly(Libs.marshalling_river)
     compileOnly(Libs.marshalling_serial)
-    compileOnly(Libs.fury)                  // NOTE: Fury 가 빠르긴 하지만 BigDecimal, BigInteger 등의 타입을 지원하지 않는다
+    compileOnly(Libs.fury)
 
     // Apple M1
     compileOnly(Libs.jna_platform)

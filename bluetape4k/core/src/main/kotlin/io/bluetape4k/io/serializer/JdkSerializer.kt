@@ -1,7 +1,6 @@
 package io.bluetape4k.io.serializer
 
-import io.bluetape4k.io.ApacheByteArrayOutputStream
-import java.io.ByteArrayInputStream
+import okio.Buffer
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 
@@ -16,13 +15,12 @@ class JdkSerializer(
 ): AbstractBinarySerializer() {
 
     override fun doSerialize(graph: Any): ByteArray {
-        return ApacheByteArrayOutputStream(bufferSize).use { bos ->
-            ObjectOutputStream(bos).use { oos ->
-                oos.writeObject(graph)
-                oos.flush()
-            }
-            bos.toByteArray()
+        val output = Buffer()
+        ObjectOutputStream(output.outputStream()).use { oos ->
+            oos.writeObject(graph)
+            oos.flush()
         }
+        return output.readByteArray()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -30,11 +28,9 @@ class JdkSerializer(
         if (bytes.isEmpty()) {
             return null
         }
-
-        return ByteArrayInputStream(bytes).buffered(bufferSize).use { bis ->
-            ObjectInputStream(bis).use { ois ->
-                ois.readObject() as? T
-            }
+        val input = Buffer().write(bytes)
+        ObjectInputStream(input.inputStream()).use { ois ->
+            return ois.readObject() as? T
         }
     }
 }

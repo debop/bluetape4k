@@ -1,13 +1,12 @@
 package io.bluetape4k.io.serializer
 
-import io.bluetape4k.io.ApacheByteArrayOutputStream
 import io.bluetape4k.logging.KLogging
+import okio.Buffer
 import org.jboss.marshalling.InputStreamByteInput
 import org.jboss.marshalling.MarshallerFactory
 import org.jboss.marshalling.Marshalling
 import org.jboss.marshalling.MarshallingConfiguration
 import org.jboss.marshalling.OutputStreamByteOutput
-import java.io.ByteArrayInputStream
 import java.util.*
 
 /**
@@ -16,6 +15,7 @@ import java.util.*
  * @property factory        [MarshallerFactory]
  * @property configuration  [MarshallingConfiguration]
  */
+
 class MarshallingSerializer private constructor(
     private val factory: MarshallerFactory,
     private val configuration: MarshallingConfiguration,
@@ -33,7 +33,7 @@ class MarshallingSerializer private constructor(
             .apply {
                 instanceCount = 256
                 classCount = 64
-                bufferSize = 1024
+                bufferSize = 8192
             }
 
         @JvmStatic
@@ -52,15 +52,14 @@ class MarshallingSerializer private constructor(
 
 
     override fun doSerialize(graph: Any): ByteArray {
-        return factory.createMarshaller(configuration).use { marshaller ->
-            ApacheByteArrayOutputStream(bufferSize).use { bos ->
-                OutputStreamByteOutput(bos).use { osbo ->
-                    marshaller.start(osbo)
-                    marshaller.writeObject(graph)
-                    marshaller.flush()
-                }
-                bos.toByteArray()
+        factory.createMarshaller(configuration).use { marshaller ->
+            val output = Buffer()
+            OutputStreamByteOutput(output.outputStream()).use { osbo ->
+                marshaller.start(osbo)
+                marshaller.writeObject(graph)
+                marshaller.flush()
             }
+            return output.readByteArray()
         }
     }
 
@@ -69,13 +68,11 @@ class MarshallingSerializer private constructor(
         if (bytes.isEmpty()) {
             return null
         }
-
-        return factory.createUnmarshaller(configuration).use { unmarshaller ->
-            ByteArrayInputStream(bytes).buffered(bufferSize).use { bis ->
-                InputStreamByteInput(bis).use { inputStream ->
-                    unmarshaller.start(inputStream)
-                    unmarshaller.readObject() as? T
-                }
+        factory.createUnmarshaller(configuration).use { unmarshaller ->
+            val input = Buffer().write(bytes)
+            InputStreamByteInput(input.inputStream()).use { inputStream ->
+                unmarshaller.start(inputStream)
+                return unmarshaller.readObject() as? T
             }
         }
     }
