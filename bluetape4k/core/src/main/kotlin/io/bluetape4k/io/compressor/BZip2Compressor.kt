@@ -1,11 +1,8 @@
 package io.bluetape4k.io.compressor
 
-import io.bluetape4k.io.ApacheByteArrayOutputStream
-import io.bluetape4k.io.DEFAULT_BLOCK_SIZE
-import io.bluetape4k.io.toByteArray
+import okio.Buffer
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream
-import java.io.ByteArrayInputStream
 
 /**
  * BZip2 알고리즘을 사용한 Compressor
@@ -15,20 +12,31 @@ class BZip2Compressor(
 ): AbstractCompressor() {
 
     override fun doCompress(plain: ByteArray): ByteArray {
-        return ApacheByteArrayOutputStream(bufferSize).use { bos ->
-            BZip2CompressorOutputStream(bos).use { bzip2 ->
-                bzip2.write(plain)
-                bzip2.flush()
-            }
-            bos.toByteArray()
+        val buffer = Buffer().buffer()
+        BZip2CompressorOutputStream(buffer.outputStream()).use { bzip2 ->
+            bzip2.write(plain)
+            bzip2.flush()
         }
+        return buffer.readByteArray()
+//        return ApacheByteArrayOutputStream(bufferSize).use { bos ->
+//            BZip2CompressorOutputStream(bos).use { bzip2 ->
+//                bzip2.write(plain)
+//                bzip2.flush()
+//            }
+//            bos.toByteArray()
+//        }
     }
 
     override fun doDecompress(compressed: ByteArray): ByteArray {
-        return ByteArrayInputStream(compressed).buffered(bufferSize).use { bis ->
-            BZip2CompressorInputStream(bis).use { bzip2 ->
-                bzip2.toByteArray(DEFAULT_BLOCK_SIZE)
-            }
+        val buffer = Buffer().write(compressed).buffer()
+        BZip2CompressorInputStream(buffer.inputStream()).use { bzip2 ->
+            return Buffer().readFrom(bzip2).readByteArray()
         }
+
+//        return ByteArrayInputStream(compressed).buffered(bufferSize).use { bis ->
+//            BZip2CompressorInputStream(bis).use { bzip2 ->
+//                bzip2.toByteArray(DEFAULT_BLOCK_SIZE)
+//            }
+//        }
     }
 }

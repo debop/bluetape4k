@@ -30,7 +30,11 @@ dependencies {
     // Apache Commons
     api(Libs.commons_lang3)
     api(Libs.commons_codec)
+    api(Libs.commons_compress)
     api(Libs.commons_io)
+
+    // Okio
+    api(Libs.okio)
 
     // Coroutines
     api(Libs.kotlinx_coroutines_core)
@@ -52,10 +56,8 @@ dependencies {
 
     // Compression
     compileOnly(Libs.snappy_java)
-    compileOnly(Libs.lz4_java)
-    compileOnly(Libs.zstd_jni)
-    compileOnly(Libs.commons_compress)
     compileOnly(Libs.xz)
+    compileOnly(Libs.zstd_jni)
 
     compileOnly(Libs.brotli4j)
     compileOnly(Libs.brotli4j_native)

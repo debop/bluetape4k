@@ -360,7 +360,7 @@ object Libs {
     
     // Apache Commons
     const val commons_beanutils = "commons-beanutils:commons-beanutils:1.9.4"     // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
-    const val commons_compress = "org.apache.commons:commons-compress:1.26.1"     // https://mvnrepository.com/artifact/org.apache.commons/commons-compress
+    const val commons_compress = "org.apache.commons:commons-compress:1.26.2"     // https://mvnrepository.com/artifact/org.apache.commons/commons-compress
     const val commons_codec = "commons-codec:commons-codec:1.17.0"                // https://mvnrepository.com/artifact/commons-codec/commons-codec
     const val commons_collections4 = "org.apache.commons:commons-collections4:4.4"  // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
     const val commons_cryto = "org.apache.commons:commons-crypto:1.2.0"             // https://mvnrepository.com/artifact/org.apache.commons/commons-crypto
