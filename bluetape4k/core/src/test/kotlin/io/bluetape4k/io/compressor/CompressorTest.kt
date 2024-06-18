@@ -60,8 +60,8 @@ class CompressorTest {
     }
 
     @Nested
-    @DisplayName("Apache Snappy")
-    inner class ApacheSnappyCompressorTest: AbstractCompressorTest() {
-        override val compressor: Compressor = ApacheSnappyCompressor()
+    @DisplayName("Framed Snappy")
+    inner class FramedSnappyCompressorTest: AbstractCompressorTest() {
+        override val compressor: Compressor = FramedSnappyCompressor()
     }
 }

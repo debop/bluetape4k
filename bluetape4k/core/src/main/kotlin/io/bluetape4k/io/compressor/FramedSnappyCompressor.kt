@@ -1,15 +1,15 @@
 package io.bluetape4k.io.compressor
 
 import okio.Buffer
-import org.apache.commons.compress.compressors.snappy.SnappyCompressorInputStream
-import org.apache.commons.compress.compressors.snappy.SnappyCompressorOutputStream
+import org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorInputStream
+import org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorOutputStream
 
-class ApacheSnappyCompressor: AbstractCompressor() {
+class FramedSnappyCompressor: AbstractCompressor() {
 
 
     override fun doCompress(plain: ByteArray): ByteArray {
         val buffer = Buffer()
-        SnappyCompressorOutputStream(buffer.outputStream(), plain.size.toLong()).use { snappy ->
+        FramedSnappyCompressorOutputStream(buffer.outputStream()).use { snappy ->
             snappy.write(plain)
             snappy.flush()
         }
@@ -18,7 +18,7 @@ class ApacheSnappyCompressor: AbstractCompressor() {
 
     override fun doDecompress(compressed: ByteArray): ByteArray {
         val buffer = Buffer().write(compressed)
-        SnappyCompressorInputStream(buffer.inputStream()).use { snappy ->
+        FramedSnappyCompressorInputStream(buffer.inputStream()).use { snappy ->
             return Buffer().readFrom(snappy).readByteArray()
         }
     }

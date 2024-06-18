@@ -5,9 +5,9 @@ import org.xerial.snappy.Snappy
 /**
  * Snappy 알고리즘을 사용한 Compressor
  *
- * Snappy 가 Apache Commons Compress 의 SnappyCompressorOutputStream 보다 훨씬 빠르다. (대략 10배 빠르다)
+ * Snappy 가 Apache Commons Compress 의 FramedSnappyCompressorOutputStream 보다 훨씬 빠르다. (대략 2배 빠르다)
  *
- * @see [ApacheSnappyCompressor]
+ * @see [FramedSnappyCompressor]
  */
 class SnappyCompressor: AbstractCompressor() {
 
