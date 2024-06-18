@@ -64,4 +64,10 @@ class CompressorTest {
     inner class FramedSnappyCompressorTest: AbstractCompressorTest() {
         override val compressor: Compressor = FramedSnappyCompressor()
     }
+
+    @Nested
+    @DisplayName("LZMA")
+    inner class LZMACompressorTest: AbstractCompressorTest() {
+        override val compressor: Compressor = LZMACompressor()
+    }
 }
