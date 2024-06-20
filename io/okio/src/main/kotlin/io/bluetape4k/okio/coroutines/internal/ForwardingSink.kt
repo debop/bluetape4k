@@ -9,6 +9,7 @@ import okio.Timeout
 internal class ForwardingSink(
     val delegate: AsyncSink,
 ): Sink {
+
     val timeout = Timeout()
 
     override fun write(source: Buffer, byteCount: Long) = runBlocking {
@@ -32,6 +33,4 @@ internal class ForwardingSink(
     override fun timeout(): Timeout {
         return timeout
     }
-
-
 }
