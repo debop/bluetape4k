@@ -43,39 +43,47 @@ class GlobalSequencer: Sequencer {
      */
     override fun nextSequence(): SnowflakeId {
         lock.withLock {
-            updateState()
-            return SnowflakeId(lastTimestamp, machineId, sequence)
+            return nextSequenceInternal()
         }
     }
 
     override fun nextSequences(size: Int): Sequence<SnowflakeId> = sequence {
-        repeat(size) {
-            yield(nextSequence())
+        lock.withLock {
+            repeat(size) {
+                yield(nextSequenceInternal())
+            }
         }
     }
 
-    private fun updateState() {
-        currentTimestamp = System.currentTimeMillis()
+    private fun nextSequenceInternal(): SnowflakeId {
+        updateState()
+        return SnowflakeId(lastTimestamp, machineId, sequence)
+    }
 
-        if (currentTimestamp == lastTimestamp) {
-            sequencer.incrementAndGet()
-            if (sequence >= MAX_SEQUENCE) {
-                machineIdSequencer.incrementAndGet()
-                // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
-                if (machineId >= MAX_MACHINE_ID) {
-                    while (currentTimestamp == lastTimestamp) {
-                        currentTimestamp = System.currentTimeMillis()
+    private fun updateState() {
+        lock.withLock {
+            currentTimestamp = System.currentTimeMillis()
+
+            if (currentTimestamp == lastTimestamp) {
+                sequencer.incrementAndGet()
+                if (sequence >= MAX_SEQUENCE) {
+                    machineIdSequencer.incrementAndGet()
+                    // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
+                    if (machineId >= MAX_MACHINE_ID) {
+                        while (currentTimestamp == lastTimestamp) {
+                            currentTimestamp = System.currentTimeMillis()
+                        }
+                        machineId = 0
+                        lastTimestamp = currentTimestamp
                     }
-                    machineId = 0
-                    lastTimestamp = currentTimestamp
+                    sequence = 0
                 }
+            } else {
+                // Reset sequence and machine id
                 sequence = 0
+                machineId = 0
+                lastTimestamp = currentTimestamp
             }
-        } else {
-            // Reset sequence and machine id
-            sequence = 0
-            machineId = 0
-            lastTimestamp = currentTimestamp
         }
     }
 }

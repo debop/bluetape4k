@@ -36,33 +36,41 @@ internal class DefaultSequencer(machineId: Int = getMachineId(MAX_MACHINE_ID)): 
      */
     override fun nextSequence(): SnowflakeId {
         lock.withLock {
-            updateState()
-            return SnowflakeId(lastTimestamp, machineId, sequence)
+            return nextSequenceInternal()
         }
     }
 
     override fun nextSequences(size: Int): Sequence<SnowflakeId> = sequence {
-        repeat(size) {
-            yield(nextSequence())
+        lock.withLock {
+            repeat(size) {
+                yield(nextSequenceInternal())
+            }
         }
     }
 
-    private fun updateState() {
-        currentTimestamp = System.currentTimeMillis()
+    private fun nextSequenceInternal(): SnowflakeId {
+        updateState()
+        return SnowflakeId(lastTimestamp, machineId, sequence)
+    }
 
-        if (currentTimestamp == lastTimestamp) {
-            sequencer.incrementAndGet()
-            // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
-            if (sequencer.value >= MAX_SEQUENCE) {
-                while (currentTimestamp == lastTimestamp) {
-                    currentTimestamp = System.currentTimeMillis()
+    private fun updateState() {
+        lock.withLock {
+            currentTimestamp = System.currentTimeMillis()
+
+            if (currentTimestamp == lastTimestamp) {
+                sequencer.incrementAndGet()
+                // sequence 가 MAX_SEQUENCE 값보다 증가하면, 다음 milliseconds까지 기다립니다.
+                if (sequencer.value >= MAX_SEQUENCE) {
+                    while (currentTimestamp == lastTimestamp) {
+                        currentTimestamp = System.currentTimeMillis()
+                    }
+                    sequence = 0
+                    lastTimestamp = currentTimestamp
                 }
+            } else {
                 sequence = 0
                 lastTimestamp = currentTimestamp
             }
-        } else {
-            sequence = 0
-            lastTimestamp = currentTimestamp
         }
     }
 }
