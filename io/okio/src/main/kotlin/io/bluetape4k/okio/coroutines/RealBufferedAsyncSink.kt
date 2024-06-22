@@ -151,6 +151,6 @@ internal class RealBufferedAsyncSink(
     }
 
     private fun checkNotClosed() {
-        check(!closed.get()) { "closed" }
+        check(!closed.get()) { "RealBufferedAsyncSync is closed" }
     }
 }

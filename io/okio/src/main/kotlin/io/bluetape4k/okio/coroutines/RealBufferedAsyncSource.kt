@@ -383,7 +383,7 @@ internal class RealBufferedAsyncSource(
     }
 
     private fun checkNotClosed() {
-        check(!closed.get()) { "closed" }
+        check(!closed.get()) { "RealBufferedAsyncSource is closed" }
     }
 
     internal fun Buffer.readUtf8Line(newline: Long): String = when {
