@@ -7,6 +7,7 @@ import io.bluetape4k.javers.repository.AbstractCdoSnapshotRepository
 import org.cache2k.Cache
 import org.javers.core.commit.CommitId
 import org.javers.core.metamodel.`object`.CdoSnapshot
+import kotlin.concurrent.withLock
 
 /**
  * [CdoSnapshot] 저장소로 [io.bluetape4k.infra.cache.cache2k.cache2k] 를 사용하는 Repository 입니다.
@@ -51,7 +52,7 @@ class Cache2KCdoSnapshotRepository(
     }
 
     override fun saveSnapshot(snapshot: CdoSnapshot) {
-        synchronized(this) {
+        lock.withLock {
             val globalIdValue = snapshot.globalId.value()
             val snapshots = snapshotCache.computeIfAbsent(globalIdValue) { mutableListOf() }
             val encoded = encode(snapshot)

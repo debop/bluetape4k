@@ -1,5 +1,9 @@
 package io.bluetape4k.jwt.provider.cache
 
+import io.bluetape4k.jwt.composer.JwtComposer
+import io.bluetape4k.jwt.composer.JwtComposerDsl
+import io.bluetape4k.jwt.keychain.KeyChain
+import io.bluetape4k.jwt.provider.AbstractJwtProvider
 import io.bluetape4k.jwt.provider.JwtProvider
 import io.bluetape4k.jwt.reader.JwtReader
 import io.bluetape4k.jwt.reader.JwtReaderDto
@@ -16,7 +20,7 @@ import javax.cache.Cache
 class JCacheJwtProvider(
     private val delegate: JwtProvider,
     private val cache: Cache<String, JwtReaderDto>,
-): JwtProvider by delegate {
+): AbstractJwtProvider(), JwtProvider by delegate {
 
     override fun tryParse(jwtString: String): JwtReader? {
         return cache.get(jwtString)?.toJwtReader()
@@ -30,5 +34,13 @@ class JCacheJwtProvider(
                     cache.put(jwtString, toDto())
                 }
             }
+    }
+
+    override fun composer(keyChain: KeyChain?): JwtComposer {
+        return delegate.composer(keyChain)
+    }
+
+    override fun compose(keyChain: KeyChain?, initializer: JwtComposerDsl.() -> Unit): String {
+        return delegate.compose(keyChain, initializer)
     }
 }

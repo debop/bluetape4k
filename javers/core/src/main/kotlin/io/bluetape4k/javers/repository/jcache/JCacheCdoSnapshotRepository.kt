@@ -7,6 +7,7 @@ import io.bluetape4k.javers.repository.AbstractCdoSnapshotRepository
 import io.bluetape4k.logging.KLogging
 import org.javers.core.commit.CommitId
 import org.javers.core.metamodel.`object`.CdoSnapshot
+import kotlin.concurrent.withLock
 
 /**
  * [CdoSnapshot] 저장소로 [javax.cache.Cache] 를 사용하는 Repository 입니다.
@@ -52,7 +53,7 @@ class JCacheCdoSnapshotRepository(
     }
 
     override fun saveSnapshot(snapshot: CdoSnapshot) {
-        synchronized(this) {
+        lock.withLock {
             val globalIdValue = snapshot.globalId.value()
 
             // NOTE: JCache 는 Reference 가 아닌 Value 를 저장해야 하므로, 매번 Replace 형식이 되어야 한다

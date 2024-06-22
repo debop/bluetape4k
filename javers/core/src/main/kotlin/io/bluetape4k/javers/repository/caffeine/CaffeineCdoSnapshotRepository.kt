@@ -7,6 +7,7 @@ import io.bluetape4k.javers.codecs.GsonCodecs
 import io.bluetape4k.javers.repository.AbstractCdoSnapshotRepository
 import org.javers.core.commit.CommitId
 import org.javers.core.metamodel.`object`.CdoSnapshot
+import kotlin.concurrent.withLock
 
 /**
  * [CdoSnapshot] 저장소로 [com.github.benmanes.caffeine.cache.Cache] 를 사용하는 Repository 입니다.
@@ -54,7 +55,7 @@ class CaffeineCdoSnapshotRepository(
     }
 
     override fun saveSnapshot(snapshot: CdoSnapshot) {
-        synchronized(this) {
+        lock.withLock {
             val globalIdValue = snapshot.globalId.value()
             val snapshots = snapshotCache.get(globalIdValue) { _ -> mutableListOf() }
             val encoded = encode(snapshot)

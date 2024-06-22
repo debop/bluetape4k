@@ -10,6 +10,8 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.SignatureAlgorithm
+import kotlinx.atomicfu.locks.ReentrantLock
+import kotlinx.atomicfu.locks.withLock
 
 interface JwtProvider {
 
@@ -27,16 +29,9 @@ interface JwtProvider {
 
     fun findKeyChain(kid: String): KeyChain?
 
-    fun composer(keyChain: KeyChain? = null): JwtComposer = synchronized(this) {
-        JwtComposer(keyChain ?: currentKeyChain())
-    }
+    fun composer(keyChain: KeyChain? = null): JwtComposer
 
-    fun compose(
-        keyChain: KeyChain? = null,
-        initializer: JwtComposerDsl.() -> Unit,
-    ): String = synchronized(this) {
-        composeJwt(keyChain ?: currentKeyChain(), initializer)
-    }
+    fun compose(keyChain: KeyChain? = null, initializer: JwtComposerDsl.() -> Unit): String
 
     fun parse(jwtString: String): JwtReader {
         return tryParse(jwtString) ?: throw JwtException("Invalid jwt string: $jwtString")
@@ -47,5 +42,22 @@ interface JwtProvider {
             val jws: Jws<Claims> = this.currentJwtParser().parseClaimsJws(jwtString)
             JwtReader(jws)
         }.getOrNull()
+    }
+}
+
+abstract class AbstractJwtProvider: JwtProvider {
+
+    protected val lock = ReentrantLock()
+
+    override fun composer(keyChain: KeyChain?): JwtComposer {
+        return lock.withLock {
+            JwtComposer(keyChain ?: currentKeyChain())
+        }
+    }
+
+    override fun compose(keyChain: KeyChain?, initializer: JwtComposerDsl.() -> Unit): String {
+        return lock.withLock {
+            composeJwt(keyChain ?: currentKeyChain(), initializer)
+        }
     }
 }

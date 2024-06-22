@@ -1,6 +1,7 @@
 package io.bluetape4k.concurrent
 
 import io.bluetape4k.logging.KLogging
+import kotlinx.atomicfu.locks.ReentrantLock
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.amshove.kluent.shouldBeTrue
@@ -32,8 +33,9 @@ class ThreadSupportTest {
         val threadGroup7 = ThreadGroup(threadGroup4, "thread_group_7__")
         val threadGroup7Doubled = ThreadGroup(threadGroup4, "thread_group_7__")
         val threadGroups = listOf(
-            threadGroup1, threadGroup2, threadGroup3, threadGroup4, threadGroup5, threadGroup6, threadGroup7,
-            threadGroup7Doubled
+            threadGroup1, threadGroup2, threadGroup3,
+            threadGroup4, threadGroup5, threadGroup6,
+            threadGroup7, threadGroup7Doubled
         )
 
         val t1: Thread = TestThread("thread1_X__")
@@ -69,15 +71,17 @@ class ThreadSupportTest {
                 thread.interrupt()
                 thread.join()
             }
-            for (threadGroup in threadGroups) {
-                if (!threadGroup.isDestroyed) {
-                    threadGroup.destroy()
-                }
-            }
+//            for (threadGroup in threadGroups) {
+//                if (!threadGroup.isDestroyed) {
+//                    threadGroup.destroy()
+//                }
+//            }
         }
     }
 
     private class TestThread: Thread {
+
+        private val lock = ReentrantLock()
         private val latch = CountDownLatch(1)
 
         constructor(name: String): super(name)
@@ -87,15 +91,15 @@ class ThreadSupportTest {
         override fun run() {
             latch.countDown()
             try {
-                synchronized(this) {
-                    (this as Object).wait()
+                synchronized(lock) {
+                    (lock as java.lang.Object).wait()
+                    // (this as java.lang.Object).wait()
                 }
             } catch (e: InterruptedException) {
                 currentThread().interrupt()
             }
         }
 
-        @Synchronized
         override fun start() {
             super.start()
             try {

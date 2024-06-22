@@ -28,9 +28,7 @@ class MultiException: RuntimeException("Multiple exceptions") {
             lock.withLock {
                 if (error is MultiException) {
                     val otherNested = error.nested
-                    synchronized(otherNested) {
-                        nested.addAll(otherNested)
-                    }
+                    nested.addAll(otherNested)
                 } else {
                     nested.add(error)
                 }
