@@ -147,7 +147,11 @@ open class User: AbstractValueObject(), Comparable<User> {
     var favoriteMovies: MutableList<String> = mutableListOf()
 
     override fun compareTo(other: User): Int {
-        return firstname.compareTo(other.firstname)
+        var result = firstname.compareTo(other.firstname)
+        if (result == 0) {
+            result = lastname.compareTo(other.lastname)
+        }
+        return result
     }
 
     override fun equalProperties(other: Any): Boolean =
@@ -178,8 +182,8 @@ fun createSampleUser(favoriteMovieSize: Int = 100): User {
         email = faker.internet().emailAddress()
         username = faker.internet().username()
 
-        homeAddr = Address(faker.address().fullAddress(), faker.phoneNumber().phoneNumber())
-        officeAddr = Address(faker.address().fullAddress(), faker.phoneNumber().phoneNumber())
+        homeAddr = Address(faker.address().fullAddress(), faker.phoneNumber().phoneNumber(), mutableListOf("home"))
+        officeAddr = Address(faker.address().fullAddress(), faker.phoneNumber().phoneNumber(), mutableListOf("office"))
 
         (0..favoriteMovieSize).forEach {
             favoriteMovies.add("Favorite Movie number-$it")

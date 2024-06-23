@@ -5,6 +5,11 @@ import io.bluetape4k.json.JsonSerializer
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.emptyByteArray
 
+/**
+ * Jackson JSON 직렬화/역직렬화를 위한 Serializer
+ *
+ * @param mapper Jackson [ObjectMapper] 인스턴스
+ */
 open class JacksonSerializer(
     val mapper: ObjectMapper = Jackson.defaultJsonMapper,
 ): JsonSerializer {

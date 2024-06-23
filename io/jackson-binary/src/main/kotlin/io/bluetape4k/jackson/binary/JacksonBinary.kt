@@ -15,8 +15,13 @@ import io.bluetape4k.logging.KLogging
 
 object JacksonBinary: KLogging() {
 
+    /**
+     * CBOR 알고리즘을 사용하는 Jackson Binary JSON Serializer 관련 Serializer, Factory, Mapper 를 제공합니다.
+     */
     object CBOR {
-
+        /**
+         * CBOR 알고리즘을 사용하는 [CBORMapper] 인스턴스
+         */
         val defaultMapper: CBORMapper by lazy {
             CBORMapper.builder()
                 .findAndAddModules()
@@ -43,13 +48,25 @@ object JacksonBinary: KLogging() {
                 .build()
         }
 
+        /**
+         * CBOR 알고리즘을 사용하는 [CBORFactory] 인스턴스
+         */
         val defaultFactory: CBORFactory by lazy { defaultMapper.factory }
 
+        /**
+         * CBOR 알고리즘을 사용하는 Jackson Binary JSON Serializer
+         */
         val defaultJsonSerializer: CborJsonSerializer by lazy { CborJsonSerializer(defaultMapper) }
     }
 
+    /**
+     * ION 알고리즘을 사용하는 Jackson Binary JSON Serializer 관련 Serializer, Factory, Mapper 를 제공합니다.
+     */
     object ION {
 
+        /**
+         * ION 알고리즘을 사용하는 [IonObjectMapper] 인스턴스
+         */
         val defaultMapper: IonObjectMapper by lazy {
             IonObjectMapper.builder()
                 .findAndAddModules()
@@ -75,13 +92,25 @@ object JacksonBinary: KLogging() {
                 .build()
         }
 
+        /**
+         * ION 알고리즘을 사용하는 [IonFactory] 인스턴스
+         */
         val defaultFactory: IonFactory by lazy { defaultMapper.factory }
 
+        /**
+         * ION 알고리즘을 사용하는 Jackson Binary JSON Serializer
+         */
         val defaultJsonSerializer: IonJsonSerializer by lazy { IonJsonSerializer(defaultMapper) }
     }
 
+    /**
+     * Smile 알고리즘을 사용하는 Jackson Binary JSON Serializer 관련 Serializer, Factory, Mapper 를 제공합니다.
+     */
     object Smile {
 
+        /**
+         * Smile 알고리즘을 사용하는 [SmileMapper] 인스턴스
+         */
         val defaultMapper: SmileMapper by lazy {
             SmileMapper.builder()
                 .findAndAddModules()
@@ -108,8 +137,14 @@ object JacksonBinary: KLogging() {
                 .build()
         }
 
+        /**
+         * Smile 알고리즘을 사용하는 [SmileFactory] 인스턴스
+         */
         val defaultFactory: SmileFactory by lazy { defaultMapper.factory }
 
+        /**
+         * Smile 알고리즘을 사용하는 Jackson Binary JSON Serializer
+         */
         val defaultJsonSerializer: SmileJsonSerializer by lazy { SmileJsonSerializer(defaultMapper) }
     }
 }
