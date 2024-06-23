@@ -211,7 +211,7 @@ class BufferTest: AbstractOkioTest() {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `read from stream`() {
-        val expectedText = Fakers.randomString()
+        val expectedText = Fakers.randomString(512)
         val input = ByteArrayInputStream(expectedText.toUtf8Bytes())
 
         val buffer = bufferOf(input)
@@ -221,7 +221,7 @@ class BufferTest: AbstractOkioTest() {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `read from spanning segments`() {
-        val expectedText = Fakers.randomString()
+        val expectedText = Fakers.randomString(1024)
         val input = ByteArrayInputStream(expectedText.toUtf8Bytes())
         val buffer = bufferOf("a".repeat(SEGMENT_SIZE - 10))
         buffer.readFrom(input)
@@ -232,7 +232,7 @@ class BufferTest: AbstractOkioTest() {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `read from stream with count`() {
-        val expectedText = Fakers.randomString()
+        val expectedText = Fakers.randomString(512)
         val input = ByteArrayInputStream(expectedText.toUtf8Bytes())
         val buffer = bufferOf(input, 10)
 

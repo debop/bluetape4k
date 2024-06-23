@@ -69,3 +69,15 @@ fun bufferOf(source: Buffer, offset: Long = 0L, size: Long = source.size): Buffe
         source.clone().copyTo(this, offset, size)
     }
 }
+
+fun bufferOf(source: Source): Buffer {
+    return Buffer().apply {
+        writeAll(source)
+    }
+}
+
+fun bufferOf(source: Source, byteCount: Long): Buffer {
+    return Buffer().apply {
+        write(source, byteCount)
+    }
+}

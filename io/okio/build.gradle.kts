@@ -7,6 +7,7 @@ dependencies {
     testImplementation(Libs.okio_fakefilesystem)
 
     api(project(":bluetape4k-core"))
+    compileOnly(project(":bluetape4k-cryptography"))
     testImplementation(project(":bluetape4k-junit5"))
 
     // Coroutines
