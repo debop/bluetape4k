@@ -1,13 +1,17 @@
-package io.bluetape4k.okio.cryptography
+package io.bluetape4k.okio
 
 import io.bluetape4k.cryptography.encrypt.Encryptor
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
-import io.bluetape4k.okio.bufferOf
 import okio.Buffer
 import okio.ForwardingSink
 import okio.Sink
 
+/**
+ * 데이터를 암호화하여 [Sink]에 쓰는 [Sink] 구현체.
+ *
+ * @see DecryptSource
+ */
 open class EncryptSink(
     delegate: Sink,
     val encryptor: Encryptor,

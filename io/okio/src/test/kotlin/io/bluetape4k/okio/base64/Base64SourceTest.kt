@@ -1,25 +1,16 @@
 package io.bluetape4k.okio.base64
 
-import io.bluetape4k.codec.encodeBase64String
-import io.bluetape4k.logging.KLogging
-import io.bluetape4k.okio.AbstractOkioTest
-import io.bluetape4k.okio.bufferOf
-import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.Test
+import io.bluetape4k.support.toUtf8Bytes
+import okio.ByteString.Companion.toByteString
+import okio.Source
 
-class Base64SourceTest: AbstractOkioTest() {
+class Base64SourceTest: AbstractBaseNSourceTest() {
 
-    companion object: KLogging()
+    override fun getSource(delegate: Source): Source {
+        return Base64Source(delegate)
+    }
 
-    @Test
-    fun `read from fixed string`() {
-        val content = faker.lorem().paragraph()
-        val base64String = content.encodeBase64String()
-
-        val input = bufferOf(base64String)
-        val source = Base64Source(input)
-
-        val output = bufferOf(source)
-        output.readUtf8() shouldBeEqualTo content
+    override fun getEncodedString(plainString: String): String {
+        return plainString.toUtf8Bytes().toByteString().base64()
     }
 }

@@ -1,4 +1,4 @@
-package io.bluetape4k.okio.cryptography
+package io.bluetape4k.okio
 
 import io.bluetape4k.cryptography.encrypt.Encryptor
 import io.bluetape4k.logging.KLogging
@@ -7,7 +7,12 @@ import okio.Buffer
 import okio.ForwardingSource
 import okio.Source
 
-open class EncryptSource(
+/**
+ * 데이터를 복호화하여 [Source]로 읽는 [Source] 구현체.
+ *
+ * @see EncryptSink
+ */
+open class DecryptSource(
     delegate: Source,
     val encryptor: Encryptor,
 ): ForwardingSource(delegate) {
