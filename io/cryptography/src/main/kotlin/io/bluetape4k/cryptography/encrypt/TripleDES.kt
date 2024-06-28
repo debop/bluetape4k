@@ -15,6 +15,6 @@ class TripleDES(
 ): AbstractEncryptor(ALGORITHM, saltGenerator, password) {
 
     companion object {
-        const val ALGORITHM = "PBEWITHSHAAND3-KEYTRIPLEDES-CBC"
+        const val ALGORITHM = "PBEWithMD5AndTripleDES"
     }
 }

@@ -24,7 +24,7 @@ abstract class AbstractEncryptor protected constructor(
         private val DefaultIvGenerator: IvGenerator = StringFixedIvGenerator(DEFAULT_PASSWORD)
     }
 
-    private val encryptor: PooledPBEByteEncryptor by lazy {
+    val encryptor: PooledPBEByteEncryptor by lazy {
         PooledPBEByteEncryptor().apply {
             registBouncCastleProvider()
             setPoolSize(16)

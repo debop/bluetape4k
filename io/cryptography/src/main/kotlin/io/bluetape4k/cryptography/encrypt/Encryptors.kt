@@ -57,6 +57,8 @@ object Encryptors: KLogging() {
             PBEWITHSHA1ANDRC4_128
             PBEWITHSHA1ANDRC4_40
          */
+        registBouncCastleProvider()
+
         return AlgorithmRegistry.getAllPBEAlgorithms() as Set<String>
     }
 }
