@@ -8,6 +8,8 @@ import javax.crypto.spec.SecretKeySpec
 
 /**
  * 암호화/복호화를 위한 [Cipher]를 빌드합니다.
+ *
+ * 참고: [Java Cipher](https://velog.io/@with667800/Java-Cipher)
  */
 class CipherBuilder {
 
@@ -31,8 +33,8 @@ class CipherBuilder {
         }
     }
 
-    private var secretKey: ByteArray = getSecretKey()
-    private var ivBytes: ByteArray = getIvBytes()
+    private var secretKey: ByteArray = ByteArray(DEFAULT_KEY_SIZE) // getSecretKey()
+    private var ivBytes: ByteArray = ByteArray(DEFAULT_KEY_SIZE) // getIvBytes()
     private var algorithm: String = ALGORITHM_AES
     private var transformantion: String = TRANSFORMATION_AES_CBC_PKCS5PADDING
 
