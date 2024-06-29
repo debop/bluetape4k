@@ -1,8 +1,9 @@
-package io.bluetape4k.okio
+package io.bluetape4k.okio.encrypt
 
 import io.bluetape4k.cryptography.encrypt.Encryptor
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.okio.bufferOf
 import okio.Buffer
 import okio.ForwardingSink
 import okio.Sink
@@ -14,7 +15,7 @@ import okio.Sink
  */
 open class EncryptSink(
     delegate: Sink,
-    val encryptor: Encryptor,
+    private val encryptor: Encryptor,
 ): ForwardingSink(delegate) {
 
     companion object: KLogging()
