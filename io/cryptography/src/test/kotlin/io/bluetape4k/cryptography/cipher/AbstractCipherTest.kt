@@ -1,13 +1,10 @@
-package io.bluetape4k.okio.cipher
+package io.bluetape4k.cryptography.cipher
 
-import io.bluetape4k.cryptography.cipher.CipherBuilder
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.okio.AbstractOkioTest
 import org.junit.jupiter.api.BeforeEach
 import javax.crypto.Cipher
 
-abstract class AbstractCipherTest: AbstractOkioTest() {
-
+abstract class AbstractCipherTest {
     companion object: KLogging() {
         const val REPEAT_SIZE = 5
     }

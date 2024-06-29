@@ -4,6 +4,7 @@ import io.bluetape4k.cryptography.encrypt.Encryptor
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.okio.bufferOf
+import io.bluetape4k.support.requireGe
 import okio.Buffer
 import okio.ForwardingSink
 import okio.Sink
@@ -21,6 +22,9 @@ open class EncryptSink(
     companion object: KLogging()
 
     override fun write(source: Buffer, byteCount: Long) {
+        // Encryptor는 한 번에 모든 데이터를 암호화해야 함
+        byteCount.requireGe(source.size, "byteCount")
+        
         // 요청한 바이트 수(또는 가능한 모든 바이트) 반환
         val bytesToRead = byteCount.coerceAtMost(source.size)
         val plainBytes = source.readByteArray(bytesToRead)

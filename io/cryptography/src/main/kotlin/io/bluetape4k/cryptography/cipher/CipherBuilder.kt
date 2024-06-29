@@ -1,4 +1,4 @@
-package io.bluetape4k.okio.cipher
+package io.bluetape4k.cryptography.cipher
 
 import io.bluetape4k.logging.KLogging
 import java.security.SecureRandom
@@ -14,52 +14,40 @@ import javax.crypto.spec.SecretKeySpec
 class CipherBuilder {
 
     companion object: KLogging() {
-        const val ALGORITHM_AES = "AES"
-        const val TRANSFORMATION_AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding"
         const val DEFAULT_KEY_SIZE = 16
-
-        private val secureRandom = SecureRandom()
-
-        private fun getSecretKey(size: Int = DEFAULT_KEY_SIZE): ByteArray {
-            return ByteArray(size).apply {
-                secureRandom.nextBytes(this)
-            }
-        }
-
-        private fun getIvBytes(size: Int = DEFAULT_KEY_SIZE): ByteArray {
-            return ByteArray(size).apply {
-                secureRandom.nextBytes(this)
-            }
-        }
+        const val DEFAULT_ALGORITHM = "AES"
+        const val DEFAULT_TRANSFORMATION = "AES/CBC/PKCS5Padding"
     }
 
-    private var secretKey: ByteArray = ByteArray(DEFAULT_KEY_SIZE) // getSecretKey()
-    private var ivBytes: ByteArray = ByteArray(DEFAULT_KEY_SIZE) // getIvBytes()
-    private var algorithm: String = ALGORITHM_AES
-    private var transformantion: String = TRANSFORMATION_AES_CBC_PKCS5PADDING
+    private val random = SecureRandom()
+
+    private var algorithm: String = DEFAULT_ALGORITHM
+    private var transformation: String = DEFAULT_TRANSFORMATION
+    private var secretKey: ByteArray = ByteArray(DEFAULT_KEY_SIZE)
+    private var ivBytes: ByteArray = ByteArray(DEFAULT_KEY_SIZE)
 
     fun secretKeySize(size: Int = DEFAULT_KEY_SIZE) = apply {
-        secretKey(getSecretKey(size))
+        secretKey = ByteArray(size).also { random.nextBytes(it) }
     }
 
-    fun secretKey(secretKey: ByteArray): CipherBuilder = apply {
-        this.secretKey = secretKey
+    fun secretKey(key: ByteArray) = apply {
+        secretKey = key
     }
 
     fun ivBytesSize(size: Int = DEFAULT_KEY_SIZE) = apply {
-        ivBytes(getIvBytes(size))
+        ivBytes = ByteArray(size).also { random.nextBytes(it) }
     }
 
-    fun ivBytes(ivBytes: ByteArray): CipherBuilder = apply {
-        this.ivBytes = ivBytes
+    fun ivBytes(iv: ByteArray) = apply {
+        ivBytes = iv
     }
 
-    fun algorithm(algorithm: String = ALGORITHM_AES): CipherBuilder = apply {
+    fun algorithm(algorithm: String = DEFAULT_ALGORITHM) = apply {
         this.algorithm = algorithm
     }
 
-    fun transformation(transformation: String = TRANSFORMATION_AES_CBC_PKCS5PADDING): CipherBuilder = apply {
-        this.transformantion = transformation
+    fun transformation(transformation: String = DEFAULT_TRANSFORMATION) = apply {
+        this.transformation = transformation
     }
 
     private val secretKeySpec: SecretKeySpec
@@ -92,8 +80,8 @@ class CipherBuilder {
      * ```
      */
     fun build(cipherMode: Int): Cipher {
-        return Cipher.getInstance(transformantion).also { cipher ->
-            cipher.init(cipherMode, secretKeySpec, iv)
+        return Cipher.getInstance(transformation).also {
+            it.init(cipherMode, secretKeySpec, iv)
         }
     }
 }
