@@ -10,6 +10,9 @@ import io.vertx.core.Future
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
+/**
+ * Resilience4j의 다양한 요소들을 Decorator로 사용할 수 있도록 지원합니다.
+ */
 object VertxDecorators: KLogging() {
 
     fun <T> ofSupplier(supplier: () -> Future<T>): CoVertxDecorateSupplier<T> {

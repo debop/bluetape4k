@@ -2,8 +2,8 @@ package io.bluetape4k.vertx.resilience4j
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.vertx.asCompletableFuture
 import io.bluetape4k.vertx.tests.withTestContext
-import io.bluetape4k.vertx.toCompletableFuture
 import io.github.resilience4j.bulkhead.Bulkhead
 import io.github.resilience4j.kotlin.bulkhead.BulkheadConfig
 import io.vertx.core.Vertx
@@ -60,7 +60,7 @@ class VertxFutureBulkheadSupportTest: AbstractVertxFutureTest() {
                 service.returnHelloWorld()
             }
 
-            val result = future.toCompletableFuture().get()
+            val result = future.asCompletableFuture().get()
 
             result shouldBeEqualTo "Hello world"
             permittedEvents shouldBeEqualTo 1
@@ -118,7 +118,7 @@ class VertxFutureBulkheadSupportTest: AbstractVertxFutureTest() {
             }
 
             assertFailsWith<RuntimeException> {
-                future.toCompletableFuture().join()
+                future.asCompletableFuture().join()
             }
 
             future.failed().shouldBeTrue()
@@ -139,7 +139,7 @@ class VertxFutureBulkheadSupportTest: AbstractVertxFutureTest() {
                 service.returnHelloWorld()
             }
             val future = decorated.invoke()
-            val result = future.toCompletableFuture().get()
+            val result = future.asCompletableFuture().get()
 
             result shouldBeEqualTo "Hello world"
             permittedEvents shouldBeEqualTo 1

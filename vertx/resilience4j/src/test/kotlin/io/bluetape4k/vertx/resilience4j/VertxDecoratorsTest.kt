@@ -1,7 +1,7 @@
 package io.bluetape4k.vertx.resilience4j
 
+import io.bluetape4k.vertx.asCompletableFuture
 import io.bluetape4k.vertx.tests.withTestContext
-import io.bluetape4k.vertx.toCompletableFuture
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.ratelimiter.RateLimiter
 import io.github.resilience4j.retry.Retry
@@ -27,7 +27,7 @@ class VertxDecoratorsTest: AbstractVertxFutureTest() {
                 .withRetry(retry)
                 .decorate()
 
-            val result = runCatching { decorated().toCompletableFuture().get() }
+            val result = runCatching { decorated().asCompletableFuture().get() }
 
             result.isSuccess.shouldBeTrue()
             result.getOrNull() shouldBeEqualTo "Hello world"
@@ -45,7 +45,7 @@ class VertxDecoratorsTest: AbstractVertxFutureTest() {
                 .withCircuitBreaker(circuitBreaker)
                 .decorate()
 
-            val result = runCatching { decorated().toCompletableFuture().get() }
+            val result = runCatching { decorated().asCompletableFuture().get() }
 
             result.isSuccess.shouldBeTrue()
             result.getOrNull() shouldBeEqualTo "Hello world"
@@ -62,7 +62,7 @@ class VertxDecoratorsTest: AbstractVertxFutureTest() {
                 .withFallback({ it == "Hello world" }, { "fallback" })
                 .decorate()
 
-            val result = runCatching { decorated().toCompletableFuture().get() }
+            val result = runCatching { decorated().asCompletableFuture().get() }
 
             result.isSuccess.shouldBeTrue()
             result.getOrNull() shouldBeEqualTo "fallback"
@@ -79,7 +79,7 @@ class VertxDecoratorsTest: AbstractVertxFutureTest() {
                 .withRetry(retry)
                 .decorate()
 
-            val result = runCatching { decorated().toCompletableFuture().get() }
+            val result = runCatching { decorated().asCompletableFuture().get() }
 
             result.isFailure.shouldBeTrue()
             service.invocationCount shouldBeEqualTo retry.retryConfig.maxAttempts
@@ -95,7 +95,7 @@ class VertxDecoratorsTest: AbstractVertxFutureTest() {
                 .withCircuitBreaker(circuitBreaker)
                 .decorate()
 
-            val result = runCatching { decorated().toCompletableFuture().get() }
+            val result = runCatching { decorated().asCompletableFuture().get() }
 
             result.isFailure.shouldBeTrue()
             service.invocationCount shouldBeEqualTo retry.retryConfig.maxAttempts
