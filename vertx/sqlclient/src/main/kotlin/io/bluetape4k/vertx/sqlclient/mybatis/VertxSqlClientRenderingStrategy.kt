@@ -53,7 +53,7 @@ class VertxSqlClientRenderingStrategy: RenderingStrategy() {
 
     companion object: KLogging() {
         @JvmStatic
-        val INSTANCE by lazy { VertxSqlClientRenderingStrategy() }
+        val INSTANCE = VertxSqlClientRenderingStrategy()
     }
 
     override fun getFormattedJdbcPlaceholder(
@@ -61,7 +61,7 @@ class VertxSqlClientRenderingStrategy: RenderingStrategy() {
         prefix: String?,
         parameterName: String?,
     ): String {
-        log.debug { "prefix=$prefix, parameterName=$parameterName" }
+        log.debug { "Get formatted jdbc placeholder. prefix=$prefix, parameterName=$parameterName" }
 
         var placeHolder = parameterName
         if (prefix != null) {
