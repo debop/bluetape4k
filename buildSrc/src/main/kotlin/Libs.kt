@@ -896,7 +896,9 @@ object Libs {
     val jackson_module_paranamer = jacksonModule("parameter")
     val jackson_module_parameter_names = jacksonModule("parameter-names")
     val jackson_module_afterburner = jacksonModule("afterburner")
-    val jackson_module_blackbird = jacksonModule("blackbird")  // Java 11+ 에서는 afterburner 대신 blackbird를 사용하세요
+    // Java 11+ 에서는 afterburner 대신 blackbird를 사용하세요
+    // https://github.com/FasterXML/jackson-modules-base/blob/master/blackbird/README.md
+    val jackson_module_blackbird = jacksonModule("blackbird")
     val jackson_module_jsonSchema = jacksonModule("jsonSchema")
 
     // Json assertions

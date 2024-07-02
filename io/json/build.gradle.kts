@@ -30,7 +30,7 @@ dependencies {
 
     api(Libs.jackson_module_kotlin)
     api(Libs.jackson_module_parameter_names)
-    api(Libs.jackson_module_blackbird)  // Java 11+ 에서는 afterburner 대신 blackbird 사용
+    api(Libs.jackson_module_blackbird)  // Java 11+ 에서는 afterburner 대신 blackbird 사용 (https://github.com/FasterXML/jackson-modules-base/blob/master/blackbird/README.md)
     // compileOnly(Libs.jackson_module_afterburner)
 
     compileOnly(Libs.jackson_dataformat_properties)
