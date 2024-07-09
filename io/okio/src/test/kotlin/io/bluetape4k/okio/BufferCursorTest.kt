@@ -14,7 +14,7 @@ import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.Assumptions
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.*
@@ -23,6 +23,8 @@ class BufferCursorTest: AbstractOkioTest() {
 
     companion object: KLogging() {
 
+        private const val REPEAT_SIZE = 3
+
         private val _factories = BufferFactory.entries.toList()
         private val _buffers = _factories.map { it.newBuffer() }
     }
@@ -30,7 +32,7 @@ class BufferCursorTest: AbstractOkioTest() {
     fun factories() = _factories
     fun buffers() = _buffers
 
-    @Test
+    @RepeatedTest(REPEAT_SIZE)
     fun `api example`() {
         val buffer = Buffer()
         buffer.readAndWriteUnsafe().use { cursor ->
@@ -42,6 +44,26 @@ class BufferCursorTest: AbstractOkioTest() {
             cursor.data!![cursor.start] = 'o'.code.toByte()
             cursor.seek(1)
             cursor.data!![cursor.start] = 'o'.code.toByte()
+            cursor.resizeBuffer(4)
+        }
+        log.debug { "buffer=$buffer" }
+        buffer shouldBeEqualTo bufferOf("xoxo")
+    }
+
+    @RepeatedTest(REPEAT_SIZE)
+    fun `api example by kotlin function`() {
+        val buffer = Buffer()
+        buffer.readAndWriteUnsafe().use { cursor ->
+            cursor.resizeBuffer(1_000_000)
+            val x = 'x'.code.toByte()
+            val data = cursor.data!!
+            do {
+                data.fill(x, cursor.start, cursor.end)
+            } while (cursor.next() != -1)
+            cursor.seek(3)
+            data[cursor.start] = 'o'.code.toByte()
+            cursor.seek(1)
+            data[cursor.start] = 'o'.code.toByte()
             cursor.resizeBuffer(4)
         }
         log.debug { "buffer=$buffer" }

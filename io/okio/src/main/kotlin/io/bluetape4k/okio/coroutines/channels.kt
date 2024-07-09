@@ -2,7 +2,9 @@ package io.bluetape4k.okio.coroutines
 
 import io.bluetape4k.okio.coroutines.internal.SEGMENT_SIZE
 import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import okio.Buffer
 import okio.Timeout
 import java.nio.ByteBuffer
@@ -12,36 +14,46 @@ import java.nio.channels.CompletionHandler
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
+/**
+ * [AsynchronousSocketChannel]을 [AsyncSource]로 변환합니다.
+ */
 suspend fun AsynchronousSocketChannel.asAsyncSource(): AsyncSource {
     val channel = this
 
     return object: AsyncSource {
         val buffer = ByteBuffer.allocateDirect(SEGMENT_SIZE.toInt())
+        val timeout = Timeout.NONE
 
         override suspend fun read(sink: Buffer, byteCount: Long): Long {
             buffer.clear()
             buffer.limit(minOf(SEGMENT_SIZE, byteCount).toInt())
-            val read = channel.aRead(buffer)
+            val read = channel.coRead(buffer)
             buffer.flip()
             if (read > 0) sink.write(buffer)
             return read.toLong()
         }
 
         override suspend fun close() {
-            channel.close()
+            withContext(Dispatchers.IO) {
+                channel.close()
+            }
         }
 
         override suspend fun timeout(): Timeout {
-            return Timeout.NONE
+            return timeout
         }
     }
 }
 
+/**
+ * [AsynchronousFileChannel]을 [AsyncSink]로 변환합니다.
+ */
 suspend fun AsynchronousSocketChannel.asAsyncSink(): AsyncSink {
     val channel = this
 
     return object: AsyncSink {
         val cursor = Buffer.UnsafeCursor()
+        val timeout = Timeout.NONE
 
         override suspend fun write(source: Buffer, byteCount: Long) {
             source.readUnsafe()
@@ -52,39 +64,48 @@ suspend fun AsynchronousSocketChannel.asAsyncSink(): AsyncSink {
         }
 
         override suspend fun close() {
-            channel.close()
+            withContext(Dispatchers.IO) {
+                channel.close()
+            }
         }
 
         override suspend fun timeout(): Timeout {
-            return Timeout.NONE
+            return timeout
         }
     }
 }
 
 
-private suspend fun AsynchronousSocketChannel.aRead(buffer: ByteBuffer): Int = suspendCancellableCoroutine { cont ->
-    read(buffer, cont, ChannelCompletionHandler)
-    cont.invokeOnCancellation { close() }
+suspend fun AsynchronousSocketChannel.coRead(buffer: ByteBuffer): Int {
+    return suspendCancellableCoroutine { cont ->
+        read(buffer, cont, ChannelCompletionHandler)
+        cont.invokeOnCancellation { close() }
+    }
 }
 
-private suspend fun AsynchronousSocketChannel.aWrite(buffer: ByteBuffer): Int = suspendCancellableCoroutine { cont ->
-    write(buffer, cont, ChannelCompletionHandler)
-    cont.invokeOnCancellation { close() }
+suspend fun AsynchronousSocketChannel.coWrite(buffer: ByteBuffer): Int {
+    return suspendCancellableCoroutine { cont ->
+        write(buffer, cont, ChannelCompletionHandler)
+        cont.invokeOnCancellation { close() }
+    }
 }
 
-private suspend fun AsynchronousFileChannel.aRead(buffer: ByteBuffer, position: Long): Int =
-    suspendCancellableCoroutine { cont ->
+suspend fun AsynchronousFileChannel.coRead(buffer: ByteBuffer, position: Long): Int {
+    return suspendCancellableCoroutine { cont ->
         read(buffer, position, cont, ChannelCompletionHandler)
         cont.invokeOnCancellation { close() }
     }
+}
 
-private suspend fun AsynchronousFileChannel.aWrite(buffer: ByteBuffer, position: Long): Int =
-    suspendCancellableCoroutine { cont ->
+suspend fun AsynchronousFileChannel.coWrite(buffer: ByteBuffer, position: Long): Int {
+    return suspendCancellableCoroutine { cont ->
         write(buffer, position, cont, ChannelCompletionHandler)
         cont.invokeOnCancellation { close() }
     }
+}
 
-private object ChannelCompletionHandler: CompletionHandler<Int, CancellableContinuation<Int>> {
+internal object ChannelCompletionHandler: CompletionHandler<Int, CancellableContinuation<Int>> {
+
     override fun completed(result: Int, attachment: CancellableContinuation<Int>) {
         attachment.resume(result)
     }
