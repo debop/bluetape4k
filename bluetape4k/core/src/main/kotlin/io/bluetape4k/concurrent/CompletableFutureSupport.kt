@@ -14,7 +14,7 @@ import kotlin.time.Duration
  * @param block 비동기로 수행할 코드 블럭
  * @return CompletableFuture<V>
  */
-inline fun <V: Any> futureOf(executor: Executor = ForkJoinExecutor, crossinline block: () -> V): CompletableFuture<V> =
+inline fun <V> futureOf(executor: Executor = ForkJoinExecutor, crossinline block: () -> V): CompletableFuture<V> =
     CompletableFuture.supplyAsync({ block() }, executor)
 
 /**
@@ -23,7 +23,7 @@ inline fun <V: Any> futureOf(executor: Executor = ForkJoinExecutor, crossinline 
  * @param block 비동기로 수행할 코드 블럭
  * @return CompletableFuture<V>
  */
-inline fun <V: Any> immediateFutureOf(crossinline block: () -> V): CompletableFuture<V> =
+inline fun <V> immediateFutureOf(crossinline block: () -> V): CompletableFuture<V> =
     futureOf(DirectExecutor, block)
 
 /**
