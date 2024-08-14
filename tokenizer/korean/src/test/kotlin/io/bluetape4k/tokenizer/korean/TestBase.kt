@@ -21,10 +21,10 @@ abstract class TestBase {
         inline fun time(block: () -> Unit): Long = measureTimeMillis(block)
         inline fun timeNano(block: () -> Unit): Long = measureNanoTime(block)
 
-        suspend inline fun assertExamples(
+        inline fun assertExamples(
             exampleFiles: String,
             log: Logger,
-            crossinline func: suspend (String) -> String,
+            crossinline func: (String) -> String,
         ) {
             val input =
                 DictionaryProvider.readFileByLineFromResources("$BASE_PATH/$exampleFiles")

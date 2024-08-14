@@ -19,12 +19,6 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPosTrie
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx.SelfNode
 import io.bluetape4k.tokenizer.korean.utils.init
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 
 
 typealias KoreanPhraseChunk = List<KoreanPhrase>
@@ -180,7 +174,7 @@ object KoreanPhraseExtractor: KLogging() {
         return isRightLength() && notEndingInNonPhrasesSuffix()
     }
 
-    suspend fun collapsePos(tokens: List<KoreanToken>): List<KoreanPhrase> {
+    fun collapsePos(tokens: List<KoreanToken>): List<KoreanPhrase> {
 
         fun getTries(token: KoreanToken, trie: List<KoreanPosTrie?>): Pair<KoreanPosTrie?, List<KoreanPosTrie?>> {
             val curTrie = trie.firstOrNull { it != null && it.curPos == token.pos }
@@ -196,8 +190,7 @@ object KoreanPhraseExtractor: KLogging() {
         val phrases = mutableListOf<KoreanPhrase>()
         var curTrie: List<KoreanPosTrie?> = collapseTrie
 
-        tokens.asFlow()
-            .buffer()
+        tokens
             .onEach { token ->
                 when {
                     curTrie.any { it?.curPos == token.pos }     -> {
@@ -231,17 +224,16 @@ object KoreanPhraseExtractor: KLogging() {
                     }
                 }
             }
-            .collect()
 
         return phrases
     }
 
-    private suspend fun distinctPhrases(chunks: List<KoreanPhraseChunk>): List<KoreanPhraseChunk> {
+    private fun distinctPhrases(chunks: List<KoreanPhraseChunk>): List<KoreanPhraseChunk> {
         val phraseChunks = mutableListOf<KoreanPhraseChunk>()
         val buffer = mutableSetOf<String>()
 
-        chunks.asFlow().buffer()
-            .collect { chunk ->
+        chunks
+            .onEach { chunk ->
                 val phraseText = chunk.joinToString("") {
                     it.tokens.joinToString("") { token -> token.text }
                 }
@@ -253,10 +245,10 @@ object KoreanPhraseExtractor: KLogging() {
         return phraseChunks.reversed()
     }
 
-    private suspend fun getCandidatePhraseChunks(
+    private fun getCandidatePhraseChunks(
         phrases: KoreanPhraseChunk,
         filterSpam: Boolean = false,
-    ): List<KoreanPhraseChunk> = coroutineScope {
+    ): List<KoreanPhraseChunk> {
         fun isNotSpam(phrase: KoreanPhrase): Boolean {
             return !filterSpam ||
                     !phrase.tokens.any { KoreanDictionaryProvider.spamNouns.contains(it.text) }
@@ -283,13 +275,13 @@ object KoreanPhraseExtractor: KLogging() {
             return isAlphaNumeric() || isModifyingPredicate() || isConjunction()
         }
 
-        suspend fun collapseNounPhrases(phrases1: KoreanPhraseChunk): KoreanPhraseChunk {
+        fun collapseNounPhrases(phrases1: KoreanPhraseChunk): KoreanPhraseChunk {
 
             val output = mutableListOf<KoreanPhrase>()
             val buffer = mutableListOf<KoreanPhrase>()
 
-            phrases1.asFlow().buffer()
-                .collect {
+            phrases1
+                .onEach {
                     if (it.pos == Noun || it.pos == ProperNoun) {
                         buffer.add(it)
                     } else {
@@ -307,7 +299,7 @@ object KoreanPhraseExtractor: KLogging() {
             return output
         }
 
-        suspend fun collapsePhrases(phrases1: KoreanPhraseChunk): List<KoreanPhraseChunk> {
+        fun collapsePhrases(phrases1: KoreanPhraseChunk): List<KoreanPhraseChunk> {
             fun addPhraseToBuffer(phrase: KoreanPhrase, buffer: List<KoreanPhraseChunk>) =
                 buffer.map { it + phrase }.toList()
 
@@ -318,8 +310,8 @@ object KoreanPhraseExtractor: KLogging() {
             val output = mutableListOf<KoreanPhraseChunk>()
             var buffer = newBuffer()
 
-            phrases1.asFlow().buffer()
-                .collect {
+            phrases1
+                .onEach {
                     buffer = if (it.pos in PhraseTokens && isNotSpam(it)) {
                         val bufferWithThisPhrase = addPhraseToBuffer(it, buffer)
                         if (it.pos == Noun || it.pos == ProperNoun) {
@@ -341,7 +333,7 @@ object KoreanPhraseExtractor: KLogging() {
             return buffer
         }
 
-        suspend fun getSingleTokenNouns(): List<KoreanPhraseChunk> {
+        fun getSingleTokenNouns(): List<KoreanPhraseChunk> {
 
             fun isSingle(phrase: KoreanPhrase): Boolean {
                 val trimmed = trimPhrase(phrase)
@@ -357,12 +349,13 @@ object KoreanPhraseExtractor: KLogging() {
                 .toList()
         }
 
-        val nounPhrases = async { collapseNounPhrases(phrases) }
-        val phraseCollapsed = async { collapsePhrases(nounPhrases.await()) }
-        val singleTokenNouns = async { getSingleTokenNouns() }
+        val nounPhrases = collapseNounPhrases(phrases)
+        val phraseCollapsed = collapsePhrases(nounPhrases)
+        val singleTokenNouns = getSingleTokenNouns()
 
-        val chunks = phraseCollapsed.await().map { trimPhraseChunk(it) } + singleTokenNouns.await()
-        distinctPhrases(chunks)
+        val chunks = phraseCollapsed.map { trimPhraseChunk(it) } + singleTokenNouns
+
+        return distinctPhrases(chunks)
     }
 
     /**
@@ -373,7 +366,7 @@ object KoreanPhraseExtractor: KLogging() {
      * @param addHashtags true if #hashtags to be included
      * @return A list of KoreanPhrase
      */
-    suspend fun extractPhrases(
+    fun extractPhrases(
         tokens: List<KoreanToken>,
         filterSpam: Boolean = false,
         addHashtags: Boolean = true,
@@ -397,6 +390,6 @@ object KoreanPhraseExtractor: KLogging() {
         return phrases
     }
 
-    private suspend fun permutateCandidates(candidates: List<KoreanPhraseChunk>): List<KoreanPhraseChunk> =
+    private fun permutateCandidates(candidates: List<KoreanPhraseChunk>): List<KoreanPhraseChunk> =
         distinctPhrases(candidates.filter { isProperPhraseChunk(it) })
 }

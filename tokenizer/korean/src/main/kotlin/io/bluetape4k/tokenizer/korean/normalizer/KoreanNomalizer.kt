@@ -31,7 +31,7 @@ object KoreanNormalizer: KLogging() {
 
     private data class Segment(val text: String, val matchData: MatchResult?)
 
-    suspend fun normalize(input: CharSequence): CharSequence {
+    fun normalize(input: CharSequence): CharSequence {
         if (input.isBlank()) return input
         var match: MatchResult = EXTENTED_KOREAN_REGEX.find(input) ?: return input
 
@@ -52,7 +52,7 @@ object KoreanNormalizer: KLogging() {
         }
     }
 
-    private suspend fun normalizeKoreanChunk(input: CharSequence): CharSequence {
+    private fun normalizeKoreanChunk(input: CharSequence): CharSequence {
 
         // Normalize endings: 안됔ㅋㅋㅋ -> 안돼ㅋㅋ
         val endingNormalized = KOREAN_TO_NORMALIZE_REGEX.replace(input) {
@@ -101,7 +101,7 @@ object KoreanNormalizer: KLogging() {
         return output
     }
 
-    suspend fun normalizeCodaN(chunk: CharSequence): CharSequence {
+    fun normalizeCodaN(chunk: CharSequence): CharSequence {
         if (chunk.length < 2)
             return chunk
 

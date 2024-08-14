@@ -16,7 +16,9 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Unknown
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
 import io.bluetape4k.tokenizer.korean.utils.KoreanSubstantive
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 
 /**
  * Provides Korean tokenization.
@@ -85,7 +87,7 @@ object KoreanTokenizer: KLogging() {
      * @param text Input Korean chunk
      * @return sequence of KoreanTokens
      */
-    suspend fun tokenize(
+    fun tokenize(
         text: CharSequence,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<KoreanToken> {
@@ -102,7 +104,7 @@ object KoreanTokenizer: KLogging() {
      * @param topN number of top candidates
      * @return sequence of KoreanTokens
      */
-    suspend fun tokenizeTopN(
+    fun tokenizeTopN(
         text: CharSequence,
         topN: Int = 1,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
@@ -113,10 +115,12 @@ object KoreanTokenizer: KLogging() {
                     when (it.pos) {
                         Korean -> {
                             // Get the best parse of each chunk
-                            val parsed = parseKoreanChunk(it, profile, topN)
+                            runBlocking(Dispatchers.IO) {
+                                val parsed = parseKoreanChunk(it, profile, topN)
 
-                            // Collapse sequence of one-char nouns into one unknown noun: (가Noun 회Noun -> 가회Noun*)
-                            parsed.map(KoreanSubstantive::collapseNouns).toList()
+                                // Collapse sequence of one-char nouns into one unknown noun: (가Noun 회Noun -> 가회Noun*)
+                                parsed.map(KoreanSubstantive::collapseNouns).toList()
+                            }
                         }
 
                         else   -> listOf(listOf(it))

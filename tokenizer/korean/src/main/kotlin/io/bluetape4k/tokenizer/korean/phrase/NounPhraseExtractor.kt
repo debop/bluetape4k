@@ -15,8 +15,6 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Suffix
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosTrie
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.buffer
 import java.util.concurrent.CopyOnWriteArrayList
 
 
@@ -179,7 +177,7 @@ object NounPhraseExtractor: KLogging() {
         return isRightLength() && notEndingInNonPhrasesSuffix()
     }
 
-    suspend fun collapsePos(tokens: Collection<KoreanToken>): List<KoreanPhrase> {
+    fun collapsePos(tokens: Collection<KoreanToken>): List<KoreanPhrase> {
 
         fun getTries(token: KoreanToken, trie: List<KoreanPosTrie?>): Pair<KoreanPosTrie?, List<KoreanPosTrie?>> {
             val curTrie = trie.firstOrNull { it != null && it.curPos == token.pos }
@@ -195,8 +193,8 @@ object NounPhraseExtractor: KLogging() {
         var curTrie: List<KoreanPosTrie?> = CollapseTrie
 
 
-        tokens.asFlow().buffer()
-            .collect { token ->
+        tokens
+            .onEach { token ->
                 when {
                     curTrie.any { it != null && it.curPos == token.pos } -> {
                         // Extend the current phase
@@ -250,7 +248,7 @@ object NounPhraseExtractor: KLogging() {
         return phraseChunks.reversed()
     }
 
-    private suspend fun getCandidatePhraseChunks(phrases: KoreanPhraseChunk): List<KoreanPhraseChunk> {
+    private fun getCandidatePhraseChunks(phrases: KoreanPhraseChunk): List<KoreanPhraseChunk> {
 
         fun isNonNounPhraseCandidate(phrase: KoreanPhrase): Boolean {
             val trimmed = trimPhrase(phrase)
@@ -273,13 +271,13 @@ object NounPhraseExtractor: KLogging() {
             return isAlphaNumeric() || isModifyingPredicate()
         }
 
-        suspend fun collapseNounPhrases(phrases1: KoreanPhraseChunk): KoreanPhraseChunk {
+        fun collapseNounPhrases(phrases1: KoreanPhraseChunk): KoreanPhraseChunk {
 
             val output = CopyOnWriteArrayList<KoreanPhrase>()
             val buffer = CopyOnWriteArrayList<KoreanPhrase>()
 
-            phrases1.asFlow().buffer()
-                .collect {
+            phrases1
+                .onEach {
                     if (it.pos == Noun || it.pos == ProperNoun) {
                         buffer.add(it)
                     } else {
@@ -297,7 +295,7 @@ object NounPhraseExtractor: KLogging() {
             return output
         }
 
-        suspend fun collapsePhrases(phrases1: KoreanPhraseChunk): List<KoreanPhraseChunk> {
+        fun collapsePhrases(phrases1: KoreanPhraseChunk): List<KoreanPhraseChunk> {
             fun addPhraseToBuffer(phrase: KoreanPhrase, buffer: List<KoreanPhraseChunk>): List<KoreanPhraseChunk> =
                 buffer.map { it + phrase }.toList()
 
@@ -308,8 +306,8 @@ object NounPhraseExtractor: KLogging() {
             val output = CopyOnWriteArrayList<KoreanPhraseChunk>()
             var buffer = newBuffer()
 
-            phrases1.asFlow().buffer()
-                .collect {
+            phrases1
+                .onEach {
                     buffer = if (it.pos in PhraseTokens) {
                         val bufferWithThisPhrase = addPhraseToBuffer(it, buffer)
                         if (it.pos == Noun || it.pos == ProperNoun) {
@@ -357,7 +355,7 @@ object NounPhraseExtractor: KLogging() {
      * @param tokens A sequence of tokens
      * @return A list of KoreanPhrase
      */
-    suspend fun extractPhrases(tokens: Collection<KoreanToken>): List<KoreanPhrase> {
+    fun extractPhrases(tokens: Collection<KoreanToken>): List<KoreanPhrase> {
 
         val collapsed = collapsePos(tokens)
         val candidates = getCandidatePhraseChunks(collapsed)

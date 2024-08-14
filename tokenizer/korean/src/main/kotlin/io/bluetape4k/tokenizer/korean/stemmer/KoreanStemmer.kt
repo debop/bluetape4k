@@ -8,10 +8,6 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Adjective
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Eomi
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.PreEomi
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import java.util.*
 
 
@@ -36,7 +32,7 @@ object KoreanStemmer: KLogging() {
      * @param tokens A sequence of tokens
      * @return A sequence of collapsed Korean tokens
      */
-    suspend fun stem(tokens: List<KoreanToken>): List<KoreanToken> {
+    fun stem(tokens: List<KoreanToken>): List<KoreanToken> {
         if (tokens.isEmpty()) {
             return tokens
         }
@@ -46,8 +42,7 @@ object KoreanStemmer: KLogging() {
 
         val stemmed = LinkedList<KoreanToken>()
 
-        tokens.asFlow()
-            .buffer()
+        tokens
             .onEach { token ->
                 if (stemmed.isNotEmpty() && Endings.contains(token.pos)) {
                     if (Predicates.contains(stemmed.first().pos)) {
@@ -70,7 +65,6 @@ object KoreanStemmer: KLogging() {
                     stemmed.add(0, token)
                 }
             }
-            .collect()
 
         return stemmed.reversed()
     }
