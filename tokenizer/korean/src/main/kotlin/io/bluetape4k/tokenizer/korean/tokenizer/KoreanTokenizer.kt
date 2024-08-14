@@ -17,7 +17,6 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
 import io.bluetape4k.tokenizer.korean.utils.KoreanSubstantive
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -139,7 +138,7 @@ object KoreanTokenizer: KLogging() {
      *              for performance optimization. This method is private and is called only by tokenize.
      * @return The best possible parse.
      */
-    private suspend fun parseKoreanChunk(
+    private fun parseKoreanChunk(
         chunk: KoreanToken,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
         topN: Int = 1,
@@ -147,10 +146,10 @@ object KoreanTokenizer: KLogging() {
         return findTopCandidates(chunk, profile).take(topN)
     }
 
-    private suspend fun findTopCandidates(
+    private fun findTopCandidates(
         chunk: KoreanToken,
         profile: TokenizerProfile,
-    ): List<List<KoreanToken>> = coroutineScope {
+    ): List<List<KoreanToken>> {
         val directMatch = findDirectMatch(chunk)
 
         // Buffer for solution
@@ -251,7 +250,7 @@ object KoreanTokenizer: KLogging() {
                 solutions[chunk.length]!!.sortedBy { it.parse.score }.map { it.parse.posNodes }.toList()
             }
 
-        (directMatch + topCandidates).distinct()
+        return (directMatch + topCandidates).distinct()
     }
 
     private fun removeUnusedSolutions(

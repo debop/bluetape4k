@@ -21,7 +21,7 @@ class KoreanConjugationTest: TestBase() {
         assertConjudations("$BASE_PATH/adj_conjugate.txt", true)
     }
 
-    private suspend fun assertConjudations(filename: String, isAdjective: Boolean) {
+    private fun assertConjudations(filename: String, isAdjective: Boolean) {
         log.debug { "load file=[$filename], isAdjective=$isAdjective" }
 
         val input = DictionaryProvider.readWordsAsSequence(filename)
