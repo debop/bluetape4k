@@ -13,7 +13,6 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import org.amshove.kluent.shouldBeEqualTo
@@ -42,8 +41,7 @@ class CancellationExamples {
         }.log("#1")
 
         delay(1100)
-        job.cancel()
-        job.join()
+        job.cancelAndJoin()
         count shouldBeEqualTo 5L
         log.debug { "Cancelled successfully." }
     }
@@ -65,7 +63,6 @@ class CancellationExamples {
         delay(1100)
         job.cancelAndJoin()
         log.debug { "Cancelled successfully" }
-        advanceUntilIdle()
     }
 
     @Test

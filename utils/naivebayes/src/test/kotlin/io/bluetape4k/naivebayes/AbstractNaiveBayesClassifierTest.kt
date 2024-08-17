@@ -6,6 +6,7 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos
 import kotlinx.coroutines.runBlocking
 import java.io.Serializable
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 abstract class AbstractNaiveBayesClassifierTest {
 
@@ -31,5 +32,6 @@ abstract class AbstractNaiveBayesClassifierTest {
         val amount: Double,
         val memo: String,
         val category: String? = null,
+        val time: LocalDateTime = LocalDateTime.now(),
     ): Serializable
 }

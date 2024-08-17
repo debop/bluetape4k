@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
@@ -28,9 +27,7 @@ class CoroutineContextBuilderExamples {
             delay(1000)
             logging("Running launch")
         }
-
         logging { "The answer is ${v1.await()}" }
-        advanceUntilIdle()
     }
 
     @Test
@@ -46,9 +43,7 @@ class CoroutineContextBuilderExamples {
             delay(1000)
             logging("Running launch")
         }
-
         logging { "The answer is ${v1.await()}" }
-        advanceUntilIdle()
     }
 
     @Test
@@ -65,8 +60,6 @@ class CoroutineContextBuilderExamples {
                 delay(1000)
                 logging("Running launch")
             }
-
             logging { "The answer is ${v1.await()}" }
-            advanceUntilIdle()
         }
 }
