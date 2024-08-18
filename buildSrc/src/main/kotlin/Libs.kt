@@ -18,7 +18,7 @@ object Plugins {
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.10"
 
-        const val spring_boot = "3.3.1"  // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
+        const val spring_boot = "3.3.2"  // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
         const val quarkus = "3.3.2"
         const val apollo = "3.8.2"
         const val dgs = "5.6.9"
@@ -215,7 +215,7 @@ object Versions {
 
     const val sentry_logback = "7.6.0"  // https://mvnrepository.com/artifact/io.sentry/sentry-logback
 
-    const val scrimage = "4.1.3"  // https://mvnrepository.com/artifact/com.sksamuel.scrimage/scrimage-core
+    const val scrimage = "4.2.0"  // https://mvnrepository.com/artifact/com.sksamuel.scrimage/scrimage-core
 }
 
 object Libs {

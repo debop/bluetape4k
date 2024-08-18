@@ -14,6 +14,10 @@ spring:
     elasticsearch:
         uris: ${testcontainers.elasticsearch.url}
 
+    cloud:
+        compatibility-verifier:
+            enabled: false
+
 # Server
 server:
     compression:
