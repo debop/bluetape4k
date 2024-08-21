@@ -137,7 +137,7 @@ class BoundedStack<E: Any> private constructor(val maxSize: Int): Stack<E>() {
     fun toList(): MutableList<E> {
         return lock.withLock {
             val results = mutableListOf<E>()
-            forEach {
+            this.forEach {
                 results.add(it)
             }
             results
