@@ -153,8 +153,8 @@ object Versions {
     const val blaze_persistence = "1.6.8" // https://mvnrepository.com/artifact/io.quarkus.platform/quarkus-blaze-persistence-bom
     const val javers = "7.0.3"  // https://github.com/javers/javers
 
-    const val slf4j = "2.0.13"      // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-    const val logback = "1.5.6"     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+    const val slf4j = "2.0.16"      // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    const val logback = "1.5.7"     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
     const val log4j = "2.23.1"      // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
 
     const val metrics = "4.1.25"
