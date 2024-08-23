@@ -43,7 +43,7 @@ fun assertThatDomainObjectIsPartiallyPopulated(domainObject: DomainObject?) {
     domainObject.id.shouldNotBeNull() shouldBeEqualTo 0
     domainObject.name.shouldNotBeNull() shouldNotBeEqualTo ""
 
-    domainObject.nestedDomainObject?.shouldNotBeNull()
+    domainObject.nestedDomainObject!!.shouldNotBeNull()
     domainObject.nestedDomainObject?.address.shouldBeNull()
     domainObject.nestedDomainObject?.category.shouldNotBeNull()
 
