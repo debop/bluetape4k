@@ -1,10 +1,11 @@
+@file:OptIn(ExperimentalContracts::class)
+
 package io.bluetape4k.support
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 
-@OptIn(ExperimentalContracts::class)
 fun <T: Any> T?.requireNotNull(parameterName: String): T {
     contract {
         returns() implies (this@requireNotNull != null)
@@ -13,7 +14,6 @@ fun <T: Any> T?.requireNotNull(parameterName: String): T {
     return this
 }
 
-@OptIn(ExperimentalContracts::class)
 fun <T: Any> T?.requireNull(parameterName: String): T? {
     contract {
         returns() implies (this@requireNull == null)
@@ -22,7 +22,6 @@ fun <T: Any> T?.requireNull(parameterName: String): T? {
     return this
 }
 
-@OptIn(ExperimentalContracts::class)
 fun <T: CharSequence> T?.requireNotEmpty(parameterName: String): T {
     contract {
         returnsNotNull() implies (this@requireNotEmpty != null)
@@ -32,7 +31,6 @@ fun <T: CharSequence> T?.requireNotEmpty(parameterName: String): T {
     return self
 }
 
-@OptIn(ExperimentalContracts::class)
 fun <T: CharSequence> T?.requireNullOrEmpty(parameterName: String): T? {
     contract {
         returns() implies (this@requireNullOrEmpty == null)
@@ -41,7 +39,6 @@ fun <T: CharSequence> T?.requireNullOrEmpty(parameterName: String): T? {
     return this
 }
 
-@OptIn(ExperimentalContracts::class)
 fun <T: CharSequence> T?.requireNotBlank(parameterName: String): T {
     contract {
         returnsNotNull() implies (this@requireNotBlank != null)
@@ -51,7 +48,6 @@ fun <T: CharSequence> T?.requireNotBlank(parameterName: String): T {
     return self
 }
 
-@OptIn(ExperimentalContracts::class)
 fun <T: CharSequence> T?.requireNullOrBlank(parameterName: String): T? {
     contract {
         returns() implies (this@requireNullOrBlank == null)
