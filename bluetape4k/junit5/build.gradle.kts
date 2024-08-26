@@ -9,6 +9,7 @@ dependencies {
 
     api(Libs.junit_jupiter)
     api(Libs.junit_jupiter_engine)
+    api(Libs.junit_jupiter_params)
     compileOnly(Libs.junit_jupiter_migrationsupport)
     compileOnly(Libs.junit_platform_launcher)
     compileOnly(Libs.junit_platform_runner)
