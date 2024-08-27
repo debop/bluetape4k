@@ -6,11 +6,17 @@ import kotlin.coroutines.Continuation
 import kotlin.reflect.KClass
 
 /**
- * var 로 선언된 필드 중 non null 수형에 대해 초기화 값을 지정하고자 할 때 사용합니다.
+ * 선언된 필드 중 non null 수형에 대해 초기화 값을 지정하고자 할 때 사용합니다.
  * 또한 `@Autowired`, `@Inject` val 수형에 사용하기 좋다.
  *
  * ```
- * @Inject val x: Repository = uninitialized()
+ * @Inject
+ * val x: Repository = uninitialized()
+ * ```
+ *
+ * ```
+ * @Autowired
+ * private val component: Component = uninitialized()
  * ```
  */
 @Suppress("UNCHECKED_CAST")
