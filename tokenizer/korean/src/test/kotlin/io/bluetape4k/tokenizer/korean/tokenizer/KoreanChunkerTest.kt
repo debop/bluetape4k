@@ -20,7 +20,6 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Punctuation
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.ScreenName
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Space
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.URL
-import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import java.util.regex.Matcher
@@ -120,7 +119,7 @@ class KoreanChunkerTest: TestBase() {
     }
 
     @Test
-    fun `getChunks should split a string into Korean-sensitive chunks`() = runTest {
+    fun `getChunks should split a string into Korean-sensitive chunks`() {
         var actual = getChunks("안녕? iphone6안녕? 세상아?")
         actual shouldBeEqualTo listOf("안녕", "?", " ", "iphone", "6", "안녕", "?", " ", "세상아", "?")
 
@@ -144,7 +143,7 @@ class KoreanChunkerTest: TestBase() {
     }
 
     @Test
-    fun `getChunksByPos should extract chunks with a POS tag`() = runTest {
+    fun `getChunksByPos should extract chunks with a POS tag`() {
 
         var actual = getChunksByPos("openkoreantext.org에서 API를 테스트 할 수 있습니다.", URL)
         actual shouldBeEqualTo listOf(
@@ -193,7 +192,7 @@ class KoreanChunkerTest: TestBase() {
     }
 
     @Test
-    fun `getChunks should extract numbers`() = runTest {
+    fun `getChunks should extract numbers`() {
         getChunks("300위안짜리 밥") shouldBeEqualTo listOf("300위안", "짜리", " ", "밥")
         getChunks("200달러와 300유로") shouldBeEqualTo listOf("200달러", "와", " ", "300유로")
         getChunks("$200이나 한다") shouldBeEqualTo listOf("$200", "이나", " ", "한다")
@@ -216,7 +215,7 @@ class KoreanChunkerTest: TestBase() {
     }
 
     @Test
-    fun `should find chunks with POS tags`() = runTest {
+    fun `should find chunks with POS tags`() {
         val text = """
                  |한국어와 English와 1234와 pic.twitter.com
                  |http://news.kukinews.com/article/view.asp?page=1&gCode=soc&arcid=0008599913&code=41121111
@@ -270,7 +269,7 @@ class KoreanChunkerTest: TestBase() {
     }
 
     @Test
-    fun `should detect Korean specific punctuations`() = runTest {
+    fun `should detect Korean specific punctuations`() {
         chunk("중·고등학교에서…") shouldBeEqualTo listOf(
             KoreanToken("중", Korean, 0, 1),
             KoreanToken("·", Punctuation, 1, 1),
@@ -280,7 +279,7 @@ class KoreanChunkerTest: TestBase() {
     }
 
     @Test
-    fun `chunk 형용사`() = runTest {
+    fun `chunk 형용사`() {
         chunk("힘든일을 수행하다") shouldBeEqualTo listOf(
             KoreanToken("힘든일을", Korean, 0, 4),
             KoreanToken(" ", Space, 4, 1),
@@ -289,7 +288,7 @@ class KoreanChunkerTest: TestBase() {
     }
 
     @Test
-    fun `chunk 동네사람들`() = runTest {
+    fun `chunk 동네사람들`() {
         chunk("얼굴이 이상해 동네사람들") shouldBeEqualTo listOf(
             KoreanToken("얼굴이", Korean, 0, 3),
             KoreanToken(" ", Space, 3, 1),

@@ -127,12 +127,15 @@ inline fun <T, R> Flow<T>.async(
 inline fun <T, R> AsyncFlow<T>.map(
     crossinline transform: suspend (value: T) -> R,
 ): AsyncFlow<R> {
-    return AsyncFlow(deferredFlow.map { input ->
-        LazyDeferred(input.coroutineContext) {
-            input.start(this)
-            transform(input.await())
-        }
-    })
+    return AsyncFlow(
+        deferredFlow
+            .map { input ->
+                LazyDeferred(input.coroutineContext) {
+                    input.start(this)
+                    transform(input.await())
+                }
+            }
+    )
 }
 
 /**

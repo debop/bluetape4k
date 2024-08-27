@@ -6,12 +6,18 @@ import io.vertx.core.Future
 import io.vertx.core.Promise
 import java.util.concurrent.TimeUnit
 
+/**
+ * Vert.x [Future]를 [CircuitBreaker]로 decorate 하여 실행합니다.
+ */
 inline fun <T> CircuitBreaker.executeVertxFuture(
     crossinline supplier: () -> Future<T>,
 ): Future<T> {
     return decorateVertxFuture(supplier).invoke()
 }
 
+/**
+ * Vert.x [Future]를 [CircuitBreaker]로 decorate 합니다.
+ */
 inline fun <T> CircuitBreaker.decorateVertxFuture(
     crossinline supplier: () -> Future<T>,
 ): () -> Future<T> = {

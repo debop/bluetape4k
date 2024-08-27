@@ -1,9 +1,10 @@
+@file:OptIn(ExperimentalContracts::class)
+
 package io.bluetape4k.support
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-@OptIn(ExperimentalContracts::class)
 fun <T: Any> T?.assertNotNull(parameterName: String): T {
     contract {
         returns() implies (this@assertNotNull != null)
@@ -12,7 +13,6 @@ fun <T: Any> T?.assertNotNull(parameterName: String): T {
     return this!!
 }
 
-@OptIn(ExperimentalContracts::class)
 fun <T: Any> T?.assertNull(parameterName: String): T? {
     contract {
         returns() implies (this@assertNull == null)
@@ -21,7 +21,6 @@ fun <T: Any> T?.assertNull(parameterName: String): T? {
     return this
 }
 
-@OptIn(ExperimentalContracts::class)
 fun <T: CharSequence> T?.assertNotEmpty(parameterName: String): T {
     contract {
         returns() implies (this@assertNotEmpty != null)
@@ -31,7 +30,7 @@ fun <T: CharSequence> T?.assertNotEmpty(parameterName: String): T {
     return self
 }
 
-@OptIn(ExperimentalContracts::class)
+
 fun <T: CharSequence> T?.assertNullOrEmpty(parameterName: String): T? {
     contract {
         returns() implies (this@assertNullOrEmpty == null)
@@ -40,7 +39,7 @@ fun <T: CharSequence> T?.assertNullOrEmpty(parameterName: String): T? {
     return this
 }
 
-@OptIn(ExperimentalContracts::class)
+
 fun <T: CharSequence> T?.assertNotBlank(parameterName: String): T {
     contract {
         returns() implies (this@assertNotBlank != null)
@@ -50,7 +49,7 @@ fun <T: CharSequence> T?.assertNotBlank(parameterName: String): T {
     return self
 }
 
-@OptIn(ExperimentalContracts::class)
+
 fun <T: CharSequence> T?.assertNullOrBlank(parameterName: String): T? {
     contract {
         returns() implies (this@assertNullOrBlank == null)

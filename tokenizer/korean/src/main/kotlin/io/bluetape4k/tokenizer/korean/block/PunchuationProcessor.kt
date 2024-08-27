@@ -36,7 +36,7 @@ class PunctuationProcessor {
         )
     }
 
-    suspend fun removePunctuation(text: String): String {
+    fun removePunctuation(text: String): String {
         val tokens = findPunctuation(text)
         var result = text
         tokens.reversed()
@@ -51,7 +51,7 @@ class PunctuationProcessor {
         return result
     }
 
-    suspend fun findPunctuation(text: String): List<Pair<KoreanToken, Boolean>> {
+    fun findPunctuation(text: String): List<Pair<KoreanToken, Boolean>> {
         val chunks = KoreanChunker.chunk(text)
 
         return chunks

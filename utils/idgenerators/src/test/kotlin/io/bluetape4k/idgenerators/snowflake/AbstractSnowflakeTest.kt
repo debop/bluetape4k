@@ -26,7 +26,7 @@ abstract class AbstractSnowflakeTest {
     companion object: KLogging() {
         private const val REPEAT_SIZE = 5
         private const val TEST_COUNT = MAX_SEQUENCE * 4
-        private val TEST_LIST = List(TEST_COUNT) { it }
+        private val TEST_LIST: List<Int> = List(TEST_COUNT) { it }
     }
 
     abstract val snowflake: Snowflake

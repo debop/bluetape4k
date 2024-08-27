@@ -7,6 +7,7 @@ import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.concurrency.VirtualthreadTester
 import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.utils.Runtimex
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeLessThan
@@ -41,10 +42,9 @@ abstract class AbstractSequencerTest {
     @BeforeAll
     fun setup() {
         // Warm up sequencer
-        IntStream.range(0, TEST_SIZE)
-            .parallel()
-            .mapToObj { sequencer.nextSequence() }
-            .toList()
+        repeat(TEST_SIZE) {
+            sequencer.nextSequence()
+        }
     }
 
     @RepeatedTest(REPEAT_SIZE)
@@ -81,7 +81,7 @@ abstract class AbstractSequencerTest {
         val idMap = ConcurrentHashMap<Long, Int>()
 
         MultithreadingTester()
-            .numThreads(100)
+            .numThreads(4 * Runtimex.availableProcessors)
             .roundsPerThread(MAX_SEQUENCE * 2)
             .add {
                 val id = sequencer.nextSequence()
@@ -95,7 +95,7 @@ abstract class AbstractSequencerTest {
         val idMap = ConcurrentHashMap<Long, Int>()
 
         VirtualthreadTester()
-            .numThreads(100)
+            .numThreads(4 * Runtimex.availableProcessors)
             .roundsPerThread(MAX_SEQUENCE * 2)
             .add {
                 val id = sequencer.nextSequence()
@@ -109,7 +109,7 @@ abstract class AbstractSequencerTest {
         val idMap = ConcurrentHashMap<Long, Int>()
 
         MultiJobTester()
-            .numJobs(100)
+            .numJobs(4 * Runtimex.availableProcessors)
             .roundsPerJob(MAX_SEQUENCE * 2)
             .add {
                 val id = sequencer.nextSequence()

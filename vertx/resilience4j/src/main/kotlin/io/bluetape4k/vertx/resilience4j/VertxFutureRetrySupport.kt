@@ -6,13 +6,19 @@ import io.vertx.core.Promise
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
+/**
+ * Vert.x [Future]를 [Retry]로 decorate 하여 실행합니다.
+ */
 inline fun <T> Retry.executeVertxFuture(
-    scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
+    scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(Thread.ofVirtual().factory()),
     crossinline supplier: () -> Future<T>,
 ): Future<T> {
     return decorateVertxFuture(scheduler, supplier).invoke()
 }
 
+/**
+ * Vert.x [Future]를 [Retry]로 decorate 합니다.
+ */
 inline fun <T> Retry.decorateVertxFuture(
     scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     crossinline supplier: () -> Future<T>,

@@ -10,14 +10,13 @@ import io.bluetape4k.logging.error
 import io.bluetape4k.logging.info
 import io.jsonwebtoken.SignatureAlgorithm
 import java.util.*
-import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.timer
 import kotlin.concurrent.withLock
 
 class DefaultJwtProvider private constructor(
     override val signatureAlgorithm: SignatureAlgorithm,
     private val repository: KeyChainRepository,
-): JwtProvider {
+): AbstractJwtProvider() {
 
     companion object: KLogging() {
         @JvmStatic
@@ -29,8 +28,6 @@ class DefaultJwtProvider private constructor(
             return DefaultJwtProvider(signatureAlgorithm, keyChainRepository)
         }
     }
-
-    private val lock = ReentrantLock()
 
     private var currentKeyChain: KeyChain? = null
     private var timer: Timer? = null

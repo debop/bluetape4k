@@ -90,23 +90,27 @@ class MultithreadingTesterTest {
             val lock2 = ReentrantLock()
             val latch2 = CountDownLatch(1)
 
-            MultithreadingTester().numThreads(2).roundsPerThread(1).add {
-                lock1.withLock {
-                    latch2.countDown()
-                    latch1.await()
-                    lock2.withLock {
-                        fail("Reached unreachable code")
-                    }
-                }
-            }.add {
-                lock2.withLock {
-                    latch1.countDown()
-                    latch2.await()
+            MultithreadingTester()
+                .numThreads(2)
+                .roundsPerThread(1)
+                .add {
                     lock1.withLock {
-                        fail("Reached unreachable code")
+                        latch2.countDown()
+                        latch1.await()
+                        lock2.withLock {
+                            fail("Reached unreachable code")
+                        }
                     }
                 }
-            }.run()
+                .add {
+                    lock2.withLock {
+                        latch1.countDown()
+                        latch2.await()
+                        lock1.withLock {
+                            fail("Reached unreachable code")
+                        }
+                    }
+                }.run()
             fail("RuntimeException expected.")
         } catch (expected: RuntimeException) {
             log.error(expected) { "Expected" }

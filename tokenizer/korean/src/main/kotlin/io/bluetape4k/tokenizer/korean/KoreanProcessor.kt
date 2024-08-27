@@ -1,5 +1,6 @@
 package io.bluetape4k.tokenizer.korean
 
+import io.bluetape4k.logging.KLogging
 import io.bluetape4k.tokenizer.korean.block.KoreanBlockwordProcessor
 import io.bluetape4k.tokenizer.korean.normalizer.KoreanNormalizer
 import io.bluetape4k.tokenizer.korean.phrase.KoreanPhrase
@@ -27,7 +28,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * 한글 형태소 분석기
  */
-object KoreanProcessor {
+object KoreanProcessor: KLogging() {
 
     /**
      * Normalize Korean text. Uses KoreanNormalizer.normalize().
@@ -35,7 +36,7 @@ object KoreanProcessor {
      * @param text Input text
      * @return Normalized Korean text
      */
-    suspend fun normalize(text: CharSequence): CharSequence {
+    fun normalize(text: CharSequence): CharSequence {
         return KoreanNormalizer.normalize(text)
     }
 
@@ -48,7 +49,7 @@ object KoreanProcessor {
      * @param profile TokenizerProfile
      * @return A sequence of KoreanTokens.
      */
-    suspend fun tokenize(
+    fun tokenize(
         text: CharSequence,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<KoreanToken> {
@@ -56,7 +57,7 @@ object KoreanProcessor {
     }
 
     // TODO: NounTokenizer 를 쓰세요 (명사위주로 분석)
-    suspend fun tokenizeForNoun(
+    fun tokenizeForNoun(
         text: CharSequence,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<KoreanToken> {
@@ -74,7 +75,7 @@ object KoreanProcessor {
      * @param profile TokenizerProfile
      * @return A sequence of sequences of KoreanTokens.
      */
-    suspend fun tokenizeTopN(
+    fun tokenizeTopN(
         text: CharSequence,
         n: Int = 1,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
@@ -205,7 +206,7 @@ object KoreanProcessor {
      * @param enableHashtags true if #hashtags to be included (default: true)
      * @return A sequence of extracted phrases
      */
-    suspend fun extractPhrases(
+    fun extractPhrases(
         tokens: List<KoreanToken>,
         filterSpam: Boolean = false,
         enableHashtags: Boolean = true,
@@ -220,7 +221,7 @@ object KoreanProcessor {
      * @param tokens         Korean tokens
      * @return A sequence of extracted phrases
      */
-    suspend fun extractPhrasesForNoun(tokens: List<KoreanToken>): List<KoreanPhrase> {
+    fun extractPhrasesForNoun(tokens: List<KoreanToken>): List<KoreanPhrase> {
         return NounPhraseExtractor.extractPhrases(tokens)
     }
 
@@ -230,7 +231,7 @@ object KoreanProcessor {
      * @param tokens A sequence of tokens
      * @return A sequence of collapsed Korean tokens
      */
-    suspend fun stem(tokens: List<KoreanToken>): List<KoreanToken> {
+    fun stem(tokens: List<KoreanToken>): List<KoreanToken> {
         return KoreanStemmer.stem(tokens)
     }
 
@@ -241,7 +242,7 @@ object KoreanProcessor {
      * @param tokens List of words.
      * @return Detokenized string.
      */
-    suspend fun detokenize(tokens: Collection<String>): String {
+    fun detokenize(tokens: Collection<String>): String {
         return KoreanDetokenizer.detokenize(tokens)
     }
 
@@ -253,7 +254,7 @@ object KoreanProcessor {
      * @param request 금칙어 처리 요청 정보 [BlockwordRequest]
      * @return 금칙어를 처리한 결과 [BlockwordResponse]
      */
-    suspend fun maskBlockwords(request: BlockwordRequest): BlockwordResponse {
+    fun maskBlockwords(request: BlockwordRequest): BlockwordResponse {
         return KoreanBlockwordProcessor.maskBlockwords(request)
     }
 }

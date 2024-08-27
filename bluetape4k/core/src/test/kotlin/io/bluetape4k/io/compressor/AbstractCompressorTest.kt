@@ -69,6 +69,7 @@ abstract class AbstractCompressorTest {
 
         val compressed = compressor.compress(expected)
         compressed.size shouldBeGreaterThan 0
+
         val actual = compressor.decompress(compressed)
         actual.size shouldBeGreaterThan 0
 

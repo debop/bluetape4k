@@ -4,13 +4,11 @@ import com.aayushatharva.brotli4j.Brotli4jLoader
 import com.aayushatharva.brotli4j.decoder.BrotliInputStream
 import com.aayushatharva.brotli4j.encoder.BrotliOutputStream
 import com.aayushatharva.brotli4j.encoder.Encoder
-import io.bluetape4k.io.ApacheByteArrayOutputStream
 import io.bluetape4k.io.compressor.BrotliCompressor.BrotliOptions
-import io.bluetape4k.io.compressor.BrotliCompressor.BrotliOptions.Companion.DEFAULT_BUFFER_SIZE
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.classIsPresent
-import java.io.ByteArrayInputStream
+import okio.Buffer
 
 /**
  * Brotli 알고리즘을 사용한 압축기
@@ -50,22 +48,33 @@ class BrotliCompressor private constructor(
     }
 
     override fun doCompress(plain: ByteArray): ByteArray {
-        return ApacheByteArrayOutputStream(options.bufferSize).use { bos ->
-            val params = Encoder.Parameters().setQuality(options.quality)
-            BrotliOutputStream(bos, params).use { brotli ->
-                brotli.write(plain)
-                brotli.flush()
-            }
-            bos.toByteArray()
+        val output = Buffer()
+        val params = Encoder.Parameters().setQuality(options.quality)
+        BrotliOutputStream(output.outputStream(), params).use { brotli ->
+            brotli.write(plain)
+            brotli.flush()
         }
+        return output.readByteArray()
+//        return ApacheByteArrayOutputStream(options.bufferSize).use { bos ->
+//            val params = Encoder.Parameters().setQuality(options.quality)
+//            BrotliOutputStream(bos, params).use { brotli ->
+//                brotli.write(plain)
+//                brotli.flush()
+//            }
+//            bos.toByteArray()
+//        }
     }
 
     override fun doDecompress(compressed: ByteArray): ByteArray {
-        return ByteArrayInputStream(compressed).buffered(options.bufferSize).use { bis ->
-            BrotliInputStream(bis, options.bufferSize).use { brotli ->
-                brotli.readAllBytes()
-            }
+        val input = Buffer().write(compressed)
+        BrotliInputStream(input.inputStream()).use { brotli ->
+            return Buffer().readFrom(brotli).readByteArray()
         }
+//        return ByteArrayInputStream(compressed).buffered(options.bufferSize).use { bis ->
+//            BrotliInputStream(bis, options.bufferSize).use { brotli ->
+//                brotli.readAllBytes()
+//            }
+//        }
     }
 
     /**

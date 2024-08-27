@@ -3,3 +3,8 @@ bluetape4k:
         services:
             httpbin: https://nghttp2.org
             jsonPlaceHolder: https://jsonplaceholder.typicode.com
+
+spring:
+    cloud:
+        compatibility-verifier:
+            enabled: false

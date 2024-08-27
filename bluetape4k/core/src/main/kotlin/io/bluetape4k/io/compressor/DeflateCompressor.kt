@@ -1,9 +1,6 @@
 package io.bluetape4k.io.compressor
 
-import io.bluetape4k.io.ApacheByteArrayOutputStream
-import io.bluetape4k.io.DEFAULT_BLOCK_SIZE
-import io.bluetape4k.io.toByteArray
-import java.io.ByteArrayInputStream
+import okio.Buffer
 import java.util.zip.DeflaterOutputStream
 import java.util.zip.InflaterInputStream
 
@@ -18,19 +15,18 @@ class DeflateCompressor @JvmOverloads constructor(
 ): AbstractCompressor() {
 
     override fun doCompress(plain: ByteArray): ByteArray {
-        return ApacheByteArrayOutputStream(bufferSize).use { bos ->
-            DeflaterOutputStream(bos).use { deflater ->
-                deflater.write(plain)
-            }
-            bos.toByteArray()
+        val output = Buffer()
+        DeflaterOutputStream(output.outputStream()).use { deflater ->
+            deflater.write(plain)
+            deflater.finish()
         }
+        return output.readByteArray()
     }
 
     override fun doDecompress(compressed: ByteArray): ByteArray {
-        return ByteArrayInputStream(compressed).buffered(bufferSize).use { bis ->
-            InflaterInputStream(bis).use { inflater ->
-                inflater.toByteArray(DEFAULT_BLOCK_SIZE)
-            }
+        val input = Buffer().write(compressed)
+        InflaterInputStream(input.inputStream()).use { inflater ->
+            return Buffer().readFrom(inflater).readByteArray()
         }
     }
 }

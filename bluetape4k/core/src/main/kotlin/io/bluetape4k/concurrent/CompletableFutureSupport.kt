@@ -74,6 +74,9 @@ inline fun <V> futureWithTimeout(
     timeoutMillis: Long = 1000L,
     crossinline block: () -> V,
 ): CompletableFuture<V> {
+    // TODO: 이 방식 말고, ScheduledThreadPoolExecutor 를 이용하여, ThreadPoolExecutor.DiscardPolicy 를 사용하는 방식으로 변경하는 것이 좋겠다.
+    // TODO: 이런 방식은 jetcache 의 JetCacheExecutor 를 참고하면 된다.
+    // HINT: 또한 ThreadFactory 를 Virtual Thread Factory 를 사용하면 더 좋을 것이다.
     val executor = Executors.newSingleThreadExecutor()
     return CompletableFuture
         .supplyAsync({ block() }, executor)

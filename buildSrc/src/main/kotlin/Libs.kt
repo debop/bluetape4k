@@ -18,7 +18,7 @@ object Plugins {
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.10"
 
-        const val spring_boot = "3.2.5"  // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
+        const val spring_boot = "3.3.2"  // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
         const val quarkus = "3.3.2"
         const val apollo = "3.8.2"
         const val dgs = "5.6.9"
@@ -63,18 +63,18 @@ object Plugins {
 
 object Versions {
 
-    const val kotlin = "2.0.0"                  // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
+    const val kotlin = "2.0.10"                 // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
     const val kotlinx_coroutines = "1.8.1"      // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
-    const val kotlinx_serialization = "1.6.3"   // https://mvnrepository.com/search?q=kotlinx-serialization
+    const val kotlinx_serialization = "1.7.1"   // https://mvnrepository.com/search?q=kotlinx-serialization
 
-    const val kotlinx_atomicfu = "0.24.0"       // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/atomicfu
+    const val kotlinx_atomicfu = "0.25.0"       // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/atomicfu
 
     const val kotlinx_benchmark = Plugins.Versions.kotlinx_benchmark
 
     const val spring_boot = Plugins.Versions.spring_boot
     const val spring_cloud = "2023.0.0"     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies
-    const val spring_integration = "6.2.5"  // https://mvnrepository.com/artifact/org.springframework.integration/spring-integration-core
-    const val reactor_bom = "2023.0.4"      // https://mvnrepository.com/artifact/io.projectreactor/reactor-bom
+    const val spring_integration = "6.2.6"  // https://mvnrepository.com/artifact/org.springframework.integration/spring-integration-core
+    const val reactor_bom = "2023.0.7"      // https://mvnrepository.com/artifact/io.projectreactor/reactor-bom
     const val spring_statemachine = "4.0.0" // https://mvnrepository.com/artifact/org.springframework.statemachine/spring-statemachine-core
 
     // https://mvnrepository.com/artifact/de.codecentric/chaos-monkey-spring-boot
@@ -111,7 +111,7 @@ object Versions {
 
     const val bucket4j = "8.10.1"       // https://mvnrepository.com/artifact/com.bucket4j/bucket4j-core
     const val resilience4j = "2.2.0"   // https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-bom
-    const val netty = "4.1.110.Final"  // https://mvnrepository.com/artifact/io.netty/netty-all
+    const val netty = "4.1.111.Final"  // https://mvnrepository.com/artifact/io.netty/netty-all
 
     const val aws = "1.12.739"    // https://mvnrepository.com/artifact/com.amazonaws
     const val aws2 = "2.25.69"   // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
@@ -129,6 +129,7 @@ object Versions {
     const val httpcore5 = "5.2.4"    // https://mvnrepository.com/artifact/org.apache.httpcomponents.core5/httpcore5
     const val retrofit2 = "2.11.0"   // https://mvnrepository.com/artifact/com.squareup.retrofit2/adapter-rxjava2
     const val okhttp3 = "4.12.0"     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    const val okio = "3.9.0"         // https://mvnrepository.com/artifact/com.squareup.okio/okio
     const val asynchttpclient = "2.12.3"  // https://mvnrepository.com/artifact/org.asynchttpclient/async-http-client
 
     const val jackson = "2.17.1" // https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom
@@ -137,7 +138,7 @@ object Versions {
     const val mapstruct = "1.5.5.Final" // https://mvnrepository.com/artifact/org.mapstruct/mapstruct
     const val reflectasm = "1.11.9"     // https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm
 
-    const val mongo_driver = "4.11.2"   // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
+    const val mongo_driver = "5.1.1"   // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
     const val lettuce = "6.3.2.RELEASE" // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
     const val redisson = "3.31.0"       // https://mvnrepository.com/artifact/org.redisson/redisson
 
@@ -181,19 +182,19 @@ object Versions {
 
     const val cassandra = "4.17.0"     // https://mvnrepository.com/artifact/com.datastax.oss/java-driver-core
     const val scylla_java = "4.13.0.0"
-    const val elasticsearch = "8.7.0"
+    const val elasticsearch = "8.14.1"   // https://mvnrepository.com/artifact/org.elasticsearch.client/elasticsearch-rest-client
 
-    const val kafka = "3.7.0"           // https://mvnrepository.com/artifact/org.apache.kafka/kafka
-    const val spring_kafka = "3.2.0"   // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
+    const val kafka = "3.7.1"           // https://mvnrepository.com/artifact/org.apache.kafka/kafka
+    const val spring_kafka = "3.2.1"   // https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
 
     const val eclipse_collections = "11.1.0"  // https://mvnrepository.com/artifact/org.eclipse.collections/eclipse-collections
     const val jctools = "4.0.5"             // https://mvnrepository.com/artifact/org.jctools/jctools-core
 
     const val ow2_asm = "9.7"               // https://mvnrepository.com/artifact/org.ow2.asm/asm
 
-    const val junit_jupiter = "5.10.2"      // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-    const val junit_platform = "1.10.2"     // https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
-    const val assertj_core = "3.24.2"
+    const val junit_jupiter = "5.10.3"      // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    const val junit_platform = "1.10.3"     // https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
+    const val assertj_core = "3.26.0"       // https://mvnrepository.com/artifact/org.assertj/assertj-core
     const val kluent = "1.73"               // https://mvnrepository.com/artifact/org.amshove.kluent/kluent
     const val mockk = "1.13.11"             // https://mvnrepository.com/artifact/io.mockk/mockk
     const val springmockk = "4.0.2"         // https://mvnrepository.com/artifact/com.ninja-squad/springmockk
@@ -206,7 +207,7 @@ object Versions {
     const val archunit = "0.21.0"
     const val rest_assured = "5.4.0"        // https://mvnrepository.com/artifact/io.rest-assured/rest-assured
 
-    const val datafaker = "2.2.2"          // https://mvnrepository.com/artifact/net.datafaker/datafaker
+    const val datafaker = "2.3.0"          // https://mvnrepository.com/artifact/net.datafaker/datafaker
     const val snakeyaml = "2.2"            // https://mvnrepository.com/artifact/org.yaml/snakeyaml
     const val random_beans = "3.9.0"
 
@@ -214,7 +215,7 @@ object Versions {
 
     const val sentry_logback = "7.6.0"  // https://mvnrepository.com/artifact/io.sentry/sentry-logback
 
-    const val scrimage = "4.1.3"  // https://mvnrepository.com/artifact/com.sksamuel.scrimage/scrimage-core
+    const val scrimage = "4.2.0"  // https://mvnrepository.com/artifact/com.sksamuel.scrimage/scrimage-core
 }
 
 object Libs {
@@ -359,7 +360,7 @@ object Libs {
     
     // Apache Commons
     const val commons_beanutils = "commons-beanutils:commons-beanutils:1.9.4"     // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
-    const val commons_compress = "org.apache.commons:commons-compress:1.26.1"     // https://mvnrepository.com/artifact/org.apache.commons/commons-compress
+    const val commons_compress = "org.apache.commons:commons-compress:1.26.2"     // https://mvnrepository.com/artifact/org.apache.commons/commons-compress
     const val commons_codec = "commons-codec:commons-codec:1.17.0"                // https://mvnrepository.com/artifact/commons-codec/commons-codec
     const val commons_collections4 = "org.apache.commons:commons-collections4:4.4"  // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
     const val commons_cryto = "org.apache.commons:commons-crypto:1.2.0"             // https://mvnrepository.com/artifact/org.apache.commons/commons-crypto
@@ -413,7 +414,7 @@ object Libs {
     const val marshalling_river = "org.jboss.marshalling:jboss-marshalling-river:2.1.2.Final"
     const val marshalling_serial = "org.jboss.marshalling:jboss-marshalling-serial:2.1.2.Final"
     // package 명도 다 바뀌어서 언제 전환해야 하나 고민이다.
-    const val fury = "org.apache.fury:fury-core:0.5.0" // https://mvnrepository.com/artifact/org.apache.fury
+    const val fury = "org.apache.fury:fury-core:0.5.1" // https://mvnrepository.com/artifact/org.apache.fury
     // const val fury = "org.furyio:fury-core:0.4.1"  // https://mvnrepository.com/artifact/org.furyio/fury-core
 
     // Spring Boot
@@ -848,6 +849,10 @@ object Libs {
     val okhttp3_urlconnection = okhttp("okhttp-urlconnection")
     val okhttp3_ws = okhttp("okhttp-ws")
 
+    // Okio
+    const val okio = "com.squareup.okio:okio:${Versions.okio}"
+    const val okio_fakefilesystem = "com.squareup.okio:okio-fakefilesystem:${Versions.okio}"
+
     // MapStruct
     const val mapstruct = "org.mapstruct:mapstruct:${Versions.mapstruct}"
     const val mapstruct_processor = "org.mapstruct:mapstruct-processor:${Versions.mapstruct}"
@@ -891,6 +896,9 @@ object Libs {
     val jackson_module_paranamer = jacksonModule("parameter")
     val jackson_module_parameter_names = jacksonModule("parameter-names")
     val jackson_module_afterburner = jacksonModule("afterburner")
+    // Java 11+ 에서는 afterburner 대신 blackbird를 사용하세요
+    // https://github.com/FasterXML/jackson-modules-base/blob/master/blackbird/README.md
+    val jackson_module_blackbird = jacksonModule("blackbird")
     val jackson_module_jsonSchema = jacksonModule("jsonSchema")
 
     // Json assertions
@@ -925,16 +933,15 @@ object Libs {
     const val xz = "org.tukaani:xz:1.9"                         // https://mvnrepository.com/artifact/org.tukaani/xz
 
     // Cryptography
-    const val jasypt = "org.jasypt:jasypt:1.9.3"
-    const val bouncycastle_bcprov = "org.bouncycastle:bcprov-jdk15on:1.70"
-    const val bouncycastle_bcpkix = "org.bouncycastle:bcpkix-jdk15on:1.70"
+    const val jasypt = "org.jasypt:jasypt:1.9.3"                              // https://mvnrepository.com/artifact/org.jasypt/jasypt
+    const val bouncycastle_bcprov = "org.bouncycastle:bcprov-jdk15on:1.70"    // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on
+    const val bouncycastle_bcpkix = "org.bouncycastle:bcpkix-jdk15on:1.70"    // https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on
 
     // Hashing
-    // https://mvnrepository.com/artifact/net.openhft/zero-allocation-hashing
-    const val zero_allocation_hashing = "net.openhft:zero-allocation-hashing:0.16"
+    const val zero_allocation_hashing = "net.openhft:zero-allocation-hashing:0.16"  // https://mvnrepository.com/artifact/net.openhft/zero-allocation-hashing
 
     // MVEL
-    const val mvel2 = "org.mvel:mvel2:2.4.12.Final"
+    const val mvel2 = "org.mvel:mvel2:2.5.2.Final"  // https://mvnrepository.com/artifact/org.mvel/mvel2
 
     // Reactor
     const val reactor_bom = "io.projectreactor:reactor-bom:${Versions.reactor_bom}"

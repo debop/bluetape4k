@@ -1,6 +1,10 @@
 package io.bluetape4k.jwt.provider.cache
 
 import io.bluetape4k.core.LibraryName
+import io.bluetape4k.jwt.composer.JwtComposer
+import io.bluetape4k.jwt.composer.JwtComposerDsl
+import io.bluetape4k.jwt.keychain.KeyChain
+import io.bluetape4k.jwt.provider.AbstractJwtProvider
 import io.bluetape4k.jwt.provider.JwtProvider
 import io.bluetape4k.jwt.reader.JwtReader
 import io.bluetape4k.jwt.reader.JwtReaderDto
@@ -25,7 +29,7 @@ class RedissonJwtProvider private constructor(
     private val delegate: JwtProvider,
     private val cache: RMapCache<String, JwtReaderDto>,
     private val ttl: Long = DEFAULT_TTL,
-): JwtProvider by delegate {
+): AbstractJwtProvider(), JwtProvider by delegate {
 
     companion object: KLogging() {
         // 3일 
@@ -77,5 +81,13 @@ class RedissonJwtProvider private constructor(
             }
             reader
         }
+    }
+
+    override fun composer(keyChain: KeyChain?): JwtComposer {
+        return delegate.composer(keyChain)
+    }
+
+    override fun compose(keyChain: KeyChain?, initializer: JwtComposerDsl.() -> Unit): String {
+        return delegate.compose(keyChain, initializer)
     }
 }

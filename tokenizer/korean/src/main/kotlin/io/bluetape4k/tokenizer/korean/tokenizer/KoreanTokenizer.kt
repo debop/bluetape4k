@@ -16,7 +16,8 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Unknown
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
 import io.bluetape4k.tokenizer.korean.utils.KoreanSubstantive
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 /**
  * Provides Korean tokenization.
@@ -85,7 +86,7 @@ object KoreanTokenizer: KLogging() {
      * @param text Input Korean chunk
      * @return sequence of KoreanTokens
      */
-    suspend fun tokenize(
+    fun tokenize(
         text: CharSequence,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<KoreanToken> {
@@ -102,7 +103,7 @@ object KoreanTokenizer: KLogging() {
      * @param topN number of top candidates
      * @return sequence of KoreanTokens
      */
-    suspend fun tokenizeTopN(
+    fun tokenizeTopN(
         text: CharSequence,
         topN: Int = 1,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
@@ -113,10 +114,12 @@ object KoreanTokenizer: KLogging() {
                     when (it.pos) {
                         Korean -> {
                             // Get the best parse of each chunk
-                            val parsed = parseKoreanChunk(it, profile, topN)
+                            runBlocking(Dispatchers.IO) {
+                                val parsed = parseKoreanChunk(it, profile, topN)
 
-                            // Collapse sequence of one-char nouns into one unknown noun: (가Noun 회Noun -> 가회Noun*)
-                            parsed.map(KoreanSubstantive::collapseNouns).toList()
+                                // Collapse sequence of one-char nouns into one unknown noun: (가Noun 회Noun -> 가회Noun*)
+                                parsed.map(KoreanSubstantive::collapseNouns).toList()
+                            }
                         }
 
                         else   -> listOf(listOf(it))
@@ -135,7 +138,7 @@ object KoreanTokenizer: KLogging() {
      *              for performance optimization. This method is private and is called only by tokenize.
      * @return The best possible parse.
      */
-    private suspend fun parseKoreanChunk(
+    private fun parseKoreanChunk(
         chunk: KoreanToken,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
         topN: Int = 1,
@@ -143,10 +146,10 @@ object KoreanTokenizer: KLogging() {
         return findTopCandidates(chunk, profile).take(topN)
     }
 
-    private suspend fun findTopCandidates(
+    private fun findTopCandidates(
         chunk: KoreanToken,
         profile: TokenizerProfile,
-    ): List<List<KoreanToken>> = coroutineScope {
+    ): List<List<KoreanToken>> {
         val directMatch = findDirectMatch(chunk)
 
         // Buffer for solution
@@ -247,7 +250,7 @@ object KoreanTokenizer: KLogging() {
                 solutions[chunk.length]!!.sortedBy { it.parse.score }.map { it.parse.posNodes }.toList()
             }
 
-        (directMatch + topCandidates).distinct()
+        return (directMatch + topCandidates).distinct()
     }
 
     private fun removeUnusedSolutions(

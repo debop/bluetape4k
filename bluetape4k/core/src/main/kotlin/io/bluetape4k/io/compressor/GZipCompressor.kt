@@ -1,9 +1,6 @@
 package io.bluetape4k.io.compressor
 
-import io.bluetape4k.io.ApacheByteArrayOutputStream
-import io.bluetape4k.io.DEFAULT_BLOCK_SIZE
-import io.bluetape4k.io.toByteArray
-import java.io.ByteArrayInputStream
+import okio.Buffer
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
@@ -18,20 +15,18 @@ class GZipCompressor @JvmOverloads constructor(
 ): AbstractCompressor() {
 
     override fun doCompress(plain: ByteArray): ByteArray {
-        return ApacheByteArrayOutputStream(bufferSize).use { bos ->
-            GZIPOutputStream(bos, bufferSize, false).use { gzip ->
-                gzip.write(plain)
-                gzip.finish()
-            }
-            bos.toByteArray()
+        val output = Buffer()
+        GZIPOutputStream(output.outputStream()).use { gzip ->
+            gzip.write(plain)
+            gzip.finish()
         }
+        return output.readByteArray()
     }
 
     override fun doDecompress(compressed: ByteArray): ByteArray {
-        return ByteArrayInputStream(compressed).buffered(bufferSize).use { bis ->
-            GZIPInputStream(bis, bufferSize).use { gzip ->
-                gzip.toByteArray(DEFAULT_BLOCK_SIZE)
-            }
+        val input = Buffer().write(compressed)
+        GZIPInputStream(input.inputStream()).use { gzip ->
+            return Buffer().readFrom(gzip).readByteArray()
         }
     }
 }

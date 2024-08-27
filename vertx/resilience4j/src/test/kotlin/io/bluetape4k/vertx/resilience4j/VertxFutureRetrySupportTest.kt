@@ -1,8 +1,8 @@
 package io.bluetape4k.vertx.resilience4j
 
 import io.bluetape4k.logging.debug
+import io.bluetape4k.vertx.asCompletableFuture
 import io.bluetape4k.vertx.tests.withTestContext
-import io.bluetape4k.vertx.toCompletableFuture
 import io.github.resilience4j.kotlin.retry.RetryConfig
 import io.github.resilience4j.retry.Retry
 import io.vertx.core.Vertx
@@ -26,7 +26,7 @@ class VertxFutureRetrySupportTest: AbstractVertxFutureTest() {
             val metrics = retry.metrics
 
             val future = retry.executeVertxFuture(scheduler) { service.returnHelloWorld() }
-            val result = runCatching { future.toCompletableFuture().get() }
+            val result = runCatching { future.asCompletableFuture().get() }
 
             result.isSuccess.shouldBeTrue()
             result.getOrNull() shouldBeEqualTo "Hello world"
@@ -58,7 +58,7 @@ class VertxFutureRetrySupportTest: AbstractVertxFutureTest() {
                 }
             }
 
-            val result = runCatching { future.toCompletableFuture().get() }
+            val result = runCatching { future.asCompletableFuture().get() }
 
             result.isSuccess.shouldBeTrue()
 
@@ -86,7 +86,7 @@ class VertxFutureRetrySupportTest: AbstractVertxFutureTest() {
             val metrics = retry.metrics
 
             val future = retry.executeVertxFuture(scheduler) { service.returnHelloWorld() }
-            val result = runCatching { future.toCompletableFuture().get() }
+            val result = runCatching { future.asCompletableFuture().get() }
 
             result.isSuccess.shouldBeTrue()
 
@@ -110,7 +110,7 @@ class VertxFutureRetrySupportTest: AbstractVertxFutureTest() {
             val metrics = retry.metrics
 
             val future = retry.executeVertxFuture(scheduler) { service.throwException() }
-            val result = runCatching { future.toCompletableFuture().get() }
+            val result = runCatching { future.asCompletableFuture().get() }
 
             result.isFailure.shouldBeTrue()
             metrics.numberOfSuccessfulCallsWithoutRetryAttempt shouldBeEqualTo 0
@@ -129,7 +129,7 @@ class VertxFutureRetrySupportTest: AbstractVertxFutureTest() {
             val metrics = retry.metrics
 
             val decorated = retry.decorateVertxFuture(scheduler) { service.returnHelloWorld() }
-            val result = runCatching { decorated().toCompletableFuture().get() }
+            val result = runCatching { decorated().asCompletableFuture().get() }
 
             result.isSuccess.shouldBeTrue()
             result.getOrNull() shouldBeEqualTo "Hello world"

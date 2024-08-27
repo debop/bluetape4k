@@ -1,6 +1,5 @@
 package io.bluetape4k.tokenizer.korean.tokenizer
 
-import io.bluetape4k.junit5.coroutines.runSuspendTest
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.tokenizer.korean.KoreanProcessor.tokenize
 import io.bluetape4k.tokenizer.korean.TestBase
@@ -20,7 +19,6 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Space
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Suffix
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.VerbPrefix
-import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
@@ -86,7 +84,7 @@ class KoreanTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `tokenize should return expected tokens`() = runSuspendTest {
+    fun `tokenize should return expected tokens`() {
 
         tokenize("개루루야") shouldBeEqualTo listOf(
             KoreanToken("개", Noun, 0, 1),
@@ -149,7 +147,7 @@ class KoreanTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `should handle unknown nouns`() = runTest {
+    fun `should handle unknown nouns`() {
         tokenize("개컁컁아") shouldBeEqualTo listOf(
             KoreanToken("개컁컁", Noun, 0, 3, unknown = true),
             KoreanToken("아", Josa, 3, 1)
@@ -163,7 +161,7 @@ class KoreanTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `should handle edge cases`() = runTest {
+    fun `should handle edge cases`() {
         tokenize("이승기가") shouldBeEqualTo listOf(
             KoreanToken("이승기", Noun, 0, 3),
             KoreanToken("가", Josa, 3, 1)
@@ -203,7 +201,7 @@ class KoreanTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `should be able to tokenize long non-space-correctable ones`() = runTest {
+    fun `should be able to tokenize long non-space-correctable ones`() {
         val actual = tokenize("훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌쩍훌")
         val expected =
             (0 until 24).map { KoreanToken("훌쩍", Noun, it * 2, 2) } + KoreanToken("훌", Noun, 48, 1, unknown = true)
@@ -211,7 +209,7 @@ class KoreanTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `should tokenize edge cases`() = runTest {
+    fun `should tokenize edge cases`() {
         tokenize("해쵸쵸쵸쵸쵸쵸쵸쵸춏") shouldBeEqualTo listOf(
             KoreanToken("해", Noun, 0, 1),
             KoreanToken("쵸쵸쵸쵸쵸쵸쵸쵸", Noun, 1, 8, unknown = true),
@@ -220,7 +218,7 @@ class KoreanTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `should add user-added nouns to dictionary`() = runTest {
+    fun `should add user-added nouns to dictionary`() {
 
         // 사전에 "뇬뇨", "츄쵸" 가 없을 때
         koreanDictionary[Noun]!!.contains("뇬뇨").shouldBeFalse()
@@ -247,7 +245,7 @@ class KoreanTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `noun-josa unmatched`() = runTest {
+    fun `명사-조사 분리`() {
 
         tokenize("울다") shouldBeEqualTo listOf(
             KoreanToken("울다", Verb, 0, 2, stem = "울다")
@@ -275,7 +273,7 @@ class KoreanTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `복합명사 추출`() = runTest {
+    fun `복합명사 추출`() {
 
         KoreanDictionaryProvider.addWordsToDictionary(Noun, listOf("주말", "특가", "행사"))
 
@@ -302,7 +300,7 @@ class KoreanTokenizerTest: TestBase() {
     }
 
     @Test
-    fun `동네사람들 분석하기`() = runTest {
+    fun `동네사람들 분석하기`() {
         val text = """우리 동네사람들"""
 
         val tokens = tokenize(text)

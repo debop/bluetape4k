@@ -18,6 +18,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.trace
 import io.bluetape4k.support.toOptional
+import kotlinx.atomicfu.locks.withLock
 import org.javers.core.commit.Commit
 import org.javers.core.commit.CommitId
 import org.javers.core.json.JsonConverter
@@ -47,6 +48,7 @@ abstract class AbstractCdoSnapshotRepository<T: Any>(
     companion object: KLogging()
 
     private var jsonConverter: JsonConverter? = null
+    protected val lock = ReentrantLock()
 
     fun getJsonConverter(): JsonConverter? = jsonConverter
 
@@ -167,7 +169,7 @@ abstract class AbstractCdoSnapshotRepository<T: Any>(
         if (commit == null) {
             return
         }
-        synchronized(this) {
+        lock.withLock {
             commit.snapshots.forEach {
                 saveSnapshot(it)
             }

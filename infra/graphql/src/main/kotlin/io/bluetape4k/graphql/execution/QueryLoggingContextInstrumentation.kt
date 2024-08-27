@@ -2,6 +2,7 @@ package io.bluetape4k.graphql.execution
 
 import graphql.ExecutionResult
 import graphql.execution.instrumentation.InstrumentationContext
+import graphql.execution.instrumentation.InstrumentationState
 import graphql.execution.instrumentation.SimplePerformantInstrumentation
 import graphql.execution.instrumentation.parameters.InstrumentationExecutionParameters
 import io.bluetape4k.cryptography.digest.Digesters
@@ -20,11 +21,12 @@ class QueryLoggingContextInstrumentation: SimplePerformantInstrumentation() {
 
     override fun beginExecution(
         parameters: InstrumentationExecutionParameters,
-    ): InstrumentationContext<ExecutionResult> {
+        state: InstrumentationState,
+    ): InstrumentationContext<ExecutionResult>? {
         val queryHash = SHA256.digest(parameters.query)
 
         return withLoggingContext("graphql.query.hash" to queryHash) {
-            super.beginExecution(parameters)
+            super.beginExecution(parameters, state)
         }
     }
 }

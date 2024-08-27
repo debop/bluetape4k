@@ -1,13 +1,10 @@
 package io.bluetape4k.io.compressor
 
-import io.bluetape4k.io.ApacheByteArrayOutputStream
-import io.bluetape4k.io.DEFAULT_BLOCK_SIZE
-import io.bluetape4k.io.toByteArray
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.support.coerce
+import okio.Buffer
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
-import java.io.ByteArrayInputStream
 
 
 /**
@@ -16,6 +13,7 @@ import java.io.ByteArrayInputStream
  * ```
  * val xz = XZCompressor()
  * val compresseod = xz.compress(bytes)
+ * val decompressed = xz.decompress(compressed)
  * ```
  * @property preset
  *      The presets 0-3 are fast presets with medium compression.
@@ -45,20 +43,18 @@ class XZCompressor private constructor(
     }
 
     override fun doCompress(plain: ByteArray): ByteArray {
-        return ApacheByteArrayOutputStream(bufferSize).use { bos ->
-            XZCompressorOutputStream(bos, preset).use { xz ->
-                xz.write(plain)
-                xz.flush()
-            }
-            bos.toByteArray()
+        val output = Buffer().buffer()
+        XZCompressorOutputStream(output.outputStream(), preset).use { xz ->
+            xz.write(plain)
+            xz.flush()
         }
+        return output.readByteArray()
     }
 
     override fun doDecompress(compressed: ByteArray): ByteArray {
-        return ByteArrayInputStream(compressed).buffered(bufferSize).use { bis ->
-            XZCompressorInputStream(bis).use { xz ->
-                xz.toByteArray(DEFAULT_BLOCK_SIZE)
-            }
+        val input = Buffer().write(compressed).buffer()
+        XZCompressorInputStream(input.inputStream()).use { xz ->
+            return Buffer().readFrom(xz).readByteArray()
         }
     }
 }

@@ -2,8 +2,8 @@ package io.bluetape4k.vertx.resilience4j
 
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
+import io.bluetape4k.vertx.asCompletableFuture
 import io.bluetape4k.vertx.tests.withTestContext
-import io.bluetape4k.vertx.toCompletableFuture
 import io.github.resilience4j.kotlin.ratelimiter.RateLimiterConfig
 import io.github.resilience4j.ratelimiter.RateLimiter
 import io.vertx.core.Vertx
@@ -41,7 +41,7 @@ class VertxFutureRateLimiterSupportTest: AbstractVertxFutureTest() {
 
             val result = rateLimiter.executeVertxFuture {
                 service.returnHelloWorld()
-            }.toCompletableFuture().get()
+            }.asCompletableFuture().get()
 
             result shouldBeEqualTo "Hello world"
             metrics.availablePermissions shouldBeEqualTo RATE_LIMIT - 1
@@ -59,7 +59,7 @@ class VertxFutureRateLimiterSupportTest: AbstractVertxFutureTest() {
             try {
                 rateLimiter.executeVertxFuture {
                     service.throwException()
-                }.toCompletableFuture().get()
+                }.asCompletableFuture().get()
                 fail("예외가 발생해야 합니다")
             } catch (e: Throwable) {
                 // no op
@@ -81,13 +81,13 @@ class VertxFutureRateLimiterSupportTest: AbstractVertxFutureTest() {
             repeat(RATE_LIMIT) {
                 rateLimiter.executeVertxFuture {
                     service.returnHelloWorld()
-                }.toCompletableFuture().get()
+                }.asCompletableFuture().get()
             }
 
             try {
                 rateLimiter.executeVertxFuture {
                     service.returnHelloWorld()
-                }.toCompletableFuture().get()
+                }.asCompletableFuture().get()
                 fail("RateLimiter에 걸려야 합니다.")
             } catch (e: Throwable) {
                 // no op
@@ -108,7 +108,7 @@ class VertxFutureRateLimiterSupportTest: AbstractVertxFutureTest() {
             val decorated = rateLimiter.decorateVertxFuture {
                 service.returnHelloWorld()
             }
-            val result = decorated().toCompletableFuture().get()
+            val result = decorated().asCompletableFuture().get()
 
             result shouldBeEqualTo "Hello world"
             metrics.availablePermissions shouldBeEqualTo RATE_LIMIT - 1

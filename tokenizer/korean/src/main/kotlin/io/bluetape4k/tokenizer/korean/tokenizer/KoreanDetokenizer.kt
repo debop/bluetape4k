@@ -10,10 +10,6 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Punctuation
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Suffix
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Verb
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.VerbPrefix
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 
 
 /**
@@ -27,7 +23,7 @@ object KoreanDetokenizer {
     @JvmField
     val PrefixPos: Set<KoreanPos> = setOf(Modifier, VerbPrefix)
 
-    suspend fun detokenize(input: Collection<String>): String {
+    fun detokenize(input: Collection<String>): String {
         // Space guide prevents tokenizing a word that was not tokenized in the input.
         val spaceGuide = getSpaceGuide(input)
 
@@ -45,12 +41,12 @@ object KoreanDetokenizer {
         return collapseTokens(tokenized).joinToString(" ")
     }
 
-    private suspend fun collapseTokens(tokenized: List<KoreanToken>): List<String> {
+    private fun collapseTokens(tokenized: List<KoreanToken>): List<String> {
         val output = mutableListOf<String>()
         var isPrefix = false
         var prevToken: KoreanToken? = null
 
-        tokenized.asFlow().buffer()
+        tokenized
             .onEach { token ->
                 if (output.isNotEmpty() && (isPrefix || token.pos in SuffixPos)) {
                     val attached = output.last() + token.text
@@ -72,7 +68,6 @@ object KoreanDetokenizer {
                     prevToken = token
                 }
             }
-            .collect()
 
         return output
     }

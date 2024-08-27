@@ -1,13 +1,12 @@
 package io.bluetape4k.tokenizer.korean.phrase
 
-import io.bluetape4k.junit5.coroutines.runSuspendTest
+import io.bluetape4k.tokenizer.korean.KoreanProcessor
 import io.bluetape4k.tokenizer.korean.TestBase
 import io.bluetape4k.tokenizer.korean.normalizer.KoreanNormalizer
 import io.bluetape4k.tokenizer.korean.tokenizer.KoreanToken
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.KoreanParticle
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Modifier
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
-import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeLessThan
 import org.amshove.kluent.shouldContainSame
@@ -21,7 +20,7 @@ class NounPhraseExtractorTest: TestBase() {
     val superLongText = "허니버터칩정규직크리스마스".repeat(50)
 
     @Test
-    fun `collapse KoreanPos sequence`() = runSuspendTest {
+    fun `collapse KoreanPos sequence`() {
         var actual = NounPhraseExtractor.collapsePos(
             listOf(
                 KoreanToken("N", Noun, 0, 1),
@@ -64,8 +63,8 @@ class NounPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `should not deduplicate phrases`() = runTest {
-        val tokenized = io.bluetape4k.tokenizer.korean.KoreanProcessor.tokenizeForNoun("성탄절 쇼핑 성탄절 쇼핑 성탄절 쇼핑 성탄절 쇼핑")
+    fun `should not deduplicate phrases`() {
+        val tokenized = KoreanProcessor.tokenizeForNoun("성탄절 쇼핑 성탄절 쇼핑 성탄절 쇼핑 성탄절 쇼핑")
         val phrases = NounPhraseExtractor.extractPhrases(tokenized)
 
         val expected = phrases.map { it.text }.distinct()
@@ -74,18 +73,18 @@ class NounPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `should extract long noun-only phrases in reasonable time`() = runSuspendTest {
+    fun `should extract long noun-only phrases in reasonable time`() {
         assertExtraction(superLongText, "허니버터칩(Noun: 0, 5), 정규직(Noun: 5, 3), 크리스마스(Noun: 8, 5)")
 
-        val tokens = io.bluetape4k.tokenizer.korean.KoreanProcessor.tokenize(superLongText)
+        val tokens = KoreanProcessor.tokenize(superLongText)
 
         measureTimeMillis { NounPhraseExtractor.extractPhrases(tokens) } shouldBeLessThan 10_000
 
     }
 
     @Test
-    fun `should extract the example set`() = runSuspendTest {
-        suspend fun phraseExtractor(text: String): String {
+    fun `should extract the example set`() {
+        fun phraseExtractor(text: String): String {
             val normalized = KoreanNormalizer.normalize(text)
             val tokens = io.bluetape4k.tokenizer.korean.KoreanProcessor.tokenizeForNoun(normalized)
             return NounPhraseExtractor.extractPhrases(tokens).joinToString("/")
@@ -123,8 +122,8 @@ class NounPhraseExtractorTest: TestBase() {
         )
     }
 
-    private fun assertExtraction(s: String, expected: String) = runSuspendTest {
-        val tokens = io.bluetape4k.tokenizer.korean.KoreanProcessor.tokenizeForNoun(s)
+    private fun assertExtraction(s: String, expected: String) {
+        val tokens = KoreanProcessor.tokenizeForNoun(s)
         val actual = NounPhraseExtractor.extractPhrases(tokens).joinToString(", ")
 
         actual shouldBeEqualTo expected

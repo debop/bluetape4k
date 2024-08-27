@@ -37,7 +37,7 @@ class KsuidTest {
 
     @RepeatedTest(REPEAT_SIZE)
     fun `generate ksuid as parallel`() {
-        val ids = (0 until 100).toList().parallelStream()
+        val ids = List(100) { it }.parallelStream()
             .map { Ksuid.generate() }
             .toList()
 

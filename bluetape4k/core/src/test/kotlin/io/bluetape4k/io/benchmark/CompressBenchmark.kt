@@ -1,6 +1,5 @@
 package io.bluetape4k.io.benchmark
 
-import com.github.luben.zstd.Zstd
 import io.bluetape4k.io.compressor.Compressors
 import io.bluetape4k.io.compressor.ZstdCompressor
 import io.bluetape4k.utils.Resourcex
@@ -25,7 +24,7 @@ class CompressBenchmark {
     private val gzip = Compressors.GZip
     private val deflate = Compressors.Deflate
     private val zstd = Compressors.Zstd
-    private val zstd_min = ZstdCompressor(Zstd.minCompressionLevel())
+    private val zstd_min = ZstdCompressor()
     private val brotli = Compressors.Brotli
 
     // Apple Silicon 에서는 실행이 안됩니다.

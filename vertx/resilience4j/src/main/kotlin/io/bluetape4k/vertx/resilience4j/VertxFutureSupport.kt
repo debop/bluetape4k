@@ -3,12 +3,18 @@ package io.bluetape4k.vertx.resilience4j
 import io.vertx.core.Future
 import io.vertx.core.Promise
 
+/**
+ * Vert.x [Future]가 예외를 발생하는 경우 [exceptionHandler]를 실행하여 복구합니다.
+ */
 inline fun <T> Future<T>.recover(
     crossinline exceptionHandler: (Throwable?) -> T,
 ): Future<T> {
     return this.andThen { exceptionHandler(it.cause()) }
 }
 
+/**
+ * Vert.x [Future]가 [exceptionTypes]에 해당하는 예외가 발생하는 경우 [exceptionHandler]를 실행하여 복구합니다.
+ */
 fun <T> Future<T>.recover(
     exceptionTypes: Iterable<Class<out Throwable?>>,
     exceptionHandler: (Throwable?) -> T,
@@ -24,7 +30,9 @@ fun <T> Future<T>.recover(
     return promise.future()
 }
 
-
+/**
+ * Vert.x [Future]가 [exceptionType]에 해당하는 예외가 발생하는 경우 [exceptionHandler]를 실행하여 복구합니다.
+ */
 fun <T> Future<T>.recover(
     exceptionType: Class<out Throwable?>,
     exceptionHandler: (Throwable?) -> T,
@@ -37,18 +45,13 @@ fun <T> Future<T>.recover(
     onFailure { error ->
         tryRecover(exceptionType, exceptionHandler, promise, error.cause ?: error)
     }
-//    this.onComplete { ar ->
-//        if (ar.failed()) {
-//            val throwable = ar.cause()
-//            tryRecover(exceptionType, exceptionHandler, promise, throwable.cause ?: throwable)
-//        } else {
-//            promise.complete(ar.result())
-//        }
-//    }
+
     return promise.future()
 }
 
-
+/**
+ * Vert.x [Future]가 [exceptionType]에 해당하는 예외가 발생하는 경우 [exceptionHandler]를 실행하여 복구합니다.
+ */
 private fun <T> tryRecover(
     exceptionTypes: Iterable<Class<out Throwable?>>,
     exceptionHandler: (Throwable?) -> T,
@@ -66,6 +69,9 @@ private fun <T> tryRecover(
     }
 }
 
+/**
+ * Vert.x [Future]가 [exceptionType]에 해당하는 예외가 발생하는 경우 [exceptionHandler]를 실행하여 복구합니다.
+ */
 private fun <T> tryRecover(
     exceptionType: Class<out Throwable?>,
     exceptionHandler: (Throwable?) -> T,
@@ -83,10 +89,16 @@ private fun <T> tryRecover(
     }
 }
 
+/**
+ * Vert.x [Future]를 반환하는 함수가 예외를 발생하는 경우 [exceptionHandler]를 실행하여 복구합니다.
+ */
 fun <T> (() -> Future<T>).recover(exceptionHandler: (Throwable?) -> T): () -> Future<T> = {
     this.invoke().recover(exceptionHandler)
 }
 
+/**
+ * Vert.x [Future]를 반환하는 함수가 완료되었을 때 [handler]를 실행합니다.
+ */
 inline fun <T, R> (() -> Future<T>).recover(
     crossinline handler: (T?, Throwable?) -> R,
 ): () -> Future<R> = {
@@ -96,6 +108,9 @@ inline fun <T, R> (() -> Future<T>).recover(
     )
 }
 
+/**
+ * Vert.x [Future]를 반환하는 함수가 [exceptionType]에 해당하는 예외가 발생하는 경우 [exceptionHandler]를 실행하여 복구합니다.
+ */
 fun <T> (() -> Future<T>).recover(
     exceptionType: Class<out Throwable>,
     exceptionHandler: (Throwable?) -> T,
@@ -103,6 +118,9 @@ fun <T> (() -> Future<T>).recover(
     this.invoke().recover(exceptionType, exceptionHandler)
 }
 
+/**
+ * Vert.x [Future]를 반환하는 함수가 [exceptionTypes]에 해당하는 예외가 발생하는 경우 [exceptionHandler]를 실행하여 복구합니다.
+ */
 fun <T> (() -> Future<T>).recover(
     exceptionTypes: Iterable<Class<out Throwable>>,
     exceptionHandler: (Throwable?) -> T,
@@ -110,6 +128,9 @@ fun <T> (() -> Future<T>).recover(
     this.invoke().recover(exceptionTypes, exceptionHandler)
 }
 
+/**
+ * Vert.x [Future]를 반환하는 함수가 [resultPredicate]을 만족하는 결과인 경우 [resultHandler]를 실행하여 복구합니다.
+ */
 inline fun <T> (() -> Future<T>).recover(
     crossinline resultPredicate: (T) -> Boolean,
     crossinline resultHandler: (T) -> T,

@@ -5,7 +5,8 @@ import io.bluetape4k.logging.KLogging
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 import kotlin.test.assertFailsWith
 
 class BoundedStackTest {
@@ -54,7 +55,7 @@ class BoundedStackTest {
             .add {
                 Thread.sleep(1)
                 counter.decrementAndGet()
-                if (stack.size > 0) {
+                if (stack.isNotEmpty()) {
                     stack.pop()
                 }
             }
@@ -69,27 +70,26 @@ class BoundedStackTest {
     @Test
     fun `push items over capacity to stack in multi-thread`() {
         val stack = BoundedStack<Int>(4)
-        val counter = AtomicInteger(0)
+        val counter = atomic(0)
+        val lock = ReentrantLock()
 
         MultithreadingTester()
             .numThreads(4)
             .roundsPerThread(4)
             .add {
-                stack.push(counter.incrementAndGet())
+                lock.withLock {
+                    stack.push(counter.incrementAndGet())
+                }
             }
             .run()
 
-        counter.get() shouldBeEqualTo 4 * 4
+        counter.value shouldBeEqualTo 4 * 4
 
         stack.size shouldBeEqualTo 4
-        stack.pop()
-        stack.pop()
-        stack.pop()
-        stack.pop()
-//        stack.pop() shouldBeEqualTo 16
-//        stack.pop() shouldBeEqualTo 15
-//        stack.pop() shouldBeEqualTo 14
-//        stack.pop() shouldBeEqualTo 13
+        stack.pop() shouldBeEqualTo 16
+        stack.pop() shouldBeEqualTo 15
+        stack.pop() shouldBeEqualTo 14
+        stack.pop() shouldBeEqualTo 13
         stack.size shouldBeEqualTo 0
     }
 }

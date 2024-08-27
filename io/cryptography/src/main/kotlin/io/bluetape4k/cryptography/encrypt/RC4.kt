@@ -15,6 +15,6 @@ class RC4(
 ): AbstractEncryptor(ALGORITHM, saltGenerator, password) {
 
     companion object {
-        const val ALGORITHM = "PBEWITHSHAAND128BITRC4"
+        const val ALGORITHM = "PBEWITHSHA1ANDRC4_128" // "PBEWITHSHAAND128BITRC4"
     }
 }

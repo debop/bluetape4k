@@ -1,6 +1,5 @@
 package io.bluetape4k.tokenizer.korean.phrase
 
-import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.debug
 import io.bluetape4k.tokenizer.korean.KoreanProcessor.tokenize
 import io.bluetape4k.tokenizer.korean.TestBase
@@ -11,7 +10,6 @@ import io.bluetape4k.tokenizer.korean.tokenizer.KoreanToken
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.KoreanParticle
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Modifier
 import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Noun
-import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldBeLessThan
@@ -26,7 +24,7 @@ class KoreanPhraseExtractorTest: TestBase() {
     private val superLongText = "허니버터칩정규직크리스마스".repeat(50)
 
     @Test
-    fun `collapse KoreanPos sequence`() = runTest {
+    fun `collapse KoreanPos sequence`() {
         var actual = collapsePos(
             listOf(
                 KoreanToken("N", Noun, 0, 1),
@@ -69,7 +67,7 @@ class KoreanPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `should not deduplicate phrases`() = runTest {
+    fun `should not deduplicate phrases`() {
         val phrases = extractPhrases(tokenize("성탄절 쇼핑 성탄절 쇼핑 성탄절 쇼핑 성탄절 쇼핑"), filterSpam = false)
 
         val expected = phrases.map { it.text }.distinct()
@@ -78,7 +76,7 @@ class KoreanPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `should extract long noun-only phrases in reasonable time`() = runTest {
+    fun `should extract long noun-only phrases in reasonable time`() {
         assertExtraction(superLongText, "허니버터칩(Noun: 0, 5), 정규직(Noun: 5, 3), 크리스마스(Noun: 8, 5)")
 
         val tokens = tokenize(superLongText)
@@ -87,8 +85,8 @@ class KoreanPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `should extract the example set`() = runSuspendWithIO {
-        suspend fun phraseExtractor(text: String): String {
+    fun `should extract the example set`() {
+        fun phraseExtractor(text: String): String {
             val normalized = KoreanNormalizer.normalize(text)
             val tokens = tokenize(normalized)
             return extractPhrases(tokens).joinToString("/")
@@ -97,7 +95,7 @@ class KoreanPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `문단 구분 예제 - 단문`() = runTest {
+    fun `문단 구분 예제 - 단문`() {
         val text = """"@user: @user 내가 얼굴이 아가쟈나..ㅎ" 동네사람들...!"""
 
         val normalized = KoreanNormalizer.normalize(text)
@@ -111,7 +109,7 @@ class KoreanPhraseExtractorTest: TestBase() {
     }
 
     @Test
-    fun `should filter out spam and profane words`() = runTest {
+    fun `should filter out spam and profane words`() {
         extractPhrases(tokenize(spamText), filterSpam = false).size shouldBeGreaterThan 5
 
         extractPhrases(
@@ -151,7 +149,7 @@ class KoreanPhraseExtractorTest: TestBase() {
         )
     }
 
-    private fun assertExtraction(s: String, expected: String) = runTest {
+    private fun assertExtraction(s: String, expected: String) {
         val tokens = tokenize(s)
         val actual = extractPhrases(tokens).joinToString(", ")
 

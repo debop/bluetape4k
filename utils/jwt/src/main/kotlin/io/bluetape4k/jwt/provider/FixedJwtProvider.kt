@@ -11,7 +11,7 @@ import java.time.Duration
 
 class FixedJwtProvider private constructor(
     private val current: KeyChain,
-): JwtProvider {
+): AbstractJwtProvider() {
 
     companion object: KLogging() {
         @JvmStatic

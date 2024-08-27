@@ -37,6 +37,10 @@ dependencies {
 
     api(Libs.jakarta_servlet_api)
 
+    // Micrometer
+    implementation(project(":bluetape4k-micrometer"))
+    implementation(Libs.micrometer_registry_prometheus)
+
     // Spring Boot
     implementation(Libs.springBoot("autoconfigure"))
     kapt(Libs.springBoot("autoconfigure-processor"))

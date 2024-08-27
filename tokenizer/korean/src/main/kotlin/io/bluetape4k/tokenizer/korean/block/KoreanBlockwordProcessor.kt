@@ -40,7 +40,7 @@ object KoreanBlockwordProcessor: KLogging() {
      * @param text 한국어 문장
      * @return 금칙어에 해당하는 [KoreanToken] 리스트
      */
-    suspend fun findBlockwords(text: String): List<KoreanToken> {
+    fun findBlockwords(text: String): List<KoreanToken> {
         if (text.isBlank()) {
             return emptyList()
         }
@@ -73,7 +73,7 @@ object KoreanBlockwordProcessor: KLogging() {
      * @param request 금칙어 처리 요청 정보 [BlockwordRequest]
      * @return 금칙어를 처리한 결과 [BlockwordResponse]
      */
-    suspend fun maskBlockwords(request: BlockwordRequest): BlockwordResponse {
+    fun maskBlockwords(request: BlockwordRequest): BlockwordResponse {
         if (request.text.isBlank()) {
             return BlockwordResponse(request, EMPTY_STRING)
         }

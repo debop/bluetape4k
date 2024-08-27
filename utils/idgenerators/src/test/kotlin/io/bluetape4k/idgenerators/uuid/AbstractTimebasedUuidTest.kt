@@ -5,7 +5,7 @@ import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.junit5.concurrency.VirtualthreadTester
 import io.bluetape4k.junit5.coroutines.MultiJobTester
 import io.bluetape4k.logging.KLogging
-import io.bluetape4k.logging.debug
+import io.bluetape4k.logging.trace
 import io.bluetape4k.utils.Runtimex
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -30,8 +30,8 @@ abstract class AbstractTimebasedUuidTest {
         val uuid1 = uuidGenerator.nextId()
         val uuid2 = uuidGenerator.nextId()
 
-        log.debug { "uuid1=$uuid1" }
-        log.debug { "uuid2=$uuid2" }
+        log.trace { "uuid1=$uuid1" }
+        log.trace { "uuid2=$uuid2" }
         uuid2 shouldNotBeEqualTo uuid1
     }
 
@@ -40,8 +40,8 @@ abstract class AbstractTimebasedUuidTest {
         val uuid1 = uuidGenerator.nextIdAsString()
         val uuid2 = uuidGenerator.nextIdAsString()
 
-        log.debug { "uuid1=$uuid1" }
-        log.debug { "uuid2=$uuid2" }
+        log.trace { "uuid1=$uuid1" }
+        log.trace { "uuid2=$uuid2" }
         uuid2 shouldNotBeEqualTo uuid1
     }
 

@@ -11,7 +11,6 @@ import io.bluetape4k.tokenizer.korean.utils.KoreanPos.Unknown
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosTrie
 import io.bluetape4k.tokenizer.korean.utils.KoreanPosx
 import io.bluetape4k.tokenizer.korean.utils.KoreanSubstantive
-import java.io.Serializable
 
 /**
  * Provides Korean tokenization.
@@ -23,7 +22,7 @@ import java.io.Serializable
  * Whenever there is an updates in the behavior of KoreanParser,
  * the initial cache has to be updated by running tools.CreateInitialCache.
  */
-object NounTokenizer: KLogging(), Serializable {
+object NounTokenizer: KLogging() {
 
     private const val TOP_N_PER_STATE = 5
     private const val MAX_TRACE_BACK = 8
@@ -83,7 +82,7 @@ object NounTokenizer: KLogging(), Serializable {
      * @param text Input Korean chunk
      * @return sequence of KoreanTokens
      */
-    suspend fun tokenize(
+    fun tokenize(
         text: CharSequence,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
     ): List<KoreanToken> {
@@ -101,7 +100,7 @@ object NounTokenizer: KLogging(), Serializable {
      * @param topN number of top candidates
      * @return sequence of KoreanTokens
      */
-    suspend fun tokenizeTopN(
+    fun tokenizeTopN(
         text: CharSequence,
         topN: Int = 1,
         profile: TokenizerProfile = TokenizerProfile.DefaultProfile,
