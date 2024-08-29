@@ -67,7 +67,7 @@ abstract class AbstractBinarySerializer: BinarySerializer {
      */
     override fun serialize(graph: Any?): ByteArray {
         if (graph == null) {
-            emptyByteArray
+            return emptyByteArray
         }
         return runCatching { doSerialize(graph!!) }
             .onFailure { log.error(it) { "Fail to serialize." } }

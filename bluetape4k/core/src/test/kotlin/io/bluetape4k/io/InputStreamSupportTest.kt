@@ -15,7 +15,7 @@ import java.nio.ByteBuffer
 import java.nio.channels.Channels
 
 @RandomizedTest
-class InputStreamExtensionsTest {
+class InputStreamSupportTest {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 3

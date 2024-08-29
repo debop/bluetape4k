@@ -7,8 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith
  *
  * ```
  * @SystemProperties(
- *     SystemProperty("name="nameA", "valueA"),
- *     SystemProperty("name="nameB", "valueB")
+ *     SystemProperty(name="nameA", value="valueA"),
+ *     SystemProperty(name="nameB", value="valueB")
  * )
  * @Test
  * fun test() {

@@ -124,7 +124,7 @@ abstract class AbstractBinarySerializerTest {
         val actual = serde.deserialize<List<SimpleData>>(compressed)
 
         actual.shouldNotBeNull()
-        actual shouldContainSame origins
+        actual shouldBeEqualTo origins
     }
 
     //

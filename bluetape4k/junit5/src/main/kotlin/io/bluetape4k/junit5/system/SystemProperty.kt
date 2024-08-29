@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith
  * 테스트 시에 시스템 속성을 지정하고, 테스트 후에는 원복한다
  *
  * ```
- * @SystemProperty("name="nameA", "valueA")
+ * @SystemProperty(name="nameA", value="valueA")
  * @Test
  * fun test() {
  *     System.getProperty("nameA") // "valueA"
