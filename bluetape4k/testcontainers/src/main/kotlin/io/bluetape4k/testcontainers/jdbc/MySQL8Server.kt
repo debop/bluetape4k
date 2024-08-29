@@ -19,7 +19,7 @@ class MySQL8Server private constructor(
 
     companion object: KLogging() {
         const val IMAGE = "mysql"
-        const val TAG = "8.3"
+        const val TAG = "8.4"
         const val NAME = "mysql"
         const val PORT: Int = 3306
         const val USERNAME = "test"

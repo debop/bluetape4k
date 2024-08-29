@@ -17,7 +17,7 @@ class PostgreSQLServer private constructor(
 
     companion object: KLogging() {
         const val IMAGE = "postgres"
-        const val TAG: String = "16"
+        const val TAG: String = "9.6"
         const val NAME = "postgresql"
         const val PORT = 5432
         const val USERNAME = "test"

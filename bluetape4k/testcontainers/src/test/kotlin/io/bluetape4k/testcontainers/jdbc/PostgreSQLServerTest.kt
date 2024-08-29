@@ -12,6 +12,7 @@ class PostgreSQLServerTest: AbstractJdbcServerTest() {
     fun `launch PostgreSQL server`() {
         PostgreSQLServer().use { postgres ->
             postgres.start()
+            Thread.sleep(10)
             assertConnection(postgres)
         }
     }
@@ -20,6 +21,7 @@ class PostgreSQLServerTest: AbstractJdbcServerTest() {
     fun `launch PostgreSQL server with default port`() {
         PostgreSQLServer(useDefaultPort = true).use { postgres ->
             postgres.start()
+            Thread.sleep(100)
             postgres.port shouldBeEqualTo PostgreSQLServer.PORT
             assertConnection(postgres)
         }
