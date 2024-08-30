@@ -62,7 +62,7 @@ enum class PeriodRelation {
 
     companion object {
 
-        val VALS = values()
+        val VALS = entries.toTypedArray()
 
         val NotOverlappedRelations = listOf(NoRelation, After, StartTouching, EndTouching, Before)
 

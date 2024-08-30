@@ -1,4 +1,4 @@
-# Module bluetape4k-utils-money
+# Module bluetape4k-money
 
 ## 개요
 

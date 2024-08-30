@@ -10,7 +10,7 @@ enum class CollectKind {
 
     companion object {
 
-        val VALS = values()
+        val VALS = entries.toTypedArray()
 
         @JvmStatic
         fun of(value: Int): CollectKind {
