@@ -104,7 +104,7 @@ class ChannelExtensionsTest {
             send(5)
         }
 
-        val debounded = channel.debounce(1.seconds)
-        debounded.toList() shouldBeEqualTo listOf(1, 3, 4, 5)
+        val debounced = channel.debounce(1.seconds).toList()
+        debounced shouldBeEqualTo listOf(1, 3, 4, 5)
     }
 }

@@ -63,7 +63,7 @@ object Plugins {
 
 object Versions {
 
-    const val kotlin = "2.0.10"                 // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
+    const val kotlin = "2.0.20"                 // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
     const val kotlinx_coroutines = "1.8.1"      // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
     const val kotlinx_serialization = "1.7.1"   // https://mvnrepository.com/search?q=kotlinx-serialization
 
