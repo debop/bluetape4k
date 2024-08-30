@@ -21,7 +21,7 @@ dependencies {
     compileOnly(Libs.jackson_dataformat_protobuf)
     compileOnly(Libs.jackson_dataformat_smile)
 
-    compileOnly(Libs.jackson_module_afterburner)
+    compileOnly(Libs.jackson_module_blackbird)
 
     testImplementation(Libs.jsonpath)
     testImplementation(Libs.jsonassert)
