@@ -1,3 +1,5 @@
+@file:JvmMultifileClass
+@file:JvmName("FlowExtensionsKt")
 @file:Suppress("NOTHING_TO_INLINE")
 
 package io.bluetape4k.coroutines.flow.extensions

@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.onStart
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * Flow를 주어진 [initialDelay] 이후에 주어진 [delay] 간격으로 발행하는 Flow를 생성합니다.
+ */
 fun <T> Flow<T>.interval(
     initialDelay: Duration,
     delay: Duration = Duration.ZERO,
@@ -25,6 +28,9 @@ fun <T> Flow<T>.interval(
         }
 }
 
+/**
+ * Flow를 주어진 [initialDelayMillis] 이후에 주어진 [delayMillis] 간격으로 발행하는 Flow를 생성합니다.
+ */
 fun <T> Flow<T>.interval(
     initialDelayMillis: Long = 0L,
     delayMillis: Long = 0L,
@@ -37,6 +43,9 @@ fun <T> Flow<T>.interval(
         }
 }
 
+/**
+ * Flow를 주어진 [initialDelay] 이후에 주어진 [delay] 간격으로 발행하는 Flow를 생성합니다.
+ */
 fun intervalFlowOf(initialDelay: Duration, delay: Duration): Flow<Long> = flow {
     delay(initialDelay)
     val sequencer = atomic(0L)
@@ -46,6 +55,9 @@ fun intervalFlowOf(initialDelay: Duration, delay: Duration): Flow<Long> = flow {
     }
 }
 
+/**
+ * Flow를 주어진 [initialDelayMillis] 이후에 주어진 [delayMillis] 간격으로 발행하는 Flow를 생성합니다.
+ */
 fun intervalFlowOf(initialDelayMillis: Long, delayMillis: Long): Flow<Long> = flow {
     delay(initialDelayMillis.coerceAtLeast(0))
     val sequencer = atomic(0L)

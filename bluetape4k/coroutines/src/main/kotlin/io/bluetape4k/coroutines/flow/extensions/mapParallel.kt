@@ -15,6 +15,7 @@ import kotlin.coroutines.EmptyCoroutineContext
  * flow의 요소들을 [parallelism]만큼 병렬로 [transform]을 수행하여 처리속도를 높힙니다.
  *
  * @param parallelism 동시 실행할 숫자
+ * @param context Coroutine Context
  * @param transform  변환 함수
  */
 inline fun <T, R> Flow<T>.mapParallel(

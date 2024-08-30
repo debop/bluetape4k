@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import io.bluetape4k.coroutines.tests.assertError
 import io.bluetape4k.coroutines.tests.assertResult
 import io.bluetape4k.logging.KLogging
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
-import kotlin.coroutines.cancellation.CancellationException
 
 class MapIndexedTest: AbstractFlowTest() {
 
