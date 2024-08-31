@@ -4,7 +4,6 @@ configurations {
 
 dependencies {
     api(project(":bluetape4k-netty"))
-    api(project(":bluetape4k-json"))
     api(project(":bluetape4k-resilience4j"))
     testImplementation(project(":bluetape4k-junit5"))
     testImplementation(project(":bluetape4k-testcontainers"))
@@ -50,6 +49,7 @@ dependencies {
     compileOnly(project(":bluetape4k-json"))
     compileOnly(Libs.jackson_databind)
     compileOnly(Libs.jackson_module_kotlin)
+    compileOnly(Libs.jackson_module_blackbird)
 
     // Gson
     compileOnly(Libs.gson)
