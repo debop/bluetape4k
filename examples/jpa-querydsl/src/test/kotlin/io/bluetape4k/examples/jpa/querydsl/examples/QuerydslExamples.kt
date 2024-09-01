@@ -20,6 +20,7 @@ import io.bluetape4k.examples.jpa.querydsl.domain.model.QMember
 import io.bluetape4k.examples.jpa.querydsl.domain.model.QTeam
 import io.bluetape4k.examples.jpa.querydsl.domain.model.Team
 import io.bluetape4k.hibernate.isLoaded
+import io.bluetape4k.hibernate.querydsl.core.inValues
 import io.bluetape4k.hibernate.querydsl.core.minus
 import io.bluetape4k.hibernate.querydsl.core.numberPathOf
 import io.bluetape4k.hibernate.querydsl.core.plus
@@ -141,7 +142,7 @@ class QuerydslExamples: AbstractQuerydslTest() {
             .where(
                 qmember.name.eq("member-1"),
                 null,       // Predicate 가 null 인 경우는 단순 무시한다
-                qmember.age.`in`(10, 20, 30, 40)
+                qmember.age.inValues(10, 20, 30, 40)
             )
             .fetchOne()!!
 
