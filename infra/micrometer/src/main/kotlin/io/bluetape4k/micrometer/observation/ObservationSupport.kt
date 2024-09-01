@@ -19,7 +19,7 @@ fun <T> withObservation(
     registry: ObservationRegistry,
     block: () -> T,
 ): T {
-    return Observation.createNotStarted(name, registry).observe(block) as T
+    return Observation.createNotStarted(name, registry).observe { block.invoke() } as T
 }
 
 fun ObservationRegistry.start(

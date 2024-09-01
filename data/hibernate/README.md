@@ -1,4 +1,4 @@
-# Module bluetape4k-data-hibernate
+# Module bluetape4k-hibernate
 
 **[hibernate-orm](https://hibernate.org/orm/)를 Kotlin에서 사용할 때 유용한 기능을 제공합니다.**
 
@@ -92,10 +92,11 @@ idea {
 
 ```kotlin
 @Entity
-class Cavalier(val name: String,
-               @OneToOne(cascade = [ALL])
-               @JoinColumn(name = "horse_id")
-               var horse: Horse? = null
+class Cavalier(
+    val name: String,
+    @OneToOne(cascade = [ALL])
+    @JoinColumn(name = "horse_id")
+    var horse: Horse? = null
 ): LongJpaEntity() {
 
     // Business Unique에 해당하는 속성으로만 equals 를 비교하도록 합니다.
