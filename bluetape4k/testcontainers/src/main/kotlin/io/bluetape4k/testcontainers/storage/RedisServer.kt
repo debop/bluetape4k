@@ -97,17 +97,27 @@ class RedisServer private constructor(
         object RedissonLib {
             // private val redissonClients = ConcurrentHashMap<String, RedissonClient>()
 
-            fun getRedissonConfig(address: String = redis.url): Config =
-                Config().apply {
+            fun getRedissonConfig(
+                address: String = redis.url,
+                connectionPoolSize: Int = 256,
+                minimumIdleSize: Int = 4,
+            ): Config {
+                return Config().apply {
                     with(useSingleServer()) {
                         this.address = address
-                        this.connectionPoolSize = 128       // default: 64
-                        this.connectionMinimumIdleSize = 4  // default: 24
+                        this.connectionPoolSize = connectionPoolSize       // default: 64
+                        this.connectionMinimumIdleSize = minimumIdleSize  // default: 24
                     }
                 }
+            }
 
-            fun getRedisson(address: String = redis.url): RedissonClient {
-                return Redisson.create(getRedissonConfig(address))
+            fun getRedisson(
+                address: String = redis.url,
+                connectionPoolSize: Int = 256,
+                minimumIdleSize: Int = 4,
+            ): RedissonClient {
+                val config = getRedissonConfig(address, connectionPoolSize, minimumIdleSize)
+                return Redisson.create(config)
                     .also { redisson ->
                         ShutdownQueue.register { redisson.shutdown() }
                     }

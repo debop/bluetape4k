@@ -59,3 +59,5 @@ lucene/
 
 # kafka stream store
 **/streams-state/
+
+.vscode
