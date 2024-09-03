@@ -4,6 +4,7 @@ import io.bluetape4k.idgenerators.snowflake.Snowflakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.trace
 import org.javers.core.commit.CommitId
+import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Supplier
 import kotlin.concurrent.withLock
 

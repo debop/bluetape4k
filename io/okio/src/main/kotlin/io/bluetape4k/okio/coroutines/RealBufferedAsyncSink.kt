@@ -29,7 +29,7 @@ internal class RealBufferedAsyncSink(
         var remaining = byteCount
         while (remaining > 0L) {
             val read = source.read(buffer, remaining)
-            if (read == -1L) throw EOFException()
+            if (read == -1L) throw okio.EOFException()
             remaining -= read
             emitCompleteSegments()
         }

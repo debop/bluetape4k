@@ -24,7 +24,7 @@ class DeflateKotlinTest: AbstractOkioTest() {
     @Test
     fun `deflate with Deflater`() {
         val data = Buffer()
-        val deflater = data.deflate(Deflater(0, true))
+        val deflater = data.deflate(okio.Deflater(0, true))
         deflater.buffered().writeUtf8("Hi!").close()
         data.readByteString().hex() shouldBeEqualTo "010300fcff486921"
     }
@@ -39,7 +39,7 @@ class DeflateKotlinTest: AbstractOkioTest() {
     @Test
     fun `inflate with Inflater`() {
         val buffer = bufferOf("010300fcff486921".decodeHex())
-        val inflated = buffer.inflate(Inflater(true))
+        val inflated = buffer.inflate(okio.Inflater(true))
         inflated.buffer().readUtf8() shouldBeEqualTo "Hi!"
     }
 }

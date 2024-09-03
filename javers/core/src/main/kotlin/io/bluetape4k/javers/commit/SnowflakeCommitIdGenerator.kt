@@ -6,6 +6,7 @@ import io.bluetape4k.idgenerators.snowflake.Snowflakers
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.locks.withLock
 import org.javers.core.commit.CommitId
+import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Supplier
 
 class SnowflakeCommitIdGenerator(

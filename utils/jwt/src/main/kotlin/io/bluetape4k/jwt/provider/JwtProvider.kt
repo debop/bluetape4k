@@ -11,6 +11,7 @@ import io.jsonwebtoken.Jws
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.SignatureAlgorithm
 import kotlinx.atomicfu.locks.withLock
+import java.util.concurrent.locks.ReentrantLock
 
 interface JwtProvider {
 

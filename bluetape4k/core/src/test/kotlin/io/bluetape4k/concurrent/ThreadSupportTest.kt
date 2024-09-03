@@ -6,6 +6,7 @@ import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.locks.ReentrantLock
 
 class ThreadSupportTest {
 

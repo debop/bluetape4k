@@ -30,6 +30,7 @@ import org.javers.core.metamodel.type.ManagedType
 import org.javers.repository.api.QueryParams
 import org.javers.repository.api.SnapshotIdentifier
 import java.util.*
+import java.util.concurrent.locks.ReentrantLock
 import kotlin.jvm.optionals.getOrNull
 
 /**

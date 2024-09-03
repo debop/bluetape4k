@@ -107,7 +107,7 @@ suspend fun BufferedAsyncSink.write(source: Source, byteCount: Long): BufferedAs
     var remaining = byteCount
     while (remaining > 0L) {
         val read = source.read(this.buffer, remaining)
-        if (read == -1L) throw EOFException()
+        if (read == -1L) throw okio.EOFException()
         remaining -= read
         emitCompleteSegments()
     }

@@ -155,7 +155,7 @@ class DeflaterSinkTest: AbstractOkioTest() {
      */
     private fun inflate(deflated: Buffer): Buffer {
         val deflatedIn = deflated.inputStream()
-        val inflater = Inflater()
+        val inflater = okio.Inflater()
         val inflatedIn = InflaterInputStream(deflatedIn, inflater)
 
         val result = Buffer()
