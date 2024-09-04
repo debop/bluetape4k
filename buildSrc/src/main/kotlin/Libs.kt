@@ -22,7 +22,7 @@ object Plugins {
         const val quarkus = "3.3.2"
         const val apollo = "3.8.2"
         const val dgs = "5.6.9"
-        const val docker_compose = "0.16.12"
+        const val docker_compose = "0.17.8"   // https://plugins.gradle.org/plugin/com.avast.gradle.docker-compose
     }
 
     const val detekt = "io.gitlab.arturbosch.detekt"
