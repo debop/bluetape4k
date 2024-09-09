@@ -18,7 +18,7 @@ object Plugins {
         const val shadow = "7.1.2"
         const val kotlinx_benchmark = "0.4.10"
 
-        const val spring_boot = "3.3.2"  // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
+        const val spring_boot = "3.3.3"  // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
         const val quarkus = "3.3.2"
         const val apollo = "3.8.2"
         const val dgs = "5.6.9"
@@ -72,9 +72,9 @@ object Versions {
     const val kotlinx_benchmark = Plugins.Versions.kotlinx_benchmark
 
     const val spring_boot = Plugins.Versions.spring_boot
-    const val spring_cloud = "2023.0.0"     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies
+    const val spring_cloud = "2023.0.3"     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies
     const val spring_integration = "6.2.6"  // https://mvnrepository.com/artifact/org.springframework.integration/spring-integration-core
-    const val reactor_bom = "2023.0.7"      // https://mvnrepository.com/artifact/io.projectreactor/reactor-bom
+    const val reactor_bom = "2023.0.9"      // https://mvnrepository.com/artifact/io.projectreactor/reactor-bom
     const val spring_statemachine = "4.0.0" // https://mvnrepository.com/artifact/org.springframework.statemachine/spring-statemachine-core
 
     // https://mvnrepository.com/artifact/de.codecentric/chaos-monkey-spring-boot
@@ -111,12 +111,12 @@ object Versions {
 
     const val bucket4j = "8.10.1"       // https://mvnrepository.com/artifact/com.bucket4j/bucket4j-core
     const val resilience4j = "2.2.0"   // https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-bom
-    const val netty = "4.1.111.Final"  // https://mvnrepository.com/artifact/io.netty/netty-all
+    const val netty = "4.1.113.Final"  // https://mvnrepository.com/artifact/io.netty/netty-all
 
-    const val aws = "1.12.739"    // https://mvnrepository.com/artifact/com.amazonaws
-    const val aws2 = "2.25.69"   // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
+    const val aws = "1.12.771"    // https://mvnrepository.com/artifact/com.amazonaws
+    const val aws2 = "2.27.21"   // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
     const val aws2_crt = "0.29.19" // https://mvnrepository.com/artifact/software.amazon.awssdk.crt
-    const val aws_kotlin = "1.2.29" // https://mvnrepository.com/artifact/aws.sdk.kotlin
+    const val aws_kotlin = "1.3.27" // https://mvnrepository.com/artifact/aws.sdk.kotlin
 
     const val grpc = "1.62.2"       // https://mvnrepository.com/artifact/io.grpc/grpc-stub
     const val grpc_kotlin = "1.4.1" // https://mvnrepository.com/artifact/io.grpc/grpc-kotlin-stub
@@ -132,22 +132,22 @@ object Versions {
     const val okio = "3.9.0"         // https://mvnrepository.com/artifact/com.squareup.okio/okio
     const val asynchttpclient = "2.12.3"  // https://mvnrepository.com/artifact/org.asynchttpclient/async-http-client
 
-    const val jackson = "2.17.1" // https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom
+    const val jackson = "2.17.2" // https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom
     const val jjwt = "0.11.5"    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
 
-    const val mapstruct = "1.5.5.Final" // https://mvnrepository.com/artifact/org.mapstruct/mapstruct
+    const val mapstruct = "1.6.0"       // https://mvnrepository.com/artifact/org.mapstruct/mapstruct
     const val reflectasm = "1.11.9"     // https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm
 
-    const val mongo_driver = "5.1.1"   // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
-    const val lettuce = "6.3.2.RELEASE" // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
-    const val redisson = "3.31.0"       // https://mvnrepository.com/artifact/org.redisson/redisson
+    const val mongo_driver = "5.1.4"   // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
+    const val lettuce = "6.4.0.RELEASE" // https://mvnrepository.com/artifact/io.lettuce/lettuce-core
+    const val redisson = "3.35.0"       // https://mvnrepository.com/artifact/org.redisson/redisson
 
     // NOTE: Hibernate 는 jakarta 버전인 경우 orm, validator 등이 group 에 포함됩니다.
     // NOTE: 이 경우 기존 javax 를 사용하는 버전과 충돌이 생길 수 있으니 조심하세요
     // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
 
-    const val hibernate = "6.5.2.Final"           // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
-    const val hibernate_reactive = "2.3.1.Final"  // https://mvnrepository.com/artifact/org.hibernate.reactive/hibernate-reactive-core
+    const val hibernate = "6.6.0.Final"           // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
+    const val hibernate_reactive = "2.4.0.Final"  // https://mvnrepository.com/artifact/org.hibernate.reactive/hibernate-reactive-core
     const val hibernate_validator = "8.0.1.Final" // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
     const val querydsl = "5.1.0"                  // https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa
 

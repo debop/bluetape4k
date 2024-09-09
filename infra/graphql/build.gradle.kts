@@ -1,6 +1,3 @@
-plugins {
-    kotlin("kapt")
-}
 
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get(), runtimeOnly.get())

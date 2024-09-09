@@ -1,8 +1,9 @@
+import org.aesh.readline.terminal.Key.k
+
 plugins {
     kotlin("plugin.spring")
     kotlin("plugin.noarg")
     kotlin("plugin.allopen")
-    kotlin("kapt")
 }
 
 allOpen {
@@ -45,3 +46,4 @@ dependencies {
     implementation(Libs.reactor_kotlin_extensions)
     testImplementation(Libs.reactor_test)
 }
+k
