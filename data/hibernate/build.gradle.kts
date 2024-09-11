@@ -30,9 +30,6 @@ idea {
 kapt {
     correctErrorTypes = true
     showProcessorStats = true
-    arguments {
-        arg("spring.jpa.open-in-view", "false")
-    }
 }
 
 configurations {
