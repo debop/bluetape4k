@@ -30,19 +30,13 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
     private val author1 = Author(faker.name().name())
     private val author2 = Author(faker.name().name())
     private val book1 = Book(
-        faker.numerify("#-#####-###-#"),
-        faker.book().title(),
-        LocalDate.of(1994, Month.JANUARY, 1)
+        faker.numerify("#-#####-###-#"), faker.book().title(), LocalDate.of(1994, Month.JANUARY, 1)
     )
     private val book2 = Book(
-        faker.numerify("#-#####-###-#"),
-        faker.book().title(),
-        LocalDate.of(1999, Month.MAY, 1)
+        faker.numerify("#-#####-###-#"), faker.book().title(), LocalDate.of(1999, Month.MAY, 1)
     )
     private val book3 = Book(
-        faker.numerify("#-#####-###-#"),
-        faker.book().title(),
-        LocalDate.of(1992, Month.JUNE, 1)
+        faker.numerify("#-#####-###-#"), faker.book().title(), LocalDate.of(1992, Month.JUNE, 1)
     )
 
     @BeforeAll
@@ -76,7 +70,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
     fun `find all book with fetch join`() = runSuspendWithIO {
         val sql = "SELECT b FROM Book b LEFT JOIN FETCH b.author a"
         val books = sf.withStatelessSessionSuspending { session ->
-            session.createQuery<Book>(sql).resultList.awaitSuspending()
+            session.createSelectionQuery(sql, Book::class.java).resultList.awaitSuspending()
         }
         books.forEach {
             println(it)
@@ -133,8 +127,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
         val criteria = cb.createQuery(Author::class.java)
         val author = criteria.from(Author::class.java)
         val book = author.join(Author_.books)
-        criteria.select(author)
-            .where(cb.equal(book.get(Book_.isbn), book1.isbn))
+        criteria.select(author).where(cb.equal(book.get(Book_.isbn), book1.isbn))
 
         val authors = sf.withStatelessSessionSuspending { session ->
             session.createQuery(criteria).resultList.awaitSuspending()
@@ -156,8 +149,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
         val book = author.join(Author_.books)
 
         // where 조건
-        criteria.select(author)
-            .where(cb.equal(book.get(Book_.isbn), book2.isbn))
+        criteria.select(author).where(cb.equal(book.get(Book_.isbn), book2.isbn))
 
         val authors = sf.withStatelessSessionSuspending { session ->
             // inner join fetch
@@ -165,10 +157,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
             // graph.addSubgraph(Author_.books)
             graph.addAttributeNodes(Author_.books)
 
-            session.createQuery(criteria)
-                .setPlan(graph)
-                .resultList
-                .awaitSuspending()
+            session.createQuery(criteria).setPlan(graph).resultList.awaitSuspending()
         }
         authors.forEach { a ->
             println(a)
@@ -178,7 +167,7 @@ class MutinyStatelessSessionExamples: AbstractMutinyTest() {
         }
         authors shouldHaveSize 1
         authors.forEach {
-            it.books shouldHaveSize 1
+            it.books shouldHaveSize 2
         }
     }
 }

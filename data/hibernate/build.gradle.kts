@@ -30,6 +30,11 @@ idea {
 kapt {
     correctErrorTypes = true
     showProcessorStats = true
+
+    arguments {
+        arg("querydsl.entityAccessors", "true")
+        arg("querydsl.kotlinCodegen", "true") // QueryDSL Kotlin Codegen 활성화
+    }
 }
 
 configurations {
@@ -61,9 +66,9 @@ dependencies {
     api(Libs.hibernate_micrometer)
     testImplementation(Libs.hibernate_testing)
 
-    // NOTE: hibernate 6.3.0+ 는 hibernate-jpamodelgen 예서 예외가 발생합니다. (6.2.x 를 사용하세요)
-    kapt(Libs.hibernate_jpamodelgen)
-    kaptTest(Libs.hibernate_jpamodelgen)
+    // NOTE: hibernate 6.3.0+ 는 hibernate-jpamodelgen 예서 예외가 발생합니다. (6.6.+ 를 사용하세요)
+    // kapt(Libs.hibernate_jpamodelgen)
+    // kaptTest(Libs.hibernate_jpamodelgen)
 
     // Querydsl
     // Hibernate 6+ jakarta 용은 claasifier로 ":jpa" 대신 ":jakarta" 를 사용해야 합니다.
@@ -71,6 +76,10 @@ dependencies {
     api(Libs.querydsl_jpa + ":jakarta")
     kapt(Libs.querydsl_apt + ":jakarta")
     kaptTest(Libs.querydsl_apt + ":jakarta")
+    api(Libs.querydsl_kotlin)
+    // TODO: querydsl-kotlin-codegen 은 tree entity 도 못 만들고, spring-data-jpa 의 repository에서 문제가 생긴다.
+    // https://github.com/querydsl/querydsl/issues/3454
+    // compileOnly(Libs.querydsl_kotlin_codegen)
 
     api(Libs.jakarta_el_api)
 
@@ -83,18 +92,13 @@ dependencies {
     compileOnly(project(":bluetape4k-json"))
 
     testImplementation(Libs.kryo)
-    testImplementation(Libs.marshalling)
-    testImplementation(Libs.marshalling_river)
+    testImplementation(Libs.fury)
 
-    testImplementation(Libs.snappy_java)
     testImplementation(Libs.lz4_java)
+    testImplementation(Libs.snappy_java)
+    testImplementation(Libs.zstd_jni)
 
     compileOnly(project(":bluetape4k-idgenerators"))
-
-    // TODO: querydsl-kotlin-codegen 은 tree entity 도 못 만들고, spring-data-jpa 의 repository에서 문제가 생긴다.
-    // https://github.com/querydsl/querydsl/issues/3454
-    // kapt(Libs.querydsl_kotlin_codegen)
-    // kaptTest(Libs.querydsl_kotlin_codegen)
 
     compileOnly(Libs.springBootStarter("data-jpa"))
     testImplementation(Libs.springBoot("autoconfigure"))

@@ -22,5 +22,5 @@ class R2dbcClient(
 /**
  * [ConnectionFactory] 인스턴스
  */
-val io.bluetape4k.r2dbc.R2dbcClient.connectionFactory: ConnectionFactory
+val R2dbcClient.connectionFactory: ConnectionFactory
     get() = databaseClient.connectionFactory

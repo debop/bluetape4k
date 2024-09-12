@@ -1,9 +1,12 @@
 package io.bluetape4k.hibernate.mapping.tree
 
 import io.bluetape4k.core.ToStringBuilder
-import io.bluetape4k.hibernate.model.LongJpaTreeEntity
+import io.bluetape4k.hibernate.model.AbstractJpaTreeEntity
 import io.bluetape4k.support.requireNotBlank
 import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
 import jakarta.persistence.Index
 import jakarta.persistence.Table
 import jakarta.validation.constraints.NotBlank
@@ -15,9 +18,8 @@ import org.hibernate.annotations.DynamicUpdate
 @DynamicInsert
 @DynamicUpdate
 class TreeNode private constructor(
-    @NotBlank
-    var title: String,
-): LongJpaTreeEntity<TreeNode>() {
+    @NotBlank var title: String,
+): AbstractJpaTreeEntity<TreeNode, Long>() {
 
     companion object {
         @JvmStatic
@@ -26,6 +28,10 @@ class TreeNode private constructor(
             return TreeNode(title)
         }
     }
+
+    @field:Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    override var id: Long? = null
 
     var description: String? = null
 
@@ -43,8 +49,6 @@ class TreeNode private constructor(
     }
 
     override fun buildStringHelper(): ToStringBuilder {
-        return super.buildStringHelper()
-            .add("title", title)
-            .add("description", description)
+        return super.buildStringHelper().add("title", title).add("description", description)
     }
 }

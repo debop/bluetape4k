@@ -24,7 +24,7 @@ class R2dbcClientAutoConfiguration {
         databaseClient: DatabaseClient,
         r2dbcEntityTemplate: R2dbcEntityTemplate,
         mappingR2dbcConverter: MappingR2dbcConverter,
-    ): io.bluetape4k.r2dbc.R2dbcClient {
+    ): R2dbcClient {
         log.info {
             "Create R2dbcClient with " +
                     "databaseClient=$databaseClient, " +

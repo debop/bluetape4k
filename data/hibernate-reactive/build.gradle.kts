@@ -1,5 +1,5 @@
 plugins {
-    idea
+//    idea
     kotlin("plugin.spring")
     kotlin("plugin.allopen")
     kotlin("plugin.noarg")
@@ -16,16 +16,26 @@ allOpen {
     annotation("jakarta.persistence.MappedSuperclass")
 }
 
-idea {
-    module {
-        val kaptMain = file("build/generated/source/kapt/main")
-        sourceDirs.plus(kaptMain)
-        generatedSourceDirs.plus(kaptMain)
+kapt {
+    correctErrorTypes = true
+    showProcessorStats = true
 
-        val kaptTest = file("build/generated/source/kapt/test")
-        testSources.plus(kaptTest)
+    arguments {
+        arg("querydsl.entityAccessors", "true")
+        arg("querydsl.kotlinCodegen", "true") // QueryDSL Kotlin Codegen 활성화
     }
 }
+
+//idea {
+//    module {
+//        val kaptMain = file("build/generated/source/kapt/main")
+//        sourceDirs.plus(kaptMain)
+//        generatedSourceDirs.plus(kaptMain)
+//
+//        val kaptTest = file("build/generated/source/kapt/test")
+//        testSources.plus(kaptTest)
+//    }
+//}
 
 // NOTE: implementation 로 지정된 Dependency를 testImplementation 으로도 지정하도록 합니다.
 configurations {
@@ -65,11 +75,11 @@ dependencies {
     testImplementation(project(":bluetape4k-json"))
 
     testImplementation(Libs.kryo)
-    testImplementation(Libs.marshalling)
-    testImplementation(Libs.marshalling_river)
+    testImplementation(Libs.fury)
 
-    testImplementation(Libs.snappy_java)
     testImplementation(Libs.lz4_java)
+    testImplementation(Libs.snappy_java)
+    testImplementation(Libs.zstd_jni)
 
     testImplementation(project(":bluetape4k-idgenerators"))
 

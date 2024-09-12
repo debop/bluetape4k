@@ -16,7 +16,7 @@ abstract class AbstractR2dbcTest {
     companion object: KLogging()
 
     @Autowired
-    protected val client: io.bluetape4k.r2dbc.R2dbcClient = uninitialized()
+    protected val client: R2dbcClient = uninitialized()
 
     @BeforeEach
     fun beforeEach() {

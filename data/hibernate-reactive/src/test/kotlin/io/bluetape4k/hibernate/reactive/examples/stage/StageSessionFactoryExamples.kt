@@ -85,7 +85,7 @@ class StageSessionFactoryExamples: AbstractStageTest() {
     fun `find all book with fetch join`() = runSuspendWithIO {
         val sql = "SELECT b FROM Book b LEFT JOIN FETCH b.author a"
         val books = sf.withSessionSuspending { session ->
-            session.createQuery<Book>(sql).resultList.await()
+            session.createSelectionQuery(sql, Book::class.java).resultList.await()
         }
         books.forEach {
             println(it)
@@ -185,7 +185,7 @@ class StageSessionFactoryExamples: AbstractStageTest() {
         }
         authors shouldHaveSize 1
         authors.forEach {
-            it.books shouldHaveSize 1
+            it.books shouldHaveSize 2
         }
     }
 

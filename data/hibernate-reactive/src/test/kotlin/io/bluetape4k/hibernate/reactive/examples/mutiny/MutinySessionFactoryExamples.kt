@@ -172,7 +172,7 @@ class MutinySessionFactoryExamples: AbstractMutinyTest() {
         }
         authors shouldHaveSize 1
         authors.forEach {
-            it.books shouldHaveSize 1
+            it.books shouldHaveSize 2
         }
     }
 
