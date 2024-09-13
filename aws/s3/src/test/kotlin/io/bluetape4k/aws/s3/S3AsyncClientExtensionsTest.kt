@@ -35,11 +35,11 @@ class S3AsyncClientExtensionsTest: AbstractS3Test() {
         val key = UUID.randomUUID().toString()
         val content = randomString()
 
-        val response = s3AsyncClient.putAsString(BUCKET_NAME, key, content).await()
+        val response = asyncClient.putAsString(BUCKET_NAME, key, content).await()
         response.eTag().shouldNotBeNull()
         log.debug { "put response=$response" }
 
-        val downContent = s3Client.getAsString(BUCKET_NAME, key)
+        val downContent = syncClient.getAsString(BUCKET_NAME, key)
 
         downContent shouldBeEqualTo content
     }
@@ -50,10 +50,10 @@ class S3AsyncClientExtensionsTest: AbstractS3Test() {
         val filepath = "files/product_type.csv"
         val bytes = Resourcex.getBytes(filepath)
 
-        val response = s3AsyncClient.putAsByteArray(BUCKET_NAME, key, bytes).await()
+        val response = asyncClient.putAsByteArray(BUCKET_NAME, key, bytes).await()
         response.eTag().shouldNotBeNull()
 
-        val download = s3Client.getAsByteArray(BUCKET_NAME, key)
+        val download = syncClient.getAsByteArray(BUCKET_NAME, key)
         download.toUtf8String() shouldBeEqualTo bytes.toUtf8String()
     }
 
@@ -65,11 +65,11 @@ class S3AsyncClientExtensionsTest: AbstractS3Test() {
         val file = File(path)
         file.exists().shouldBeTrue()
 
-        val response = s3AsyncClient.putAsFile(BUCKET_NAME, key, file).await()
+        val response = asyncClient.putAsFile(BUCKET_NAME, key, file).await()
         response.eTag().shouldNotBeNull()
 
         val downloadFile = tempDir.resolve(filename)
-        val response2 = s3Client.getAsFile(BUCKET_NAME, key, downloadFile)
+        val response2 = syncClient.getAsFile(BUCKET_NAME, key, downloadFile)
         response2.eTag().shouldNotBeNull()
 
         log.debug { "downloadFile=$downloadFile, size=${downloadFile.length()}" }

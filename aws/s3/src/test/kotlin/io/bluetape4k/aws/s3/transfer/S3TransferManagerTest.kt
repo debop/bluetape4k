@@ -32,12 +32,12 @@ class S3TransferManagerTest: AbstractS3Test() {
         val key = UUID.randomUUID().toString()
         val content = randomString()
 
-        val upload = s3TransferManager.uploadByteArray(BUCKET_NAME, key, content.toUtf8Bytes())
+        val upload = transferManager.uploadByteArray(BUCKET_NAME, key, content.toUtf8Bytes())
 
         val completedUpload = upload.completionFuture().await()
         completedUpload.response().eTag().shouldNotBeEmpty()
 
-        val download = s3TransferManager.downloadAsByteArray(BUCKET_NAME, key)
+        val download = transferManager.downloadAsByteArray(BUCKET_NAME, key)
 
         val completedDownload = download.completionFuture().await()
 
@@ -54,7 +54,7 @@ class S3TransferManagerTest: AbstractS3Test() {
         file.exists().shouldBeTrue()
 
         // Upload file by S3TransferManager
-        val upload = s3TransferManager.uploadFile(BUCKET_NAME, key, file.toPath())
+        val upload = transferManager.uploadFile(BUCKET_NAME, key, file.toPath())
         val completedUpload = upload.completionFuture().await()
         completedUpload.response().eTag().shouldNotBeEmpty()
 
@@ -62,7 +62,7 @@ class S3TransferManagerTest: AbstractS3Test() {
         val downloadFile = File(tempDir, filename)
         val downloadPath = downloadFile.toPath()
 
-        val download = s3TransferManager.downloadFile(BUCKET_NAME, key, downloadPath)
+        val download = transferManager.downloadFile(BUCKET_NAME, key, downloadPath)
         download.completionFuture().await()
 
         log.debug { "downloadFile=$downloadFile, size=${downloadFile.length()}" }

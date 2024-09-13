@@ -1,10 +1,12 @@
 package io.bluetape4k.aws.s3
 
 import io.bluetape4k.io.deleteIfExists
+import io.bluetape4k.junit5.coroutines.runSuspendWithIO
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.support.toUtf8String
 import io.bluetape4k.utils.Resourcex
+import kotlinx.coroutines.future.await
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull
@@ -19,7 +21,7 @@ import java.io.File
 import java.util.*
 
 @Execution(ExecutionMode.CONCURRENT)
-class S3ClientExtensionsTest: AbstractS3Test() {
+class S3CrtAsyncClientExtensionsTest: AbstractS3Test() {
 
     companion object: KLogging() {
         private const val REPEAT_SIZE = 3
@@ -29,11 +31,11 @@ class S3ClientExtensionsTest: AbstractS3Test() {
     lateinit var tempDir: File
 
     @Test
-    fun `put and get s3 object`() {
+    fun `put and get s3 object`() = runSuspendWithIO {
         val key = UUID.randomUUID().toString()
         val content = randomString()
 
-        val response = syncClient.putAsString(BUCKET_NAME, key, content)
+        val response = crtAsyncClient.putAsString(BUCKET_NAME, key, content).await()
         response.eTag().shouldNotBeNull()
         log.debug { "put response=$response" }
 
@@ -43,12 +45,12 @@ class S3ClientExtensionsTest: AbstractS3Test() {
     }
 
     @RepeatedTest(REPEAT_SIZE)
-    fun `upload and download as byte array`() {
+    fun `upload and download as byte array`() = runSuspendWithIO {
         val key = UUID.randomUUID().toString()
         val filepath = "files/product_type.csv"
         val bytes = Resourcex.getBytes(filepath)
 
-        val response = syncClient.putAsByteArray(BUCKET_NAME, key, bytes)
+        val response = crtAsyncClient.putAsByteArray(BUCKET_NAME, key, bytes).await()
         response.eTag().shouldNotBeNull()
 
         val download = syncClient.getAsByteArray(BUCKET_NAME, key)
@@ -57,13 +59,13 @@ class S3ClientExtensionsTest: AbstractS3Test() {
 
     @ParameterizedTest(name = "upload/download {0}")
     @MethodSource("getImageNames")
-    fun `upload and download binary file`(filename: String) {
+    fun `upload and download binary file`(filename: String) = runSuspendWithIO {
         val key = UUID.randomUUID().toString()
         val path = "$IMAGE_PATH/$filename"
         val file = File(path)
         file.exists().shouldBeTrue()
 
-        val response = syncClient.putAsFile(BUCKET_NAME, key, file)
+        val response = crtAsyncClient.putAsFile(BUCKET_NAME, key, file).await()
         response.eTag().shouldNotBeNull()
 
         val downloadFile = tempDir.resolve(filename)

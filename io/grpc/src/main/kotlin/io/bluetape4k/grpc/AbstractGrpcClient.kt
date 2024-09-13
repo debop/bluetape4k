@@ -1,9 +1,8 @@
 package io.bluetape4k.grpc
 
+import io.bluetape4k.concurrent.VirtualThreadExecutor
 import io.bluetape4k.logging.KLogging
 import io.grpc.ManagedChannel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asExecutor
 import java.io.Closeable
 
 /**
@@ -21,7 +20,7 @@ abstract class AbstractGrpcClient(protected val channel: ManagedChannel): Closea
         private fun buildForAddress(host: String, port: Int): ManagedChannel =
             managedChannel(host, port) {
                 usePlaintext()
-                executor(Dispatchers.IO.asExecutor())
+                executor(VirtualThreadExecutor)
             }
     }
 

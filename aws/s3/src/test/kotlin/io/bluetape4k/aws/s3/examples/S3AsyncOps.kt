@@ -21,7 +21,7 @@ class S3AsyncOps: AbstractS3Test() {
     @Test
     fun `put object asynchronously`() = runTest {
         val key = UUID.randomUUID().toString()
-        val response = s3AsyncClient
+        val response = asyncClient
             .putAsByteArray(BUCKET_NAME, key, randomString().toUtf8Bytes())
             .await()
 
@@ -36,10 +36,10 @@ class S3AsyncOps: AbstractS3Test() {
         val value = randomString()
 
         // Put object
-        s3AsyncClient.putAsByteArray(BUCKET_NAME, key, value.toUtf8Bytes()).await()
+        asyncClient.putAsByteArray(BUCKET_NAME, key, value.toUtf8Bytes()).await()
 
         // Get object
-        val content = s3AsyncClient.getAsByteArray(BUCKET_NAME, key).await()
+        val content = asyncClient.getAsByteArray(BUCKET_NAME, key).await()
         content.toUtf8String() shouldBeEqualTo value
     }
 }

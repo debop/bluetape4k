@@ -113,10 +113,10 @@ object Versions {
     const val resilience4j = "2.2.0"   // https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-bom
     const val netty = "4.1.113.Final"  // https://mvnrepository.com/artifact/io.netty/netty-all
 
-    const val aws = "1.12.771"    // https://mvnrepository.com/artifact/com.amazonaws
-    const val aws2 = "2.27.21"   // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
-    const val aws2_crt = "0.29.19" // https://mvnrepository.com/artifact/software.amazon.awssdk.crt
-    const val aws_kotlin = "1.3.27" // https://mvnrepository.com/artifact/aws.sdk.kotlin
+    const val aws = "1.12.772"    // https://mvnrepository.com/artifact/com.amazonaws
+    const val aws2 = "2.27.24"   // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-sdk-java
+    const val aws2_crt = "0.30.11" // https://mvnrepository.com/artifact/software.amazon.awssdk.crt
+    const val aws_kotlin = "1.3.30" // https://mvnrepository.com/artifact/aws.sdk.kotlin
 
     const val grpc = "1.62.2"       // https://mvnrepository.com/artifact/io.grpc/grpc-stub
     const val grpc_kotlin = "1.4.1" // https://mvnrepository.com/artifact/io.grpc/grpc-kotlin-stub

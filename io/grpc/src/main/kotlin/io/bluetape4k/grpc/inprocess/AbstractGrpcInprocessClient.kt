@@ -1,11 +1,10 @@
 package io.bluetape4k.grpc.inprocess
 
+import io.bluetape4k.concurrent.VirtualThreadExecutor
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.grpc.ManagedChannel
 import io.grpc.inprocess.InProcessChannelBuilder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asExecutor
 import java.io.Closeable
 import java.util.concurrent.TimeUnit
 
@@ -26,7 +25,7 @@ abstract class AbstractGrpcInprocessClient(protected val channel: ManagedChannel
             return InProcessChannelBuilder
                 .forName(name)
                 .usePlaintext()
-                .executor(Dispatchers.IO.asExecutor())
+                .executor(VirtualThreadExecutor)
                 .build()
         }
 
@@ -35,7 +34,7 @@ abstract class AbstractGrpcInprocessClient(protected val channel: ManagedChannel
             return InProcessChannelBuilder
                 .forAddress(host, port)
                 .usePlaintext()
-                .executor(Dispatchers.IO.asExecutor())
+                .executor(VirtualThreadExecutor)
                 .build()
         }
     }

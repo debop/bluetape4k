@@ -27,7 +27,7 @@ class BasicExamples: AbstractS3Test() {
 
     @Test
     fun `모든 bucket 을 조회합니다`() {
-        val response = s3Client.listBuckets(listBucketsRequestOf())
+        val response = syncClient.listBuckets(listBucketsRequestOf())
 
         val buckets = response.buckets()
         buckets.forEach { bucket ->
@@ -43,12 +43,12 @@ class BasicExamples: AbstractS3Test() {
 
         val keys = List(5) { UUID.randomUUID().encodeBase62() }.sorted()
         keys.forEach { key ->
-            s3Client.putAsString(bucket, key, randomString()) {
+            syncClient.putAsString(bucket, key, randomString()) {
                 it.requestPayer(RequestPayer.REQUESTER)
             }
         }
 
-        val response = s3Client.listObjectsV2 { it.bucket(bucket) }
+        val response = syncClient.listObjectsV2 { it.bucket(bucket) }
         val objects = response.contents()
 
         objects.forEach {
@@ -63,7 +63,7 @@ class BasicExamples: AbstractS3Test() {
         val objectSize = 10
         val objectIds = List(objectSize) {
             val key = UUID.randomUUID().toString()
-            s3Client.putAsByteArray(BUCKET_NAME, key, randomString().toUtf8Bytes())
+            syncClient.putAsByteArray(BUCKET_NAME, key, randomString().toUtf8Bytes())
             objectIdentifierOf(key)
         }
 
@@ -71,7 +71,7 @@ class BasicExamples: AbstractS3Test() {
 
         // 삭제할 Object 들의 object identifier 로 [Delete] 를 구성한다
         val delete = deleteOf(objectIds)
-        val response = s3Client.deleteObjects(deleteObjectsRequestOf(BUCKET_NAME, delete))
+        val response = syncClient.deleteObjects(deleteObjectsRequestOf(BUCKET_NAME, delete))
         val deletedObjects = response.deleted()
         deletedObjects.forEach {
             log.debug { "Deleted object. key=${it.key()}" }
@@ -82,9 +82,9 @@ class BasicExamples: AbstractS3Test() {
     @Test
     fun `get bucket acl`() {
         val key = UUID.randomUUID().toString()
-        s3Client.putAsByteArray(BUCKET_NAME, key, "acl-content".toUtf8Bytes())
+        syncClient.putAsByteArray(BUCKET_NAME, key, "acl-content".toUtf8Bytes())
 
-        val aclResponse = s3Client.getObjectAcl { it.bucket(BUCKET_NAME).key(key) }
+        val aclResponse = syncClient.getObjectAcl { it.bucket(BUCKET_NAME).key(key) }
         val grants = aclResponse.grants()
 
         grants.forEach {
@@ -101,7 +101,7 @@ class BasicExamples: AbstractS3Test() {
     fun `get bucket policy`() {
         // Bucket Policy 를 지정하지 않았습니다. 없으면 예외가 발생하네요 ...
         assertFailsWith<S3Exception> {
-            val response = s3Client.getBucketPolicy { it.bucket(BUCKET_NAME) }
+            val response = syncClient.getBucketPolicy { it.bucket(BUCKET_NAME) }
             val policy = response.policy()
             log.debug { "Policy=$policy" }
             policy.shouldNotBeEmpty()

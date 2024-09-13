@@ -6,8 +6,7 @@ import io.bluetape4k.logging.KLogging
 import io.bluetape4k.logging.debug
 import io.bluetape4k.logging.error
 import io.bluetape4k.testcontainers.aws.LocalStackServer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asExecutor
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.testcontainers.containers.localstack.LocalStackContainer
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
@@ -15,6 +14,7 @@ import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3AsyncClient
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.transfer.s3.S3TransferManager
+import java.util.concurrent.Executors
 
 abstract class AbstractS3Test {
 
@@ -51,7 +51,7 @@ abstract class AbstractS3Test {
             Fakers.randomString(256, 2048)
     }
 
-    val s3Client: S3Client by lazy {
+    val syncClient: S3Client by lazy {
         S3Factory.Sync.create {
             endpointOverride(endpoint)
             region(region)
@@ -59,7 +59,7 @@ abstract class AbstractS3Test {
         }
     }
 
-    val s3AsyncClient: S3AsyncClient by lazy {
+    val asyncClient: S3AsyncClient by lazy {
         S3Factory.Async.create {
             endpointOverride(endpoint)
             region(region)
@@ -67,13 +67,22 @@ abstract class AbstractS3Test {
         }
     }
 
-    val s3TransferManager: S3TransferManager by lazy {
+    val crtAsyncClient: S3AsyncClient by lazy {
+        S3Factory.CrtAsync.create {
+            endpointOverride(endpoint)
+            region(region)
+            credentialsProvider(credentialsProvider)
+            futureCompletionExecutor(Executors.newVirtualThreadPerTaskExecutor())
+        }
+    }
+
+    val transferManager: S3TransferManager by lazy {
         S3Factory.TransferManager.create(
             endpoint,
             region,
             credentialsProvider
         ) {
-            this.executor(Dispatchers.IO.asExecutor())
+            this.executor(Executors.newVirtualThreadPerTaskExecutor())
         }
     }
 
@@ -83,29 +92,34 @@ abstract class AbstractS3Test {
         createBucketsIfNotExists(BUCKET_NAME, BUCKET_NAME2)
     }
 
+    @AfterAll
+    fun afterAll() {
+        deleteBuckets()
+    }
+
     protected fun deleteBuckets() {
         // 기존 bucket을 삭제한다
-        val buckets = s3Client.listBuckets().buckets()
+        val buckets = syncClient.listBuckets().buckets()
 
         buckets.forEach { bucket ->
-            val listObjects = s3Client.listObjects { it.bucket(bucket.name()) }.contents()
+            val listObjects = syncClient.listObjects { it.bucket(bucket.name()) }.contents()
             listObjects
                 .map { it.key() }
                 .forEach { key ->
                     log.debug { "Delete object... bucket=${bucket.name()}, key=$key" }
-                    s3Client.deleteObject { it.bucket(bucket.name()).key(key) }
+                    syncClient.deleteObject { it.bucket(bucket.name()).key(key) }
                 }
             log.debug { "Delete bucket... name=${bucket.name()}" }
-            s3Client.deleteBucket { it.bucket(bucket.name()) }
+            syncClient.deleteBucket { it.bucket(bucket.name()) }
         }
     }
 
     protected fun createBucketsIfNotExists(vararg bucketNames: String) {
         bucketNames.forEach { bucket ->
-            if (!s3Client.existsBucket(bucket)) {
+            if (!syncClient.existsBucket(bucket)) {
                 log.debug { "Create bucket... name=$bucket" }
                 runCatching {
-                    val response = s3Client.createBucket { it.bucket(bucket) }
+                    val response = syncClient.createBucket { it.bucket(bucket) }
                     if (response.sdkHttpResponse().isSuccessful) {
                         log.debug { "Create new bucket. name=$bucket, location=${response.location()}" }
                     } else {

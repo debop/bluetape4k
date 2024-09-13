@@ -2,9 +2,8 @@ package io.bluetape4k.aws.s3
 
 import io.bluetape4k.aws.auth.LocalAwsCredentialsProvider
 import io.bluetape4k.aws.http.SdkHttpClientProvider
+import io.bluetape4k.concurrent.VirtualThreadExecutor
 import io.bluetape4k.utils.ShutdownQueue
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asExecutor
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3AsyncClient
@@ -79,9 +78,7 @@ object S3Factory {
          * @return [S3AsyncClient] 인스턴스
          */
         inline fun create(initializer: S3AsyncClientBuilder.() -> Unit): S3AsyncClient {
-            return S3AsyncClient.builder()
-                .apply(initializer)
-                .build()
+            return S3AsyncClient.builder().apply(initializer).build()
                 .apply {
                     ShutdownQueue.register(this)
                 }
@@ -126,9 +123,7 @@ object S3Factory {
          * @return [S3AsyncClient] 인스턴스
          */
         inline fun create(initializer: S3CrtAsyncClientBuilder.() -> Unit): S3AsyncClient {
-            return S3AsyncClient.crtBuilder()
-                .apply(initializer)
-                .build()
+            return S3AsyncClient.crtBuilder().apply(initializer).build()
                 .apply {
                     ShutdownQueue.register(this)
                 }
@@ -147,6 +142,7 @@ object S3Factory {
             endpointOverride: URI,
             region: Region = Region.AP_NORTHEAST_2,
             credentialsProvider: AwsCredentialsProvider = LocalAwsCredentialsProvider,
+            executor: Executor = VirtualThreadExecutor,
             additionalInitializer: S3CrtAsyncClientBuilder.() -> Unit = {},
         ): S3AsyncClient {
             return create {
@@ -155,6 +151,7 @@ object S3Factory {
                 credentialsProvider(credentialsProvider)
                 maxConcurrency(Runtime.getRuntime().availableProcessors())
                 minimumPartSizeInBytes(1 * MB)
+                futureCompletionExecutor(executor)
                 additionalInitializer()
             }
         }
@@ -194,14 +191,15 @@ object S3Factory {
             endpointOverride: URI,
             region: Region = Region.AP_NORTHEAST_2,
             credentialsProvider: AwsCredentialsProvider = LocalAwsCredentialsProvider,
-            executor: Executor = Dispatchers.IO.asExecutor(),
+            executor: Executor = VirtualThreadExecutor,
             additionalInitializer: S3TransferManager.Builder.() -> Unit = {},
         ): S3TransferManager {
             return create {
                 // AWS CRT-based S3AsyncClient 를 사용하는 것을 추천한다
                 val asyncClient = CrtAsync.create(endpointOverride, region, credentialsProvider) {
-                    maxConcurrency(Runtime.getRuntime().availableProcessors())
+                    maxConcurrency(Runtime.getRuntime().availableProcessors() * 2)
                     minimumPartSizeInBytes(1 * MB)
+                    futureCompletionExecutor(VirtualThreadExecutor)
                     // .initialReadBufferSizeInBytes(8 * KB)
                 }
 
@@ -222,7 +220,7 @@ object S3Factory {
          */
         inline fun create(
             asyncClient: S3AsyncClient,
-            executor: Executor = Dispatchers.IO.asExecutor(),
+            executor: Executor = VirtualThreadExecutor,
             additionalInitializer: S3TransferManager.Builder.() -> Unit = {},
         ): S3TransferManager {
             return create {
