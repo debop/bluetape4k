@@ -1,6 +1,7 @@
 package io.bluetape4k.aws.sqs
 
 import io.bluetape4k.aws.auth.staticCredentialsProviderOf
+import io.bluetape4k.aws.http.SdkAsyncHttpClientProvider
 import io.bluetape4k.junit5.faker.Fakers
 import io.bluetape4k.logging.KLogging
 import io.bluetape4k.testcontainers.aws.LocalStackServer
@@ -49,6 +50,7 @@ abstract class AbstractSqsTest {
             sqsAsyncClient {
                 credentialsProvider(credentialsProvider)
                 endpointOverride(endpoint)
+                httpClient(SdkAsyncHttpClientProvider.Netty.nettyNioAsyncHttpClient)
                 region(region)
             }.apply {
                 ShutdownQueue.register(this)

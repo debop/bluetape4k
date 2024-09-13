@@ -2,6 +2,7 @@ package io.bluetape4k.aws.http
 
 import software.amazon.awssdk.http.async.SdkAsyncHttpClient
 import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient
+import software.amazon.awssdk.http.nio.netty.SdkEventLoopGroup
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
@@ -13,7 +14,7 @@ inline fun nettyNioAsyncHttpClient(
 }
 
 fun nettyNioAsyncHttpClientOf(
-    maxConcurrency: Int = 100,
+    maxConcurrency: Int = 1000,
     connectionMaxIdleTime: Duration = 30.seconds,
     connectionTimeout: Duration = 30.seconds,
     readTimeout: Duration = 30.seconds,
@@ -25,6 +26,8 @@ fun nettyNioAsyncHttpClientOf(
     this.connectionTimeout(connectionTimeout.toJavaDuration())
     this.readTimeout(readTimeout.toJavaDuration())
     this.writeTimeout(writeTimeout.toJavaDuration())
+
+    this.eventLoopGroupBuilder(SdkEventLoopGroup.builder().threadFactory(Thread.ofVirtual().factory()))
 
     initializer()
 }

@@ -4,6 +4,7 @@ import io.bluetape4k.aws.http.SdkAsyncHttpClientProvider
 import io.bluetape4k.aws.sqs.model.sendMessageRequestOf
 import io.bluetape4k.support.requireNotBlank
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
+import software.amazon.awssdk.http.async.SdkAsyncHttpClient
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import software.amazon.awssdk.services.sqs.SqsAsyncClientBuilder
@@ -36,13 +37,13 @@ fun sqsAsyncClientOf(
     endpoint: URI,
     region: Region,
     credentialsProvider: AwsCredentialsProvider,
+    httpClient: SdkAsyncHttpClient = SdkAsyncHttpClientProvider.Netty.nettyNioAsyncHttpClient,
     initializer: SqsAsyncClientBuilder.() -> Unit = {},
 ): SqsAsyncClient = sqsAsyncClient {
     endpointOverride(endpoint)
     region(region)
     credentialsProvider(credentialsProvider)
-
-    httpClient(SdkAsyncHttpClientProvider.Netty.nettyNioAsyncHttpClient)
+    httpClient(httpClient)
 
     initializer()
 }

@@ -1,8 +1,8 @@
 package io.bluetape4k.aws.ses
 
 import io.bluetape4k.aws.http.SdkAsyncHttpClientProvider
-import io.bluetape4k.aws.http.nettyNioAsyncHttpClientOf
 import io.bluetape4k.utils.ShutdownQueue
+import software.amazon.awssdk.http.async.SdkAsyncHttpClient
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.ses.SesAsyncClient
 import software.amazon.awssdk.services.ses.SesAsyncClientBuilder
@@ -28,20 +28,25 @@ inline fun sesAsyncClient(
 
 fun sesAsyncClientOf(
     region: Region,
+    endpointProvider: SesEndpointProvider? = null,
+    httpClient: SdkAsyncHttpClient = SdkAsyncHttpClientProvider.Netty.nettyNioAsyncHttpClient,
+
     initializer: SesAsyncClientBuilder.() -> Unit = {},
 ): SesAsyncClient = sesAsyncClient {
     region(region)
-    httpClient(SdkAsyncHttpClientProvider.Netty.nettyNioAsyncHttpClient)
+    endpointProvider?.let { endpointProvider(it) }
+    httpClient(httpClient)
 
     initializer()
 }
 
 fun sesAsyncClientOf(
     endpointProvider: SesEndpointProvider,
+    httpClient: SdkAsyncHttpClient = SdkAsyncHttpClientProvider.Netty.nettyNioAsyncHttpClient,
     initializer: SesAsyncClientBuilder.() -> Unit = {},
 ): SesAsyncClient = sesAsyncClient {
     endpointProvider(endpointProvider)
-    httpClient(nettyNioAsyncHttpClientOf())
+    httpClient(httpClient)
 
     initializer()
 }

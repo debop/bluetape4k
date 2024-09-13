@@ -11,6 +11,7 @@ dependencies {
     api(Libs.aws2_aws_core)
     api(Libs.aws2_sqs)
     api(Libs.aws2_netty_nio_client)
+    api(Libs.aws2_aws_crt)  // AWS CRT 기반 HTTP 클라이언트를 사용하기 위해 필요합니다.
     testImplementation(Libs.aws2_test_utils)
 
     // Coroutines

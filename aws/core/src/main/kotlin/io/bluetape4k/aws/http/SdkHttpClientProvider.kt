@@ -4,6 +4,8 @@ import io.bluetape4k.utils.ShutdownQueue
 import software.amazon.awssdk.http.SdkHttpClient
 import software.amazon.awssdk.http.apache.ApacheHttpClient
 import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 /**
  * [SdkHttpClient] 를 공용으로 사용할 수 있도록 제공하는 Provider 입니다.
@@ -15,7 +17,9 @@ object SdkHttpClientProvider {
     object Apache {
 
         val apacheHttpClient: SdkHttpClient by lazy {
-            ApacheHttpClient.builder().build()
+            ApacheHttpClient.builder()
+                .maxConnections(1000)
+                .build()
                 .apply {
                     ShutdownQueue.register(this)
                 }
@@ -25,7 +29,9 @@ object SdkHttpClientProvider {
     object UrlConnection {
 
         val urlConnectionHttpClient: SdkHttpClient by lazy {
-            UrlConnectionHttpClient.builder().build()
+            UrlConnectionHttpClient.builder()
+                .connectionTimeout(30.seconds.toJavaDuration())
+                .build()
                 .apply {
                     ShutdownQueue.register(this)
                 }

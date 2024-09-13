@@ -16,6 +16,7 @@ dependencies {
     // AWS SDK V2
     api(Libs.aws2_dynamodb_enhanced)
     api(Libs.aws2_netty_nio_client)
+    api(Libs.aws2_aws_crt)  // AWS CRT 기반 HTTP 클라이언트를 사용하기 위해 필요합니다.
     testImplementation(Libs.aws2_test_utils)
 
     // Coroutines
@@ -34,6 +35,7 @@ dependencies {
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
         exclude(group = "junit", module = "junit")
+        exclude(module = "mockito-core")
     }
 
     testImplementation(Libs.javax_el)

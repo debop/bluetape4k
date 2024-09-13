@@ -36,6 +36,10 @@ fun awsCrtAsyncHttpClientOf(
     this.connectionMaxIdleTime(connectionMaxIdleTime.toJavaDuration())
     this.connectionTimeout(connectionTimeout.toJavaDuration())
     this.postQuantumTlsEnabled(postQuantumTlsEnabled)
+    this.tcpKeepAliveConfiguration {
+        it.keepAliveInterval(5.seconds.toJavaDuration())
+        it.keepAliveTimeout(60.seconds.toJavaDuration())
+    }
 
     initializer()
 }
