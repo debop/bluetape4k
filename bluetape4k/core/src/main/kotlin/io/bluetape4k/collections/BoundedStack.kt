@@ -91,7 +91,9 @@ class BoundedStack<E: Any> private constructor(val maxSize: Int): Stack<E>() {
 
             val item = array[top]
             top = (++top) % maxSize
-            counter.decrementAndGet()
+            if (counter.value > 0) {
+                counter.decrementAndGet()
+            }
             return item!!
         }
     }

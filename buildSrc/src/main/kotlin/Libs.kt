@@ -64,8 +64,8 @@ object Plugins {
 object Versions {
 
     const val kotlin = "2.0.20"                 // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
-    const val kotlinx_coroutines = "1.8.1"      // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
-    const val kotlinx_serialization = "1.7.1"   // https://mvnrepository.com/search?q=kotlinx-serialization
+    const val kotlinx_coroutines = "1.9.0"      // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
+    const val kotlinx_serialization = "1.7.2"   // https://mvnrepository.com/search?q=kotlinx-serialization
 
     const val kotlinx_atomicfu = "0.25.0"       // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/atomicfu
 
@@ -73,13 +73,12 @@ object Versions {
 
     const val spring_boot = Plugins.Versions.spring_boot
     const val spring_cloud = "2023.0.3"     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies
-    const val spring_integration = "6.2.6"  // https://mvnrepository.com/artifact/org.springframework.integration/spring-integration-core
-    const val reactor_bom = "2023.0.9"      // https://mvnrepository.com/artifact/io.projectreactor/reactor-bom
+    const val spring_integration = "6.3.3"  // https://mvnrepository.com/artifact/org.springframework.integration/spring-integration-core
+    const val reactor_bom = "2023.0.10"     // https://mvnrepository.com/artifact/io.projectreactor/reactor-bom
     const val spring_statemachine = "4.0.0" // https://mvnrepository.com/artifact/org.springframework.statemachine/spring-statemachine-core
 
-    // https://mvnrepository.com/artifact/de.codecentric/chaos-monkey-spring-boot
-    const val chaos_monkey = "3.0.2"
-    const val blockhound = "1.0.8.RELEASE"
+    const val chaos_monkey = "3.1.0"        // https://mvnrepository.com/artifact/de.codecentric/chaos-monkey-spring-boot
+    const val blockhound = "1.0.9.RELEASE"  // https://mvnrepository.com/artifact/io.projectreactor.tools/blockhound
 
     // GraphQL
     // Netflix DGS 의 bom (5.5.x) 에서 graph-java 버전이 낮아서 (18.3) 최신 버전 (19.+)으로 강제 update 해야 한다

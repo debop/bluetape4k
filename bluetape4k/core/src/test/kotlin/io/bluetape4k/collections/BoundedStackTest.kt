@@ -2,6 +2,7 @@ package io.bluetape4k.collections
 
 import io.bluetape4k.junit5.concurrency.MultithreadingTester
 import io.bluetape4k.logging.KLogging
+import io.bluetape4k.logging.debug
 import kotlinx.atomicfu.atomic
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
@@ -45,19 +46,28 @@ class BoundedStackTest {
     fun `push and pop items to stack in multi-thread`() {
         val stack = BoundedStack<Int>(16)
         val counter = atomic(0)
+        val lock = ReentrantLock()
 
         MultithreadingTester()
-            .numThreads(4)
+            .numThreads(8)
             .roundsPerThread(4)
             .add {
-                stack.push(counter.incrementAndGet())
+                lock.withLock {
+                    stack.push(counter.incrementAndGet())
+                }
             }
             .add {
-                Thread.sleep(1)
-                counter.decrementAndGet()
-                if (stack.isNotEmpty()) {
-                    stack.pop()
-                }
+                do {
+                    val result = lock.withLock {
+                        runCatching { stack.pop() }
+                            .onSuccess { counter.decrementAndGet() }
+                            .onFailure {
+                                log.debug(it) { "Fail to pop." }
+                                Thread.sleep(1)
+                            }
+                    }
+                } while (result.isFailure)
+
             }
             .run()
 
@@ -74,7 +84,7 @@ class BoundedStackTest {
         val lock = ReentrantLock()
 
         MultithreadingTester()
-            .numThreads(4)
+            .numThreads(8)
             .roundsPerThread(4)
             .add {
                 lock.withLock {
@@ -83,13 +93,13 @@ class BoundedStackTest {
             }
             .run()
 
-        counter.value shouldBeEqualTo 4 * 4
+        counter.value shouldBeEqualTo 8 * 4
 
         stack.size shouldBeEqualTo 4
-        stack.pop() shouldBeEqualTo 16
-        stack.pop() shouldBeEqualTo 15
-        stack.pop() shouldBeEqualTo 14
-        stack.pop() shouldBeEqualTo 13
+        stack.pop() shouldBeEqualTo 32
+        stack.pop() shouldBeEqualTo 31
+        stack.pop() shouldBeEqualTo 30
+        stack.pop() shouldBeEqualTo 29
         stack.size shouldBeEqualTo 0
     }
 }

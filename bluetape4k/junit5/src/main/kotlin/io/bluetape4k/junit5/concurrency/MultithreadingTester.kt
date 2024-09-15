@@ -7,7 +7,6 @@ import java.lang.management.ManagementFactory
 import java.lang.management.ThreadMXBean
 import java.util.*
 import java.util.concurrent.CopyOnWriteArraySet
-import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
 /**
@@ -154,21 +153,14 @@ class MultithreadingTester {
     private fun startWorkerThreads(me: MultiException) {
         log.debug { "Start worker threads ... numThreads=$numThreads" }
 
-        var iter = runnables.iterator()
-        val latch = CountDownLatch(numThreads)
-
         workerThreads = List(numThreads) {
-            // thread 수만큼 runnableAssert를 반복해서 사용한다
-            if (!iter.hasNext()) {
-                iter = runnables.iterator()
-            }
-            val runnableAssert = iter.next()
+            // thread 수만큼 runnable를 반복해서 사용한다
+            val runnable = runnables[it % runnables.size]
             thread(start = true, name = "MultithreadingTester-worker-$it") {
                 try {
-                    latch.countDown()
-                    latch.await()
                     repeat(roundsPerThread) {
-                        runnableAssert.invoke()
+                        log.debug { "Thread[${Thread.currentThread().name}] start round $it" }
+                        runnable.invoke()
                     }
                 } catch (t: Throwable) {
                     me.add(t)
@@ -199,6 +191,7 @@ class MultithreadingTester {
                 }
             }
         } while (foundAliveWorkerThread && monitorThread.isAlive)
+        log.debug { "Join worker threads done" }
     }
 
     private fun stopMonitorThread() {
