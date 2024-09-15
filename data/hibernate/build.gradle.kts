@@ -67,8 +67,8 @@ dependencies {
     testImplementation(Libs.hibernate_testing)
 
     // NOTE: hibernate 6.3.0+ 는 hibernate-jpamodelgen 예서 예외가 발생합니다. (6.6.+ 를 사용하세요)
-    // kapt(Libs.hibernate_jpamodelgen)
-    // kaptTest(Libs.hibernate_jpamodelgen)
+    kapt(Libs.hibernate_jpamodelgen)
+    kaptTest(Libs.hibernate_jpamodelgen)
 
     // Querydsl
     // Hibernate 6+ jakarta 용은 claasifier로 ":jpa" 대신 ":jakarta" 를 사용해야 합니다.
