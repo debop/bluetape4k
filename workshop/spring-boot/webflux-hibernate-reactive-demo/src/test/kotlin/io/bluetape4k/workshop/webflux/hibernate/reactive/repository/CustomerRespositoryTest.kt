@@ -6,6 +6,7 @@ import io.bluetape4k.logging.debug
 import io.bluetape4k.workshop.webflux.hibernate.reactive.AbstractHibernateReactiveTest
 import io.bluetape4k.workshop.webflux.hibernate.reactive.model.City
 import io.bluetape4k.workshop.webflux.hibernate.reactive.model.Customer
+import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeEmpty
 import org.amshove.kluent.shouldNotBeEqualTo
@@ -26,7 +27,7 @@ class CustomerRespositoryTest(
     }
 
     @Test
-    fun `find customer by id`() = runSuspendTest {
+    fun `find customer by id`() = runTest {
         val debop = customerRepo.findById(1L)
         log.debug { "Customer[1]=$debop" }
         debop.shouldNotBeNull()

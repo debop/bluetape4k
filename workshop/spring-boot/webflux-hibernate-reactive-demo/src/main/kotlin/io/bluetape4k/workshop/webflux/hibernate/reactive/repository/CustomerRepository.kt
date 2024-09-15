@@ -2,9 +2,8 @@ package io.bluetape4k.workshop.webflux.hibernate.reactive.repository
 
 import io.bluetape4k.hibernate.reactive.mutiny.asMutinySessionFactory
 import io.bluetape4k.hibernate.reactive.mutiny.createQueryAs
-import io.bluetape4k.hibernate.reactive.mutiny.getAs
+import io.bluetape4k.hibernate.reactive.mutiny.findAs
 import io.bluetape4k.hibernate.reactive.mutiny.withSessionSuspending
-import io.bluetape4k.hibernate.reactive.mutiny.withStatelessSessionSuspending
 import io.bluetape4k.hibernate.reactive.mutiny.withTransactionSuspending
 import io.bluetape4k.workshop.webflux.hibernate.reactive.model.City
 import io.bluetape4k.workshop.webflux.hibernate.reactive.model.Customer
@@ -15,7 +14,6 @@ import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Join
 import jakarta.persistence.criteria.Root
-import org.hibernate.LockMode
 import org.hibernate.reactive.mutiny.Mutiny
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
@@ -34,9 +32,12 @@ class CustomerRepository(@Autowired emf: EntityManagerFactory) {
     }
 
     suspend fun findById(id: Long): Customer? {
-        return sf.withStatelessSessionSuspending { stateless ->
-            stateless.getAs<Customer>(id).awaitSuspending()
+        return sf.withSessionSuspending { session ->
+            session.findAs<Customer>(id).awaitSuspending()
         }
+//        return sf.withStatelessSessionSuspending { stateless ->
+//            stateless.getAs<Customer>(id).awaitSuspending()
+//        }
     }
 
     suspend fun findAll(): List<Customer> {
@@ -60,9 +61,12 @@ class CustomerRepository(@Autowired emf: EntityManagerFactory) {
         val city: Join<Customer, City> = root.join(Customer::city.name)
         query.where(cb.like(city.get(City::name.name), "%${cityToMatch}%"))
 
-        return sf.withStatelessSessionSuspending { stateless: Mutiny.StatelessSession ->
-            stateless.createQuery(query).resultList.awaitSuspending()
+        return sf.withSessionSuspending { session: Mutiny.Session ->
+            session.createQuery(query).resultList.awaitSuspending()
         }
+//        return sf.withStatelessSessionSuspending { stateless: Mutiny.StatelessSession ->
+//            stateless.createQuery(query).resultList.awaitSuspending()
+//        }
     }
 
     suspend fun createCustomer(name: String): Customer {
@@ -70,19 +74,30 @@ class CustomerRepository(@Autowired emf: EntityManagerFactory) {
     }
 
     suspend fun updateCustomer(c: Customer): Customer? {
-        return sf.withStatelessSessionSuspending { stateless: Mutiny.StatelessSession ->
-            stateless.update(c).replaceWith(c).awaitSuspending()
+        return sf.withSessionSuspending { session: Mutiny.Session ->
+            session.persist(c).replaceWith(c).awaitSuspending()
         }
+//        return sf.withStatelessSessionSuspending { stateless: Mutiny.StatelessSession ->
+//            stateless.update(c).replaceWith(c).awaitSuspending()
+//        }
     }
 
     suspend fun deleteCustomerById(id: Long): Customer? {
-        return sf.withStatelessSessionSuspending { stateless: Mutiny.StatelessSession ->
-            stateless.getAs<Customer>(id, LockMode.PESSIMISTIC_WRITE)
+        return sf.withSessionSuspending { session: Mutiny.Session ->
+            session.findAs<Customer>(id)
                 .call { customer ->
-                    if (customer != null) stateless.delete(customer)
+                    if (customer != null) session.remove(customer)
                     else Uni.createFrom().nullItem<Customer>()
                 }
                 .awaitSuspending()
         }
+//        return sf.withStatelessSessionSuspending { stateless: Mutiny.StatelessSession ->
+//            stateless.getAs<Customer>(id, LockMode.PESSIMISTIC_WRITE)
+//                .call { customer ->
+//                    if (customer != null) stateless.delete(customer)
+//                    else Uni.createFrom().nullItem<Customer>()
+//                }
+//                .awaitSuspending()
+//        }
     }
 }
