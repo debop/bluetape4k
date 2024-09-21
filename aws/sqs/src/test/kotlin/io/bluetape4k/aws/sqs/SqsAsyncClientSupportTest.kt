@@ -21,7 +21,7 @@ import java.util.*
 
 @Execution(ExecutionMode.SAME_THREAD)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class SqsAsyncClientSupport: AbstractSqsTest() {
+class SqsAsyncClientSupportTest: AbstractSqsTest() {
 
     companion object: KLogging() {
         private const val QUEUE_PREFIX = "coroutines-queue"
