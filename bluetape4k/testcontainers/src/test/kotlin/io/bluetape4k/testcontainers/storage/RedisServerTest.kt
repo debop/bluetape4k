@@ -22,8 +22,6 @@ class RedisServerTest {
                 redis.isRunning.shouldBeTrue()
                 redis.port shouldBeEqualTo RedisServer.PORT
 
-                Thread.sleep(100)
-
                 verifyRedisServer(redis)
             }
         }
