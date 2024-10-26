@@ -3,7 +3,6 @@ plugins {
     kotlin("plugin.spring")
     kotlin("plugin.noarg")
     kotlin("plugin.allopen")
-    kotlin("kapt")
 }
 
 allOpen {
@@ -32,7 +31,7 @@ dependencies {
     implementation(Libs.elasticsearch_rest_client)
 
     runtimeOnly(Libs.springBoot("devtools"))
-    kapt(Libs.springBoot("configuration-processor"))
+    annotationProcessor(Libs.springBoot("configuration-processor"))
 
     implementation(Libs.springBootStarter("webflux"))
     testImplementation(Libs.springBootStarter("test")) {

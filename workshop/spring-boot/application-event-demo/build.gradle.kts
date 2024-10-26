@@ -1,7 +1,6 @@
 plugins {
     kotlin("plugin.spring")
     kotlin("plugin.noarg")
-    kotlin("kapt")
     id(Plugins.spring_boot)
 }
 
@@ -23,8 +22,8 @@ dependencies {
 
     // Spring Boot
     implementation(Libs.springBoot("autoconfigure"))
-    kapt(Libs.springBoot("autoconfigure-processor"))
-    kapt(Libs.springBoot("configuration-processor"))
+    annotationProcessor(Libs.springBoot("autoconfigure-processor"))
+    annotationProcessor(Libs.springBoot("configuration-processor"))
     runtimeOnly(Libs.springBoot("devtools"))
 
     implementation(Libs.springBootStarter("aop"))

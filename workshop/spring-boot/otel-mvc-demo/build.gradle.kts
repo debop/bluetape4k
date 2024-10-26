@@ -1,6 +1,5 @@
 plugins {
     kotlin("plugin.spring")
-    kotlin("kapt")
     id(Plugins.spring_boot)
 }
 
@@ -53,8 +52,8 @@ dependencies {
     implementation(Libs.springBootStarter("actuator"))
 
     implementation(Libs.springBoot("autoconfigure"))
-    kapt(Libs.springBoot("autoconfigure-processor"))
-    kapt(Libs.springBoot("configuration-processor"))
+    annotationProcessor(Libs.springBoot("autoconfigure-processor"))
+    annotationProcessor(Libs.springBoot("configuration-processor"))
     runtimeOnly(Libs.springBoot("devtools"))
 
     testImplementation(Libs.springBootStarter("test")) {

@@ -1,6 +1,5 @@
 plugins {
     kotlin("plugin.spring")
-    kotlin("kapt")
 }
 
 configurations {
@@ -17,7 +16,7 @@ dependencies {
     implementation(Libs.springBootStarter("data-mongodb-reactive"))
 
     runtimeOnly(Libs.springBoot("devtools"))
-    kapt(Libs.springBoot("configuration-processor"))
+    annotationProcessor(Libs.springBoot("configuration-processor"))
 
     testImplementation(Libs.springBootStarter("test")) {
         exclude(group = "junit", module = "junit")
