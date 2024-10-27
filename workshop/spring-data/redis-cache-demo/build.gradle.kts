@@ -22,6 +22,7 @@ dependencies {
     implementation(Libs.fury)
     // Compressor
     implementation(Libs.lz4_java)
+    implementation(Libs.zstd_jni)
 
     // Coroutines
     implementation(project(":bluetape4k-coroutines"))
