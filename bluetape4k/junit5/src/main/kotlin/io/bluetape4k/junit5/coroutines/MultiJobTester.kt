@@ -47,8 +47,8 @@ class MultiJobTester {
 
     private val suspendBlocks = mutableListOf<suspend () -> Unit>()
 
-    private lateinit var workerDispather: ExecutorCoroutineDispatcher
-    private lateinit var workerJobs: List<Job>
+    private var workerDispather: ExecutorCoroutineDispatcher? = null
+    private val workerJobs: MutableList<Job> = mutableListOf()
 
     fun numJobs(value: Int) = apply {
         check(value in MIN_NUM_JOBS..MAX_NUM_JOBS) {
@@ -88,6 +88,7 @@ class MultiJobTester {
             yield()
             awaitWorkerJobs()
         } finally {
+            shutdownDispatcher()
             me.throwIfNotEmpty()
         }
     }
@@ -100,10 +101,11 @@ class MultiJobTester {
         val cpuCount = Runtime.getRuntime().availableProcessors()
         val threads = numJobs.coerceIn(cpuCount, cpuCount * 8)
         workerDispather = newFixedThreadPoolContext(threads, "multi-job")
+        workerJobs.clear()
 
-        workerJobs = List(numJobs * roundsPerJob) {
+        val jobs = List(numJobs * roundsPerJob) {
             val block = suspendBlocks[sequence.getAndIncrement() % suspendBlocks.size]
-            launch(workerDispather) {
+            launch(workerDispather!!) {
                 try {
                     block()
                 } catch (e: Throwable) {
@@ -111,11 +113,16 @@ class MultiJobTester {
                 }
             }
         }
+        workerJobs.addAll(jobs)
     }
 
     private suspend fun awaitWorkerJobs() {
         log.trace { "Await multi testing jobs..." }
         runCatching { workerJobs.joinAll() }
-        runCatching { workerDispather.close() }
+    }
+
+    private fun shutdownDispatcher() {
+        log.trace { "Shutdown worker dispatcher..." }
+        runCatching { workerDispather?.close() }
     }
 }
